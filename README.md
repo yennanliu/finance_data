@@ -2,6 +2,10 @@
 
 A collection of tools for downloading and managing SEC financial reports.
 
+## Ref
+
+- https://www.annualreports.com/Company/palantir-technologies-inc
+
 ## Directory Structure
 
 ```
