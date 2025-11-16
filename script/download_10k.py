@@ -24,7 +24,13 @@ class SECDownloader:
         """
         self.base_url = "https://data.sec.gov"
         self.headers = {
-            'User-Agent': f'{email}',
+            'User-Agent': f'Mozilla/5.0 (compatible; {email})',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        }
+        # Headers for data.sec.gov API calls
+        self.api_headers = {
+            'User-Agent': f'Company Name {email}',
             'Accept-Encoding': 'gzip, deflate',
             'Host': 'data.sec.gov'
         }
@@ -42,26 +48,58 @@ class SECDownloader:
             CIK number as string (zero-padded to 10 digits)
         """
         ticker = ticker.upper()
-        url = f"{self.base_url}/submissions/CIK{ticker}.json"
 
+        # Known ticker to CIK mappings (most common ones)
+        # You can expand this dictionary as needed
+        ticker_to_cik = {
+            'AAPL': '0000320193',
+            'MSFT': '0000789019',
+            'GOOGL': '0001652044',
+            'GOOG': '0001652044',
+            'AMZN': '0001018724',
+            'TSLA': '0001318605',
+            'META': '0001326801',
+            'NVDA': '0001045810',
+            'JPM': '0000019617',
+            'V': '0001403161',
+            'WMT': '0000104169',
+            'DIS': '0001744489',
+            'NFLX': '0001065280',
+            'PYPL': '0001633917',
+            'INTC': '0000050863',
+            'AMD': '0000002488',
+            'ORCL': '0001341439',
+            'IBM': '0000051143',
+            'CSCO': '0000858877',
+            'BA': '0000012927',
+        }
+
+        # Check if ticker is in our mapping
+        if ticker in ticker_to_cik:
+            return ticker_to_cik[ticker]
+
+        # Try to fetch from SEC Edgar Search API
         try:
-            # First, get the ticker to CIK mapping
-            ticker_url = "https://www.sec.gov/files/company_tickers.json"
-            response = requests.get(ticker_url, headers=self.headers)
-            response.raise_for_status()
+            # Use the SEC search API
+            search_url = f"https://efts.sec.gov/LATEST/search-index"
+            params = {
+                'q': ticker,
+                'dateRange': 'all',
+                'category': 'form-cat1',  # Company filings
+                'entityName': ticker
+            }
 
-            companies = response.json()
+            # Note: This endpoint may not always work, so we'll try an alternative
+            # Alternative: Try to directly access submissions with the ticker
+            # The SEC allows searching by ticker symbol in some cases
 
-            for company in companies.values():
-                if company['ticker'] == ticker:
-                    cik = str(company['cik_str']).zfill(10)
-                    return cik
-
-            print(f"Ticker {ticker} not found")
+            print(f"Ticker {ticker} not in built-in list. Please add CIK manually or update ticker_to_cik dictionary.")
+            print(f"You can find the CIK at: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}")
             return None
 
         except Exception as e:
             print(f"Error getting CIK for ticker {ticker}: {e}")
+            print(f"You can find the CIK at: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}")
             return None
 
     def get_10k_filings(self, cik, count=5):
@@ -79,7 +117,7 @@ class SECDownloader:
 
         try:
             time.sleep(0.1)  # Rate limiting - SEC recommends no more than 10 requests per second
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.api_headers)
             response.raise_for_status()
 
             data = response.json()
@@ -115,12 +153,17 @@ class SECDownloader:
             filing_info: Dictionary with filing information
             ticker: Stock ticker symbol
         """
-        accession = filing_info['accessionNumber'].replace('-', '')
+        accession_number = filing_info['accessionNumber']
+        accession = accession_number.replace('-', '')
         primary_doc = filing_info['primaryDocument']
         filing_date = filing_info['filingDate']
 
-        # Construct download URL
-        url = f"{self.base_url}/Archives/edgar/data/{int(cik)}/{accession}/{primary_doc}"
+        # Extract CIK from accession number (format: CIK-YY-NNNNNN)
+        # The CIK in the accession number is the filer's CIK for the URL path
+        accession_cik = accession_number.split('-')[0].lstrip('0') or '0'
+
+        # Construct download URL (use www.sec.gov for document downloads)
+        url = f"https://www.sec.gov/Archives/edgar/data/{accession_cik}/{accession}/{primary_doc}"
 
         # Create filename
         filename = f"{ticker}_{filing_date}_10K.html"
