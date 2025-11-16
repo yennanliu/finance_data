@@ -229,26 +229,40 @@ class SECDownloaderV2:
 
     def is_xbrl_file(self, content):
         """
-        Check if file content is XBRL/iXBRL format (not human-readable).
+        Check if file content is a non-human-readable XBRL file.
+
+        Note: Inline XBRL (iXBRL) files ARE human-readable and should NOT be skipped.
+        Only skip pure XML/XBRL rendering files that are not meant for human reading.
 
         Args:
             content: File content bytes
 
         Returns:
-            True if XBRL format, False otherwise
+            True if pure XBRL/XML (not human-readable), False if human-readable or iXBRL
         """
         try:
-            # Check first 2000 bytes for XBRL indicators
+            # Check first 2000 bytes
             header = content[:2000].decode('utf-8', errors='ignore').lower()
-            xbrl_indicators = [
-                'xmlns:xbrl',
-                'xmlns:ix',
-                'inlinexbrl',
-                'xbrl.org/2013/inlinexbrl',
-                '<?xml version',
-                'xbrl document created'
+
+            # Skip pure XML rendering files and XBRL data files
+            # These are NOT human-readable
+            skip_indicators = [
+                '<type>xml',  # XML rendering files like R12.htm
+                'idea: xbrl document',  # XBRL rendering files
+                '<type>graphic',  # Graphic files
             ]
-            return any(indicator in header for indicator in xbrl_indicators)
+
+            if any(indicator in header for indicator in skip_indicators):
+                return True
+
+            # Check if it's a very small file with no actual content (< 1KB)
+            if len(content) < 1024:
+                return True
+
+            # Allow inline XBRL files - they ARE human-readable HTML with embedded XBRL tags
+            # Modern SEC filings use this format
+            return False
+
         except Exception:
             return False
 
