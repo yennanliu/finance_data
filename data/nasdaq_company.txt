@@ -1,0 +1,795 @@
+NASDAQ Companies from AnnualReports.com
+========================================
+
+Source: https://www.annualreports.com/Companies?exch=2
+
+scPharmaceuticals Inc.
+U.S. Concrete, Inc.
+1-800-FLOWERS.COM
+10x Genomics, Inc.
+111, Inc.
+180 Life Sciences Corp.
+1895 Bancorp of Wisconsin, Inc.
+1Life Healthcare, Inc.
+1st Constitution Bancorp (NJ)
+1st Source Corporation
+1stdibs.Com, Inc.
+21Vianet Group, Inc.
+23andMe Holding Co.
+2seventy bio, Inc.
+2U Inc.
+36Kr Holdings Inc.
+374Water Inc.
+3D Systems Corp.
+4D Molecular Therapeutics, Inc.
+51job, Inc.
+5E Advanced Materials, Inc.
+89bio, Inc.
+8i Enterprises Acquisition Corp
+8x8 Inc.
+9 Meters Biopharma, Inc.
+908 Devices Inc.
+9F Inc.
+A Mark Precious Metals
+Aadi Bioscience, Inc.
+AAON Inc.
+Aardvark Therapeutics
+Abacus Life
+AbCellera Biologics Inc.
+Abeona Therapeutics Inc
+Abiomed, Inc.
+Abraxas Petroleum Corp.
+Absci Corporation
+AC Immune
+Acacia Communications, Inc.
+Acacia Research Corporation
+Academy Sports + Outdoors
+Acadia Healthcare Co.
+ACADIA Pharmaceuticals
+Acamar Partners Acquisition Corp.
+Accelerate Diagnostics Inc
+Acceleron Pharma Inc.
+Accolade, Inc.
+Accuray Incorporated
+Acelyrin, Inc.
+Acer Therapeutics Inc.
+Aceragen, Inc.
+Aceto Corp.
+Achieve Life Sciences, Inc.
+Achillion Pharmaceuticals Inc.
+ACI Worldwide Inc
+Aclaris Therapeutics, Inc.
+ACM Research, Inc.
+ACNB Corporation
+Acorda Therapeutics, Inc.
+Acrivon Therapeutics, Inc.
+Actelis Networks, Inc.
+Activision Blizzard Inc.
+Acumen Pharmaceuticals, Inc.
+Acura Pharmaceuticals, Inc.
+Acurx Pharmaceuticals, Inc.
+Acutus Medical, Inc.
+ACV Auctions Inc.
+Acxiom Corporation
+Adamas One Corp.
+Adamas Pharmaceuticals Inc
+AdaptHealth Corp.
+Adaptimmune Therapeutics
+Adaptive Biotechnologies Corporation
+Addus Homecare Corporation
+ADDvantage Technologies Group, Inc.
+Adeia Inc.
+Adesto Technologies Corporation
+Adial Pharmaceuticals, Inc
+Adicet Bio, Inc.
+Adma Biologics
+Adobe Systems Inc.
+AdTheorent Holding Company, Inc.
+ADTRAN Inc.
+Advanced Energy
+Advanced Flower Capital
+Advanced Micro Devices, Inc.
+Advantage Solutions Inc.
+Advent Technologies Holdings, Inc.
+Adverum Biotechnologies, Inc.
+Aehr Test Systems
+Aeluma, Inc.
+Aemetis, Inc
+AerCap Holdings N.V.
+Aerie Pharmaceuticals Inc
+Aerovate Therapeutics, Inc.
+AeroVironment, Inc.
+AerSale, Inc.
+Aethlon Medical, Inc.
+AEye, Inc.
+Affimed NV
+Affinity Bancshares, Inc.
+Affirm Holdings, Inc.
+Afya Limited
+Agenus Inc.
+Agile Therapeutics Inc
+AgileThought, Inc.
+Agilysys Inc.
+Agios Pharmaceuticals
+AGM Group Holdings Inc.
+AGNC Investment Corp
+AgriFORCE Growing Systems Ltd.
+Agrify Corporation
+AgroFresh Solutions, Inc.
+AIFU Inc.
+Aimmune Therapeutics, Inc.
+Air T, Inc.
+Air Transport Services Group, Inc.
+Airbnb, Inc.
+Airgain, Inc.
+AirJoule Technologies
+AirNet Technology Inc.
+AirSculpt Technologies, Inc.
+Airship AI Holdings
+Akamai Technologies Inc.
+Akari Therapeutics Plc
+Akcea Therapeutics, Inc.
+Akebia Therapeutics Inc
+Akero Therapeutics, Inc.
+Akili, Inc.
+Akorn Inc.
+Akoustis Technologies, Inc.
+Akoya Biosciences, Inc.
+Alarm.com Holdings, Inc.
+Alaska Communications Systems Group Inc.
+Alaunos Therapeutic
+Alberton Acquisition Corporation
+Albireo Pharma, Inc.
+Alder Biopharmaceuticals Inc
+Aldeyra Therapeutics, Inc.
+Alector, Inc.
+Alerus Financial Corporation
+Alexion Pharmaceuticals Inc.
+Alico Inc.
+Align Technology Inc.
+Alignment Healthcare, Inc.
+Aligos Therapeutics, Inc.
+Alimera Sciences, Inc.
+Alithya
+ALJ Regional Holdings, Inc.
+Alkami Technology, Inc.
+Alkermes, Inc.
+Allakos Inc.
+Allarity Therapeutics, Inc.
+Allbirds, Inc.
+Allegiance Bancshares, Inc.
+Allegiant Travel Company
+Allegro MicroSystems, Inc.
+Allena Pharmaceuticals, Inc.
+Alliance Entertainment Holding Corporation
+Alliance Resource Partners, L.P.
+Allied Gaming & Entertainment Inc.
+Allied Healthcare Products, Inc.
+Allient Inc
+Allogene Therapeutics, Inc.
+Allot Ltd.
+AlloVir, Inc.
+Alpha & Omega Semiconductor
+Alpha Teknova, Inc.
+Alphatec Holdings Inc
+Alpine Immune Sciences, Inc.
+Altabancorp
+Altair Engineering Inc.
+Altamira Therapeutics Ltd.
+Alterity Therapeutics Limited
+AlTi Global, Inc.
+Altimmune, Inc.
+Altisource Portfolio Solutions S.A.
+Alto Ingredients, Inc.
+Altra Holdings, Inc.
+Alvotech
+ALX Oncology Holdings Inc.
+Alzamend Neuro, Inc.
+AMAG Pharmaceuticals, Inc.
+Amalgamated Bank
+Amarin Corporation plc
+Amazon.com Inc.
+Ambac Financial Group, Inc.
+Ambarella Inc
+Ambrx Biopharma Inc.
+AMC Networks
+Amedisys Inc.
+Amerant Bancorp Inc.
+AMERCO
+America's Car-Mart Inc.
+American Airlines Group
+American Battery Technology Company
+American Coastal Insurance
+American National Bankshares Inc.
+American National Insurance Co.
+American Outdoor Brands, Inc.
+American Public Education, Inc.
+American Resources Corporation
+American River Bankshares
+American Software Inc.
+American Superconductor Corporation
+American Virtual Cloud Technologies, Inc.
+American Woodmark Corp.
+Ameris Bancorp
+Amerisafe, Inc.
+Ames National Corporation
+Amesite Inc.
+Amgen Inc.
+Amicus Therapeutics, Inc.
+Amkor Technology Inc.
+AMMO, Inc.
+Amphastar Pharmaceuticals Inc
+Amplitude, Inc.
+Amtech Systems
+Amylyx Pharmaceuticals, Inc.
+Amyris
+AN2 Therapeutics, Inc.
+Analog Devices Inc.
+AnaptysBio, Inc.
+Anavex Life Sciences Corp.
+Anebulo Pharmaceuticals, Inc.
+Angi
+AngioDynamics Inc.
+ANI Pharmaceuticals Inc
+Anika Therapeutics Inc.
+Anixa Biosciences, Inc.
+Annexon Biosciences
+AnPac Bio-Medical Science Co., Ltd.
+ANSYS Inc.
+Antares Pharma Inc.
+Anterix Inc.
+APA Corporation
+Apellis Pharmaceuticals, Inc.
+Apex Global Brands Inc.
+Apogee Enterprises, Inc.
+Apogee Therapeutics
+Apollo Endosurgery, Inc.
+AppFolio, Inc.
+AppHarvest, Inc.
+Appian Corporation
+Apple Inc.
+Applied Digital Corporation
+Applied DNA Sciences
+Applied Genetic Technologies Corp
+Applied Materials Inc.
+Applied Molecular Transport Inc.
+Applied Optoelectronics Inc
+Applied Therapeutics, Inc.
+Applied UV, Inc.
+AppLovin Corporation
+Approach Resources, Inc.
+AppTech Payments Corp.
+Aprea Therapeutics, Inc.
+Apricus Biosciences Inc.
+Aptevo Therapeutics Inc.
+Aptinyx Inc.
+Aptorum Group Limited
+Apyx Medical Corporation
+Aqua Metals, Inc.
+AquaBounty Technologies, Inc.
+Aquestive Therapeutics, Inc.
+Aravive, Inc.
+Arbutus Biopharma Corporation
+Arc Group Worldwide
+Arcadia Biosciences
+ArcBest
+Arcellx, Inc.
+Arch Capital Group Limited
+Arcimoto, Inc.
+Arco Platform Limited
+Arcturus Therapeutics Holdings Inc.
+Arcutis Biotherapeutics, Inc.
+Ardelyx Inc
+Arena Pharmaceuticals, Inc.
+Ares Capital Corporation
+argenx
+Argo Group International Holdings Ltd.
+Arhaus, Inc.
+Aridis Pharmaceuticals Inc.
+Ark Restaurants Corp.
+Arko Corp.
+Arlington Asset Investment Corp.
+Arotech Corporation
+Arq Inc.
+Array Technologies, Inc.
+ARRIS Group, Inc.
+ArriVent BioPharma, Inc.
+Arrow Financial Corporation
+Arrowhead Pharmaceuticals, Inc.
+ARS Pharmaceuticals, Inc.
+Artelo Biosciences, Inc.
+Arteris, Inc.
+Artesian Resources Corporation
+Arvinas
+Ascena Retail Group, Inc.
+Ascendis Pharma A/S
+Ascent Industries Co.
+Ascent Solar Technologies, Inc.
+Asia Pacific Wire & Cable Corporation Limited
+ASLAN Pharmaceuticals Limited
+ASM International NV
+ASML International N.V.
+ASP Isotopes
+Aspen Group Inc.
+Aspen Technology, Inc.
+Aspira Women's Health Inc.
+Assembly Biosciences Inc
+Assertio Holdings, Inc.
+Asset Entities Inc.
+AST SpaceMobile, Inc.
+Asta Funding
+Astec Industries Inc.
+Astra Space, Inc.
+Astrana Health
+Astria Therapeutics Inc
+Astronics Corp.
+AstroNova, Inc.
+Asure Software
+ATA Creativity Global
+Atai Life Sciences N.V.
+Atara Biotherapeutics Inc
+Atea Pharmaceuticals, Inc.
+Aterian
+Athenex, Inc.
+Athersys, Inc.
+Athira Pharma, Inc.
+ATIF Holdings Limited
+Atlanta Braves Holdings, Inc.
+Atlantic American Corp.
+Atlantic Capital Bank
+Atlantic Tele-Network Inc.
+Atlantic Union Bankshares Corporation
+Atlantica Yield PLC
+Atlanticus Holdings Corporation
+Atlas Air Worldwide Holdings Inc.
+Atlas Financial Holdings Inc
+Atlas Lithium Corporation
+Atlas Technical Consultants, Inc.
+Atlassian Corp Plc
+Atomera Inc
+Atossa Therapeutics, Inc.
+Atreca, Inc.
+AtriCure, Inc.
+Atrion Corp.
+aTyr Pharma Inc
+Auburn National Bancorporation, Inc.
+Auddia Inc.
+AudioCodes Ltd.
+AudioEye, Inc.
+Augmedix, Inc.
+Aura Biosciences, Inc.
+Aurinia Pharmaceuticals Inc.
+Aurora Innovation
+Aurora Mobile Limited
+authID Inc.
+Autodesk, Inc.
+Autolus Therapeutics plc
+AutoWeb, Inc.
+Avadel Pharmaceuticals plc
+Avalo Therapeutics, Inc.
+Avalon GloboCare Corp.
+Avantax
+Aveanna Healthcare Holdings Inc.
+Avenue Therapeutics, Inc.
+AVEO Pharmaceuticals, Inc.
+AvePoint, Inc.
+Aviat Networks, Inc.
+Avid Bioservices, Inc.
+Avid Technology, Inc.
+Avidity Biosciences, Inc.
+Avinger
+Avis Budget Group, Inc
+Avita Medical Limited
+Aware, Inc.
+Axcelis Technologies Inc.
+Axcella Health Inc.
+AXOGEN, INC.
+Axon Enterprise, Inc.
+Axonics, Inc.
+Axsome Therapeutics Inc.
+Axt Inc
+Aytu BioPharma, Inc.
+Azenta, Inc.
+Azuria Water Solutions
+B Communications Ltd.
+B.O.S. Better Online Solutions
+Backblaze, Inc.
+Baidu, Inc.
+Balchem Corporation
+Ballard Power Systems
+Bancorp 34, Inc.
+Bancorp Inc
+Bandwidth
+Bank First National
+Bank of Commerce Holdings
+Bank of Marin Bancorp
+Bank of the James Financial Group, Inc.
+Bank OZK
+Bank7 Corp.
+BankFinancial Corporation
+Bankwell Financial Group, Inc.
+Banner Corporation
+Baozun
+Barfresh Food Group, Inc.
+Barinthus Biotherapeutics
+Barrett Business Services Inc.
+Bassett Furniture Industries Inc.
+Baudax Bio, Inc.
+BayCom Corp
+BayFirst Financial Corp.
+BBQ Holdings, Inc.
+BCB Bancorp Inc.
+Beacon Roofing Supply Inc.
+Beam Therapeutics Inc.
+Beasley Broadcast Group, Inc.
+Bed Bath & Beyond Inc.
+BeiGene, Ltd.
+Bel Fuse Inc.
+Bellerophon Therapeutics
+Bellicum Pharmaceuticals Inc
+Benefitfocus Inc
+Benitec Biopharma Inc.
+Bentley Systems, Incorporated
+Berkshire Grey, Inc.
+Berkshire Hills Bancorp, Inc.
+Berry Corporation (bry)
+Better Therapeutics, Inc.
+Beyond Air, Inc.
+Beyond Meat, Inc.
+BeyondSpring, Inc.
+BGC Partners, Inc.
+Bicycle Therapeutics plc
+Big 5 Sporting Goods Corporation
+Big Rock Partners Acquisition Corp.
+BigCommerce Holdings, Inc.
+Bilibili
+BIO-key International, Inc.
+Bio-Path Holdings, Inc.
+Bio-Techne
+bioAffinity Technologies, Inc.
+Bioatla
+BioCardia, Inc.
+Biocept
+Bioceres Crop Solutions
+BioCryst Pharmaceuticals Inc.
+BioDelivery Sciences International Inc
+Biodesix, Inc.
+Biodexa Pharmaceuticals PLC
+Biofrontera AG
+Biogen Idec
+Biolase, Inc.
+BioLife Solutions
+BioLineRx Ltd.
+BioMarin Pharmaceutical Inc.
+Biomea Fusion
+Biomerica, Inc.
+Bionano Genomics, Inc.
+BioNTech SE
+Biora Therapeutics, Inc.
+BioRestorative Therapies, Inc.
+BioSig Technologies, Inc.
+BioSpecifics Technologies Corp.
+Biote
+BioTelemetry, Inc.
+Bioventus
+BioVie Inc.
+BioXcel Therapeutics, Inc.
+Bitdeer Technologies Group
+BJ's Restaurants Inc.
+Black Box Corp.
+Black Diamond Therapeutics, Inc.
+Blackbaud Inc.
+BlackLine
+BlackRock Capital Investment Corporation
+BlackRock TCP Capital Corp.
+Blade Air Mobility, Inc.
+Blink Charging Co.
+Bloomin' Brands Inc
+Blue Bird Corp
+Blue Dolphin Energy Co.
+Blue Foundry Bancorp
+Blue Hat Interactive Entertainment Technology
+bluebird bio, Inc.
+Blueknight Energy Parnters, L.P.
+Blueprint Medicines Corp
+Bogota Financial Corp.
+Boingo Wireless Inc
+BOK Financial Corporation
+Bolt Biotherapeutics, Inc.
+Booking Holdings
+BOQI International Medical Inc.
+Boston Omaha Corporation
+Bottomline Technologies Inc.
+Bowman Consulting Group
+Boxlight Corporation
+Brainstorm Cell Therapeutics
+Brainsway Ltd.
+Braze
+BriaCell Therapeutics Corp.
+Bridge Bancorp Inc.
+BridgeBio Pharma, Inc.
+Bridgeline Digital, Inc
+Bridger Aerospace Group Holdings, Inc.
+Bridgewater Bank
+Bridgford Foods
+Bright Green Corporation
+Brightcove Inc
+Brighthouse Financial, Inc.
+BrightSpring Health Services, Inc.
+Brilliant Earth Group, Inc.
+Broadcom Inc.
+BroadVision
+Broadway Financial Corporation
+Broadwind, Inc.
+Brooge Energy Limited
+Brookline Bancorp Inc.
+BRP Inc
+Bruker Corporation
+Bryn Mawr Bank Corp.
+BSQUARE Corporation
+Builders FirstSource Inc.
+Building Materials Holding Corporation
+Bumble Inc.
+BurgerFi International, Inc.
+Burke & Herbert Bank
+Business First Bancshares, Inc.
+BuzzFeed, Inc.
+BV Financial Inc.
+Byrna Technologies Inc.
+C.H. Robinson Worldwide Inc.
+C&F Financial Corporation
+C4 Therapeutics, Inc.
+Cabaletta Bio, Inc.
+Cabot Microelectronics Corporation
+Cadence Design Systems, Inc.
+Cadiz Inc.
+Cadrenal Therapeutics, Inc.
+Caesars Entertainment Corporation
+Caesarstone Ltd.
+CalAmp Corp.
+Calavo Growers Inc.
+CalciMedica, Inc.
+California BanCorp
+California First National Bancorp
+Calithera Biosciences Inc
+Calumet, Inc.
+Cambium Networks Corporation
+Cambridge Bancorp
+Camden National Corporation
+Canaan Inc.
+Canadian Solar Inc.
+Candel Therapeutics
+Canoo Inc.
+Cantaloupe, Inc.
+Canterbury Park Holding Corporation
+Capital Bancorp, Inc.
+Capital City Bank Group Inc.
+Capital Clean Energy Carriers Corp
+Capital Southwest Corporation
+Capitol Federal Financial, Inc.
+Capricor Therapeutics, Inc.
+CapStar Financial Holdings, Inc.
+Capstone Green Energy Corporation
+Cara Therapeutics Inc
+Carbonite Inc
+Cardiff Oncology, Inc.
+Cardio Diagnostics Holdings, Inc.
+Cardiovascular Systems Inc
+Cardlytics, Inc.
+Cardtronics Inc.
+CareCloud Inc.
+CareDx, Inc.
+CareMax, Inc.
+Caretrust REIT Inc
+CARGO Therapeutics, Inc.
+CarGurus
+Caribou Biosciences, Inc.
+Carlyle Secured Lending, Inc.
+CarParts.com, Inc.
+Carrols Restaurant Group Inc.
+Carter Bankshares, Inc.
+Cartesian Therapeutics, Inc.
+Carver Bancorp, Inc.
+Casa Systems, Inc.
+Casella Waste Systems Inc.
+Casey's General Stores Inc.
+CASI Pharmaceuticals Inc
+Cass Information Services Inc.
+Cassava Sciences, Inc.
+Castle Biosciences Inc.
+Castlight Health Inc
+Castor Maritime Inc.
+Catabasis Pharmaceuticals, Inc.
+Catalyst Bancorp, Inc.
+Catalyst Pharmaceutical Partners Inc.
+Cathay General Bancorp
+Cavco Industries Inc.
+CB Financial Services, Inc
+CBAK Energy Technology, Inc.
+Cboe Global Markets, Inc.
+CCC Intelligent Solutions Holdings Inc.
+CDK Global Inc
+CDW Corp
+CEA Industries Inc.
+CECO Environmental Corp.
+Cedar Realty Trust, Inc.
+Celcuity Inc.
+Celldex Therapeutics Inc.
+Cellect Biotechnology Ltd.
+Cellectar Biosciences, Inc.
+Cellectis S.A.
+Cellular Biomedicine Group Inc
+Celsius Holdings, Inc.
+Celyad SA
+Cemtrex
+Cenntro Electric Group Limited
+CenterState Banks, Inc.
+Centessa Pharmaceuticals plc
+Centogene N.V.
+Central European Media Enterprises Ltd.
+Central Garden & Pet Company
+Central Valley Community Bancorp
+Centric Brands Inc.
+Century Aluminum Company
+Century Bancorp Inc.
+Century Casinos Inc.
+Century Therapeutics, Inc.
+Cepton, Inc.
+Ceragon Networks Ltd.
+Cerence Inc.
+Cerevel Therapeutics Holdings, Inc.
+Cerner Corporation
+Certara, Inc.
+Cerus Corporation
+CervoMed Inc
+CEVA Inc.
+CF Bankshares Inc.
+CG Oncology, Inc.
+Champions Oncology, Inc.
+Change Healthcare Inc.
+Changyou.com
+Charge Enterprises, Inc.
+Charles & Colvard Ltd.
+Chart Industries Inc.
+Check Point Software Technologies Ltd.
+Checkpoint Therapeutics, Inc.
+Chefs' Warehouse
+Chembio Diagnostics, Inc.
+ChemoCentryx Inc
+Chemomab Therapeutics Ltd.
+Chemung Financial Corporation
+Chiasma, Inc.
+Chicago Atlantic BDC, Inc.
+Chicago Atlantic Real Estate Finance, Inc.
+Chicken Soup for the Soul Entertainment, Inc.
+Chimerix Inc
+China Automotive Systems, Inc.
+China Biologic Products, Inc.
+China Customer Relations Centers, Inc.
+China Finance Online Co. Limited
+China Index Holdings Limited
+China Jo-Jo Drugstores, Inc.
+China Natural Resources, Inc.
+China Recycling Energy Corporation
+China XD Plastics Company Limited
+ChinaNet Online Holdings, Inc.
+Chinook Therapeutics, Inc.
+ChipMOS TECHNOLOGIES INC.
+Chord Energy Corporation
+CHS Inc.
+Churchill Downs, Inc.
+Chuy's Holdings Inc
+Cibus, Inc.
+Cidara Therapeutics Inc
+CIIG Merger Corp.
+Cimpress plc
+Cincinnati Bancorp, Inc.
+Cincinnati Financial Corp.
+Cineverse
+Cingulate Inc.
+Cintas Corporation
+Cipher Mining Inc.
+Cirrus Logic Inc.
+Cisco Systems Inc.
+CISO Global, Inc.
+Citi Trends, Inc.
+Citius Pharmaceuticals, Inc.
+Citizens & Northern Corporation
+Citizens Community Bancorp
+Citizens Holding Company
+Citrix Systems Inc.
+City Holding Co.
+Civista Bancshares Inc
+Clarus Corporation
+Clean Energy Fuels Corp.
+CleanSpark, Inc.
+Clearfield Inc
+ClearOne
+ClearPoint Neuro Inc.
+Clearside Biomedical, Inc.
+ClearSign Technologies Corporation
+Clene Nanomedicine, Inc.
+Cleveland Biolabs, Inc.
+Clever Leaves Holdings Inc.
+Climb Bio
+Climb Global Solutions
+Clover Health Investments, Corp.
+Clovis Oncology Inc
+CLPS Incorporation
+CME Group Inc.
+CNB Financial Corporation
+CNS Pharmaceuticals, Inc.
+Co-Diagnostics, Inc.
+Coastal Financial Corporation
+Coca-Cola Bottling Co. Consolidated
+Cocrystal Pharma, Inc.
+Coda Octopus Group, Inc.
+Codexis, Inc.
+Codorus Valley Bancorp
+Coeptis Therapeutics Holdings, Inc.
+Coffee Holding Co. Inc.
+Cogent Biosciences, Inc.
+Cogent Communications Group Inc.
+Cognex Corporation
+Cognition Therapeutics, Inc.
+Cognizant Technology Solutions Corp.
+CohBar, Inc.
+Coherent, Inc.
+Coherus Biosciences Inc
+Cohu Inc.
+Coinbase Global, Inc.
+Collectors Universe Inc.
+Collegium Pharmaceutical Inc
+CollPlant Biotechnologies Ltd.
+Colony Bankcorp Inc.
+Columbia Bank
+Columbia Banking System Inc.
+Columbia Sportswear Company
+Columbus McKinnon Corp.
+Comcast Corp.
+Comera Life Sciences Holdings, Inc.
+Commerce Bancshares Inc
+Commercial Vehicle Group Inc.
+Commscope Holdings
+Community Bankers Trust
+Community First Bancshares, Inc.
+Community Trust Bancorp Inc.
+Community West Bancshares
+CommVault Systems, Inc.
+Compass Diversified Holdings
+COMPASS Pathways plc
+Compass Therapeutics, Inc.
+CompoSecure, Inc.
+Compugen Ltd.
+Computer Task Group Inc.
+comScore, Inc.
+COMSovereign Holding Corp.
+Comstock Holding Companies, Inc.
+Comtech Telecommunications Corp.
+Concentrix Corporation
+Concert Pharmaceuticals Inc
+Concrete Pumping Holdings, Inc.
+Condor Hospitality Trust, Inc.
+Conduit Pharmaceuticals, Inc.
+Confluent, Inc.
+ConforMIS, Inc.
+Conifer Holdings, Inc.
+CONMED Corp.
+CONN'S, Inc.
+Consensus Cloud Solutions, Inc.
+Consolidated Communications Holdings, Inc.
+Consolidated Water Co. Ltd.
+Constellation Energy Corporation
+Constellation Pharmaceuticals, Inc.
+Construction Partners
+Consumer Portfolio Services, Inc.
+Context Therapeutics Inc.
+ContextLogic Inc.
+Contrafect Corp
+Control4 Corp
+Copart
+Corbus Pharmaceuticals Holdings
+Corcept Therapeutics
+Core Scientific, Inc.
+Core-Mark Holding Company, Inc.
+Cornerstone OnDemand, Inc.
