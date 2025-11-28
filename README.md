@@ -7,6 +7,12 @@ A collection of tools for downloading and managing SEC financial reports.
 
 - https://www.annualreports.com/Company/palantir-technologies-inc
 
+
+- Nasdaq
+	- https://www.annualreports.com/Companies?exch=2
+- NYSE
+	- https://www.annualreports.com/Companies?exch=1
+
 ## Directory Structure
 
 ```
@@ -35,9 +41,11 @@ pip install requests
 # Download 5 most recent 10-K reports for Apple
 python script/download_10k.py AAPL
 
+# V1
 python script/download_10k_pdf.py meta-platforms-inc
 
-
+# V2
+uv run script/download_10k_pdf.py meta-platforms-inc
 
 
 

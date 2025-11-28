@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/jerryliu/finance_data/script/download_10k_pdf.py", line 26, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+✗ Failed: NVDA
+
+Waiting 3 seconds before next company...
+Traceback (most recent call last):
+  File "/Users/jerryliu/finance_data/script/download_10k_pdf.py", line 26, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+✗ Failed: AAPL
+
+Waiting 3 seconds before next company...
+Traceback (most recent call last):
+  File "/Users/jerryliu/finance_data/script/download_10k_pdf.py", line 26, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+✗ Failed: MSFT
+
+Waiting 3 seconds before next company...
