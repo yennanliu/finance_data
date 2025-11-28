@@ -1,0 +1,26 @@
+Rank,Symbol,Company Name,Approximate Weight (%)
+1,NVDA,NVIDIA Corporation,7.14%
+2,AAPL,Apple Inc.,6.13%
+3,MSFT,Microsoft Corporation,5.88%
+4,AMZN,"Amazon.com, Inc.",3.58%
+5,AVGO,Broadcom Inc.,2.66%
+6,GOOGL,Alphabet Inc. Class A,2.50%
+7,META,"Meta Platforms, Inc.",2.15%
+8,GOOG,Alphabet Inc. Class C,1.99%
+9,TSLA,"Tesla, Inc.",1.91%
+10,BRK.B,Berkshire Hathaway Inc. Class B,1.31%
+11,JPM,JPMorgan Chase & Co.,1.26%
+12,LLY,Eli Lilly and Company,1.12%
+13,V,Visa Inc.,0.87%
+14,XOM,Exxon Mobil Corporation,0.74%
+15,NFLX,"Netflix, Inc.",0.73%
+16,JNJ,Johnson & Johnson,0.69%
+17,MA,Mastercard Incorporated,0.68%
+18,WMT,Walmart Inc.,0.68%
+19,ORCL,Oracle Corporation,0.68%
+20,PLTR,Palantir Technologies Inc.,0.66%
+21,AMD,"Advanced Micro Devices, Inc.",0.63%
+22,COST,Costco Wholesale Corporation,0.62%
+23,ABBV,AbbVie Inc.,0.59%
+24,HD,"The Home Depot, Inc.",0.58%
+25,PG,The Procter & Gamble Company,0.54%
