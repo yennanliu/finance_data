@@ -35,6 +35,13 @@ pip install requests
 # Download 5 most recent 10-K reports for Apple
 python script/download_10k.py AAPL
 
+python script/download_10k_pdf.py meta-platforms-inc
+
+
+
+
+
+
 # Download 10 most recent reports
 python script/download_10k.py AAPL -n 10
 
