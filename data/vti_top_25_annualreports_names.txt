@@ -1,0 +1,49 @@
+VTI Top 25 Companies - AnnualReports.com Company Names
+=======================================================
+
+Based on search of https://www.annualreports.com/
+
+Rank | Symbol | Original Name                      | AnnualReports.com Name           | URL Pattern                                  | Status
+-----|--------|-----------------------------------|----------------------------------|----------------------------------------------|--------
+1    | NVDA   | NVIDIA Corporation                | NVIDIA Corporation               | /Company/nvidia-corporation                  | FOUND
+2    | AAPL   | Apple Inc.                        | Apple Inc.                       | /Company/apple-inc                           | FOUND
+3    | MSFT   | Microsoft Corporation             | Microsoft Corporation            | /Company/microsoft-corporation               | FOUND
+4    | AMZN   | Amazon.com, Inc.                  | Amazon.com Inc.                  | /Company/amazoncom-inc                       | FOUND
+5    | AVGO   | Broadcom Inc.                     | Broadcom Inc.                    | /Company/broadcom-inc                        | FOUND
+6    | GOOGL  | Alphabet Inc. Class A             | Google Inc.                      | /Company/google-inc (likely)                 | PARTIAL
+7    | META   | Meta Platforms, Inc.              | Meta Platforms, Inc.             | /Company/meta-platforms-inc                  | FOUND
+8    | GOOG   | Alphabet Inc. Class C             | Google Inc.                      | /Company/google-inc (likely)                 | PARTIAL
+9    | TSLA   | Tesla, Inc.                       | Tesla, Inc.                      | /Company/tesla-inc                           | FOUND
+10   | BRK.B  | Berkshire Hathaway Inc. Class B   | Berkshire Hathaway               | /Company/berkshire-hathaway                  | FOUND
+11   | JPM    | JPMorgan Chase & Co.              | JPMorgan Chase & Co              | /Company/jpmorgan-chase-co                   | FOUND
+12   | LLY    | Eli Lilly and Company             | Eli Lilly & Co.                  | /Company/eli-lilly-co                        | FOUND
+13   | V      | Visa Inc.                         | Visa, Inc                        | /Company/visa-inc                            | FOUND
+14   | XOM    | Exxon Mobil Corporation           | Exxon Mobil Corporation          | /Company/exxon-mobil-corporation             | FOUND
+15   | NFLX   | Netflix, Inc.                     | Netflix, Inc.                    | PDF found: NASDAQ_NFLX_2023.pdf              | PARTIAL
+16   | JNJ    | Johnson & Johnson                 | Johnson & Johnson                | /Company/johnson-johnson                     | FOUND
+17   | MA     | Mastercard Incorporated           | Mastercard Incorporated          | /Company/mastercard-incorporated             | FOUND
+18   | WMT    | Walmart Inc.                      | Walmart Inc                      | /Company/walmart-inc                         | FOUND
+19   | ORCL   | Oracle Corporation                | Oracle Corporation               | /Company/oracle-corporation                  | FOUND
+20   | PLTR   | Palantir Technologies Inc.        | Palantir Technologies Inc.       | /Company/palantir-technologies-inc           | FOUND
+21   | AMD    | Advanced Micro Devices, Inc.      | Advanced Micro Devices, Inc.     | /Company/advanced-micro-devices-inc          | FOUND
+22   | COST   | Costco Wholesale Corporation      | Costco Wholesale Corporation     | /Company/costco-wholesale-corporation        | FOUND
+23   | ABBV   | AbbVie Inc.                       | Abbvie Inc                       | /Company/abbvie-inc                          | FOUND
+24   | HD     | The Home Depot, Inc.              | The Home Depot, Inc.             | /Company/the-home-depot-inc                  | FOUND
+25   | PG     | The Procter & Gamble Company      | Procter & Gamble Co.             | /Company/procter-gamble-co                   | FOUND
+
+NOTES:
+======
+- GOOGL/GOOG: Both tickers represent Alphabet Inc., but the website appears to use the legacy name "Google Inc." for the company page
+- NFLX: Company page URL not definitively found, but annual report PDFs are hosted on the site (e.g., NASDAQ_NFLX_2023.pdf)
+- Most companies match closely, with minor differences in punctuation (e.g., "Inc." vs "Inc", "&" vs "and")
+- Some companies drop "The" prefix or modify punctuation in their URL slugs
+
+KEY DIFFERENCES FROM ORIGINAL NAMES:
+====================================
+META: "Meta Platforms, Inc." → "Meta Platforms, Inc." (no change)
+AMZN: "Amazon.com, Inc." → "Amazon.com Inc." (comma removed before Inc)
+LLY: "Eli Lilly and Company" → "Eli Lilly & Co." (and → &, Company → Co.)
+V: "Visa Inc." → "Visa, Inc" (comma added)
+ABBV: "AbbVie Inc." → "Abbvie Inc" (capital V → lowercase v)
+PG: "The Procter & Gamble Company" → "Procter & Gamble Co." ("The" dropped, Company → Co.)
+GOOGL/GOOG: "Alphabet Inc." → "Google Inc." (parent company name vs subsidiary/legacy name)
