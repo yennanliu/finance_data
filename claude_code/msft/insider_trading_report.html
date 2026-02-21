@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微軟 (MSFT) 內部人交易分析報告 — 2025-2026</title>
+  <style>
+    :root {
+      --primary: #0078d4;
+      --primary-dark: #005a9e;
+      --accent: #50e6ff;
+      --bg: #0f1923;
+      --bg-card: #1a2535;
+      --bg-card2: #1e2d42;
+      --text: #e8edf3;
+      --text-muted: #8fa3b8;
+      --border: #2a3f5a;
+      --bullish: #00c896;
+      --bearish: #ff4757;
+      --neutral: #ffa502;
+      --warning: #ff6b35;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'Microsoft JhengHei', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0078d4 0%, #005a9e 50%, #0f1923 100%);
+      padding: 60px 40px 50px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+    }
+    .hero .ticker { font-size: 14px; color: var(--accent); letter-spacing: 3px; font-weight: 600; text-transform: uppercase; }
+    .hero h1 { font-size: 2.8rem; font-weight: 700; margin: 10px 0; }
+    .hero .subtitle { font-size: 1.1rem; color: #b0c8e0; margin-top: 8px; }
+    .hero .meta { margin-top: 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+    .hero .meta-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 20px; }
+    .hero .meta-item span { display: block; font-size: 11px; color: var(--accent); letter-spacing: 1px; }
+    .hero .meta-item strong { font-size: 16px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+    /* Sentiment Badge */
+    .sentiment-banner {
+      display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .sentiment-card {
+      flex: 1; min-width: 200px; border-radius: 12px; padding: 24px;
+      text-align: center; border: 1px solid var(--border);
+    }
+    .sentiment-card.bearish { background: rgba(255,71,87,0.1); border-color: var(--bearish); }
+    .sentiment-card.bullish { background: rgba(0,200,150,0.1); border-color: var(--bullish); }
+    .sentiment-card.neutral { background: rgba(255,165,2,0.1); border-color: var(--neutral); }
+    .sentiment-card .label { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+    .sentiment-card .value { font-size: 2rem; font-weight: 700; margin: 8px 0; }
+    .sentiment-card.bearish .value { color: var(--bearish); }
+    .sentiment-card.bullish .value { color: var(--bullish); }
+    .sentiment-card.neutral .value { color: var(--neutral); }
+    .sentiment-card .desc { font-size: 13px; color: var(--text-muted); }
+
+    /* Sections */
+    .section { margin-bottom: 50px; }
+    .section-title {
+      font-size: 1.5rem; font-weight: 700; color: var(--accent);
+      border-left: 4px solid var(--primary); padding-left: 16px;
+      margin-bottom: 24px;
+    }
+    .section-num { color: var(--text-muted); font-size: 0.9rem; margin-right: 8px; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead tr { background: var(--bg-card2); }
+    th { padding: 12px 14px; text-align: left; color: var(--text-muted); font-weight: 600; font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(0,120,212,0.08); }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+    }
+    .badge-buy { background: rgba(0,200,150,0.2); color: var(--bullish); }
+    .badge-sell { background: rgba(255,71,87,0.2); color: var(--bearish); }
+    .badge-award { background: rgba(255,165,2,0.15); color: var(--neutral); }
+    .badge-plan { background: rgba(80,230,255,0.15); color: var(--accent); }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Progress bar */
+    .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .progress-label { width: 120px; font-size: 13px; color: var(--text-muted); flex-shrink: 0; }
+    .progress-bar { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; }
+    .progress-value { width: 80px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+    .timeline-item { position: relative; margin-bottom: 24px; }
+    .timeline-dot {
+      position: absolute; left: -24px; top: 4px;
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .timeline-dot.sell { background: var(--bearish); }
+    .timeline-dot.buy { background: var(--bullish); }
+    .timeline-dot.award { background: var(--neutral); }
+    .timeline-date { font-size: 12px; color: var(--text-muted); }
+    .timeline-title { font-weight: 600; margin: 4px 0; }
+    .timeline-detail { font-size: 13px; color: var(--text-muted); }
+
+    /* Signal gauge */
+    .gauge-wrap { text-align: center; padding: 20px 0; }
+    .gauge-bar {
+      width: 100%; height: 20px; border-radius: 10px;
+      background: linear-gradient(to right, var(--bullish) 0%, #a0e070 25%, var(--neutral) 50%, #ff8c42 75%, var(--bearish) 100%);
+      position: relative; margin: 16px 0;
+    }
+    .gauge-pointer {
+      position: absolute; top: -8px; width: 4px; height: 36px;
+      background: white; border-radius: 2px;
+      transform: translateX(-50%);
+      box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+    .gauge-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+
+    /* Flags */
+    .flag-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+    .flag-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .flag-text strong { display: block; margin-bottom: 3px; }
+    .flag-text p { font-size: 13px; color: var(--text-muted); }
+
+    /* Two-column */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Ownership table */
+    .own-quarter { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .own-q { background: var(--bg-card2); border-radius: 8px; padding: 14px; text-align: center; }
+    .own-q .q-label { font-size: 12px; color: var(--text-muted); }
+    .own-q .q-value { font-size: 1.3rem; font-weight: 700; margin: 6px 0; }
+    .own-q .q-change { font-size: 12px; }
+    .up { color: var(--bullish); }
+    .down { color: var(--bearish); }
+    .flat { color: var(--neutral); }
+
+    /* Peer */
+    .peer-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .peer-name { width: 80px; font-weight: 600; }
+    .peer-bar-wrap { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+    .peer-bar { height: 100%; border-radius: 5px; }
+    .peer-score { width: 60px; font-size: 13px; font-weight: 600; text-align: right; }
+
+    /* Footer */
+    footer {
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 30px 40px; text-align: center;
+      color: var(--text-muted); font-size: 13px; margin-top: 60px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* Print */
+    @media print {
+      body { background: white; color: black; }
+      .hero { background: #0078d4; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="ticker">NASDAQ: MSFT</div>
+  <h1>微軟公司 (Microsoft)<br>內部人交易分析報告</h1>
+  <div class="subtitle">SEC Form 4 申報資料分析 | 2025 年 8 月 — 2026 年 2 月</div>
+  <div class="meta">
+    <div class="meta-item"><span>分析日期</span><strong>2026 年 2 月 22 日</strong></div>
+    <div class="meta-item"><span>當前股價</span><strong>$397.23</strong></div>
+    <div class="meta-item"><span>52 週高點</span><strong>$555.45</strong></div>
+    <div class="meta-item"><span>52 週低點</span><strong>$344.79</strong></div>
+    <div class="meta-item"><span>整體情緒</span><strong style="color:#ff8c42;">偏空中性</strong></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ─── SECTION 1: EXECUTIVE SUMMARY ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">01</span>執行摘要</div>
+    <div class="sentiment-banner">
+      <div class="sentiment-card bearish">
+        <div class="label">整體內部人情緒</div>
+        <div class="value">偏空</div>
+        <div class="desc">過去 18 個月淨賣出 57.5 萬股</div>
+      </div>
+      <div class="sentiment-card neutral">
+        <div class="label">信心水準</div>
+        <div class="value">中等</div>
+        <div class="desc">多數賣出為 10b5-1 計畫執行</div>
+      </div>
+      <div class="sentiment-card bullish">
+        <div class="label">值得關注訊號</div>
+        <div class="value">1 筆</div>
+        <div class="desc">董事 Stanton 公開市場買入 $199 萬</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">五大核心發現</div>
+      <ol style="padding-left: 20px; line-height: 2.2;">
+        <li><strong>CEO 薩提亞・納德拉（Satya Nadella）</strong>於 2025 年 9 月依照 10b5-1 計畫賣出 149,205 股，套現約 <strong>$7,530 萬</strong>，持股降至 790,852 股。</li>
+        <li><strong>副董事長 Bradford Smith</strong> 於 2025 年 11 月賣出約 38,500 股，合計套現約 <strong>$2,000 萬</strong>。</li>
+        <li><strong>董事 John W. Stanton</strong> 於 2026 年 2 月 18 日以 $397.35 <strong>公開市場買入 5,000 股</strong>（$199 萬），為過去 6 個月最顯著的主動買入訊號。</li>
+        <li>過去 18 個月累計賣出 <strong>579,569 股</strong>，主動買入僅 <strong>3,842 股</strong>，淨情緒評分約 <strong>-0.99</strong>（強烈偏空區間）。</li>
+        <li>然而，絕大多數賣出交易均為 <strong>10b5-1 預先計畫</strong>執行，屬常規操作，訊號意義相對受限。</li>
+      </ol>
+    </div>
+
+    <!-- Net Sentiment Gauge -->
+    <div class="card">
+      <div class="card-title">內部人情緒儀表</div>
+      <div class="gauge-wrap">
+        <div style="font-size: 13px; color: var(--text-muted);">情緒計算：(買入金額 - 賣出金額) / (買入金額 + 賣出金額)</div>
+        <div class="gauge-bar">
+          <!-- pointer at ~2% from right (bearish) -->
+          <div class="gauge-pointer" style="left: 3%;"></div>
+        </div>
+        <div class="gauge-labels">
+          <span style="color: var(--bullish);">強烈看多 +1.0</span>
+          <span>看多 +0.5</span>
+          <span>中性 0</span>
+          <span>看空 -0.5</span>
+          <span style="color: var(--bearish);">強烈看空 -1.0</span>
+        </div>
+        <div style="margin-top: 16px; font-size: 1.6rem; font-weight: 700; color: var(--bearish);">
+          情緒評分：−0.95（強烈偏空）
+        </div>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">
+          ⚠ 注意：多數賣出為 10b5-1 計畫，已提前鎖定，訊號解讀需保守
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 2: TRANSACTION SUMMARY ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">02</span>交易總覽（過去 18 個月）</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-label">總交易筆數</div>
+        <div class="stat-value">~35+</div>
+        <div class="stat-sub">Form 4 申報</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">主動買入</div>
+        <div class="stat-value" style="color: var(--bullish);">3,842 股</div>
+        <div class="stat-sub">含股票獎勵授予</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">主動賣出</div>
+        <div class="stat-value" style="color: var(--bearish);">579,569 股</div>
+        <div class="stat-sub">多為 10b5-1 計畫</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">淨股數變化</div>
+        <div class="stat-value" style="color: var(--bearish);">−575,727</div>
+        <div class="stat-sub">內部人淨減持</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">賣出總金額（估計）</div>
+        <div class="stat-value" style="color: var(--bearish);">~$2.7 億</div>
+        <div class="stat-sub">主要為 CEO 及 Smith</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">公開市場買入金額</div>
+        <div class="stat-value" style="color: var(--bullish);">$1.99 百萬</div>
+        <div class="stat-sub">Stanton 2026/02/18</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">近 3 個月賣出</div>
+        <div class="stat-value" style="color: var(--bearish);">54,100 股</div>
+        <div class="stat-sub">無公開市場主動買入</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">總內部人持股比例</div>
+        <div class="stat-value">~0.06%</div>
+        <div class="stat-sub">≈ $14 億市值</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 3: SIGNIFICANT TRANSACTIONS ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">03</span>重大交易明細</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>內部人</th>
+            <th>職稱</th>
+            <th>交易類型</th>
+            <th>股數</th>
+            <th>股價</th>
+            <th>交易金額</th>
+            <th>交易後持股</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026/02/18</td>
+            <td><strong>John W. Stanton</strong></td>
+            <td>董事</td>
+            <td><span class="badge badge-buy">公開買入</span></td>
+            <td>5,000</td>
+            <td>$397.35</td>
+            <td style="color: var(--bullish); font-weight: 700;">+$1,986,750</td>
+            <td>83,905 (直接)</td>
+            <td>重要看多訊號，接近 52W 低點買入</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>John W. Stanton</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">股票授予</span></td>
+            <td>145</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>78,905</td>
+            <td>年度董事薪酬</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>John D. Rainey</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">RSU 授予</span></td>
+            <td>145.251</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>—</td>
+            <td>限制性股票單位，年度薪酬</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>Charles W. Scharf</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">股票授予</span></td>
+            <td>145</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>44,892 (直接)</td>
+            <td>年度董事薪酬</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>Mark Mason</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">股票授予</span></td>
+            <td>145</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>1,675</td>
+            <td>年度董事薪酬</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>Teri List</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">股票授予</span></td>
+            <td>145</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>—</td>
+            <td>年度董事薪酬</td>
+          </tr>
+          <tr>
+            <td>2026/01/30</td>
+            <td>Catherine MacGregor</td>
+            <td>董事</td>
+            <td><span class="badge badge-award">RSU 授予</span></td>
+            <td>238.211</td>
+            <td>$0</td>
+            <td>$0（薪酬）</td>
+            <td>1,924.21 RSU</td>
+            <td>離任後一年交割</td>
+          </tr>
+          <tr>
+            <td>2026/02</td>
+            <td>Amy Coleman</td>
+            <td>EVP 人力資源</td>
+            <td><span class="badge badge-sell">出售</span></td>
+            <td>85</td>
+            <td>$401.32</td>
+            <td style="color: var(--bearish);">−$34,112</td>
+            <td>49,246</td>
+            <td>小額稅務相關處置</td>
+          </tr>
+          <tr>
+            <td>2025/11/03</td>
+            <td><strong>Bradford L. Smith</strong></td>
+            <td>副董事長暨總裁</td>
+            <td><span class="badge badge-sell">公開賣出</span></td>
+            <td>30,411</td>
+            <td>$518.49</td>
+            <td style="color: var(--bearish); font-weight: 700;">−$15,767,000</td>
+            <td>461,596</td>
+            <td>高點附近賣出，需注意</td>
+          </tr>
+          <tr>
+            <td>2025/11/03</td>
+            <td><strong>Bradford L. Smith</strong></td>
+            <td>副董事長暨總裁</td>
+            <td><span class="badge badge-sell">公開賣出</span></td>
+            <td>8,089</td>
+            <td>$519.21</td>
+            <td style="color: var(--bearish); font-weight: 700;">−$4,200,000</td>
+            <td>461,596</td>
+            <td>同日兩批賣出</td>
+          </tr>
+          <tr>
+            <td>2025/09/03</td>
+            <td><strong>Satya Nadella</strong></td>
+            <td>執行長 (CEO)</td>
+            <td><span class="badge badge-sell">公開賣出</span></td>
+            <td>149,205</td>
+            <td>~$504</td>
+            <td style="color: var(--bearish); font-weight: 700;">−$75,300,000</td>
+            <td>790,852</td>
+            <td><span class="badge badge-plan">10b5-1 計畫</span> 2025/03/07 採用</td>
+          </tr>
+          <tr>
+            <td>2025</td>
+            <td>Takeshi Numoto</td>
+            <td>EVP 行銷長</td>
+            <td><span class="badge badge-sell">淨賣出</span></td>
+            <td>23,200</td>
+            <td>~$440–520</td>
+            <td style="color: var(--bearish);">~−$10,800,000</td>
+            <td>—</td>
+            <td>分批賣出，估計值</td>
+          </tr>
+          <tr>
+            <td>2025</td>
+            <td>Judson Althoff</td>
+            <td>EVP 商業長</td>
+            <td><span class="badge badge-sell">淨賣出</span></td>
+            <td>53,750</td>
+            <td>~$430–520</td>
+            <td style="color: var(--bearish);">~−$24,000,000</td>
+            <td>—</td>
+            <td>分批賣出，估計值</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 4: INSIDER CATEGORIES ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">04</span>內部人類別分析</div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">執行長官層（CEO/CFO/COO）</div>
+        <p style="margin-bottom: 12px; color: var(--text-muted);">訊號強度：<strong style="color: var(--bearish);">高（偏空）</strong></p>
+        <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px;">
+          <li>CEO Satya Nadella 於 2025 年 9 月賣出 149,205 股（$7,530 萬），屬 10b5-1 計畫執行</li>
+          <li>Nadella 過去 5 年共執行 10 次交易，<strong>全部為賣出</strong></li>
+          <li>執行長官過去 18 個月無任何公開市場主動買入</li>
+          <li>10b5-1 計畫降低了這些交易的即時看空訊號強度</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">董事會成員</div>
+        <p style="margin-bottom: 12px; color: var(--text-muted);">訊號強度：<strong style="color: var(--bullish);">中等（看多）</strong></p>
+        <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px;">
+          <li><strong>關鍵看多訊號</strong>：John W. Stanton 於 2026/02/18 以 $397.35 公開市場買入 5,000 股（$199 萬）</li>
+          <li>買入時點正接近 52 週低點 $344.79 區間反彈後，顯示對估值的信心</li>
+          <li>多位董事於 1 月 30 日接受年度股票薪酬授予（中性訊號）</li>
+          <li>獨立董事主動買入通常具有較強看多訊號</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">高階副總裁（EVP/VP）</div>
+        <p style="margin-bottom: 12px; color: var(--text-muted);">訊號強度：<strong style="color: var(--bearish);">中等（偏空）</strong></p>
+        <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px;">
+          <li>Bradford Smith（副董事長）賣出 38,500 股（約 $2,000 萬）</li>
+          <li>Judson Althoff（EVP 商業）淨賣出約 53,750 股</li>
+          <li>Takeshi Numoto（EVP 行銷）淨賣出約 23,200 股</li>
+          <li>整體高管賣出一致，但需確認是否全屬 10b5-1 計畫</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">其他內部人（VP/資深經理）</div>
+        <p style="margin-bottom: 12px; color: var(--text-muted);">訊號強度：<strong style="color: var(--neutral);">低（中性）</strong></p>
+        <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px;">
+          <li>Amy Coleman（EVP 人力）小額處置 85 股（$34,112）屬稅務相關，中性</li>
+          <li>2025 年 12 月中旬：10 筆申報交易，8 筆為股票授予，2 筆為稅務賣出，無異常</li>
+          <li>常規薪酬計畫執行訊號低</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 5: OWNERSHIP TRENDS ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">05</span>持股趨勢分析</div>
+    <div class="card">
+      <div class="card-title">當前持股結構</div>
+      <div class="stats-grid" style="margin-bottom: 24px;">
+        <div class="stat-item">
+          <div class="stat-label">總內部人持股比例</div>
+          <div class="stat-value">~0.06%</div>
+          <div class="stat-sub">對大型科技公司屬低水位</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">CEO Nadella 持股</div>
+          <div class="stat-value">790,852 股</div>
+          <div class="stat-sub">2025/09 賣出後餘額</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">CEO 持股市值</div>
+          <div class="stat-value">~$4.01 億</div>
+          <div class="stat-sub">以 $507 估算</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">整體評估</div>
+          <div class="stat-value" style="color: var(--neutral);">偏低對齊</div>
+          <div class="stat-sub">持股 &lt; 1% 屬弱對齊</div>
+        </div>
+      </div>
+      <div class="card-title" style="margin-top: 8px;">季度持股趨勢（估算）</div>
+      <div class="own-quarter" style="margin-top: 12px;">
+        <div class="own-q">
+          <div class="q-label">Q1 2025</div>
+          <div class="q-value">~0.08%</div>
+          <div class="q-change flat">基準期</div>
+        </div>
+        <div class="own-q">
+          <div class="q-label">Q2 2025</div>
+          <div class="q-value">~0.075%</div>
+          <div class="q-change down">↓ 輕微減少</div>
+        </div>
+        <div class="own-q">
+          <div class="q-label">Q3 2025</div>
+          <div class="q-value">~0.065%</div>
+          <div class="q-change down">↓ Nadella 大額賣出</div>
+        </div>
+        <div class="own-q">
+          <div class="q-label">Q4 2025–Q1 2026</div>
+          <div class="q-value">~0.06%</div>
+          <div class="q-change down">↓ 持續減少</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-title">主要內部人持股分布</div>
+      <div style="margin-top: 12px;">
+        <div class="progress-row">
+          <div class="progress-label">Satya Nadella (CEO)</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 62%; background: var(--primary);"></div></div>
+          <div class="progress-value">790,852 股</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Bradford Smith</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 36%; background: var(--primary);"></div></div>
+          <div class="progress-value">461,596 股</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">John W. Stanton</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 7%; background: var(--bullish);"></div></div>
+          <div class="progress-value">83,905 股</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">C. W. Scharf</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 4%; background: var(--primary);"></div></div>
+          <div class="progress-value">44,892 股</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Amy Coleman</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 4%; background: var(--primary);"></div></div>
+          <div class="progress-value">49,246 股</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 6: TIMING & PATTERN ANALYSIS ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">06</span>時機與模式分析</div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">相對股價時機</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot sell"></div>
+            <div class="timeline-date">2025 年 9 月（股價 ~$504）</div>
+            <div class="timeline-title">CEO Nadella 賣出 $7,530 萬</div>
+            <div class="timeline-detail">股價距 52W 高點 $555 約下跌 9%，但仍在高位。屬 10b5-1 計畫，訊號意義有限。</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot sell"></div>
+            <div class="timeline-date">2025 年 11 月（股價 ~$518–$519）</div>
+            <div class="timeline-title">Smith 賣出 $2,000 萬</div>
+            <div class="timeline-detail">接近 2025 年底高點 $539（10/28 高點），高位賣出訊號需關注。</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot buy"></div>
+            <div class="timeline-date">2026 年 2 月 18 日（股價 $397.35）</div>
+            <div class="timeline-title">Stanton 公開買入 $199 萬</div>
+            <div class="timeline-detail"><strong style="color: var(--bullish);">看多訊號：</strong>股價比 52W 高點低 28%，在年初修正後的低位主動加碼，具逆勢信心。</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">模式識別</div>
+        <p style="font-weight: 600; color: var(--bullish); margin-bottom: 8px;">看多模式</p>
+        <ul style="padding-left: 18px; font-size: 14px; line-height: 2.0; margin-bottom: 16px;">
+          <li>Stanton 董事在低估值區（-28% 自高點）進行公開市場買入</li>
+          <li>非期權行使，而是以個人現金購買，訊號強度較高</li>
+          <li>微軟整體基本面（Azure AI 成長）保持強勁</li>
+        </ul>
+        <p style="font-weight: 600; color: var(--bearish); margin-bottom: 8px;">看空模式</p>
+        <ul style="padding-left: 18px; font-size: 14px; line-height: 2.0; margin-bottom: 16px;">
+          <li>CEO 持續賣出（5 年無任何買入），歷史紀錄全為賣出</li>
+          <li>多位高層在同一時間段大規模減持</li>
+          <li>近 3 個月無任何主動公開市場買入（直至 Stanton）</li>
+        </ul>
+        <p style="font-weight: 600; color: var(--neutral); margin-bottom: 8px;">中性模式</p>
+        <ul style="padding-left: 18px; font-size: 14px; line-height: 2.0;">
+          <li>多數大額賣出為 10b5-1 預先計畫，屬薪酬多元化，非緊急出場</li>
+          <li>董事股票薪酬授予為年度常規操作</li>
+          <li>大型科技公司高管長期薪酬以股票為主，定期賣出屬常態</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 7: RED FLAGS ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">07</span>警示訊號與關注事項</div>
+    <div class="card">
+      <div class="card-title" style="color: var(--bearish);">中等嚴重程度警示</div>
+      <div class="flag-item">
+        <div class="flag-icon">🔴</div>
+        <div class="flag-text">
+          <strong>CEO 持續賣出，過去 5 年零買入</strong>
+          <p>Satya Nadella 過去五年所有 10 筆申報交易均為賣出，無任何公開市場主動買入。雖然大部分透過 10b5-1 計畫執行，但此模式顯示 CEO 無意增持。</p>
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-icon">🟠</div>
+        <div class="flag-text">
+          <strong>高管層集體減持</strong>
+          <p>CEO、副董事長 Smith、EVP Althoff、EVP Numoto 在相近時間段均有賣出，雖分屬不同計畫，但方向一致，值得留意。</p>
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-icon">🟡</div>
+        <div class="flag-text">
+          <strong>內部人持股比例極低（0.06%）</strong>
+          <p>對於市值 $3 兆的公司，0.06% 的內部人持股屬低水位，「與股東利益對齊」程度相對薄弱。</p>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-color: var(--bullish);">
+      <div class="card-title" style="color: var(--bullish);">正面訊號（中和因素）</div>
+      <div class="flag-item">
+        <div class="flag-icon">✅</div>
+        <div class="flag-text">
+          <strong>Stanton 董事公開市場買入為近期唯一主動多頭訊號</strong>
+          <p>2026 年 2 月 18 日以 $397.35 買入 5,000 股（$199 萬），是在股價修正 -28% 後的逆勢加倉，具有較高可信度。</p>
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-icon">✅</div>
+        <div class="flag-text">
+          <strong>多數大額賣出為 10b5-1 預先計畫</strong>
+          <p>CEO Nadella 的 $7,530 萬賣出是依 2025 年 3 月 7 日採用的 10b5-1 計畫執行，並非對即時市況的反應性決策，訊號強度大幅降低。</p>
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-icon">✅</div>
+        <div class="flag-text">
+          <strong>無重大時機紅旗</strong>
+          <p>未發現在財報前後的異常大額賣出，也無禁止期交易的違規跡象，申報均在規定時限內完成。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 8: PEER COMPARISON ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">08</span>同業比較</div>
+    <div class="card">
+      <div class="card-title">科技巨頭內部人情緒比較（估算）</div>
+      <div style="margin-top: 16px;">
+        <div class="peer-row">
+          <div class="peer-name">MSFT</div>
+          <div class="peer-bar-wrap"><div class="peer-bar" style="width: 8%; background: var(--bearish);"></div></div>
+          <div class="peer-score" style="color: var(--bearish);">−0.95</div>
+        </div>
+        <div class="peer-row">
+          <div class="peer-name">AAPL</div>
+          <div class="peer-bar-wrap"><div class="peer-bar" style="width: 15%; background: var(--bearish);"></div></div>
+          <div class="peer-score" style="color: var(--bearish);">−0.85</div>
+        </div>
+        <div class="peer-row">
+          <div class="peer-name">GOOGL</div>
+          <div class="peer-bar-wrap"><div class="peer-bar" style="width: 20%; background: var(--bearish);"></div></div>
+          <div class="peer-score" style="color: var(--bearish);">−0.80</div>
+        </div>
+        <div class="peer-row">
+          <div class="peer-name">AMZN</div>
+          <div class="peer-bar-wrap"><div class="peer-bar" style="width: 25%; background: var(--bearish);"></div></div>
+          <div class="peer-score" style="color: var(--bearish);">−0.75</div>
+        </div>
+        <div class="peer-row">
+          <div class="peer-name">NVDA</div>
+          <div class="peer-bar-wrap"><div class="peer-bar" style="width: 50%; background: var(--neutral);"></div></div>
+          <div class="peer-score" style="color: var(--neutral);">−0.30</div>
+        </div>
+      </div>
+      <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">
+        ⚠ 同業比較為估算值，僅供參考。大型科技公司高管因薪酬結構，普遍呈現賣出偏向，MSFT 情況與同業相似，並非特殊異常。NVDA 因 AI 熱潮，部分高管近期有較多主動買入，情緒相對中性。
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 9: HISTORICAL CONTEXT ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">09</span>歷史背景</div>
+    <div class="card">
+      <div class="card-title">微軟內部人交易歷史脈絡</div>
+      <div class="two-col">
+        <div>
+          <p style="font-weight: 600; margin-bottom: 10px;">長期模式特徵</p>
+          <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px; color: var(--text-muted);">
+            <li>微軟高管歷史上以股票薪酬為主要收入來源，定期透過 10b5-1 計畫賣出屬正常現象</li>
+            <li>Satya Nadella 自 2014 年擔任 CEO 至今，持續賣出股票，無任何公開市場買入記錄</li>
+            <li>董事會成員偶有小額買入，但大額買入屬稀少事件</li>
+            <li>整體內部人持股比例長期維持在 0.05%–0.10% 低水位，為成熟大型企業常態</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-weight: 600; margin-bottom: 10px;">現況與歷史的差異</p>
+          <ul style="padding-left: 18px; line-height: 2.0; font-size: 14px; color: var(--text-muted);">
+            <li>Stanton 在 2026 年 2 月的 $199 萬買入，可能是對股票在近期 AI 股票輪動修正後估值相對吸引的反應</li>
+            <li>2025 年 9–11 月的集中賣出，恰好發生在股價接近歷史高點時，時機值得觀察</li>
+            <li>賣出金額（$2.7 億+）為近 5 年較大規模，反映高管在高估值時期實現利潤</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 10: INVESTMENT IMPLICATIONS ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">10</span>投資意涵</div>
+    <div class="card" style="border-color: var(--neutral);">
+      <div class="card-title">整體評估</div>
+      <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 1.2rem; font-weight: 700; color: var(--neutral); margin-bottom: 12px;">
+            投資訊號：中性偏謹慎（HOLD）
+          </div>
+          <div style="font-size: 14px; line-height: 2.0;">
+            <p><strong>信心水準：</strong><span style="color: var(--neutral);">中等</span></p>
+            <p><strong>主要支撐：</strong>多數賣出為 10b5-1 計畫，非緊急出場；Stanton 低位買入顯示部分管理層信心</p>
+            <p><strong>主要疑慮：</strong>CEO 從未主動買入，高管集體減持規模大，內部人持股比例極低</p>
+            <p><strong>與基本面結合：</strong>需搭配 Azure/AI 業務成長數據、本益比評估綜合判斷</p>
+          </div>
+        </div>
+        <div style="flex: 1; min-width: 280px;">
+          <p style="font-weight: 600; margin-bottom: 10px;">後續監控計畫</p>
+          <ul style="padding-left: 18px; line-height: 2.2; font-size: 14px;">
+            <li>追蹤 CEO Nadella 是否有任何公開市場買入（將為重大轉向訊號）</li>
+            <li>觀察 Stanton 是否持續加碼（若有第二次買入，訊號大幅增強）</li>
+            <li>監控 10b5-1 計畫到期/更新情況，留意是否取消計畫（看多訊號）</li>
+            <li>觀察 2026 年 Q2 業績公告前後的申報活動</li>
+            <li>追蹤董事會整體持股是否呈現穩定或增加趨勢</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top: 20px;">
+      <div class="card" style="border-color: var(--bullish);">
+        <div class="card-title" style="color: var(--bullish);">內部人活動中的看多因素</div>
+        <ul style="padding-left: 18px; line-height: 2.1; font-size: 14px;">
+          <li>Stanton 以逆勢心態在 -28% 低點公開買入</li>
+          <li>主要賣出為 10b5-1 計畫，非緊急清倉</li>
+          <li>無申報違規或可疑時機問題</li>
+          <li>董事薪酬授予維持穩定，顯示整體薪酬結構未改變</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color: var(--bearish);">
+        <div class="card-title" style="color: var(--bearish);">內部人活動中的看空因素</div>
+        <ul style="padding-left: 18px; line-height: 2.1; font-size: 14px;">
+          <li>CEO 5 年無任何買入，純賣出模式</li>
+          <li>18 個月賣出近 58 萬股，買入僅 3,842 股</li>
+          <li>高管在 2025 年高點附近集中套現</li>
+          <li>整體持股偏低（0.06%），「與股東利益對齊」有限</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 11: DATA SOURCES ─── -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">11</span>數據來源</div>
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">主要數據來源</div>
+          <div style="font-size: 14px; line-height: 2.0; margin-top: 8px;">
+            SEC EDGAR Form 4<br>OpenInsider.com<br>MarketBeat Insider Trades<br>GuruFocus Insider<br>StockTitan SEC Filings<br>Yahoo Finance<br>Investing.com
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">分析涵蓋期間</div>
+          <div style="font-size: 14px; line-height: 2.0; margin-top: 8px;">
+            主要期間：2025 年 8 月 — 2026 年 2 月<br>
+            18 個月趨勢：2024 年 8 月起<br>
+            歷史背景：2020 年起
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">報告資訊</div>
+          <div style="font-size: 14px; line-height: 2.0; margin-top: 8px;">
+            報告日期：2026 年 2 月 22 日<br>
+            當前股價：$397.23<br>
+            分析師：Claude AI (Sonnet 4.6)<br>
+            語言：繁體中文
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">免責聲明</div>
+          <div style="font-size: 13px; line-height: 1.8; margin-top: 8px; color: var(--text-muted);">
+            本報告僅供教育與研究參考，不構成投資建議。內部人交易數據來自公開 SEC 申報，交易金額為根據公開資訊計算之估算值。投資決策需結合個人財務狀況及其他研究。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>微軟公司 (MSFT) 內部人交易分析報告 &nbsp;|&nbsp; 報告日期：2026 年 2 月 22 日 &nbsp;|&nbsp; 由 Claude AI 生成</p>
+  <p style="margin-top: 8px;">
+    數據來源：
+    <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000789019&type=4" target="_blank">SEC EDGAR</a> ·
+    <a href="http://openinsider.com/MSFT" target="_blank">OpenInsider</a> ·
+    <a href="https://www.marketbeat.com/stocks/NASDAQ/MSFT/insider-trades/" target="_blank">MarketBeat</a> ·
+    <a href="https://www.gurufocus.com/insider/3953/satya-nadella" target="_blank">GuruFocus</a>
+  </p>
+  <p style="margin-top: 8px; font-size: 11px;">本報告僅供參考，不構成投資建議。投資有風險，決策前請諮詢專業顧問。</p>
+</footer>
+
+</body>
+</html>
