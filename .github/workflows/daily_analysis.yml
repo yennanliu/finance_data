@@ -80,7 +80,20 @@ jobs:
           echo "  Max tokens: ${MAX_TOKENS}"
           echo "  Output dir: ${OUTPUT_DIR}"
 
-      # ── 5. Generate report ────────────────────────────────────────
+      # ── 5. Verify API key secret is set ──────────────────────────
+      - name: Check ANTHROPIC_API_KEY secret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set."
+            echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
+            echo "Name: ANTHROPIC_API_KEY  |  Value: your Anthropic API key"
+            exit 1
+          fi
+          echo "✅ ANTHROPIC_API_KEY is set."
+
+      # ── 6. Generate report ────────────────────────────────────────
       - name: Generate analysis report
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -91,7 +104,7 @@ jobs:
             --model "${{ steps.params.outputs.model }}" \
             --max-tokens "${{ steps.params.outputs.max_tokens }}"
 
-      # ── 6. Commit & push ──────────────────────────────────────────
+      # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
         run: |
           git config user.name  "github-actions[bot]"
