@@ -1,15 +1,31 @@
 name: Daily Stock Analysis
 
+# ── Schedules ────────────────────────────────────────────────────────────────
+#   02:00 UTC = 10:00 AM Taipei  →  AAPL fundamental-analysis
+#   03:00 UTC = 11:00 AM Taipei  →  TSLA technical-analysis
 on:
   schedule:
-    - cron: "0 2 * * *"   # daily at 02:00 UTC (10:00 AM Taipei)
+    - cron: "0 2 * * *"   # AAPL fundamental-analysis
+    - cron: "0 3 * * *"   # TSLA technical-analysis
 
   workflow_dispatch:
     inputs:
       ticker:
-        description: "Stock ticker symbol (e.g. AAPL, NVDA, MSFT)"
+        description: "Stock ticker symbol (e.g. AAPL, TSLA, NVDA, SPY)"
         required: false
         default: "AAPL"
+      analysis_type:
+        description: "Analysis type"
+        required: false
+        default: "fundamental-analysis"
+        type: choice
+        options:
+          - fundamental-analysis
+          - technical-analysis
+          - stock-eval
+          - economics-analysis
+          - portfolio-review
+          - sector-analysis
       model:
         description: "Claude model ID"
         required: false
@@ -28,7 +44,7 @@ concurrency:
 
 jobs:
   generate:
-    name: Generate Fundamental Analysis
+    name: Generate Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +52,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed for git history / diff
+          fetch-depth: 0
 
       # ── 2. Python ─────────────────────────────────────────────────
       - name: Set up Python 3.11
@@ -51,34 +67,63 @@ jobs:
           pip install --upgrade pip
           pip install anthropic>=0.40.0 yfinance>=0.2.40
 
-      # ── 4. Resolve inputs (schedule uses defaults) ─────────────────
+      # ── 4. Resolve parameters ─────────────────────────────────────
+      #   workflow_dispatch → use user inputs
+      #   schedule 0 2 * * *  → AAPL / fundamental-analysis
+      #   schedule 0 3 * * *  → TSLA / technical-analysis
       - name: Resolve analysis parameters
         id: params
         run: |
-          # On schedule trigger, github.event.inputs is empty → use defaults
-          TICKER="${{ github.event.inputs.ticker }}"
-          MODEL="${{ github.event.inputs.model }}"
-          MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
+          EVENT="${{ github.event_name }}"
+          SCHEDULE="${{ github.event.schedule }}"
 
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            TICKER="${{ github.event.inputs.ticker }}"
+            ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
+            MODEL="${{ github.event.inputs.model }}"
+            MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
+          elif [ "$SCHEDULE" = "0 2 * * *" ]; then
+            TICKER="AAPL"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="8000"
+          elif [ "$SCHEDULE" = "0 3 * * *" ]; then
+            TICKER="TSLA"
+            ANALYSIS_TYPE="technical-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="8000"
+          else
+            # Fallback
+            TICKER="AAPL"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="8000"
+          fi
+
+          # Apply defaults for empty values
           TICKER="${TICKER:-AAPL}"
+          ANALYSIS_TYPE="${ANALYSIS_TYPE:-fundamental-analysis}"
           MODEL="${MODEL:-claude-sonnet-4-6}"
           MAX_TOKENS="${MAX_TOKENS:-8000}"
 
-          # Normalise: lowercase for directory, uppercase for ticker arg
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
           OUTPUT_DIR="claude_code/${TICKER_LOWER}"
 
-          echo "ticker=${TICKER_UPPER}"    >> "$GITHUB_OUTPUT"
-          echo "model=${MODEL}"            >> "$GITHUB_OUTPUT"
-          echo "max_tokens=${MAX_TOKENS}"  >> "$GITHUB_OUTPUT"
-          echo "output_dir=${OUTPUT_DIR}"  >> "$GITHUB_OUTPUT"
+          echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
+          echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
+          echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
+          echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
+          echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
-          echo "  Ticker:     ${TICKER_UPPER}"
-          echo "  Model:      ${MODEL}"
-          echo "  Max tokens: ${MAX_TOKENS}"
-          echo "  Output dir: ${OUTPUT_DIR}"
+          echo "  Event:         ${EVENT}"
+          echo "  Schedule:      ${SCHEDULE:-n/a}"
+          echo "  Ticker:        ${TICKER_UPPER}"
+          echo "  Analysis type: ${ANALYSIS_TYPE}"
+          echo "  Model:         ${MODEL}"
+          echo "  Max tokens:    ${MAX_TOKENS}"
+          echo "  Output dir:    ${OUTPUT_DIR}"
 
       # ── 5. Verify API key secret is set ──────────────────────────
       - name: Check ANTHROPIC_API_KEY secret
@@ -100,9 +145,10 @@ jobs:
         run: |
           python scripts/generate_analysis.py \
             "${{ steps.params.outputs.ticker }}" \
-            --output-dir "${{ steps.params.outputs.output_dir }}" \
-            --model "${{ steps.params.outputs.model }}" \
-            --max-tokens "${{ steps.params.outputs.max_tokens }}"
+            --analysis-type "${{ steps.params.outputs.analysis_type }}" \
+            --output-dir    "${{ steps.params.outputs.output_dir }}" \
+            --model         "${{ steps.params.outputs.model }}" \
+            --max-tokens    "${{ steps.params.outputs.max_tokens }}"
 
       # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
@@ -112,12 +158,13 @@ jobs:
 
           git add "${{ steps.params.outputs.output_dir }}/"
 
-          # Only commit if there are actual changes
           if git diff --cached --quiet; then
-            echo "No changes to commit (report already up to date)."
+            echo "No changes to commit."
           else
             DATE=$(date -u +"%Y-%m-%d")
-            git commit -m "chore: auto-generate ${{ steps.params.outputs.ticker }} analysis ${DATE} [skip deploy-check]"
+            TICKER="${{ steps.params.outputs.ticker }}"
+            ATYPE="${{ steps.params.outputs.analysis_type }}"
+            git commit -m "chore: auto-generate ${TICKER} ${ATYPE} ${DATE}"
             git push
-            echo "Report committed and pushed."
+            echo "✅ Report committed and pushed."
           fi
