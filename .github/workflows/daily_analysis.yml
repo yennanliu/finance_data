@@ -1,0 +1,110 @@
+name: Daily Stock Analysis
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # daily at 02:00 UTC (10:00 AM Taipei)
+
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: "Stock ticker symbol (e.g. AAPL, NVDA, MSFT)"
+        required: false
+        default: "AAPL"
+      model:
+        description: "Claude model ID"
+        required: false
+        default: "claude-sonnet-4-6"
+      max_tokens:
+        description: "Max output tokens"
+        required: false
+        default: "8000"
+
+permissions:
+  contents: write   # needed to commit & push generated report
+
+concurrency:
+  group: "daily-analysis-${{ github.run_id }}"
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate Fundamental Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed for git history / diff
+
+      # ── 2. Python ─────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # ── 3. Dependencies ───────────────────────────────────────────
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic>=0.40.0 yfinance>=0.2.40
+
+      # ── 4. Resolve inputs (schedule uses defaults) ─────────────────
+      - name: Resolve analysis parameters
+        id: params
+        run: |
+          # On schedule trigger, github.event.inputs is empty → use defaults
+          TICKER="${{ github.event.inputs.ticker }}"
+          MODEL="${{ github.event.inputs.model }}"
+          MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
+
+          TICKER="${TICKER:-AAPL}"
+          MODEL="${MODEL:-claude-sonnet-4-6}"
+          MAX_TOKENS="${MAX_TOKENS:-8000}"
+
+          # Normalise: lowercase for directory, uppercase for ticker arg
+          TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
+          TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
+          OUTPUT_DIR="claude_code/${TICKER_LOWER}"
+
+          echo "ticker=${TICKER_UPPER}"    >> "$GITHUB_OUTPUT"
+          echo "model=${MODEL}"            >> "$GITHUB_OUTPUT"
+          echo "max_tokens=${MAX_TOKENS}"  >> "$GITHUB_OUTPUT"
+          echo "output_dir=${OUTPUT_DIR}"  >> "$GITHUB_OUTPUT"
+
+          echo "=== Parameters ==="
+          echo "  Ticker:     ${TICKER_UPPER}"
+          echo "  Model:      ${MODEL}"
+          echo "  Max tokens: ${MAX_TOKENS}"
+          echo "  Output dir: ${OUTPUT_DIR}"
+
+      # ── 5. Generate report ────────────────────────────────────────
+      - name: Generate analysis report
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python scripts/generate_analysis.py \
+            "${{ steps.params.outputs.ticker }}" \
+            --output-dir "${{ steps.params.outputs.output_dir }}" \
+            --model "${{ steps.params.outputs.model }}" \
+            --max-tokens "${{ steps.params.outputs.max_tokens }}"
+
+      # ── 6. Commit & push ──────────────────────────────────────────
+      - name: Commit and push report
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add "${{ steps.params.outputs.output_dir }}/"
+
+          # Only commit if there are actual changes
+          if git diff --cached --quiet; then
+            echo "No changes to commit (report already up to date)."
+          else
+            DATE=$(date -u +"%Y-%m-%d")
+            git commit -m "chore: auto-generate ${{ steps.params.outputs.ticker }} analysis ${DATE} [skip deploy-check]"
+            git push
+            echo "Report committed and pushed."
+          fi
