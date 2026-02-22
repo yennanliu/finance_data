@@ -2,3 +2,23 @@
 notebook_llm/.DS_Store
 **/.DS_Store
 .DS_Store
+
+# MkDocs build output
+site/
+
+# Generated docs sub-dirs (rebuilt in CI by scripts/build_docs.py)
+docs/reports/
+docs/notebooks/
+docs/sec/
+docs/investor_day/
+docs/scripts.md
+docs/includes/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/

@@ -1,0 +1,88 @@
+/* ── Finance Hub Custom Styles ────────────────────────────────── */
+
+/* Hero gradient header on home page */
+.md-typeset h1 {
+  font-weight: 800;
+}
+
+/* Card grid improvements */
+.md-typeset .grid.cards > ul > li {
+  border-radius: 12px;
+  transition: box-shadow .2s, transform .2s;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  transform: translateY(-2px);
+}
+
+/* Color badge helpers */
+.badge-green  { color: #00c896; font-weight: 700; }
+.badge-red    { color: #f4536b; font-weight: 700; }
+.badge-yellow { color: #fbbf24; font-weight: 700; }
+.badge-blue   { color: #38bdf8; font-weight: 700; }
+
+/* Report iframe embed */
+.report-embed {
+  width: 100%;
+  height: 85vh;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+
+/* Table improvements */
+.md-typeset table:not([class]) {
+  font-size: .85rem;
+}
+.md-typeset table:not([class]) th {
+  font-size: .75rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Ticker pill style */
+.ticker {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--md-code-font);
+  font-size: .8rem;
+  font-weight: 700;
+  background: var(--md-primary-fg-color--light);
+  color: var(--md-primary-bg-color);
+}
+
+/* Signal badges */
+.signal-bullish { color: #00c896; font-weight: 600; }
+.signal-bearish { color: #f4536b; font-weight: 600; }
+.signal-neutral { color: #fbbf24; font-weight: 600; }
+
+/* PDF viewer link button */
+.pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color) !important;
+  font-size: .8rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: opacity .2s;
+}
+.pdf-btn:hover { opacity: .85; }
+
+/* Admonition customization */
+.md-typeset .admonition.disclaimer,
+.md-typeset details.disclaimer {
+  border-color: #fbbf24;
+}
+.md-typeset .admonition.disclaimer > .admonition-title,
+.md-typeset details.disclaimer > summary {
+  background-color: rgba(251,191,36,.1);
+  border-color: #fbbf24;
+}
+
+/* Wide table scroll */
+.wide-table { overflow-x: auto; }
