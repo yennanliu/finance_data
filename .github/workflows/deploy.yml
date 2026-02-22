@@ -1,0 +1,82 @@
+name: Deploy Finance Hub to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "claude_code/**"
+      - "notebook_llm/**"
+      - "10-k/**"
+      - "10-q/**"
+      - "13-f/**"
+      - "investor_day/**"
+      - "README.md"
+      - "mkdocs.yml"
+      - "docs/**"
+      - "scripts/build_docs.py"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:      # allow manual trigger from GitHub UI
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ── Build ────────────────────────────────────────────────────
+  build:
+    name: Build MkDocs Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history for git-revision-date plugin
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install MkDocs & plugins
+        run: |
+          pip install --upgrade pip
+          pip install \
+            mkdocs-material==9.5.* \
+            mkdocs-awesome-pages-plugin \
+            mkdocs-minify-plugin \
+            Pillow \
+            cairosvg
+
+      - name: Generate docs content
+        run: python scripts/build_docs.py
+
+      - name: Build MkDocs site
+        run: mkdocs build --clean --strict
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
+  # ── Deploy ───────────────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
