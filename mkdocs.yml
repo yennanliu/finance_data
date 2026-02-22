@@ -103,7 +103,6 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink:
-      normalize_issue_urls: true
       repo_url_shorthand: true
       user: yennanliu
       repo: finance_data
