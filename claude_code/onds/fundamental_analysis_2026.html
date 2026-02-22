@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONDS 安達斯公司 — 基本面深度分析 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:       #0b1420;
+    --bg2:      #111d2e;
+    --bg3:      #162236;
+    --border:   #1f3352;
+    --text:     #dde8f5;
+    --muted:    #7a9bbf;
+    --accent:   #38bdf8;
+    --green:    #22d3a5;
+    --red:      #f4536b;
+    --yellow:   #fbbf24;
+    --orange:   #fb923c;
+    --purple:   #a78bfa;
+    --primary:  #3b82f6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI','Microsoft JhengHei',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+
+  /* ── HERO ── */
+  .hero{
+    background:linear-gradient(135deg,#0f3460 0%,#16213e 50%,#0b1420 100%);
+    padding:56px 40px 48px;text-align:center;
+    border-bottom:2px solid var(--accent);
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(56,189,248,.12),transparent);
+  }
+  .hero .tag{font-size:12px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;font-weight:600}
+  .hero h1{font-size:2.6rem;font-weight:800;margin:10px 0 4px;line-height:1.2}
+  .hero .sub{color:#90b4d4;font-size:1rem;margin-top:6px}
+  .hero-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:28px}
+  .hm{background:rgba(255,255,255,.07);border:1px solid rgba(56,189,248,.25);border-radius:10px;padding:12px 20px;min-width:140px}
+  .hm span{display:block;font-size:11px;color:var(--accent);letter-spacing:1px;margin-bottom:4px}
+  .hm strong{font-size:1.25rem;font-weight:700}
+
+  /* ── LAYOUT ── */
+  .container{max-width:1280px;margin:0 auto;padding:40px 20px}
+
+  /* ── SECTION ── */
+  .section{margin-bottom:60px}
+  .sec-title{
+    font-size:1.4rem;font-weight:700;color:var(--accent);
+    border-left:4px solid var(--primary);padding-left:14px;
+    margin-bottom:24px;display:flex;align-items:center;gap:10px
+  }
+  .sec-num{color:var(--muted);font-size:.85rem;font-weight:400}
+
+  /* ── CARDS ── */
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px}
+  .card-title{font-size:1rem;font-weight:600;color:var(--accent);margin-bottom:16px}
+
+  /* ── GRID ── */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+  /* ── STAT BOXES ── */
+  .stat{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+  .stat .label{font-size:11px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+  .stat .value{font-size:1.55rem;font-weight:700}
+  .stat .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .up{color:var(--green)} .down{color:var(--red)} .neu{color:var(--yellow)}
+
+  /* ── BADGE ── */
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+  .b-buy{background:rgba(34,211,165,.15);color:var(--green)}
+  .b-sell{background:rgba(244,83,107,.15);color:var(--red)}
+  .b-neu{background:rgba(251,191,36,.15);color:var(--yellow)}
+  .b-blue{background:rgba(56,189,248,.15);color:var(--accent)}
+
+  /* ── TABLE ── */
+  .tbl-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead tr{background:var(--bg3)}
+  th{padding:11px 14px;text-align:left;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
+  td{padding:11px 14px;border-bottom:1px solid var(--border)}
+  tr:hover td{background:rgba(56,189,248,.05)}
+
+  /* ── RATING PILL ── */
+  .rating-pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(251,191,36,.12);border:2px solid var(--yellow);
+    border-radius:50px;padding:10px 28px;font-size:1.2rem;font-weight:700;color:var(--yellow);
+    margin-bottom:24px
+  }
+
+  /* ── PROGRESS ── */
+  .prog-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .prog-lbl{width:130px;font-size:13px;color:var(--muted);flex-shrink:0}
+  .prog-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:4px}
+  .prog-val{width:70px;font-size:13px;font-weight:600;text-align:right;flex-shrink:0}
+
+  /* ── TIMELINE ── */
+  .tl{position:relative;padding-left:28px}
+  .tl::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+  .tl-item{position:relative;margin-bottom:22px}
+  .tl-dot{position:absolute;left:-23px;top:5px;width:11px;height:11px;border-radius:50%}
+  .tl-date{font-size:12px;color:var(--muted)}
+  .tl-title{font-weight:600;margin:3px 0}
+  .tl-desc{font-size:13px;color:var(--muted)}
+
+  /* ── CANVAS WRAPPER ── */
+  .chart-box{position:relative;padding:20px 10px 10px}
+
+  /* ── RISK BADGE ── */
+  .risk-h{color:var(--red);font-weight:700}
+  .risk-m{color:var(--yellow);font-weight:700}
+  .risk-l{color:var(--green);font-weight:700}
+
+  /* ── VERDICT CARD ── */
+  .verdict{
+    background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(59,130,246,.08));
+    border:2px solid var(--yellow);border-radius:16px;padding:28px;text-align:center
+  }
+
+  /* ── FOOTER ── */
+  footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 40px;text-align:center;color:var(--muted);font-size:13px;margin-top:60px}
+  footer a{color:var(--accent);text-decoration:none}
+
+  /* ── SCENARIO TABLE ── */
+  .scen{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .scen-row{display:grid;grid-template-columns:120px 1fr 1fr 1fr 1fr;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .scen-row:last-child{border-bottom:none}
+  .scen-row.header{background:var(--bg3);font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase}
+  @media(max-width:700px){.scen-row{grid-template-columns:1fr 1fr;row-gap:4px}}
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="tag">基本面深度分析 · NASDAQ: ONDS</div>
+  <h1>安達斯公司<br>Ondas Inc.</h1>
+  <div class="sub">前稱 Ondas Holdings Inc.（2026 年 1 月改名）｜自主無人機 · 私有無線 · 國防科技</div>
+  <div class="hero-meta">
+    <div class="hm"><span>當前股價</span><strong>~$9.69</strong></div>
+    <div class="hm"><span>市值</span><strong>$43.7 億</strong></div>
+    <div class="hm"><span>52W 高點</span><strong style="color:var(--green)">$15.28</strong></div>
+    <div class="hm"><span>52W 低點</span><strong style="color:var(--red)">$0.57</strong></div>
+    <div class="hm"><span>2025 收入指引</span><strong style="color:var(--green)">$36M+</strong></div>
+    <div class="hm"><span>2026 收入指引</span><strong style="color:var(--green)">$110M+</strong></div>
+    <div class="hm"><span>分析師目標價</span><strong style="color:var(--accent)">$19.00</strong></div>
+    <div class="hm"><span>報告日期</span><strong>2026/02/22</strong></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════
+     01 執行摘要
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">01</span>執行摘要</div>
+
+  <div class="verdict">
+    <div class="rating-pill">🟡 投機性買入（Speculative Buy）</div>
+    <div style="font-size:14px;color:var(--muted);max-width:700px;margin:0 auto">
+      信心水準：<strong style="color:var(--yellow)">低至中等</strong> ｜
+      建議倉位：<strong style="color:var(--yellow)">≤ 3–5%</strong> ｜
+      投資時限：<strong style="color:var(--yellow)">中長期 2–4 年</strong>
+    </div>
+  </div>
+
+  <div class="grid4" style="margin-top:20px">
+    <div class="stat"><div class="label">Q3 2025 收入年增</div><div class="value up">+582%</div><div class="hint">$10.1M（季度）</div></div>
+    <div class="stat"><div class="label">手持現金</div><div class="value up">$433M</div><div class="hint">消除倒閉風險</div></div>
+    <div class="stat"><div class="label">股份 12 個月增幅</div><div class="value down">+352%</div><div class="hint">嚴重稀釋風險</div></div>
+    <div class="stat"><div class="label">2024 毛利率崩跌</div><div class="value down">5%</div><div class="hint">2023 為 41%</div></div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">五大核心發現</div>
+    <table>
+      <thead><tr><th>#</th><th>發現</th><th>影響程度</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Q3 2025 收入 $10.1M，年增 <strong>582%</strong>，創單季紀錄</td><td><span class="badge b-buy">極度看多</span></td></tr>
+        <tr><td>2</td><td>$4.25 億股票發行後持現 <strong>$433M</strong>，流動比率 15.3x，資金充裕</td><td><span class="badge b-buy">看多</span></td></tr>
+        <tr><td>3</td><td>贏得「<strong>千架無人機</strong>」邊境安全政府標案（2026 Q1 初始 PO）</td><td><span class="badge b-buy">看多</span></td></tr>
+        <tr><td>4</td><td>股份過去 12 個月激增 <strong>352%</strong>，認股權仍有 7,392 萬待行使</td><td><span class="badge b-sell">嚴重稀釋</span></td></tr>
+        <tr><td>5</td><td>2024 毛利率僅 5%（vs 2023 的 41%），2025 恢復中但仍待確認</td><td><span class="badge b-neu">需觀察</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div><!-- /section -->
+
+<!-- ═══════════════════════════════════════════
+     02 公司概覽
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">02</span>公司概覽</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">基本資訊</div>
+      <table>
+        <tbody>
+          <tr><td style="color:var(--muted)">公司名稱</td><td><strong>Ondas Inc.</strong>（前稱 Ondas Holdings）</td></tr>
+          <tr><td style="color:var(--muted)">交易所 / 代號</td><td>NASDAQ: <strong>ONDS</strong></td></tr>
+          <tr><td style="color:var(--muted)">總部</td><td>美國加州 Sunnyvale</td></tr>
+          <tr><td style="color:var(--muted)">核心業務</td><td>自主無人機系統、私有無線寬頻、國防科技顧問</td></tr>
+          <tr><td style="color:var(--muted)">主要市場</td><td>美國 / 以色列 / 歐洲政府與軍事</td></tr>
+          <tr><td style="color:var(--muted)">流通股數</td><td>259,909,415 股（2025 年底）</td></tr>
+          <tr><td style="color:var(--muted)">改名時間</td><td>2026 年 1 月（Ondas Holdings → Ondas Inc.）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">三大業務分部</div>
+      <div style="margin-bottom:14px">
+        <div style="font-weight:600;color:var(--green);margin-bottom:6px">🚁 Ondas Autonomous Systems (OAS) — 主力 ~90% 收入</div>
+        <div style="font-size:13px;color:var(--muted)">Iron Drone Raider™（反無人機）、Optimus System™（FAA BVLOS 認證）、Scout、Apeiro Motion 收購</div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-weight:600;color:var(--accent);margin-bottom:6px">📡 Ondas Networks — 鐵路工業無線 ~8% 收入</div>
+        <div style="font-size:13px;color:var(--muted)">FullMAX™ 802.16s 平台，北美鐵路 AAR 頻段，WCC 監管更新後升級週期開啟</div>
+      </div>
+      <div>
+        <div style="font-weight:600;color:var(--purple);margin-bottom:6px">💼 Ondas Capital — 防衛科技顧問（新設 2025）</div>
+        <div style="font-size:13px;color:var(--muted)">橋接美國、歐洲、中東盟友自主防衛系統，早期階段</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     03 收入分析（圖表核心）
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">03</span>損益表分析</div>
+
+  <!-- Chart 1: 年度收入 + 淨虧損 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 年度收入趨勢（2020–2026E）</div>
+      <div class="chart-box"><canvas id="chartRevenue" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📉 年度淨虧損趨勢（2020–2026E）</div>
+      <div class="chart-box"><canvas id="chartNetLoss" height="260"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Chart 2: 季度收入分解 -->
+  <div class="card">
+    <div class="card-title">📊 季度收入分解（OAS vs Networks，2024–2025E）</div>
+    <div class="chart-box"><canvas id="chartQuarterly" height="200"></canvas></div>
+  </div>
+
+  <!-- Chart 3: 毛利率趨勢 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📈 毛利率 / 營業利潤率趨勢</div>
+      <div class="chart-box"><canvas id="chartMargins" height="250"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 收入增長率 vs 營業費用增長</div>
+      <div class="chart-box"><canvas id="chartGrowthVsOpex" height="250"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 詳細數據表 -->
+  <div class="card">
+    <div class="card-title">損益表關鍵數據（年度）</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>財年</th><th>收入 ($M)</th><th>收入增長</th><th>毛利率</th><th>毛利潤 ($M)</th>
+            <th>營業費用 ($M)</th><th>營業損失 ($M)</th><th>淨虧損 ($M)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2020</td><td>~$0.8</td><td>—</td><td>~60%</td><td>~$0.5</td><td>~$18</td><td>~-$17</td><td class="down">~-$17</td></tr>
+          <tr><td>2021</td><td>~$1.4</td><td class="up">+75%</td><td>~55%</td><td>~$0.8</td><td>~$32</td><td>~-$31</td><td class="down">~-$31</td></tr>
+          <tr><td>2022</td><td>$2.1</td><td class="up">+50%</td><td><strong>52%</strong></td><td>$1.1</td><td>~$70.5</td><td>~-$69</td><td class="down">~-$69</td></tr>
+          <tr><td>2023</td><td><strong>$15.7</strong></td><td class="up"><strong>+638%</strong></td><td>41%</td><td>$6.4</td><td>$46.1</td><td>~-$39.7</td><td class="down">~-$47</td></tr>
+          <tr><td>2024</td><td>$7.2</td><td class="down"><strong>-54%</strong></td><td class="down"><strong>5%</strong></td><td>$0.3</td><td>$35.0</td><td>~-$34.7</td><td class="down"><strong>-$38</strong></td></tr>
+          <tr style="background:rgba(34,211,165,.05)"><td>2025E</td><td class="up"><strong>$36+</strong></td><td class="up"><strong>+400%</strong></td><td class="up">~25%</td><td>~$9</td><td>~$55</td><td>~-$46</td><td class="down">~-$35</td></tr>
+          <tr style="background:rgba(34,211,165,.05)"><td>2026E</td><td class="up"><strong>$110+</strong></td><td class="up"><strong>+206%</strong></td><td class="up">~30%</td><td>~$33</td><td>~$75</td><td>~-$42</td><td class="down">~-$25</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- /section -->
+
+<!-- ═══════════════════════════════════════════
+     04 資產負債表
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">04</span>資產負債表分析</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 資產結構（2024/12 vs 2025/09）</div>
+      <div class="chart-box"><canvas id="chartAssets" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 股份數量爆增（稀釋風險）</div>
+      <div class="chart-box"><canvas id="chartShares" height="260"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid4">
+    <div class="stat"><div class="label">現金（2025/09）</div><div class="value up">$433M</div><div class="hint">vs $30M (2024/12)</div></div>
+    <div class="stat"><div class="label">股東權益</div><div class="value up">$487M</div><div class="hint">vs $16.6M (2024/12)</div></div>
+    <div class="stat"><div class="label">總負債</div><div class="value up">$62.9M</div><div class="hint">D/E = 2.3%</div></div>
+    <div class="stat"><div class="label">流動比率</div><div class="value up">15.3x</div><div class="hint">健康基準 > 1.5x</div></div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">歷年資產負債表摘要</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>時間點</th><th>現金 ($M)</th><th>總資產 ($M)</th><th>總負債 ($M)</th><th>股東權益 ($M)</th><th>D/E 比</th><th>流動比率</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2022/12</td><td>~$15</td><td>~$150</td><td>~$100</td><td>~$50</td><td>2.0x</td><td>~2.5x</td></tr>
+          <tr><td>2023/12</td><td>~$15</td><td>~$120</td><td>~$80</td><td>~$40</td><td>2.0x</td><td>~2.0x</td></tr>
+          <tr><td>2024/12</td><td>$30.0</td><td>~$150</td><td>~$133</td><td>$16.6</td><td>8.0x</td><td>~1.5x</td></tr>
+          <tr style="background:rgba(34,211,165,.05)"><td><strong>2025/09</strong></td><td class="up"><strong>$433.4</strong></td><td class="up"><strong>$550.2</strong></td><td class="up"><strong>$62.9</strong></td><td class="up"><strong>$487.2</strong></td><td class="up"><strong>0.023x</strong></td><td class="up"><strong>15.3x</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     05 現金流量
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">05</span>現金流量分析</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 現金流量瀑布圖（FY2024）</div>
+      <div class="chart-box"><canvas id="chartCashflow" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔥 現金消耗率 vs 現金儲備</div>
+      <div class="chart-box"><canvas id="chartBurnRate" height="280"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">現金流量組成明細</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>項目</th><th>FY2022 ($M)</th><th>FY2023 ($M)</th><th>FY2024 ($M)</th><th>Q3 2025 季 ($M)</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>營業現金流</td><td class="down">~-$22</td><td class="down">~-$28</td><td class="down">~-$25</td><td class="down">~-$7</td><td>持續負值，核心業務仍燒錢</td></tr>
+          <tr><td>資本支出</td><td class="down">~-$3</td><td class="down">~-$4</td><td class="down">~-$5</td><td class="down">~-$1.5</td><td>R&D 設備投資</td></tr>
+          <tr><td>自由現金流</td><td class="down">~-$25</td><td class="down">~-$32</td><td class="down">~-$30</td><td class="down">~-$8.5</td><td>持續負值</td></tr>
+          <tr><td>融資現金流</td><td class="up">+$25</td><td class="up">+$20</td><td class="up">+$40</td><td class="up">+$407</td><td>2025 Q4 $4.25 億發行</td></tr>
+          <tr><td>期末現金</td><td>~$15</td><td>~$15</td><td>$30</td><td class="up"><strong>$433</strong></td><td>大幅改善</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     06 獲利能力
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">06</span>獲利能力指標</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">🕸 獲利能力雷達圖</div>
+      <div class="chart-box"><canvas id="chartRadar" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 ROE / ROA / ROIC 趨勢</div>
+      <div class="chart-box"><canvas id="chartROE" height="280"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid4">
+    <div class="stat"><div class="label">毛利率 (2024)</div><div class="value down">5%</div><div class="hint">2023: 41%</div></div>
+    <div class="stat"><div class="label">淨利率 (2024)</div><div class="value down">-528%</div><div class="hint">深度虧損</div></div>
+    <div class="stat"><div class="label">ROE (2024)</div><div class="value down">-229%</div><div class="hint">無意義（虧損）</div></div>
+    <div class="stat"><div class="label">毛利率目標 (2026)</div><div class="value up">30%+</div><div class="hint">管理層指引</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     07 估值分析
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">07</span>估值分析</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 P/S 比率歷史趨勢</div>
+      <div class="chart-box"><canvas id="chartPS" height="250"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 同業 P/S 比率比較</div>
+      <div class="chart-box"><canvas id="chartPeer" height="250"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 情境分析 -->
+  <div class="card">
+    <div class="card-title">📊 情境分析——目標股價</div>
+    <div class="chart-box"><canvas id="chartScenario" height="200"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">估值多重情境表</div>
+    <div class="scen">
+      <div class="scen-row header">
+        <div>情境</div><div>2026 收入假設</div><div>P/S 倍數</div><div>隱含市值</div><div>目標股價</div>
+      </div>
+      <div class="scen-row">
+        <div><span class="badge b-sell">熊市</span></div>
+        <div>$60M（指引的 55%）</div><div>4x</div><div>$2.4B</div>
+        <div class="down"><strong>$9.23 (-5%)</strong></div>
+      </div>
+      <div class="scen-row">
+        <div><span class="badge b-neu">基準</span></div>
+        <div>$110M（符合指引）</div><div>6x</div><div>$6.6B</div>
+        <div class="up"><strong>$25.39 (+162%)</strong></div>
+      </div>
+      <div class="scen-row">
+        <div><span class="badge b-buy">牛市</span></div>
+        <div>$150M（超越指引）</div><div>8x</div><div>$12.0B</div>
+        <div class="up"><strong>$46.17 (+376%)</strong></div>
+      </div>
+      <div class="scen-row">
+        <div><span class="badge b-blue">超牛</span></div>
+        <div>$200M（大幅超越）</div><div>10x</div><div>$20.0B</div>
+        <div class="up"><strong>$76.95 (+694%)</strong></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:12px">假設：流通股 260M；現價 $9.69；分析師均值目標 $19（保守基準）</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     08 競爭態勢
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">08</span>競爭態勢 · 護城河分析</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">🕸 波特五力評分</div>
+      <div class="chart-box"><canvas id="chartPorter" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏰 護城河強度評估</div>
+      <div style="margin-top:10px">
+        <div class="prog-row">
+          <div class="prog-lbl">FAA BVLOS 認證</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:95%;background:var(--green)"></div></div>
+          <div class="prog-val up">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-lbl">Iron Drone 軍事技術</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:80%;background:var(--green)"></div></div>
+          <div class="prog-val up">⭐⭐⭐⭐</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-lbl">FullMAX 鐵路標準</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:65%;background:var(--accent)"></div></div>
+          <div class="prog-val" style="color:var(--accent)">⭐⭐⭐</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-lbl">政府安全資質</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:65%;background:var(--accent)"></div></div>
+          <div class="prog-val" style="color:var(--accent)">⭐⭐⭐</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-lbl">規模與資本實力</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:40%;background:var(--yellow)"></div></div>
+          <div class="prog-val neu">⭐⭐</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-lbl">品牌認知度</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:25%;background:var(--red)"></div></div>
+          <div class="prog-val down">⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">主要競爭對手比較</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>公司</th><th>重疊領域</th><th>規模</th><th>優勢</th><th>ONDS 差異化</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>L3Harris</strong></td><td>C-UAS、軍事無人機</td><td>大型（$6B+收入）</td><td>資本、政府關係</td><td>靈活性、以色列 IP</td></tr>
+          <tr><td><strong>Skydio</strong></td><td>自動無人機</td><td>私有（估值 ~$2.2B）</td><td>AI 飛行算法</td><td>FAA BVLOS 先發優勢</td></tr>
+          <tr><td><strong>Elbit Systems</strong></td><td>無人機、C-UAS</td><td>大型（$5B+收入）</td><td>以色列軍事 IP</td><td>Airobotics 本同門</td></tr>
+          <tr><td><strong>Dedrone (Axon)</strong></td><td>C-UAS 偵測</td><td>中型</td><td>軟體偵測</td><td>ONDS 更注重打擊</td></tr>
+          <tr><td><strong>Roboteam</strong></td><td>地面機器人</td><td>小型</td><td>戰術機器人</td><td><span class="badge b-buy">已被 ONDS 收購</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     09 成長催化劑
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">09</span>成長催化劑</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 可服務目標市場（TAM）2025→2030</div>
+      <div class="chart-box"><canvas id="chartTAM" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">重大合約里程碑時間軸</div>
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--green)"></div>
+          <div class="tl-date">2025 Q1</div>
+          <div class="tl-title">$14.3M — Optimus 系統最大單筆訂單</div>
+          <div class="tl-desc">來自主要國防客戶，為歷史最大訂單</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--accent)"></div>
+          <div class="tl-date">2025 Q2</div>
+          <div class="tl-title">$8.2M — 歐洲最大機場 Iron Drone Raider</div>
+          <div class="tl-desc">重要歐洲市場突破，機場安保應用</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--accent)"></div>
+          <div class="tl-date">2025 Q3</div>
+          <div class="tl-title">$3.4M — 歐洲國防承包商 C-UAS</div>
+          <div class="tl-desc">Iron Drone Raider 歐洲政府客戶</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--purple)"></div>
+          <div class="tl-date">2025 Q3</div>
+          <div class="tl-title">Apeiro Motion 收購完成</div>
+          <div class="tl-desc">強化 OAS 運動控制能力</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--yellow)"></div>
+          <div class="tl-date">2025 Q4</div>
+          <div class="tl-title">$4.25 億股票發行</div>
+          <div class="tl-desc">淨收益 $4.07 億，消除融資壓力</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--green)"></div>
+          <div class="tl-date">2026 Q1 (預期)</div>
+          <div class="tl-title">🚀 邊境保護「千架無人機」政府標案 PO</div>
+          <div class="tl-desc">潛在最重大合約，金額 TBD，多年計畫</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--green)"></div>
+          <div class="tl-date">2026 Q1</div>
+          <div class="tl-title">Roboteam 收購完成</div>
+          <div class="tl-desc">全球領先戰術地面機器人，拓展陸地自主系統</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     10 風險分析
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">10</span>風險分析</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📊 風險評估矩陣</div>
+      <div class="chart-box"><canvas id="chartRisk" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 認股權稀釋影響（已發行 vs 潛在）</div>
+      <div class="chart-box"><canvas id="chartDilution" height="280"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">主要風險詳細評估</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>風險類型</th><th>嚴重程度</th><th>發生概率</th><th>緩解因素</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td><td><strong>股份稀釋</strong></td>
+            <td><span class="risk-h">極高</span></td><td><span class="risk-h">極高</span></td>
+            <td>$4.25億已發行，短期無需再融資</td>
+          </tr>
+          <tr>
+            <td>2</td><td><strong>客戶集中風險</strong></td>
+            <td><span class="risk-h">高</span></td><td><span class="risk-m">中</span></td>
+            <td>積極多元化，但仍依賴少數大合約</td>
+          </tr>
+          <tr>
+            <td>3</td><td><strong>持續深度虧損</strong></td>
+            <td><span class="risk-m">中高</span></td><td><span class="risk-h">高</span></td>
+            <td>現金充足，目標 H2 2026 EBITDA 轉正</td>
+          </tr>
+          <tr>
+            <td>4</td><td><strong>收入執行延遲</strong></td>
+            <td><span class="risk-m">中高</span></td><td><span class="risk-m">中</span></td>
+            <td>2024 曾發生，管理層已調整交付能力</td>
+          </tr>
+          <tr>
+            <td>5</td><td><strong>大廠競爭威脅</strong></td>
+            <td><span class="risk-m">中高</span></td><td><span class="risk-h">高</span></td>
+            <td>FAA 認證 + 以色列軍事 IP 護城河</td>
+          </tr>
+          <tr>
+            <td>6</td><td><strong>多收購整合風險</strong></td>
+            <td><span class="risk-m">中</span></td><td><span class="risk-m">中</span></td>
+            <td>Roboteam + Apeiro Motion 同時整合挑戰</td>
+          </tr>
+          <tr>
+            <td>7</td><td><strong>監管 / 地緣政治</strong></td>
+            <td><span class="risk-m">中</span></td><td><span class="risk-l">低至中</span></td>
+            <td>美以關係穩定，但出口管制風險存在</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     11 公平價值 & 投資建議
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">11</span>公平價值 · 投資建議</div>
+
+  <div class="card">
+    <div class="card-title">📊 估值方法彙整</div>
+    <div class="chart-box"><canvas id="chartValuation" height="200"></canvas></div>
+  </div>
+
+  <div class="grid2" style="margin-top:20px">
+    <div class="card" style="border-color:var(--green)">
+      <div class="card-title" style="color:var(--green)">✅ 看多因素</div>
+      <ul style="padding-left:20px;line-height:2.3;font-size:14px">
+        <li>Q3 2025 +582% 成長，証明商業模式可行</li>
+        <li>$433M 現金，消除倒閉風險，可燃燒 10 年以上</li>
+        <li>FAA BVLOS 唯一認證，護城河難以複製</li>
+        <li>邊境保護「千架無人機」政府標案，潛力極大</li>
+        <li>P/S 6.3x 低於 5 年均值 17.6x，相對折扣</li>
+        <li>分析師目標 $19，較現價有 +96% 潛在空間</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--red)">
+      <div class="card-title" style="color:var(--red)">⚠️ 看空因素</div>
+      <ul style="padding-left:20px;line-height:2.3;font-size:14px">
+        <li>12 個月股份 +352%，認股權仍有 7,392 萬待行使</li>
+        <li>淨利率 -298.6%，盈虧平衡遙遠</li>
+        <li>2024 年收入大幅低於 2023（-54%），可靠性存疑</li>
+        <li>按 2024 實際收入計算市值/收入 ≈ 60x，泡沫風險</li>
+        <li>多項收購同步整合，執行風險高</li>
+        <li>大型國防承包商競爭，資本實力遠遜於競爭對手</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-color:var(--yellow)">
+    <div class="card-title">最終投資建議</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:280px">
+        <div style="font-size:1.3rem;font-weight:700;color:var(--yellow);margin-bottom:12px">🟡 投機性買入（Speculative Buy）</div>
+        <table>
+          <tbody>
+            <tr><td style="color:var(--muted);padding:6px 12px 6px 0">公平價值區間</td><td><strong>$18 – $22</strong>（基準情境）</td></tr>
+            <tr><td style="color:var(--muted);padding:6px 12px 6px 0">信心水準</td><td><strong style="color:var(--yellow)">低至中等</strong></td></tr>
+            <tr><td style="color:var(--muted);padding:6px 12px 6px 0">建議倉位</td><td><strong style="color:var(--yellow)">≤ 3–5% 高風險組合</strong></td></tr>
+            <tr><td style="color:var(--muted);padding:6px 12px 6px 0">投資時限</td><td><strong>中長期 2–4 年</strong></td></tr>
+            <tr><td style="color:var(--muted);padding:6px 12px 6px 0">進場策略</td><td>分批建倉，控制平均成本</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div style="font-weight:600;margin-bottom:12px">關鍵監控指標</div>
+        <ul style="padding-left:18px;line-height:2.2;font-size:14px;color:var(--muted)">
+          <li>收入是否達成 $36M（2025）/ $110M（2026）</li>
+          <li>毛利率恢復至 20%+ 目標</li>
+          <li>邊境保護標案正式 PO 金額公告</li>
+          <li>H2 2026 EBITDA 轉正目標</li>
+          <li>認股權行使 / 股份繼續稀釋情況</li>
+          <li>Roboteam 整合協同效益</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     12 數據來源
+═══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">12</span>數據來源</div>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>來源</th><th>類型</th><th>主要引用內容</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://ir.ondas.com/press-releases/detail/254" style="color:var(--accent)">Ondas Q3 2025 財報</a></td><td>官方申報</td><td>Q3 2025 收入 $10.1M、現金 $433M、2025 指引 $36M+</td></tr>
+          <tr><td><a href="https://ir.ondas.com/press-releases/detail/199" style="color:var(--accent)">Ondas FY2024 年報</a></td><td>官方申報</td><td>2024 全年收入 $7.2M、毛利率 5%、淨虧損 $38M</td></tr>
+          <tr><td><a href="https://ir.ondas.com/press-releases/detail/155" style="color:var(--accent)">Ondas FY2023 年報</a></td><td>官方申報</td><td>2023 全年收入 $15.7M、毛利率 41%</td></tr>
+          <tr><td><a href="https://stockanalysis.com/stocks/onds/statistics/" style="color:var(--accent)">StockAnalysis ONDS</a></td><td>財務數據庫</td><td>P/S 比率、市值、流通股</td></tr>
+          <tr><td><a href="https://fintel.io/topic/how-will-the-425m-october-2025-offering-impact-ondss-capital-structure-and-dilution-1675-9162" style="color:var(--accent)">Fintel 稀釋分析</a></td><td>風險分析</td><td>$4.25 億發行稀釋影響</td></tr>
+          <tr><td><a href="https://seekingalpha.com/symbol/ONDS" style="color:var(--accent)">Seeking Alpha ONDS</a></td><td>投資分析</td><td>同業比較、熊市分析</td></tr>
+          <tr><td><a href="https://www.macrotrends.net/stocks/charts/ONDS/ondas-holdings/revenue" style="color:var(--accent)">MacroTrends</a></td><td>歷史數據</td><td>歷年收入序列</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>安達斯公司 (ONDS) 基本面深度分析報告 &nbsp;|&nbsp; 報告日期：2026 年 2 月 22 日 &nbsp;|&nbsp; 由 Claude AI Sonnet 4.6 生成</p>
+  <p style="margin-top:8px">
+    <a href="https://ir.ondas.com/" target="_blank">Ondas IR</a> ·
+    <a href="https://stockanalysis.com/stocks/onds/" target="_blank">StockAnalysis</a> ·
+    <a href="https://seekingalpha.com/symbol/ONDS" target="_blank">Seeking Alpha</a>
+  </p>
+  <p style="margin-top:8px;font-size:11px">本報告僅供教育與研究參考，不構成投資建議。ONDS 為高風險投機性成長股，投資前請諮詢持牌財務顧問。</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     CHARTS (Chart.js)
+═══════════════════════════════════════════ -->
+<script>
+Chart.defaults.color = '#7a9bbf';
+Chart.defaults.borderColor = '#1f3352';
+Chart.defaults.font.family = "'Segoe UI','Microsoft JhengHei',Arial,sans-serif";
+
+const COLORS = {
+  green:  'rgba(34,211,165,1)',
+  greenA: 'rgba(34,211,165,0.15)',
+  red:    'rgba(244,83,107,1)',
+  redA:   'rgba(244,83,107,0.15)',
+  yellow: 'rgba(251,191,36,1)',
+  yellowA:'rgba(251,191,36,0.15)',
+  blue:   'rgba(56,189,248,1)',
+  blueA:  'rgba(56,189,248,0.15)',
+  purple: 'rgba(167,139,250,1)',
+  purpleA:'rgba(167,139,250,0.15)',
+  orange: 'rgba(251,146,60,1)',
+  orangeA:'rgba(251,146,60,0.15)',
+};
+
+// ── 1. Annual Revenue ──
+new Chart(document.getElementById('chartRevenue'), {
+  type:'bar',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025E','2026E'],
+    datasets:[{
+      label:'年度收入 ($M)',
+      data:[0.8,1.4,2.1,15.7,7.2,36,110],
+      backgroundColor:['#1f3352','#1f3352','#1f3352','rgba(34,211,165,.7)','rgba(244,83,107,.7)','rgba(34,211,165,.85)','rgba(34,211,165,1)'],
+      borderRadius:6,
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}M`}}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 2. Net Loss ──
+new Chart(document.getElementById('chartNetLoss'), {
+  type:'bar',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025E','2026E'],
+    datasets:[{
+      label:'淨虧損 ($M)',
+      data:[-17,-31,-69,-47,-38,-35,-25],
+      backgroundColor:['rgba(244,83,107,.5)','rgba(244,83,107,.55)','rgba(244,83,107,.9)','rgba(244,83,107,.75)','rgba(244,83,107,.8)','rgba(244,83,107,.6)','rgba(244,83,107,.4)'],
+      borderRadius:6,
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}M`}}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 3. Quarterly Revenue ──
+new Chart(document.getElementById('chartQuarterly'), {
+  type:'bar',
+  data:{
+    labels:['Q1\'24','Q2\'24','Q3\'24','Q4\'24','Q1\'25','Q2\'25','Q3\'25','Q4\'25E'],
+    datasets:[
+      {label:'OAS',data:[2.0,1.8,1.0,0.5,2.5,4.0,10.0,13.0],backgroundColor:'rgba(34,211,165,.8)',borderRadius:4},
+      {label:'Networks',data:[0.7,0.5,0.3,0.4,0.6,0.7,0.1,0.2],backgroundColor:'rgba(56,189,248,.8)',borderRadius:4},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.raw}M`}}},
+    scales:{
+      y:{stacked:true,ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'}},
+      x:{stacked:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── 4. Margins ──
+new Chart(document.getElementById('chartMargins'), {
+  type:'line',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025E'],
+    datasets:[
+      {label:'毛利率',data:[60,55,52,41,5,25],borderColor:COLORS.green,backgroundColor:COLORS.greenA,tension:.4,fill:true,pointRadius:5},
+      {label:'營業利潤率',data:[-2100,-2214,-3286,-253,-481,-125],borderColor:COLORS.red,backgroundColor:'transparent',tension:.4,pointRadius:5,hidden:true},
+      {label:'行業均值（參考）',data:[35,35,35,35,35,35],borderColor:COLORS.yellow,borderDash:[5,5],backgroundColor:'transparent',pointRadius:0},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+    scales:{
+      y:{ticks:{callback:v=>`${v}%`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 5. Revenue growth vs OPEX ──
+new Chart(document.getElementById('chartGrowthVsOpex'), {
+  type:'bar',
+  data:{
+    labels:['2022→2023','2023→2024','2024→2025E'],
+    datasets:[
+      {label:'收入增長率',data:[638,-54,400],backgroundColor:['rgba(34,211,165,.8)','rgba(244,83,107,.8)','rgba(34,211,165,.8)'],borderRadius:6},
+      {label:'營業費用增長率',data:[-34.6,-24.1,57.1],backgroundColor:['rgba(56,189,248,.6)','rgba(56,189,248,.6)','rgba(56,189,248,.6)'],borderRadius:6},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+    scales:{
+      y:{ticks:{callback:v=>`${v}%`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 6. Assets Bar ──
+new Chart(document.getElementById('chartAssets'), {
+  type:'bar',
+  data:{
+    labels:['2024/12 資產','2024/12 負債+權益','2025/09 資產','2025/09 負債+權益'],
+    datasets:[
+      {label:'現金',data:[30,0,433.4,0],backgroundColor:'rgba(34,211,165,.8)',borderRadius:4},
+      {label:'其他資產',data:[120,0,116.8,0],backgroundColor:'rgba(56,189,248,.6)',borderRadius:4},
+      {label:'股東權益',data:[0,16.6,0,487.2],backgroundColor:'rgba(167,139,250,.7)',borderRadius:4},
+      {label:'負債',data:[0,133.4,0,62.9],backgroundColor:'rgba(244,83,107,.7)',borderRadius:4},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'}},
+    scales:{
+      y:{stacked:true,ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'}},
+      x:{stacked:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── 7. Shares Dilution ──
+new Chart(document.getElementById('chartShares'), {
+  type:'line',
+  data:{
+    labels:['2022/12','2023/06','2023/12','2024/06','2024/12','2025/06','2025/09','2025/12'],
+    datasets:[{
+      label:'流通股數（百萬）',
+      data:[48,55,58,62,58,72,85,260],
+      borderColor:COLORS.red,
+      backgroundColor:COLORS.redA,
+      fill:true,tension:.4,pointRadius:5,
+    },{
+      label:'潛在稀釋後（百萬）',
+      data:[null,null,null,null,null,null,null,335],
+      borderColor:COLORS.yellow,
+      backgroundColor:'transparent',
+      borderDash:[5,5],pointRadius:8,pointStyle:'star',
+    }]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}M 股`}}},
+    scales:{
+      y:{ticks:{callback:v=>`${v}M`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 8. Cashflow Waterfall ──
+new Chart(document.getElementById('chartCashflow'), {
+  type:'bar',
+  data:{
+    labels:['營業現金流','資本支出','自由現金流','融資現金流','期末現金'],
+    datasets:[{
+      label:'金額 ($M)',
+      data:[-25,-5,-30,40,30],
+      backgroundColor:[
+        'rgba(244,83,107,.75)',
+        'rgba(244,83,107,.55)',
+        'rgba(244,83,107,.85)',
+        'rgba(34,211,165,.8)',
+        'rgba(56,189,248,.8)',
+      ],
+      borderRadius:6,
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}M`}}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 9. Burn Rate ──
+new Chart(document.getElementById('chartBurnRate'), {
+  type:'line',
+  data:{
+    labels:['2022','2023','2024','Q3\'25 (年化)'],
+    datasets:[
+      {label:'年度現金消耗 ($M)',data:[25,32,30,35],borderColor:COLORS.red,backgroundColor:COLORS.redA,fill:true,tension:.4,pointRadius:5},
+      {label:'期末現金 ($M)',data:[15,15,30,433],borderColor:COLORS.green,backgroundColor:'transparent',tension:.4,pointRadius:5,yAxisID:'y2'},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}M`},grid:{color:'#1f3352'},title:{display:true,text:'消耗率 ($M)'}},
+      y2:{type:'linear',position:'right',ticks:{callback:v=>`$${v}M`},grid:{display:false},title:{display:true,text:'現金儲備 ($M)'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 10. Radar ──
+new Chart(document.getElementById('chartRadar'), {
+  type:'radar',
+  data:{
+    labels:['收入成長力','毛利率潛力','資本結構','現金充足度','盈利能力','競爭護城河'],
+    datasets:[
+      {label:'ONDS (現狀)',data:[90,40,75,95,10,65],borderColor:COLORS.blue,backgroundColor:COLORS.blueA,pointRadius:5},
+      {label:'行業均值',data:[40,65,60,50,55,50],borderColor:COLORS.yellow,backgroundColor:COLORS.yellowA,pointRadius:5},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'}},
+    scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'#1f3352'},angleLines:{color:'#1f3352'}}}
+  }
+});
+
+// ── 11. ROE/ROA ──
+new Chart(document.getElementById('chartROE'), {
+  type:'line',
+  data:{
+    labels:['2021','2022','2023','2024','2025E'],
+    datasets:[
+      {label:'毛利率 %',data:[55,52,41,5,25],borderColor:COLORS.green,backgroundColor:'transparent',tension:.4,pointRadius:5},
+      {label:'行業毛利率均值',data:[35,35,35,35,35],borderColor:COLORS.yellow,borderDash:[5,5],backgroundColor:'transparent',pointRadius:0},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+    scales:{
+      y:{ticks:{callback:v=>`${v}%`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 12. P/S History ──
+new Chart(document.getElementById('chartPS'), {
+  type:'line',
+  data:{
+    labels:['2021','2022','2023','2024','現在'],
+    datasets:[
+      {label:'P/S 比率',data:[22,18,8,12,6.3],borderColor:COLORS.blue,backgroundColor:COLORS.blueA,fill:true,tension:.4,pointRadius:6},
+      {label:'5年均值 17.6x',data:[17.6,17.6,17.6,17.6,17.6],borderColor:COLORS.yellow,borderDash:[6,3],backgroundColor:'transparent',pointRadius:0},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}x`}}},
+    scales:{
+      y:{ticks:{callback:v=>`${v}x`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 13. Peer P/S ──
+new Chart(document.getElementById('chartPeer'), {
+  type:'bar',
+  data:{
+    labels:['AeroVironment\n(AVAV)','Kratos Defense\n(KTOS)','ONDS (當前)','Axon (AXON)','小型防衛\nAgTech均值'],
+    datasets:[{
+      label:'P/S 比率',
+      data:[5.0,6.0,6.3,7.8,8.0],
+      backgroundColor:['#1f3352','#1f3352','rgba(56,189,248,.8)','#1f3352','#1f3352'],
+      borderRadius:6,
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw}x P/S`}}},
+    scales:{
+      x:{ticks:{callback:v=>`${v}x`},grid:{color:'#1f3352'}},
+      y:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 14. Scenario ──
+new Chart(document.getElementById('chartScenario'), {
+  type:'bar',
+  data:{
+    labels:['熊市\n$60M × 4x','基準\n$110M × 6x','牛市\n$150M × 8x','超牛\n$200M × 10x'],
+    datasets:[{
+      label:'目標股價 ($)',
+      data:[9.23,25.39,46.17,76.95],
+      backgroundColor:['rgba(244,83,107,.7)','rgba(251,191,36,.7)','rgba(34,211,165,.7)','rgba(167,139,250,.7)'],
+      borderRadius:8,
+    }]
+  },
+  options:{
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>`$${c.raw}`}},
+      annotation:{annotations:{
+        currentPrice:{type:'line',yMin:9.69,yMax:9.69,borderColor:'rgba(255,255,255,.5)',borderDash:[5,5],label:{display:true,content:'現價 $9.69',position:'end',color:'white'}}
+      }}
+    },
+    scales:{
+      y:{ticks:{callback:v=>`$${v}`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 15. Porter's Five Forces ──
+new Chart(document.getElementById('chartPorter'), {
+  type:'radar',
+  data:{
+    labels:['新進者威脅','供應商議價力','買家議價力','替代品威脅','競爭強度'],
+    datasets:[{
+      label:'ONDS 威脅程度（越高=越不利）',
+      data:[70,55,55,50,75],
+      borderColor:COLORS.orange,backgroundColor:COLORS.orangeA,pointRadius:6,
+    }]
+  },
+  options:{
+    plugins:{legend:{position:'top'}},
+    scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'#1f3352'},angleLines:{color:'#1f3352'}}}
+  }
+});
+
+// ── 16. TAM ──
+new Chart(document.getElementById('chartTAM'), {
+  type:'bar',
+  data:{
+    labels:['C-UAS\n反無人機','BVLOS\n無人機服務','鐵路 IoT\n無線通訊','邊境安全\n自主系統'],
+    datasets:[
+      {label:'2025E ($B)',data:[3.5,2.1,2.0,1.5],backgroundColor:'rgba(56,189,248,.6)',borderRadius:5},
+      {label:'2030E ($B)',data:[10.0,12.5,4.0,7.0],backgroundColor:'rgba(34,211,165,.75)',borderRadius:5},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`$${c.raw}B`}}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}B`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+// ── 17. Risk Matrix (bubble) ──
+new Chart(document.getElementById('chartRisk'), {
+  type:'bubble',
+  data:{
+    datasets:[
+      {label:'①稀釋風險',data:[{x:90,y:90,r:18}],backgroundColor:'rgba(244,83,107,.75)'},
+      {label:'②客戶集中',data:[{x:55,y:80,r:13}],backgroundColor:'rgba(251,146,60,.75)'},
+      {label:'③持續虧損',data:[{x:80,y:70,r:14}],backgroundColor:'rgba(244,83,107,.6)'},
+      {label:'④執行延遲',data:[{x:55,y:65,r:11}],backgroundColor:'rgba(251,191,36,.75)'},
+      {label:'⑤大廠競爭',data:[{x:75,y:65,r:12}],backgroundColor:'rgba(251,146,60,.6)'},
+      {label:'⑥整合風險',data:[{x:50,y:50,r:9}],backgroundColor:'rgba(251,191,36,.6)'},
+      {label:'⑦監管地緣',data:[{x:30,y:45,r:8}],backgroundColor:'rgba(34,211,165,.6)'},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'right',labels:{boxWidth:12}}},
+    scales:{
+      x:{min:0,max:100,title:{display:true,text:'發生概率 →'},grid:{color:'#1f3352'}},
+      y:{min:0,max:100,title:{display:true,text:'影響程度 →'},grid:{color:'#1f3352'}}
+    }
+  }
+});
+
+// ── 18. Dilution Pie ──
+new Chart(document.getElementById('chartDilution'), {
+  type:'doughnut',
+  data:{
+    labels:['現有流通股','待行使認股權','其他潛在稀釋'],
+    datasets:[{
+      data:[260,73.9,1.1],
+      backgroundColor:['rgba(56,189,248,.8)','rgba(244,83,107,.75)','rgba(251,191,36,.7)'],
+      borderColor:['#162236'],borderWidth:2,hoverOffset:6,
+    }]
+  },
+  options:{
+    plugins:{
+      legend:{position:'bottom'},
+      tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}M 股 (${(c.raw/335*100).toFixed(1)}%)`}}
+    }
+  }
+});
+
+// ── 19. Valuation Methods ──
+new Chart(document.getElementById('chartValuation'), {
+  type:'bar',
+  data:{
+    labels:['P/S 倍數法\n(2026指引×6x)','DCF (簡化,樂觀)','DCF (簡化,保守)','分析師均值目標'],
+    datasets:[{
+      label:'目標股價 ($)',
+      data:[25.39,28,12,19],
+      backgroundColor:['rgba(34,211,165,.75)','rgba(56,189,248,.7)','rgba(251,146,60,.7)','rgba(167,139,250,.8)'],
+      borderRadius:8,
+    },{
+      label:'現價 $9.69',
+      data:[9.69,9.69,9.69,9.69],
+      backgroundColor:'rgba(255,255,255,.1)',
+      borderColor:'rgba(255,255,255,.4)',
+      borderWidth:2,
+      type:'bar',borderRadius:8,
+    }]
+  },
+  options:{
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: $${c.raw}`}}},
+    scales:{
+      y:{ticks:{callback:v=>`$${v}`},grid:{color:'#1f3352'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+</script>
+</body>
+</html>
