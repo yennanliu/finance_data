@@ -1,19 +1,35 @@
 name: Daily Market News
 
-# ── Schedules ────────────────────────────────────────────────────────────────
-#   01:00 UTC = 09:00 AM Taipei  →  AAPL news
-#   01:30 UTC = 09:30 AM Taipei  →  TSLA news
+# ── Schedules (UTC → Taipei) ─────────────────────────────────────────────────
+#   01:00 → 09:00  TSLA
+#   01:15 → 09:15  PLTR
+#   01:30 → 09:30  ONDS
+#   01:45 → 09:45  TSM
+#   02:00 → 10:00  GOOG
+#   02:15 → 10:15  AMZN
+#   02:30 → 10:30  SOFI
+#   02:45 → 10:45  AMD
+#   03:00 → 11:00  MSFT
+#   03:15 → 11:15  RKLB
 on:
   schedule:
-    - cron: "0 1 * * *"    # AAPL news
-    - cron: "30 1 * * *"   # TSLA news
+    - cron: "0 1 * * *"    # TSLA
+    - cron: "15 1 * * *"   # PLTR
+    - cron: "30 1 * * *"   # ONDS
+    - cron: "45 1 * * *"   # TSM
+    - cron: "0 2 * * *"    # GOOG
+    - cron: "15 2 * * *"   # AMZN
+    - cron: "30 2 * * *"   # SOFI
+    - cron: "45 2 * * *"   # AMD
+    - cron: "0 3 * * *"    # MSFT
+    - cron: "15 3 * * *"   # RKLB
 
   workflow_dispatch:
     inputs:
       ticker:
         description: "Stock ticker symbol (e.g. AAPL, TSLA, NVDA, SPY)"
         required: false
-        default: "AAPL"
+        default: "TSLA"
       model:
         description: "Claude model ID"
         required: false
@@ -62,8 +78,7 @@ jobs:
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
-      #   schedule 0 1 * * *   → AAPL
-      #   schedule 30 1 * * *  → TSLA
+      #   scheduled crons   → map to pre-configured ticker
       - name: Resolve parameters
         id: params
         run: |
@@ -75,22 +90,54 @@ jobs:
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
           elif [ "$SCHEDULE" = "0 1 * * *" ]; then
-            TICKER="AAPL"
+            TICKER="TSLA"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "15 1 * * *" ]; then
+            TICKER="PLTR"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
           elif [ "$SCHEDULE" = "30 1 * * *" ]; then
-            TICKER="TSLA"
+            TICKER="ONDS"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "45 1 * * *" ]; then
+            TICKER="TSM"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "0 2 * * *" ]; then
+            TICKER="GOOG"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "15 2 * * *" ]; then
+            TICKER="AMZN"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "30 2 * * *" ]; then
+            TICKER="SOFI"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "45 2 * * *" ]; then
+            TICKER="AMD"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "0 3 * * *" ]; then
+            TICKER="MSFT"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "15 3 * * *" ]; then
+            TICKER="RKLB"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
           else
             # Fallback
-            TICKER="AAPL"
+            TICKER="TSLA"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
           fi
 
           # Apply defaults for empty values
-          TICKER="${TICKER:-AAPL}"
+          TICKER="${TICKER:-TSLA}"
           MODEL="${MODEL:-claude-sonnet-4-6}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
