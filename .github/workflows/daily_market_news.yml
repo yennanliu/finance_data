@@ -1,12 +1,12 @@
-name: Daily Stock Analysis
+name: Daily Market News
 
 # ── Schedules ────────────────────────────────────────────────────────────────
-#   02:00 UTC = 10:00 AM Taipei  →  AAPL fundamental-analysis
-#   03:00 UTC = 11:00 AM Taipei  →  TSLA technical-analysis
+#   01:00 UTC = 09:00 AM Taipei  →  AAPL news
+#   01:30 UTC = 09:30 AM Taipei  →  TSLA news
 on:
   schedule:
-    - cron: "0 2 * * *"   # AAPL fundamental-analysis
-    - cron: "0 3 * * *"   # TSLA technical-analysis
+    - cron: "0 1 * * *"    # AAPL news
+    - cron: "30 1 * * *"   # TSLA news
 
   workflow_dispatch:
     inputs:
@@ -14,18 +14,6 @@ on:
         description: "Stock ticker symbol (e.g. AAPL, TSLA, NVDA, SPY)"
         required: false
         default: "AAPL"
-      analysis_type:
-        description: "Analysis type"
-        required: false
-        default: "fundamental-analysis"
-        type: choice
-        options:
-          - fundamental-analysis
-          - technical-analysis
-          - stock-eval
-          - economics-analysis
-          - portfolio-review
-          - sector-analysis
       model:
         description: "Claude model ID"
         required: false
@@ -38,18 +26,18 @@ on:
       max_tokens:
         description: "Max output tokens"
         required: false
-        default: "20000"
+        default: "8000"
 
 permissions:
   contents: write   # needed to commit & push generated report
 
 concurrency:
-  group: "daily-analysis-${{ github.run_id }}"
+  group: "daily-market-news-${{ github.run_id }}"
   cancel-in-progress: false
 
 jobs:
-  generate:
-    name: Generate Analysis
+  fetch-news:
+    name: Fetch & Generate News Report
     runs-on: ubuntu-latest
 
     steps:
@@ -74,9 +62,9 @@ jobs:
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
-      #   schedule 0 2 * * *  → AAPL / fundamental-analysis
-      #   schedule 0 3 * * *  → TSLA / technical-analysis
-      - name: Resolve analysis parameters
+      #   schedule 0 1 * * *   → AAPL
+      #   schedule 30 1 * * *  → TSLA
+      - name: Resolve parameters
         id: params
         run: |
           EVENT="${{ github.event_name }}"
@@ -84,51 +72,44 @@ jobs:
 
           if [ "$EVENT" = "workflow_dispatch" ]; then
             TICKER="${{ github.event.inputs.ticker }}"
-            ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          elif [ "$SCHEDULE" = "0 2 * * *" ]; then
+          elif [ "$SCHEDULE" = "0 1 * * *" ]; then
             TICKER="AAPL"
-            ANALYSIS_TYPE="fundamental-analysis"
             MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "0 3 * * *" ]; then
+            MAX_TOKENS="8000"
+          elif [ "$SCHEDULE" = "30 1 * * *" ]; then
             TICKER="TSLA"
-            ANALYSIS_TYPE="technical-analysis"
             MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            MAX_TOKENS="8000"
           else
             # Fallback
             TICKER="AAPL"
-            ANALYSIS_TYPE="fundamental-analysis"
             MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            MAX_TOKENS="8000"
           fi
 
           # Apply defaults for empty values
           TICKER="${TICKER:-AAPL}"
-          ANALYSIS_TYPE="${ANALYSIS_TYPE:-fundamental-analysis}"
           MODEL="${MODEL:-claude-sonnet-4-6}"
-          MAX_TOKENS="${MAX_TOKENS:-20000}"
+          MAX_TOKENS="${MAX_TOKENS:-8000}"
 
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
-          OUTPUT_DIR="claude_code/${TICKER_LOWER}"
+          OUTPUT_DIR="claude_code/market_news/${TICKER_LOWER}"
 
-          echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
-          echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
-          echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
-          echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
-          echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
+          echo "ticker=${TICKER_UPPER}"      >> "$GITHUB_OUTPUT"
+          echo "model=${MODEL}"              >> "$GITHUB_OUTPUT"
+          echo "max_tokens=${MAX_TOKENS}"    >> "$GITHUB_OUTPUT"
+          echo "output_dir=${OUTPUT_DIR}"    >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
-          echo "  Event:         ${EVENT}"
-          echo "  Schedule:      ${SCHEDULE:-n/a}"
-          echo "  Ticker:        ${TICKER_UPPER}"
-          echo "  Analysis type: ${ANALYSIS_TYPE}"
-          echo "  Model:         ${MODEL}"
-          echo "  Max tokens:    ${MAX_TOKENS}"
-          echo "  Output dir:    ${OUTPUT_DIR}"
+          echo "  Event:      ${EVENT}"
+          echo "  Schedule:   ${SCHEDULE:-n/a}"
+          echo "  Ticker:     ${TICKER_UPPER}"
+          echo "  Model:      ${MODEL}"
+          echo "  Max tokens: ${MAX_TOKENS}"
+          echo "  Output dir: ${OUTPUT_DIR}"
 
       # ── 5. Verify API key secret is set ──────────────────────────
       - name: Check ANTHROPIC_API_KEY secret
@@ -143,17 +124,16 @@ jobs:
           fi
           echo "✅ ANTHROPIC_API_KEY is set."
 
-      # ── 6. Generate report ────────────────────────────────────────
-      - name: Generate analysis report
+      # ── 6. Generate news report ───────────────────────────────────
+      - name: Generate market news report
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python scripts/generate_analysis.py \
+          python scripts/generate_market_news.py \
             "${{ steps.params.outputs.ticker }}" \
-            --analysis-type "${{ steps.params.outputs.analysis_type }}" \
-            --output-dir    "${{ steps.params.outputs.output_dir }}" \
-            --model         "${{ steps.params.outputs.model }}" \
-            --max-tokens    "${{ steps.params.outputs.max_tokens }}"
+            --output-dir  "${{ steps.params.outputs.output_dir }}" \
+            --model       "${{ steps.params.outputs.model }}" \
+            --max-tokens  "${{ steps.params.outputs.max_tokens }}"
 
       # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
@@ -168,8 +148,7 @@ jobs:
           else
             DATE=$(date -u +"%Y-%m-%d")
             TICKER="${{ steps.params.outputs.ticker }}"
-            ATYPE="${{ steps.params.outputs.analysis_type }}"
-            git commit -m "chore: auto-generate ${TICKER} ${ATYPE} ${DATE}"
+            git commit -m "chore: auto-fetch ${TICKER} market-news ${DATE}"
             git push
-            echo "✅ Report committed and pushed."
+            echo "✅ News report committed and pushed."
           fi
