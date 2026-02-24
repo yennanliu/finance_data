@@ -1,0 +1,188 @@
+name: Advanced Stock Analysis
+
+# Handles analysis types that benefit from extra inputs:
+#   earnings-call-analysis  — optional transcript URL
+#   insider-trading         — SEC Form 4 insider activity
+#   institutional-ownership — 13F institutional holdings
+#   report-generator        — interactive HTML report
+
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: "Stock ticker (e.g. AAPL, TSLA, NVDA)"
+        required: true
+        default: "AAPL"
+      analysis_type:
+        description: "Analysis type"
+        required: true
+        default: "earnings-call-analysis"
+        type: choice
+        options:
+          - earnings-call-analysis
+          - insider-trading
+          - institutional-ownership
+          - report-generator
+      transcript_url:
+        description: "[earnings-call] Earnings transcript URL (optional — leave blank to use Yahoo Finance data)"
+        required: false
+        default: ""
+      model:
+        description: "Claude model ID"
+        required: false
+        default: "claude-sonnet-4-6"
+        type: choice
+        options:
+          - claude-sonnet-4-6
+          - claude-opus-4-6
+          - claude-haiku-4-5-20251001
+      max_tokens:
+        description: "Max output tokens"
+        required: false
+        default: "20000"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "advanced-analysis-${{ github.run_id }}"
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate Advanced Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Python ──────────────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # ── 3. Dependencies ────────────────────────────────────────────────────
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic>=0.40.0 yfinance>=0.2.40
+
+      # ── 4. Resolve parameters ──────────────────────────────────────────────
+      - name: Resolve analysis parameters
+        id: params
+        run: |
+          TICKER="${{ github.event.inputs.ticker }}"
+          ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
+          MODEL="${{ github.event.inputs.model }}"
+          MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
+          TRANSCRIPT_URL="${{ github.event.inputs.transcript_url }}"
+
+          TICKER="${TICKER:-AAPL}"
+          ANALYSIS_TYPE="${ANALYSIS_TYPE:-earnings-call-analysis}"
+          MODEL="${MODEL:-claude-sonnet-4-6}"
+          MAX_TOKENS="${MAX_TOKENS:-20000}"
+
+          TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
+          TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
+          OUTPUT_DIR="claude_code/${TICKER_LOWER}"
+
+          echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
+          echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
+          echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
+          echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
+          echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
+          echo "transcript_url=${TRANSCRIPT_URL}" >> "$GITHUB_OUTPUT"
+
+          echo "=== Parameters ==="
+          echo "  Ticker:        ${TICKER_UPPER}"
+          echo "  Analysis type: ${ANALYSIS_TYPE}"
+          echo "  Model:         ${MODEL}"
+          echo "  Max tokens:    ${MAX_TOKENS}"
+          echo "  Output dir:    ${OUTPUT_DIR}"
+          echo "  Transcript URL:${TRANSCRIPT_URL:-none}"
+
+      # ── 5. Fetch transcript (optional, earnings-call only) ─────────────────
+      - name: Fetch transcript content (if URL provided)
+        id: transcript
+        if: >
+          github.event.inputs.analysis_type == 'earnings-call-analysis' &&
+          github.event.inputs.transcript_url != ''
+        run: |
+          URL="${{ steps.params.outputs.transcript_url }}"
+          echo "Fetching transcript from: ${URL}"
+          TRANSCRIPT=$(curl -fsSL --max-time 30 "$URL" \
+            | python3 -c "
+          import sys, re
+          raw = sys.stdin.read()
+          # Strip HTML tags if present
+          text = re.sub(r'<[^>]+>', ' ', raw)
+          text = re.sub(r'\s+', ' ', text).strip()
+          # Limit to 12000 chars to fit in context
+          print(text[:12000])
+          " 2>/dev/null || echo "")
+
+          if [ -n "$TRANSCRIPT" ]; then
+            echo "transcript_content<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$TRANSCRIPT"             >> "$GITHUB_OUTPUT"
+            echo "EOF"                     >> "$GITHUB_OUTPUT"
+            echo "✅ Transcript fetched (${#TRANSCRIPT} chars)"
+          else
+            echo "transcript_content="     >> "$GITHUB_OUTPUT"
+            echo "⚠️  Could not fetch transcript, falling back to Yahoo Finance data."
+          fi
+
+      # ── 6. Verify API key ──────────────────────────────────────────────────
+      - name: Check ANTHROPIC_API_KEY secret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set."
+            exit 1
+          fi
+          echo "✅ ANTHROPIC_API_KEY is set."
+
+      # ── 7. Generate report ─────────────────────────────────────────────────
+      - name: Generate analysis report
+        timeout-minutes: 20
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TRANSCRIPT_CONTENT: ${{ steps.transcript.outputs.transcript_content }}
+        run: |
+          python scripts/generate_analysis.py \
+            "${{ steps.params.outputs.ticker }}" \
+            --analysis-type "${{ steps.params.outputs.analysis_type }}" \
+            --output-dir    "${{ steps.params.outputs.output_dir }}" \
+            --model         "${{ steps.params.outputs.model }}" \
+            --max-tokens    "${{ steps.params.outputs.max_tokens }}"
+
+      # ── 8. Commit & push ───────────────────────────────────────────────────
+      - name: Commit and push report
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          echo "📥 Pulling latest changes from remote..."
+          git pull --rebase origin main
+
+          git add "${{ steps.params.outputs.output_dir }}/"
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            DATE=$(date -u +"%Y-%m-%d")
+            TICKER="${{ steps.params.outputs.ticker }}"
+            ATYPE="${{ steps.params.outputs.analysis_type }}"
+            git commit -m "chore: auto-generate ${TICKER} ${ATYPE} ${DATE}"
+
+            echo "📤 Pushing changes to remote..."
+            git push
+            echo "✅ Report committed and pushed."
+          fi
