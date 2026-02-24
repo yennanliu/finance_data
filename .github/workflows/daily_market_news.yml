@@ -55,6 +55,7 @@ jobs:
   fetch-news:
     name: Fetch & Generate News Report
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       # ── 1. Checkout ────────────────────────────────────────────────
@@ -174,6 +175,7 @@ jobs:
 
       # ── 6. Generate news report ───────────────────────────────────
       - name: Generate market news report
+        timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
