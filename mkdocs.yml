@@ -15,7 +15,7 @@ site_dir: site
 theme:
   name: material
   custom_dir: docs/overrides
-  language: zh-TW
+  language: en
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -24,7 +24,7 @@ theme:
       accent: light blue
       toggle:
         icon: material/weather-sunny
-        name: 切換至深色模式
+        name: Switch to dark mode
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -32,7 +32,7 @@ theme:
       accent: light blue
       toggle:
         icon: material/weather-night
-        name: 切換至淺色模式
+        name: Switch to light mode
   font:
     text: Noto Sans TC
     code: JetBrains Mono
@@ -85,7 +85,7 @@ markdown_extensions:
   - md_in_html
   - toc:
       permalink: true
-      title: 目錄
+      title: Table of Contents
   - tables
   - pymdownx.arithmatex:
       generic: true
@@ -125,6 +125,13 @@ markdown_extensions:
 
 # ── Extra ─────────────────────────────────────────────────────────────────────
 extra:
+  alternate:
+    - name: English
+      link: /finance_data/
+      lang: en
+    - name: 繁體中文
+      link: /finance_data/zh/
+      lang: zh-TW
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/yennanliu/finance_data

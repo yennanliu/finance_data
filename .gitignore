@@ -14,6 +14,15 @@ docs/investor_day/
 docs/scripts.md
 docs/includes/
 
+# Generated Traditional Chinese docs (except index.md)
+docs/zh/reports/
+docs/zh/notebooks/
+docs/zh/sec/
+docs/zh/investor_day/
+docs/zh/scripts.md
+docs/zh/includes/
+docs/zh/.pages
+
 # Python
 __pycache__/
 *.py[cod]
