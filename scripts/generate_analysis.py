@@ -58,7 +58,7 @@ except ImportError:
 # ── constants ─────────────────────────────────────────────────────────────────
 TODAY          = date.today().isoformat()
 DEFAULT_MODEL  = "claude-sonnet-4-6"
-DEFAULT_TOKENS = 8000
+DEFAULT_TOKENS = 16000
 
 ANALYSIS_TYPES = {
     "fundamental-analysis": {
@@ -146,12 +146,13 @@ def fetch_data(ticker: str) -> dict:
     t    = yf.Ticker(ticker)
     info = t.info or {}
 
-    # price history ───────────────────────────────────────────────────────────
+    # price history (2Y for richer technical context) ─────────────────────────
     try:
-        hist           = t.history(period="1y")
+        hist           = t.history(period="2y")
         price_now      = float(hist["Close"].iloc[-1]) if not hist.empty else None
-        price_52w_high = float(hist["High"].max())     if not hist.empty else None
-        price_52w_low  = float(hist["Low"].min())      if not hist.empty else None
+        price_52w      = hist.tail(252)
+        price_52w_high = float(price_52w["High"].max()) if not hist.empty else None
+        price_52w_low  = float(price_52w["Low"].min())  if not hist.empty else None
         monthly        = hist["Close"].resample("ME").last().dropna()
         price_series   = {str(k)[:7]: round(float(v), 2) for k, v in monthly.items()}
     except Exception:
@@ -167,6 +168,48 @@ def fetch_data(ticker: str) -> dict:
         except Exception:
             return None
 
+    # analyst upgrades/downgrades (last 6 actions) ────────────────────────────
+    upgrades_text = "  (no data)"
+    try:
+        upg = t.upgrades_downgrades
+        if upg is not None and not upg.empty:
+            upg = upg.sort_index(ascending=False).head(6)
+            lines = []
+            for dt, row in upg.iterrows():
+                date_str = str(dt)[:10]
+                firm     = str(row.get("Firm", ""))[:20]
+                action   = str(row.get("Action", ""))
+                to_grade = str(row.get("ToGrade", ""))
+                lines.append(f"  {date_str}  {firm:<20}  {action:<12}  → {to_grade}")
+            upgrades_text = "\n".join(lines)
+    except Exception:
+        pass
+
+    # earnings history (beats/misses) ─────────────────────────────────────────
+    earnings_text = "  (no data)"
+    try:
+        eh = t.earnings_history
+        if eh is not None and not eh.empty:
+            eh = eh.sort_index(ascending=False).head(8)
+            lines = ["  Quarter      EPS Est  EPS Act  Surprise%"]
+            for dt, row in eh.iterrows():
+                q     = str(dt)[:10]
+                est   = row.get("epsestimate", float("nan"))
+                act   = row.get("epsactual",   float("nan"))
+                surp  = row.get("epsdifference", float("nan"))
+                surp_pct = row.get("surprisepercent", float("nan"))
+                try:
+                    flag = "✅" if float(surp) >= 0 else "❌"
+                except Exception:
+                    flag = "  "
+                lines.append(
+                    f"  {q}  {est:>8.2f}  {act:>8.2f}  "
+                    f"{surp_pct:>+7.1f}%  {flag}"
+                )
+            earnings_text = "\n".join(lines)
+    except Exception:
+        pass
+
     return {
         "ticker":         ticker,
         "info":           info,
@@ -174,12 +217,16 @@ def fetch_data(ticker: str) -> dict:
         "income":         _safe_df(lambda: t.financials),
         "income_q":       _safe_df(lambda: t.quarterly_financials),
         "balance":        _safe_df(lambda: t.balance_sheet),
+        "balance_q":      _safe_df(lambda: t.quarterly_balance_sheet),
         "cashflow":       _safe_df(lambda: t.cashflow),
-        "news":           (t.news or [])[:8],
+        "cashflow_q":     _safe_df(lambda: t.quarterly_cashflow),
+        "news":           (t.news or [])[:10],
         "price_now":      price_now,
         "price_52w_high": price_52w_high,
         "price_52w_low":  price_52w_low,
         "price_series":   price_series,
+        "upgrades_text":  upgrades_text,
+        "earnings_text":  earnings_text,
     }
 
 
@@ -199,86 +246,192 @@ def _price_ascii_chart(price_series: dict) -> str:
 
 
 def _compute_technicals(hist) -> str:
-    """Compute basic technical indicators from OHLC history DataFrame."""
+    """Compute technical indicators from OHLCV history DataFrame."""
     if hist is None or hist.empty:
         return "  (no OHLC data)"
     try:
         import pandas as pd
+        import numpy as np
 
         close  = hist["Close"]
+        high   = hist["High"]
+        low    = hist["Low"]
         volume = hist["Volume"]
 
-        # Moving averages
+        # ── Moving averages ───────────────────────────────────────────────────
         ma20  = close.rolling(20).mean()
         ma50  = close.rolling(50).mean()
         ma200 = close.rolling(200).mean()
 
-        # RSI-14
+        # ── RSI-14 ────────────────────────────────────────────────────────────
         delta = close.diff()
         gain  = delta.clip(lower=0).rolling(14).mean()
         loss  = (-delta.clip(upper=0)).rolling(14).mean()
         rs    = gain / loss.replace(0, float("nan"))
         rsi   = 100 - (100 / (1 + rs))
 
-        # MACD (12/26/9)
+        # ── MACD (12/26/9) ────────────────────────────────────────────────────
         ema12  = close.ewm(span=12, adjust=False).mean()
         ema26  = close.ewm(span=26, adjust=False).mean()
         macd   = ema12 - ema26
         signal = macd.ewm(span=9, adjust=False).mean()
         hist_m = macd - signal
 
-        # Bollinger Bands (20, 2σ)
-        bb_mid  = close.rolling(20).mean()
-        bb_std  = close.rolling(20).std()
-        bb_up   = bb_mid + 2 * bb_std
-        bb_lo   = bb_mid - 2 * bb_std
+        # ── Bollinger Bands (20, 2σ) ──────────────────────────────────────────
+        bb_mid = close.rolling(20).mean()
+        bb_std = close.rolling(20).std()
+        bb_up  = bb_mid + 2 * bb_std
+        bb_lo  = bb_mid - 2 * bb_std
+        bb_pct = (close - bb_lo) / (bb_up - bb_lo).replace(0, float("nan"))
 
-        # Last values
-        last        = close.iloc[-1]
-        last_ma20   = ma20.iloc[-1]
-        last_ma50   = ma50.iloc[-1]
-        last_ma200  = ma200.iloc[-1] if len(close) >= 200 else float("nan")
-        last_rsi    = rsi.iloc[-1]
-        last_macd   = macd.iloc[-1]
-        last_signal = signal.iloc[-1]
-        last_hist_m = hist_m.iloc[-1]
-        last_bb_up  = bb_up.iloc[-1]
-        last_bb_lo  = bb_lo.iloc[-1]
-        avg_vol_20  = volume.rolling(20).mean().iloc[-1]
-        last_vol    = volume.iloc[-1]
+        # ── ATR-14 ────────────────────────────────────────────────────────────
+        prev_close = close.shift(1)
+        tr = pd.concat([
+            high - low,
+            (high - prev_close).abs(),
+            (low  - prev_close).abs(),
+        ], axis=1).max(axis=1)
+        atr14 = tr.rolling(14).mean()
 
-        # Recent 60-day OHLCV table (weekly)
-        recent = hist.tail(60).copy()
-        recent.index = recent.index.strftime("%Y-%m-%d")
-        weekly = recent["Close"].resample("W").last().dropna()
-        ohlcv_lines = ["  日期        收盤     RSI    MACD信號"]
-        for dt_str in list(weekly.index.strftime("%Y-%m-%d"))[-12:]:
+        # ── Stochastic %K/%D (14,3,3) ─────────────────────────────────────────
+        low14  = low.rolling(14).min()
+        high14 = high.rolling(14).max()
+        stoch_k = 100 * (close - low14) / (high14 - low14).replace(0, float("nan"))
+        stoch_d = stoch_k.rolling(3).mean()
+
+        # ── ADX-14 (trend strength) ───────────────────────────────────────────
+        up_move   = high.diff()
+        down_move = -low.diff()
+        plus_dm   = up_move.where((up_move > down_move) & (up_move > 0), 0.0)
+        minus_dm  = down_move.where((down_move > up_move) & (down_move > 0), 0.0)
+        atr14_adx = tr.ewm(alpha=1/14, adjust=False).mean()
+        plus_di   = 100 * plus_dm.ewm(alpha=1/14, adjust=False).mean() / atr14_adx.replace(0, float("nan"))
+        minus_di  = 100 * minus_dm.ewm(alpha=1/14, adjust=False).mean() / atr14_adx.replace(0, float("nan"))
+        dx        = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, float("nan"))
+        adx       = dx.ewm(alpha=1/14, adjust=False).mean()
+
+        # ── OBV (On-Balance Volume) ───────────────────────────────────────────
+        obv_direction = close.diff().apply(lambda x: 1 if x > 0 else (-1 if x < 0 else 0))
+        obv = (volume * obv_direction).cumsum()
+        obv_ma20 = obv.rolling(20).mean()
+
+        # ── Volume ────────────────────────────────────────────────────────────
+        avg_vol_20 = volume.rolling(20).mean()
+        avg_vol_50 = volume.rolling(50).mean()
+
+        # ── Last values ───────────────────────────────────────────────────────
+        last         = close.iloc[-1]
+        last_ma20    = ma20.iloc[-1]
+        last_ma50    = ma50.iloc[-1]
+        last_ma200   = ma200.iloc[-1] if len(close) >= 200 else float("nan")
+        last_rsi     = rsi.iloc[-1]
+        last_macd    = macd.iloc[-1]
+        last_signal  = signal.iloc[-1]
+        last_hist_m  = hist_m.iloc[-1]
+        last_bb_up   = bb_up.iloc[-1]
+        last_bb_lo   = bb_lo.iloc[-1]
+        last_bb_pct  = bb_pct.iloc[-1]
+        last_atr     = atr14.iloc[-1]
+        last_stoch_k = stoch_k.iloc[-1]
+        last_stoch_d = stoch_d.iloc[-1]
+        last_adx     = adx.iloc[-1]
+        last_plus_di = plus_di.iloc[-1]
+        last_minus_di= minus_di.iloc[-1]
+        last_obv     = obv.iloc[-1]
+        last_obv_ma  = obv_ma20.iloc[-1]
+        last_vol     = volume.iloc[-1]
+        last_avg_vol = avg_vol_20.iloc[-1]
+        last_avg_vol50 = avg_vol_50.iloc[-1]
+
+        # ── 52-week position ──────────────────────────────────────────────────
+        w52_high = float(high.tail(252).max())
+        w52_low  = float(low.tail(252).min())
+        w52_pct  = (last - w52_low) / (w52_high - w52_low) * 100 if w52_high != w52_low else 50
+
+        # ── RSI divergence hint (last 20 bars) ────────────────────────────────
+        price_20  = close.tail(20)
+        rsi_20    = rsi.tail(20)
+        price_dir = "⬆" if price_20.iloc[-1] > price_20.iloc[0] else "⬇"
+        rsi_dir   = "⬆" if rsi_20.iloc[-1]   > rsi_20.iloc[0]   else "⬇"
+        divergence = ""
+        if price_dir == "⬆" and rsi_dir == "⬇":
+            divergence = "⚠️ 頂背離 (Bearish Divergence)"
+        elif price_dir == "⬇" and rsi_dir == "⬆":
+            divergence = "⚠️ 底背離 (Bullish Divergence)"
+        else:
+            divergence = "無明顯背離"
+
+        # ── Weekly OHLCV table (last 20 weeks) ───────────────────────────────
+        weekly_close  = close.resample("W").last().dropna().tail(20)
+        weekly_volume = volume.resample("W").sum().dropna().tail(20)
+        ohlcv_lines   = ["  日期          收盤      RSI     MACD柱    週成交量"]
+        for wdt in weekly_close.index:
+            wdt_str = wdt.strftime("%Y-%m-%d")
+            wc  = weekly_close.get(wdt, float("nan"))
+            # nearest rsi/macd for this week
             try:
-                dt     = pd.Timestamp(dt_str)
-                c      = close.loc[dt_str] if dt_str in close.index else float("nan")
-                r      = rsi.loc[dt_str]   if dt_str in rsi.index   else float("nan")
-                m      = macd.loc[dt_str]  if dt_str in macd.index  else float("nan")
-                ohlcv_lines.append(f"  {dt_str}  {c:>7.2f}  {r:>5.1f}  {m:>+7.3f}")
+                idx_slice = rsi[rsi.index <= wdt]
+                wr = float(idx_slice.iloc[-1]) if not idx_slice.empty else float("nan")
+            except Exception:
+                wr = float("nan")
+            try:
+                idx_slice = hist_m[hist_m.index <= wdt]
+                wm = float(idx_slice.iloc[-1]) if not idx_slice.empty else float("nan")
+            except Exception:
+                wm = float("nan")
+            wv = weekly_volume.get(wdt, float("nan"))
+            try:
+                ohlcv_lines.append(
+                    f"  {wdt_str}  {wc:>8.2f}  {wr:>6.1f}  {wm:>+8.3f}  {wv:>12,.0f}"
+                )
             except Exception:
                 pass
 
-        na = lambda v: f"{v:.2f}" if v == v else "N/A"  # NaN check
+        na = lambda v: f"{v:.2f}" if v == v else "N/A"
+        na3 = lambda v: f"{v:.3f}" if v == v else "N/A"
+
+        vol_ratio = last_vol / last_avg_vol if last_avg_vol > 0 else float("nan")
+        obv_trend = "OBV > MA → 量能支撐上漲" if last_obv > last_obv_ma else "OBV < MA → 量能疲弱"
+
+        atr_pct = last_atr / last * 100 if last > 0 else float("nan")
 
         return f"""
   ── 當前技術指標快照 ──
-  收盤價:   ${last:.2f}
-  MA20:     ${na(last_ma20)}   {'▲ 上方' if last > last_ma20 else '▼ 下方'}
-  MA50:     ${na(last_ma50)}   {'▲ 上方' if last > last_ma50 else '▼ 下方'}
-  MA200:    ${na(last_ma200)}  {'▲ 上方' if last_ma200 == last_ma200 and last > last_ma200 else '▼ 下方' if last_ma200 == last_ma200 else 'N/A'}
-  RSI(14):  {na(last_rsi)}    {'超買 >70' if last_rsi > 70 else '超賣 <30' if last_rsi < 30 else '中性'}
-  MACD:     {last_macd:+.3f}
-  MACD信號: {last_signal:+.3f}
-  MACD柱:   {last_hist_m:+.3f}  {'看多' if last_hist_m > 0 else '看空'}
-  BB上軌:   ${na(last_bb_up)}
-  BB下軌:   ${na(last_bb_lo)}
-  成交量:   {last_vol:,.0f}  (20日均量: {avg_vol_20:,.0f})
+  收盤價:       ${last:.2f}
+  52W 高/低:    ${w52_high:.2f} / ${w52_low:.2f}  (目前位於52W區間 {w52_pct:.1f}%)
+  ATR(14):      ${na(last_atr)}  ({na(atr_pct)}% of price) — 每日波動參考
 
-  ── 近12週收盤走勢 ──
+  ── 均線系統 ──
+  MA20:         ${na(last_ma20)}   {'▲ 上方' if last > last_ma20 else '▼ 下方'}
+  MA50:         ${na(last_ma50)}   {'▲ 上方' if last > last_ma50 else '▼ 下方'}
+  MA200:        ${na(last_ma200)}  {'▲ 上方' if last_ma200 == last_ma200 and last > last_ma200 else '▼ 下方' if last_ma200 == last_ma200 else 'N/A'}
+  均線排列:     {'多頭排列 MA20>MA50>MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 > last_ma50 > last_ma200 else '空頭排列 MA20<MA50<MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 < last_ma50 < last_ma200 else '混合排列'}
+
+  ── 動能指標 ──
+  RSI(14):      {na(last_rsi)}    {'🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
+  RSI 背離:     {divergence}
+  MACD:         {na3(last_macd)}
+  MACD Signal:  {na3(last_signal)}
+  MACD Hist:    {last_hist_m:+.3f}  {'🟢 看多' if last_hist_m > 0 else '🔴 看空'}
+  Stoch %K:     {na(last_stoch_k)}  Stoch %D: {na(last_stoch_d)}  {'超買' if last_stoch_k > 80 else '超賣' if last_stoch_k < 20 else '中性'}
+
+  ── 趨勢強度 (ADX) ──
+  ADX(14):      {na(last_adx)}  {'強趨勢 >25' if last_adx > 25 else '弱趨勢/盤整 <25'}
+  +DI:          {na(last_plus_di)}  -DI: {na(last_minus_di)}  {'多頭主導' if last_plus_di > last_minus_di else '空頭主導'}
+
+  ── 布林通道 ──
+  BB上軌:       ${na(last_bb_up)}
+  BB中軌(MA20): ${na(last_ma20)}
+  BB下軌:       ${na(last_bb_lo)}
+  BB %B:        {na(last_bb_pct)}  (0=下軌, 0.5=中軌, 1=上軌)
+
+  ── 成交量 ──
+  最新成交量:   {last_vol:,.0f}
+  20日均量:     {last_avg_vol:,.0f}  (量比: {na(vol_ratio)}x)
+  50日均量:     {last_avg_vol50:,.0f}
+  OBV趨勢:      {obv_trend}
+
+  ── 近20週收盤走勢 ──
 {chr(10).join(ohlcv_lines)}
 """
     except Exception as exc:
@@ -290,43 +443,62 @@ def _compute_technicals(hist) -> str:
 # ═════════════════════════════════════════════════════════════════════════════
 
 def _market_overview(info: dict, data: dict) -> str:
+    # FCF yield
+    fcf = info.get('freeCashflow')
+    mkt = info.get('marketCap')
+    try:
+        fcf_yield = f"{float(fcf)/float(mkt)*100:.2f}%" if fcf and mkt else "N/A"
+    except Exception:
+        fcf_yield = "N/A"
+
     return f"""
 ━━ MARKET DATA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Current Price:       {_fmt_price(data['price_now'])}
-52W High:            {_fmt_price(data['price_52w_high'])}
-52W Low:             {_fmt_price(data['price_52w_low'])}
-Market Cap:          {_money(info.get('marketCap'))}
-Enterprise Value:    {_money(info.get('enterpriseValue'))}
-Beta:                {_safe(info.get('beta'))}
-Short Ratio:         {_safe(info.get('shortRatio'))}
-Shares Outstanding:  {_money(info.get('sharesOutstanding'), prefix='')} shares
+Current Price:          {_fmt_price(data['price_now'])}
+52W High:               {_fmt_price(data['price_52w_high'])}
+52W Low:                {_fmt_price(data['price_52w_low'])}
+Market Cap:             {_money(info.get('marketCap'))}
+Enterprise Value:       {_money(info.get('enterpriseValue'))}
+Beta:                   {_safe(info.get('beta'))}
+Short Ratio:            {_safe(info.get('shortRatio'))}
+Short % Float:          {_pct(info.get('shortPercentOfFloat'))}
+Shares Outstanding:     {_money(info.get('sharesOutstanding'), prefix='')} shares
+Float Shares:           {_money(info.get('floatShares'), prefix='')} shares
+Insider Own %:          {_pct(info.get('heldPercentInsiders'))}
+Institution Own %:      {_pct(info.get('heldPercentInstitutions'))}
 
 ━━ VALUATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-P/E  (Trailing):     {_safe(info.get('trailingPE'))}
-P/E  (Forward):      {_safe(info.get('forwardPE'))}
-PEG  Ratio:          {_safe(info.get('pegRatio'))}
-P/S  Ratio:          {_safe(info.get('priceToSalesTrailing12Months'))}
-P/B  Ratio:          {_safe(info.get('priceToBook'))}
-EV / EBITDA:         {_safe(info.get('enterpriseToEbitda'))}
-EPS (TTM):           ${_safe(info.get('trailingEps'))}
-EPS (Forward):       ${_safe(info.get('forwardEps'))}
+P/E  (Trailing):        {_safe(info.get('trailingPE'))}
+P/E  (Forward):         {_safe(info.get('forwardPE'))}
+PEG  Ratio:             {_safe(info.get('pegRatio'))}
+P/S  Ratio:             {_safe(info.get('priceToSalesTrailing12Months'))}
+P/B  Ratio:             {_safe(info.get('priceToBook'))}
+EV / EBITDA:            {_safe(info.get('enterpriseToEbitda'))}
+EV / Revenue:           {_safe(info.get('enterpriseToRevenue'))}
+EPS (TTM):              ${_safe(info.get('trailingEps'))}
+EPS (Forward):          ${_safe(info.get('forwardEps'))}
+FCF Yield:              {fcf_yield}
 
-━━ PROFITABILITY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Revenue (TTM):       {_money(info.get('totalRevenue'))}
-Revenue Growth:      {_pct(info.get('revenueGrowth'))}
-Gross Margin:        {_pct(info.get('grossMargins'))}
-Operating Margin:    {_pct(info.get('operatingMargins'))}
-Net Profit Margin:   {_pct(info.get('profitMargins'))}
-ROE:                 {_pct(info.get('returnOnEquity'))}
-ROA:                 {_pct(info.get('returnOnAssets'))}
+━━ PROFITABILITY & GROWTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Revenue (TTM):          {_money(info.get('totalRevenue'))}
+Revenue Growth (YoY):   {_pct(info.get('revenueGrowth'))}
+Earnings Growth (YoY):  {_pct(info.get('earningsGrowth'))}
+Earnings Growth (QoQ):  {_pct(info.get('earningsQuarterlyGrowth'))}
+Gross Margin:           {_pct(info.get('grossMargins'))}
+Operating Margin:       {_pct(info.get('operatingMargins'))}
+EBITDA Margin:          {_pct(info.get('ebitdaMargins'))}
+Net Profit Margin:      {_pct(info.get('profitMargins'))}
+ROE:                    {_pct(info.get('returnOnEquity'))}
+ROA:                    {_pct(info.get('returnOnAssets'))}
 
 ━━ BALANCE SHEET SNAPSHOT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Total Cash:          {_money(info.get('totalCash'))}
-Total Debt:          {_money(info.get('totalDebt'))}
-Debt/Equity:         {_safe(info.get('debtToEquity'))}
-Current Ratio:       {_safe(info.get('currentRatio'))}
-Operating Cash Flow: {_money(info.get('operatingCashflow'))}
-Free Cash Flow:      {_money(info.get('freeCashflow'))}
+Total Cash:             {_money(info.get('totalCash'))}
+Total Debt:             {_money(info.get('totalDebt'))}
+Net Cash / Debt:        {_money((info.get('totalCash') or 0) - (info.get('totalDebt') or 0))}
+Debt/Equity:            {_safe(info.get('debtToEquity'))}
+Current Ratio:          {_safe(info.get('currentRatio'))}
+Quick Ratio:            {_safe(info.get('quickRatio'))}
+Operating Cash Flow:    {_money(info.get('operatingCashflow'))}
+Free Cash Flow:         {_money(info.get('freeCashflow'))}
 """
 
 
@@ -360,6 +532,9 @@ Summary:
         "\n".join(news_lines) if news_lines else "  (no news)"
     )
 
+    earnings_block  = f"\n━━ EARNINGS HISTORY (EPS Beats/Misses) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('earnings_text', '  (no data)')}"
+    upgrades_block  = f"\n━━ ANALYST UPGRADES / DOWNGRADES (Recent) ━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('upgrades_text', '  (no data)')}"
+
     # ── technical-analysis: focus on price/indicator data ─────────────────────
     if analysis_type == "technical-analysis":
         price_chart = _price_ascii_chart(data["price_series"])
@@ -367,15 +542,17 @@ Summary:
         analyst = f"""
 ━━ ANALYST CONSENSUS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Recommendation:  {_safe(info.get('recommendationKey'))}
+# Analysts:      {_safe(info.get('numberOfAnalystOpinions'))}
 Target (Mean):   {_fmt_price(info.get('targetMeanPrice'))}
 Target (Low):    {_fmt_price(info.get('targetLowPrice'))}
 Target (High):   {_fmt_price(info.get('targetHighPrice'))}
 """
         return "\n".join([
             company_hdr,
-            f"\n━━ 12-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
             technicals,
             analyst,
+            upgrades_block,
             news_block,
         ])
 
@@ -384,8 +561,9 @@ Target (High):   {_fmt_price(info.get('targetHighPrice'))}
         price_chart = _price_ascii_chart(data["price_series"])
         return "\n".join([
             company_hdr,
-            f"\n━━ 12-MONTH PRICE HISTORY ({ticker}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            f"\n━━ 24-MONTH PRICE HISTORY ({ticker}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
             _market_overview(info, data),
+            upgrades_block,
             news_block,
         ])
 
@@ -394,6 +572,9 @@ Target (High):   {_fmt_price(info.get('targetHighPrice'))}
         "Total Revenue", "Gross Profit", "Operating Income",
         "Net Income", "EBITDA", "Research And Development",
         "Selling General Administrative",
+    ]
+    inc_q_rows = [
+        "Total Revenue", "Gross Profit", "Operating Income", "Net Income",
     ]
     bs_rows = [
         "Total Assets", "Total Liabilities Net Minority Interest",
@@ -413,16 +594,20 @@ Target (Low):    {_fmt_price(info.get('targetLowPrice'))}
 Target (High):   {_fmt_price(info.get('targetHighPrice'))}
 Dividend Yield:  {_pct(info.get('dividendYield'))}
 Payout Ratio:    {_pct(info.get('payoutRatio'))}
+5Y Avg Dividend: {_pct(info.get('fiveYearAvgDividendYield'))}
 """
     price_chart = _price_ascii_chart(data["price_series"])
     return "\n".join([
         company_hdr,
-        f"\n━━ 12-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+        f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
         _market_overview(info, data),
         analyst_block,
-        f"\n━━ INCOME STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income'], inc_rows)}",
+        f"\n━━ INCOME STATEMENT (Annual, last 4Y) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income'], inc_rows)}",
+        f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income_q'], inc_q_rows)}",
         f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['balance'], bs_rows)}",
         f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['cashflow'], cf_rows)}",
+        earnings_block,
+        upgrades_block,
         news_block,
     ])
 
@@ -433,240 +618,248 @@ Payout Ratio:    {_pct(info.get('payoutRatio'))}
 
 # ── Fundamental Analysis ──────────────────────────────────────────────────────
 PROMPT_FUNDAMENTAL = """\
-你是一位頂級美股投資研究分析師，深度精通基本面分析。
-請根據下方提供的即時財務數據，為 **{ticker}** 撰寫一份完整的基本面深度分析報告。
+你是一位頂級美股投資研究分析師，擁有 CFA 資格，深度精通基本面分析、估值建模與產業研究。
+請根據下方提供的即時財務數據，為 **{ticker}** 撰寫一份機構級基本面深度分析報告。
 
 ═══════════════════════  嚴格要求  ═══════════════════════
 1. 語言：全程使用**繁體中文**（Traditional Chinese）
 2. 格式：完整 **Markdown** 格式（# ## ### 層級標題）
 3. 視覺化圖表（必須大量使用）：
-   - **Mermaid 圖表**：用於展示流程、關係、趨勢（graph, pie, mindmap, quadrantChart, gantt）
-   - **ASCII 圖表**：折線圖、長條圖、進度條來展示數據趨勢
-   - 參考範例：使用 ```mermaid 代碼塊創建圖表
-4. 圖表範例：
-   ```mermaid
-   graph TD
-       A[收入] --> B[毛利]
-       B --> C[營業利益]
-   ```
-   ```mermaid
-   pie title 收入結構
-       "產品A" : 45
-       "產品B" : 30
-       "產品C" : 25
-   ```
-5. 深度：每個章節需深入分析，直接引用具體財務數字
-6. 表格：重要比較數據一律用 Markdown 表格呈現，加入視覺指標 🟢🟡🔴
-7. 評分：在適當地方加入 ★☆ 評星
-8. Unicode 圖表：使用 ▓░█ 等字符創建視覺化進度條
+   - **Mermaid 圖表**：流程/關係/趨勢（graph, pie, mindmap, quadrantChart, gantt）
+   - **ASCII 圖表**：折線圖、長條圖、進度條
+4. 深度要求：
+   - 每個章節必須引用具體財務數字，不得只講概念
+   - 季度對季度（QoQ）與年度對年度（YoY）成長率必須計算並標註
+   - 利潤率趨勢必須分析，解釋改善或惡化的原因
+   - 同業比較：必須點名 2-3 家直接競爭對手的估值倍數進行對比
+   - ROIC vs WACC：必須分析公司是否在創造還是摧毀股東價值
+5. 表格：重要比較數據一律用 Markdown 表格呈現，加入視覺指標 🟢🟡🔴
+6. 評分：各維度給出 1-10 分並附理由
+7. Unicode 圖表：使用 ▓░█ 等字符創建視覺化進度條
+8. EPS 趨勢：分析過去 4 季盈餘表現（超預期/不及預期）及原因
 ═══════════════════════════════════════════════════════════
 
 ━━ 財務數據（今日即時）━━
 {financial_context}
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
-請按以下架構輸出完整報告，每個章節都要包含豐富的視覺化圖表：
+請按以下架構輸出完整報告，每個章節都要包含豐富的視覺化圖表與具體數字分析：
 
 # {ticker} 基本面深度分析報告
 > **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance
 
 ## 目錄
 ## 1. 執行摘要
-   - 使用 Mermaid graph 顯示核心評分（基本面/估值/技術面）
-   - 5大投資論點表格 🟢🟡🔴
-   - 快速統計卡片（Markdown表格）
-## 2. 公司概覽
-   - 業務結構 Mermaid graph TD 流程圖
-   - 市場地位 Mermaid pie chart
-   - 競爭優勢 Mermaid mindmap
+   - 核心評分儀表板 Mermaid graph（基本面/成長/獲利/財務健康/估值，各1-10分）
+   - 5大投資論點 + 3大風險 表格 🟢🟡🔴
+   - 快速統計卡片：關鍵指標一覽表（含與行業均值對比）
+   - 投資結論：明確給出 買入/持有/觀望/賣出 + 目標價區間
+## 2. 公司概覽與商業模式
+   - 業務結構與收入來源 Mermaid graph TD
+   - 市場地位 Mermaid pie chart（市場份額估算）
+   - 競爭護城河 Mermaid mindmap（品牌/技術/網路效應/成本/轉換成本/規模）
+   - 護城河強度評分 Unicode 條形圖 ▓░
 ## 3. 損益表深度分析
-   - 收入成長 Mermaid graph LR 時間軸
-   - 年度收入趨勢 Unicode 長條圖 ▓░
-   - 利潤率演變 Mermaid graph 或 ASCII 折線圖
-   - 詳細數據表（近4年：收入/毛利率/EBITDA/淨利/EPS）
-   - 費用結構 Mermaid pie chart
+   - 年度收入成長趨勢 Unicode 長條圖（近4年絕對值 + YoY%）
+   - 季度收入趨勢（近4季 QoQ + YoY 成長率表格）
+   - 利潤率演變表格（毛利率/營業利益率/EBITDA率/淨利率，近4年）🟢🟡🔴
+   - 費用結構分析 Mermaid pie chart（R&D/SGA/COGS佔收入比）
+   - EPS 趨勢與盈餘品質分析（含季度超預期/不及預期紀錄）
 ## 4. 資產負債表分析
-   - 資產結構 Mermaid graph TD 分解圖
-   - 資產配置 Unicode 橫條圖
-   - 負債與流動性比率表格
-   - 股東權益趨勢 ASCII 圖
-## 5. 現金流量分析
-   - 現金流瀑布 Mermaid graph LR
-   - 自由現金流趨勢 Unicode 進度條
-   - 資本配置策略 Mermaid graph
-## 6. 獲利能力指標
-   - ROE/ROA/ROIC 對比表格（含行業均值）🟢🟡🔴
+   - 資產結構 Mermaid graph TD（流動/非流動資產分解）
+   - 流動性指標表格（流動比/速動比/現金比）🟢🟡🔴
+   - 債務結構分析（短期/長期/淨負債/Debt-to-EBITDA）
+   - 股東權益趨勢 ASCII 圖（帳面價值成長）
+## 5. 現金流量深度分析
+   - 現金流量瀑布圖 Mermaid graph LR（營業→投資→融資→淨增減）
+   - FCF 轉換率（FCF / Net Income）趨勢表格
+   - 自由現金流趨勢 Unicode 進度條（近4年）
+   - 資本配置評估：buyback / 股息 / 資本支出 / M&A 比例分析
+## 6. 獲利能力與資本效率
+   - ROE / ROA / ROIC 趨勢表格（近4年，含行業均值對比）🟢🟡🔴
+   - **ROIC vs WACC 分析**：估算 WACC，判斷是否創造經濟價值（EVA>0？）
+   - DuPont 分解（ROE = 淨利率 × 資產週轉率 × 槓桿比）
    - 獲利能力儀表板 Mermaid graph
-## 7. 估值分析
-   - 估值指標 Mermaid graph TD
-   - 估值倍數對比表格（P/E P/B P/S EV/EBITDA PEG）
-   - 情境目標股價（樂觀/基準/悲觀）Mermaid graph
-   - 同業比較 Markdown 表格
-## 8. 競爭護城河
-   - Porter's Five Forces Mermaid mindmap
-   - 護城河評分 Unicode 條形圖 ▓░
-   - 競爭定位矩陣表格
-## 9. 成長催化劑
-   - 催化劑時間軸 Mermaid gantt
-   - 短/中/長期機會 Mermaid graph
-   - TAM 市場規模 Unicode 圖表
-## 10. 風險分析
-   - 風險矩陣 Mermaid quadrantChart
-   - 風險評分卡表格（含機率×影響度）🔴🟡🟢
-   - 緩解措施列表
-## 11. 公平價值估算
-   - DCF 模型 Mermaid graph LR
-   - 三種估值法比較 Markdown 表格
-   - 估值區間視覺化 Unicode 圖
-## 12. 投資建議
-   - 最終評級 Mermaid graph 或框格
-   - 投資人適配度 Mermaid graph TD
-   - 監控指標 checklist
+## 7. 估值深度分析
+   - **同業估值比較表格**（點名 2-3 家競爭對手，比較 P/E / P/S / EV/EBITDA / P/B / PEG / FCF Yield）🟢🟡🔴
+   - 歷史估值區間分析（P/E 5年區間：高/中/低，目前所處位置）
+   - **DCF 敏感性分析**：
+     - 基準/樂觀/悲觀 情境（3種成長假設 × 2種折現率）→ 6格目標價矩陣表格
+   - 估值區間視覺化 Unicode 圖（低估區/合理區/高估區）
+## 8. 成長催化劑
+   - 催化劑時間軸 Mermaid gantt（近期/中期/長期）
+   - TAM 市場規模與滲透率 Unicode 圖
+   - 短/中/長期成長驅動力 Mermaid graph TD
+## 9. 風險矩陣
+   - 風險評分矩陣 Mermaid quadrantChart（機率 vs 衝擊）
+   - 風險清單表格（風險項目/機率/衝擊/評分/緩解措施）🔴🟡🟢
+## 10. 投資建議
+   - 最終綜合評級（1-10分，各維度）Unicode 雷達圖 ▓░
+   - 目標價（樂觀/基準/悲觀）及隱含報酬率
+   - 買入時機與觸發因素 checklist
+   - 投資人適配度（成長型/價值型/股息型/短期交易）Mermaid graph TD
+   - 關鍵監控指標 checklist（下次財報/產業數據/競爭動態）
 
 > **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
 """
 
 # ── Technical Analysis ────────────────────────────────────────────────────────
 PROMPT_TECHNICAL = """\
-你是一位專業的技術分析師，精通圖表形態識別與技術指標解讀。
+你是一位資深技術分析師，擁有超過15年經驗，精通多時框架分析、圖表形態識別與量化技術指標解讀。
 請根據下方提供的 {ticker} 技術數據，撰寫一份完整的技術分析報告。
 
 ═══════════════════════  嚴格要求  ═══════════════════════
 1. 語言：全程使用**繁體中文**
 2. 格式：完整 Markdown 格式
 3. 視覺化圖表（必須大量使用）：
-   - **Mermaid 圖表**：展示技術指標關係、趨勢判斷（graph, quadrantChart）
-   - **ASCII 圖表**：繪製關鍵走勢、支撐阻力位示意圖
-   - **Unicode 進度條**：顯示指標強度（▓░█）
-4. 具體數字：所有支撐/阻力位、目標價需給出具體數值
-5. 交易建議：需包含進場點、止損點、目標價及風險報酬比
-6. 視覺指標：使用 🟢🟡🔴 表示多空訊號強度
+   - **Mermaid 圖表**：指標關係、趨勢判斷（graph, quadrantChart）
+   - **ASCII 圖表**：繪製支撐阻力位示意圖、走勢形態
+   - **Unicode 進度條**：顯示各指標強度（▓░█）
+4. 具體數字：所有支撐/阻力位、目標價、止損點必須給出精確數值（不得只說「附近」）
+5. 交易建議：每個策略必須包含 進場點 / 止損點 / 目標價1 / 目標價2 / 風險報酬比
+6. 指標整合：不得孤立分析指標，必須說明多個指標是否互相確認或矛盾
+7. 背離分析：明確判斷 RSI / MACD 是否存在頂背離或底背離，給出結論
+8. ADX 解讀：說明趨勢強度，判斷是趨勢行情還是盤整行情
+9. OBV 分析：說明量能是否確認價格走勢
+10. 視覺指標：使用 🟢🟡🔴 表示多空訊號強度
 ═══════════════════════════════════════════════════════════
 
-━━ 技術數據（今日即時）━━
+━━ 技術數據（今日即時，含2年歷史）━━
 {financial_context}
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
-請按以下架構輸出完整報告，每個章節都要包含豐富的視覺化圖表：
+請按以下架構輸出完整報告，每個章節都要包含豐富的視覺化圖表與精確數值：
 
 # {ticker} 技術分析報告
 > **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance
 
 ## 目錄
 ## 1. 技術面概覽
-   - 技術訊號儀表板 Mermaid graph（買入/中性/賣出）
-   - 核心指標速覽表（價格/均線/RSI/MACD）🟢🟡🔴
-   - 技術評分卡
-## 2. 趨勢分析
-   - 多時框趨勢 Mermaid graph TD（月/週/日線）
-   - 長期趨勢（週線/月線）Unicode 走勢圖
-   - 中期趨勢（日線）
-   - 短期趨勢（近期走勢）
-   - 趨勢強度評估（ADX 解讀）Mermaid graph
+   - 技術訊號儀表板 Mermaid graph（所有指標：買入/中性/賣出 計分）
+   - 核心指標速覽表（含 MA/RSI/MACD/Stoch/ADX/ATR/OBV）🟢🟡🔴
+   - 技術綜合評分（1-10分）Unicode 進度條
+   - 52週價格位置分析（目前在哪個區間）
+## 2. 趨勢分析（多時框架）
+   - 多時框趨勢判斷 Mermaid graph TD（月線→週線→日線→短期）
+   - ADX 趨勢強度解讀：是趨勢行情 or 盤整行情？
+   - 均線排列（MA20/MA50/MA200）: 多頭/空頭/混合 判斷
+   - 長/中/短期趨勢 Unicode 走勢圖
 ## 3. 圖表形態分析
-   - 形態識別 Mermaid graph LR（頭肩頂/底、雙頂/底、三角形等）
-   - K線形態（近期重要K線組合）
-   - ASCII 走勢示意圖（標注關鍵點位）
-   - 形態目標價計算
-## 4. 支撐與阻力
-   - 關鍵價位分布 Unicode 圖
-   - 阻力位（近、中、強）表格
-   - 支撐位（近、中、強）表格
-   - 支撐阻力位 ASCII 視覺化圖
-   - 斐波那契回調位
+   - 形態識別 Mermaid graph LR（頭肩頂/底、雙頂/底、三角形、旗形等）
+   - ASCII 走勢示意圖（標注支撐、阻力、形態關鍵點位）
+   - 形態目標價計算（含量測方法說明）
+   - 近期重要 K 線組合分析（日線/週線）
+## 4. 支撐與阻力（精確數值）
+   - 支撐阻力位 ASCII 視覺化圖（標注全部關鍵價位）
+   - 阻力位表格（近端/中端/強阻力，各含具體價格與依據）
+   - 支撐位表格（近端/中端/強支撐，各含具體價格與依據）
+   - 斐波那契回調位計算表格（38.2% / 50% / 61.8%）
+   - 布林通道上下軌作為動態支撐阻力分析
 ## 5. 技術指標深度解讀
-   - 指標訊號總覽 Mermaid graph TD
-   - 移動平均線（MA20/50/200）排列分析 Mermaid graph
-   - RSI（14）過買過賣分析 Unicode 進度條
-   - MACD（12/26/9）訊號解讀 Mermaid graph
-   - 布林通道分析 ASCII 圖
-   - 成交量分析（量價配合度）Unicode 圖
-## 6. 動能與波動率
-   - 動能評估 Mermaid quadrantChart
-   - ATR 波動率 Unicode 進度條
-   - Beta 與市場相關性表格
-## 7. 多時框架總結
-   - 時框架評分 Markdown 表格（月線/週線/日線）🟢🟡🔴
-   - 綜合訊號矩陣
-## 8. 交易策略建議
-   - 策略流程圖 Mermaid graph TD
-   - 多頭策略（進場/目標/止損/風險報酬比）表格
-   - 空頭策略（進場/目標/止損/風險報酬比）表格
-   - 整體訊號強度 ★☆ 評星 + Mermaid graph
+   - 指標訊號彙整 Mermaid graph TD
+   - RSI(14) 分析：數值/超買超賣/背離判斷（頂背離/底背離）Unicode 進度條
+   - MACD(12/26/9) 分析：交叉/零軸/柱狀圖趨勢 Mermaid graph
+   - Stochastic(14,3,3) 分析：%K/%D 交叉/超買超賣
+   - 布林通道(20,2σ) 分析：%B 位置/收縮擴張 ASCII 圖
+   - ATR(14) 分析：波動率水準、止損距離建議
+## 6. 量價分析
+   - OBV 趨勢分析：是否確認價格走勢（量能背離？）
+   - 成交量與價格配合度分析（放量突破 / 縮量回調）
+   - 量能評分 Unicode 進度條 ▓░
+   - 量能異常信號識別
+## 7. 多時框架訊號總結
+   - 時框架評分表格（月線/週線/日線：趨勢/動能/成交量/綜合）🟢🟡🔴
+   - 訊號一致性：多指標是否互相確認（或矛盾之處）
+## 8. 交易策略建議（精確數值）
+   - 策略選擇流程圖 Mermaid graph TD（趨勢行情 vs 盤整行情）
+   - **多頭策略**（進場點/止損/目標1/目標2/風險報酬比）表格
+   - **空頭策略**（進場點/止損/目標1/目標2/風險報酬比）表格
+   - **盤整策略**（高賣低買區間）
+   - 倉位管理建議（% of portfolio）
+   - 整體技術訊號強度 ★☆ 評星
 ## 9. 風險提示與監控
-   - 關鍵監控指標 checklist
-   - 風險場景 Mermaid graph
+   - 關鍵失效條件（什麼價位/信號代表判斷錯誤）checklist
+   - 近期催化劑事件（財報/Fed/產業數據）對技術形態的影響
+   - 風險場景 Mermaid graph（突破 vs 跌破情境）
 
 > **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
 """
 
 # ── Stock Evaluation ──────────────────────────────────────────────────────────
 PROMPT_STOCK_EVAL = """\
-你是一位頂級美股投資評估師，請對 **{ticker}** 進行全方位綜合評估。
+你是一位頂級美股投資評估師，擁有基金管理與企業估值經驗，請對 **{ticker}** 進行全方位綜合評估。
 
 ═══════════════════════  嚴格要求  ═══════════════════════
 1. 語言：全程使用**繁體中文**
 2. 格式：完整 Markdown 格式
 3. 視覺化圖表（必須大量使用）：
    - **Mermaid 圖表**：雷達圖概念（graph）、決策樹（graph TD）、評分矩陣（quadrantChart）
-   - **ASCII 雷達圖**：多維度評分視覺化
+   - **ASCII 雷達圖**：多維度評分視覺化（必須包含）
    - **Unicode 評分條**：各項指標強度（▓░█）
-4. 綜合評分：從多個維度給出量化評分（0-10分）
-5. 視覺指標：使用 🟢🟡🔴 表示評級
-6. 投資論點：給出清晰、可操作的投資論據
+4. 綜合評分：8個維度，各給出 1-10 分並附具體理由
+5. ROIC vs WACC：必須估算，判斷是否創造股東價值
+6. 同業比較：點名 2-3 家直接競爭對手，進行全面對比
+7. 資本配置：評估管理層資本分配效率（buyback/股息/投資/M&A）
+8. 視覺指標：使用 🟢🟡🔴 + ★☆ 評星
 ═══════════════════════════════════════════════════════════
 
 ━━ 財務數據（今日即時）━━
 {financial_context}
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
-請按以下架構輸出完整報告，每個章節都要包含豐富的視覺化圖表：
+請按以下架構輸出完整報告：
 
 # {ticker} 綜合股票評估報告
 > **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance
 
 ## 目錄
 ## 1. 評估總覽
-   - 綜合評分 Mermaid graph（六維度評分）
-   - ASCII 雷達圖（多維度視覺化）
-   - 買入/持有/賣出 快速結論 Mermaid pie chart
-## 2. 六維度評分矩陣
-   - Markdown 表格：成長性/獲利能力/財務健康/估值/競爭優勢/管理層（各0-10分）🟢🟡🔴
+   - ASCII 雷達圖（8個維度評分視覺化，必須繪製）
+   - 八維度評分：成長性/獲利能力/財務健康/估值/競爭優勢/管理品質/動能/風險（各1-10分）
    - Unicode 評分條視覺化 ▓░
-   - Mermaid quadrantChart（風險/報酬矩陣）
-## 3. 業務品質評估
-   - 商業模式 Mermaid graph TD
-   - 護城河評估 Mermaid mindmap
-   - 市場地位與競爭動態 Mermaid graph
-   - 管理層執行力評分表格
-## 4. 財務健康評估
-   - 財務儀表板 Mermaid graph
-   - 獲利能力趨勢表格（近3年）🟢🟡🔴
-   - 資產負債表穩健度 Unicode 圖
-   - 現金流生成 Mermaid graph LR
+   - 投資結論：明確給出 強力買入/買入/持有/觀望/賣出 + 目標價 + 預期報酬率
+## 2. 八維度評分矩陣
+   - Markdown 表格（各維度 評分/依據/趨勢/🟢🟡🔴）
+   - Mermaid quadrantChart（風險/報酬定位）
+   - 與同業整體比較 Mermaid graph
+## 3. 業務品質與護城河
+   - 商業模式可持續性評估 Mermaid graph TD
+   - 護城河評估 Mermaid mindmap（6種護城河類型各評分）
+   - 護城河強度 Unicode 條形圖 ▓░
+   - 市場地位：TAM / 市場份額 / 行業地位
+## 4. 財務健康全面評估
+   - 財務儀表板 Mermaid graph（獲利/流動/槓桿/效率）
+   - 獲利能力趨勢表格（近4年：毛利率/營業利益率/淨利率/FCF Margin）🟢🟡🔴
+   - 資產負債表穩健度 Unicode 圖（流動比/速動比/淨負債/D/E）
+   - 現金流質量分析（FCF 轉換率/FCF yield）
 ## 5. 成長性評估
-   - 成長軌跡 Mermaid graph LR
-   - 歷史成長率（3/5年 CAGR）表格
-   - 未來成長驅動力 Mermaid graph TD
-   - 市場份額趨勢 Unicode 圖
-## 6. 估值合理性評估
-   - 估值矩陣 Mermaid graph TD
-   - 多重估值法比較表格（P/E/P/B/P/S/DCF）
-   - 估值區間視覺化 Unicode 圖（低估/合理/高估）
-   - 對標同業比較 Markdown 表格
-## 7. 風險評估
-   - 風險熱圖 Mermaid quadrantChart
-   - 風險項目表格（高/中/低）🔴🟡🟢
-   - 風險緩解措施
-## 8. 催化劑與觸發因素
-   - 催化劑時間軸 Mermaid gantt
-   - 觸發因素 Mermaid graph TD
-## 9. 投資建議
-   - 最終評級 Mermaid graph + 框格
-   - 評級 ★☆ 評星
-   - 目標價區間（樂觀/基準/悲觀）Mermaid graph LR
-   - 投資人適配度 Mermaid graph TD
-   - 建議持倉時間與策略
+   - 歷史 CAGR 表格（1/3/5年：收入/EPS/FCF）
+   - 未來成長催化劑 Mermaid graph TD
+   - 市場份額趨勢分析
+   - 成長軌跡 Unicode 長條圖
+## 6. 估值合理性 & 同業比較
+   - **同業比較表格**（點名 2-3 家競爭對手：P/E/P/S/EV/EBITDA/P/B/FCF Yield）🟢🟡🔴
+   - 歷史估值區間（P/E 5年高/中/低，目前所處位置）
+   - 多重估值法彙整（DDM/DCF/相對估值）→ 目標價區間
+   - 估值區間視覺化 Unicode 圖（低估/合理/高估標示）
+## 7. 資本配置與管理層評估
+   - **ROIC vs WACC**：估算數值，判斷 EVA 正負，說明是否創造股東價值
+   - 資本配置歷史（buyback / 股息 / CAPEX / M&A 比例）Mermaid pie chart
+   - 管理層執行力評分表格（承諾達成率/資本紀律/戰略清晰度）
+   - 股東友善度評分 Unicode 條形圖
+## 8. 風險評估
+   - 風險熱圖 Mermaid quadrantChart（機率 × 衝擊）
+   - 風險清單表格（高/中/低，含緩解措施）🔴🟡🟢
+   - 最大下行情境分析（bear case 目標價）
+## 9. 催化劑與觸發因素
+   - 催化劑時間軸 Mermaid gantt（近期/中期/長期）
+   - 正面觸發因素 Mermaid graph TD
+## 10. 投資建議
+   - 最終評級 ★☆ 評星 + 結論框格
+   - 目標價區間（樂觀/基準/悲觀）及隱含報酬率表格
+   - 投資人適配度（成長/價值/股息/短線）Mermaid graph TD
+   - 建議持倉時間、加碼觸發條件、止損觸發條件
+   - 關鍵監控指標 checklist
 
 > **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
 """
