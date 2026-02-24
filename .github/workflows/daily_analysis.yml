@@ -58,6 +58,10 @@ on:
           - economics-analysis
           - portfolio-review
           - sector-analysis
+          - earnings-call-analysis
+          - insider-trading
+          - institutional-ownership
+          - report-generator
       model:
         description: "Claude model ID"
         required: false

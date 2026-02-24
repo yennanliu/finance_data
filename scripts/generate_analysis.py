@@ -64,26 +64,52 @@ ANALYSIS_TYPES = {
     "fundamental-analysis": {
         "filename_prefix": "fundamental_analysis",
         "label":           "基本面深度分析",
+        "ext":             ".md",
     },
     "technical-analysis": {
         "filename_prefix": "technical_analysis",
         "label":           "技術分析",
+        "ext":             ".md",
     },
     "stock-eval": {
         "filename_prefix": "stock_eval",
         "label":           "綜合股票評估",
+        "ext":             ".md",
     },
     "economics-analysis": {
         "filename_prefix": "economics_analysis",
         "label":           "總體經濟分析",
+        "ext":             ".md",
     },
     "portfolio-review": {
         "filename_prefix": "portfolio_review",
         "label":           "投資組合回顧",
+        "ext":             ".md",
     },
     "sector-analysis": {
         "filename_prefix": "sector_analysis",
         "label":           "產業板塊分析",
+        "ext":             ".md",
+    },
+    "earnings-call-analysis": {
+        "filename_prefix": "earnings_call_analysis",
+        "label":           "財報電話會議分析",
+        "ext":             ".md",
+    },
+    "insider-trading": {
+        "filename_prefix": "insider_trading",
+        "label":           "內部人交易分析",
+        "ext":             ".md",
+    },
+    "institutional-ownership": {
+        "filename_prefix": "institutional_ownership",
+        "label":           "機構持股分析",
+        "ext":             ".md",
+    },
+    "report-generator": {
+        "filename_prefix": "report",
+        "label":           "綜合HTML投資報告",
+        "ext":             ".html",
     },
 }
 
@@ -168,12 +194,12 @@ def fetch_data(ticker: str) -> dict:
         except Exception:
             return None
 
-    # analyst upgrades/downgrades (last 6 actions) ────────────────────────────
+    # analyst upgrades/downgrades (last 10 actions) ───────────────────────────
     upgrades_text = "  (no data)"
     try:
         upg = t.upgrades_downgrades
         if upg is not None and not upg.empty:
-            upg = upg.sort_index(ascending=False).head(6)
+            upg = upg.sort_index(ascending=False).head(10)
             lines = []
             for dt, row in upg.iterrows():
                 date_str = str(dt)[:10]
@@ -182,6 +208,84 @@ def fetch_data(ticker: str) -> dict:
                 to_grade = str(row.get("ToGrade", ""))
                 lines.append(f"  {date_str}  {firm:<20}  {action:<12}  → {to_grade}")
             upgrades_text = "\n".join(lines)
+    except Exception:
+        pass
+
+    # insider transactions ────────────────────────────────────────────────────
+    insider_text = "  (no data)"
+    try:
+        ins = t.insider_transactions
+        if ins is not None and not ins.empty:
+            ins = ins.sort_index(ascending=False).head(20)
+            lines = ["  日期          姓名/職稱                  交易類型      股數         價值"]
+            for dt, row in ins.iterrows():
+                date_str  = str(dt)[:10]
+                name      = str(row.get("Insider", row.get("Name", "")))[:24]
+                tx_type   = str(row.get("Transaction", ""))[:16]
+                shares    = row.get("Shares", 0)
+                value     = row.get("Value", 0)
+                try:
+                    flag = "🟢" if "Purchase" in tx_type or "Buy" in tx_type else "🔴" if "Sale" in tx_type or "Sell" in tx_type else "⬜"
+                except Exception:
+                    flag = "⬜"
+                lines.append(
+                    f"  {date_str}  {name:<24}  {tx_type:<16}  {shares:>10,.0f}  {_money(value)}  {flag}"
+                )
+            insider_text = "\n".join(lines)
+    except Exception:
+        pass
+
+    # major holders / institutional holders ───────────────────────────────────
+    major_holders_text = "  (no data)"
+    try:
+        mh = t.major_holders
+        if mh is not None and not mh.empty:
+            lines = []
+            for _, row in mh.iterrows():
+                val = row.iloc[0] if len(row) > 0 else ""
+                lbl = row.iloc[1] if len(row) > 1 else ""
+                lines.append(f"  {str(val):<12}  {str(lbl)}")
+            major_holders_text = "\n".join(lines)
+    except Exception:
+        pass
+
+    institutional_text = "  (no data)"
+    try:
+        ih = t.institutional_holders
+        if ih is not None and not ih.empty:
+            ih = ih.head(20)
+            lines = ["  持股機構                          股數            持股%        價值          變化%"]
+            for _, row in ih.iterrows():
+                holder  = str(row.get("Holder", ""))[:32]
+                shares  = row.get("Shares", 0)
+                pct_out = row.get("% Out",  float("nan"))
+                value   = row.get("Value",  0)
+                chg     = row.get("% Change", float("nan"))
+                try:
+                    chg_str = f"{float(chg):+.2f}%"
+                    arrow   = "🟢" if float(chg) > 0 else "🔴" if float(chg) < 0 else "⬜"
+                except Exception:
+                    chg_str, arrow = "N/A", "⬜"
+                lines.append(
+                    f"  {holder:<32}  {shares:>14,.0f}  {pct_out:.2%}  {_money(value)}  {chg_str} {arrow}"
+                )
+            institutional_text = "\n".join(lines)
+    except Exception:
+        pass
+
+    mutualfund_text = "  (no data)"
+    try:
+        mf = t.mutualfund_holders
+        if mf is not None and not mf.empty:
+            mf = mf.head(10)
+            lines = ["  基金名稱                              股數            持股%        價值"]
+            for _, row in mf.iterrows():
+                holder = str(row.get("Holder", ""))[:36]
+                shares = row.get("Shares", 0)
+                pct    = row.get("% Out",  float("nan"))
+                value  = row.get("Value",  0)
+                lines.append(f"  {holder:<36}  {shares:>14,.0f}  {pct:.2%}  {_money(value)}")
+            mutualfund_text = "\n".join(lines)
     except Exception:
         pass
 
@@ -211,22 +315,26 @@ def fetch_data(ticker: str) -> dict:
         pass
 
     return {
-        "ticker":         ticker,
-        "info":           info,
-        "hist":           hist,
-        "income":         _safe_df(lambda: t.financials),
-        "income_q":       _safe_df(lambda: t.quarterly_financials),
-        "balance":        _safe_df(lambda: t.balance_sheet),
-        "balance_q":      _safe_df(lambda: t.quarterly_balance_sheet),
-        "cashflow":       _safe_df(lambda: t.cashflow),
-        "cashflow_q":     _safe_df(lambda: t.quarterly_cashflow),
-        "news":           (t.news or [])[:10],
-        "price_now":      price_now,
-        "price_52w_high": price_52w_high,
-        "price_52w_low":  price_52w_low,
-        "price_series":   price_series,
-        "upgrades_text":  upgrades_text,
-        "earnings_text":  earnings_text,
+        "ticker":               ticker,
+        "info":                 info,
+        "hist":                 hist,
+        "income":               _safe_df(lambda: t.financials),
+        "income_q":             _safe_df(lambda: t.quarterly_financials),
+        "balance":              _safe_df(lambda: t.balance_sheet),
+        "balance_q":            _safe_df(lambda: t.quarterly_balance_sheet),
+        "cashflow":             _safe_df(lambda: t.cashflow),
+        "cashflow_q":           _safe_df(lambda: t.quarterly_cashflow),
+        "news":                 (t.news or [])[:10],
+        "price_now":            price_now,
+        "price_52w_high":       price_52w_high,
+        "price_52w_low":        price_52w_low,
+        "price_series":         price_series,
+        "upgrades_text":        upgrades_text,
+        "earnings_text":        earnings_text,
+        "insider_text":         insider_text,
+        "major_holders_text":   major_holders_text,
+        "institutional_text":   institutional_text,
+        "mutualfund_text":      mutualfund_text,
     }
 
 
@@ -532,8 +640,89 @@ Summary:
         "\n".join(news_lines) if news_lines else "  (no news)"
     )
 
-    earnings_block  = f"\n━━ EARNINGS HISTORY (EPS Beats/Misses) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('earnings_text', '  (no data)')}"
-    upgrades_block  = f"\n━━ ANALYST UPGRADES / DOWNGRADES (Recent) ━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('upgrades_text', '  (no data)')}"
+    earnings_block       = f"\n━━ EARNINGS HISTORY (EPS Beats/Misses) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('earnings_text', '  (no data)')}"
+    upgrades_block       = f"\n━━ ANALYST UPGRADES / DOWNGRADES (Recent) ━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('upgrades_text', '  (no data)')}"
+    insider_block        = f"\n━━ INSIDER TRANSACTIONS (Recent 20) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('insider_text', '  (no data)')}"
+    major_holders_block  = f"\n━━ MAJOR HOLDERS BREAKDOWN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('major_holders_text', '  (no data)')}"
+    institutional_block  = f"\n━━ TOP INSTITUTIONAL HOLDERS (Top 20) ━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('institutional_text', '  (no data)')}"
+    mutualfund_block     = f"\n━━ TOP MUTUAL FUND HOLDERS (Top 10) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('mutualfund_text', '  (no data)')}"
+
+    # ── insider-trading ───────────────────────────────────────────────────────
+    if analysis_type == "insider-trading":
+        price_chart = _price_ascii_chart(data["price_series"])
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            major_holders_block,
+            insider_block,
+            upgrades_block,
+            news_block,
+        ])
+
+    # ── institutional-ownership ────────────────────────────────────────────────
+    if analysis_type == "institutional-ownership":
+        price_chart = _price_ascii_chart(data["price_series"])
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            major_holders_block,
+            institutional_block,
+            mutualfund_block,
+            insider_block,
+            upgrades_block,
+            news_block,
+        ])
+
+    # ── earnings-call-analysis ────────────────────────────────────────────────
+    if analysis_type == "earnings-call-analysis":
+        price_chart = _price_ascii_chart(data["price_series"])
+        inc_q_rows  = ["Total Revenue", "Gross Profit", "Operating Income", "Net Income"]
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            f"\n━━ QUARTERLY INCOME (last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income_q'], inc_q_rows)}",
+            earnings_block,
+            upgrades_block,
+            news_block,
+        ])
+
+    # ── report-generator: full context (all data) ─────────────────────────────
+    if analysis_type == "report-generator":
+        price_chart = _price_ascii_chart(data["price_series"])
+        technicals  = _compute_technicals(data["hist"])
+        inc_rows = [
+            "Total Revenue", "Gross Profit", "Operating Income",
+            "Net Income", "EBITDA", "Research And Development",
+        ]
+        inc_q_rows = ["Total Revenue", "Gross Profit", "Operating Income", "Net Income"]
+        bs_rows    = [
+            "Total Assets", "Total Liabilities Net Minority Interest",
+            "Stockholders Equity", "Cash And Cash Equivalents", "Total Debt",
+            "Current Assets", "Current Liabilities",
+        ]
+        cf_rows    = [
+            "Operating Cash Flow", "Capital Expenditure", "Free Cash Flow",
+            "Common Stock Repurchased", "Cash Dividends Paid",
+        ]
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            technicals,
+            f"\n━━ INCOME STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income'], inc_rows)}",
+            f"\n━━ INCOME STATEMENT (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income_q'], inc_q_rows)}",
+            f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['balance'], bs_rows)}",
+            f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['cashflow'], cf_rows)}",
+            major_holders_block,
+            institutional_block,
+            insider_block,
+            earnings_block,
+            upgrades_block,
+            news_block,
+        ])
 
     # ── technical-analysis: focus on price/indicator data ─────────────────────
     if analysis_type == "technical-analysis":
@@ -1009,13 +1198,281 @@ PROMPT_SECTOR = """\
 > **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
 """
 
+# ── Earnings Call Analysis ────────────────────────────────────────────────────
+PROMPT_EARNINGS_CALL = """\
+你是一位專業的財報電話會議（Earnings Call）分析師，擅長解讀管理層語氣、識別關鍵信號與市場影響。
+請根據下方提供的 **{ticker}** 財務數據與近期新聞，進行財報電話會議深度分析。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 格式：完整 Markdown 格式
+3. 視覺化：使用 Mermaid graph、表格、Unicode 進度條 ▓░█
+4. 情緒分析：量化評分管理層語氣（樂觀/中性/謹慎/悲觀）
+5. 具體數字：所有 guidance、業績數字必須引用
+6. 信號識別：區分「管理層刻意強調」vs「輕描淡寫」的項目
+7. 市場影響：分析財報後的預期股價反應與催化劑
+8. 視覺指標：使用 🟢🟡🔴 + ★☆ 評星
+═══════════════════════════════════════════════════════════
+
+━━ 財務數據與背景資訊（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請按以下架構輸出完整報告：
+
+# {ticker} 財報電話會議分析報告
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance + 公開資訊
+
+## 目錄
+## 1. 財報摘要儀表板
+   - 核心財務數據 vs 市場預期對比表格（Revenue/EPS/Margin 🟢🟡🔴）
+   - 最近4季 EPS 超預期/不及預期紀錄 Unicode 進度條
+   - 財報反應評分（1-10分）
+## 2. 業績表現深度解讀
+   - 收入成長分析（季度 QoQ + YoY，趨勢 ASCII 圖）
+   - 利潤率變動分析（毛利率/營業利益率/淨利率）🟢🟡🔴
+   - 各業務板塊表現（若有）Mermaid pie chart
+   - EPS 質量分析（one-time items / recurring earnings）
+## 3. 管理層語氣與情緒分析
+   - 整體語氣評分 Mermaid graph（樂觀↔悲觀量表）
+   - 管理層常用措辭分析表格（正面/中性/負面關鍵詞）
+   - 與上季財報語氣對比 🟢🟡🔴
+   - 管理層公信力歷史評估（過往 guidance 達成率）
+## 4. 關鍵主題與信號識別
+   - 強調項目（管理層重複提及）Mermaid mindmap
+   - 刻意迴避/輕描淡寫的風險項目 🔴
+   - 新增/消失的關鍵詞（與上季比較）
+   - 隱藏信號解讀表格
+## 5. Forward Guidance 分析
+   - 下季/全年 Guidance 表格（Revenue/EPS/Margin 指引）
+   - Guidance vs 市場共識對比 🟢🟡🔴
+   - Guidance 保守度評估（歷史達成率）
+   - 上調/下調趨勢 ASCII 圖
+## 6. 分析師 Q&A 重點
+   - 熱點問題分類 Mermaid graph TD
+   - 管理層回答品質評分（直接/迴避）表格
+   - 分析師關注焦點轉移分析
+## 7. 競爭環境與行業洞察
+   - 管理層提及的競爭動態
+   - 行業趨勢信號（需求/定價/庫存）
+   - 宏觀環境影響評估
+## 8. 財報後市場影響預測
+   - 短期股價反應預測（1週）🟢🟡🔴
+   - 估值重定價可能性分析
+   - 催化劑與風險事件時間軸 Mermaid gantt
+   - 分析師預測修正方向
+## 9. 投資行動建議
+   - 財報品質綜合評分 ★☆
+   - 買入/持有/觀望/賣出 結論
+   - 關鍵監控指標 checklist（下季重點關注）
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
+# ── Insider Trading Analysis ──────────────────────────────────────────────────
+PROMPT_INSIDER_TRADING = """\
+你是一位專精美國 SEC 監管與內部人交易的投資研究分析師。
+請根據下方提供的 **{ticker}** 內部人交易數據，進行深度內部人交易分析報告。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 格式：完整 Markdown 格式
+3. 視覺化：Mermaid graph、表格、Unicode 進度條 ▓░█
+4. 信號解讀：區分「例行性賣出」（期權履約）vs「有意義的買賣」
+5. 聰明錢判斷：識別哪些內部人的交易最具參考價值
+6. 時機分析：交易時點與股價走勢的關係
+7. 視覺指標：🟢（買入）🔴（賣出）🟡（中性）
+═══════════════════════════════════════════════════════════
+
+━━ 內部人交易數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請按以下架構輸出完整報告：
+
+# {ticker} 內部人交易深度分析報告
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance (SEC Form 4)
+
+## 目錄
+## 1. 內部人交易概覽儀表板
+   - 買賣比率 Mermaid pie chart（近6個月買入 vs 賣出）
+   - 淨買入/賣出金額 Unicode 進度條（正=淨買入 🟢，負=淨賣出 🔴）
+   - 交易活躍度評分（1-10分）
+   - 整體信號：看多/中性/看空 🟢🟡🔴
+## 2. 詳細交易記錄分析
+   - 全部交易記錄表格（日期/姓名/職位/交易類型/股數/價值 🟢🔴）
+   - 最大單筆交易分析（買入前5名 + 賣出前5名）
+   - 交易價格 vs 當時股價對比（內部人買/賣點位 ASCII 圖）
+## 3. 關鍵內部人識別
+   - 最具參考價值的內部人排名表格（CEO/CFO/董事 加權）
+   - 「聰明錢」標記：過往交易與股價的相關性
+   - 內部人職位分布 Mermaid pie chart
+## 4. 買入信號分析
+   - 有意義的買入交易（過濾期權履約，聚焦公開市場買入）🟢
+   - 集群買入識別（多位內部人同期買入）
+   - 買入規模 vs 薪酬對比（高信心指標）
+   - 歷史買入準確率分析
+## 5. 賣出信號分析
+   - 例行性賣出識別（期權履約/稅務規劃）⬜
+   - 異常賣出預警（大額、集中、多人同時）🔴
+   - 賣出與業績公告時間關係分析
+## 6. 持股結構分析
+   - 主要持股者分布（內部人 vs 機構 vs 散戶）Mermaid pie chart
+   - 內部人整體持股比例趨勢（增加/減少）
+   - 機構持股前20名表格（含持股變化 🟢🔴）
+## 7. 時機與價格分析
+   - 內部人交易時機 vs 股價走勢 ASCII 圖（標注買賣點）
+   - 交易後1/3/6個月股價表現統計
+   - 交易集中在哪個股價區間（成本基礎分析）
+## 8. 綜合信號解讀與投資建議
+   - 內部人交易信號強度評分 ★☆
+   - 買入/持有/觀望 建議（基於內部人行為）
+   - 關鍵監控觸發點 checklist（什麼樣的交易出現應特別注意）
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
+# ── Institutional Ownership Analysis ─────────────────────────────────────────
+PROMPT_INSTITUTIONAL = """\
+你是一位專精機構投資者行為分析的研究分析師，擅長解讀 13F 持股變化與聰明錢動向。
+請根據下方提供的 **{ticker}** 機構持股數據，進行深度機構持股分析報告。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 格式：完整 Markdown 格式
+3. 視覺化：Mermaid graph、表格、Unicode 進度條 ▓░█
+4. 聰明錢識別：區分不同類型機構（對沖基金/共同基金/養老金/ETF）的意義
+5. 持股變化解讀：大幅加倉/減倉的含義分析
+6. 籌碼集中度：分析股權集中度對股價的影響
+7. 視覺指標：🟢（加倉）🔴（減倉）🟡（持平）
+═══════════════════════════════════════════════════════════
+
+━━ 機構持股數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請按以下架構輸出完整報告：
+
+# {ticker} 機構持股深度分析報告
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance (13F)
+
+## 目錄
+## 1. 持股結構總覽儀表板
+   - 股權結構分布 Mermaid pie chart（機構/散戶/內部人/ETF）
+   - 機構持股比例 Unicode 進度條
+   - 整體機構信心評分（1-10分）🟢🟡🔴
+   - 聰明錢趨勢：淨增持/淨減持 信號
+## 2. 主要機構持股明細
+   - 前20大機構持股表格（機構名稱/股數/持股%/市值/變化% 🟢🔴）
+   - 加倉最多 Top 5 🟢
+   - 減倉最多 Top 5 🔴
+   - 新進機構（首次建倉）✨
+   - 清倉機構（完全出清）⚠️
+## 3. 機構類型分析
+   - 機構類型分布 Mermaid pie chart（對沖基金/共同基金/養老金/ETF/保險）
+   - 各類型機構持股變化趨勢表格
+   - 主動管理 vs 被動指數基金比例
+## 4. 聰明錢識別與分析
+   - 頂級對沖基金持倉（Bridgewater / Blackrock / Vanguard 等代表性機構）
+   - 聰明錢一致性：多家頂尖機構同向操作？
+   - 知名基金經理持倉記錄（若有）
+   - 聰明錢信號強度 ★☆ 評星
+## 5. 共同基金持股分析
+   - 前10大共同基金持股表格
+   - 基金類型（成長/價值/平衡）偏好分析
+   - 基金持股比例佔基金 AUM 分析（高持倉=高信心）
+## 6. 籌碼集中度分析
+   - 前10大機構集中度（佔流通股%）Unicode 進度條
+   - 籌碼集中度歷史趨勢（集中增加/分散）
+   - 集中度對股價波動的影響評估
+   - 大股東鎖定效應分析
+## 7. 持股變化趨勢解讀
+   - 機構持股整體趨勢（增持/減持/持平）ASCII 走勢圖
+   - 近期最顯著持股變化事件分析
+   - 持股變化與股價的歷史相關性
+## 8. 空頭數據分析
+   - 放空比率（Short Float %）
+   - Short Ratio（空頭回補天數）
+   - 空頭倉位變化趨勢
+   - 軋空潛力評估 🟢🔴
+## 9. 綜合機構行為信號與投資建議
+   - 機構持股信號強度評分 ★☆
+   - 機構動向支持的投資方向（買入/持有/觀望）
+   - 關鍵監控指標 checklist（下季 13F 重點關注對象）
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
+# ── Report Generator (HTML) ───────────────────────────────────────────────────
+PROMPT_REPORT_GENERATOR = """\
+你是一位頂級金融報告設計師兼分析師，擅長用 HTML + Chart.js 生成互動式專業投資報告。
+請根據下方提供的 **{ticker}** 完整財務數據，生成一份美觀的 HTML 投資報告。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 輸出格式：**純 HTML 文件**（完整可獨立運行，含 CSS 與 Chart.js CDN）
+3. 設計風格：
+   - 深色主題（dark theme）：背景 #0d1117，文字 #e6edf3
+   - 強調色：#58a6ff（藍）、#3fb950（綠）、#f85149（紅）、#d29922（黃）
+   - 卡片式佈局（card layout）
+   - 響應式設計（RWD）
+4. 圖表（必須包含，使用 Chart.js 4.x CDN）：
+   - 股價走勢折線圖（近24個月月收盤）
+   - 收入/利潤趨勢長條圖（近4年）
+   - 技術指標儀表板（RSI/MACD 數值卡片）
+   - 估值倍數雷達圖（P/E / P/B / P/S / EV/EBITDA）
+   - 機構持股結構圓餅圖
+5. 數據表格：使用 HTML table，含 hover 效果與顏色編碼
+6. 評分系統：每個維度用 CSS progress bar 顯示（0-100%）
+7. 報告結構完整，等同於機構研究報告品質
+═══════════════════════════════════════════════════════════
+
+━━ 完整財務數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請輸出完整的 HTML 文件（從 <!DOCTYPE html> 開始到 </html> 結束），包含以下章節：
+
+1. **Header**：公司名稱、Ticker、報告日期、整體評級徽章
+2. **Executive Summary**：關鍵指標卡片（股價/市值/P/E/ROE/FCF）+ 投資結論
+3. **Price Chart**：Chart.js 折線圖（24個月月收盤價）
+4. **Financial Performance**：Chart.js 長條圖（收入/毛利/淨利趨勢，近4年）
+5. **Valuation Dashboard**：估值倍數卡片 + Chart.js 雷達圖（同業比較）
+6. **Technical Indicators**：RSI/MACD/MA 數值卡片 + 信號燈（🟢🔴）
+7. **Fundamentals Table**：完整財務數據 HTML 表格（含顏色編碼）
+8. **Institutional Ownership**：Chart.js 圓餅圖 + 前10大機構表格
+9. **Risk & Scoring**：多維度評分 CSS progress bar（成長/獲利/估值/技術/機構信心）
+10. **Investment Thesis**：投資論點 + 目標價 + 監控指標 checklist
+11. **Footer**：免責聲明
+
+確保：
+- 所有 Chart.js 使用 CDN：https://cdn.jsdelivr.net/npm/chart.js@4
+- CSS 完全內嵌（無外部 CSS 依賴）
+- 數據直接硬編碼到 JavaScript（從上方財務數據提取）
+- 文件可直接在瀏覽器開啟，無需伺服器
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
 PROMPT_MAP = {
-    "fundamental-analysis": PROMPT_FUNDAMENTAL,
-    "technical-analysis":   PROMPT_TECHNICAL,
-    "stock-eval":           PROMPT_STOCK_EVAL,
-    "economics-analysis":   PROMPT_ECONOMICS,
-    "portfolio-review":     PROMPT_PORTFOLIO,
-    "sector-analysis":      PROMPT_SECTOR,
+    "fundamental-analysis":   PROMPT_FUNDAMENTAL,
+    "technical-analysis":     PROMPT_TECHNICAL,
+    "stock-eval":             PROMPT_STOCK_EVAL,
+    "economics-analysis":     PROMPT_ECONOMICS,
+    "portfolio-review":       PROMPT_PORTFOLIO,
+    "sector-analysis":        PROMPT_SECTOR,
+    "earnings-call-analysis": PROMPT_EARNINGS_CALL,
+    "insider-trading":        PROMPT_INSIDER_TRADING,
+    "institutional-ownership":PROMPT_INSTITUTIONAL,
+    "report-generator":       PROMPT_REPORT_GENERATOR,
 }
 
 
@@ -1071,28 +1528,36 @@ def call_claude(ticker: str, context: str, analysis_type: str,
 def save_report(ticker: str, content: str, output_dir: Path,
                 analysis_type: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
-    prefix = ANALYSIS_TYPES[analysis_type]["filename_prefix"]
-    label  = ANALYSIS_TYPES[analysis_type]["label"]
-    base   = f"{prefix}_{TODAY}"
+    meta    = ANALYSIS_TYPES[analysis_type]
+    prefix  = meta["filename_prefix"]
+    label   = meta["label"]
+    ext     = meta.get("ext", ".md")
+    base    = f"{prefix}_{TODAY}"
 
-    # Same-day deduplication: base.md → base-2.md → base-3.md …
-    path    = output_dir / f"{base}.md"
+    # Same-day deduplication: base.ext → base-2.ext → base-3.ext …
+    path    = output_dir / f"{base}{ext}"
     counter = 2
     while path.exists():
-        path    = output_dir / f"{base}-{counter}.md"
+        path    = output_dir / f"{base}-{counter}{ext}"
         counter += 1
 
-    frontmatter = (
-        "---\n"
-        f'title: "{ticker} {label} {TODAY}"\n'
-        f"date: {TODAY}\n"
-        f"ticker: {ticker}\n"
-        f"analysis_type: {analysis_type}\n"
-        "language: zh-TW\n"
-        "generated_by: Claude AI (scripts/generate_analysis.py)\n"
-        "---\n\n"
-    )
-    path.write_text(frontmatter + content, encoding="utf-8")
+    if ext == ".html":
+        # HTML output: write as-is (Claude generates complete HTML)
+        path.write_text(content, encoding="utf-8")
+    else:
+        # Markdown: prepend YAML frontmatter
+        frontmatter = (
+            "---\n"
+            f'title: "{ticker} {label} {TODAY}"\n'
+            f"date: {TODAY}\n"
+            f"ticker: {ticker}\n"
+            f"analysis_type: {analysis_type}\n"
+            "language: zh-TW\n"
+            "generated_by: Claude AI (scripts/generate_analysis.py)\n"
+            "---\n\n"
+        )
+        path.write_text(frontmatter + content, encoding="utf-8")
+
     print(f"  ✅ saved → {path}")
     return path
 

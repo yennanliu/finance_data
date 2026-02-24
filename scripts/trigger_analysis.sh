@@ -43,9 +43,13 @@ done
 if [[ ${#TICKERS[@]} -eq 0 ]]; then
   echo "Usage: $0 TICKER [TICKER ...] [--types TYPE,TYPE] [--repo owner/repo]"
   echo ""
-  echo "Available analysis types:"
-  echo "  fundamental-analysis  technical-analysis  stock-eval"
-  echo "  economics-analysis    portfolio-review     sector-analysis"
+  echo "Available analysis types (daily_analysis workflow):"
+  echo "  fundamental-analysis    technical-analysis    stock-eval"
+  echo "  economics-analysis      portfolio-review      sector-analysis"
+  echo "  earnings-call-analysis  insider-trading       institutional-ownership"
+  echo "  report-generator"
+  echo ""
+  echo "Note: earnings-call-analysis with transcript URL → use advanced_analysis workflow"
   exit 1
 fi
 

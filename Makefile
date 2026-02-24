@@ -32,3 +32,24 @@ analyze-mag7: ## AAPL MSFT NVDA META AMZN GOOG TSLA
 .PHONY: analyze-watchlist
 analyze-watchlist: ## Full personal watchlist
 	$(TRIGGER) IEF AGG VEA NVDA TSLA PLTR RKLB ONDS AVAV KTOS --types $(TYPES)
+
+## ── Advanced analysis shortcuts ──────────────────────────────────────────────
+.PHONY: insider
+insider: ## Insider trading analysis — e.g. make insider TICKERS="TSLA NVDA"
+	$(TRIGGER) $(TICKERS) --types insider-trading
+
+.PHONY: institutional
+institutional: ## Institutional ownership — e.g. make institutional TICKERS="MSFT META"
+	$(TRIGGER) $(TICKERS) --types institutional-ownership
+
+.PHONY: earnings-call
+earnings-call: ## Earnings call analysis — e.g. make earnings-call TICKERS="AAPL NVDA"
+	$(TRIGGER) $(TICKERS) --types earnings-call-analysis
+
+.PHONY: html-report
+html-report: ## Generate interactive HTML report — e.g. make html-report TICKERS="AAPL"
+	$(TRIGGER) $(TICKERS) --types report-generator
+
+.PHONY: deep-dive
+deep-dive: ## All 4 new analysis types for a single stock — e.g. make deep-dive TICKERS="NVDA"
+	$(TRIGGER) $(TICKERS) --types earnings-call-analysis,insider-trading,institutional-ownership,report-generator
