@@ -1,0 +1,1224 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM 投資研究報告 — 台積電 | 2026-02-24</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-card: #1c2128;
+    --bg-hover: #22272e;
+    --border: #30363d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --blue: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --purple: #bc8cff;
+    --orange: #ffa657;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1c2128 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-content { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+  .header-left {}
+  .ticker-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    margin-bottom: 12px;
+  }
+  .ticker-symbol { font-size: 20px; font-weight: 800; color: var(--blue); letter-spacing: 2px; }
+  .exchange-tag { font-size: 11px; color: var(--text-muted); background: var(--bg-card); padding: 2px 8px; border-radius: 4px; }
+  .company-name { font-size: 26px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+  .company-meta { color: var(--text-secondary); font-size: 13px; }
+  .company-meta span { margin-right: 20px; }
+  .company-meta span::before { content: '▸ '; color: var(--blue); }
+  .header-right { text-align: right; }
+  .report-date { color: var(--text-muted); font-size: 12px; margin-bottom: 12px; }
+  .overall-rating {
+    display: inline-block;
+    background: linear-gradient(135deg, #1a3a1a, #0f2b1a);
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 16px 28px;
+    text-align: center;
+  }
+  .rating-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .rating-value { font-size: 28px; font-weight: 800; color: var(--green); }
+  .rating-sub { font-size: 12px; color: var(--green); margin-top: 2px; }
+  .price-header { margin-top: 12px; }
+  .current-price { font-size: 36px; font-weight: 800; color: var(--text-primary); }
+  .price-change { color: var(--green); font-size: 16px; font-weight: 600; }
+
+  /* ── Section ── */
+  .section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+  .section-title {
+    font-size: 20px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 22px;
+    background: linear-gradient(180deg, var(--blue), var(--purple));
+    border-radius: 2px;
+  }
+
+  /* ── Cards Grid ── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+  .card:hover { border-color: var(--blue); background: var(--bg-hover); transform: translateY(-2px); }
+  .card-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card-value { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+  .card-sub { font-size: 12px; margin-top: 4px; }
+  .card.highlight { border-color: rgba(88,166,255,0.4); background: linear-gradient(135deg, #1c2128, #1a2535); }
+  .card.green { border-color: rgba(63,185,80,0.4); background: linear-gradient(135deg, #1c2128, #1a2b1a); }
+  .card.red { border-color: rgba(248,81,73,0.4); background: linear-gradient(135deg, #1c2128, #2b1a1a); }
+  .card.yellow { border-color: rgba(210,153,34,0.4); background: linear-gradient(135deg, #1c2128, #2b271a); }
+
+  .text-blue { color: var(--blue); }
+  .text-green { color: var(--green); }
+  .text-red { color: var(--red); }
+  .text-yellow { color: var(--yellow); }
+  .text-purple { color: var(--purple); }
+  .text-orange { color: var(--orange); }
+  .text-muted { color: var(--text-muted); }
+
+  /* ── Chart Container ── */
+  .chart-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .chart-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+  .chart-container { position: relative; }
+
+  /* ── Two Columns ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* ── Tables ── */
+  .table-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(48,54,61,0.5); color: var(--text-primary); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg-hover); }
+  .td-right { text-align: right; }
+  .td-center { text-align: center; }
+
+  /* ── Technical Indicators ── */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .tech-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tech-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .tech-card.bullish::before { background: var(--green); }
+  .tech-card.bearish::before { background: var(--red); }
+  .tech-card.neutral::before { background: var(--yellow); }
+  .tech-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .tech-value { font-size: 22px; font-weight: 700; }
+  .tech-signal { font-size: 11px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+  .signal-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .signal-dot.green { background: var(--green); }
+  .signal-dot.red { background: var(--red); }
+  .signal-dot.yellow { background: var(--yellow); }
+
+  /* ── Progress Bars ── */
+  .score-item { margin-bottom: 20px; }
+  .score-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .score-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .score-num { font-size: 14px; font-weight: 700; }
+  .progress-bar {
+    height: 10px;
+    background: rgba(48,54,61,0.8);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1.5s ease;
+  }
+  .progress-fill.green { background: linear-gradient(90deg, #2ea043, var(--green)); }
+  .progress-fill.blue { background: linear-gradient(90deg, #1a73e8, var(--blue)); }
+  .progress-fill.yellow { background: linear-gradient(90deg, #a67c00, var(--yellow)); }
+  .progress-fill.red { background: linear-gradient(90deg, #b91c1c, var(--red)); }
+  .score-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── Executive Summary ── */
+  .exec-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .exec-title { font-size: 16px; font-weight: 700; color: var(--blue); margin-bottom: 14px; }
+  .exec-text { color: var(--text-secondary); line-height: 1.8; font-size: 14px; }
+  .exec-text strong { color: var(--text-primary); }
+  .exec-highlight {
+    background: rgba(88,166,255,0.08);
+    border-left: 3px solid var(--blue);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 14px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  /* ── Analyst Ratings ── */
+  .analyst-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .analyst-item:last-child { border-bottom: none; }
+  .analyst-firm { font-weight: 600; color: var(--text-primary); }
+  .analyst-date { font-size: 12px; color: var(--text-muted); }
+  .rating-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-buy { background: rgba(63,185,80,0.2); color: var(--green); border: 1px solid rgba(63,185,80,0.4); }
+  .badge-hold { background: rgba(210,153,34,0.2); color: var(--yellow); border: 1px solid rgba(210,153,34,0.4); }
+  .badge-overweight { background: rgba(88,166,255,0.2); color: var(--blue); border: 1px solid rgba(88,166,255,0.4); }
+  .badge-outperform { background: rgba(63,185,80,0.15); color: #7ee787; border: 1px solid rgba(63,185,80,0.3); }
+  .badge-positive { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.3); }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(48,54,61,0.4);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before { content: '◆'; color: var(--blue); flex-shrink: 0; margin-top: 1px; font-size: 10px; }
+
+  /* ── Target Price Box ── */
+  .target-box {
+    background: linear-gradient(135deg, #1a2535, #1c2128);
+    border: 1px solid rgba(88,166,255,0.4);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .target-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .target-price { font-size: 48px; font-weight: 800; color: var(--blue); margin: 8px 0; }
+  .target-upside { font-size: 16px; font-weight: 700; color: var(--green); }
+
+  /* ── Footer ── */
+  .footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 30px 0;
+    margin-top: 20px;
+  }
+  .footer-disclaimer {
+    background: rgba(248,81,73,0.05);
+    border: 1px solid rgba(248,81,73,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .footer-disclaimer strong { color: var(--red); }
+
+  /* ── MA Bar ── */
+  .ma-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ma-name { font-size: 13px; color: var(--text-muted); min-width: 60px; }
+  .ma-value { font-size: 18px; font-weight: 700; }
+  .ma-diff { font-size: 12px; font-weight: 600; }
+  .ma-track {
+    flex: 1;
+    min-width: 200px;
+    height: 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .ma-fill { height: 100%; border-radius: 3px; }
+
+  /* ── Valuation Cards ── */
+  .val-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .val-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .val-metric { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .val-value { font-size: 26px; font-weight: 800; }
+  .val-context { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* ── Tag ── */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px;
+  }
+
+  /* ── Scrollable table wrapper ── */
+  .scroll-x { overflow-x: auto; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .company-name { font-size: 18px; }
+    .current-price { font-size: 28px; }
+    .target-price { font-size: 36px; }
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .tech-grid { grid-template-columns: 1fr 1fr; }
+    .val-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .header-content { flex-direction: column; }
+    .header-right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="ticker-badge">
+          <span class="ticker-symbol">TSM</span>
+          <span class="exchange-tag">NYSE・ADR</span>
+          <span class="exchange-tag" style="background:rgba(63,185,80,0.15);color:var(--green);border:1px solid rgba(63,185,80,0.3);">台灣半導體</span>
+        </div>
+        <div class="company-name">台灣積體電路製造股份有限公司</div>
+        <div class="company-name" style="font-size:14px;color:var(--text-secondary);font-weight:400;margin-bottom:12px;">Taiwan Semiconductor Manufacturing Company Limited</div>
+        <div class="company-meta">
+          <span>科技 / 半導體</span>
+          <span>台灣・TWSE上市</span>
+          <span>全球晶圓代工龍頭</span>
+        </div>
+        <div style="margin-top:20px;">
+          <div class="current-price">$387.26 <span style="font-size:16px;font-weight:400;color:var(--text-muted);">USD</span></div>
+          <div style="margin-top:4px;">
+            <span class="price-change">▲ 52週新高 +191.6%</span>
+            <span style="color:var(--text-muted);margin-left:12px;font-size:12px;">52W 低: $132.98</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="report-date">📅 報告日期：2026年2月24日</div>
+        <div class="overall-rating">
+          <div class="rating-label">整體評級</div>
+          <div class="rating-value">強力買入</div>
+          <div class="rating-sub">⭐ STRONG BUY</div>
+        </div>
+        <div style="margin-top:14px;text-align:right;">
+          <span class="tag" style="background:rgba(63,185,80,0.2);color:var(--green);border:1px solid rgba(63,185,80,0.3);">市值 $2.01T</span>
+          <span class="tag" style="background:rgba(88,166,255,0.2);color:var(--blue);border:1px solid rgba(88,166,255,0.3);">AI晶片龍頭</span>
+          <span class="tag" style="background:rgba(210,153,34,0.2);color:var(--yellow);border:1px solid rgba(210,153,34,0.3);">FCF殖利率30.8%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EXECUTIVE SUMMARY ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">執行摘要 Executive Summary</div>
+
+    <!-- Key Metric Cards -->
+    <div class="cards-grid" style="margin-bottom:24px;">
+      <div class="card highlight">
+        <div class="card-label">當前股價</div>
+        <div class="card-value text-blue">$387.26</div>
+        <div class="card-sub text-green">▲ 52週高點</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">市值</div>
+        <div class="card-value text-green">$2.01T</div>
+        <div class="card-sub text-muted">流通股 5.19B</div>
+      </div>
+      <div class="card">
+        <div class="card-label">本益比 (TTM)</div>
+        <div class="card-value text-blue">36.85x</div>
+        <div class="card-sub text-muted">遠期 P/E: 21.5x</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">股東權益報酬率</div>
+        <div class="card-value text-green">35.2%</div>
+        <div class="card-sub text-green">▲ 優質ROE</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">自由現金流殖利率</div>
+        <div class="card-value text-green">30.82%</div>
+        <div class="card-sub text-muted">FCF $861B (2024)</div>
+      </div>
+      <div class="card">
+        <div class="card-label">EPS (TTM)</div>
+        <div class="card-value text-blue">$10.51</div>
+        <div class="card-sub text-green">遠期 EPS $17.97</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">毛利率</div>
+        <div class="card-value text-green">59.9%</div>
+        <div class="card-sub text-green">▲ 行業頂尖</div>
+      </div>
+      <div class="card">
+        <div class="card-label">營收成長 (YoY)</div>
+        <div class="card-value text-orange">+20.5%</div>
+        <div class="card-sub text-green">獲利成長 +40.6%</div>
+      </div>
+    </div>
+
+    <!-- Summary Text -->
+    <div class="exec-summary">
+      <div class="exec-title">📋 投資結論</div>
+      <div class="exec-text">
+        台積電（TSM）是全球最大、技術最先進的晶圓代工廠，在尖端製程（3nm、2nm）領域享有無可撼動的技術護城河。公司股價於過去12個月從 <strong>$132.98</strong> 飆升至 <strong>$387.26</strong>，漲幅高達 <strong>+191%</strong>，主要受惠於 AI 算力爆炸式需求、HPC 晶片訂單激增，以及全球先進封裝（CoWoS）產能告急。
+        <br><br>
+        財務面呈現強勁健康：2024年全年營收 <strong>$2.89T TWD</strong>（YoY +33.8%），淨利 <strong>$1.16T TWD</strong>（YoY +36.3%），毛利率維持 <strong>59.9%</strong> 高位，淨利率達 <strong>45.1%</strong>，ROE <strong>35.2%</strong>。公司帳上淨現金 <strong>$2.08T</strong>，財務結構極為穩健。
+        <br><br>
+        技術面：股價處於 52 週高點，多頭排列（MA20 > MA50 > MA200），RSI 達 75.8 進入超買區，短期有回調風險，但中長期趨勢強勁。
+      </div>
+      <div class="exec-highlight">
+        ⚡ <strong>核心催化劑：</strong>AI 伺服器 GPU/TPU 旺盛需求（NVIDIA、AMD、Apple、Google 皆為主要客戶）→ 先進製程定價權提升 → 毛利率擴張 → EPS 高速成長。目標價 <strong>$430–460</strong>，潛在上漲空間 <strong>+11%~+19%</strong>。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PRICE CHART ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">股價走勢 Price History（近24個月）</div>
+    <div class="chart-wrapper">
+      <div class="chart-title">TSM 月度收盤價走勢圖 (2024/02 – 2026/02)</div>
+      <div class="chart-container" style="height:380px;">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">期間起始價</div>
+        <div class="card-value text-muted">$125.19</div>
+        <div class="card-sub text-muted">2024-02</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">期間最高價</div>
+        <div class="card-value text-green">$387.26</div>
+        <div class="card-sub text-green">2026-02（52W高）</div>
+      </div>
+      <div class="card">
+        <div class="card-label">期間最低價</div>
+        <div class="card-value text-yellow">$125.19</div>
+        <div class="card-sub text-muted">2024-02</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">24個月總報酬</div>
+        <div class="card-value text-green">+209.4%</div>
+        <div class="card-sub text-green">遠超大盤表現</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FINANCIAL PERFORMANCE ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">財務績效 Financial Performance（近4年）</div>
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">年度營收 / 毛利 / 淨利趨勢（單位：百億TWD）</div>
+        <div class="chart-container" style="height:320px;">
+          <canvas id="incomeChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <div class="chart-title">季度營收趨勢（2025 Q1-Q3）</div>
+        <div class="chart-container" style="height:320px;">
+          <canvas id="quarterlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Table -->
+    <div class="table-wrapper scroll-x">
+      <table>
+        <thead>
+          <tr>
+            <th>財務指標</th>
+            <th class="td-right">2021</th>
+            <th class="td-right">2022</th>
+            <th class="td-right">2023</th>
+            <th class="td-right">2024</th>
+            <th class="td-right">YoY變化</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>總營收</strong></td>
+            <td class="td-right text-muted">$1.59T</td>
+            <td class="td-right text-muted">$2.26T</td>
+            <td class="td-right text-muted">$2.16T</td>
+            <td class="td-right text-blue"><strong>$2.89T</strong></td>
+            <td class="td-right text-green">▲ +33.8%</td>
+          </tr>
+          <tr>
+            <td><strong>毛利潤</strong></td>
+            <td class="td-right text-muted">$819B</td>
+            <td class="td-right text-muted">$1.35T</td>
+            <td class="td-right text-muted">$1.18T</td>
+            <td class="td-right text-blue"><strong>$1.62T</strong></td>
+            <td class="td-right text-green">▲ +37.3%</td>
+          </tr>
+          <tr>
+            <td><strong>營業利益</strong></td>
+            <td class="td-right text-muted">$650B</td>
+            <td class="td-right text-muted">$1.12T</td>
+            <td class="td-right text-muted">$921B</td>
+            <td class="td-right text-blue"><strong>$1.32T</strong></td>
+            <td class="td-right text-green">▲ +43.3%</td>
+          </tr>
+          <tr>
+            <td><strong>淨利潤</strong></td>
+            <td class="td-right text-muted">$592B</td>
+            <td class="td-right text-muted">$993B</td>
+            <td class="td-right text-muted">$852B</td>
+            <td class="td-right text-blue"><strong>$1.16T</strong></td>
+            <td class="td-right text-green">▲ +36.3%</td>
+          </tr>
+          <tr>
+            <td><strong>EBITDA</strong></td>
+            <td class="td-right text-muted">$1.09T</td>
+            <td class="td-right text-muted">$1.59T</td>
+            <td class="td-right text-muted">$1.52T</td>
+            <td class="td-right text-blue"><strong>$2.08T</strong></td>
+            <td class="td-right text-green">▲ +36.8%</td>
+          </tr>
+          <tr>
+            <td><strong>自由現金流</strong></td>
+            <td class="td-right text-muted">$263B</td>
+            <td class="td-right text-muted">$521B</td>
+            <td class="td-right text-muted">$287B</td>
+            <td class="td-right text-blue"><strong>$861B</strong></td>
+            <td class="td-right text-green">▲ +200.4%</td>
+          </tr>
+          <tr>
+            <td><strong>研發費用</strong></td>
+            <td class="td-right text-muted">$125B</td>
+            <td class="td-right text-muted">$163B</td>
+            <td class="td-right text-muted">$182B</td>
+            <td class="td-right text-blue"><strong>$204B</strong></td>
+            <td class="td-right text-yellow">▲ +12.0%</td>
+          </tr>
+          <tr>
+            <td><strong>資本支出</strong></td>
+            <td class="td-right text-red">-$849B</td>
+            <td class="td-right text-red">-$1.09T</td>
+            <td class="td-right text-red">-$955B</td>
+            <td class="td-right text-red"><strong>-$965B</strong></td>
+            <td class="td-right text-muted">+1.0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Margin Cards -->
+    <div class="cards-grid">
+      <div class="card green">
+        <div class="card-label">毛利率</div>
+        <div class="card-value text-green">59.9%</div>
+        <div class="card-sub text-green">行業頂尖</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">營業利益率</div>
+        <div class="card-value text-green">54.0%</div>
+        <div class="card-sub text-green">極高營運效率</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">EBITDA 利潤率</div>
+        <div class="card-value text-green">68.9%</div>
+        <div class="card-sub text-green">現金產出強勁</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">淨利率</div>
+        <div class="card-value text-green">45.1%</div>
+        <div class="card-sub text-green">全球半導體第一</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ VALUATION DASHBOARD ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">估值儀表板 Valuation Dashboard</div>
+    <div class="val-grid">
+      <div class="val-card">
+        <div class="val-metric">P/E (TTM)</div>
+        <div class="val-value text-yellow">36.85x</div>
+        <div class="val-context">科技股平均 ~28x</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">P/E (Forward)</div>
+        <div class="val-value text-green">21.55x</div>
+        <div class="val-context">遠期估值合理</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">P/S Ratio</div>
+        <div class="val-value text-green">0.53x</div>
+        <div class="val-context">ADR折算極低</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">P/B Ratio</div>
+        <div class="val-value text-red">58.49x</div>
+        <div class="val-context">品牌溢價偏高</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">EV/EBITDA</div>
+        <div class="val-value text-green">2.88x</div>
+        <div class="val-context">極具吸引力</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">EV/Revenue</div>
+        <div class="val-value text-green">1.99x</div>
+        <div class="val-context">低於行業均值</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">FCF Yield</div>
+        <div class="val-value text-green">30.82%</div>
+        <div class="val-context">超強現金回報</div>
+      </div>
+      <div class="val-card">
+        <div class="val-metric">Beta</div>
+        <div class="val-value text-yellow">1.272</div>
+        <div class="val-context">波動略高於大盤</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">估值倍數雷達圖（標準化至0-100分）</div>
+        <div class="chart-container" style="height:340px;">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <div class="chart-title">現金流分析（年度，單位：千億TWD）</div>
+        <div class="chart-container" style="height:340px;">
+          <canvas id="cashflowChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TECHNICAL INDICATORS ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">技術指標 Technical Indicators</div>
+
+    <div class="tech-grid" style="margin-bottom:24px;">
+      <div class="tech-card bearish">
+        <div class="tech-label">RSI (14)</div>
+        <div class="tech-value text-red">75.77</div>
+        <div class="tech-signal"><span class="signal-dot red"></span><span style="color:var(--red);">🔴 超買區域 (>70)</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">MACD</div>
+        <div class="tech-value text-green">13.26</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">🟢 信號線: 11.77</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">MACD 柱狀</div>
+        <div class="tech-value text-green">+1.496</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">🟢 多頭動能</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">MA20</div>
+        <div class="tech-value text-green">$353.69</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">▲ 股價在上方 +9.5%</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">MA50</div>
+        <div class="tech-value text-green">$328.88</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">▲ 股價在上方 +17.7%</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">MA200</div>
+        <div class="tech-value text-green">$269.45</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">▲ 股價在上方 +43.7%</span></div>
+      </div>
+      <div class="tech-card neutral">
+        <div class="tech-label">ADX (14)</div>
+        <div class="tech-value text-yellow">16.58</div>
+        <div class="tech-signal"><span class="signal-dot yellow"></span><span style="color:var(--yellow);">⚠️ 弱趨勢 (<25)</span></div>
+      </div>
+      <div class="tech-card bearish">
+        <div class="tech-label">Stochastic %K</div>
+        <div class="tech-value text-red">99.97</div>
+        <div class="tech-signal"><span class="signal-dot red"></span><span style="color:var(--red);">🔴 極度超買</span></div>
+      </div>
+      <div class="tech-card bearish">
+        <div class="tech-label">BB %B</div>
+        <div class="tech-value text-yellow">0.99</div>
+        <div class="tech-signal"><span class="signal-dot red"></span><span style="color:var(--red);">股價觸及上軌</span></div>
+      </div>
+      <div class="tech-card neutral">
+        <div class="tech-label">ATR (14)</div>
+        <div class="tech-value text-yellow">$15.87</div>
+        <div class="tech-signal"><span class="signal-dot yellow"></span><span style="color:var(--yellow);">日均波動 4.1%</span></div>
+      </div>
+      <div class="tech-card bullish">
+        <div class="tech-label">+DI / -DI</div>
+        <div class="tech-value text-green">32.85</div>
+        <div class="tech-signal"><span class="signal-dot green"></span><span style="color:var(--green);">🟢 多頭主導 -DI:24.6</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-label">52W 位置</div>
+        <div class="tech-value text-blue">100.0%</div>
+        <div class="tech-signal"><span class="signal-dot red"></span><span style="color:var(--red);">處於52週高點</span></div>
+      </div>
+    </div>
+
+    <!-- MA System -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:14px;">📊 均線系統（多頭排列 ✅）</div>
+      <div class="ma-bar">
+        <div class="ma-name">MA20</div>
+        <div class="ma-value text-green">$353.69</div>
+        <div class="ma-track"><div class="ma-fill" style="width:91%;background:var(--green);"></div></div>
+        <div class="ma-diff text-green">▲ 距現價 +9.5%</div>
+      </div>
+      <div class="ma-bar">
+        <div class="ma-name">MA50</div>
+        <div class="ma-value text-blue">$328.88</div>
+        <div class="ma-track"><div class="ma-fill" style="width:85%;background:var(--blue);"></div></div>
+        <div class="ma-diff text-blue">▲ 距現價 +17.7%</div>
+      </div>
+      <div class="ma-bar">
+        <div class="ma-name">MA200</div>
+        <div class="ma-value text-purple">$269.45</div>
+        <div class="ma-track"><div class="ma-fill" style="width:70%;background:var(--purple);"></div></div>
+        <div class="ma-diff text-purple">▲ 距現價 +43.7%</div>
+      </div>
+    </div>
+
+    <!-- Weekly RSI Chart -->
+    <div class="chart-wrapper">
+      <div class="chart-title">近20週 RSI 走勢與收盤價</div>
+      <div class="chart-container" style="height:300px;">
+        <canvas id="rsiChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FUNDAMENTALS TABLE ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">基本面數據 Fundamentals</div>
+    <div class="two-col">
+      <!-- Balance Sheet -->
+      <div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th colspan="2">資產負債表（年度）</th></tr></thead>
+            <tbody>
+              <tr><td>總資產 (2024)</td><td class="td-right text-green">$6.69T</td></tr>
+              <tr><td>總負債 (2024)</td><td class="td-right text-red">$2.41T</td></tr>
+              <tr><td>股東權益 (2024)</td><td class="td-right text-green">$4.24T</td></tr>
+              <tr><td>現金及等價物</td><td class="td-right text-green">$2.13T</td></tr>
+              <tr><td>總債務</td><td class="td-right text-yellow">$1.05T</td></tr>
+              <tr><td>淨現金部位</td><td class="td-right text-green"><strong>+$2.08T</strong></td></tr>
+              <tr><td>流動資產</td><td class="td-right text-blue">$3.09T</td></tr>
+              <tr><td>流動負債</td><td class="td-right text-muted">$1.31T</td></tr>
+              <tr><td>流動比率</td><td class="td-right text-green"><strong>2.62x ✅</strong></td></tr>
+              <tr><td>速動比率</td><td class="td-right text-green">2.30x ✅</td></tr>
+              <tr><td>負債權益比</td><td class="td-right text-yellow">18.19%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Profitability -->
+      <div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th colspan="2">獲利能力指標</th></tr></thead>
+            <tbody>
+              <tr><td>毛利率</td><td class="td-right text-green"><strong>59.9%</strong></td></tr>
+              <tr><td>營業利益率</td><td class="td-right text-green"><strong>54.0%</strong></td></tr>
+              <tr><td>EBITDA 利潤率</td><td class="td-right text-green"><strong>68.9%</strong></td></tr>
+              <tr><td>淨利率</td><td class="td-right text-green"><strong>45.1%</strong></td></tr>
+              <tr><td>ROE</td><td class="td-right text-green">35.2%</td></tr>
+              <tr><td>ROA</td><td class="td-right text-green">16.5%</td></tr>
+              <tr><td>EPS (TTM)</td><td class="td-right text-blue">$10.51</td></tr>
+              <tr><td>EPS (Forward)</td><td class="td-right text-green">$17.97</td></tr>
+              <tr><td>FCF Yield</td><td class="td-right text-green"><strong>30.82%</strong></td></tr>
+              <tr><td>營收成長 YoY</td><td class="td-right text-orange">+20.5%</td></tr>
+              <tr><td>獲利成長 YoY</td><td class="td-right text-green">+40.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market Data Table -->
+    <div class="table-wrapper scroll-x">
+      <table>
+        <thead>
+          <tr>
+            <th>市場數據</th><th class="td-right">數值</th>
+            <th>市場數據</th><th class="td-right">數值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>當前股價</td><td class="td-right text-blue">$387.26</td>
+            <td>市值</td><td class="td-right text-green">$2.01T</td>
+          </tr>
+          <tr>
+            <td>企業價值 (EV)</td><td class="td-right text-yellow">$7.56T</td>
+            <td>52W 高</td><td class="td-right text-green">$387.27</td>
+          </tr>
+          <tr>
+            <td>52W 低</td><td class="td-right text-red">$132.98</td>
+            <td>Beta</td><td class="td-right text-yellow">1.272</td>
+          </tr>
+          <tr>
+            <td>流通股數</td><td class="td-right text-muted">5.19B</td>
+            <td>空頭比率</td><td class="td-right text-muted">1.34</td>
+          </tr>
+          <tr>
+            <td>空頭佔比</td><td class="td-right text-muted">0.4%</td>
+            <td>機構持股</td><td class="td-right text-blue">15.8%</td>
+          </tr>
+          <tr>
+            <td>內部人持股</td><td class="td-right text-muted">0.1%</td>
+            <td>現金股息 (2024)</td><td class="td-right text-green">$363B</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ INSTITUTIONAL OWNERSHIP ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">機構持股 Institutional Ownership</div>
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">持股結構圓餅圖</div>
+        <div class="chart-container" style="height:320px;">
+          <canvas id="ownershipPieChart"></canvas>
+        </div>
+      </div>
+      <div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>機構名稱</th>
+                <th class="td-right">持股數</th>
+                <th class="td-right">市值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-muted">1</td><td><strong>FMR, LLC</strong> <span style="font-size:11px;color:var(--text-muted);">(富達)</span></td><td class="td-right text-blue">61,131,828</td><td class="td-right text-green">$23.67B</td></tr>
+              <tr><td class="text-muted">2</td><td><strong>Sanders Capital</strong></td><td class="td-right text-blue">31,958,360</td><td class="td-right text-green">$12.37B</td></tr>
+              <tr><td class="text-muted">3</td><td><strong>Capital World Investors</strong></td><td class="td-right text-blue">27,404,289</td><td class="td-right text-green">$10.61B</td></tr>
+              <tr><td class="text-muted">4</td><td><strong>Capital International</strong></td><td class="td-right text-blue">25,658,661</td><td class="td-right text-green">$9.94B</td></tr>
+              <tr><td class="text-muted">5</td><td><strong>JPMorgan Chase</strong></td><td class="td-right text-blue">25,182,540</td><td class="td-right text-green">$9.75B</td></tr>
+              <tr><td class="text-muted">6</td><td><strong>Fisher Asset Mgmt</strong></td><td class="td-right text-blue">18,146,900</td><td class="td-right text-green">$7.03B</td></tr>
+              <tr><td class="text-muted">7</td><td><strong>Van Eck Associates</strong></td><td class="td-right text-blue">17,464,962</td><td class="td-right text-green">$6.76B</td></tr>
+              <tr><td class="text-muted">8</td><td><strong>BlackRock Inc.</strong></td><td class="td-right text-blue">16,481,878</td><td class="td-right text-green">$6.38B</td></tr>
+              <tr><td class="text-muted">9</td><td><strong>Bank of America</strong></td><td class="td-right text-blue">15,902,819</td><td class="td-right text-green">$6.16B</td></tr>
+              <tr><td class="text-muted">10</td><td><strong>Morgan Stanley</strong></td><td class="td-right text-blue">13,513,371</td><td class="td-right text-green">$5.23B</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ANALYST RATINGS ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">分析師評級 Analyst Ratings</div>
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">近期評級動向（2025-2026）</div>
+        <div style="padding:8px 0;">
+          <div class="analyst-item">
+            <div><div class="analyst-firm">DA Davidson</div><div class="analyst-date">2026-02-13 · 首次覆蓋</div></div>
+            <span class="rating-badge badge-buy">Buy</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Barclays</div><div class="analyst-date">2026-01-16 · 維持</div></div>
+            <span class="rating-badge badge-overweight">Overweight</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">TD Cowen</div><div class="analyst-date">2026-01-16 · 維持</div></div>
+            <span class="rating-badge badge-hold">Hold</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Needham</div><div class="analyst-date">2026-01-15 · 維持</div></div>
+            <span class="rating-badge badge-buy">Buy</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Bernstein</div><div class="analyst-date">2025-12-08 · 維持</div></div>
+            <span class="rating-badge badge-outperform">Outperform</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Needham</div><div class="analyst-date">2025-10-27 · 重申</div></div>
+            <span class="rating-badge badge-buy">Buy</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Susquehanna</div><div class="analyst-date">2025-10-10 · 維持</div></div>
+            <span class="rating-badge badge-positive">Positive</span>
+          </div>
+          <div class="analyst-item">
+            <div><div class="analyst-firm">Barclays</div><div class="analyst-date">2025-10-09 · 維持</div></div>
+            <span class="rating-badge badge-overweight">Overweight</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <div class="chart-title">評級分佈統計</div>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="ratingPieChart"></canvas>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;">
+          <div style="text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--green);">7</div>
+            <div style="font-size:11px;color:var(--text-muted);">買入/增持</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--yellow);">1</div>
+            <div style="font-size:11px;color:var(--text-muted);">持有</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--red);">0</div>
+            <div style="font-size:11px;color:var(--text-muted);">賣出</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:var(--blue);">87.5%</div>
+            <div style="font-size:11px;color:var(--text-muted);">看多比例</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ RISK & SCORING ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">多維度評分 Risk & Scoring</div>
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">評分細項（0-100分）</div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">📈 成長潛力</span>
+            <span class="score-num text-green">88/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:88%;"></div></div>
+          <div class="score-desc">營收 YoY +20.5%，獲利 YoY +40.6%，AI需求強勁驅動</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">💰 獲利能力</span>
+            <span class="score-num text-green">94/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:94%;"></div></div>
+          <div class="score-desc">毛利率 59.9%，淨利率 45.1%，ROE 35.2%，全球頂尖</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">⚖️ 估值合理性</span>
+            <span class="score-num text-yellow">62/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:62%;"></div></div>
+          <div class="score-desc">遠期P/E 21.5x尚合理，但TTM P/E 36.8x偏高，P/B 58.5x溢價</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">📊 技術面</span>
+            <span class="score-num text-yellow">65/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:65%;"></div></div>
+          <div class="score-desc">多頭排列強勁，但RSI 75.8超買，Stoch 99.97極度超買</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">🏛️ 機構信心</span>
+            <span class="score-num text-blue">82/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:82%;"></div></div>
+          <div class="score-desc">主要機構持股穩定，分析師87.5%看多，持續加碼</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">🏦 財務健康</span>
+            <span class="score-num text-green">91/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:91%;"></div></div>
+          <div class="score-desc">淨現金 $2.08T，流動比率 2.62，FCF殖利率 30.8%</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">🛡️ 競爭護城河</span>
+            <span class="score-num text-green">96/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:96%;"></div></div>
+          <div class="score-desc">全球唯一3nm/2nm量產能力，客戶黏著度極高，技術壁壘無可匹敵</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">⚠️ 地緣政治風險</span>
+            <span class="score-num text-red">45/100</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:45%;"></div></div>
+          <div class="score-desc">台海緊張局勢、美中半導體戰為主要風險，需持續監控</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="chart-wrapper">
+          <div class="chart-title">綜合評分雷達圖</div>
+          <div class="chart-container" style="height:360px;">
+            <canvas id="scoreRadarChart"></canvas>
+          </div>
+        </div>
+        <!-- Risk Summary -->
+        <div class="card" style="margin-top:0;">
+          <div class="card-label" style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">⚠️ 主要風險提示</div>
+          <ul style="list-style:none;color:var(--text-secondary);font-size:13px;line-height:2;">
+            <li>🔴 台海地緣政治風險（最大尾部風險）</li>
+            <li>🔴 RSI 超買，短期回調風險 10-15%</li>
+            <li>🟡 美國晶片出口限制政策風險</li>
+            <li>🟡 半導體週期下行風險（2026H2?）</li>
+            <li>🟡 Arizona 廠成本超支 / 良率爬坡風險</li>
+            <li>🟢 長期AI需求趨勢強勁抵消週期風險</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ INVESTMENT THESIS ═══════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-title">投資論點 Investment Thesis</div>
+    <div class="two-col" style="margin-bottom:24px;">
+      <div class="target-box">
+        <div class="target-label">12個月目標價</div>
+        <div class="target-price">$445</div>
+        <div class="target-upside">▲ 潛在上漲 +14.9%</div>
+        <div style="margin-top:16px;font-size:12px;color:var(--text-muted);">
+          保守目標：$410 (+5.9%)<br>
+          基礎目標：$445 (+14.9%)<br>
+          樂觀目標：$500 (+29.1%)
+        </div>
+      </div>
+      <div class="exec-summary" style="margin-bottom:0;">
+        <div class="exec-title">🎯 核心投資論點</div>
+        <div class="exec-text" style="font-size:13px;">
+          <strong>1. AI 算力超級週期受益者：</strong>NVIDIA H100/H200/B200 GPU 均由台積電 CoWoS 先進封裝製造，隨AI基礎建設投資飆升，台積電享有定價權與份額雙升。<br><br>
+          <strong>2. 技術護城河絕對領先：</strong>3nm量產全球僅台積電，2nm預計2025量產，Intel/Samsung落後2-3年，技術壁壘長期持續。<br><br>
+          <strong>3. 獲利能力超強擴張：</strong>隨先進製程比重上升，ASP提升推動毛利率從56%擴張至59.9%+，EPS複合年增率預計25%+。<br><br>
+          <strong>4. 現金流優異：</strong>FCF殖利率30.8%，淨現金$2.08T，股息持續增長，現金回饋股東能力強。
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="two-col">
+      <div class="chart-wrapper">
+        <div class="chart-title">📌 多頭論點確認清單</div>
+        <ul class="checklist">
+          <li>AI 伺服器晶片需求持續超預期，CoWoS產能告急</li>
+          <li>先進製程（3nm/2nm）定價能力持續提升毛利率</li>
+          <li>客戶名單涵蓋 Apple、NVIDIA、AMD、Google、Microsoft</li>
+          <li>2024年 FCF $861B，同比大幅改善</li>
+          <li>ROE 35.2%，遠優於同業平均 20%</li>
+          <li>Arizona/Japan/Dresden 全球佈局降低地緣風險</li>
+          <li>遠期P/E 21.5x，成長調整後估值合理</li>
+          <li>分析師共識 87.5% 買入/增持，機構持續加碼</li>
+        </ul>
+      </div>
+      <div class="chart-wrapper">
+        <div class="chart-title">🔍 監控指標 Watchlist</div>
+        <ul class="checklist">
+          <li>每季毛利率是否維持 >55%（關鍵護城河指標）</li>
+          <li>N3/N2 先進製程出貨量與良率爬升進度</li>
+          <li>NVIDIA/Apple 訂單能見度與庫存水位</li>
+          <li>美中半導體出口限制政策最新進展</li>
+          <li>RSI 回落至 50-60 時可視為再進場機會</li>
+          <li>Arizona Fab 投產時程與成本控制</li>
+          <li>競爭對手 Samsung/Intel 3nm良率突破情況</li>
+          <li>全球AI資本支出趨勢（Meta/Google/Microsoft年報）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--blue);">TSM 投資研究報告</div>
+        <div style="font-size:12px;color:var(--text-muted);">台灣積體電路製造股份有限公司 · ADR</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:var(--text-muted);">
+        <div>報告生成時間：2026年2月24日</div>
+        <div>數據來源：公開財務資料、Yahoo Finance</div>
+        <div style="margin-top:4px;">
+          <span class="tag" style="background:rgba(88,166,255,0.15);color:var(--blue);border:1px solid rgba(88,166,255,0.3);">Chart.js 4.4.0</span>
+          <span class="tag" style="background:rgba(63,185,80,0.15);color:var(--green);border:1px solid rgba(63,185,80,0.3);">AI 自動生成</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer">
+      <strong>⚠️ 免責聲明 Disclaimer：</strong>
+      本報告由 AI 系統自動生成，所有數據均來自公開資訊來源，僅供學術研究與資訊參考使用，<strong>不構成任何投資建議或要約</strong>。投資涉及風險，過去績效不代表未來表現。讀者應自行進行盡職調查，並在做出任何投資決策前諮詢持牌財務顧問。本報告作者及發行機構對因使用本報告而產生的任何直接或間接損失概不負責。台積電 ADR（TSM）投資涉及台灣與美國市場雙重風險，包括匯率風險、地緣政治風險及半導體產業周期風險。
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// Chart.js 全域設定
+// ══════════════════════════════════════════════
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "'Segoe UI', -apple-system, sans-serif";
+
+// ── 1. 股價走勢折線圖 ──
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+const priceLabels = [
+  '2024-02','2024-03','2024-04','2024-05','2024-06','2024-07',
+  '2024-08','2024-09','2024-10','2024-11','2024-12','2025-01',
+  '2025-02','2025-03','2025-04','2025-05','2025-06','2025-07',
+  '2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02'
+];
+const priceData = [
+  125.19, 132.90, 134.17, 147.55, 170.33, 162.48,
+  168.26, 170.82, 187.41
