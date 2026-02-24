@@ -1,12 +1,44 @@
 name: Daily Stock Analysis
 
-# ── Schedules ────────────────────────────────────────────────────────────────
-#   02:00 UTC = 10:00 AM Taipei  →  AAPL fundamental-analysis
-#   03:00 UTC = 11:00 AM Taipei  →  TSLA technical-analysis
+# ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
+#   17:00 → 01:00  0050
+#   17:13 → 01:13  2330.tw
+#   17:26 → 01:26  TSLA
+#   17:39 → 01:39  PL
+#   17:52 → 01:52  GRAB
+#   18:05 → 02:05  TSM
+#   18:18 → 02:18  GOOG
+#   18:31 → 02:31  AMZN
+#   18:44 → 02:44  MSFT
+#   18:57 → 02:57  SOFI
+#   19:10 → 03:10  PLTR
+#   19:23 → 03:23  RKLB
+#   19:36 → 03:36  ONDS
+#   19:49 → 03:49  AVAV
+#   20:02 → 04:02  KTOS
+#   20:15 → 04:15  META
+#   20:28 → 04:28  AMD
+#   20:41 → 04:41  NVDA
 on:
   schedule:
-    - cron: "0 2 * * *"   # AAPL fundamental-analysis
-    - cron: "0 3 * * *"   # TSLA technical-analysis
+    - cron: "0 17 * * *"    # 0050
+    - cron: "13 17 * * *"   # 2330.tw
+    - cron: "26 17 * * *"   # TSLA
+    - cron: "39 17 * * *"   # PL
+    - cron: "52 17 * * *"   # GRAB
+    - cron: "5 18 * * *"    # TSM
+    - cron: "18 18 * * *"   # GOOG
+    - cron: "31 18 * * *"   # AMZN
+    - cron: "44 18 * * *"   # MSFT
+    - cron: "57 18 * * *"   # SOFI
+    - cron: "10 19 * * *"   # PLTR
+    - cron: "23 19 * * *"   # RKLB
+    - cron: "36 19 * * *"   # ONDS
+    - cron: "49 19 * * *"   # AVAV
+    - cron: "2 20 * * *"    # KTOS
+    - cron: "15 20 * * *"   # META
+    - cron: "28 20 * * *"   # AMD
+    - cron: "41 20 * * *"   # NVDA
 
   workflow_dispatch:
     inputs:
@@ -74,8 +106,7 @@ jobs:
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
-      #   schedule 0 2 * * *  → AAPL / fundamental-analysis
-      #   schedule 0 3 * * *  → TSLA / technical-analysis
+      #   scheduled crons   → map to pre-configured ticker
       - name: Resolve analysis parameters
         id: params
         run: |
@@ -87,19 +118,99 @@ jobs:
             ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          elif [ "$SCHEDULE" = "0 2 * * *" ]; then
-            TICKER="AAPL"
+          elif [ "$SCHEDULE" = "0 17 * * *" ]; then
+            TICKER="0050"
             ANALYSIS_TYPE="fundamental-analysis"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "0 3 * * *" ]; then
+          elif [ "$SCHEDULE" = "13 17 * * *" ]; then
+            TICKER="2330.tw"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "26 17 * * *" ]; then
             TICKER="TSLA"
-            ANALYSIS_TYPE="technical-analysis"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "39 17 * * *" ]; then
+            TICKER="PL"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "52 17 * * *" ]; then
+            TICKER="GRAB"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "5 18 * * *" ]; then
+            TICKER="TSM"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "18 18 * * *" ]; then
+            TICKER="GOOG"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "31 18 * * *" ]; then
+            TICKER="AMZN"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "44 18 * * *" ]; then
+            TICKER="MSFT"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "57 18 * * *" ]; then
+            TICKER="SOFI"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "10 19 * * *" ]; then
+            TICKER="PLTR"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "23 19 * * *" ]; then
+            TICKER="RKLB"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "36 19 * * *" ]; then
+            TICKER="ONDS"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "49 19 * * *" ]; then
+            TICKER="AVAV"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "2 20 * * *" ]; then
+            TICKER="KTOS"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "15 20 * * *" ]; then
+            TICKER="META"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "28 20 * * *" ]; then
+            TICKER="AMD"
+            ANALYSIS_TYPE="fundamental-analysis"
+            MODEL="claude-sonnet-4-6"
+            MAX_TOKENS="20000"
+          elif [ "$SCHEDULE" = "41 20 * * *" ]; then
+            TICKER="NVDA"
+            ANALYSIS_TYPE="fundamental-analysis"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
           else
             # Fallback
-            TICKER="AAPL"
+            TICKER="TSLA"
             ANALYSIS_TYPE="fundamental-analysis"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
