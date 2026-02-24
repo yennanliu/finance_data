@@ -28,6 +28,7 @@ from pathlib import Path
 # ── Paths ────────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).resolve().parent.parent
 DOCS       = ROOT / "docs"
+DOCS_ZH    = ROOT / "docs" / "zh"
 SITE       = ROOT / "site"
 
 SRC_CLAUDE   = ROOT / "claude_code"
@@ -38,12 +39,103 @@ SRC_13F      = ROOT / "13-f"
 SRC_6K       = ROOT / "6-k"
 SRC_INV_DAY  = ROOT / "investor_day"
 
-DST_REPORTS  = DOCS / "reports"
-DST_NOTEBOOKS= DOCS / "notebooks"
-DST_SEC      = DOCS / "sec"
-DST_INV_DAY  = DOCS / "investor_day"
-
 TODAY = date.today().isoformat()
+
+# ── Language-specific text ────────────────────────────────────────────────────
+LANG_TEXT = {
+    "en": {
+        "last_updated": "Last updated",
+        "last_built": "Last built",
+        "sector": "Sector",
+        "available_reports": "Available Reports",
+        "markdown_reports": "📄 Markdown Reports",
+        "html_reports": "🌐 Interactive HTML Reports",
+        "analysis_reports": "Analysis Reports",
+        "ai_generated": "AI-generated investment research reports",
+        "disclaimer": "Disclaimer",
+        "disclaimer_text": "All reports are for educational purposes only and do not constitute investment advice.",
+        "report_index": "Report Index",
+        "ticker": "Ticker",
+        "company": "Company",
+        "files": "Files",
+        "reports": "Reports",
+        "ai_notebooks": "AI Research Notebooks",
+        "deep_dive": "Deep-dive analysis generated with Google NotebookLM",
+        "research_docs": "📑 Research Documents",
+        "notes_outlines": "📝 Notes & Outlines",
+        "about_notebooklm": "About NotebookLM Reports",
+        "notebooklm_desc": "These documents are AI-synthesised research reports created using Google NotebookLM from primary source materials (10-K filings, investor presentations, earnings calls). They provide deep-dive analysis from a structured, document-grounded AI perspective.",
+        "sec_filings": "SEC Filings",
+        "annual_reports": "10-K Annual Reports",
+        "sec_annual_desc": "SEC annual filings (Form 10-K) stored locally",
+        "total": "Total",
+        "companies": "companies",
+        "last_indexed": "Last indexed",
+        "file_location": "File Location",
+        "file_location_desc": "10-K PDFs are stored in the `10-k/` directory of the repository. Clone the repo to access them locally",
+        "company_index": "Company Index",
+        "years": "Years",
+        "download_more": "Download More Filings",
+        "download_desc": "Use the included Python scripts to download additional 10-K filings",
+        "quarterly_reports": "10-Q Quarterly Reports",
+        "quarterly_desc": "Quarterly SEC filings",
+        "institutional_holdings": "13-F Institutional Holdings",
+        "institutional_desc": "13-F filings track institutional investment managers' holdings",
+        "current_reports": "6-K Current Reports",
+        "foreign_desc": "Foreign private issuer current reports",
+        "investor_day": "Investor Day Materials",
+        "investor_day_desc": "Company presentations from investor days and analyst events",
+        "presentations": "Presentations",
+        "download_scripts": "Download Scripts",
+        "scripts_desc": "Python and Bash tools for batch-downloading SEC filings",
+    },
+    "zh": {
+        "last_updated": "最後更新",
+        "last_built": "最後建置",
+        "sector": "產業",
+        "available_reports": "可用報告",
+        "markdown_reports": "📄 Markdown 報告",
+        "html_reports": "🌐 互動式 HTML 報告",
+        "analysis_reports": "分析報告",
+        "ai_generated": "AI 生成的投資研究報告",
+        "disclaimer": "免責聲明",
+        "disclaimer_text": "所有報告僅供教育目的，不構成投資建議。",
+        "report_index": "報告索引",
+        "ticker": "股票代號",
+        "company": "公司",
+        "files": "檔案",
+        "reports": "報告",
+        "ai_notebooks": "AI 研究筆記",
+        "deep_dive": "使用 Google NotebookLM 生成的深度分析",
+        "research_docs": "📑 研究文件",
+        "notes_outlines": "📝 筆記與大綱",
+        "about_notebooklm": "關於 NotebookLM 報告",
+        "notebooklm_desc": "這些文件是使用 Google NotebookLM 從主要來源資料（10-K 文件、投資者簡報、財報電話會議）創建的 AI 綜合研究報告。它們從結構化、基於文件的 AI 視角提供深度分析。",
+        "sec_filings": "SEC 文件",
+        "annual_reports": "10-K 年度報告",
+        "sec_annual_desc": "本地儲存的 SEC 年度文件（Form 10-K）",
+        "total": "總計",
+        "companies": "家公司",
+        "last_indexed": "最後索引",
+        "file_location": "檔案位置",
+        "file_location_desc": "10-K PDF 檔案儲存在存儲庫的 `10-k/` 目錄中。複製存儲庫以在本地訪問它們",
+        "company_index": "公司索引",
+        "years": "年份",
+        "download_more": "下載更多文件",
+        "download_desc": "使用包含的 Python 腳本下載額外的 10-K 文件",
+        "quarterly_reports": "10-Q 季度報告",
+        "quarterly_desc": "季度 SEC 文件",
+        "institutional_holdings": "13-F 機構持股",
+        "institutional_desc": "13-F 文件追蹤機構投資管理者的持股",
+        "current_reports": "6-K 當前報告",
+        "foreign_desc": "外國私人發行人當前報告",
+        "investor_day": "投資者日資料",
+        "investor_day_desc": "來自投資者日和分析師活動的公司簡報",
+        "presentations": "簡報",
+        "download_scripts": "下載腳本",
+        "scripts_desc": "用於批量下載 SEC 文件的 Python 和 Bash 工具",
+    }
+}
 
 # ── Company metadata ──────────────────────────────────────────────────────────
 COMPANY_META: dict[str, dict] = {
@@ -78,6 +170,16 @@ def get_meta(ticker: str) -> dict:
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+def t(lang: str, key: str) -> str:
+    """Get translated text for the given language and key."""
+    return LANG_TEXT.get(lang, LANG_TEXT["en"]).get(key, key)
+
+
+def get_docs_root(lang: str) -> Path:
+    """Get the docs root directory for the given language."""
+    return DOCS_ZH if lang == "zh" else DOCS
+
+
 def ensure(path: Path):
     path.mkdir(parents=True, exist_ok=True)
 
@@ -107,13 +209,15 @@ def write(path: Path, content: str):
 
 
 # ── 1. claude_code → docs/reports/ ───────────────────────────────────────────
-def build_reports():
+def build_reports(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_REPORTS = docs_root / "reports"
     ensure(DST_REPORTS)
     report_index_rows: list[str] = []
     nav_entries: list[str] = []
 
     if not SRC_CLAUDE.exists():
-        write(DST_REPORTS / "index.md", "# Reports\n\nNo reports found.\n")
+        write(DST_REPORTS / "index.md", f"# {t(lang, 'reports')}\n\nNo reports found.\n")
         return
 
     tickers = sorted([d for d in SRC_CLAUDE.iterdir() if d.is_dir()])
@@ -141,16 +245,16 @@ def build_reports():
         lines = [
             f"# {meta['flag']} {meta['name']} ({ticker.upper()})",
             "",
-            f"> **Sector:** {meta['sector']}  |  **Last updated:** {TODAY}",
+            f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
             "",
             "---",
             "",
-            "## Available Reports",
+            f"## {t(lang, 'available_reports')}",
             "",
         ]
 
         if md_files:
-            lines.append("### 📄 Markdown Reports")
+            lines.append(f"### {t(lang, 'markdown_reports')}")
             lines.append("")
             for f in md_files:
                 label = f.stem.replace("_", " ").title()
@@ -158,7 +262,7 @@ def build_reports():
             lines.append("")
 
         if html_files:
-            lines.append("### 🌐 Interactive HTML Reports")
+            lines.append(f"### {t(lang, 'html_reports')}")
             lines.append("")
             for f in html_files:
                 label = f.stem.replace("_", " ").title()
@@ -181,16 +285,16 @@ def build_reports():
 
     # Top-level reports/index.md
     top_lines = [
-        "# Analysis Reports",
+        f"# {t(lang, 'analysis_reports')}",
         "",
-        f"> AI-generated investment research reports. Last built: **{TODAY}**",
+        f"> {t(lang, 'ai_generated')}. {t(lang, 'last_built')}: **{TODAY}**",
         "",
-        "!!! warning \"Disclaimer\"",
-        "    All reports are for educational purposes only and do not constitute investment advice.",
+        f"!!! warning \"{t(lang, 'disclaimer')}\"",
+        f"    {t(lang, 'disclaimer_text')}",
         "",
-        "## Report Index",
+        f"## {t(lang, 'report_index')}",
         "",
-        "| | Ticker | Company | Sector | Files | Reports |",
+        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'files')} | {t(lang, 'reports')} |",
         "|---|--------|---------|--------|-------|---------|",
     ] + report_index_rows
 
@@ -210,17 +314,17 @@ def build_reports():
             "",
             f"## {meta['flag']} {ticker.upper()} — {meta['name']}",
             "",
-            f"**Sector:** {meta['sector']}",
+            f"**{t(lang, 'sector')}:** {meta['sector']}",
             "",
         ]
         if md_files:
-            top_lines.append("**Markdown Reports:**")
+            top_lines.append(f"**{t(lang, 'markdown_reports')}:**")
             for f in md_files:
                 label = f.stem.replace("_", " ").title()
                 top_lines.append(f"- [{label}]({ticker}/{f.name})")
         if html_files:
             top_lines.append("")
-            top_lines.append("**Interactive Reports (HTML):**")
+            top_lines.append(f"**{t(lang, 'html_reports')}:**")
             for f in html_files:
                 label = f.stem.replace("_", " ").title()
                 top_lines.append(f"- [:material-open-in-new: {label}]({ticker}/{f.name}){{target=_blank .pdf-btn}}")
@@ -229,11 +333,13 @@ def build_reports():
 
 
 # ── 2. notebook_llm → docs/notebooks/ ────────────────────────────────────────
-def build_notebooks():
+def build_notebooks(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_NOTEBOOKS = docs_root / "notebooks"
     ensure(DST_NOTEBOOKS)
 
     if not SRC_NOTEBOOK.exists():
-        write(DST_NOTEBOOKS / "index.md", "# AI Research Notebooks\n\nNo notebooks found.\n")
+        write(DST_NOTEBOOKS / "index.md", f"# {t(lang, 'ai_notebooks')}\n\nNo notebooks found.\n")
         return
 
     ticker_dirs = sorted([d for d in SRC_NOTEBOOK.iterdir() if d.is_dir()])
@@ -255,16 +361,16 @@ def build_notebooks():
 
         # Per-ticker index
         lines = [
-            f"# {meta['flag']} {meta['name']} — AI Notebooks",
+            f"# {meta['flag']} {meta['name']} — {t(lang, 'ai_notebooks')}",
             "",
-            f"> **Sector:** {meta['sector']}",
+            f"> **{t(lang, 'sector')}:** {meta['sector']}",
             "",
             "---",
             "",
         ]
 
         if pdfs:
-            lines += ["## 📑 Research Documents", ""]
+            lines += [f"## {t(lang, 'research_docs')}", ""]
             for f in pdfs:
                 size_kb = int(f.stat().st_size / 1024)
                 lines.append(
@@ -274,7 +380,7 @@ def build_notebooks():
             lines.append("")
 
         if txts or mds:
-            lines += ["## 📝 Notes & Outlines", ""]
+            lines += [f"## {t(lang, 'notes_outlines')}", ""]
             for f in list(txts) + list(mds):
                 lines.append(f"- [{f.stem}]({f.name})")
             lines.append("")
@@ -290,32 +396,32 @@ def build_notebooks():
 
     # Top-level notebooks/index.md
     top_lines = [
-        "# AI Research Notebooks",
+        f"# {t(lang, 'ai_notebooks')}",
         "",
-        f"> Deep-dive analysis generated with Google NotebookLM. Built: **{TODAY}**",
+        f"> {t(lang, 'deep_dive')}. {t(lang, 'last_built')}: **{TODAY}**",
         "",
-        "| | Ticker | Company | Sector | Files |",
+        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'files')} |",
         "|---|--------|---------|--------|-------|",
     ] + index_rows + [
         "",
         "---",
         "",
-        "## About NotebookLM Reports",
+        f"## {t(lang, 'about_notebooklm')}",
         "",
-        "These documents are AI-synthesised research reports created using Google NotebookLM",
-        "from primary source materials (10-K filings, investor presentations, earnings calls).",
-        "They provide deep-dive analysis from a structured, document-grounded AI perspective.",
+        t(lang, 'notebooklm_desc'),
     ]
 
     write(DST_NOTEBOOKS / "index.md", "\n".join(top_lines))
 
 
 # ── 3. 10-k → docs/sec/10k.md (index, no PDF copy) ──────────────────────────
-def build_10k_index():
+def build_10k_index(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_SEC = docs_root / "sec"
     ensure(DST_SEC)
 
     if not SRC_10K.exists():
-        write(DST_SEC / "10k.md", "# 10-K Filings\n\nNo filings found.\n")
+        write(DST_SEC / "10k.md", f"# {t(lang, 'annual_reports')}\n\nNo filings found.\n")
         return
 
     company_dirs = sorted([d for d in SRC_10K.iterdir() if d.is_dir()])
@@ -352,26 +458,25 @@ def build_10k_index():
         )
 
     lines = [
-        "# 10-K Annual Reports",
+        f"# {t(lang, 'annual_reports')}",
         "",
-        f"> SEC annual filings (Form 10-K) stored locally. Total: **{total_pdfs} PDFs** across **{len(table_rows)} companies**.",
-        f"> Last indexed: **{TODAY}**",
+        f"> {t(lang, 'sec_annual_desc')}. {t(lang, 'total')}: **{total_pdfs} PDFs** ({len(table_rows)} {t(lang, 'companies')}).",
+        f"> {t(lang, 'last_indexed')}: **{TODAY}**",
         "",
-        "!!! info \"File Location\"",
-        "    10-K PDFs are stored in the `10-k/` directory of the repository.",
-        "    Clone the repo to access them locally: `git clone https://github.com/yennanliu/finance_data.git`",
+        f"!!! info \"{t(lang, 'file_location')}\"",
+        f"    {t(lang, 'file_location_desc')}: `git clone https://github.com/yennanliu/finance_data.git`",
         "",
-        "## Company Index",
+        f"## {t(lang, 'company_index')}",
         "",
-        "| Company | Ticker | Sector | # Files | Years |",
+        f"| {t(lang, 'company')} | {t(lang, 'ticker')} | {t(lang, 'sector')} | # {t(lang, 'files')} | {t(lang, 'years')} |",
         "|---------|--------|--------|---------|-------|",
     ] + table_rows + [
         "",
         "---",
         "",
-        "## Download More Filings",
+        f"## {t(lang, 'download_more')}",
         "",
-        "Use the included Python scripts to download additional 10-K filings:",
+        f"{t(lang, 'download_desc')}:",
         "",
         "```bash",
         "# Download 5 most recent 10-Ks for a ticker",
@@ -388,7 +493,9 @@ def build_10k_index():
 
 
 # ── 4. 10-q / 13-f / 6-k indices ─────────────────────────────────────────────
-def build_other_sec():
+def build_other_sec(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_SEC = docs_root / "sec"
     ensure(DST_SEC)
 
     # 10-Q
@@ -455,11 +562,13 @@ def build_other_sec():
 
 
 # ── 5. investor_day → docs/investor_day/ ──────────────────────────────────────
-def build_investor_day():
+def build_investor_day(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_INV_DAY = docs_root / "investor_day"
     ensure(DST_INV_DAY)
 
     if not SRC_INV_DAY.exists():
-        write(DST_INV_DAY / "index.md", "# Investor Day Materials\n\nNo materials found.\n")
+        write(DST_INV_DAY / "index.md", f"# {t(lang, 'investor_day')}\n\nNo materials found.\n")
         return
 
     rows: list[str] = []
@@ -504,8 +613,9 @@ def build_investor_day():
 
 
 # ── 6. scripts.md ─────────────────────────────────────────────────────────────
-def build_scripts_page():
-    scripts_page = DOCS / "scripts.md"
+def build_scripts_page(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    scripts_page = docs_root / "scripts.md"
     script_dir = ROOT / "script"
     py_scripts = sorted(script_dir.glob("*.py")) if script_dir.exists() else []
     sh_scripts = sorted(script_dir.glob("*.sh")) if script_dir.exists() else []
@@ -565,9 +675,10 @@ def build_scripts_page():
 
 
 # ── 7. .pages files for awesome-pages plugin ──────────────────────────────────
-def build_nav_pages():
+def build_nav_pages(lang: str = "en"):
     """Write .pages files so awesome-pages controls navigation order."""
-    root_pages = DOCS / ".pages"
+    docs_root = get_docs_root(lang)
+    root_pages = docs_root / ".pages"
     write(root_pages, "\n".join([
         "nav:",
         "  - index.md",
@@ -579,6 +690,11 @@ def build_nav_pages():
         "",
     ]))
 
+    DST_REPORTS = docs_root / "reports"
+    DST_NOTEBOOKS = docs_root / "notebooks"
+    DST_SEC = docs_root / "sec"
+    DST_INV_DAY = docs_root / "investor_day"
+
     for subdir in [DST_REPORTS, DST_NOTEBOOKS, DST_SEC, DST_INV_DAY]:
         if subdir.exists():
             pages_file = subdir / ".pages"
@@ -586,8 +702,9 @@ def build_nav_pages():
 
 
 # ── 8. includes/abbreviations.md ─────────────────────────────────────────────
-def build_abbreviations():
-    inc = DOCS / "includes"
+def build_abbreviations(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    inc = docs_root / "includes"
     ensure(inc)
     abbr = inc / "abbreviations.md"
     if not abbr.exists():
@@ -612,42 +729,75 @@ def build_abbreviations():
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    print(f"\n{'='*60}")
-    print(" Finance Hub — building docs/")
-    print(f"{'='*60}\n")
+    print(f"\n{'='*70}")
+    print(" Finance Hub — building docs/ (EN + ZH)")
+    print(f"{'='*70}\n")
 
-    # Clean previously generated dirs (keep hand-crafted files like index.md)
-    for subdir in ["reports", "notebooks", "sec", "investor_day"]:
-        path = DOCS / subdir
-        if path.exists():
-            shutil.rmtree(path)
-            print(f"  clean {path.relative_to(ROOT)}/")
+    # Clean previously generated dirs for both languages
+    for lang_dir in [DOCS, DOCS_ZH]:
+        for subdir in ["reports", "notebooks", "sec", "investor_day"]:
+            path = lang_dir / subdir
+            if path.exists():
+                shutil.rmtree(path)
+                print(f"  clean {path.relative_to(ROOT)}/")
 
-    print("\n[1/7] Building claude_code reports...")
-    build_reports()
+    # Build English version
+    print(f"\n{'─'*70}")
+    print(" Building English version (docs/)")
+    print(f"{'─'*70}")
 
-    print("\n[2/7] Building notebook_llm pages...")
-    build_notebooks()
+    print("\n[EN 1/7] Building claude_code reports...")
+    build_reports(lang="en")
 
-    print("\n[3/7] Building 10-K index...")
-    build_10k_index()
+    print("\n[EN 2/7] Building notebook_llm pages...")
+    build_notebooks(lang="en")
 
-    print("\n[4/7] Building other SEC indices (10-Q, 13-F, 6-K)...")
-    build_other_sec()
+    print("\n[EN 3/7] Building 10-K index...")
+    build_10k_index(lang="en")
 
-    print("\n[5/7] Building investor_day pages...")
-    build_investor_day()
+    print("\n[EN 4/7] Building other SEC indices (10-Q, 13-F, 6-K)...")
+    build_other_sec(lang="en")
 
-    print("\n[6/7] Building scripts page...")
-    build_scripts_page()
+    print("\n[EN 5/7] Building investor_day pages...")
+    build_investor_day(lang="en")
 
-    print("\n[7/7] Writing .pages nav files & abbreviations...")
-    build_nav_pages()
-    build_abbreviations()
+    print("\n[EN 6/7] Building scripts page...")
+    build_scripts_page(lang="en")
 
-    print(f"\n{'='*60}")
-    print(" ✅  docs/ generated successfully")
-    print(f"{'='*60}\n")
+    print("\n[EN 7/7] Writing .pages nav files & abbreviations...")
+    build_nav_pages(lang="en")
+    build_abbreviations(lang="en")
+
+    # Build Traditional Chinese version
+    print(f"\n{'─'*70}")
+    print(" Building Traditional Chinese version (docs/zh/)")
+    print(f"{'─'*70}")
+
+    print("\n[ZH 1/7] Building claude_code reports...")
+    build_reports(lang="zh")
+
+    print("\n[ZH 2/7] Building notebook_llm pages...")
+    build_notebooks(lang="zh")
+
+    print("\n[ZH 3/7] Building 10-K index...")
+    build_10k_index(lang="zh")
+
+    print("\n[ZH 4/7] Building other SEC indices (10-Q, 13-F, 6-K)...")
+    build_other_sec(lang="zh")
+
+    print("\n[ZH 5/7] Building investor_day pages...")
+    build_investor_day(lang="zh")
+
+    print("\n[ZH 6/7] Building scripts page...")
+    build_scripts_page(lang="zh")
+
+    print("\n[ZH 7/7] Writing .pages nav files & abbreviations...")
+    build_nav_pages(lang="zh")
+    build_abbreviations(lang="zh")
+
+    print(f"\n{'='*70}")
+    print(" ✅  docs/ generated successfully (EN + ZH)")
+    print(f"{'='*70}\n")
 
 
 if __name__ == "__main__":
