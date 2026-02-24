@@ -13,6 +13,7 @@ GH="${GH_BIN:-gh}"
 REPO="${GH_REPO:-yennanliu/finance_data}"
 WORKFLOW="Daily Stock Analysis"
 DEFAULT_TYPES="fundamental-analysis,technical-analysis"
+DELAY="${TRIGGER_DELAY:-20}"   # seconds between workflow dispatches
 
 # ── Parse args ────────────────────────────────────────────────────────────────
 TICKERS=()
@@ -72,6 +73,10 @@ for TICKER in "${TICKERS[@]}"; do
     else
       echo "FAIL: $URL"
       (( FAIL++ )) || true
+    fi
+    # stagger dispatches to avoid concurrent API rate limits
+    if [[ $(( SUCCESS + FAIL )) -lt $TOTAL ]]; then
+      sleep "$DELAY"
     fi
   done
 done
