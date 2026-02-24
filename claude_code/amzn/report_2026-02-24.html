@@ -1,0 +1,1410 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMZN 投資研究報告 — Amazon.com, Inc. | 2026-02-24</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --blue: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --purple: #bc8cff;
+    --orange: #ffa657;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  a { color: var(--blue); text-decoration: none; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; }
+  @media(max-width:1100px){ .grid-5{grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:900px){ .grid-4{grid-template-columns:repeat(2,1fr);} .grid-3{grid-template-columns:1fr 1fr;} }
+  @media(max-width:680px){ .grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr;} }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: #58a6ff44; }
+  .card-sm { padding: 16px; }
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 50%;
+    height: 200%;
+    background: radial-gradient(ellipse, #58a6ff08 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .ticker-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #58a6ff22, #58a6ff11);
+    border: 1px solid #58a6ff44;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .company-name { font-size: 28px; font-weight: 800; color: var(--text); margin: 6px 0; }
+  .company-meta { color: var(--text2); font-size: 13px; }
+  .rating-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .rating-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #3fb95011;
+    box-shadow: 0 0 20px #3fb95033;
+  }
+  .rating-score { font-size: 26px; font-weight: 800; color: var(--green); }
+  .rating-label { font-size: 9px; color: var(--text2); letter-spacing: 1px; }
+  .rating-text { font-size: 13px; font-weight: 700; color: var(--green); }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-inner {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 8px 0;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-item {
+    white-space: nowrap;
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+
+  /* ── KPI CARDS ── */
+  .kpi-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); border-color: #58a6ff44; }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--accent, var(--blue));
+    border-radius: 12px 12px 0 0;
+  }
+  .kpi-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .kpi-value { font-size: 24px; font-weight: 800; color: var(--text); }
+  .kpi-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .kpi-change { font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .neu { color: var(--yellow); }
+  .blue-c { color: var(--blue); }
+
+  /* ── CHART CONTAINERS ── */
+  .chart-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .chart-h300 { height: 300px; }
+  .chart-h350 { height: 350px; }
+  .chart-h280 { height: 280px; }
+
+  /* ── TABLES ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: var(--bg3);
+    color: var(--text2);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #21262d;
+    color: var(--text);
+    transition: background .15s;
+  }
+  .data-table tr:hover td { background: #21262d; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .text-right { text-align: right; }
+  .text-center { text-align: center; }
+  .table-scroll { overflow-x: auto; }
+
+  /* ── PROGRESS BARS ── */
+  .score-item { margin-bottom: 18px; }
+  .score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .score-name { font-size: 13px; font-weight: 600; }
+  .score-val { font-size: 13px; font-weight: 700; }
+  .progress-track {
+    width: 100%;
+    height: 8px;
+    background: var(--bg3);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+    background: linear-gradient(90deg, var(--fill-start, #58a6ff), var(--fill-end, #58a6ff));
+  }
+
+  /* ── SIGNAL LIGHTS ── */
+  .signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .signal-green { background: #3fb95020; color: var(--green); border: 1px solid #3fb95040; }
+  .signal-red { background: #f8514920; color: var(--red); border: 1px solid #f8514940; }
+  .signal-yellow { background: #d2992220; color: var(--yellow); border: 1px solid #d2992240; }
+  .signal-blue { background: #58a6ff20; color: var(--blue); border: 1px solid #58a6ff40; }
+
+  /* ── TECH INDICATORS ── */
+  .tech-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .tech-card-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .tech-card-value { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .tech-card-desc { font-size: 11px; color: var(--text2); }
+
+  /* ── INVESTMENT THESIS ── */
+  .thesis-section { margin-bottom: 24px; }
+  .thesis-title { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+  .thesis-list { list-style: none; }
+  .thesis-list li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    color: var(--text2);
+    font-size: 13px;
+    border-bottom: 1px solid #21262d;
+  }
+  .thesis-list li:last-child { border-bottom: none; }
+  .thesis-list li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    font-size: 10px;
+    color: var(--blue);
+  }
+  .bull li::before { color: var(--green); content: '▲'; }
+  .bear li::before { color: var(--red); content: '▼'; }
+
+  .checklist li::before { content: '☐'; font-size: 13px; color: var(--yellow); }
+
+  /* ── TARGET PRICE ── */
+  .target-box {
+    background: linear-gradient(135deg, #58a6ff11, #3fb95011);
+    border: 1px solid #58a6ff33;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .target-label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+  .target-price { font-size: 42px; font-weight: 900; color: var(--green); margin: 8px 0; }
+  .target-upside { font-size: 15px; font-weight: 700; color: var(--green); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 30px 0;
+    margin-top: 60px;
+  }
+  .footer-text {
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 30px 0; }
+  section { padding: 40px 0; }
+
+  /* ── ANALYST TABLE ── */
+  .analyst-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #3fb95020;
+    color: var(--green);
+    border: 1px solid #3fb95040;
+  }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: linear-gradient(135deg, #58a6ff08, transparent);
+    border: 1px solid #58a6ff22;
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+
+  /* ── OWNERSHIP ── */
+  .owner-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--blue);
+    margin-top: 4px;
+  }
+
+  .section-gap { margin-bottom: 40px; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .tag-sector { background: #58a6ff20; color: var(--blue); }
+  .tag-country { background: #3fb95020; color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="ticker-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+            NASDAQ: AMZN
+          </div>
+          <span class="tag tag-sector">Consumer Cyclical</span>
+          <span class="tag tag-country">🇺🇸 美國</span>
+        </div>
+        <h1 class="company-name">Amazon.com, Inc.</h1>
+        <div class="company-meta">
+          <span>📅 報告日期：2026-02-24</span>
+          &nbsp;|&nbsp;
+          <span>👥 員工人數：1,576,000</span>
+          &nbsp;|&nbsp;
+          <span>🏭 互聯網零售 &amp; 雲端服務</span>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;">
+          <span style="font-size:28px;font-weight:900;color:var(--text);">$207.51</span>
+          <span class="signal signal-red">▼ -12.7% 近月</span>
+          <span class="signal signal-blue">市值 $2.23T</span>
+        </div>
+      </div>
+      <div class="rating-badge">
+        <div class="rating-circle">
+          <span class="rating-score">72</span>
+          <span class="rating-label">SCORE</span>
+        </div>
+        <span class="rating-text">★ 買進觀察</span>
+        <span style="font-size:11px;color:var(--text2);">綜合評分 72/100</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#summary" class="nav-item">執行摘要</a>
+      <a href="#price" class="nav-item">股價走勢</a>
+      <a href="#financial" class="nav-item">財務表現</a>
+      <a href="#valuation" class="nav-item">估值分析</a>
+      <a href="#technical" class="nav-item">技術指標</a>
+      <a href="#fundamentals" class="nav-item">基本面數據</a>
+      <a href="#ownership" class="nav-item">機構持股</a>
+      <a href="#scoring" class="nav-item">綜合評分</a>
+      <a href="#thesis" class="nav-item">投資論點</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ MAIN CONTENT ═══════════════════════ -->
+<main>
+
+<!-- ① EXECUTIVE SUMMARY -->
+<section id="summary">
+  <div class="container">
+    <div class="section-title">執行摘要 — Executive Summary</div>
+
+    <!-- KPI Cards -->
+    <div class="grid-5" style="margin-bottom:24px;">
+      <div class="kpi-card" style="--accent:var(--blue);">
+        <div class="kpi-label">當前股價</div>
+        <div class="kpi-value">$207.51</div>
+        <div class="kpi-sub">52W: $161.38 — $258.60</div>
+        <div class="kpi-change neg">▼ 位於52W區間 47.4%</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--green);">
+        <div class="kpi-label">市值</div>
+        <div class="kpi-value">$2.23T</div>
+        <div class="kpi-sub">企業價值 $2.26T</div>
+        <div class="kpi-change pos">全球前五大市值企業</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--yellow);">
+        <div class="kpi-label">本益比 P/E</div>
+        <div class="kpi-value">29.0x</div>
+        <div class="kpi-sub">Forward P/E: 22.3x</div>
+        <div class="kpi-change neu">EPS TTM: $7.16</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--purple);">
+        <div class="kpi-label">股東權益報酬率</div>
+        <div class="kpi-value">22.3%</div>
+        <div class="kpi-sub">ROA: 6.9%</div>
+        <div class="kpi-change pos">▲ 盈利能力強勁改善</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--orange);">
+        <div class="kpi-label">自由現金流</div>
+        <div class="kpi-value">$7.70B</div>
+        <div class="kpi-sub">FCF Yield: 1.07%</div>
+        <div class="kpi-change neg">▼ 大額資本支出壓縮</div>
+      </div>
+    </div>
+
+    <!-- Second row -->
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="kpi-card" style="--accent:var(--green);">
+        <div class="kpi-label">年營收 (TTM)</div>
+        <div class="kpi-value">$716.9B</div>
+        <div class="kpi-sub">YoY成長 +13.6%</div>
+        <div class="kpi-change pos">▲ 穩健成長</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--green);">
+        <div class="kpi-label">毛利率</div>
+        <div class="kpi-value">50.3%</div>
+        <div class="kpi-sub">營業利益率 10.5%</div>
+        <div class="kpi-change pos">▲ 歷史高位</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--blue);">
+        <div class="kpi-label">淨利潤 (年)</div>
+        <div class="kpi-value">$77.67B</div>
+        <div class="kpi-sub">淨利率 10.8%</div>
+        <div class="kpi-change pos">▲ 扭虧為盈後爆發</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--yellow);">
+        <div class="kpi-label">Beta 值</div>
+        <div class="kpi-value">1.385</div>
+        <div class="kpi-sub">機構持股 67.1%</div>
+        <div class="kpi-change neu">高波動性股票</div>
+      </div>
+    </div>
+
+    <!-- Investment Conclusion -->
+    <div class="card">
+      <div style="font-size:15px;font-weight:700;color:var(--blue);margin-bottom:12px;">📋 投資結論摘要</div>
+      <div class="summary-box">
+        Amazon（AMZN）是全球電子商務與雲端運算（AWS）的雙引擎巨頭。2025財年全年營收達 <strong style="color:var(--text)">$716.9B</strong>，年增 13.6%，淨利潤大幅躍升至 <strong style="color:var(--text)">$777億</strong>，淨利率首次突破 10%。AWS 雲端業務持續高速成長，廣告業務成為新盈利引擎，毛利率攀升至 50.3% 歷史高位。<br><br>
+        技術面短期承壓：RSI(14) 跌至 <strong style="color:var(--red)">23.3（超賣區間）</strong>，股價已跌破 MA20/MA50/MA200 三均線，MACD 柱持續負值，空頭主導格局明顯。但從基本面長期視角而言，Forward P/E 22.3x 相對其歷史估值具吸引力，且超賣技術狀態可能創造<strong style="color:var(--green)">中長期買進機會</strong>。主要風險：宏觀經濟壓力、AI 資本支出（$1,319億）大幅壓縮 FCF、監管風險及激烈競爭。綜合評分 <strong style="color:var(--green)">72/100</strong>，給予 <strong style="color:var(--green)">「買進觀察」</strong> 評級，目標價 $250。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ② PRICE CHART -->
+<section id="price">
+  <div class="container">
+    <div class="section-title">股價走勢 — 24個月月收盤價</div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+        <div>
+          <span style="font-size:13px;color:var(--text2);">2024-02 → 2026-02&nbsp;&nbsp;</span>
+          <span class="signal signal-green">▲ +17.3% (24個月)</span>
+        </div>
+        <div style="display:flex;gap:16px;font-size:12px;color:var(--text2);">
+          <span><span style="color:var(--blue);">●</span> 月收盤</span>
+          <span><span style="color:var(--yellow);">- - -</span> MA6</span>
+          <span><span style="color:var(--orange);">- - -</span> MA12</span>
+        </div>
+      </div>
+      <div class="chart-wrapper chart-h350">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ③ FINANCIAL PERFORMANCE -->
+<section id="financial">
+  <div class="container">
+    <div class="section-title">財務表現 — 近4年年度數據</div>
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📊 收入 / 毛利 / 淨利 趨勢</div>
+        <div class="chart-wrapper chart-h300">
+          <canvas id="financialChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📈 EBITDA / 營業利益 趨勢</div>
+        <div class="chart-wrapper chart-h300">
+          <canvas id="ebitdaChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quarterly -->
+    <div style="margin-top:20px;">
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📆 近4季季度財報</div>
+        <div class="chart-wrapper chart-h280">
+          <canvas id="quarterlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Margins -->
+    <div class="grid-4" style="margin-top:20px;">
+      <div class="tech-card">
+        <div class="tech-card-label">毛利率</div>
+        <div class="tech-card-value pos">50.3%</div>
+        <div class="tech-card-desc">歷史高位</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">營業利益率</div>
+        <div class="tech-card-value pos">10.5%</div>
+        <div class="tech-card-desc">持續擴張</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">EBITDA 利益率</div>
+        <div class="tech-card-value pos">20.3%</div>
+        <div class="tech-card-desc">優於同業</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">淨利率</div>
+        <div class="tech-card-value pos">10.8%</div>
+        <div class="tech-card-desc">從虧損到雙位數</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ VALUATION -->
+<section id="valuation">
+  <div class="container">
+    <div class="section-title">估值分析 — Valuation Dashboard</div>
+    <div class="grid-2">
+      <!-- Valuation Cards -->
+      <div>
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div class="kpi-card" style="--accent:var(--blue);">
+            <div class="kpi-label">P/E (Trailing)</div>
+            <div class="kpi-value">29.0x</div>
+            <div class="kpi-sub">Forward: 22.3x</div>
+            <div class="kpi-change neu">合理偏低</div>
+          </div>
+          <div class="kpi-card" style="--accent:var(--green);">
+            <div class="kpi-label">EV/EBITDA</div>
+            <div class="kpi-value">15.5x</div>
+            <div class="kpi-sub">EV/Rev: 3.15x</div>
+            <div class="kpi-change pos">具吸引力</div>
+          </div>
+          <div class="kpi-card" style="--accent:var(--yellow);">
+            <div class="kpi-label">P/S Ratio</div>
+            <div class="kpi-value">3.11x</div>
+            <div class="kpi-sub">YoY 收入增 13.6%</div>
+            <div class="kpi-change neu">合理</div>
+          </div>
+          <div class="kpi-card" style="--accent:var(--purple);">
+            <div class="kpi-label">P/B Ratio</div>
+            <div class="kpi-value">5.42x</div>
+            <div class="kpi-sub">ROE 22.3%</div>
+            <div class="kpi-change neu">與成長匹配</div>
+          </div>
+        </div>
+
+        <!-- Valuation Table -->
+        <div class="card card-sm">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>估值指標</th>
+                <th class="text-right">當前值</th>
+                <th class="text-right">5年均值（估）</th>
+                <th class="text-right">評估</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>P/E (Trailing)</td>
+                <td class="text-right">28.98x</td>
+                <td class="text-right">~55x</td>
+                <td class="text-right"><span class="signal signal-green">低估</span></td>
+              </tr>
+              <tr>
+                <td>P/E (Forward)</td>
+                <td class="text-right">22.33x</td>
+                <td class="text-right">~40x</td>
+                <td class="text-right"><span class="signal signal-green">低估</span></td>
+              </tr>
+              <tr>
+                <td>P/S</td>
+                <td class="text-right">3.11x</td>
+                <td class="text-right">~3.5x</td>
+                <td class="text-right"><span class="signal signal-yellow">合理</span></td>
+              </tr>
+              <tr>
+                <td>P/B</td>
+                <td class="text-right">5.42x</td>
+                <td class="text-right">~8x</td>
+                <td class="text-right"><span class="signal signal-green">低估</span></td>
+              </tr>
+              <tr>
+                <td>EV/EBITDA</td>
+                <td class="text-right">15.50x</td>
+                <td class="text-right">~22x</td>
+                <td class="text-right"><span class="signal signal-green">低估</span></td>
+              </tr>
+              <tr>
+                <td>EV/Revenue</td>
+                <td class="text-right">3.15x</td>
+                <td class="text-right">~3.5x</td>
+                <td class="text-right"><span class="signal signal-yellow">合理</span></td>
+              </tr>
+              <tr>
+                <td>FCF Yield</td>
+                <td class="text-right">1.07%</td>
+                <td class="text-right">—</td>
+                <td class="text-right"><span class="signal signal-red">偏低</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Radar Chart -->
+      <div class="card" style="display:flex;flex-direction:column;">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">🎯 估值雷達圖（相對歷史均值評分，100=歷史最低估值）</div>
+        <div class="chart-wrapper" style="flex:1;min-height:300px;">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ TECHNICAL INDICATORS -->
+<section id="technical">
+  <div class="container">
+    <div class="section-title">技術指標 — Technical Dashboard</div>
+
+    <!-- Signal Summary -->
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+      <span class="signal signal-red">🔴 整體技術 — 空頭</span>
+      <span class="signal signal-green">🟢 RSI 超賣 — 潛在反彈</span>
+      <span class="signal signal-red">🔴 均線系統 — 破位</span>
+      <span class="signal signal-red">🔴 MACD — 看空</span>
+      <span class="signal signal-red">🔴 ADX — 強空趨勢</span>
+      <span class="signal signal-yellow">🟡 布林通道 — 下軌附近</span>
+    </div>
+
+    <!-- Tech Cards Row 1 -->
+    <div class="grid-4" style="margin-bottom:20px;">
+      <div class="tech-card">
+        <div class="tech-card-label">RSI (14)</div>
+        <div class="tech-card-value pos">23.29</div>
+        <div class="tech-card-desc">🟢 超賣區間 &lt;30</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">MACD</div>
+        <div class="tech-card-value neg">-8.003</div>
+        <div class="tech-card-desc">🔴 Signal: -7.571</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">MACD Hist</div>
+        <div class="tech-card-value neg">-0.431</div>
+        <div class="tech-card-desc">🔴 持續負值看空</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">ADX (14)</div>
+        <div class="tech-card-value neg">29.99</div>
+        <div class="tech-card-desc">🔴 強趨勢 &gt;25</div>
+      </div>
+    </div>
+
+    <!-- Tech Cards Row 2 -->
+    <div class="grid-4" style="margin-bottom:20px;">
+      <div class="tech-card">
+        <div class="tech-card-label">Stoch %K / %D</div>
+        <div class="tech-card-value neu">26.85 / 24.43</div>
+        <div class="tech-card-desc">中性偏弱</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">ATR (14)</div>
+        <div class="tech-card-value" style="color:var(--blue);">$7.68</div>
+        <div class="tech-card-desc">日波動 3.70%</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">BB %B</div>
+        <div class="tech-card-value neu">0.34</div>
+        <div class="tech-card-desc">偏下軌 (0=下軌)</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">+DI / -DI</div>
+        <div class="tech-card-value neg">17.09 / 30.26</div>
+        <div class="tech-card-desc">🔴 空頭主導</div>
+      </div>
+    </div>
+
+    <!-- Moving Averages Table -->
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:14px;">📉 均線系統</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>均線</th>
+              <th class="text-right">數值</th>
+              <th class="text-right">vs 當前 $207.51</th>
+              <th class="text-right">訊號</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MA20</td>
+              <td class="text-right">$218.41</td>
+              <td class="text-right neg">▼ -5.0%</td>
+              <td class="text-right"><span class="signal signal-red">股價在下方</span></td>
+            </tr>
+            <tr>
+              <td>MA50</td>
+              <td class="text-right">$227.58</td>
+              <td class="text-right neg">▼ -8.8%</td>
+              <td class="text-right"><span class="signal signal-red">股價在下方</span></td>
+            </tr>
+            <tr>
+              <td>MA200</td>
+              <td class="text-right">$224.17</td>
+              <td class="text-right neg">▼ -7.4%</td>
+              <td class="text-right"><span class="signal signal-red">股價在下方</span></td>
+            </tr>
+            <tr>
+              <td>布林上軌</td>
+              <td class="text-right">$253.29</td>
+              <td class="text-right neg">▼ -18.1%</td>
+              <td class="text-right"><span class="signal signal-yellow">遠離上軌</span></td>
+            </tr>
+            <tr>
+              <td>布林中軌</td>
+              <td class="text-right">$218.41</td>
+              <td class="text-right neg">▼ -5.0%</td>
+              <td class="text-right"><span class="signal signal-yellow">接近中軌</span></td>
+            </tr>
+            <tr>
+              <td>布林下軌</td>
+              <td class="text-right">$183.53</td>
+              <td class="text-right pos">▲ +13.1%</td>
+              <td class="text-right"><span class="signal signal-green">在下軌上方</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Weekly RSI Chart -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:14px;">📊 近20週 RSI 與收盤走勢</div>
+        <div class="chart-wrapper chart-h280">
+          <canvas id="rsiChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ FUNDAMENTALS TABLE -->
+<section id="fundamentals">
+  <div class="container">
+    <div class="section-title">基本面數據 — Complete Fundamentals</div>
+
+    <!-- Annual Income Statement -->
+    <div class="card section-gap">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📋 損益表（年度）</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th class="text-right">2025</th>
+              <th class="text-right">2024</th>
+              <th class="text-right">2023</th>
+              <th class="text-right">2022</th>
+              <th class="text-right">YoY 增長</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">總營收</td>
+              <td class="text-right blue-c">$716.92B</td>
+              <td class="text-right">$637.96B</td>
+              <td class="text-right">$574.78B</td>
+              <td class="text-right">$513.98B</td>
+              <td class="text-right pos">+12.4%</td>
+            </tr>
+            <tr>
+              <td>毛利潤</td>
+              <td class="text-right blue-c">$360.51B</td>
+              <td class="text-right">$311.67B</td>
+              <td class="text-right">$270.05B</td>
+              <td class="text-right">$225.15B</td>
+              <td class="text-right pos">+15.7%</td>
+            </tr>
+            <tr>
+              <td>毛利率</td>
+              <td class="text-right pos">50.3%</td>
+              <td class="text-right pos">48.8%</td>
+              <td class="text-right">47.0%</td>
+              <td class="text-right">43.8%</td>
+              <td class="text-right pos">▲ 持續擴張</td>
+            </tr>
+            <tr>
+              <td>營業利益</td>
+              <td class="text-right blue-c">$79.97B</td>
+              <td class="text-right">$68.59B</td>
+              <td class="text-right">$36.85B</td>
+              <td class="text-right">$12.25B</td>
+              <td class="text-right pos">+16.6%</td>
+            </tr>
+            <tr>
+              <td>淨利潤</td>
+              <td class="text-right blue-c">$77.67B</td>
+              <td class="text-right">$59.25B</td>
+              <td class="text-right">$30.43B</td>
+              <td class="text-right neg">$-2.72B</td>
+              <td class="text-right pos">+31.1%</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">EBITDA</td>
+              <td class="text-right blue-c">$165.34B</td>
+              <td class="text-right">$123.81B</td>
+              <td class="text-right">$89.40B</td>
+              <td class="text-right">$38.35B</td>
+              <td class="text-right pos">+33.5%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Balance Sheet -->
+    <div class="card section-gap">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">🏦 資產負債表（年度）</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th class="text-right">2025</th>
+              <th class="text-right">2024</th>
+              <th class="text-right">2023</th>
+              <th class="text-right">2022</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">總資產</td>
+              <td class="text-right blue-c">$818.04B</td>
+              <td class="text-right">$624.89B</td>
+              <td class="text-right">$527.85B</td>
+              <td class="text-right">$462.68B</td>
+            </tr>
+            <tr>
+              <td>總負債</td>
+              <td class="text-right">$406.98B</td>
+              <td class="text-right">$338.92B</td>
+              <td class="text-right">$325.98B</td>
+              <td class="text-right">$316.63B</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">股東權益</td>
+              <td class="text-right pos">$411.06B</td>
+              <td class="text-right">$285.97B</td>
+              <td class="text-right">$201.88B</td>
+              <td class="text-right">$146.04B</td>
+            </tr>
+            <tr>
+              <td>現金及等價物</td>
+              <td class="text-right pos">$86.81B</td>
+              <td class="text-right">$78.78B</td>
+              <td class="text-right">$73.39B</td>
+              <td class="text-right">$53.89B</td>
+            </tr>
+            <tr>
+              <td>總債務</td>
+              <td class="text-right">$152.99B</td>
+              <td class="text-right">$130.90B</td>
+              <td class="text-right">$135.61B</td>
+              <td class="text-right">$140.12B</td>
+            </tr>
+            <tr>
+              <td>流動資產</td>
+              <td class="text-right">$229.08B</td>
+              <td class="text-right">$190.87B</td>
+              <td class="text-right">$172.35B</td>
+              <td class="text-right">$146.79B</td>
+            </tr>
+            <tr>
+              <td>流動負債</td>
+              <td class="text-right">$218.00B</td>
+              <td class="text-right">$179.43B</td>
+              <td class="text-right">$164.92B</td>
+              <td class="text-right">$155.39B</td>
+            </tr>
+            <tr>
+              <td>流動比率</td>
+              <td class="text-right neu">1.051</td>
+              <td class="text-right">1.064</td>
+              <td class="text-right">1.045</td>
+              <td class="text-right neg">0.945</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Cash Flow -->
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">💰 現金流量表（年度）</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th class="text-right">2025</th>
+              <th class="text-right">2024</th>
+              <th class="text-right">2023</th>
+              <th class="text-right">2022</th>
+              <th class="text-right">說明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">營業現金流</td>
+              <td class="text-right pos blue-c">$139.51B</td>
+              <td class="text-right pos">$115.88B</td>
+              <td class="text-right pos">$84.95B</td>
+              <td class="text-right pos">$46.75B</td>
+              <td class="text-right"><span class="signal signal-green">強勁增長</span></td>
+            </tr>
+            <tr>
+              <td>資本支出</td>
+              <td class="text-right neg">-$131.82B</td>
+              <td class="text-right neg">-$83.00B</td>
+              <td class="text-right neg">-$52.73B</td>
+              <td class="text-right neg">-$63.65B</td>
+              <td class="text-right"><span class="signal signal-red">AI基建大幅擴張</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">自由現金流</td>
+              <td class="text-right neg">$7.70B</td>
+              <td class="text-right pos">$32.88B</td>
+              <td class="text-right pos">$32.22B</td>
+              <td class="text-right neg">-$16.89B</td>
+              <td class="text-right"><span class="signal signal-yellow">受Capex壓縮</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ INSTITUTIONAL OWNERSHIP -->
+<section id="ownership">
+  <div class="container">
+    <div class="section-title">機構持股 — Institutional Ownership</div>
+    <div class="grid-2">
+      <!-- Pie Chart -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">🥧 持股結構分佈</div>
+        <div class="chart-wrapper chart-h300">
+          <canvas id="ownershipChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Top Institutions -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px;">🏦 前10大機構持股</div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>機構名稱</th>
+                <th class="text-right">持股數</th>
+                <th class="text-right">估值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:var(--yellow);font-weight:700;">1</td>
+                <td>Vanguard Group</td>
+                <td class="text-right">845.4M</td>
+                <td class="text-right blue-c">$175.4B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">2</td>
+                <td>BlackRock Inc.</td>
+                <td class="text-right">734.4M</td>
+                <td class="text-right blue-c">$152.4B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">3</td>
+                <td>State Street Corp.</td>
+                <td class="text-right">388.7M</td>
+                <td class="text-right blue-c">$80.7B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">4</td>
+                <td>FMR (Fidelity)</td>
+                <td class="text-right">331.5M</td>
+                <td class="text-right blue-c">$68.8B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">5</td>
+                <td>Geode Capital Mgmt.</td>
+                <td class="text-right">225.1M</td>
+                <td class="text-right blue-c">$46.7B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">6</td>
+                <td>Morgan Stanley</td>
+                <td class="text-right">161.6M</td>
+                <td class="text-right blue-c">$33.5B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">7</td>
+                <td>JPMorgan Chase</td>
+                <td class="text-right">160.0M</td>
+                <td class="text-right blue-c">$33.2B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">8</td>
+                <td>Norges Bank</td>
+                <td class="text-right">142.4M</td>
+                <td class="text-right blue-c">$29.6B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">9</td>
+                <td>T. Rowe Price</td>
+                <td class="text-right">131.0M</td>
+                <td class="text-right blue-c">$27.2B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);">10</td>
+                <td>Northern Trust</td>
+                <td class="text-right">94.7M</td>
+                <td class="text-right blue-c">$19.7B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analyst Ratings -->
+    <div style="margin-top:20px;" class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📣 最新分析師評級（近期）</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>機構</th>
+              <th>評級</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-02-23</td><td>Wells Fargo</td><td><span class="analyst-badge">Overweight</span></td></tr>
+            <tr><td>2026-02-09</td><td>Citigroup</td><td><span class="analyst-badge">Buy</span></td></tr>
+            <tr><td>2026-02-06</td><td>Wells Fargo</td><td><span class="analyst-badge">Overweight</span></td></tr>
+            <tr><td>2026-02-06</td><td>RBC Capital</td><td><span class="analyst-badge">Outperform</span></td></tr>
+            <tr><td>2026-02-06</td><td>Oppenheimer</td><td><span class="analyst-badge">Outperform</span></td></tr>
+            <tr><td>2026-02-06</td><td>Argus Research</td><td><span class="analyst-badge">Buy</span></td></tr>
+            <tr><td>2026-02-06</td><td>Cantor Fitzgerald</td><td><span class="analyst-badge">Overweight</span></td></tr>
+            <tr><td>2026-02-06</td><td>Piper Sandler</td><td><span class="analyst-badge">Overweight</span></td></tr>
+            <tr><td>2026-02-06</td><td>Guggenheim</td><td><span class="analyst-badge">Buy</span></td></tr>
+            <tr><td>2026-02-06</td><td>Citizens</td><td><span class="analyst-badge">Market Outperform</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ RISK & SCORING -->
+<section id="scoring">
+  <div class="container">
+    <div class="section-title">綜合評分 — Multi-Dimensional Scoring</div>
+    <div class="grid-2">
+      <!-- Scoring Bars -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:20px;">📊 各維度評分（0-100）</div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">💹 成長動能</span>
+            <span class="score-val pos">82/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:82%;--fill-start:#3fb950;--fill-end:#58a6ff;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">收入+13.6% | 淨利+31% | AWS持續高速成長</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">💰 盈利能力</span>
+            <span class="score-val pos">85/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:85%;--fill-start:#3fb950;--fill-end:#3fb950;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">毛利率50.3% | 淨利率10.8% | ROE 22.3%</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">💎 估值合理性</span>
+            <span class="score-val pos">75/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:75%;--fill-start:#d29922;--fill-end:#3fb950;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Forward P/E 22.3x | EV/EBITDA 15.5x 低於歷史均值</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">📉 技術面訊號</span>
+            <span class="score-val neg">30/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:30%;--fill-start:#f85149;--fill-end:#d29922;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">RSI 23超賣 | 破三均線 | 空頭主導 (短期)</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">🏦 機構信心</span>
+            <span class="score-val pos">88/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:88%;--fill-start:#58a6ff;--fill-end:#3fb950;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">機構持股67.1% | 10家分析師齊升 Buy/Overweight</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">🛡️ 財務健康</span>
+            <span class="score-val neu">68/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:68%;--fill-start:#d29922;--fill-end:#58a6ff;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">現金$86.8B充裕 | FCF受Capex壓縮 | D/E 43x</div>
+        </div>
+
+        <div class="score-item">
+          <div class="score-header">
+            <span class="score-name">⚠️ 風險評估（越低越好）</span>
+            <span class="score-val neu">42/100</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:42%;--fill-start:#3fb950;--fill-end:#d29922;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Beta 1.385 | 短期技術破位 | Capex風險</div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:8px;">
+          <div class="score-header">
+            <span class="score-name" style="font-size:15px;color:var(--green);">🎯 綜合總評分</span>
+            <span class="score-val" style="font-size:18px;color:var(--green);">72/100</span>
+          </div>
+          <div class="progress-track" style="height:12px;">
+            <div class="progress-fill" style="width:72%;--fill-start:#58a6ff;--fill-end:#3fb950;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Matrix -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:20px;">⚠️ 風險矩陣</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>風險類型</th>
+              <th class="text-center">影響程度</th>
+              <th class="text-center">發生機率</th>
+              <th class="text-center">風險等級</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AI Capex 大幅壓縮 FCF</td>
+              <td class="text-center">高</td>
+              <td class="text-center">高</td>
+              <td class="text-center"><span class="signal signal-red">🔴 高</span></td>
+            </tr>
+            <tr>
+              <td>宏觀經濟衰退消費下滑</td>
+              <td class="text-center">高</td>
+              <td class="text-center">中</td>
+              <td class="text-center"><span class="signal signal-yellow">🟡 中高</span></td>
+            </tr>
+            <tr>
+              <td>AWS 雲端競爭加劇</td>
+              <td class="text-center">中</td>
+              <td class="text-center">中</td>
+              <td class="text-center"><span class="signal signal-yellow">🟡 中</span></td>
+            </tr>
+            <tr>
+              <td>反壟斷監管風險</td>
+              <td class="text-center">高</td>
+              <td class="text-center">低</td>
+              <td class="text-center"><span class="signal signal-yellow">🟡 中</span></td>
+            </tr>
+            <tr>
+              <td>技術面持續破位下跌</td>
+              <td class="text-center">中</td>
+              <td class="text-center">中</td>
+              <td class="text-center"><span class="signal signal-yellow">🟡 中</span></td>
+            </tr>
+            <tr>
+              <td>內部人大量出售股票</td>
+              <td class="text-center">中</td>
+              <td class="text-center">已發生</td>
+              <td class="text-center"><span class="signal signal-red">🔴 注意</span></td>
+            </tr>
+            <tr>
+              <td>廣告業務增長放緩</td>
+              <td class="text-center">中</td>
+              <td class="text-center">低</td>
+              <td class="text-center"><span class="signal signal-green">🟢 低</span></td>
+            </tr>
+            <tr>
+              <td>AWS AI 爆發帶動成長</td>
+              <td class="text-center">高</td>
+              <td class="text-center">高</td>
+              <td class="text-center"><span class="signal signal-green">🟢 機遇</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Score Summary -->
+        <div style="margin-top:20px;background:var(--bg3);border-radius:8px;padding:16px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text2);">評級說明</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <div style="text-align:center;flex:1;min-width:80px;">
+              <div style="font-size:20px;font-weight:800;color:var(--green);">Buy</div>
+              <div style="font-size:11px;color:var(--text2);">分析師共識</div>
+            </div>
+            <div style="text-align:center;flex:1;min-width:80px;">
+              <div style="font-size:20px;font-weight:800;color:var(--green);">$250</div>
+              <div style="font-size:11px;color:var(--text2);">目標價</div>
+            </div>
+            <div style="text-align:center;flex:1;min-width:80px;">
+              <div style="font-size:20px;font-weight:800;color:var(--green);">+20.5%</div>
+              <div style="font-size:11px;color:var(--text2);">預期上漲</div>
+            </div>
+            <div style="text-align:center;flex:1;min-width:80px;">
+              <div style="font-size:20px;font-weight:800;color:var(--yellow);">12M</div>
+              <div style="font-size:11px;color:var(--text2);">投資期限</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑨ INVESTMENT THESIS -->
+<section id="thesis">
+  <div class="container">
+    <div class="section-title">投資論點 — Investment Thesis</div>
+    <div class="grid-2" style="margin-bottom:24px;">
+
+      <!-- Bull Case -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:16px;">📈 多頭論點（Bull Case）</div>
+        <ul class="thesis-list bull">
+          <li>AWS 雲端 + AI 服務持續高速成長，成為全球最大雲端平台，生成式 AI 浪潮帶動需求爆發</li>
+          <li>廣告業務成為第三大收入來源，2025年廣告營收突破 $540億，利潤率極高</li>
+          <li>毛利率從 2022年 43.8% 升至 50.3%，業務結構改善顯著，高利潤雲端比重持續提升</li>
+          <li>Forward P/E 22.3x 遠低於歷史均值 ~55x，估值極具吸引力</li>
+          <li>RSI 23.3 超賣，技術面過度悲觀，歷史上類似超賣後平均反彈 20-35%</li>
+          <li>10家主要分析師全部維持 Buy/Overweight，目標價普遍在 $250-$280</li>
+          <li>Prime 會員生態護城河深厚，物流基礎設施難以複製</li>
+          <li>$131B 資本支出投入 AI 基礎設施，將在 2026-2027年形成競爭優勢</li>
+        </ul>
+      </div>
+
+      <!-- Bear Case -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:16px;">📉 空頭論點（Bear Case）</div>
+        <ul class="thesis-list bear">
+          <li>FCF 從 2024年 $328億 大幅下滑至 2025年 $77億（不到 $8B），Capex 爆炸性增長壓縮股東回報</li>
+          <li>股價已破 MA20/MA50/MA200 三大均線，技術面空頭趨勢明確，ADX 30強趨勢看空</li>
+          <li>貝佐斯（Bezos）持續大量出售股票（最近 $12億+），內部人信心不足訊號</li>
+          <li>宏觀經濟不確定性，消費降級可能衝擊零售業務，利率維持高位壓縮估值</li>
+          <li>Debt/Equity 43x，財務槓桿偏高，利息成本上升風險</li>
+          <li>Microsoft Azure / Google Cloud 競爭加劇，AWS 市佔率承壓</li>
+          <li>反壟斷調查風險，美國與歐盟監管趨嚴</li>
+          <li>短期成交量萎縮（量比 0.17x），市場興趣不足，可能持續弱勢整理</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Target Price -->
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="target-box">
+        <div class="target-label">⬇️ 空頭目標價</div>
+        <div class="target-price" style="color:var(--red);">$183</div>
+        <div class="target-upside" style="color:var(--red);">▼ -11.8% (布林下軌支撐)</div>
+      </div>
+      <div class="target-box" style="border-color:#58a6ff55;">
+        <div class="target-label">🎯 基準目標價 (12M)</div>
+        <div class="target-price">$250</div>
+        <div class="target-upside">▲ +20.5% 上漲空間</div>
+      </div>
+      <div class="target-box" style="border-color:#3fb95055;">
+        <div class="target-label">🚀 多頭目標價 (12M)</div>
+        <div class="target-price" style="color:var(--green);">$290</div>
+        <div class="target-upside" style="color:var(--green);">▲ +39.8% (AWS 爆發情境)</div>
+      </div>
+    </div>
+
+    <!-- Monitoring Checklist -->
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:16px;">📋 監控指標 Checklist — 觸發條件</div>
+      <div class="grid-2">
+        <div>
+          <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:8px;">✅ 買進確認訊號</div>
+          <ul class="thesis-list checklist">
+            <li>RSI 從超賣區回升突破 35 → 動能回歸</li>
+            <li>股價收復 $218 MA20 均線 → 短期趨勢反轉</li>
+            <li>MACD 柱轉正，金叉形成 → 趨勢改變</li>
+            <li>成交量放大至 20日均量 1.5倍以上伴隨上漲</li>
+            <li>Q1 2026 財報 
