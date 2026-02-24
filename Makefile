@@ -3,7 +3,8 @@ GH        ?= $(shell which gh || echo /opt/homebrew/bin/gh)
 GH_REPO   ?= yennanliu/finance_data
 TICKERS   ?= AAPL
 TYPES     ?= fundamental-analysis,technical-analysis
-TRIGGER   := GH_BIN="$(GH)" GH_REPO="$(GH_REPO)" bash scripts/trigger_analysis.sh
+DELAY     ?= 20   # seconds between workflow dispatches (avoids concurrent rate limits)
+TRIGGER   := GH_BIN="$(GH)" GH_REPO="$(GH_REPO)" TRIGGER_DELAY="$(DELAY)" bash scripts/trigger_analysis.sh
 
 ## ── Help ─────────────────────────────────────────────────────────────────────
 .PHONY: help

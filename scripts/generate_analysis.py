@@ -40,6 +40,7 @@ import argparse
 import os
 import sys
 import textwrap
+import time
 from datetime import date
 from pathlib import Path
 
@@ -844,11 +845,24 @@ def call_claude(ticker: str, context: str, analysis_type: str,
     )
 
     print(f"  → Claude API  model={model}  max_tokens={max_tokens}")
-    response = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": prompt}],
-    )
+
+    max_retries = 5
+    base_delay  = 30  # seconds
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = client.messages.create(
+                model=model,
+                max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            break
+        except anthropic.RateLimitError as e:
+            if attempt == max_retries:
+                raise
+            delay = base_delay * (2 ** (attempt - 1))  # 30 60 120 240 …
+            print(f"  ⚠️  Rate limit hit (attempt {attempt}/{max_retries})."
+                  f" Retrying in {delay}s …")
+            time.sleep(delay)
 
     text  = "\n\n".join(b.text for b in response.content if hasattr(b, "text"))
     usage = response.usage
