@@ -191,6 +191,10 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Pull latest changes to avoid conflicts with concurrent jobs
+          echo "📥 Pulling latest changes from remote..."
+          git pull --rebase origin main
+
           git add "${{ steps.params.outputs.output_dir }}/"
 
           if git diff --cached --quiet; then
@@ -199,6 +203,8 @@ jobs:
             DATE=$(date -u +"%Y-%m-%d")
             TICKER="${{ steps.params.outputs.ticker }}"
             git commit -m "chore: auto-fetch ${TICKER} market-news ${DATE}"
+
+            echo "📤 Pushing changes to remote..."
             git push
             echo "✅ News report committed and pushed."
           fi
