@@ -1,28 +1,28 @@
 name: Daily Market News
 
-# ── Schedules (UTC → Taipei) ─────────────────────────────────────────────────
-#   01:00 → 09:00  TSLA
-#   01:15 → 09:15  PLTR
-#   01:30 → 09:30  ONDS
-#   01:45 → 09:45  TSM
-#   02:00 → 10:00  GOOG
-#   02:15 → 10:15  AMZN
-#   02:30 → 10:30  SOFI
-#   02:45 → 10:45  AMD
-#   03:00 → 11:00  MSFT
-#   03:15 → 11:15  RKLB
+# ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
+#   21:00 → 05:00  TSLA
+#   21:24 → 05:24  PLTR
+#   21:48 → 05:48  ONDS
+#   22:12 → 06:12  TSM
+#   22:36 → 06:36  GOOG
+#   23:00 → 07:00  AMZN
+#   23:24 → 07:24  SOFI
+#   23:48 → 07:48  AMD
+#   00:12 → 08:12  MSFT
+#   00:36 → 08:36  RKLB
 on:
   schedule:
-    - cron: "0 1 * * *"    # TSLA
-    - cron: "15 1 * * *"   # PLTR
-    - cron: "30 1 * * *"   # ONDS
-    - cron: "45 1 * * *"   # TSM
-    - cron: "0 2 * * *"    # GOOG
-    - cron: "15 2 * * *"   # AMZN
-    - cron: "30 2 * * *"   # SOFI
-    - cron: "45 2 * * *"   # AMD
-    - cron: "0 3 * * *"    # MSFT
-    - cron: "15 3 * * *"   # RKLB
+    - cron: "0 21 * * *"    # TSLA
+    - cron: "24 21 * * *"   # PLTR
+    - cron: "48 21 * * *"   # ONDS
+    - cron: "12 22 * * *"   # TSM
+    - cron: "36 22 * * *"   # GOOG
+    - cron: "0 23 * * *"    # AMZN
+    - cron: "24 23 * * *"   # SOFI
+    - cron: "48 23 * * *"   # AMD
+    - cron: "12 0 * * *"    # MSFT
+    - cron: "36 0 * * *"    # RKLB
 
   workflow_dispatch:
     inputs:
@@ -89,43 +89,43 @@ jobs:
             TICKER="${{ github.event.inputs.ticker }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          elif [ "$SCHEDULE" = "0 1 * * *" ]; then
+          elif [ "$SCHEDULE" = "0 21 * * *" ]; then
             TICKER="TSLA"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "15 1 * * *" ]; then
+          elif [ "$SCHEDULE" = "24 21 * * *" ]; then
             TICKER="PLTR"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "30 1 * * *" ]; then
+          elif [ "$SCHEDULE" = "48 21 * * *" ]; then
             TICKER="ONDS"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "45 1 * * *" ]; then
+          elif [ "$SCHEDULE" = "12 22 * * *" ]; then
             TICKER="TSM"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "0 2 * * *" ]; then
+          elif [ "$SCHEDULE" = "36 22 * * *" ]; then
             TICKER="GOOG"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "15 2 * * *" ]; then
+          elif [ "$SCHEDULE" = "0 23 * * *" ]; then
             TICKER="AMZN"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "30 2 * * *" ]; then
+          elif [ "$SCHEDULE" = "24 23 * * *" ]; then
             TICKER="SOFI"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "45 2 * * *" ]; then
+          elif [ "$SCHEDULE" = "48 23 * * *" ]; then
             TICKER="AMD"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "0 3 * * *" ]; then
+          elif [ "$SCHEDULE" = "12 0 * * *" ]; then
             TICKER="MSFT"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
-          elif [ "$SCHEDULE" = "15 3 * * *" ]; then
+          elif [ "$SCHEDULE" = "36 0 * * *" ]; then
             TICKER="RKLB"
             MODEL="claude-sonnet-4-6"
             MAX_TOKENS="20000"
