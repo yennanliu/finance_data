@@ -62,6 +62,8 @@ on:
           - insider-trading
           - institutional-ownership
           - report-generator
+          - financial-report-analyst
+          - stock-valuation
       model:
         description: "Claude model ID"
         required: false
