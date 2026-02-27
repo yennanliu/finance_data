@@ -7,12 +7,14 @@ to produce an investment analysis report in Traditional Chinese (Markdown).
 
 Supported analysis types
 -------------------------
-  fundamental-analysis   Deep fundamental analysis using financial statements
-  technical-analysis     Technical chart and indicator analysis
-  stock-eval             Comprehensive stock evaluation (fundamental + valuation)
-  economics-analysis     US economic indicators and macro environment
-  portfolio-review       Portfolio performance and optimization review
-  sector-analysis        US market sector rotation and analysis
+  fundamental-analysis      Deep fundamental analysis using financial statements
+  technical-analysis        Technical chart and indicator analysis
+  stock-eval                Comprehensive stock evaluation (fundamental + valuation)
+  economics-analysis        US economic indicators and macro environment
+  portfolio-review          Portfolio performance and optimization review
+  sector-analysis           US market sector rotation and analysis
+  financial-report-analyst  8-phase SEC filing analysis with accounting quality score
+  stock-valuation           Multi-method valuation (DCF/CCA/EV/EBITDA/P/E) + football field
 
 Usage
 -----
@@ -110,6 +112,16 @@ ANALYSIS_TYPES = {
         "filename_prefix": "report",
         "label":           "綜合HTML投資報告",
         "ext":             ".html",
+    },
+    "financial-report-analyst": {
+        "filename_prefix": "financial_report_analyst",
+        "label":           "財報深度解析",
+        "ext":             ".md",
+    },
+    "stock-valuation": {
+        "filename_prefix": "stock_valuation",
+        "label":           "多方法估值分析",
+        "ext":             ".md",
     },
 }
 
@@ -753,6 +765,83 @@ Target (High):   {_fmt_price(info.get('targetHighPrice'))}
             f"\n━━ 24-MONTH PRICE HISTORY ({ticker}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
             _market_overview(info, data),
             upgrades_block,
+            news_block,
+        ])
+
+    # ── financial-report-analyst: comprehensive statements + insider ──────────
+    if analysis_type == "financial-report-analyst":
+        price_chart = _price_ascii_chart(data["price_series"])
+        inc_rows = [
+            "Total Revenue", "Gross Profit", "Operating Income",
+            "Net Income", "EBITDA", "Research And Development",
+            "Selling General Administrative",
+        ]
+        inc_q_rows = ["Total Revenue", "Gross Profit", "Operating Income", "Net Income"]
+        bs_rows = [
+            "Total Assets", "Total Liabilities Net Minority Interest",
+            "Stockholders Equity", "Cash And Cash Equivalents", "Total Debt",
+            "Current Assets", "Current Liabilities",
+            "Accounts Receivable", "Inventory", "Accounts Payable",
+        ]
+        cf_rows = [
+            "Operating Cash Flow", "Capital Expenditure", "Free Cash Flow",
+            "Common Stock Repurchased", "Cash Dividends Paid",
+            "Stock Based Compensation",
+        ]
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            f"\n━━ INCOME STATEMENT (Annual, last 4Y) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income'], inc_rows)}",
+            f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income_q'], inc_q_rows)}",
+            f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['balance'], bs_rows)}",
+            f"\n━━ BALANCE SHEET (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['balance_q'], bs_rows)}",
+            f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['cashflow'], cf_rows)}",
+            f"\n━━ CASH FLOW STATEMENT (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['cashflow_q'], cf_rows)}",
+            insider_block,
+            earnings_block,
+            upgrades_block,
+            news_block,
+        ])
+
+    # ── stock-valuation: full valuation + financials + analyst consensus ───────
+    if analysis_type == "stock-valuation":
+        price_chart = _price_ascii_chart(data["price_series"])
+        inc_rows = [
+            "Total Revenue", "Gross Profit", "Operating Income",
+            "Net Income", "EBITDA", "Research And Development",
+        ]
+        inc_q_rows = ["Total Revenue", "Gross Profit", "Operating Income", "Net Income"]
+        bs_rows = [
+            "Total Assets", "Total Liabilities Net Minority Interest",
+            "Stockholders Equity", "Total Debt", "Cash And Cash Equivalents",
+        ]
+        cf_rows = [
+            "Operating Cash Flow", "Capital Expenditure", "Free Cash Flow",
+            "Common Stock Repurchased",
+        ]
+        analyst_block = f"""
+━━ ANALYST CONSENSUS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recommendation:  {_safe(info.get('recommendationKey'))}
+# Analysts:      {_safe(info.get('numberOfAnalystOpinions'))}
+Target (Mean):   {_fmt_price(info.get('targetMeanPrice'))}
+Target (Low):    {_fmt_price(info.get('targetLowPrice'))}
+Target (High):   {_fmt_price(info.get('targetHighPrice'))}
+Dividend Yield:  {_pct(info.get('dividendYield'))}
+Payout Ratio:    {_pct(info.get('payoutRatio'))}
+"""
+        return "\n".join([
+            company_hdr,
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{price_chart}",
+            _market_overview(info, data),
+            analyst_block,
+            f"\n━━ INCOME STATEMENT (Annual, last 4Y) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income'], inc_rows)}",
+            f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['income_q'], inc_q_rows)}",
+            f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['balance'], bs_rows)}",
+            f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{_df_to_text(data['cashflow'], cf_rows)}",
+            earnings_block,
+            upgrades_block,
+            insider_block,
             news_block,
         ])
 
@@ -1462,6 +1551,296 @@ PROMPT_REPORT_GENERATOR = """\
 > **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
 """
 
+# ── Financial Report Analyst ──────────────────────────────────────────────────
+PROMPT_FINANCIAL_REPORT_ANALYST = """\
+你是一位精通 SEC 監管文件解讀的頂級財報分析師，擁有 CPA 與 CFA 雙重資格，擅長從財務報表、\
+MD&A 與附注中發掘機構研究員容易忽略的深層信息。
+請根據下方 **{ticker}** 的即時財務數據，進行八階段財報深度解析。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 格式：完整 Markdown 格式（# ## ### 層級標題）
+3. 視覺化圖表（必須大量使用）：
+   - **Mermaid 圖表**：財務結構、風險矩陣（graph, quadrantChart）
+   - **ASCII 圖表**：DSO/DIO/FCF 趨勢折線圖
+   - **Unicode 評分條**：各維度強度 ▓░█
+4. 會計品質評分（0–21分）：依七大標準評分，附詳細拆解表格
+5. 紅旗偵測：識別風險因素變化、附注異常、分部報告調整
+6. 管理層語氣量化評分（1–5分），追蹤 Guidance 達成率
+7. 營運資本分析：計算 DSO / DIO / AP Days，判斷趨勢 🟢🟡🔴
+8. FCF 轉換率（FCF / Net Income）：目標 >80%；SBC 佔收入比 >5% 須預警 🔴
+9. 視覺指標：使用 🟢🟡🔴 + HIGH/MED/LOW 紅旗等級
+10. 最終輸出標準化訊號塊（BULLISH / NEUTRAL / BEARISH）
+═══════════════════════════════════════════════════════════
+
+━━ 財務數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請按八階段架構輸出完整報告：
+
+# {ticker} 財報深度解析報告
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **框架**：8-Phase Financial Report Analysis
+
+## 目錄
+## 階段 1：文件定向（Document Orientation）
+   - 財報類型識別（10-K / 10-Q / 8-K / 財報新聞稿）+ 涵蓋期間
+   - 審計師意見類型（無保留/保留/否定/無法表示）及審計師是否變更 🔴
+   - 申報日期適時性評估（是否延遲申報）
+   - 前期財務重述記錄
+
+## 階段 2：MD&A 深度解讀
+   - **收入分析**：分部/產品收入拆解、有機 vs 無機成長、積壓訂單趨勢、管理層 Guidance 具體性
+   - **利潤率分析**：Non-GAAP vs GAAP 差異表格（Non-GAAP 排除項成長速度 > GAAP 費用 → 警訊 🔴）
+   - **流動性與資本資源**：現金部位、循環信用額度、12個月/3年債務到期時間表、OCF/FCF
+   - **Forward Guidance**：具體數字 vs 方向性語言趨勢分析（語氣降格 → 信心減弱信號）
+
+## 階段 3：財務報表深度解讀
+   - **損益表**：收入認列政策變動、應收帳款成長 vs 收入成長對比（塞貨信號 🔴）、遞延收入趨勢
+   - **資產負債表**：商譽/無形資產佔總資產比、DSO/DIO 趨勢表格、利息保障倍數、淨負債/EBITDA
+   - **現金流量表**（最難操縱）：
+     - GAAP 淨利 → 營業現金流調節分析
+     - FCF 轉換率趨勢表格（目標 >80%）🟢🟡🔴
+     - SBC 佔收入比例評估（>5% → 稀釋預警 🔴）
+     - 資本支出 vs 折舊（維護性 vs 成長性 CAPEX 判斷）
+
+## 階段 4：風險因素分析
+   - 新增風險因素表格（法規/法律/客戶集中/網路安全/持續經營）🔴
+   - 消失或縮減的風險因素（是否刻意淡化？）🟡
+   - 風險描述語言強化分析（擴展描述 → 升級警示）
+   - 競爭風險語言 vs 上期對比
+
+## 階段 5：會計附注深度解析
+   - 關鍵會計估計審查（收入認列/商譽減損/SBC 估值）
+   - 關聯方交易識別 + 金額揭露 🔴
+   - 分部報告變更分析（隱藏績效欠佳部門？）
+   - 或有負債 + 法律訴訟重大性評估
+
+## 階段 6：管理層語氣分析
+   - 整體語氣評分表格（各財報段落 1–5 分）Mermaid graph
+   - 對沖語言清單：「we cannot assure」/「significant uncertainty」/被動語態 負面項目 🔴
+   - 正面強調 vs 刻意迴避項目對比表格
+   - **Guidance 準確度計分卡**：近4季 預測 vs 實際（命中率 / 平均誤差）
+
+## 階段 7：季度環比比較（適用 10-Q）
+   - QoQ 趨勢表格（本季 vs 上季 vs 去年同期）
+   - 加速 / 穩定 / 減速 / 惡化 趨勢判斷 🟢🟡🔴
+   - 季節性調整後核心趨勢解讀
+
+## 階段 8：內部人活動交叉驗證
+   - 近期 CEO/CFO 公開市場買入（強烈看多信號）🟢
+   - 低價大量賣出（負面信號）🔴
+   - 新設 10b5-1 計畫（中性參考）
+   - 高管離職（尤其 CFO 離職 → 重大紅旗）🔴
+
+## 綜合評估輸出
+
+### 財務健康儀表板
+| 指標 | 數值 | 評分 | 趨勢 |
+|------|------|------|------|
+| 收入成長 | | /10 | 🟢🟡🔴 |
+| FCF 轉換率 | | /10 | |
+| 毛利率 | | /10 | |
+| 淨負債/EBITDA | | /10 | |
+| DSO 趨勢 | | /10 | |
+| 管理層語氣 | | /5 | |
+| 會計品質評分 | | /21 | |
+
+### 會計品質評分（0–21）
+| 標準 | 滿分 | 得分 | 評估說明 |
+|------|------|------|---------|
+| 收入認列清晰度 | 3 | | |
+| Non-GAAP 調節合理性 | 3 | | |
+| FCF 轉換率 | 3 | | |
+| 營運資本健康度 | 3 | | |
+| 附注透明度 | 3 | | |
+| 審計師意見 | 3 | | |
+| 關聯方交易 | 3 | | |
+| **合計** | **21** | | |
+
+### 紅旗彙整表格
+| 嚴重度 | 紅旗項目 | 位置/段落 | 投資含義 |
+|--------|---------|---------|---------|
+| HIGH 🔴 | | | |
+| MED 🟡 | | | |
+| LOW ⬜ | | | |
+
+### 投資訊號
+```
+Signal:     BULLISH / NEUTRAL / BEARISH
+Confidence: HIGH / MEDIUM / LOW
+Horizon:    SHORT / MEDIUM / LONG-TERM
+Score:      X.X / 10
+Action:     BUY / HOLD / SELL
+```
+**評分指引**：8.0–10.0 強烈看多 ｜ 6.0–7.9 溫和看多 ｜ 4.0–5.9 中性 ｜ 2.0–3.9 溫和看空 ｜ 0.0–1.9 強烈看空
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
+# ── Stock Valuation ───────────────────────────────────────────────────────────
+PROMPT_STOCK_VALUATION = """\
+你是一位頂級股票估值專家，擁有投資銀行與私募股權估值經驗，精通 DCF、可比公司分析、\
+EV/EBITDA 倍數法、P/E 估值與剩餘收益模型。
+請根據下方 **{ticker}** 的即時財務數據，運用五種方法進行多方法估值分析，\
+最終彙整橄欖球場圖（Football Field Chart）與機率加權內在價值。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 格式：完整 Markdown 格式（# ## ### 層級標題）
+3. 視覺化圖表（必須大量使用）：
+   - **ASCII 橄欖球場圖**：彙整5種方法的熊/基準/牛市價值區間（必須繪製）
+   - **Mermaid 圖表**：DCF 情境樹、估值比較（graph, quadrantChart）
+   - **Unicode 評分條**：安全邊際視覺化 ▓░█
+4. 五種方法均需完整計算，並列出所有假設條件
+5. DCF：三情境（樂觀20%/基準60%/悲觀20%），10年投影，6格敏感性矩陣（WACC × 終端成長率）
+6. CCA：點名5–8家同業，比較 EV/Revenue / EV/EBITDA / P/E / EV/FCF
+7. 機率加權綜合估值：整合全部方法並附權重說明
+8. 風險調整報酬：計算各情境隱含報酬率，目標風險報酬比 ≥ 3:1
+9. 分析師共識比較：與市場目標價對比
+10. 安全邊際評估：>30% 折價=吸引力高 🟢 ｜ 0–10%=合理定價 🟡 ｜ >50% 溢價=昂貴 🔴
+═══════════════════════════════════════════════════════════
+
+━━ 財務數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請按以下架構輸出完整報告：
+
+# {ticker} 多方法估值分析報告
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **框架**：5-Method Football Field Valuation
+
+## 目錄
+## 1. 估值摘要儀表板
+   - **ASCII 橄欖球場圖**（必須繪製）：
+     ```
+     方法                熊市    基準    牛市
+     ─────────────────────────────────────────────────────
+     DCF                 $XX     $XX     $XX   |---[=====]-----|
+     可比公司 CCA        $XX     $XX     $XX   |--[====]-------|
+     EV/EBITDA 倍數      $XX     $XX     $XX   |----[====]-----|
+     P/E 倍數            $XX     $XX     $XX   |---[=====]-----|
+     剩餘收益            $XX     $XX     $XX   |----[====]-----|
+     ─────────────────────────────────────────────────────
+     機率加權綜合        $XX     $XX     $XX   ★
+     目前股價            $XX                   ↑
+     ```
+   - 綜合估值結論表格（當前股價 vs 各方法目標價 vs 安全邊際）🟢🟡🔴
+   - 投資訊號：明確給出 強力買入/買入/持有/觀望/賣出 + 隱含報酬率
+
+## 2. 方法一：DCF 貼現現金流分析
+   - **WACC 計算**：Ke（CAPM）/ Kd / 資本結構詳細計算表格
+   - **三情境假設表格**：
+     | 假設 | 樂觀（20%） | 基準（60%） | 悲觀（20%） |
+     |------|----------|----------|----------|
+     | 前5年收入CAGR | | | |
+     | 後5年收入CAGR | | | |
+     | 目標EBITDA Margin | | | |
+     | 終端成長率 | | | |
+     | WACC | | | |
+     | 目標價 | | | |
+   - **10年自由現金流投影表格**（含終端價值計算與佔比）
+   - **敏感性分析矩陣**（6格：WACC × 終端成長率）：
+     ```
+              終端成長率
+     WACC    1.0%    2.0%    3.0%
+     8%      $XX     $XX     $XX
+     9%      $XX     $XX     $XX
+     10%     $XX     $XX     $XX
+     ```
+   - DCF 機率加權目標價：**$XX**
+
+## 3. 方法二：可比公司分析（CCA）
+   - **同業比較表格**（5–8家同業，必須點名公司）：
+     | 公司 | EV/Revenue | EV/EBITDA | P/E | EV/FCF | 綜合評分 |
+     |------|-----------|----------|-----|--------|---------|
+     | 同業1 | | | | | |
+     | 同業2 | | | | | |
+     | 中位數 | | | | | |
+     | **{ticker}** | | | | | 🟢🟡🔴 |
+   - 各倍數法目標價計算表格（中位數倍數 × {ticker} 財務指標）
+   - CCA 目標價區間：**$XX – $XX**
+
+## 4. 方法三：EV/EBITDA 倍數估值
+   - 歷史 EV/EBITDA 區間分析（5年：高/均值/低）
+   - **三層估值表格**：
+     | 情境 | EV/EBITDA倍數 | 依據 | 目標價 |
+     |------|-------------|-----|------|
+     | 保守 | | | $XX |
+     | 基準 | | | $XX |
+     | 優質溢價 | | | $XX |
+   - EV/EBITDA 目標價：**$XX**
+
+## 5. 方法四：P/E 倍數估值（含 PEG）
+   - 歷史 P/E 區間（5年：高/均值/低）
+   - **P/E 估值表格**（Forward P/E × EPS 估計）：
+     | 情境 | P/E倍數 | Forward EPS | 目標價 |
+     |------|--------|------------|------|
+     | 保守 | | | $XX |
+     | 基準 | | | $XX |
+     | 成長溢價 | | | $XX |
+   - **PEG 比率分析**：PEG = P/E ÷ EPS成長率，合理 PEG 區間評估
+   - P/E 目標價：**$XX**
+
+## 6. 方法五：剩餘收益 / 經濟附加值（EVA）
+   （適用金融股、資產密集型或 FCF 為負的成長公司）
+   - **EVA 計算**：NOPAT - (WACC × 投入資本)，判斷是否創造股東價值
+   - **剩餘收益投影**（10年），含終端殘差值
+   - 內在價值 = 帳面價值 + 未來剩餘收益現值
+   - 剩餘收益目標價：**$XX**
+
+## 7. 機率加權綜合內在價值
+   - **綜合估值表格**（各方法權重 + 加權貢獻）：
+     | 方法 | 基準目標價 | 權重 | 加權貢獻 |
+     |------|---------|------|--------|
+     | DCF | $XX | 35% | $XX |
+     | CCA | $XX | 25% | $XX |
+     | EV/EBITDA | $XX | 20% | $XX |
+     | P/E | $XX | 15% | $XX |
+     | 剩餘收益 | $XX | 5% | $XX |
+     | **機率加權綜合** | | **100%** | **$XX** |
+   - 安全邊際 Unicode 進度條 ▓░
+   - 安全邊際評估：>30% 折價=吸引力高 🟢 ｜ 0–10%=合理定價 🟡 ｜ >50% 溢價=昂貴 🔴
+
+## 8. 風險調整報酬分析
+   - **三情境期望報酬表格**：
+     | 情境 | 機率 | 目標價 | 隱含報酬率 | 機率加權報酬 |
+     |------|------|------|---------|-----------|
+     | 牛市 | 20% | $XX | +XX% | +XX% |
+     | 基準 | 60% | $XX | +XX% | +XX% |
+     | 熊市 | 20% | $XX | -XX% | -XX% |
+     | **期望報酬** | | | | **+XX%** |
+   - 風險報酬比：X:1（目標 ≥ 3:1）
+   - 下行保護評估（熊市情境最大虧損幅度）
+
+## 9. 分析師共識比較
+   - 分析師目標價統計（Mean / Low / High / 本報告目標）對比表格 🟢🟡🔴
+   - 本報告 vs 共識的主要差異分析（更樂觀/悲觀的核心假設差異）
+   - 近期評級調整趨勢
+
+## 10. 估值結論與投資建議
+   - 最終估值區間摘要（熊/基準/牛市目標價）
+   - 安全邊際視覺化 Unicode ▓░ 進度條
+   - **投資訊號**：
+     ```
+     Signal:      BULLISH / NEUTRAL / BEARISH
+     Confidence:  HIGH / MEDIUM / LOW
+     Horizon:     SHORT / MEDIUM / LONG-TERM
+     Score:       X.X / 10
+     Action:      BUY / HOLD / SELL
+     Target:      $XX（基準） | $XX（牛市） | $XX（熊市）
+     Risk/Reward: X:1
+     ```
+   - 關鍵估值假設監控 checklist（什麼數據變化需重新估值）
+   - 觸發重新評估的指標
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。
+"""
+
 PROMPT_MAP = {
     "fundamental-analysis":   PROMPT_FUNDAMENTAL,
     "technical-analysis":     PROMPT_TECHNICAL,
@@ -1471,8 +1850,10 @@ PROMPT_MAP = {
     "sector-analysis":        PROMPT_SECTOR,
     "earnings-call-analysis": PROMPT_EARNINGS_CALL,
     "insider-trading":        PROMPT_INSIDER_TRADING,
-    "institutional-ownership":PROMPT_INSTITUTIONAL,
-    "report-generator":       PROMPT_REPORT_GENERATOR,
+    "institutional-ownership":    PROMPT_INSTITUTIONAL,
+    "report-generator":           PROMPT_REPORT_GENERATOR,
+    "financial-report-analyst":   PROMPT_FINANCIAL_REPORT_ANALYST,
+    "stock-valuation":            PROMPT_STOCK_VALUATION,
 }
 
 
