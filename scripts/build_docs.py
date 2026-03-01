@@ -75,6 +75,12 @@ LANG_TEXT = {
         "file_location_desc": "10-K PDFs are stored in the `10-k/` directory of the repository. Clone the repo to access them locally",
         "company_index": "Company Index",
         "years": "Years",
+        "view_filings": "View Filings",
+        "annual_filings_for": "Annual Filings for",
+        "year": "Year",
+        "filename": "Filename",
+        "view": "View",
+        "back_to_index": "Back to 10-K Index",
         "download_more": "Download More Filings",
         "download_desc": "Use the included Python scripts to download additional 10-K filings",
         "quarterly_reports": "10-Q Quarterly Reports",
@@ -121,6 +127,12 @@ LANG_TEXT = {
         "file_location_desc": "10-K PDF 檔案儲存在存儲庫的 `10-k/` 目錄中。複製存儲庫以在本地訪問它們",
         "company_index": "公司索引",
         "years": "年份",
+        "view_filings": "查看文件",
+        "annual_filings_for": "年度文件 —",
+        "year": "年份",
+        "filename": "檔案名稱",
+        "view": "查看",
+        "back_to_index": "返回 10-K 索引",
         "download_more": "下載更多文件",
         "download_desc": "使用包含的 Python 腳本下載額外的 10-K 文件",
         "quarterly_reports": "10-Q 季度報告",
@@ -414,11 +426,16 @@ def build_notebooks(lang: str = "en"):
     write(DST_NOTEBOOKS / "index.md", "\n".join(top_lines))
 
 
-# ── 3. 10-k → docs/sec/10k.md (index, no PDF copy) ──────────────────────────
+# ── 3. 10-k → docs/sec/10k/ (per-company pages with GitHub PDF links) ────────
+GITHUB_RAW_BASE = "https://raw.githubusercontent.com/yennanliu/finance_data/main/10-k"
+GITHUB_BLOB_BASE = "https://github.com/yennanliu/finance_data/blob/main/10-k"
+
+
 def build_10k_index(lang: str = "en"):
     docs_root = get_docs_root(lang)
     DST_SEC = docs_root / "sec"
-    ensure(DST_SEC)
+    DST_10K_DIR = DST_SEC / "10k"
+    ensure(DST_10K_DIR)
 
     if not SRC_10K.exists():
         write(DST_SEC / "10k.md", f"# {t(lang, 'annual_reports')}\n\nNo filings found.\n")
@@ -429,7 +446,7 @@ def build_10k_index(lang: str = "en"):
     total_pdfs = 0
 
     for company_dir in company_dirs:
-        pdfs = sorted(company_dir.glob("*.pdf"))
+        pdfs = sorted(company_dir.glob("*.pdf"), key=lambda p: p.name, reverse=True)
         if not pdfs:
             continue
         total_pdfs += len(pdfs)
@@ -452,8 +469,47 @@ def build_10k_index(lang: str = "en"):
         # Format company display name
         display_name = meta["name"] if meta["name"] != ticker_clean.upper() else dir_name.replace("_", " ").rstrip(" -")
 
+        # Create per-company sub-page
+        slug = slugify(dir_name)
+        dst_company = DST_10K_DIR / slug
+        ensure(dst_company)
+
+        company_lines = [
+            f"# {meta['flag']} {display_name} — 10-K",
+            "",
+            f"> **{t(lang, 'ticker')}:** `{ticker_clean.upper()}` &nbsp;|&nbsp; "
+            f"**{t(lang, 'sector')}:** {meta['sector']} &nbsp;|&nbsp; "
+            f"**{t(lang, 'total')}:** {len(pdfs)} {t(lang, 'files')}",
+            "",
+            f"[:material-arrow-left: {t(lang, 'back_to_index')}](../../10k.md)",
+            "",
+            "---",
+            "",
+            f"## {t(lang, 'annual_filings_for')} {display_name}",
+            "",
+            f"| {t(lang, 'year')} | {t(lang, 'filename')} | {t(lang, 'view')} |",
+            "|------|----------|------|",
+        ]
+
+        for pdf in pdfs:
+            m = re.search(r"(20\d{2}|19\d{2})", pdf.name)
+            year = m.group(1) if m else "—"
+            # URL-encode spaces in filename just in case
+            safe_name = pdf.name.replace(" ", "%20")
+            blob_url = f"{GITHUB_BLOB_BASE}/{dir_name}/{safe_name}"
+            raw_url = f"{GITHUB_RAW_BASE}/{dir_name}/{safe_name}"
+            company_lines.append(
+                f"| {year} | `{pdf.name}` "
+                f"| [:material-file-pdf-box: GitHub]({blob_url}){{target=_blank}} "
+                f"&nbsp; [:material-download: Download]({raw_url}){{target=_blank}} |"
+            )
+
+        write(dst_company / "index.md", "\n".join(company_lines))
+
+        # Row for main table — link to company sub-page
         table_rows.append(
-            f"| {meta['flag']} {display_name} | `{ticker_clean.upper()}` "
+            f"| {meta['flag']} [{display_name}](10k/{slug}/index.md) "
+            f"| `{ticker_clean.upper()}` "
             f"| {meta['sector']} | {len(pdfs)} | {year_str} |"
         )
 
@@ -463,8 +519,9 @@ def build_10k_index(lang: str = "en"):
         f"> {t(lang, 'sec_annual_desc')}. {t(lang, 'total')}: **{total_pdfs} PDFs** ({len(table_rows)} {t(lang, 'companies')}).",
         f"> {t(lang, 'last_indexed')}: **{TODAY}**",
         "",
-        f"!!! info \"{t(lang, 'file_location')}\"",
-        f"    {t(lang, 'file_location_desc')}: `git clone https://github.com/yennanliu/finance_data.git`",
+        f"!!! tip \"{t(lang, 'view_filings')}\"",
+        f"    {t(lang, 'file_location_desc')}: `git clone https://github.com/yennanliu/finance_data.git`  ",
+        f"    Click any company below to view and download individual PDF filings directly from GitHub.",
         "",
         f"## {t(lang, 'company_index')}",
         "",
@@ -699,6 +756,11 @@ def build_nav_pages(lang: str = "en"):
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # .pages for the 10k/ sub-directory inside sec/
+    DST_10K_DIR = DST_SEC / "10k"
+    if DST_10K_DIR.exists():
+        write(DST_10K_DIR / ".pages", "nav:\n  - ...\n")
 
 
 # ── 8. includes/abbreviations.md ─────────────────────────────────────────────
