@@ -16,6 +16,13 @@ on:
       - "docs/**"
       - "scripts/build_docs.py"
       - ".github/workflows/deploy.yml"
+  schedule:
+    # ── Consolidated nightly deploy (UTC) ───────────────────────────────────
+    # Runs after ALL other cron jobs complete:
+    #   daily_analysis:    last job NVDA at 20:41 UTC
+    #   daily_market_news: last job RKLB at 00:36 UTC
+    # → Deploy at 01:10 UTC to ensure latest reports are published
+    - cron: "10 1 * * *"
   workflow_dispatch:      # allow manual trigger from GitHub UI
 
 permissions:
