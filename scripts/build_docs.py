@@ -59,11 +59,11 @@ LANG_TEXT = {
         "company": "Company",
         "files": "Files",
         "reports": "Reports",
-        "ai_notebooks": "AI Research Notebooks",
+        "ai_notebooks": "NotebookLLM",
         "deep_dive": "Deep-dive analysis generated with Google NotebookLM",
         "research_docs": "📑 Research Documents",
         "notes_outlines": "📝 Notes & Outlines",
-        "about_notebooklm": "About NotebookLM Reports",
+        "about_notebooklm": "About NotebookLLM Reports",
         "notebooklm_desc": "These documents are AI-synthesised research reports created using Google NotebookLM from primary source materials (10-K filings, investor presentations, earnings calls). They provide deep-dive analysis from a structured, document-grounded AI perspective.",
         "sec_filings": "SEC Filings",
         "annual_reports": "10-K Annual Reports",
@@ -111,11 +111,11 @@ LANG_TEXT = {
         "company": "公司",
         "files": "檔案",
         "reports": "報告",
-        "ai_notebooks": "AI 研究筆記",
+        "ai_notebooks": "NotebookLLM",
         "deep_dive": "使用 Google NotebookLM 生成的深度分析",
         "research_docs": "📑 研究文件",
         "notes_outlines": "📝 筆記與大綱",
-        "about_notebooklm": "關於 NotebookLM 報告",
+        "about_notebooklm": "關於 NotebookLLM 報告",
         "notebooklm_desc": "這些文件是使用 Google NotebookLM 從主要來源資料（10-K 文件、投資者簡報、財報電話會議）創建的 AI 綜合研究報告。它們從結構化、基於文件的 AI 視角提供深度分析。",
         "sec_filings": "SEC 文件",
         "annual_reports": "10-K 年度報告",
@@ -285,14 +285,13 @@ def build_reports(lang: str = "en"):
 
         # Row for top-level index table
         report_count = len(md_files) + len(html_files)
-        report_list = ", ".join(
-            [f"[{f.stem}]({ticker}/{f.name})" for f in md_files[:2]]
-            + [f"[{f.stem} (HTML)]({ticker}/{f.name}){{target=_blank}}" for f in html_files[:1]]
-        )
+        md_badge = f"📄 {len(md_files)}" if md_files else ""
+        html_badge = f"🌐 {len(html_files)}" if html_files else ""
+        badges = " &nbsp; ".join(b for b in [md_badge, html_badge] if b)
         report_index_rows.append(
-            f"| {meta['flag']} [{ticker.upper()}](#{ticker}) "
+            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
             f"| {meta['name']} | {meta['sector']} "
-            f"| {report_count} | {report_list} |"
+            f"| {badges} | [View →]({ticker}/index.md) |"
         )
 
     # Top-level reports/index.md
@@ -306,8 +305,8 @@ def build_reports(lang: str = "en"):
         "",
         f"## {t(lang, 'report_index')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'files')} | {t(lang, 'reports')} |",
-        "|---|--------|---------|--------|-------|---------|",
+        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} | |",
+        "|---|--------|---------|--------|-------|---|",
     ] + report_index_rows
 
     # Per-ticker detail sections
@@ -331,15 +330,18 @@ def build_reports(lang: str = "en"):
         ]
         if md_files:
             top_lines.append(f"**{t(lang, 'markdown_reports')}:**")
+            top_lines.append("")
             for f in md_files:
                 label = f.stem.replace("_", " ").title()
                 top_lines.append(f"- [{label}]({ticker}/{f.name})")
-        if html_files:
             top_lines.append("")
+        if html_files:
             top_lines.append(f"**{t(lang, 'html_reports')}:**")
+            top_lines.append("")
             for f in html_files:
                 label = f.stem.replace("_", " ").title()
                 top_lines.append(f"- [:material-open-in-new: {label}]({ticker}/{f.name}){{target=_blank .pdf-btn}}")
+            top_lines.append("")
 
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
 
@@ -752,10 +754,14 @@ def build_nav_pages(lang: str = "en"):
     DST_SEC = docs_root / "sec"
     DST_INV_DAY = docs_root / "investor_day"
 
-    for subdir in [DST_REPORTS, DST_NOTEBOOKS, DST_SEC, DST_INV_DAY]:
+    for subdir in [DST_REPORTS, DST_SEC, DST_INV_DAY]:
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # Notebooks section: set display title to "NotebookLLM" in nav
+    if DST_NOTEBOOKS.exists():
+        write(DST_NOTEBOOKS / ".pages", "title: NotebookLLM\nnav:\n  - index.md\n  - ...\n")
 
     # .pages for the 10k/ sub-directory inside sec/
     DST_10K_DIR = DST_SEC / "10k"
