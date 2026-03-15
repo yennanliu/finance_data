@@ -98,7 +98,7 @@ description: AI 驅動的投資研究、SEC 文件與基本面分析
 - **`10-k/`** — 30+ 家公司的年度 SEC 文件（PDF）
 - **`10-q/`** — 季度 SEC 文件
 - **`13-f/`** — 機構持股文件
-- **`script/`** — 用於 SEC EDGAR 批量下載的 Python 自動化工具
+- **`scripts/`** — 用於 SEC EDGAR 批量下載的 Python 自動化工具
 - **`investor_day/`** — 投資者日簡報資料
 
 !!! note "資料來源"

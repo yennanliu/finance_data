@@ -539,10 +539,10 @@ def build_10k_index(lang: str = "en"):
         "",
         "```bash",
         "# Download 5 most recent 10-Ks for a ticker",
-        "python script/download_10k_pdf.py apple-inc",
+        "python scripts/download_10k_pdf.py apple-inc",
         "",
         "# Download for multiple companies (batch)",
-        "bash script/batch_download_vti_top25.sh",
+        "bash scripts/batch_download_vti_top25.sh",
         "```",
         "",
         "See the [Scripts page](../scripts.md) for full documentation.",
@@ -569,7 +569,7 @@ def build_other_sec(lang: str = "en"):
         "## Download",
         "",
         "```bash",
-        "python script/download_10k_pdf.py AAPL --form 10-Q",
+        "python scripts/download_10k_pdf.py AAPL --form 10-Q",
         "```",
     ]
     write(DST_SEC / "10q.md", "\n".join(lines_10q))
@@ -675,7 +675,7 @@ def build_investor_day(lang: str = "en"):
 def build_scripts_page(lang: str = "en"):
     docs_root = get_docs_root(lang)
     scripts_page = docs_root / "scripts.md"
-    script_dir = ROOT / "script"
+    script_dir = ROOT / "scripts"
     py_scripts = sorted(script_dir.glob("*.py")) if script_dir.exists() else []
     sh_scripts = sorted(script_dir.glob("*.sh")) if script_dir.exists() else []
 
@@ -701,7 +701,7 @@ def build_scripts_page(lang: str = "en"):
             f"### `{script.name}`",
             "",
             "```bash",
-            f"python script/{script.name} --help",
+            f"python scripts/{script.name} --help",
             "```",
             "",
         ]
@@ -713,7 +713,7 @@ def build_scripts_page(lang: str = "en"):
                 f"### `{script.name}`",
                 "",
                 "```bash",
-                f"bash script/{script.name}",
+                f"bash scripts/{script.name}",
                 "```",
                 "",
             ]

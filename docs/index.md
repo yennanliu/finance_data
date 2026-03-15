@@ -98,7 +98,7 @@ This repository provides tools and research for downloading, storing, and analys
 - **`10-k/`** — Annual SEC filings (PDF) for 30+ companies
 - **`10-q/`** — Quarterly SEC filings
 - **`13-f/`** — Institutional holdings filings
-- **`script/`** — Python automation tools for SEC EDGAR batch downloads
+- **`scripts/`** — Python automation tools for SEC EDGAR batch downloads
 - **`investor_day/`** — Investor day presentation materials
 
 !!! note "Data Sources"
