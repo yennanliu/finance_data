@@ -157,10 +157,23 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
         print("ERROR: OPENAI_API_KEY is not set.", file=sys.stderr)
         sys.exit(1)
 
+    # OpenAI models have different max token limits - cap to safe values
+    # gpt-4o: 16384, gpt-4-turbo: 4096, gpt-4: 8192
+    openai_max_tokens = {
+        "gpt-4o": 16384,
+        "gpt-4o-mini": 16384,
+        "gpt-4-turbo": 4096,
+        "gpt-4": 8192,
+    }
+    model_max = openai_max_tokens.get(model, 16384)
+    effective_max_tokens = min(max_tokens, model_max)
+    if effective_max_tokens != max_tokens:
+        print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
+
     client = openai.OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model=model,
-        max_tokens=max_tokens,
+        max_tokens=effective_max_tokens,
         messages=[{"role": "user", "content": prompt}],
     )
     return response.choices[0].message.content
