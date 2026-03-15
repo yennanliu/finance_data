@@ -20,7 +20,7 @@ finance_data/
 ├── 10-k/       # 10-K annual reports
 ├── 10-q/       # 10-Q quarterly reports
 ├── 13-f/       # 13-F holdings reports
-└── script/     # Download scripts
+└── scripts/    # Download scripts
 ```
 
 ## Scripts
@@ -39,25 +39,25 @@ pip install requests
 
 ```bash
 # Download 5 most recent 10-K reports for Apple
-python script/download_10k.py AAPL
+python scripts/download_10k.py AAPL
 
 # V1
-python script/download_10k_pdf.py meta-platforms-inc
+python scripts/download_10k_pdf.py meta-platforms-inc
 
 # V2
-uv run script/download_10k_pdf.py meta-platforms-inc
+uv run scripts/download_10k_pdf.py meta-platforms-inc
 
 
 
 
 # Download 10 most recent reports
-python script/download_10k.py AAPL -n 10
+python scripts/download_10k.py AAPL -n 10
 
 # Download for multiple companies
-python script/download_10k.py AAPL MSFT TSLA
+python scripts/download_10k.py AAPL MSFT TSLA
 
 # Specify your email (recommended by SEC)
-python script/download_10k.py AAPL -e your.email@example.com
+python scripts/download_10k.py AAPL -e your.email@example.com
 ```
 
 **Features:**
