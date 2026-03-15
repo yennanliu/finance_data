@@ -2,7 +2,7 @@
 """
 generate_analysis.py
 ====================
-Fetches live financial data from yfinance, then calls the Claude API
+Fetches live financial data from yfinance, then calls the Claude or OpenAI API
 to produce an investment analysis report in Traditional Chinese (Markdown).
 
 Supported analysis types
@@ -18,22 +18,24 @@ Supported analysis types
 
 Usage
 -----
-  python scripts/generate_analysis.py                          # AAPL fundamental
+  python scripts/generate_analysis.py                          # AAPL fundamental (Claude)
   python scripts/generate_analysis.py TSLA --analysis-type technical-analysis
   python scripts/generate_analysis.py SPY  --analysis-type sector-analysis
   python scripts/generate_analysis.py      --analysis-type economics-analysis
   python scripts/generate_analysis.py AAPL --model claude-opus-4-6 --max-tokens 10000
+  python scripts/generate_analysis.py AAPL --provider openai --model gpt-4o
 
 Same-day runs: if fundamental_analysis_2026-02-22.md already exists,
 the next run creates fundamental_analysis_2026-02-22-2.md, then -3, etc.
 
 Requirements
 ------------
-  pip install anthropic yfinance
+  pip install anthropic openai yfinance
 
 Environment
 -----------
-  ANTHROPIC_API_KEY   (required)
+  ANTHROPIC_API_KEY   (required for Claude provider - default)
+  OPENAI_API_KEY      (required for OpenAI provider)
 """
 
 from __future__ import annotations
@@ -1858,7 +1860,7 @@ PROMPT_MAP = {
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# 4.  CLAUDE API
+# 4.  LLM API (Claude / OpenAI)
 # ═════════════════════════════════════════════════════════════════════════════
 
 def call_claude(ticker: str, context: str, analysis_type: str,
@@ -1900,6 +1902,62 @@ def call_claude(ticker: str, context: str, analysis_type: str,
     print(f"  ✅ response  in={usage.input_tokens}  out={usage.output_tokens}"
           f"  chars={len(text)}")
     return text
+
+
+def call_openai(ticker: str, context: str, analysis_type: str,
+                model: str, max_tokens: int) -> str:
+    """Call OpenAI API and return the response text."""
+    try:
+        import openai
+    except ImportError:
+        sys.exit("ERROR: 'openai' not installed.  Run: pip install openai")
+
+    api_key = os.environ.get("OPENAI_API_KEY", "")
+    if not api_key:
+        sys.exit("ERROR: OPENAI_API_KEY environment variable is not set.")
+
+    client   = openai.OpenAI(api_key=api_key)
+    template = PROMPT_MAP[analysis_type]
+    prompt   = template.format(
+        ticker=ticker,
+        financial_context=context,
+        today=TODAY,
+    )
+
+    print(f"  → OpenAI API  model={model}  max_tokens={max_tokens}")
+
+    max_retries = 5
+    base_delay  = 30  # seconds
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            break
+        except openai.RateLimitError as e:
+            if attempt == max_retries:
+                raise
+            delay = base_delay * (2 ** (attempt - 1))  # 30 60 120 240 …
+            print(f"  ⚠️  Rate limit hit (attempt {attempt}/{max_retries})."
+                  f" Retrying in {delay}s …")
+            time.sleep(delay)
+
+    text = response.choices[0].message.content
+    usage = response.usage
+    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}"
+          f"  chars={len(text)}")
+    return text
+
+
+def call_llm(ticker: str, context: str, analysis_type: str,
+             provider: str, model: str, max_tokens: int) -> str:
+    """Dispatch to the appropriate LLM provider."""
+    if provider == "openai":
+        return call_openai(ticker, context, analysis_type, model, max_tokens)
+    else:
+        return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -1949,7 +2007,7 @@ def save_report(ticker: str, content: str, output_dir: Path,
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="Generate a Traditional-Chinese investment analysis report via Claude API."
+        description="Generate a Traditional-Chinese investment analysis report via Claude or OpenAI API."
     )
     p.add_argument(
         "ticker", nargs="?", default="AAPL",
@@ -1965,8 +2023,13 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save the report (default: claude_code/<ticker>/)",
     )
     p.add_argument(
+        "--provider", default="claude",
+        choices=["claude", "openai"],
+        help="AI provider (default: claude)",
+    )
+    p.add_argument(
         "--model", default=DEFAULT_MODEL,
-        help=f"Claude model ID (default: {DEFAULT_MODEL})",
+        help=f"Model ID (default: {DEFAULT_MODEL})",
     )
     p.add_argument(
         "--max-tokens", type=int, default=DEFAULT_TOKENS,
@@ -1979,10 +2042,11 @@ def main() -> None:
     args          = parse_args()
     ticker        = args.ticker.upper()
     analysis_type = args.analysis_type
+    provider      = args.provider
     output_dir    = args.output_dir or (Path("claude_code") / ticker.lower())
 
     label  = ANALYSIS_TYPES[analysis_type]["label"]
-    banner = f"  {ticker}  |  {label}  |  model: {args.model}  |  out: {output_dir}"
+    banner = f"  {ticker}  |  {label}  |  provider: {provider}  |  model: {args.model}  |  out: {output_dir}"
     sep    = "=" * max(70, len(banner) + 4)
     print(f"\n{sep}\n{banner}\n{sep}\n")
 
@@ -1990,8 +2054,8 @@ def main() -> None:
     data    = fetch_data(ticker)
     context = build_context(data, analysis_type)
 
-    print("[2/3] Calling Claude API …")
-    report  = call_claude(ticker, context, analysis_type, args.model, args.max_tokens)
+    print(f"[2/3] Calling {provider.upper()} API …")
+    report  = call_llm(ticker, context, analysis_type, provider, args.model, args.max_tokens)
 
     print("[3/3] Saving report …")
     save_report(ticker, report, output_dir, analysis_type)
