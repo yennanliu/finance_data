@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
 generate_market_news.py — Fetch recent news for a stock ticker and generate
-a Traditional Chinese Markdown report using the Claude AI API.
+a Traditional Chinese Markdown report using Claude or OpenAI API.
 
 Usage:
   python scripts/generate_market_news.py AAPL
   python scripts/generate_market_news.py TSLA --max-tokens 8000 --model claude-opus-4-6
+  python scripts/generate_market_news.py AAPL --provider openai --model gpt-4o
 """
 
 import argparse
@@ -14,9 +15,9 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-import anthropic
 import yfinance as yf
 
+DEFAULT_PROVIDER = "claude"
 DEFAULT_MODEL = "claude-sonnet-4-6"
 DEFAULT_TOKENS = 8000
 
@@ -129,19 +130,49 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
-def generate_report(
-    ticker: str,
-    model: str,
-    max_tokens: int,
-    output_dir: Path,
-) -> None:
+def call_claude(prompt: str, model: str, max_tokens: int) -> str:
+    """Call Claude API and return the response text."""
+    import anthropic
+
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
         print("ERROR: ANTHROPIC_API_KEY is not set.", file=sys.stderr)
         sys.exit(1)
 
     client = anthropic.Anthropic(api_key=api_key)
+    message = client.messages.create(
+        model=model,
+        max_tokens=max_tokens,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return message.content[0].text
 
+
+def call_openai(prompt: str, model: str, max_tokens: int) -> str:
+    """Call OpenAI API and return the response text."""
+    import openai
+
+    api_key = os.environ.get("OPENAI_API_KEY", "")
+    if not api_key:
+        print("ERROR: OPENAI_API_KEY is not set.", file=sys.stderr)
+        sys.exit(1)
+
+    client = openai.OpenAI(api_key=api_key)
+    response = client.chat.completions.create(
+        model=model,
+        max_tokens=max_tokens,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
+
+
+def generate_report(
+    ticker: str,
+    provider: str,
+    model: str,
+    max_tokens: int,
+    output_dir: Path,
+) -> None:
     print(f"[1/4] Fetching ticker info for {ticker}…")
     info = fetch_ticker_info(ticker)
 
@@ -155,13 +186,11 @@ def generate_report(
     news_block = format_news_block(news_items) if news_items else "（目前無可用新聞資料）"
     prompt = build_prompt(ticker, info, news_block)
 
-    print(f"[3/4] Calling Claude ({model}, max_tokens={max_tokens})…")
-    message = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    report_body = message.content[0].text
+    print(f"[3/4] Calling {provider.upper()} ({model}, max_tokens={max_tokens})…")
+    if provider == "openai":
+        report_body = call_openai(prompt, model, max_tokens)
+    else:
+        report_body = call_claude(prompt, model, max_tokens)
 
     # YAML front-matter
     today = date.today().isoformat()
@@ -170,6 +199,7 @@ def generate_report(
         f"ticker: {ticker}\n"
         f"date: {today}\n"
         "type: market-news\n"
+        f"provider: {provider}\n"
         f"model: {model}\n"
         "---\n\n"
     )
@@ -192,9 +222,15 @@ def main() -> None:
         help="Output directory (default: claude_code/market_news/<ticker_lower>/<date>)",
     )
     parser.add_argument(
+        "--provider",
+        default=DEFAULT_PROVIDER,
+        choices=["claude", "openai"],
+        help=f"AI provider (default: {DEFAULT_PROVIDER})",
+    )
+    parser.add_argument(
         "--model",
         default=DEFAULT_MODEL,
-        help=f"Claude model ID (default: {DEFAULT_MODEL})",
+        help=f"Model ID (default: {DEFAULT_MODEL})",
     )
     parser.add_argument(
         "--max-tokens",
@@ -212,7 +248,7 @@ def main() -> None:
         else Path(f"claude_code/market_news/{ticker.lower()}/{today}")
     )
 
-    generate_report(ticker, args.model, args.max_tokens, output_dir)
+    generate_report(ticker, args.provider, args.model, args.max_tokens, output_dir)
 
 
 if __name__ == "__main__":
