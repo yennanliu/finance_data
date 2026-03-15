@@ -64,15 +64,18 @@ on:
           - report-generator
           - financial-report-analyst
           - stock-valuation
-      model:
-        description: "Claude model ID"
+      provider:
+        description: "AI provider"
         required: false
-        default: "claude-sonnet-4-6"
+        default: "claude"
         type: choice
         options:
-          - claude-sonnet-4-6
-          - claude-opus-4-6
-          - claude-haiku-4-5-20251001
+          - claude
+          - openai
+      model:
+        description: "Model ID (Claude: claude-sonnet-4-6, claude-opus-4-6; OpenAI: gpt-4o, gpt-4-turbo)"
+        required: false
+        default: "claude-sonnet-4-6"
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -109,7 +112,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic>=0.40.0 yfinance>=0.2.40
+          pip install anthropic>=0.40.0 openai>=1.0.0 yfinance>=0.2.40
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
@@ -123,6 +126,7 @@ jobs:
           if [ "$EVENT" = "workflow_dispatch" ]; then
             TICKER="${{ github.event.inputs.ticker }}"
             ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
+            PROVIDER="${{ github.event.inputs.provider }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
           elif [ "$SCHEDULE" = "0 17 * * *" ]; then
@@ -226,6 +230,7 @@ jobs:
           # Apply defaults for empty values
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-fundamental-analysis}"
+          PROVIDER="${PROVIDER:-claude}"
           MODEL="${MODEL:-claude-sonnet-4-6}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
@@ -235,6 +240,7 @@ jobs:
 
           echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
           echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
+          echo "provider=${PROVIDER}"            >> "$GITHUB_OUTPUT"
           echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
           echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
           echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
@@ -244,33 +250,48 @@ jobs:
           echo "  Schedule:      ${SCHEDULE:-n/a}"
           echo "  Ticker:        ${TICKER_UPPER}"
           echo "  Analysis type: ${ANALYSIS_TYPE}"
+          echo "  Provider:      ${PROVIDER}"
           echo "  Model:         ${MODEL}"
           echo "  Max tokens:    ${MAX_TOKENS}"
           echo "  Output dir:    ${OUTPUT_DIR}"
 
       # ── 5. Verify API key secret is set ──────────────────────────
-      - name: Check ANTHROPIC_API_KEY secret
+      - name: Check API key secret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+          PROVIDER: ${{ steps.params.outputs.provider }}
         run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::error::ANTHROPIC_API_KEY secret is not set."
-            echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-            echo "Name: ANTHROPIC_API_KEY  |  Value: your Anthropic API key"
-            exit 1
+          if [ "$PROVIDER" = "openai" ]; then
+            if [ -z "$OPENAI_API_KEY" ]; then
+              echo "::error::OPEN_KEY_API secret is not set."
+              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
+              echo "Name: OPEN_KEY_API  |  Value: your OpenAI API key"
+              exit 1
+            fi
+            echo "✅ OPEN_KEY_API is set."
+          else
+            if [ -z "$ANTHROPIC_API_KEY" ]; then
+              echo "::error::ANTHROPIC_API_KEY secret is not set."
+              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
+              echo "Name: ANTHROPIC_API_KEY  |  Value: your Anthropic API key"
+              exit 1
+            fi
+            echo "✅ ANTHROPIC_API_KEY is set."
           fi
-          echo "✅ ANTHROPIC_API_KEY is set."
 
       # ── 6. Generate report ────────────────────────────────────────
       - name: Generate analysis report
         timeout-minutes: 20
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
         run: |
           python scripts/generate_analysis.py \
             "${{ steps.params.outputs.ticker }}" \
             --analysis-type "${{ steps.params.outputs.analysis_type }}" \
             --output-dir    "${{ steps.params.outputs.output_dir }}" \
+            --provider      "${{ steps.params.outputs.provider }}" \
             --model         "${{ steps.params.outputs.model }}" \
             --max-tokens    "${{ steps.params.outputs.max_tokens }}"
 
