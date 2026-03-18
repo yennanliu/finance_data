@@ -170,11 +170,29 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
     if effective_max_tokens != max_tokens:
         print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
 
+    # System message to improve output quality (matching Claude's detailed style)
+    system_message = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
+
+你的分析必須遵循以下原則：
+1. **深度分析**：每個章節必須提供詳盡、專業的分析，不得只有簡單的一兩句話
+2. **具體數據**：引用具體的財務數據、股價、估值倍數等數字支撐論點
+3. **專業格式**：使用完整的 Markdown 格式，包含表格、條列、emoji 視覺標記
+4. **風險評估**：詳細分析風險因素，使用 🟢🟡🔴 標記風險等級
+5. **產業洞察**：提供產業背景、競爭態勢、市場趨勢的深入分析
+6. **投資建議**：給出明確的投資建議、目標價區間、關注重點
+7. **報告長度**：報告應詳盡完整，至少 3000 字以上，確保涵蓋所有要求的章節
+
+即使原始新聞資料不足，你也應該基於公司背景、產業知識、市場環境提供專業推演分析，而非只是簡單帶過。"""
+
     client = openai.OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model=model,
         max_tokens=effective_max_tokens,
-        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": prompt},
+        ],
     )
     return response.choices[0].message.content
 
