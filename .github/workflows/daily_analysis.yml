@@ -67,25 +67,25 @@ on:
       provider:
         description: "AI provider"
         required: false
-        default: "claude"
+        default: "openai"
         type: choice
         options:
-          - claude
           - openai
+          - claude
       model:
         description: "Model ID"
         required: false
-        default: "claude-sonnet-4-6"
+        default: "gpt-4o"
         type: choice
         options:
-          # Claude models
-          - claude-sonnet-4-6
-          - claude-opus-4-6
-          - claude-haiku-4-5-20251001
           # OpenAI models
           - gpt-4o
           - gpt-4o-mini
           - gpt-4-turbo
+          # Claude models
+          - claude-sonnet-4-6
+          - claude-opus-4-6
+          - claude-haiku-4-5-20251001
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -142,106 +142,125 @@ jobs:
           elif [ "$SCHEDULE" = "0 17 * * *" ]; then
             TICKER="0050"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "13 17 * * *" ]; then
             TICKER="2330.tw"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "26 17 * * *" ]; then
             TICKER="TSLA"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "39 17 * * *" ]; then
             TICKER="PL"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "52 17 * * *" ]; then
             TICKER="GRAB"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "5 18 * * *" ]; then
             TICKER="TSM"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "18 18 * * *" ]; then
             TICKER="GOOG"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "31 18 * * *" ]; then
             TICKER="AMZN"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "44 18 * * *" ]; then
             TICKER="MSFT"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "57 18 * * *" ]; then
             TICKER="SOFI"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "10 19 * * *" ]; then
             TICKER="PLTR"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "23 19 * * *" ]; then
             TICKER="RKLB"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "36 19 * * *" ]; then
             TICKER="ONDS"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "49 19 * * *" ]; then
             TICKER="AVAV"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "2 20 * * *" ]; then
             TICKER="KTOS"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "15 20 * * *" ]; then
             TICKER="META"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "28 20 * * *" ]; then
             TICKER="AMD"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "41 20 * * *" ]; then
             TICKER="NVDA"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           else
             # Fallback
             TICKER="TSLA"
             ANALYSIS_TYPE="fundamental-analysis"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           fi
 
           # Apply defaults for empty values
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-fundamental-analysis}"
-          PROVIDER="${PROVIDER:-claude}"
-          MODEL="${MODEL:-claude-sonnet-4-6}"
+          PROVIDER="${PROVIDER:-openai}"
+          MODEL="${MODEL:-gpt-4o}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
