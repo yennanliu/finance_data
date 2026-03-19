@@ -33,25 +33,25 @@ on:
       provider:
         description: "AI provider"
         required: false
-        default: "claude"
+        default: "openai"
         type: choice
         options:
-          - claude
           - openai
+          - claude
       model:
         description: "Model ID"
         required: false
-        default: "claude-sonnet-4-6"
+        default: "gpt-4o"
         type: choice
         options:
-          # Claude models
-          - claude-sonnet-4-6
-          - claude-opus-4-6
-          - claude-haiku-4-5-20251001
           # OpenAI models
           - gpt-4o
           - gpt-4o-mini
           - gpt-4-turbo
+          # Claude models
+          - claude-sonnet-4-6
+          - claude-opus-4-6
+          - claude-haiku-4-5-20251001
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -106,55 +106,66 @@ jobs:
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
           elif [ "$SCHEDULE" = "0 21 * * *" ]; then
             TICKER="TSLA"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "24 21 * * *" ]; then
             TICKER="PLTR"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "48 21 * * *" ]; then
             TICKER="ONDS"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "12 22 * * *" ]; then
             TICKER="TSM"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "36 22 * * *" ]; then
             TICKER="GOOG"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "0 23 * * *" ]; then
             TICKER="AMZN"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "24 23 * * *" ]; then
             TICKER="SOFI"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "48 23 * * *" ]; then
             TICKER="AMD"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "12 0 * * *" ]; then
             TICKER="MSFT"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           elif [ "$SCHEDULE" = "36 0 * * *" ]; then
             TICKER="RKLB"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           else
             # Fallback
             TICKER="TSLA"
-            MODEL="claude-sonnet-4-6"
-            MAX_TOKENS="20000"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
           fi
 
           # Apply defaults for empty values
           TICKER="${TICKER:-TSLA}"
-          PROVIDER="${PROVIDER:-claude}"
-          MODEL="${MODEL:-claude-sonnet-4-6}"
+          PROVIDER="${PROVIDER:-openai}"
+          MODEL="${MODEL:-gpt-4o}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
