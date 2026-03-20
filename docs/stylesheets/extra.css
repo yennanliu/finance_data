@@ -1,10 +1,11 @@
 /* ══════════════════════════════════════════════════════════════
    Finance Data Research Hub — Custom Styles
    Inspired by openpua.ai dark aesthetic
+   Supports both light and dark modes
    ══════════════════════════════════════════════════════════════ */
 
-/* ── CSS Variables ── */
-:root {
+/* ── Dark mode variables (default) ── */
+[data-md-color-scheme="slate"] {
   --fp-bg: #09090b;
   --fp-bg-alt: #111113;
   --fp-bg-card: #16161a;
@@ -14,23 +15,136 @@
   --fp-text: #fafafa;
   --fp-text-secondary: #a1a1aa;
   --fp-text-muted: #71717a;
-  --fp-accent: #38bdf8;
-  --fp-accent-dim: rgba(56, 189, 248, 0.15);
-  --fp-accent-glow: rgba(56, 189, 248, 0.08);
+  --fp-accent: #a1a1aa;
+  --fp-accent-dim: rgba(161, 161, 170, 0.15);
+  --fp-accent-glow: rgba(255, 255, 255, 0.06);
   --fp-green: #22c55e;
   --fp-red: #ef4444;
   --fp-yellow: #eab308;
-  --fp-max-w: 1152px;
+  --fp-title-from: #ffffff;
+  --fp-title-to: #71717a;
+  --fp-section-title-from: #ffffff;
+  --fp-section-title-to: #a1a1aa;
+  --fp-btn-accent-bg: #fafafa;
+  --fp-btn-accent-fg: #09090b;
+  --fp-btn-accent-glow: rgba(255, 255, 255, 0.15);
+  --fp-badge-border: rgba(255, 255, 255, 0.15);
+  --fp-badge-bg: rgba(255, 255, 255, 0.04);
+  --fp-badge-color: #a1a1aa;
+  --fp-dot-color: #fafafa;
+  --fp-shimmer-edge: #71717a;
+  --fp-shimmer-mid: #fafafa;
+  --fp-hero-glow-1: rgba(255, 255, 255, 0.04);
+  --fp-hero-glow-2: rgba(120, 119, 198, 0.03);
+  --fp-step-circle-border: rgba(255, 255, 255, 0.2);
+  --fp-step-circle-bg: rgba(255, 255, 255, 0.04);
+  --fp-ticker-bg: rgba(161, 161, 170, 0.12);
+  --fp-ticker-border: rgba(161, 161, 170, 0.15);
+  --fp-ticker-color: #d4d4d8;
+  --fp-card-accent-border: #a1a1aa;
+  --fp-card-icon-color: #d4d4d8;
+  --fp-link-color: #d4d4d8;
+  --fp-glow-line: rgba(255, 255, 255, 0.3);
+
+  /* MkDocs Material overrides */
+  --md-default-bg-color: #09090b;
+  --md-default-fg-color: #fafafa;
+  --md-primary-fg-color: #fafafa;
+  --md-primary-bg-color: #09090b;
+  --md-accent-fg-color: #a1a1aa;
+  --md-typeset-a-color: #d4d4d8;
+}
+
+/* ── Light mode variables ── */
+[data-md-color-scheme="default"] {
+  --fp-bg: #ffffff;
+  --fp-bg-alt: #f7f7f8;
+  --fp-bg-card: #ffffff;
+  --fp-bg-card-hover: #f4f4f5;
+  --fp-border: #e4e4e7;
+  --fp-border-dim: #f0f0f2;
+  --fp-text: #09090b;
+  --fp-text-secondary: #52525b;
+  --fp-text-muted: #71717a;
+  --fp-accent: #52525b;
+  --fp-accent-dim: rgba(82, 82, 91, 0.08);
+  --fp-accent-glow: rgba(0, 0, 0, 0.04);
+  --fp-green: #16a34a;
+  --fp-red: #dc2626;
+  --fp-yellow: #ca8a04;
+  --fp-title-from: #09090b;
+  --fp-title-to: #71717a;
+  --fp-section-title-from: #18181b;
+  --fp-section-title-to: #52525b;
+  --fp-btn-accent-bg: #18181b;
+  --fp-btn-accent-fg: #fafafa;
+  --fp-btn-accent-glow: rgba(0, 0, 0, 0.15);
+  --fp-badge-border: rgba(0, 0, 0, 0.12);
+  --fp-badge-bg: rgba(0, 0, 0, 0.03);
+  --fp-badge-color: #52525b;
+  --fp-dot-color: #18181b;
+  --fp-shimmer-edge: #71717a;
+  --fp-shimmer-mid: #18181b;
+  --fp-hero-glow-1: rgba(0, 0, 0, 0.02);
+  --fp-hero-glow-2: rgba(120, 119, 198, 0.03);
+  --fp-step-circle-border: rgba(0, 0, 0, 0.15);
+  --fp-step-circle-bg: rgba(0, 0, 0, 0.03);
+  --fp-ticker-bg: rgba(0, 0, 0, 0.05);
+  --fp-ticker-border: rgba(0, 0, 0, 0.08);
+  --fp-ticker-color: #18181b;
+  --fp-card-accent-border: #18181b;
+  --fp-card-icon-color: #18181b;
+  --fp-link-color: #18181b;
+  --fp-glow-line: rgba(0, 0, 0, 0.15);
+
+  /* MkDocs Material overrides */
+  --md-primary-fg-color: #18181b;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: #18181b;
+  --md-typeset-a-color: #18181b;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   MkDocs Material Dark Theme Override
+   MkDocs Material Header — Black/White
    ══════════════════════════════════════════════════════════════ */
-[data-md-color-scheme="slate"] {
-  --md-default-bg-color: #09090b;
-  --md-default-fg-color: #fafafa;
-  --md-primary-fg-color: #38bdf8;
-  --md-accent-fg-color: #38bdf8;
+[data-md-color-scheme="slate"] .md-header {
+  background-color: #09090b;
+  border-bottom: 1px solid #1e1e22;
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background-color: #ffffff;
+  color: #18181b;
+  border-bottom: 1px solid #e4e4e7;
+  box-shadow: none;
+}
+
+[data-md-color-scheme="default"] .md-header .md-header__title,
+[data-md-color-scheme="default"] .md-header .md-header__topic,
+[data-md-color-scheme="default"] .md-header .md-header__button,
+[data-md-color-scheme="default"] .md-header .md-logo,
+[data-md-color-scheme="default"] .md-header .md-search__icon,
+[data-md-color-scheme="default"] .md-header .md-icon {
+  color: #18181b;
+}
+
+[data-md-color-scheme="default"] .md-tabs {
+  background-color: #f7f7f8;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+[data-md-color-scheme="default"] .md-tabs__link {
+  color: #52525b;
+}
+
+[data-md-color-scheme="default"] .md-tabs__link--active,
+[data-md-color-scheme="default"] .md-tabs__link:hover {
+  color: #18181b;
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: #111113;
+  border-bottom: 1px solid #1e1e22;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -39,14 +153,14 @@
 .fp-wrapper {
   background: var(--fp-bg);
   color: var(--fp-text);
-  font-family: "Inter", "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 .fp-container {
-  max-width: var(--fp-max-w);
+  max-width: 1152px;
   margin: 0 auto;
-  width: min(100%, var(--fp-max-w));
+  width: min(100%, 1152px);
   padding: 0 1.5rem;
 }
 
@@ -62,8 +176,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(56, 189, 248, 0.07), transparent 70%),
-    radial-gradient(ellipse 40% 50% at 80% 20%, rgba(120, 119, 198, 0.05), transparent 60%);
+    radial-gradient(ellipse 60% 40% at 50% 0%, var(--fp-hero-glow-1), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 80% 20%, var(--fp-hero-glow-2), transparent 60%);
   pointer-events: none;
 }
 
@@ -73,10 +187,10 @@
   gap: 0.5rem;
   padding: 0.4rem 1rem;
   border-radius: 9999px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid var(--fp-badge-border);
+  background: var(--fp-badge-bg);
   font-size: 0.8rem;
-  color: var(--fp-accent);
+  color: var(--fp-badge-color);
   font-weight: 500;
   margin-bottom: 1.5rem;
 }
@@ -85,7 +199,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--fp-accent);
+  background: var(--fp-dot-color);
   display: inline-block;
   animation: fp-pulse 2s ease-in-out infinite;
 }
@@ -100,7 +214,7 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.05;
-  background: linear-gradient(to bottom, #fff 30%, #71717a 100%);
+  background: linear-gradient(to bottom, var(--fp-title-from) 30%, var(--fp-title-to) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -122,9 +236,9 @@
 .fp-shimmer {
   background: linear-gradient(
     110deg,
-    var(--fp-text-secondary) 35%,
-    var(--fp-accent) 50%,
-    var(--fp-text-secondary) 65%
+    var(--fp-shimmer-edge) 35%,
+    var(--fp-shimmer-mid) 50%,
+    var(--fp-shimmer-edge) 65%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -155,9 +269,9 @@
   border-radius: 9999px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #000;
+  color: var(--fp-btn-accent-fg);
   text-decoration: none !important;
-  background: var(--fp-accent);
+  background: var(--fp-btn-accent-bg);
   border: none;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -165,8 +279,8 @@
 
 .fp-btn-accent:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 24px rgba(56, 189, 248, 0.3);
-  color: #000;
+  box-shadow: 0 0 24px var(--fp-btn-accent-glow);
+  color: var(--fp-btn-accent-fg);
 }
 
 .fp-btn-ghost {
@@ -185,7 +299,7 @@
 }
 
 .fp-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--fp-accent-glow);
   color: var(--fp-text);
   border-color: var(--fp-text-muted);
 }
@@ -228,7 +342,7 @@
 }
 
 .fp-stat-card:hover {
-  border-color: rgba(56, 189, 248, 0.2);
+  border-color: var(--fp-text-muted);
   box-shadow: 0 0 30px var(--fp-accent-glow);
 }
 
@@ -236,7 +350,7 @@
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--fp-accent);
+  color: var(--fp-text);
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
@@ -264,7 +378,7 @@
   transform: translateX(-50%);
   width: 200px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--fp-accent), transparent);
+  background: linear-gradient(90deg, transparent, var(--fp-glow-line), transparent);
 }
 
 .fp-section-hd {
@@ -276,7 +390,7 @@
   font-size: 1.85rem;
   font-weight: 700;
   letter-spacing: -0.03em;
-  background: linear-gradient(to right, #fff, #a1a1aa);
+  background: linear-gradient(to right, var(--fp-section-title-from), var(--fp-section-title-to));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -321,18 +435,18 @@
 
 .fp-card:hover {
   background: var(--fp-bg-card-hover);
-  border-color: #333;
+  border-color: var(--fp-text-muted);
 }
 
 .fp-card-accent {
-  border-left: 3px solid var(--fp-accent);
+  border-left: 3px solid var(--fp-card-accent-border);
 }
 
 .fp-card-icon {
   width: 2.5rem;
   height: 2.5rem;
   margin-bottom: 1rem;
-  color: var(--fp-accent);
+  color: var(--fp-card-icon-color);
 }
 
 .fp-card-icon svg {
@@ -358,7 +472,7 @@
   margin-top: 0.75rem;
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--fp-accent) !important;
+  color: var(--fp-link-color) !important;
   text-decoration: none !important;
   transition: color 0.15s;
 }
@@ -388,9 +502,9 @@
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--fp-accent-dim);
-  color: var(--fp-accent);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  background: var(--fp-ticker-bg);
+  color: var(--fp-ticker-color);
+  border: 1px solid var(--fp-ticker-border);
 }
 
 /* ── Steps ── */
@@ -419,7 +533,7 @@
 }
 
 .fp-step:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--fp-accent-glow);
 }
 
 .fp-step-circle {
@@ -432,9 +546,9 @@
   font-size: 0.8rem;
   font-weight: 700;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  color: var(--fp-accent);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  background: rgba(56, 189, 248, 0.06);
+  color: var(--fp-text);
+  border: 1px solid var(--fp-step-circle-border);
+  background: var(--fp-step-circle-bg);
   flex-shrink: 0;
   margin-top: 0.1rem;
 }
