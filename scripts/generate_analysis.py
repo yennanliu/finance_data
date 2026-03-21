@@ -971,7 +971,7 @@ PROMPT_FUNDAMENTAL = """\
    - TAM 市場規模與滲透率 Unicode 圖
    - 短/中/長期成長驅動力 Mermaid graph TD
 ## 9. 風險矩陣
-   - 風險評分矩陣 Mermaid quadrantChart（機率 vs 衝擊）
+   - 風險評分矩陣（機率 vs 衝擊）使用 Markdown 表格呈現，搭配 🔴🟡🟢 標示
    - 風險清單表格（風險項目/機率/衝擊/評分/緩解措施）🔴🟡🟢
 ## 10. 投資建議
    - 最終綜合評級（1-10分，各維度）Unicode 雷達圖 ▓░
@@ -992,7 +992,7 @@ PROMPT_TECHNICAL = """\
 1. 語言：全程使用**繁體中文**
 2. 格式：完整 Markdown 格式
 3. 視覺化圖表（必須大量使用）：
-   - **Mermaid 圖表**：指標關係、趨勢判斷（graph, quadrantChart）
+   - **Mermaid 圖表**：指標關係、趨勢判斷（graph）
    - **ASCII 圖表**：繪製支撐阻力位示意圖、走勢形態
    - **Unicode 進度條**：顯示各指標強度（▓░█）
 4. 具體數字：所有支撐/阻力位、目標價、止損點必須給出精確數值（不得只說「附近」）
@@ -1073,7 +1073,7 @@ PROMPT_STOCK_EVAL = """\
 1. 語言：全程使用**繁體中文**
 2. 格式：完整 Markdown 格式
 3. 視覺化圖表（必須大量使用）：
-   - **Mermaid 圖表**：雷達圖概念（graph）、決策樹（graph TD）、評分矩陣（quadrantChart）
+   - **Mermaid 圖表**：雷達圖概念（graph）、決策樹（graph TD）
    - **ASCII 雷達圖**：多維度評分視覺化（必須包含）
    - **Unicode 評分條**：各項指標強度（▓░█）
 4. 綜合評分：8個維度，各給出 1-10 分並附具體理由
@@ -1100,7 +1100,7 @@ PROMPT_STOCK_EVAL = """\
    - 投資結論：明確給出 強力買入/買入/持有/觀望/賣出 + 目標價 + 預期報酬率
 ## 2. 八維度評分矩陣
    - Markdown 表格（各維度 評分/依據/趨勢/🟢🟡🔴）
-   - Mermaid quadrantChart（風險/報酬定位）
+   - 風險/報酬定位使用 Markdown 表格呈現（高風險高報酬/低風險低報酬等象限）
    - 與同業整體比較 Mermaid graph
 ## 3. 業務品質與護城河
    - 商業模式可持續性評估 Mermaid graph TD
@@ -1935,23 +1935,25 @@ def call_openai(ticker: str, context: str, analysis_type: str,
 你必須嚴格遵循以下原則產出報告：
 
 ## 核心要求
-1. **完整性**：必須按照 prompt 中要求的所有章節完整輸出，不得省略任何章節
-2. **深度分析**：每個章節必須提供詳盡、專業的分析內容，至少 200-500 字
+1. **完整性**：必須按照 prompt 中要求的所有章節完整輸出，不得省略任何章節或使用「略」等簡化語
+2. **深度分析**：每個章節必須提供詳盡、專業的分析內容，至少 300-800 字
 3. **具體數據**：引用具體的財務數據、比率、估值倍數等數字支撐所有論點
 4. **專業格式**：使用完整的 Markdown 格式，包含層級標題、表格、條列
 5. **視覺指標**：使用 🟢🟡🔴 標記評估結果、★☆ 評星
 
 ## 輸出標準
-- **報告長度**：完整報告應達到 8000-15000 字
+- **報告長度**：完整報告應達到 12000-20000 字
 - **表格使用**：關鍵數據比較必須使用 Markdown 表格呈現
 - **評分系統**：各維度評分（1-10分）必須附上具體理由
-- **視覺圖表**：使用 Markdown 表格和 Unicode 進度條（▓░█）呈現數據，避免使用 Mermaid 圖表
+- **視覺圖表**：嚴格按照 prompt 要求使用 Mermaid 圖表（graph, pie, mindmap, gantt）和 Unicode 進度條（▓░█）
+- **Mermaid 語法**：確保所有 Mermaid 圖表語法正確，避免使用 quadrantChart（改用表格呈現風險矩陣）
 
 ## 分析深度
 - 計算並標註 YoY / QoQ 成長率
 - 同業比較：點名 2-3 家競爭對手進行估值對比
 - 風險評估：列出主要風險因素及其影響程度
 - 投資建議：明確給出買入/持有/賣出建議與目標價區間
+- 每個章節必須有獨立的分析價值，不得簡單重複其他章節內容
 
 即使財務數據有缺失，你也應該基於公司背景、產業知識、市場環境提供專業推演分析，確保報告內容豐富完整。"""
 
@@ -2008,13 +2010,16 @@ def call_llm(ticker: str, context: str, analysis_type: str,
 # ═════════════════════════════════════════════════════════════════════════════
 
 def save_report(ticker: str, content: str, output_dir: Path,
-                analysis_type: str) -> Path:
+                analysis_type: str, provider: str = "claude") -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     meta    = ANALYSIS_TYPES[analysis_type]
     prefix  = meta["filename_prefix"]
     label   = meta["label"]
     ext     = meta.get("ext", ".md")
-    base    = f"{prefix}_{TODAY}"
+
+    # Map provider to simple suffix
+    model_suffix = "openai" if provider == "openai" else "claude"
+    base    = f"{prefix}_{TODAY}_{model_suffix}"
 
     # Same-day deduplication: base.ext → base-2.ext → base-3.ext …
     path    = output_dir / f"{base}{ext}"
@@ -2028,14 +2033,16 @@ def save_report(ticker: str, content: str, output_dir: Path,
         path.write_text(content, encoding="utf-8")
     else:
         # Markdown: prepend YAML frontmatter
+        generated_by = "OpenAI API" if provider == "openai" else "Claude AI"
         frontmatter = (
             "---\n"
             f'title: "{ticker} {label} {TODAY}"\n'
             f"date: {TODAY}\n"
             f"ticker: {ticker}\n"
             f"analysis_type: {analysis_type}\n"
+            f"provider: {provider}\n"
             "language: zh-TW\n"
-            "generated_by: Claude AI (scripts/generate_analysis.py)\n"
+            f"generated_by: {generated_by} (scripts/generate_analysis.py)\n"
             "---\n\n"
         )
         path.write_text(frontmatter + content, encoding="utf-8")
@@ -2101,7 +2108,7 @@ def main() -> None:
     report  = call_llm(ticker, context, analysis_type, provider, args.model, args.max_tokens)
 
     print("[3/3] Saving report …")
-    save_report(ticker, report, output_dir, analysis_type)
+    save_report(ticker, report, output_dir, analysis_type, provider=provider)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 
