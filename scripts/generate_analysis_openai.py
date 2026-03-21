@@ -91,7 +91,7 @@ def main() -> None:
     report = call_openai(ticker, context, analysis_type, args.model, args.max_tokens)
 
     print("[3/3] Saving report …")
-    save_report(ticker, report, output_dir, analysis_type)
+    save_report(ticker, report, output_dir, analysis_type, provider="openai")
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 
