@@ -64,6 +64,13 @@ jobs:
       - name: Generate docs content
         run: python scripts/build_docs.py
 
+      - name: Inject build date into templates
+        run: |
+          BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
+          sed -i "s/__BUILD_DATE__/${BUILD_DATE}/g" docs/overrides/main.html
+          sed -i "s/__BUILD_DATE__/${BUILD_DATE}/g" docs/overrides/home.html
+          echo "Build date set to: ${BUILD_DATE}"
+
       - name: Build MkDocs site
         run: mkdocs build --clean --strict
 
