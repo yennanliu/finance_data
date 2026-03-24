@@ -19,7 +19,7 @@ import yfinance as yf
 
 DEFAULT_PROVIDER = "claude"
 DEFAULT_MODEL = "claude-sonnet-4-6"
-DEFAULT_TOKENS = 8000
+DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news analysis (OpenAI gpt-4o max: 12000)
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -176,15 +176,15 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
         print("ERROR: OPENAI_API_KEY is not set.", file=sys.stderr)
         sys.exit(1)
 
-    # OpenAI models have different max token limits - cap to safe values
-    # gpt-4o: 16384, gpt-4-turbo: 4096, gpt-4: 8192
+    # OpenAI models have different max token limits - use optimized values for market news
+    # gpt-4o & gpt-4o-mini: 128k context window, can support higher output limits
     openai_max_tokens = {
-        "gpt-4o": 16384,
-        "gpt-4o-mini": 16384,
-        "gpt-4-turbo": 4096,
-        "gpt-4": 8192,
+        "gpt-4o": 12000,         # Generous limit for detailed market news analysis
+        "gpt-4o-mini": 10000,    # Good limit for comprehensive analysis
+        "gpt-4-turbo": 4096,     # Hard limit for this older model
+        "gpt-4": 8192,           # Standard limit for older model
     }
-    model_max = openai_max_tokens.get(model, 16384)
+    model_max = openai_max_tokens.get(model, 12000)
     effective_max_tokens = min(max_tokens, model_max)
     if effective_max_tokens != max_tokens:
         print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
@@ -199,17 +199,19 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
 4. **風險評估**：詳細分析風險因素，使用 🟢🟡🔴 標記風險等級
 5. **產業洞察**：提供產業背景、競爭態勢、市場趨勢的深入分析
 6. **投資建議**：給出明確的投資建議、目標價區間、關注重點
-7. **報告長度**：報告應詳盡完整，至少 3000 字以上，確保涵蓋所有要求的章節
+7. **報告長度**：報告應詳盡完整，至少 3000-5000 字以上，充分利用提供的 token 額度
 
 **對不完整新聞資料的處理方式**：
 - 如果新聞標題為「《未命名新聞》」或「未知來源」，代表該筆新聞不完整或無法從原始資料獲取詳細信息
 - 在這種情況下，你應該基於該新聞發布時間和公司背景，推演可能的新聞內容與市場影響
 - 不要照搬「無標題」或「N/A」等佔位符到報告中
 - 對每則新聞進行實質性分析，而不只是列舉信息
+- 對推演分析明確說明「基於...推演」，但分析內容必須有實質價值
 
 **原始新聞資料不足的處理**：
 - 如果提供的新聞資料不足或不完整，你仍應基於公司背景、產業知識、市場環境提供深度推演分析
-- 結合公司最近的業務進展、財報數據、競爭態勢等因素，生成高質量的投資分析報告"""
+- 結合公司最近的業務進展、財報數據、競爭態勢等因素，生成高質量的投資分析報告
+- 即使無法獲取完整新聞標題，也應基於時間、公司業務、產業動態進行專業推演"""
 
     client = openai.OpenAI(api_key=api_key)
     response = client.chat.completions.create(
@@ -221,7 +223,16 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
             {"role": "user", "content": prompt},
         ],
     )
-    return response.choices[0].message.content
+    text = response.choices[0].message.content
+    usage = response.usage
+    total_tokens = usage.prompt_tokens + usage.completion_tokens
+    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}  total={total_tokens}"
+          f"  chars={len(text)}")
+
+    # Log if we're under-utilizing available tokens
+    if usage.completion_tokens < effective_max_tokens * 0.6:
+        print(f"  ℹ️  Token usage is {usage.completion_tokens}/{effective_max_tokens} ({100*usage.completion_tokens//effective_max_tokens}%) - report could be more detailed")
+    return text
 
 
 def generate_report(
