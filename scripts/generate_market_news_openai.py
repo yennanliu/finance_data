@@ -40,7 +40,7 @@ from generate_market_news import (
 )
 
 DEFAULT_MODEL = "gpt-4o"
-DEFAULT_TOKENS = 8000
+DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news analysis
 
 
 def generate_report(

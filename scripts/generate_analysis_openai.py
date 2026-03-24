@@ -41,7 +41,7 @@ from generate_analysis import (
 )
 
 DEFAULT_MODEL = "gpt-4o"
-DEFAULT_TOKENS = 16000
+DEFAULT_TOKENS = 20000  # Increased to allow more comprehensive analysis
 
 
 def parse_args() -> argparse.Namespace:
