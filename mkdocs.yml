@@ -145,5 +145,6 @@ extra_css:
   - stylesheets/extra.css
 
 extra_javascript:
+  - javascripts/clickable-rows.js
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

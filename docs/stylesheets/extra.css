@@ -77,8 +77,8 @@
   --fp-section-title-from: #18181b;
   --fp-section-title-to: #52525b;
   --fp-btn-accent-bg: #18181b;
-  --fp-btn-accent-fg: #fafafa;
-  --fp-btn-accent-glow: rgba(0, 0, 0, 0.15);
+  --fp-btn-accent-fg: #ffffff;
+  --fp-btn-accent-glow: rgba(0, 0, 0, 0.2);
   --fp-badge-border: rgba(0, 0, 0, 0.12);
   --fp-badge-bg: rgba(0, 0, 0, 0.03);
   --fp-badge-color: #52525b;
@@ -681,6 +681,16 @@
   font-size: .75rem;
   letter-spacing: .04em;
   text-transform: uppercase;
+}
+
+/* Make table rows clickable on report pages */
+.md-typeset table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.md-typeset table tbody tr:hover {
+  background-color: var(--fp-accent-dim);
 }
 
 /* Ticker pill style (inner pages) */
