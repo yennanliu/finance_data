@@ -62,7 +62,7 @@ except ImportError:
 # ── constants ─────────────────────────────────────────────────────────────────
 TODAY          = date.today().isoformat()
 DEFAULT_MODEL  = "claude-sonnet-4-6"
-DEFAULT_TOKENS = 16000
+DEFAULT_TOKENS = 20000  # Increased to allow more comprehensive analysis (OpenAI gpt-4o max: 20000)
 
 ANALYSIS_TYPES = {
     "fundamental-analysis": {
@@ -1916,15 +1916,16 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     if not api_key:
         sys.exit("ERROR: OPENAI_API_KEY environment variable is not set.")
 
-    # OpenAI models have different max token limits - cap to safe values
-    # gpt-4o: 16384, gpt-4-turbo: 4096, gpt-4: 8192
+    # OpenAI models have different max token limits - use optimized values for detailed analysis
+    # gpt-4o & gpt-4o-mini: 128k context window, can support higher output limits
+    # gpt-4-turbo: older model with lower limits
     openai_max_tokens = {
-        "gpt-4o": 16384,
-        "gpt-4o-mini": 16384,
-        "gpt-4-turbo": 4096,
-        "gpt-4": 8192,
+        "gpt-4o": 20000,         # Generous limit for comprehensive stock analysis reports
+        "gpt-4o-mini": 12000,    # Good limit for detailed analysis
+        "gpt-4-turbo": 4096,     # Hard limit for this older model
+        "gpt-4": 8192,           # Standard limit for older model
     }
-    model_max = openai_max_tokens.get(model, 16384)
+    model_max = openai_max_tokens.get(model, 20000)
     effective_max_tokens = min(max_tokens, model_max)
     if effective_max_tokens != max_tokens:
         print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
@@ -1942,7 +1943,7 @@ def call_openai(ticker: str, context: str, analysis_type: str,
 5. **視覺指標**：使用 🟢🟡🔴 標記評估結果、★☆ 評星
 
 ## 輸出標準
-- **報告長度**：完整報告應達到 12000-20000 字
+- **報告長度**：完整報告應達到 12000-20000 字（充分利用提供的 token 額度）
 - **表格使用**：關鍵數據比較必須使用 Markdown 表格呈現
 - **評分系統**：各維度評分（1-10分）必須附上具體理由
 - **視覺圖表**：嚴格按照 prompt 要求使用 Mermaid 圖表（graph, pie, mindmap, gantt）和 Unicode 進度條（▓░█）
@@ -1955,7 +1956,11 @@ def call_openai(ticker: str, context: str, analysis_type: str,
 - 投資建議：明確給出買入/持有/賣出建議與目標價區間
 - 每個章節必須有獨立的分析價值，不得簡單重複其他章節內容
 
-即使財務數據有缺失，你也應該基於公司背景、產業知識、市場環境提供專業推演分析，確保報告內容豐富完整。"""
+## 對不完整數據的處理
+- 如果部分財務數據缺失或不可用，基於公司背景、產業知識、市場環境進行專業推演分析
+- 對缺失的數據點明確說明「推演基於...」，但分析內容必須高質量、具有實質價值
+- 不要在報告中出現「N/A」、「無可用數據」等佔位符，應改為基於相關信息的分析推導
+- 即使數據不完整，也應維持報告的完整性和專業水準"""
 
     client   = openai.OpenAI(api_key=api_key)
     template = PROMPT_MAP[analysis_type]
@@ -1991,8 +1996,13 @@ def call_openai(ticker: str, context: str, analysis_type: str,
 
     text = response.choices[0].message.content
     usage = response.usage
-    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}"
+    total_tokens = usage.prompt_tokens + usage.completion_tokens
+    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}  total={total_tokens}"
           f"  chars={len(text)}")
+
+    # Log if we're under-utilizing available tokens
+    if usage.completion_tokens < effective_max_tokens * 0.7:
+        print(f"  ℹ️  Token usage is {usage.completion_tokens}/{effective_max_tokens} ({100*usage.completion_tokens//effective_max_tokens}%) - report could be more detailed")
     return text
 
 
