@@ -51,16 +51,26 @@ def fetch_ticker_info(ticker: str) -> dict:
 def format_news_block(news_items: list[dict]) -> str:
     """Convert yfinance news list to a readable text block for the prompt."""
     lines = []
-    for i, item in enumerate(news_items[:25], 1):
-        title = item.get("title", "（無標題）")
-        publisher = item.get("publisher", "N/A")
+    # Filter out items with empty/missing critical fields
+    valid_items = [
+        item for item in news_items
+        if item.get("title") and item.get("title").strip()
+    ]
+
+    # If no valid items found, try using all items even if incomplete
+    if not valid_items:
+        valid_items = news_items
+
+    for i, item in enumerate(valid_items[:25], 1):
+        title = (item.get("title") or "").strip() or f"《未命名新聞 #{i}》"
+        publisher = (item.get("publisher") or "").strip() or "未知來源"
         pub_ts = item.get("providerPublishTime", 0)
         if pub_ts:
             pub_dt = datetime.fromtimestamp(pub_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
         else:
-            pub_dt = "N/A"
-        link = item.get("link", "")
-        summary = item.get("summary", "")
+            pub_dt = "未知時間"
+        link = (item.get("link") or "").strip()
+        summary = (item.get("summary") or "").strip()
 
         lines.append(f"\n### {i}. {title}")
         lines.append(f"- 發布時間：{pub_dt}")
@@ -69,7 +79,8 @@ def format_news_block(news_items: list[dict]) -> str:
             lines.append(f"- 連結：{link}")
         if summary:
             lines.append(f"- 摘要：{summary}")
-    return "\n".join(lines)
+
+    return "\n".join(lines) if lines else "（暫時無可用新聞資料）"
 
 
 def build_prompt(ticker: str, info: dict, news_block: str) -> str:
@@ -94,6 +105,11 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 
 ---
 
+重要提示：
+- 如新聞資料缺失或不完整，請基於公司背景、產業趨勢、歷史財報等信息進行深度分析
+- 不要在最終報告中出現「無標題」、「N/A」、「未知來源」等佔位符，應改為實質性分析
+- 每個新聞分析都應包含對公司營運、股價或市場的具體影響推演
+
 請依照以下格式完整輸出報告（使用 Markdown）：
 
 # {ticker} 市場新聞分析報告
@@ -102,20 +118,23 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 {today}
 
 ## 🏢 公司概覽
-[一段簡短的公司/產業背景介紹]
+[一段簡短的公司/產業背景介紹，包含關鍵業務和市場地位]
 
 ## 📰 近期新聞總覽
-[條列式列出所有新聞標題及發布時間，格式：- YYYY-MM-DD | 標題]
+[條列式列出新聞標題及發布時間，格式：- YYYY-MM-DD | 標題]
+[如新聞標題缺失，應根據發布日期和公司信息推演可能的新聞內容]
 
 ## 🔍 重點新聞深度分析
-[選出 3–5 則最重要的新聞，逐一深入分析對公司營運、股價或產業的潛在影響]
+[選出 3–5 則最重要的新聞，逐一深入分析]
+[對每則新聞進行具體分析，包括對公司營運、財務、股價的潛在影響]
+[分析內容應包含短期和長期影響推演]
 
 ## 📊 市場情緒評估
 [整體市場情緒：🟢 正面 / 🟡 中性 / 🔴 負面]
-[說明評估依據，包含正面因素與負面因素]
+[詳細說明評估依據，包含正面因素與負面因素]
 
 ## ⚠️ 主要風險因素
-[從新聞中識別出的短期或長期風險，條列說明]
+[識別出的短期或長期風險，條列說明]
 
 ## 💡 短期關注重點
 [根據新聞，未來 1–4 週投資人應關注的事項或催化劑]
@@ -182,7 +201,15 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
 6. **投資建議**：給出明確的投資建議、目標價區間、關注重點
 7. **報告長度**：報告應詳盡完整，至少 3000 字以上，確保涵蓋所有要求的章節
 
-即使原始新聞資料不足，你也應該基於公司背景、產業知識、市場環境提供專業推演分析，而非只是簡單帶過。"""
+**對不完整新聞資料的處理方式**：
+- 如果新聞標題為「《未命名新聞》」或「未知來源」，代表該筆新聞不完整或無法從原始資料獲取詳細信息
+- 在這種情況下，你應該基於該新聞發布時間和公司背景，推演可能的新聞內容與市場影響
+- 不要照搬「無標題」或「N/A」等佔位符到報告中
+- 對每則新聞進行實質性分析，而不只是列舉信息
+
+**原始新聞資料不足的處理**：
+- 如果提供的新聞資料不足或不完整，你仍應基於公司背景、產業知識、市場環境提供深度推演分析
+- 結合公司最近的業務進展、財報數據、競爭態勢等因素，生成高質量的投資分析報告"""
 
     client = openai.OpenAI(api_key=api_key)
     response = client.chat.completions.create(
@@ -210,6 +237,14 @@ def generate_report(
     print(f"[2/4] Fetching recent news for {ticker}…")
     news_items = fetch_news(ticker)
     print(f"      Found {len(news_items)} news items.")
+
+    # Debug: Check data quality
+    if news_items:
+        valid_titles = sum(1 for item in news_items if item.get("title", "").strip())
+        valid_publishers = sum(1 for item in news_items if item.get("publisher", "").strip())
+        print(f"      Data quality: {valid_titles}/{len(news_items)} have titles, {valid_publishers}/{len(news_items)} have publishers")
+        if valid_titles < len(news_items) * 0.5:
+            print("[WARN] Less than 50% of news items have titles - data may be incomplete from yfinance")
 
     if not news_items:
         print("[WARN] No news returned by yfinance. Report will note data unavailability.")
