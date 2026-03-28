@@ -2532,16 +2532,16 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     if not api_key:
         sys.exit("ERROR: OPENAI_API_KEY environment variable is not set.")
 
-    # OpenAI models have different max token limits - use optimized values for detailed analysis
-    # gpt-4o & gpt-4o-mini: 128k context window, can support higher output limits
-    # gpt-4-turbo: older model with lower limits
+    # OpenAI models have different max token limits
+    # gpt-4o: 128k context, max 16384 output tokens
+    # gpt-4o-mini: 128k context, max 16384 output tokens
     openai_max_tokens = {
-        "gpt-4o": 20000,         # Generous limit for comprehensive stock analysis reports
-        "gpt-4o-mini": 12000,    # Good limit for detailed analysis
+        "gpt-4o": 16384,         # Hard limit for gpt-4o output
+        "gpt-4o-mini": 16384,    # Hard limit for gpt-4o-mini output
         "gpt-4-turbo": 4096,     # Hard limit for this older model
         "gpt-4": 8192,           # Standard limit for older model
     }
-    model_max = openai_max_tokens.get(model, 20000)
+    model_max = openai_max_tokens.get(model, 16384)
     effective_max_tokens = min(max_tokens, model_max)
     if effective_max_tokens != max_tokens:
         print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
