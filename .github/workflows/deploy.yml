@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "claude_code/**"
+      - "ai_gen_report/**"
       - "notebook_llm/**"
       - "10-k/**"
       - "10-q/**"

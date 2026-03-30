@@ -93,7 +93,8 @@ description: AI 驅動的投資研究、SEC 文件與基本面分析
 
 此存儲庫提供用於下載、儲存和分析美股資料的工具和研究：
 
-- **`claude_code/`** — AI 生成的投資分析報告（Markdown + HTML）
+- **`ai_gen_report/stock/`** — AI 生成的投資分析報告（Markdown + HTML）
+- **`ai_gen_report/market_news/`** — AI 生成的每日市場新聞分析
 - **`notebook_llm/`** — 使用 Google NotebookLM 創建的深度研究文件
 - **`10-k/`** — 30+ 家公司的年度 SEC 文件（PDF）
 - **`10-q/`** — 季度 SEC 文件

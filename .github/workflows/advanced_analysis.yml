@@ -106,7 +106,7 @@ jobs:
 
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
-          OUTPUT_DIR="claude_code/${TICKER_LOWER}"
+          OUTPUT_DIR="ai_gen_report/stock/${TICKER_LOWER}"
 
           echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
           echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"

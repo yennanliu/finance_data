@@ -4,13 +4,14 @@ build_docs.py — Finance Hub docs builder
 =========================================
 Generates the `docs/` directory content from source files:
 
-  • claude_code/  → docs/reports/<ticker>/
-  • notebook_llm/ → docs/notebooks/<ticker>/
-  • 10-k/         → docs/sec/10k.md   (index only, PDFs not copied)
-  • 10-q/         → docs/sec/10q.md
-  • 13-f/         → docs/sec/13f.md
-  • investor_day/ → docs/investor_day/
-  • README.md     → enriches docs/index.md
+  • ai_gen_report/stock/       → docs/reports/<ticker>/
+  • ai_gen_report/market_news/ → docs/reports/market_news/<ticker>/
+  • notebook_llm/              → docs/notebooks/<ticker>/
+  • 10-k/                      → docs/sec/10k.md   (index only, PDFs not copied)
+  • 10-q/                      → docs/sec/10q.md
+  • 13-f/                      → docs/sec/13f.md
+  • investor_day/              → docs/investor_day/
+  • README.md                  → enriches docs/index.md
 
 Run locally:   python scripts/build_docs.py
 Run in CI:     automatically called before `mkdocs build`
@@ -31,7 +32,8 @@ DOCS       = ROOT / "docs"
 DOCS_ZH    = ROOT / "docs" / "zh"
 SITE       = ROOT / "site"
 
-SRC_CLAUDE   = ROOT / "claude_code"
+SRC_STOCK    = ROOT / "ai_gen_report" / "stock"
+SRC_MARKET_NEWS = ROOT / "ai_gen_report" / "market_news"
 SRC_NOTEBOOK = ROOT / "notebook_llm"
 SRC_10K      = ROOT / "10-k"
 SRC_10Q      = ROOT / "10-q"
@@ -220,7 +222,7 @@ def write(path: Path, content: str):
     print(f"  write {path.relative_to(ROOT)}")
 
 
-# ── 1. claude_code → docs/reports/ ───────────────────────────────────────────
+# ── 1. ai_gen_report/stock → docs/reports/ ───────────────────────────────────
 def build_reports(lang: str = "en"):
     docs_root = get_docs_root(lang)
     DST_REPORTS = docs_root / "reports"
@@ -228,11 +230,11 @@ def build_reports(lang: str = "en"):
     report_index_rows: list[str] = []
     nav_entries: list[str] = []
 
-    if not SRC_CLAUDE.exists():
+    if not SRC_STOCK.exists():
         write(DST_REPORTS / "index.md", f"# {t(lang, 'reports')}\n\nNo reports found.\n")
         return
 
-    tickers = sorted([d for d in SRC_CLAUDE.iterdir() if d.is_dir()])
+    tickers = sorted([d for d in SRC_STOCK.iterdir() if d.is_dir()])
 
     for ticker_dir in tickers:
         ticker = ticker_dir.name.lower()
@@ -344,6 +346,85 @@ def build_reports(lang: str = "en"):
             top_lines.append("")
 
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
+
+
+# ── 1b. ai_gen_report/market_news → docs/reports/market_news/ ────────────────
+def build_market_news(lang: str = "en"):
+    """Build market news section from ai_gen_report/market_news/<ticker>/<date>/README.md"""
+    docs_root = get_docs_root(lang)
+    DST_MARKET_NEWS = docs_root / "reports" / "market_news"
+    ensure(DST_MARKET_NEWS)
+
+    if not SRC_MARKET_NEWS.exists():
+        write(DST_MARKET_NEWS / "index.md", f"# Market News\n\nNo market news found.\n")
+        return
+
+    ticker_dirs = sorted([d for d in SRC_MARKET_NEWS.iterdir() if d.is_dir()])
+    index_rows: list[str] = []
+
+    for ticker_dir in ticker_dirs:
+        ticker = ticker_dir.name.lower()
+        meta = get_meta(ticker)
+        dst_ticker_dir = DST_MARKET_NEWS / ticker
+        ensure(dst_ticker_dir)
+
+        # Get all date directories
+        date_dirs = sorted([d for d in ticker_dir.iterdir() if d.is_dir()], reverse=True)
+        news_files = []
+
+        for date_dir in date_dirs:
+            readme = date_dir / "README.md"
+            if readme.exists():
+                # Copy to docs/reports/market_news/<ticker>/<date>.md
+                dst_file = dst_ticker_dir / f"{date_dir.name}.md"
+                copy_file(readme, dst_file)
+                news_files.append((date_dir.name, dst_file.name))
+
+        if not news_files:
+            continue
+
+        # Generate per-ticker index
+        lines = [
+            f"# {meta['flag']} {meta['name']} ({ticker.upper()}) — Market News",
+            "",
+            f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
+            "",
+            "---",
+            "",
+            "## 📰 Market News Reports",
+            "",
+            "| Date | Report |",
+            "|------|--------|",
+        ]
+        for date_str, filename in news_files:
+            lines.append(f"| {date_str} | [{date_str}]({filename}) |")
+
+        write(dst_ticker_dir / "index.md", "\n".join(lines))
+
+        # Row for top-level index
+        latest_date = news_files[0][0] if news_files else "—"
+        index_rows.append(
+            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
+            f"| {meta['name']} | {meta['sector']} "
+            f"| {len(news_files)} | {latest_date} |"
+        )
+
+    # Top-level market_news/index.md
+    top_lines = [
+        "# 📰 Market News Reports",
+        "",
+        f"> AI-generated daily market news analysis. {t(lang, 'last_built')}: **{TODAY}**",
+        "",
+        f"!!! warning \"{t(lang, 'disclaimer')}\"",
+        f"    {t(lang, 'disclaimer_text')}",
+        "",
+        "## Covered Stocks",
+        "",
+        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # Reports | Latest |",
+        "|---|--------|---------|--------|---------|--------|",
+    ] + index_rows
+
+    write(DST_MARKET_NEWS / "index.md", "\n".join(top_lines))
 
 
 # ── 2. notebook_llm → docs/notebooks/ ────────────────────────────────────────
@@ -814,25 +895,28 @@ def main():
     print(" Building English version (docs/)")
     print(f"{'─'*70}")
 
-    print("\n[EN 1/7] Building claude_code reports...")
+    print("\n[EN 1/8] Building ai_gen_report/stock reports...")
     build_reports(lang="en")
 
-    print("\n[EN 2/7] Building notebook_llm pages...")
+    print("\n[EN 2/8] Building ai_gen_report/market_news...")
+    build_market_news(lang="en")
+
+    print("\n[EN 3/8] Building notebook_llm pages...")
     build_notebooks(lang="en")
 
-    print("\n[EN 3/7] Building 10-K index...")
+    print("\n[EN 4/8] Building 10-K index...")
     build_10k_index(lang="en")
 
-    print("\n[EN 4/7] Building other SEC indices (10-Q, 13-F, 6-K)...")
+    print("\n[EN 5/8] Building other SEC indices (10-Q, 13-F, 6-K)...")
     build_other_sec(lang="en")
 
-    print("\n[EN 5/7] Building investor_day pages...")
+    print("\n[EN 6/8] Building investor_day pages...")
     build_investor_day(lang="en")
 
-    print("\n[EN 6/7] Building scripts page...")
+    print("\n[EN 7/8] Building scripts page...")
     build_scripts_page(lang="en")
 
-    print("\n[EN 7/7] Writing .pages nav files & abbreviations...")
+    print("\n[EN 8/8] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="en")
     build_abbreviations(lang="en")
 
@@ -841,25 +925,28 @@ def main():
     print(" Building Traditional Chinese version (docs/zh/)")
     print(f"{'─'*70}")
 
-    print("\n[ZH 1/7] Building claude_code reports...")
+    print("\n[ZH 1/8] Building ai_gen_report/stock reports...")
     build_reports(lang="zh")
 
-    print("\n[ZH 2/7] Building notebook_llm pages...")
+    print("\n[ZH 2/8] Building ai_gen_report/market_news...")
+    build_market_news(lang="zh")
+
+    print("\n[ZH 3/8] Building notebook_llm pages...")
     build_notebooks(lang="zh")
 
-    print("\n[ZH 3/7] Building 10-K index...")
+    print("\n[ZH 4/8] Building 10-K index...")
     build_10k_index(lang="zh")
 
-    print("\n[ZH 4/7] Building other SEC indices (10-Q, 13-F, 6-K)...")
+    print("\n[ZH 5/8] Building other SEC indices (10-Q, 13-F, 6-K)...")
     build_other_sec(lang="zh")
 
-    print("\n[ZH 5/7] Building investor_day pages...")
+    print("\n[ZH 6/8] Building investor_day pages...")
     build_investor_day(lang="zh")
 
-    print("\n[ZH 6/7] Building scripts page...")
+    print("\n[ZH 7/8] Building scripts page...")
     build_scripts_page(lang="zh")
 
-    print("\n[ZH 7/7] Writing .pages nav files & abbreviations...")
+    print("\n[ZH 8/8] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="zh")
     build_abbreviations(lang="zh")
 

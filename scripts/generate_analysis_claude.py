@@ -59,7 +59,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--output-dir", type=Path, default=None,
-        help="Directory to save the report (default: claude_code/<ticker>/)",
+        help="Directory to save the report (default: ai_gen_report/stock/<ticker>/)",
     )
     p.add_argument(
         "--model", default=DEFAULT_MODEL,
@@ -76,7 +76,7 @@ def main() -> None:
     args = parse_args()
     ticker = args.ticker.upper()
     analysis_type = args.analysis_type
-    output_dir = args.output_dir or (Path("claude_code") / ticker.lower())
+    output_dir = args.output_dir or (Path("ai_gen_report/stock") / ticker.lower())
 
     label = ANALYSIS_TYPES[analysis_type]["label"]
     banner = f"  {ticker}  |  {label}  |  Claude  |  model: {args.model}  |  out: {output_dir}"
