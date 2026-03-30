@@ -159,7 +159,7 @@ If yfinance continues to return incomplete data:
 - GitHub Actions workflow: `.github/workflows/daily_market_news.yml`
 - OpenAI-specific wrapper: `scripts/generate_market_news_openai.py`
 - Claude-specific wrapper: `scripts/generate_market_news_claude.py`
-- Last report issue: `claude_code/market_news/rklb/2026-03-24/README.md`
+- Last report issue: `ai_gen_report/market_news/rklb/2026-03-24/README.md`
 
 ---
 
