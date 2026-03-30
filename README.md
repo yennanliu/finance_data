@@ -23,11 +23,11 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 | Category | Description | Location |
 |----------|-------------|----------|
-| Analysis Reports | AI-generated fundamental analysis, insider trading reports, technical analysis | `claude_code/` |
+| Analysis Reports | AI-generated fundamental analysis, insider trading reports, technical analysis | `ai_gen_report/stock/` |
+| Market News | Daily AI-curated market news per ticker | `ai_gen_report/market_news/` |
 | SEC Filings | 10-K, 10-Q, 13-F, 6-K filings for 30+ companies | `10-k/`, `10-q/`, `13-f/`, `6-k/` |
 | AI Research Notes | Deep-dive notebooks via NotebookLM (defense, autonomous systems, energy) | `notebook_llm/` |
 | Investor Day Materials | Presentation decks and transcripts | `investor_day/` |
-| Market News | Daily AI-curated market news per ticker | `market_news/` |
 | Automation Scripts | SEC EDGAR downloaders, AI analysis generator, docs builder | `scripts/` |
 
 ### Coverage
@@ -71,7 +71,7 @@ export ANTHROPIC_API_KEY="sk-..."
 python3 scripts/generate_analysis.py AAPL
 ```
 
-Output saved to `claude_code/aapl/fundamental_analysis_YYYY-MM-DD.md`
+Output saved to `ai_gen_report/stock/aapl/fundamental_analysis_YYYY-MM-DD.md`
 
 ### Download SEC filings
 
@@ -103,9 +103,10 @@ mkdocs serve
 
 ```
 finance_data/
-├── claude_code/      # AI-generated analysis reports (Markdown)
+├── ai_gen_report/
+│   ├── stock/        # AI-generated analysis reports (Markdown)
+│   └── market_news/  # Daily AI-curated market news
 ├── notebook_llm/     # NotebookLM deep research notes
-├── market_news/      # Daily AI-curated market news
 ├── 10-k/             # SEC 10-K annual reports (PDF)
 ├── 10-q/             # SEC 10-Q quarterly reports
 ├── 13-f/             # SEC 13-F institutional holdings

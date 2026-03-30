@@ -92,7 +92,7 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         default=None,
-        help="Output directory (default: claude_code/market_news/<ticker_lower>/<date>)",
+        help="Output directory (default: ai_gen_report/market_news/<ticker_lower>/<date>)",
     )
     parser.add_argument(
         "--model",
@@ -112,7 +112,7 @@ def main() -> None:
     output_dir = (
         Path(args.output_dir)
         if args.output_dir
-        else Path(f"claude_code/market_news/{ticker.lower()}/{today}")
+        else Path(f"ai_gen_report/market_news/{ticker.lower()}/{today}")
     )
 
     generate_report(ticker, args.model, args.max_tokens, output_dir)
