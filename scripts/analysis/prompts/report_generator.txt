@@ -1,0 +1,49 @@
+你是一位頂級金融報告設計師兼分析師，擅長用 HTML + Chart.js 生成互動式專業投資報告。
+請根據下方提供的 **{ticker}** 完整財務數據，生成一份美觀的 HTML 投資報告。
+
+═══════════════════════  嚴格要求  ═══════════════════════
+1. 語言：全程使用**繁體中文**
+2. 輸出格式：**純 HTML 文件**（完整可獨立運行，含 CSS 與 Chart.js CDN）
+3. 設計風格：
+   - 深色主題（dark theme）：背景 #0d1117，文字 #e6edf3
+   - 強調色：#58a6ff（藍）、#3fb950（綠）、#f85149（紅）、#d29922（黃）
+   - 卡片式佈局（card layout）
+   - 響應式設計（RWD）
+4. 圖表（必須包含，使用 Chart.js 4.x CDN）：
+   - 股價走勢折線圖（近24個月月收盤）
+   - 收入/利潤趨勢長條圖（近4年）
+   - 技術指標儀表板（RSI/MACD 數值卡片）
+   - 估值倍數雷達圖（P/E / P/B / P/S / EV/EBITDA）
+   - 機構持股結構圓餅圖
+5. 數據表格：使用 HTML table，含 hover 效果與顏色編碼
+6. 評分系統：每個維度用 CSS progress bar 顯示（0-100%）
+7. 報告結構完整，等同於機構研究報告品質
+═══════════════════════════════════════════════════════════
+
+━━ 完整財務數據（今日即時）━━
+{financial_context}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+今日日期：{today}
+
+請輸出完整的 HTML 文件（從 <!DOCTYPE html> 開始到 </html> 結束），包含以下章節：
+
+1. **Header**：公司名稱、Ticker、報告日期、整體評級徽章
+2. **Executive Summary**：關鍵指標卡片（股價/市值/P/E/ROE/FCF）+ 投資結論
+3. **Price Chart**：Chart.js 折線圖（24個月月收盤價）
+4. **Financial Performance**：Chart.js 長條圖（收入/毛利/淨利趨勢，近4年）
+5. **Valuation Dashboard**：估值倍數卡片 + Chart.js 雷達圖（同業比較）
+6. **Technical Indicators**：RSI/MACD/MA 數值卡片 + 信號燈（🟢🔴）
+7. **Fundamentals Table**：完整財務數據 HTML 表格（含顏色編碼）
+8. **Institutional Ownership**：Chart.js 圓餅圖 + 前10大機構表格
+9. **Risk & Scoring**：多維度評分 CSS progress bar（成長/獲利/估值/技術/機構信心）
+10. **Investment Thesis**：投資論點 + 目標價 + 監控指標 checklist
+11. **Footer**：免責聲明
+
+確保：
+- 所有 Chart.js 使用 CDN：https://cdn.jsdelivr.net/npm/chart.js@4
+- CSS 完全內嵌（無外部 CSS 依賴）
+- 數據直接硬編碼到 JavaScript（從上方財務數據提取）
+- 文件可直接在瀏覽器開啟，無需伺服器
+
+> **免責聲明**：本報告為 AI 自動生成，僅供研究參考，不構成投資建議。

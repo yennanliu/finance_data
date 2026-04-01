@@ -30,18 +30,54 @@ from pathlib import Path
 # Add script directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-# Import shared functionality from the main script
-from generate_analysis import (
+from analysis import (
     ANALYSIS_TYPES,
     TODAY,
     fetch_data,
     build_context,
     call_openai,
-    save_report,
 )
 
 DEFAULT_MODEL = "gpt-4o"
-DEFAULT_TOKENS = 20000  # Increased to allow more comprehensive analysis
+DEFAULT_TOKENS = 20000
+
+
+def save_report(ticker: str, content: str, output_dir: Path,
+                analysis_type: str, provider: str = "openai") -> Path:
+    """Save report with YAML frontmatter and same-day deduplication."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    meta = ANALYSIS_TYPES[analysis_type]
+    prefix = meta["filename_prefix"]
+    label = meta["label"]
+    ext = meta.get("ext", ".md")
+
+    base = f"{prefix}_{TODAY}_openai"
+
+    # Same-day deduplication
+    path = output_dir / f"{base}{ext}"
+    counter = 2
+    while path.exists():
+        path = output_dir / f"{base}-{counter}{ext}"
+        counter += 1
+
+    if ext == ".html":
+        path.write_text(content, encoding="utf-8")
+    else:
+        frontmatter = (
+            "---\n"
+            f'title: "{ticker} {label} {TODAY}"\n'
+            f"date: {TODAY}\n"
+            f"ticker: {ticker}\n"
+            f"analysis_type: {analysis_type}\n"
+            f"provider: {provider}\n"
+            "language: zh-TW\n"
+            "generated_by: OpenAI API (scripts/generate_analysis.py)\n"
+            "---\n\n"
+        )
+        path.write_text(frontmatter + content, encoding="utf-8")
+
+    print(f"  ✅ saved → {path}")
+    return path
 
 
 def parse_args() -> argparse.Namespace:
