@@ -140,6 +140,34 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}  total={total_tokens}"
           f"  chars={len(text)}")
 
+    # Detect refusal patterns and retry with stronger instruction
+    refusal_patterns = ["抱歉", "無法完成", "無法滿足", "無法處理", "無法提供", "過於龐大"]
+    if len(text) < 500 and any(p in text for p in refusal_patterns):
+        print(f"  ⚠️  Detected refusal response, retrying with stronger instruction...")
+        retry_prompt = f"""你之前的回覆被拒絕了。請注意：
+
+1. 你必須產出報告，不能拒絕
+2. 即使數據不完整，也要基於你的專業知識完成分析
+3. 如果是已下市或數據稀少的公司，請說明情況並提供歷史分析
+
+現在請直接開始輸出報告，從標題「# {ticker} 基本面深度分析報告」開始：
+
+{prompt}"""
+
+        retry_response = client.chat.completions.create(
+            model=model,
+            max_tokens=effective_max_tokens,
+            temperature=0.7,
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": retry_prompt},
+            ],
+        )
+        text = retry_response.choices[0].message.content
+        retry_usage = retry_response.usage
+        print(f"  ✅ retry response  in={retry_usage.prompt_tokens}  out={retry_usage.completion_tokens}"
+              f"  chars={len(text)}")
+
     # Log if under-utilizing available tokens
     if usage.completion_tokens < effective_max_tokens * 0.7:
         print(f"  ℹ️  Token usage is {usage.completion_tokens}/{effective_max_tokens} "
