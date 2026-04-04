@@ -350,7 +350,7 @@ def build_reports(lang: str = "en"):
 
 # ── 1b. ai_gen_report/market_news → docs/reports/market_news/ ────────────────
 def build_market_news(lang: str = "en"):
-    """Build market news section from ai_gen_report/market_news/<ticker>/<date>/README.md"""
+    """Build market news section from market_news/<ticker>/market_news_<date>_<provider>.md"""
     docs_root = get_docs_root(lang)
     DST_MARKET_NEWS = docs_root / "reports" / "market_news"
     ensure(DST_MARKET_NEWS)
@@ -368,14 +368,26 @@ def build_market_news(lang: str = "en"):
         dst_ticker_dir = DST_MARKET_NEWS / ticker
         ensure(dst_ticker_dir)
 
-        # Get all date directories
+        # Get all market_news_*.md files directly in ticker dir
+        md_files = sorted(
+            [f for f in ticker_dir.iterdir() if f.is_file() and f.name.startswith("market_news_") and f.suffix == ".md"],
+            reverse=True,
+        )
+        # Also support legacy README.md in date subdirs
         date_dirs = sorted([d for d in ticker_dir.iterdir() if d.is_dir()], reverse=True)
         news_files = []
+
+        for md_file in md_files:
+            dst_file = dst_ticker_dir / md_file.name
+            copy_file(md_file, dst_file)
+            # Extract date from filename: market_news_YYYY-MM-DD_openai.md
+            parts = md_file.stem.split("_")  # ['market', 'news', 'YYYY-MM-DD', 'openai']
+            date_str = parts[2] if len(parts) >= 3 else md_file.stem
+            news_files.append((date_str, dst_file.name))
 
         for date_dir in date_dirs:
             readme = date_dir / "README.md"
             if readme.exists():
-                # Copy to docs/reports/market_news/<ticker>/<date>.md
                 dst_file = dst_ticker_dir / f"{date_dir.name}.md"
                 copy_file(readme, dst_file)
                 news_files.append((date_dir.name, dst_file.name))
