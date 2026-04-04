@@ -28,27 +28,25 @@ DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news anal
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-# (name, url, ticker_specific?)
+# All feeds search by keyword: {query} is replaced with the ticker symbol
 RSS_FEEDS = [
-    ("CNBC Top",         "https://www.cnbc.com/id/100003114/device/rss/rss.html",                      False),
-    ("CNBC Earnings",    "https://www.cnbc.com/id/15839135/device/rss/rss.html",                       False),
-    ("MarketWatch",      "http://feeds.marketwatch.com/marketwatch/marketpulse/",                       False),
-    ("WSJ Markets",      "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",                              False),
+    ("Google News",  "https://news.google.com/rss/search?q={query}+stock&hl=en-US&gl=US&ceid=US:en"),
+    ("Bing News",    "https://www.bing.com/news/search?q={query}+stock&format=rss"),
+    ("Yahoo News",   "https://news.google.com/rss/search?q={query}+stock+site:finance.yahoo.com&hl=en-US&gl=US&ceid=US:en"),
+    ("Seeking Alpha","https://news.google.com/rss/search?q={query}+site:seekingalpha.com&hl=en-US&gl=US&ceid=US:en"),
 ]
 
 RSS_PER_FEED_LIMIT = 5  # top N headlines per feed
 
-_USER_AGENT = "Mozilla/5.0 (compatible; FinanceBot/1.0)"
+_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)"
 
 
-def _fetch_rss(url: str, ticker: str, source_name: str, ticker_specific: bool, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
-    """Parse an RSS/Atom feed and return top *limit* headlines.
+def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
+    """Parse an RSS/Atom feed and return top *limit* headlines."""
+    final_url = url.format(query=ticker)
 
-    For ticker-specific feeds (e.g. CNBC search), all results are kept.
-    For general market feeds, we grab the top N headlines as-is (broad market context).
-    """
     try:
-        req = Request(url.format(ticker=ticker), headers={"User-Agent": _USER_AGENT})
+        req = Request(final_url, headers={"User-Agent": _USER_AGENT})
         with urlopen(req, timeout=10) as resp:
             raw = resp.read()
         root = ET.fromstring(raw)
@@ -93,7 +91,7 @@ def _fetch_rss(url: str, ticker: str, source_name: str, ticker_specific: bool, l
 
 
 def fetch_news(ticker: str) -> list[dict]:
-    """Collect news from yfinance + all RSS feeds, deduplicate, and return."""
+    """Collect news from yfinance + keyword-searched RSS feeds, deduplicate, and return."""
     source_counts: dict[str, int] = {}
 
     # 1. Yahoo Finance
@@ -106,10 +104,10 @@ def fetch_news(ticker: str) -> list[dict]:
         print(f"  [WARN] yfinance news fetch failed: {exc}", file=sys.stderr)
         source_counts["yfinance"] = 0
 
-    # 2. RSS feeds — top 5 from each
+    # 2. RSS feeds — keyword search per ticker, top 5 from each
     rss_items: list[dict] = []
-    for name, url, ticker_specific in RSS_FEEDS:
-        batch = _fetch_rss(url, ticker, name, ticker_specific)
+    for name, url in RSS_FEEDS:
+        batch = _fetch_rss(url, name, ticker)
         source_counts[name] = len(batch)
         rss_items.extend(batch)
 
