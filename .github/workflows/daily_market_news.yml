@@ -1,28 +1,50 @@
 name: Daily Market News
 
 # ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
-#   21:00 → 05:00  TSLA
-#   21:24 → 05:24  PLTR
-#   21:48 → 05:48  ONDS
-#   22:12 → 06:12  TSM
-#   22:36 → 06:36  GOOG
-#   23:00 → 07:00  AMZN
-#   23:24 → 07:24  SOFI
-#   23:48 → 07:48  AMD
-#   00:12 → 08:12  MSFT
-#   00:36 → 08:36  RKLB
+#   17:00 → 01:00  0050
+#   17:10 → 01:10  2330.tw
+#   17:20 → 01:20  TSLA
+#   17:30 → 01:30  PL
+#   17:40 → 01:40  GRAB
+#   17:50 → 01:50  TSM
+#   18:00 → 02:00  GOOG
+#   18:10 → 02:10  AMZN
+#   18:20 → 02:20  MSFT
+#   18:30 → 02:30  SOFI
+#   18:40 → 02:40  PLTR
+#   18:50 → 02:50  RKLB
+#   19:00 → 03:00  ONDS
+#   19:10 → 03:10  AVAV
+#   19:20 → 03:20  KTOS
+#   19:30 → 03:30  META
+#   19:40 → 03:40  AMD
+#   19:50 → 03:50  NVDA
+#   20:00 → 04:00  NU
+#   20:10 → 04:10  VST
+#   20:20 → 04:20  ORCL
 on:
   schedule:
-    - cron: "0 21 * * *"    # TSLA
-    - cron: "24 21 * * *"   # PLTR
-    - cron: "48 21 * * *"   # ONDS
-    - cron: "12 22 * * *"   # TSM
-    - cron: "36 22 * * *"   # GOOG
-    - cron: "0 23 * * *"    # AMZN
-    - cron: "24 23 * * *"   # SOFI
-    - cron: "48 23 * * *"   # AMD
-    - cron: "12 0 * * *"    # MSFT
-    - cron: "36 0 * * *"    # RKLB
+    - cron: "0 17 * * *"     # 0050
+    - cron: "10 17 * * *"    # 2330.tw
+    - cron: "20 17 * * *"    # TSLA
+    - cron: "30 17 * * *"    # PL
+    - cron: "40 17 * * *"    # GRAB
+    - cron: "50 17 * * *"    # TSM
+    - cron: "0 18 * * *"     # GOOG
+    - cron: "10 18 * * *"    # AMZN
+    - cron: "20 18 * * *"    # MSFT
+    - cron: "30 18 * * *"    # SOFI
+    - cron: "40 18 * * *"    # PLTR
+    - cron: "50 18 * * *"    # RKLB
+    - cron: "0 19 * * *"     # ONDS
+    - cron: "10 19 * * *"    # AVAV
+    - cron: "20 19 * * *"    # KTOS
+    - cron: "30 19 * * *"    # META
+    - cron: "40 19 * * *"    # AMD
+    - cron: "50 19 * * *"    # NVDA
+    - cron: "0 20 * * *"     # NU
+    - cron: "10 20 * * *"    # VST
+    - cron: "20 20 * * *"    # ORCL
 
   workflow_dispatch:
     inputs:
@@ -104,53 +126,108 @@ jobs:
             PROVIDER="${{ github.event.inputs.provider }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          elif [ "$SCHEDULE" = "0 21 * * *" ]; then
+          elif [ "$SCHEDULE" = "0 17 * * *" ]; then
+            TICKER="0050"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "10 17 * * *" ]; then
+            TICKER="2330.tw"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "20 17 * * *" ]; then
             TICKER="TSLA"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "24 21 * * *" ]; then
-            TICKER="PLTR"
+          elif [ "$SCHEDULE" = "30 17 * * *" ]; then
+            TICKER="PL"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "48 21 * * *" ]; then
-            TICKER="ONDS"
+          elif [ "$SCHEDULE" = "40 17 * * *" ]; then
+            TICKER="GRAB"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "12 22 * * *" ]; then
+          elif [ "$SCHEDULE" = "50 17 * * *" ]; then
             TICKER="TSM"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "36 22 * * *" ]; then
+          elif [ "$SCHEDULE" = "0 18 * * *" ]; then
             TICKER="GOOG"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 23 * * *" ]; then
+          elif [ "$SCHEDULE" = "10 18 * * *" ]; then
             TICKER="AMZN"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "24 23 * * *" ]; then
-            TICKER="SOFI"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "48 23 * * *" ]; then
-            TICKER="AMD"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "12 0 * * *" ]; then
+          elif [ "$SCHEDULE" = "20 18 * * *" ]; then
             TICKER="MSFT"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "36 0 * * *" ]; then
+          elif [ "$SCHEDULE" = "30 18 * * *" ]; then
+            TICKER="SOFI"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "40 18 * * *" ]; then
+            TICKER="PLTR"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "50 18 * * *" ]; then
             TICKER="RKLB"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "0 19 * * *" ]; then
+            TICKER="ONDS"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "10 19 * * *" ]; then
+            TICKER="AVAV"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "20 19 * * *" ]; then
+            TICKER="KTOS"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "30 19 * * *" ]; then
+            TICKER="META"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "40 19 * * *" ]; then
+            TICKER="AMD"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "50 19 * * *" ]; then
+            TICKER="NVDA"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "0 20 * * *" ]; then
+            TICKER="NU"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "10 20 * * *" ]; then
+            TICKER="VST"
+            PROVIDER="openai"
+            MODEL="gpt-4o"
+            MAX_TOKENS="16000"
+          elif [ "$SCHEDULE" = "20 20 * * *" ]; then
+            TICKER="ORCL"
             PROVIDER="openai"
             MODEL="gpt-4o"
             MAX_TOKENS="16000"
@@ -171,13 +248,15 @@ jobs:
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
           DATE_TIME=$(date -u +"%Y-%m-%d")
-          OUTPUT_DIR="ai_gen_report/market_news/${TICKER_LOWER}/${DATE_TIME}"
+          OUTPUT_DIR="ai_gen_report/market_news/${TICKER_LOWER}"
+          OUTPUT_FILE="market_news_${DATE_TIME}_${PROVIDER}.md"
 
           echo "ticker=${TICKER_UPPER}"      >> "$GITHUB_OUTPUT"
           echo "provider=${PROVIDER}"        >> "$GITHUB_OUTPUT"
           echo "model=${MODEL}"              >> "$GITHUB_OUTPUT"
           echo "max_tokens=${MAX_TOKENS}"    >> "$GITHUB_OUTPUT"
           echo "output_dir=${OUTPUT_DIR}"    >> "$GITHUB_OUTPUT"
+          echo "output_file=${OUTPUT_FILE}"  >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
           echo "  Event:      ${EVENT}"
@@ -187,6 +266,7 @@ jobs:
           echo "  Model:      ${MODEL}"
           echo "  Max tokens: ${MAX_TOKENS}"
           echo "  Output dir: ${OUTPUT_DIR}"
+          echo "  Output file: ${OUTPUT_FILE}"
 
       # ── 5. Verify API key secret is set ──────────────────────────
       - name: Check API key secret
@@ -229,6 +309,7 @@ jobs:
           python "$SCRIPT" \
             "${{ steps.params.outputs.ticker }}" \
             --output-dir  "${{ steps.params.outputs.output_dir }}" \
+            --output-file "${{ steps.params.outputs.output_file }}" \
             --model       "${{ steps.params.outputs.model }}" \
             --max-tokens  "${{ steps.params.outputs.max_tokens }}"
 
