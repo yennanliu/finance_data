@@ -28,18 +28,25 @@ DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news anal
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-RSS_FEEDS = {
-    "CNBC": "https://search.cnbc.com/rs/search/view.xml?partnerId=2000&keywords={ticker}",
-    "MarketWatch": "http://feeds.marketwatch.com/marketwatch/marketpulse/",
-    "WSJ Markets": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
-    "Reuters Business": "https://www.reutersagency.com/feed/?best-topics=business&post_type=best",
-}
+# (name, url, ticker_specific?)
+RSS_FEEDS = [
+    ("CNBC Top",         "https://www.cnbc.com/id/100003114/device/rss/rss.html",                      False),
+    ("CNBC Earnings",    "https://www.cnbc.com/id/15839135/device/rss/rss.html",                       False),
+    ("MarketWatch",      "http://feeds.marketwatch.com/marketwatch/marketpulse/",                       False),
+    ("WSJ Markets",      "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",                              False),
+]
+
+RSS_PER_FEED_LIMIT = 5  # top N headlines per feed
 
 _USER_AGENT = "Mozilla/5.0 (compatible; FinanceBot/1.0)"
 
 
-def _fetch_rss(url: str, ticker: str, source_name: str, limit: int = 10) -> list[dict]:
-    """Parse an RSS/Atom feed and return news items relevant to *ticker*."""
+def _fetch_rss(url: str, ticker: str, source_name: str, ticker_specific: bool, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
+    """Parse an RSS/Atom feed and return top *limit* headlines.
+
+    For ticker-specific feeds (e.g. CNBC search), all results are kept.
+    For general market feeds, we grab the top N headlines as-is (broad market context).
+    """
     try:
         req = Request(url.format(ticker=ticker), headers={"User-Agent": _USER_AGENT})
         with urlopen(req, timeout=10) as resp:
@@ -50,25 +57,20 @@ def _fetch_rss(url: str, ticker: str, source_name: str, limit: int = 10) -> list
         return []
 
     items: list[dict] = []
-    # Support both RSS <item> and Atom <entry>
     ns = {"atom": "http://www.w3.org/2005/Atom"}
     entries = root.findall(".//item") or root.findall(".//atom:entry", ns)
 
-    ticker_upper = ticker.upper()
     for entry in entries:
         title = (entry.findtext("title") or entry.findtext("atom:title", namespaces=ns) or "").strip()
+        if not title:
+            continue
         link = (entry.findtext("link") or "").strip()
         if not link:
             link_el = entry.find("atom:link", ns)
             link = (link_el.get("href", "") if link_el is not None else "").strip()
         pub_str = (entry.findtext("pubDate") or entry.findtext("atom:updated", namespaces=ns) or "").strip()
         summary = (entry.findtext("description") or entry.findtext("atom:summary", namespaces=ns) or "").strip()
-        # Strip HTML tags from summary
         summary = re.sub(r"<[^>]+>", "", summary).strip()
-
-        # For ticker-specific feeds (CNBC) keep all; for general feeds filter by ticker mention
-        if "{ticker}" not in url and ticker_upper not in title.upper() and ticker_upper not in summary.upper():
-            continue
 
         pub_ts = 0
         if pub_str:
@@ -91,21 +93,31 @@ def _fetch_rss(url: str, ticker: str, source_name: str, limit: int = 10) -> list
 
 
 def fetch_news(ticker: str) -> list[dict]:
-    """Return recent news from yfinance + RSS feeds, deduplicated."""
+    """Collect news from yfinance + all RSS feeds, deduplicate, and return."""
+    source_counts: dict[str, int] = {}
+
     # 1. Yahoo Finance
-    yf_items = []
+    yf_items: list[dict] = []
     try:
         t = yf.Ticker(ticker)
         yf_items = t.news or []
+        source_counts["yfinance"] = len(yf_items)
     except Exception as exc:
         print(f"  [WARN] yfinance news fetch failed: {exc}", file=sys.stderr)
+        source_counts["yfinance"] = 0
 
-    # 2. RSS feeds
+    # 2. RSS feeds — top 5 from each
     rss_items: list[dict] = []
-    for name, url in RSS_FEEDS.items():
-        rss_items.extend(_fetch_rss(url, ticker, name))
+    for name, url, ticker_specific in RSS_FEEDS:
+        batch = _fetch_rss(url, ticker, name, ticker_specific)
+        source_counts[name] = len(batch)
+        rss_items.extend(batch)
 
-    # Combine & deduplicate by title similarity
+    # Log per-source counts
+    parts = [f"{src}: {n}" for src, n in source_counts.items()]
+    print(f"      Sources → {', '.join(parts)}")
+
+    # Combine & deduplicate by normalised title
     all_items = yf_items + rss_items
     seen_titles: set[str] = set()
     unique: list[dict] = []
@@ -116,7 +128,6 @@ def fetch_news(ticker: str) -> list[dict]:
         seen_titles.add(key)
         unique.append(item)
 
-    # Sort by publish time descending
     unique.sort(key=lambda x: x.get("providerPublishTime", 0), reverse=True)
     return unique
 
