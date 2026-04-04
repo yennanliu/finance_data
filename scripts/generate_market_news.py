@@ -11,9 +11,13 @@ Usage:
 
 import argparse
 import os
+import re
 import sys
+import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 import yfinance as yf
 
@@ -24,10 +28,97 @@ DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news anal
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
+RSS_FEEDS = {
+    "CNBC": "https://search.cnbc.com/rs/search/view.xml?partnerId=2000&keywords={ticker}",
+    "MarketWatch": "http://feeds.marketwatch.com/marketwatch/marketpulse/",
+    "WSJ Markets": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+    "Reuters Business": "https://www.reutersagency.com/feed/?best-topics=business&post_type=best",
+}
+
+_USER_AGENT = "Mozilla/5.0 (compatible; FinanceBot/1.0)"
+
+
+def _fetch_rss(url: str, ticker: str, source_name: str, limit: int = 10) -> list[dict]:
+    """Parse an RSS/Atom feed and return news items relevant to *ticker*."""
+    try:
+        req = Request(url.format(ticker=ticker), headers={"User-Agent": _USER_AGENT})
+        with urlopen(req, timeout=10) as resp:
+            raw = resp.read()
+        root = ET.fromstring(raw)
+    except Exception as exc:
+        print(f"  [WARN] RSS fetch failed for {source_name}: {exc}", file=sys.stderr)
+        return []
+
+    items: list[dict] = []
+    # Support both RSS <item> and Atom <entry>
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    entries = root.findall(".//item") or root.findall(".//atom:entry", ns)
+
+    ticker_upper = ticker.upper()
+    for entry in entries:
+        title = (entry.findtext("title") or entry.findtext("atom:title", namespaces=ns) or "").strip()
+        link = (entry.findtext("link") or "").strip()
+        if not link:
+            link_el = entry.find("atom:link", ns)
+            link = (link_el.get("href", "") if link_el is not None else "").strip()
+        pub_str = (entry.findtext("pubDate") or entry.findtext("atom:updated", namespaces=ns) or "").strip()
+        summary = (entry.findtext("description") or entry.findtext("atom:summary", namespaces=ns) or "").strip()
+        # Strip HTML tags from summary
+        summary = re.sub(r"<[^>]+>", "", summary).strip()
+
+        # For ticker-specific feeds (CNBC) keep all; for general feeds filter by ticker mention
+        if "{ticker}" not in url and ticker_upper not in title.upper() and ticker_upper not in summary.upper():
+            continue
+
+        pub_ts = 0
+        if pub_str:
+            try:
+                pub_ts = int(parsedate_to_datetime(pub_str).timestamp())
+            except Exception:
+                pass
+
+        items.append({
+            "title": title,
+            "publisher": source_name,
+            "providerPublishTime": pub_ts,
+            "link": link,
+            "summary": summary[:300] if summary else "",
+        })
+        if len(items) >= limit:
+            break
+
+    return items
+
+
 def fetch_news(ticker: str) -> list[dict]:
-    """Return up to 30 recent news items from yfinance."""
-    t = yf.Ticker(ticker)
-    return t.news or []
+    """Return recent news from yfinance + RSS feeds, deduplicated."""
+    # 1. Yahoo Finance
+    yf_items = []
+    try:
+        t = yf.Ticker(ticker)
+        yf_items = t.news or []
+    except Exception as exc:
+        print(f"  [WARN] yfinance news fetch failed: {exc}", file=sys.stderr)
+
+    # 2. RSS feeds
+    rss_items: list[dict] = []
+    for name, url in RSS_FEEDS.items():
+        rss_items.extend(_fetch_rss(url, ticker, name))
+
+    # Combine & deduplicate by title similarity
+    all_items = yf_items + rss_items
+    seen_titles: set[str] = set()
+    unique: list[dict] = []
+    for item in all_items:
+        key = re.sub(r"\W+", "", (item.get("title") or "").lower())[:60]
+        if key and key in seen_titles:
+            continue
+        seen_titles.add(key)
+        unique.append(item)
+
+    # Sort by publish time descending
+    unique.sort(key=lambda x: x.get("providerPublishTime", 0), reverse=True)
+    return unique
 
 
 def fetch_ticker_info(ticker: str) -> dict:
@@ -245,9 +336,9 @@ def generate_report(
     print(f"[1/4] Fetching ticker info for {ticker}…")
     info = fetch_ticker_info(ticker)
 
-    print(f"[2/4] Fetching recent news for {ticker}…")
+    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds)…")
     news_items = fetch_news(ticker)
-    print(f"      Found {len(news_items)} news items.")
+    print(f"      Found {len(news_items)} news items (from yfinance + RSS feeds).")
 
     # Debug: Check data quality
     if news_items:
