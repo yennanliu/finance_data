@@ -168,6 +168,9 @@ Summary:
             "Operating Cash Flow", "Capital Expenditure", "Free Cash Flow",
             "Common Stock Repurchased", "Cash Dividends Paid",
         ]
+        finviz_block = f"\n━━ FINVIZ SNAPSHOT (Cross-Reference) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('finviz_text', '  (no data)')}"
+        stockanalysis_block = f"\n━━ STOCKANALYSIS.COM DATA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('stockanalysis_text', '  (no data)')}"
+        roic_block = f"\n━━ ROIC.AI HISTORICAL DATA (10Y+) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('roic_text', '  (no data)')}"
         return "\n".join([
             company_hdr,
             f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
@@ -177,6 +180,9 @@ Summary:
             f"\n━━ INCOME STATEMENT (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
             f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
             f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+            finviz_block,
+            stockanalysis_block,
+            roic_block,
             major_holders_block,
             institutional_block,
             insider_block,
@@ -237,6 +243,8 @@ Target (High):   {fmt_price(info.get('targetHighPrice'))}
             "Common Stock Repurchased", "Cash Dividends Paid",
             "Stock Based Compensation",
         ]
+        finviz_block = f"\n━━ FINVIZ SNAPSHOT (Cross-Reference) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('finviz_text', '  (no data)')}"
+        roic_block = f"\n━━ ROIC.AI HISTORICAL DATA (10Y+) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('roic_text', '  (no data)')}"
         return "\n".join([
             company_hdr,
             f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
@@ -247,6 +255,8 @@ Target (High):   {fmt_price(info.get('targetHighPrice'))}
             f"\n━━ BALANCE SHEET (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance_q'], bs_rows)}",
             f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
             f"\n━━ CASH FLOW STATEMENT (Quarterly) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow_q'], cf_rows)}",
+            finviz_block,
+            roic_block,
             insider_block,
             earnings_block,
             upgrades_block,
@@ -279,6 +289,8 @@ Target (High):   {fmt_price(info.get('targetHighPrice'))}
 Dividend Yield:  {pct(info.get('dividendYield'))}
 Payout Ratio:    {pct(info.get('payoutRatio'))}
 """
+        finviz_block = f"\n━━ FINVIZ SNAPSHOT (Cross-Reference) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('finviz_text', '  (no data)')}"
+        roic_block = f"\n━━ ROIC.AI HISTORICAL DATA (10Y+) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('roic_text', '  (no data)')}"
         return "\n".join([
             company_hdr,
             f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
@@ -288,6 +300,8 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
             f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
             f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
             f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+            finviz_block,
+            roic_block,
             earnings_block,
             upgrades_block,
             insider_block,
@@ -324,6 +338,12 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
 5Y Avg Dividend: {pct(info.get('fiveYearAvgDividendYield'))}
 """
     chart = price_ascii_chart(data["price_series"])
+
+    # Additional data sources
+    finviz_block = f"\n━━ FINVIZ SNAPSHOT (Cross-Reference) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('finviz_text', '  (no data)')}"
+    stockanalysis_block = f"\n━━ STOCKANALYSIS.COM DATA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('stockanalysis_text', '  (no data)')}"
+    roic_block = f"\n━━ ROIC.AI HISTORICAL DATA (10Y+) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('roic_text', '  (no data)')}"
+
     return "\n".join([
         company_hdr,
         f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
@@ -333,6 +353,9 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
         f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
         f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
         f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+        finviz_block,
+        stockanalysis_block,
+        roic_block,
         earnings_block,
         upgrades_block,
         news_block,
