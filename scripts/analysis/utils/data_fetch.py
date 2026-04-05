@@ -1,12 +1,242 @@
 """
-Data fetching utilities for financial data from Yahoo Finance.
+Data fetching utilities for financial data from multiple sources.
+Sources: Yahoo Finance, Finviz, StockAnalysis, Macrotrends
 """
 
 from __future__ import annotations
 
+import re
 import sys
+import time
 
 from .formatting import money
+
+
+# ── HTTP helpers ─────────────────────────────────────────────────────
+
+_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ),
+}
+
+
+def _get_soup(url: str, retries: int = 2):
+    """Fetch a URL and return a BeautifulSoup object."""
+    import requests
+    from bs4 import BeautifulSoup
+
+    for attempt in range(retries + 1):
+        try:
+            resp = requests.get(url, headers=_HEADERS, timeout=15)
+            if resp.status_code == 200:
+                return BeautifulSoup(resp.text, "html.parser")
+            if resp.status_code == 403:
+                return None  # blocked, skip
+        except Exception:
+            if attempt < retries:
+                time.sleep(1)
+    return None
+
+
+# ── Finviz ───────────────────────────────────────────────────────────
+
+def fetch_finviz(ticker: str) -> dict:
+    """Scrape Finviz snapshot table for valuation & key ratios."""
+    print(f"  → finviz: {ticker}")
+    url = f"https://finviz.com/quote.ashx?t={ticker}&ty=c&p=d&b=1"
+    soup = _get_soup(url)
+    if soup is None:
+        return {}
+
+    data = {}
+    try:
+        table = soup.find("table", class_="snapshot-table2")
+        if not table:
+            return {}
+        tds = table.find_all("td")
+        # pairs of (label, value) in sequential tds
+        for i in range(0, len(tds) - 1, 2):
+            label = tds[i].get_text(strip=True)
+            value = tds[i + 1].get_text(strip=True)
+            data[label] = value
+    except Exception:
+        pass
+    return data
+
+
+def _format_finviz(data: dict) -> str:
+    """Format Finviz data into readable text block."""
+    if not data:
+        return "  (no Finviz data available)"
+
+    # Key metrics to display, grouped
+    groups = {
+        "Valuation": [
+            "P/E", "Forward P/E", "PEG", "P/S", "P/B", "P/C", "P/FCF",
+            "EPS (ttm)", "EPS next Y", "EPS next 5Y", "EPS past 5Y",
+        ],
+        "Performance": [
+            "Perf Week", "Perf Month", "Perf Quarter", "Perf Half Y",
+            "Perf Year", "Perf YTD",
+        ],
+        "Profitability": [
+            "ROA", "ROE", "ROI", "Gross Margin", "Oper. Margin",
+            "Profit Margin",
+        ],
+        "Financial Health": [
+            "Current Ratio", "Quick Ratio", "Debt/Eq", "LT Debt/Eq",
+        ],
+        "Analyst & Ownership": [
+            "Target Price", "Recom", "Short Float", "Short Ratio",
+            "Insider Own", "Insider Trans", "Inst Own", "Inst Trans",
+        ],
+        "Technicals": [
+            "SMA20", "SMA50", "SMA200", "RSI (14)", "Volatility",
+            "Avg Volume", "Rel Volume", "Beta",
+        ],
+    }
+
+    lines = []
+    for group_name, keys in groups.items():
+        items = [(k, data[k]) for k in keys if k in data and data[k] != "-"]
+        if items:
+            lines.append(f"  [{group_name}]")
+            for k, v in items:
+                lines.append(f"    {k:<18} {v}")
+    return "\n".join(lines) if lines else "  (no Finviz data available)"
+
+
+# ── StockAnalysis ────────────────────────────────────────────────────
+
+def fetch_stockanalysis(ticker: str) -> dict:
+    """Scrape StockAnalysis.com for financial ratios and key stats."""
+    print(f"  → stockanalysis: {ticker}")
+    result = {"ratios": "", "growth": ""}
+
+    # Financial ratios page
+    url = f"https://stockanalysis.com/stocks/{ticker.lower()}/financials/?p=annual"
+    soup = _get_soup(url)
+    if soup:
+        try:
+            tables = soup.find_all("table")
+            if tables:
+                result["financials_annual"] = _html_table_to_text(tables[0], max_rows=25)
+        except Exception:
+            pass
+
+    time.sleep(0.5)
+
+    # Quarterly financials
+    url_q = f"https://stockanalysis.com/stocks/{ticker.lower()}/financials/?p=quarterly"
+    soup_q = _get_soup(url_q)
+    if soup_q:
+        try:
+            tables = soup_q.find_all("table")
+            if tables:
+                result["financials_quarterly"] = _html_table_to_text(tables[0], max_rows=15)
+        except Exception:
+            pass
+
+    time.sleep(0.5)
+
+    # Balance sheet
+    url_bs = f"https://stockanalysis.com/stocks/{ticker.lower()}/financials/balance-sheet/"
+    soup_bs = _get_soup(url_bs)
+    if soup_bs:
+        try:
+            tables = soup_bs.find_all("table")
+            if tables:
+                result["balance_sheet"] = _html_table_to_text(tables[0], max_rows=20)
+        except Exception:
+            pass
+
+    return result
+
+
+def _html_table_to_text(table, max_rows: int = 20) -> str:
+    """Convert an HTML table element to formatted text."""
+    rows = table.find_all("tr")
+    if not rows:
+        return ""
+    lines = []
+    for row in rows[:max_rows + 1]:
+        cells = row.find_all(["th", "td"])
+        vals = [c.get_text(strip=True) for c in cells]
+        if vals:
+            lines.append("  " + "  |  ".join(f"{v:<14}" for v in vals[:8]))
+    return "\n".join(lines)
+
+
+def _format_stockanalysis(data: dict) -> str:
+    """Format StockAnalysis data into readable text blocks."""
+    sections = []
+    if data.get("financials_annual"):
+        sections.append(f"  [Annual Income Statement]\n{data['financials_annual']}")
+    if data.get("financials_quarterly"):
+        sections.append(f"  [Quarterly Income Statement]\n{data['financials_quarterly']}")
+    if data.get("balance_sheet"):
+        sections.append(f"  [Balance Sheet]\n{data['balance_sheet']}")
+    return "\n\n".join(sections) if sections else "  (no StockAnalysis data available)"
+
+
+# ── Roic.ai ──────────────────────────────────────────────────────────
+
+def fetch_roic(ticker: str) -> dict:
+    """Scrape Roic.ai for historical value investing metrics (10Y+)."""
+    print(f"  → roic.ai: {ticker}")
+    url = f"https://roic.ai/company/{ticker.upper()}"
+    soup = _get_soup(url)
+    if soup is None:
+        return {}
+
+    result = {}
+    try:
+        tables = soup.find_all("table")
+        for i, table in enumerate(tables[:7]):
+            rows = table.find_all("tr")
+            if not rows:
+                continue
+            # Use first row as header to identify the table
+            header_cells = rows[0].find_all(["th", "td"])
+            headers = [c.get_text(strip=True) for c in header_cells]
+
+            data_rows = []
+            for row in rows[1:]:
+                cells = row.find_all(["th", "td"])
+                vals = [c.get_text(strip=True) for c in cells]
+                if vals and any(v for v in vals):
+                    data_rows.append(vals)
+
+            if data_rows:
+                result[f"table_{i}"] = {"headers": headers, "rows": data_rows}
+    except Exception:
+        pass
+    return result
+
+
+def _format_roic(data: dict) -> str:
+    """Format Roic.ai data into readable text."""
+    if not data:
+        return "  (no Roic.ai data available)"
+
+    lines = []
+    for key, table_data in data.items():
+        headers = table_data.get("headers", [])
+        rows = table_data.get("rows", [])
+        if not rows:
+            continue
+
+        # Determine column widths (cap at 14 chars, show up to 8 cols)
+        cols = min(len(headers), 8) if headers else min(len(rows[0]), 8)
+        if headers:
+            lines.append("  " + "  |  ".join(f"{h[:14]:<14}" for h in headers[:cols]))
+            lines.append("  " + "-" * (cols * 18))
+        for row in rows:
+            lines.append("  " + "  |  ".join(f"{v[:14]:<14}" for v in row[:cols]))
+        lines.append("")
+    return "\n".join(lines) if lines else "  (no Roic.ai data available)"
 
 
 def _get_yf():
@@ -167,6 +397,26 @@ def fetch_data(ticker: str) -> dict:
     except Exception:
         pass
 
+    # ── Additional sources (best-effort, non-blocking) ──
+    finviz_data = {}
+    stockanalysis_data = {}
+    roic_data = {}
+
+    try:
+        finviz_data = fetch_finviz(ticker)
+    except Exception as e:
+        print(f"  ⚠ Finviz fetch failed: {e}")
+
+    try:
+        stockanalysis_data = fetch_stockanalysis(ticker)
+    except Exception as e:
+        print(f"  ⚠ StockAnalysis fetch failed: {e}")
+
+    try:
+        roic_data = fetch_roic(ticker)
+    except Exception as e:
+        print(f"  ⚠ Roic.ai fetch failed: {e}")
+
     return {
         "ticker": ticker,
         "info": info,
@@ -188,6 +438,13 @@ def fetch_data(ticker: str) -> dict:
         "major_holders_text": major_holders_text,
         "institutional_text": institutional_text,
         "mutualfund_text": mutualfund_text,
+        # Additional sources
+        "finviz_data": finviz_data,
+        "finviz_text": _format_finviz(finviz_data),
+        "stockanalysis_data": stockanalysis_data,
+        "stockanalysis_text": _format_stockanalysis(stockanalysis_data),
+        "roic_data": roic_data,
+        "roic_text": _format_roic(roic_data),
     }
 
 
@@ -397,4 +654,7 @@ def compute_technicals(hist) -> str:
         return f"  (technical indicator error: {exc})"
 
 
-__all__ = ["fetch_data", "price_ascii_chart", "compute_technicals"]
+__all__ = [
+    "fetch_data", "price_ascii_chart", "compute_technicals",
+    "fetch_finviz", "fetch_stockanalysis", "fetch_roic",
+]
