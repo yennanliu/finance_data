@@ -344,6 +344,15 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
     stockanalysis_block = f"\n━━ STOCKANALYSIS.COM DATA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('stockanalysis_text', '  (no data)')}"
     roic_block = f"\n━━ ROIC.AI HISTORICAL DATA (10Y+) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('roic_text', '  (no data)')}"
 
+    cross_ref_note = """
+━━ DATA SOURCE NOTE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The MARKET DATA / VALUATION / PROFITABILITY sections above are merged from
+Yahoo Finance + Finviz (backfilled where Yahoo returned null). The sections
+below (Finviz Snapshot, StockAnalysis, Roic.ai) provide additional detail
+and historical data. Cross-reference ALL sources for your analysis — if one
+source shows N/A, check the others for that metric.
+"""
+
     return "\n".join([
         company_hdr,
         f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
@@ -353,6 +362,7 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
         f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
         f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
         f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+        cross_ref_note,
         finviz_block,
         stockanalysis_block,
         roic_block,
