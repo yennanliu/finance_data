@@ -239,6 +239,84 @@ def _format_roic(data: dict) -> str:
     return "\n".join(lines) if lines else "  (no Roic.ai data available)"
 
 
+def _parse_finviz_number(val: str):
+    """Parse Finviz string value into a float. Returns None on failure."""
+    if not val or val == "-":
+        return None
+    val = val.strip()
+    try:
+        # Handle percentages: "12.34%" → 0.1234
+        if val.endswith("%"):
+            return float(val[:-1]) / 100
+        # Handle magnitudes: "1.23B", "456.7M", "12.3K"
+        multipliers = {"T": 1e12, "B": 1e9, "M": 1e6, "K": 1e3}
+        if val[-1] in multipliers:
+            return float(val[:-1]) * multipliers[val[-1]]
+        return float(val.replace(",", ""))
+    except (ValueError, IndexError):
+        return None
+
+
+def _merge_finviz_into_info(info: dict, finviz: dict) -> dict:
+    """Backfill missing Yahoo Finance info fields using Finviz data."""
+    if not finviz:
+        return info
+
+    # Mapping: Finviz label → (Yahoo info key, is_percentage)
+    # is_percentage=True means Finviz shows "12.3%" and Yahoo expects 0.123
+    mapping = {
+        "P/E": ("trailingPE", False),
+        "Forward P/E": ("forwardPE", False),
+        "PEG": ("pegRatio", False),
+        "P/S": ("priceToSalesTrailing12Months", False),
+        "P/B": ("priceToBook", False),
+        "EPS (ttm)": ("trailingEps", False),
+        "EPS next Y": ("forwardEps", False),
+        "ROA": ("returnOnAssets", True),
+        "ROE": ("returnOnEquity", True),
+        "Gross Margin": ("grossMargins", True),
+        "Oper. Margin": ("operatingMargins", True),
+        "Profit Margin": ("profitMargins", True),
+        "Current Ratio": ("currentRatio", False),
+        "Quick Ratio": ("quickRatio", False),
+        "Debt/Eq": ("debtToEquity", False),
+        "Beta": ("beta", False),
+        "Short Ratio": ("shortRatio", False),
+        "Short Float": ("shortPercentOfFloat", True),
+        "Target Price": ("targetMeanPrice", False),
+        "Recom": ("recommendationMean", False),
+        "Insider Own": ("heldPercentInsiders", True),
+        "Inst Own": ("heldPercentInstitutions", True),
+        "Market Cap": ("marketCap", False),
+        "Avg Volume": ("averageVolume", False),
+        "Volatility": None,  # skip, format differs
+        "Dividend %": ("dividendYield", True),
+        "Payout": ("payoutRatio", True),
+    }
+
+    filled = []
+    for fv_key, spec in mapping.items():
+        if spec is None:
+            continue
+        yf_key, is_pct = spec
+        # Only backfill if Yahoo value is missing
+        if info.get(yf_key) is not None:
+            continue
+        fv_val = finviz.get(fv_key)
+        if not fv_val or fv_val == "-":
+            continue
+        parsed = _parse_finviz_number(fv_val)
+        if parsed is not None:
+            # Finviz percentages are already parsed as decimals by _parse_finviz_number
+            info[yf_key] = parsed
+            filled.append(yf_key)
+
+    if filled:
+        print(f"  ✓ Backfilled from Finviz: {', '.join(filled)}")
+
+    return info
+
+
 def _get_yf():
     """Lazy import of yfinance."""
     try:
@@ -416,6 +494,9 @@ def fetch_data(ticker: str) -> dict:
         roic_data = fetch_roic(ticker)
     except Exception as e:
         print(f"  ⚠ Roic.ai fetch failed: {e}")
+
+    # ── Merge: backfill missing Yahoo info from Finviz ──
+    info = _merge_finviz_into_info(info, finviz_data)
 
     return {
         "ticker": ticker,
