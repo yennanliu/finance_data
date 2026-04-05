@@ -23,6 +23,20 @@
      ST --> ST1["催化劑1"]
      ```
    - quadrantChart 必須包含：title, x-axis, y-axis, quadrant-1~4, 數據點格式 `名稱: [x, y]`
+   - **quadrantChart 限制**：title、x-axis、y-axis、quadrant-1~4 以及數據點名稱**必須使用英文**，不可使用中文。例如：
+     ```
+     quadrantChart
+         title Risk Matrix
+         x-axis Low Probability --> High Probability
+         y-axis Low Impact --> High Impact
+         quadrant-1 High Priority
+         quadrant-2 Monitor
+         quadrant-3 Review
+         quadrant-4 Watch
+         Risk Item 1: [0.80, 0.85]
+     ```
+   - **mindmap 限制**：所有節點文字**必須使用英文**，不可使用中文或括號包裹中文。例如用 `Technology Leadership` 而非 `技術領先` 或 `("技術領先")`
+   - **pie chart 限制**：標籤中不可使用括號 `（）`，用英文或去除括號
 4. 深度要求：
    - 每個章節必須引用具體財務數字，不得只講概念
    - 季度對季度（QoQ）與年度對年度（YoY）成長率必須計算並標註
@@ -44,7 +58,7 @@
 ---
 
 # {ticker} 基本面深度分析報告
-> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance ｜ **分析師**：CFA 級機構研究
+> **報告日期**：{today} ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance, Finviz, StockAnalysis, Roic.ai ｜ **分析師**：CFA 級機構研究
 
 ---
 
@@ -427,19 +441,19 @@ graph TD
 
 ```mermaid
 quadrantChart
-    title 風險評分矩陣
-    x-axis 低機率 --> 高機率
-    y-axis 低衝擊 --> 高衝擊
-    quadrant-1 高優先處理
-    quadrant-2 密切監控
-    quadrant-3 定期檢視
-    quadrant-4 持續觀察
+    title Risk Assessment Matrix
+    x-axis Low Probability --> High Probability
+    y-axis Low Impact --> High Impact
+    quadrant-1 High Priority
+    quadrant-2 Monitor Closely
+    quadrant-3 Review Periodically
+    quadrant-4 Watch
 
-    風險項目1: [0.80, 0.85]
-    風險項目2: [0.50, 0.65]
-    風險項目3: [0.20, 0.75]
-    風險項目4: [0.70, 0.70]
-    風險項目5: [0.50, 0.45]
+    Risk Item 1: [0.80, 0.85]
+    Risk Item 2: [0.50, 0.65]
+    Risk Item 3: [0.20, 0.75]
+    Risk Item 4: [0.70, 0.70]
+    Risk Item 5: [0.50, 0.45]
 ```
 
 ### 9.2 風險清單詳細分析
