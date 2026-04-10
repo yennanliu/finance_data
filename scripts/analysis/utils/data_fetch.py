@@ -618,18 +618,24 @@ def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
     try:
         import mplfinance as mpf
         import matplotlib
+        import matplotlib.patches as mpatches
         matplotlib.use("Agg")  # headless backend, no display
 
         # Use last 200 trading days for good chart visibility
         df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
 
+        # Define MA periods and colors
+        ma_config = [(30, "#2196F3"), (60, "#9C27B0"), (200, "#212121")]
+
         # Build MA list based on available data
         mavs = []
         ma_colors = []
-        for period, color in [(30, "#2196F3"), (60, "#9C27B0"), (200, "#212121")]:
+        legend_labels = []
+        for period, color in ma_config:
             if len(df) >= period:
                 mavs.append(period)
                 ma_colors.append(color)
+                legend_labels.append(f"MA{period}")
 
         if not mavs:
             return ""
@@ -641,11 +647,12 @@ def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
                 "axes.labelsize": 9,
                 "xtick.labelsize": 8,
                 "ytick.labelsize": 8,
+                "legend.fontsize": 10,
             },
         )
 
-        # Generate the chart
-        mpf.plot(
+        # Generate the chart with returnfig to add custom legend
+        fig, axes = mpf.plot(
             df,
             type="candle",
             mav=tuple(mavs),
@@ -653,9 +660,28 @@ def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
             style=style,
             mavcolors=ma_colors,
             title=f"{ticker}  |  MA{mavs}  |  最近200交易日",
-            savefig=dict(fname=output_path, dpi=150, bbox_inches="tight"),
             figsize=(12, 7),
+            returnfig=True,
         )
+
+        # Add custom legend with MA labels
+        legend_patches = [
+            mpatches.Patch(facecolor=color, label=label)
+            for label, color in zip(legend_labels, ma_colors)
+        ]
+        axes[0].legend(
+            handles=legend_patches,
+            loc="upper left",
+            frameon=True,
+            fancybox=True,
+            shadow=True,
+            fontsize=10,
+        )
+
+        # Save the figure
+        fig.savefig(output_path, dpi=150, bbox_inches="tight")
+        import matplotlib.pyplot as plt
+        plt.close(fig)
 
         return output_path
     except ImportError:
