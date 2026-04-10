@@ -56,6 +56,7 @@ from analysis import (
     build_context,
     call_llm,
 )
+from analysis.utils.data_fetch import generate_candlestick_chart
 
 
 def save_report(ticker: str, content: str, output_dir: Path,
@@ -150,11 +151,23 @@ def main() -> None:
     data = fetch_data(ticker)
     context = build_context(data, analysis_type)
 
+    # Generate candlestick chart for technical analysis (before LLM call for efficiency)
+    chart_embed = ""
+    if analysis_type == "technical-analysis" and data.get("hist") is not None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        chart_file = output_dir / f"technical_chart_{TODAY}.png"
+        print("  Generating candlestick chart with MA30/60/200 …")
+        chart_path = generate_candlestick_chart(data["hist"], ticker, str(chart_file))
+        if chart_path:
+            chart_filename = Path(chart_path).name
+            chart_embed = f"![{ticker} 技術面走勢圖]({chart_filename})\n\n"
+
     print(f"[2/3] Calling {provider.upper()} API …")
     report = call_llm(ticker, context, analysis_type, provider, args.model, args.max_tokens)
 
     print("[3/3] Saving report …")
-    save_report(ticker, report, output_dir, analysis_type, provider=provider)
+    final_report = chart_embed + report
+    save_report(ticker, final_report, output_dir, analysis_type, provider=provider)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 
