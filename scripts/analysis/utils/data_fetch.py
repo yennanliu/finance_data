@@ -543,6 +543,64 @@ def price_ascii_chart(price_series: dict) -> str:
     return "\n".join(lines)
 
 
+def compute_moving_average_charts(hist) -> str:
+    """Generate ASCII charts for moving averages (5, 10, 20, 60, 120, 240 days)."""
+    if hist is None or hist.empty:
+        return ""
+
+    try:
+        import pandas as pd
+
+        close = hist["Close"]
+        ma_periods = [5, 10, 20, 60, 120, 240]
+
+        ma_lines = ["  ── 移動平均線 (MA) 走勢 ──"]
+
+        for period in ma_periods:
+            if len(close) < period:
+                ma_lines.append(f"  MA{period:3d}: (資料不足，需要{period}筆數據)")
+                continue
+
+            ma = close.rolling(period).mean()
+            last_ma = ma.iloc[-1]
+
+            # Get last 30 values for sparkline
+            ma_tail = ma.tail(30)
+            if ma_tail.isna().all():
+                ma_lines.append(f"  MA{period:3d}: N/A")
+                continue
+
+            # Create sparkline
+            ma_valid = ma_tail.dropna()
+            if len(ma_valid) > 0:
+                min_val = ma_valid.min()
+                max_val = ma_valid.max()
+                rng = max_val - min_val if max_val != min_val else 1
+
+                sparkline = ""
+                chars = "▁▂▃▄▅▆▇█"
+                for val in ma_valid:
+                    pos = int((val - min_val) / rng * 8)
+                    pos = max(0, min(pos, len(chars) - 1))  # Clamp to valid range
+                    sparkline += chars[pos]
+
+                # Current price vs MA
+                current = close.iloc[-1]
+                diff = current - last_ma
+                pct_diff = (diff / last_ma * 100) if last_ma != 0 else 0
+                arrow = "▲" if diff > 0 else "▼" if diff < 0 else "="
+
+                ma_lines.append(
+                    f"  MA{period:3d}: ${last_ma:8.2f}  {arrow} {diff:+7.2f} ({pct_diff:+6.2f}%)  {sparkline}"
+                )
+            else:
+                ma_lines.append(f"  MA{period:3d}: N/A")
+
+        return "\n".join(ma_lines)
+    except Exception as e:
+        return f"  (MA chart error: {e})"
+
+
 def compute_technicals(hist) -> str:
     """Compute technical indicators from OHLCV history DataFrame."""
     if hist is None or hist.empty:
@@ -557,6 +615,8 @@ def compute_technicals(hist) -> str:
         volume = hist["Volume"]
 
         # Moving averages
+        ma5 = close.rolling(5).mean()
+        ma10 = close.rolling(10).mean()
         ma20 = close.rolling(20).mean()
         ma50 = close.rolling(50).mean()
         ma200 = close.rolling(200).mean()
@@ -692,6 +752,9 @@ def compute_technicals(hist) -> str:
 
         atr_pct = last_atr / last * 100 if last > 0 else float("nan")
 
+        # Get MA charts
+        ma_charts = compute_moving_average_charts(hist)
+
         return f"""
   ── 當前技術指標快照 ──
   收盤價:       ${last:.2f}
@@ -703,6 +766,8 @@ def compute_technicals(hist) -> str:
   MA50:         ${na(last_ma50)}   {'▲ 上方' if last > last_ma50 else '▼ 下方'}
   MA200:        ${na(last_ma200)}  {'▲ 上方' if last_ma200 == last_ma200 and last > last_ma200 else '▼ 下方' if last_ma200 == last_ma200 else 'N/A'}
   均線排列:     {'多頭排列 MA20>MA50>MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 > last_ma50 > last_ma200 else '空頭排列 MA20<MA50<MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 < last_ma50 < last_ma200 else '混合排列'}
+
+{ma_charts}
 
   ── 動能指標 ──
   RSI(14):      {na(last_rsi)}    {'🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
