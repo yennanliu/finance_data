@@ -601,6 +601,96 @@ def compute_moving_average_charts(hist) -> str:
         return f"  (MA chart error: {e})"
 
 
+def generate_plotly_candlestick_chart(hist, ticker: str) -> str:
+    """Generate an interactive candlestick chart with MA(30,60,200) overlays using Plotly.
+
+    Args:
+        hist: OHLCV DataFrame from yfinance (must have OHLCV columns)
+        ticker: Stock ticker symbol
+
+    Returns:
+        HTML embed code with <div> and <script>, or empty string on failure
+    """
+    if hist is None or hist.empty or len(hist) < 60:
+        return ""
+
+    try:
+        import plotly.graph_objects as go
+        import pandas as pd
+
+        # Use last 200 trading days for good chart visibility
+        df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
+
+        # Calculate MAs
+        df["MA30"] = df["Close"].rolling(window=30).mean()
+        df["MA60"] = df["Close"].rolling(window=60).mean()
+        df["MA200"] = df["Close"].rolling(window=200).mean()
+
+        # Create candlestick figure
+        fig = go.Figure()
+
+        # Add candlestick chart
+        fig.add_trace(
+            go.Candlestick(
+                x=df.index,
+                open=df["Open"],
+                high=df["High"],
+                low=df["Low"],
+                close=df["Close"],
+                name="價格",
+                hovertemplate=(
+                    "<b>%{x|%Y-%m-%d}</b><br>"
+                    "開: $%{open:.2f}<br>"
+                    "高: $%{high:.2f}<br>"
+                    "低: $%{low:.2f}<br>"
+                    "收: $%{close:.2f}<extra></extra>"
+                ),
+            )
+        )
+
+        # Add MA lines with custom colors
+        ma_config = [
+            ("MA30", "#2196F3", "點線"),
+            ("MA60", "#9C27B0", "虛線"),
+            ("MA200", "#FF6F00", "實線"),
+        ]
+
+        for ma_col, color, dash in ma_config:
+            fig.add_trace(
+                go.Scatter(
+                    x=df.index,
+                    y=df[ma_col],
+                    mode="lines",
+                    name=ma_col,
+                    line=dict(color=color, width=2, dash="dash" if dash == "虛線" else "solid"),
+                    hovertemplate=f"{ma_col}: $%{{y:.2f}}<extra></extra>",
+                )
+            )
+
+        # Update layout
+        fig.update_layout(
+            title=f"{ticker}  |  MA(30/60/200)  |  最近200交易日",
+            yaxis_title="股價 (USD)",
+            xaxis_title="日期",
+            hovermode="x unified",
+            template="plotly_dark",
+            height=500,
+            xaxis_rangeslider_visible=False,
+            font=dict(size=11),
+        )
+
+        # Convert to HTML embed
+        html_embed = fig.to_html(include_plotlyjs="cdn", div_id="candlestick-chart")
+        return html_embed
+
+    except ImportError:
+        print(f"  ⚠ plotly not installed, skipping interactive chart generation")
+        return ""
+    except Exception as e:
+        print(f"  ⚠ Interactive chart generation failed: {e}")
+        return ""
+
+
 def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
     """Generate a candlestick chart with MA(30,60,200) overlays and save as PNG.
 
