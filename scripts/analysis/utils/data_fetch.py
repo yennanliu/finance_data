@@ -601,6 +601,71 @@ def compute_moving_average_charts(hist) -> str:
         return f"  (MA chart error: {e})"
 
 
+def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
+    """Generate a candlestick chart with MA(30,60,200) overlays and save as PNG.
+
+    Args:
+        hist: OHLCV DataFrame from yfinance (must have OHLCV columns)
+        ticker: Stock ticker symbol
+        output_path: File path where PNG will be saved
+
+    Returns:
+        output_path if successful, empty string on failure
+    """
+    if hist is None or hist.empty or len(hist) < 60:
+        return ""
+
+    try:
+        import mplfinance as mpf
+        import matplotlib
+        matplotlib.use("Agg")  # headless backend, no display
+
+        # Use last 200 trading days for good chart visibility
+        df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
+
+        # Build MA list based on available data
+        mavs = []
+        ma_colors = []
+        for period, color in [(30, "#2196F3"), (60, "#9C27B0"), (200, "#212121")]:
+            if len(df) >= period:
+                mavs.append(period)
+                ma_colors.append(color)
+
+        if not mavs:
+            return ""
+
+        # Create custom style
+        style = mpf.make_mpf_style(
+            base_mpf_style="charles",
+            rc={
+                "axes.labelsize": 9,
+                "xtick.labelsize": 8,
+                "ytick.labelsize": 8,
+            },
+        )
+
+        # Generate the chart
+        mpf.plot(
+            df,
+            type="candle",
+            mav=tuple(mavs),
+            volume=True,
+            style=style,
+            mavcolors=ma_colors,
+            title=f"{ticker}  |  MA{mavs}  |  最近200交易日",
+            savefig=dict(fname=output_path, dpi=150, bbox_inches="tight"),
+            figsize=(12, 7),
+        )
+
+        return output_path
+    except ImportError:
+        print(f"  ⚠ mplfinance not installed, skipping chart generation")
+        return ""
+    except Exception as e:
+        print(f"  ⚠ Chart generation failed: {e}")
+        return ""
+
+
 def compute_technicals(hist) -> str:
     """Compute technical indicators from OHLCV history DataFrame."""
     if hist is None or hist.empty:
@@ -801,6 +866,6 @@ def compute_technicals(hist) -> str:
 
 
 __all__ = [
-    "fetch_data", "price_ascii_chart", "compute_technicals",
+    "fetch_data", "price_ascii_chart", "compute_technicals", "generate_candlestick_chart",
     "fetch_finviz", "fetch_stockanalysis", "fetch_roic",
 ]
