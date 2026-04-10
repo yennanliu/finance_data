@@ -321,7 +321,7 @@
   border-radius: 9999px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--fp-btn-accent-fg);
+  color: var(--fp-btn-accent-fg) !important;
   text-decoration: none !important;
   background: var(--fp-btn-accent-bg);
   border: none;
@@ -332,7 +332,13 @@
 .fp-btn-accent:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 24px var(--fp-btn-accent-glow);
-  color: var(--fp-btn-accent-fg);
+  color: var(--fp-btn-accent-fg) !important;
+}
+
+/* Light mode button explicit styling */
+[data-md-color-scheme="default"] .fp-btn-accent {
+  color: #ffffff !important;
+  background: #18181b;
 }
 
 .fp-btn-ghost {
