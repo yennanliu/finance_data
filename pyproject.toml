@@ -8,4 +8,6 @@ dependencies = [
     "requests>=2.32.5",
     "selenium>=4.36.0",
     "webdriver-manager>=4.0.2",
+    "matplotlib>=3.8.0",
+    "mplfinance>=0.12.10",
 ]
