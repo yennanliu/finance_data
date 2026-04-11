@@ -5,8 +5,8 @@ Configuration constants for analysis generation.
 from datetime import date
 
 TODAY = date.today().isoformat()
-DEFAULT_MODEL = "claude-sonnet-4-6"
-DEFAULT_TOKENS = 20000
+DEFAULT_MODEL = "gpt-4o"
+DEFAULT_TOKENS = 16000
 
 ANALYSIS_TYPES = {
     "fundamental-analysis": {
