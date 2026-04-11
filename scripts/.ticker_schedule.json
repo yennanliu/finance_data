@@ -1,0 +1,19 @@
+{
+  "tickers": {
+    "fundamental": [
+      "0050", "2330.TW", "TSLA", "PL", "GRAB", "TSM", "GOOG", "AMZN",
+      "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
+      "AMD", "NVDA", "NU", "VST", "ORCL"
+    ],
+    "technical": [
+      "0050", "2330.TW", "TSLA", "PL", "GRAB", "TSM", "GOOG", "AMZN",
+      "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
+      "AMD", "NVDA", "NU", "VST", "ORCL"
+    ]
+  },
+  "defaults": {
+    "provider": "openai",
+    "model": "gpt-4o",
+    "max_tokens": 16000
+  }
+}
