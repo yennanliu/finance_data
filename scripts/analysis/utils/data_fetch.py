@@ -724,15 +724,22 @@ def _generate_mplfinance_chart(df, ticker: str, output_path) -> str:
     import matplotlib
     matplotlib.use("Agg")
 
-    # Select OHLC columns
-    chart_df = df[["Open", "High", "Low", "Close"]].copy()
+    # Select OHLCV columns, only including Volume if it exists
+    cols_to_select = ["Open", "High", "Low", "Close"]
+    if "Volume" in df.columns:
+        cols_to_select.append("Volume")
+
+    chart_df = df[cols_to_select].copy()
+
+    # Include volume only if available
+    include_volume = "Volume" in chart_df.columns
 
     style = mpf.make_mpf_style(base_mpf_style="charles")
     fig, axes = mpf.plot(
         chart_df,
         type="candle",
         mav=(30, 60, 200),
-        volume=True,
+        volume=include_volume,
         style=style,
         title=f"{ticker}  |  MA(30/60/200)  |  最近200交易日",
         figsize=(12, 7),
