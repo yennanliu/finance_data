@@ -16,6 +16,24 @@ on:
         options:
           - "false"
           - "true"
+      search_pattern:
+        description: "Pattern to search for (leave empty for default refusal message)"
+        required: false
+        default: "抱歉，我無法完成這項請求。"
+        type: string
+      search_directory:
+        description: "Directory to search (leave empty for entire repo)"
+        required: false
+        default: "."
+        type: string
+      auto_commit:
+        description: "Automatically commit and push changes"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 permissions:
   contents: write
@@ -33,17 +51,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ── 2. Find and delete refusal files ───────────────────────
+      # ── 2. Resolve parameters ─────────────────────────────────
+      - name: Resolve parameters
+        id: params
+        run: |
+          PATTERN="${{ github.event.inputs.search_pattern }}"
+          PATTERN="${PATTERN:-抱歉，我無法完成這項請求。}"
+
+          DIRECTORY="${{ github.event.inputs.search_directory }}"
+          DIRECTORY="${DIRECTORY:-.}"
+
+          echo "search_pattern=$PATTERN" >> $GITHUB_OUTPUT
+          echo "search_directory=$DIRECTORY" >> $GITHUB_OUTPUT
+
+          echo "📋 Cleanup Configuration:"
+          echo "  Pattern: $PATTERN"
+          echo "  Directory: $DIRECTORY"
+          echo "  Dry-run: ${{ github.event.inputs.dry_run || 'false' }}"
+          echo "  Auto-commit: ${{ github.event.inputs.auto_commit || 'true' }}"
+
+      # ── 3. Find and delete refusal files ───────────────────────
       - name: Find files with refusal message
         id: find
-        env:
-          REFUSAL_MSG: "抱歉，我無法完成這項請求。"
         run: |
           echo "🔍 Searching for refusal message..."
           echo ""
 
           # Find all files containing the refusal message
-          REFUSAL_FILES=$(grep -r "抱歉，我無法完成這項請求。" . \
+          REFUSAL_FILES=$(grep -r "${{ steps.params.outputs.search_pattern }}" "${{ steps.params.outputs.search_directory }}" \
             --include="*.md" \
             --include="*.html" \
             --exclude-dir=.git \
@@ -99,7 +134,7 @@ jobs:
 
       # ── 4. Commit and push changes ─────────────────────────────
       - name: Commit and push changes
-        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.auto_commit != 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -115,13 +150,16 @@ jobs:
 
           # Commit
           FILE_COUNT=${{ steps.find.outputs.file_count }}
+          PATTERN="${{ steps.params.outputs.search_pattern }}"
+          DIRECTORY="${{ steps.params.outputs.search_directory }}"
+
           git commit -m "chore: cleanup $FILE_COUNT files with refusal message
 
-Automated cleanup: removed files containing '抱歉，我無法完成這項請求。'
+Automated cleanup: removed files containing pattern
 
-- Searched: entire repository
-- Pattern: refusal message
-- Action: automated deletion
+- Pattern: $PATTERN
+- Directory: $DIRECTORY
+- File count: $FILE_COUNT
 - Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
 
 [skip ci]"
@@ -130,6 +168,18 @@ Automated cleanup: removed files containing '抱歉，我無法完成這項請�
           echo "📤 Pushing changes..."
           git push origin main
           echo "✅ Changes pushed to main"
+
+      # ── Skip auto-commit notice
+      - name: Auto-commit disabled notice
+        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.auto_commit == 'false'
+        run: |
+          echo "⚠️  Auto-commit is disabled"
+          echo ""
+          echo "Files have been deleted but NOT committed:"
+          cat /tmp/refusal_files.txt
+          echo ""
+          echo "To commit manually, run:"
+          echo "  git add -A && git commit -m 'chore: cleanup files' && git push"
 
       # ── 5. Summary ─────────────────────────────────────────────
       - name: Job summary
@@ -145,14 +195,22 @@ Automated cleanup: removed files containing '抱歉，我無法完成這項請�
             if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
               echo "**Mode:** 🏜️ Dry-run (no deletion)" >> $GITHUB_STEP_SUMMARY
             else
-              echo "**Mode:** 🗑️ Cleanup executed" >> $GITHUB_STEP_SUMMARY
+              if [ "${{ github.event.inputs.auto_commit }}" = "false" ]; then
+                echo "**Mode:** 🗑️ Files deleted (manual commit required)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "**Mode:** 🗑️ Cleanup executed & committed" >> $GITHUB_STEP_SUMMARY
+              fi
             fi
           else
-            echo "**Status:** ✅ No refusal files found" >> $GITHUB_STEP_SUMMARY
+            echo "**Status:** ✅ No matching files found" >> $GITHUB_STEP_SUMMARY
             echo "**Action:** None required" >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Refusal Pattern:** \`抱歉，我無法完成這項請求。\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Search Scope:** Entire repository" >> $GITHUB_STEP_SUMMARY
-          echo "**Schedule:** Daily at 2:00 AM UTC" >> $GITHUB_STEP_SUMMARY
+          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "**Search Pattern:** \`${{ steps.params.outputs.search_pattern }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Search Directory:** \`${{ steps.params.outputs.search_directory }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Dry-run:** ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Auto-commit:** ${{ github.event.inputs.auto_commit || 'true' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Schedule:** Daily at 2:00 AM UTC (when triggered automatically)" >> $GITHUB_STEP_SUMMARY
