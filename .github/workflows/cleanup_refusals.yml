@@ -1,0 +1,158 @@
+name: Cleanup Refusal Posts
+
+# ── Schedule & Manual Trigger ─────────────────────────────────────
+on:
+  schedule:
+    # Daily at 2:00 AM UTC (10:00 AM Taipei)
+    - cron: "0 2 * * *"
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run in dry-run mode (list files but don't delete)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Remove Files with Refusal Message
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Find and delete refusal files ───────────────────────
+      - name: Find files with refusal message
+        id: find
+        env:
+          REFUSAL_MSG: "抱歉，我無法完成這項請求。"
+        run: |
+          echo "🔍 Searching for refusal message..."
+          echo ""
+
+          # Find all files containing the refusal message
+          REFUSAL_FILES=$(grep -r "抱歉，我無法完成這項請求。" . \
+            --include="*.md" \
+            --include="*.html" \
+            --exclude-dir=.git \
+            --exclude-dir=.github \
+            --exclude-dir=.venv \
+            --exclude-dir=node_modules \
+            -l 2>/dev/null || true)
+
+          if [ -z "$REFUSAL_FILES" ]; then
+            echo "✅ No files with refusal message found."
+            echo "files_found=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Found files with refusal message:"
+          echo "$REFUSAL_FILES" | while read file; do
+            echo "  ❌ $file"
+          done
+
+          # Save to output for next step
+          echo "$REFUSAL_FILES" > /tmp/refusal_files.txt
+          echo "files_found=true" >> $GITHUB_OUTPUT
+          echo "file_count=$(echo "$REFUSAL_FILES" | wc -l)" >> $GITHUB_OUTPUT
+
+      # ── 3. Delete files (unless dry-run) ────────────────────────
+      - name: Delete refusal files
+        if: steps.find.outputs.files_found == 'true'
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "🏜️  DRY RUN MODE - No files will be deleted"
+            echo ""
+            echo "Files that would be deleted:"
+            cat /tmp/refusal_files.txt | while read file; do
+              echo "  [WOULD DELETE] $file"
+            done
+            exit 0
+          fi
+
+          echo "🗑️  Deleting files with refusal message..."
+          echo ""
+
+          cat /tmp/refusal_files.txt | while read file; do
+            if [ -f "$file" ]; then
+              rm -f "$file"
+              echo "  ✓ Deleted: $file"
+            fi
+          done
+
+          echo ""
+          echo "✅ Cleanup complete"
+
+      # ── 4. Commit and push changes ─────────────────────────────
+      - name: Commit and push changes
+        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Check if there are changes
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          # Stage deleted files
+          git add -A
+
+          # Commit
+          FILE_COUNT=${{ steps.find.outputs.file_count }}
+          git commit -m "chore: cleanup $FILE_COUNT files with refusal message
+
+Automated cleanup: removed files containing '抱歉，我無法完成這項請求。'
+
+- Searched: entire repository
+- Pattern: refusal message
+- Action: automated deletion
+- Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+
+[skip ci]"
+
+          # Push
+          echo "📤 Pushing changes..."
+          git push origin main
+          echo "✅ Changes pushed to main"
+
+      # ── 5. Summary ─────────────────────────────────────────────
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## Cleanup Job Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.find.outputs.files_found }}" = "true" ]; then
+            echo "**Status:** ✅ Files found and processed" >> $GITHUB_STEP_SUMMARY
+            echo "**Count:** ${{ steps.find.outputs.file_count }} files" >> $GITHUB_STEP_SUMMARY
+
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              echo "**Mode:** 🏜️ Dry-run (no deletion)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "**Mode:** 🗑️ Cleanup executed" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "**Status:** ✅ No refusal files found" >> $GITHUB_STEP_SUMMARY
+            echo "**Action:** None required" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Refusal Pattern:** \`抱歉，我無法完成這項請求。\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Search Scope:** Entire repository" >> $GITHUB_STEP_SUMMARY
+          echo "**Schedule:** Daily at 2:00 AM UTC" >> $GITHUB_STEP_SUMMARY
