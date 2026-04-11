@@ -120,9 +120,9 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save the report (default: ai_gen_report/stock/<ticker>/)",
     )
     p.add_argument(
-        "--provider", default="claude",
+        "--provider", default="openai",
         choices=["claude", "openai"],
-        help="AI provider (default: claude)",
+        help="AI provider (default: openai)",
     )
     p.add_argument(
         "--model", default=DEFAULT_MODEL,
