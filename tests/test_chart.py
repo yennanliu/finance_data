@@ -19,41 +19,47 @@ def sample_ohlcv_data():
     }, index=dates)
 
 
-def test_generate_plotly_candlestick_chart_returns_html(sample_ohlcv_data):
-    """Verify chart generation returns non-empty HTML."""
-    html = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
-    assert isinstance(html, str)
-    assert len(html) > 0
-    assert "html" in html.lower()
+def test_generate_plotly_candlestick_chart_returns_dict(sample_ohlcv_data):
+    """Verify chart generation returns dict with plotly_html and png_filename keys."""
+    result = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    assert isinstance(result, dict)
+    assert "plotly_html" in result
+    assert "png_filename" in result
+    assert isinstance(result["plotly_html"], str)
 
 
 def test_generate_plotly_candlestick_chart_includes_plotly_cdn(sample_ohlcv_data):
     """Verify generated chart includes Plotly.js CDN."""
-    html = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    result = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    html = result.get("plotly_html", "")
     assert "cdn.plot.ly/plotly" in html or "plotly" in html.lower()
 
 
 def test_generate_plotly_candlestick_chart_includes_ticker(sample_ohlcv_data):
     """Verify chart HTML contains the ticker name."""
-    html = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    result = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    html = result.get("plotly_html", "")
     assert "MSFT" in html
 
 
 def test_generate_plotly_candlestick_chart_with_empty_data():
     """Verify chart generation gracefully handles empty DataFrame."""
     empty_df = pd.DataFrame()
-    html = generate_plotly_candlestick_chart(empty_df, "TEST")
-    assert html == ""  # Should return empty string on failure
+    result = generate_plotly_candlestick_chart(empty_df, "TEST")
+    assert isinstance(result, dict)
+    assert result.get("plotly_html") == ""
 
 
 def test_generate_plotly_candlestick_chart_with_none():
     """Verify chart generation gracefully handles None."""
-    html = generate_plotly_candlestick_chart(None, "TEST")
-    assert html == ""  # Should return empty string on failure
+    result = generate_plotly_candlestick_chart(None, "TEST")
+    assert isinstance(result, dict)
+    assert result.get("plotly_html") == ""
 
 
 def test_generate_plotly_candlestick_chart_includes_ma_lines(sample_ohlcv_data):
     """Verify chart includes moving average traces."""
-    html = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    result = generate_plotly_candlestick_chart(sample_ohlcv_data, "MSFT")
+    html = result.get("plotly_html", "")
     # Check for MA indicators (may appear in JSON data within script)
     assert "MA" in html or "moving" in html.lower()
