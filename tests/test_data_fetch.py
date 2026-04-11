@@ -30,7 +30,8 @@ def test_compute_technicals_with_valid_data(sample_hist):
 def test_compute_technicals_with_none():
     """Verify compute_technicals handles None gracefully."""
     result = compute_technicals(None)
-    assert "no OHLC data" in result.lower() or result == ""
+    # Should contain a message about missing OHLC data
+    assert "no ohlc data" in result.lower()
 
 
 def test_compute_technicals_with_empty_dataframe():

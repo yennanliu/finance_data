@@ -10,6 +10,7 @@ import sys
 import time
 
 from .formatting import money
+from .. import TODAY
 
 
 # ── HTTP helpers ─────────────────────────────────────────────────────
@@ -601,22 +602,28 @@ def compute_moving_average_charts(hist) -> str:
         return f"  (MA chart error: {e})"
 
 
-def generate_plotly_candlestick_chart(hist, ticker: str) -> str:
-    """Generate an interactive candlestick chart with MA(30,60,200) overlays using Plotly.
+def generate_plotly_candlestick_chart(hist, ticker: str, output_dir: str = None) -> dict:
+    """Generate both PNG and interactive Plotly candlestick chart with MA(30,60,200).
 
     Args:
         hist: OHLCV DataFrame from yfinance (must have OHLCV columns)
         ticker: Stock ticker symbol
+        output_dir: Directory to save PNG chart (optional)
 
     Returns:
-        HTML embed code with <div> and <script>, or empty string on failure
+        Dict with keys:
+          - 'plotly_html': HTML embed code (or empty string)
+          - 'png_filename': PNG filename relative to output_dir (or None)
     """
     if hist is None or hist.empty or len(hist) < 60:
-        return ""
+        return {"plotly_html": "", "png_filename": None}
+
+    result = {"plotly_html": "", "png_filename": None}
 
     try:
         import plotly.graph_objects as go
         import pandas as pd
+        from pathlib import Path
 
         # Use last 200 trading days for good chart visibility
         df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
@@ -650,9 +657,9 @@ def generate_plotly_candlestick_chart(hist, ticker: str) -> str:
 
         # Add MA lines with custom colors
         ma_config = [
-            ("MA30", "#2196F3", "點線"),
-            ("MA60", "#9C27B0", "虛線"),
-            ("MA200", "#FF6F00", "實線"),
+            ("MA30", "#2196F3", "dash"),
+            ("MA60", "#9C27B0", "dash"),
+            ("MA200", "#FF6F00", "solid"),
         ]
 
         for ma_col, color, dash in ma_config:
@@ -662,7 +669,7 @@ def generate_plotly_candlestick_chart(hist, ticker: str) -> str:
                     y=df[ma_col],
                     mode="lines",
                     name=ma_col,
-                    line=dict(color=color, width=2, dash="dash" if dash == "虛線" else "solid"),
+                    line=dict(color=color, width=2, dash=dash),
                     hovertemplate=f"{ma_col}: $%{{y:.2f}}<extra></extra>",
                 )
             )
@@ -679,16 +686,64 @@ def generate_plotly_candlestick_chart(hist, ticker: str) -> str:
             font=dict(size=11),
         )
 
-        # Convert to HTML embed
-        html_embed = fig.to_html(include_plotlyjs="cdn", div_id="candlestick-chart")
-        return html_embed
+        # Generate Plotly HTML
+        try:
+            result["plotly_html"] = fig.to_html(include_plotlyjs="cdn", div_id="candlestick-chart")
+        except Exception as e:
+            print(f"  ⚠ Plotly HTML generation failed: {e}")
+
+        # Generate PNG if output_dir provided
+        if output_dir:
+            try:
+                from pathlib import Path
+                output_path = Path(output_dir) / f"technical_chart_{TODAY}.png"
+                fig.write_image(str(output_path), width=1200, height=600)
+                result["png_filename"] = output_path.name
+                print(f"  ✓ PNG chart saved: {output_path.name}")
+            except Exception as e:
+                print(f"  ⚠ PNG generation failed (kaleido may not be installed): {e}")
+                # Fallback to mplfinance if kaleido not available
+                try:
+                    result["png_filename"] = _generate_mplfinance_chart(df, ticker, output_path)
+                except Exception as e2:
+                    print(f"  ⚠ Fallback PNG generation also failed: {e2}")
+
+        return result
 
     except ImportError:
         print(f"  ⚠ plotly not installed, skipping interactive chart generation")
-        return ""
+        return {"plotly_html": "", "png_filename": None}
     except Exception as e:
-        print(f"  ⚠ Interactive chart generation failed: {e}")
-        return ""
+        print(f"  ⚠ Chart generation failed: {e}")
+        return {"plotly_html": "", "png_filename": None}
+
+
+def _generate_mplfinance_chart(df, ticker: str, output_path) -> str:
+    """Fallback PNG generation using mplfinance (for when kaleido unavailable)."""
+    import mplfinance as mpf
+    import matplotlib
+    matplotlib.use("Agg")
+
+    # Select OHLC columns
+    chart_df = df[["Open", "High", "Low", "Close"]].copy()
+
+    style = mpf.make_mpf_style(base_mpf_style="charles")
+    fig, axes = mpf.plot(
+        chart_df,
+        type="candle",
+        mav=(30, 60, 200),
+        volume=True,
+        style=style,
+        title=f"{ticker}  |  MA(30/60/200)  |  最近200交易日",
+        figsize=(12, 7),
+        returnfig=True,
+    )
+
+    fig.savefig(str(output_path), dpi=150, bbox_inches="tight")
+    import matplotlib.pyplot as plt
+    plt.close(fig)
+
+    return output_path.name
 
 
 def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:

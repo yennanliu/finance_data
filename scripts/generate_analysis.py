@@ -155,9 +155,25 @@ def main() -> None:
     chart_embed = ""
     if analysis_type == "technical-analysis" and data.get("hist") is not None:
         print("  Generating interactive candlestick chart with MA30/60/200 …")
-        chart_html = generate_plotly_candlestick_chart(data["hist"], ticker)
-        if chart_html:
-            chart_embed = chart_html + "\n\n"
+        chart_result = generate_plotly_candlestick_chart(data["hist"], ticker, str(output_dir))
+        if isinstance(chart_result, dict) and chart_result.get("plotly_html"):
+            png_filename = chart_result.get("png_filename", "")
+            plotly_html = chart_result.get("plotly_html", "")
+
+            # Create collapsible PNG section with Plotly interactive chart below
+            if png_filename:
+                chart_embed = (
+                    f'<details>\n'
+                    f'<summary>📊 靜態圖表 (點擊展開)</summary>\n'
+                    f'\n'
+                    f'![Technical Chart]({png_filename})\n'
+                    f'\n'
+                    f'</details>\n'
+                    f'\n'
+                    f'{plotly_html}\n\n'
+                )
+            else:
+                chart_embed = plotly_html + "\n\n"
 
     print(f"[2/3] Calling {provider.upper()} API …")
     report = call_llm(ticker, context, analysis_type, provider, args.model, args.max_tokens)
