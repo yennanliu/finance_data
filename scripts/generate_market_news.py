@@ -212,7 +212,7 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 
 請依照以下格式完整輸出報告（使用 Markdown）：
 
-# {ticker} 市場新聞分析報告
+# {ticker} 市場新聞分析報告 ({today})
 
 ## 📅 報告日期
 {today}
