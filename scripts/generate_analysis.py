@@ -165,9 +165,7 @@ def main() -> None:
                 chart_embed = (
                     f'<details>\n'
                     f'<summary>📊 靜態圖表 (點擊展開)</summary>\n'
-                    f'\n'
-                    f'![Technical Chart]({png_filename})\n'
-                    f'\n'
+                    f'<img src="{png_filename}" alt="Technical Chart" style="max-width:100%;">\n'
                     f'</details>\n'
                     f'\n'
                     f'{plotly_html}\n\n'
