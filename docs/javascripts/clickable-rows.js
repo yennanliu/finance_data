@@ -1,21 +1,24 @@
-// Make table rows clickable by navigating to the first link in the row
-document.addEventListener('DOMContentLoaded', function() {
-  // Find all table rows in the main content
-  const tableRows = document.querySelectorAll('.md-typeset table tbody tr');
+// Make table rows clickable by navigating to the first link in the row.
+// Uses event delegation: one listener on document, not one per row.
+document.addEventListener('click', function(e) {
+  // Walk up from the click target to find a <tr>
+  var target = e.target;
+  while (target && target.tagName !== 'TR') {
+    target = target.parentElement;
+  }
+  if (!target) return;
 
-  tableRows.forEach(row => {
-    // Find the first link in the row
-    const link = row.querySelector('a');
+  // Only act on rows inside .md-typeset table bodies
+  var tbody = target.parentElement;
+  if (!tbody || tbody.tagName !== 'TBODY') return;
+  var table = tbody.closest('.md-typeset table');
+  if (!table) return;
 
-    if (link) {
-      // Make the row clickable
-      row.addEventListener('click', function(e) {
-        // Only navigate if clicking on the row itself, not on a link
-        // (to prevent double navigation)
-        if (e.target.tagName !== 'A') {
-          window.location.href = link.href;
-        }
-      });
-    }
-  });
+  // Don't double-navigate when clicking a link directly
+  if (e.target.tagName === 'A' || e.target.closest('a')) return;
+
+  var link = target.querySelector('a');
+  if (link) {
+    window.location.href = link.href;
+  }
 });

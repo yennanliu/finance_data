@@ -33,3 +33,5 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+# Mermaid pre-render cache
+.mermaid_cache.json
