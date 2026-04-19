@@ -40,9 +40,9 @@
 - [x] Switch `clickable-rows.js` to **event delegation** — done: one listener on `document`, walks up to `<tr>`
 
 ### Architectural (4–8 hrs each)
-- [ ] **Single-source bilingual** — one `docs/` dir with language routing instead of duplicating all content into `docs/zh/`
-- [ ] **Incremental builds** in `build_docs.py` — skip unchanged files (currently rebuilds everything)
-- [ ] **Lazy-load Chart.js** in HTML reports — defer until chart container is in viewport
+- [x] **Single-source bilingual** — ZH tree now generates index-only pages; report/news/notebook files link to EN pages via absolute `SITE_BASE` paths instead of being copied (saves ~50% of `docs/` size)
+- [x] **Incremental builds** in `build_docs.py` — default mode now skips unchanged files; `copy_file()` checks mtime, `write()` checks content equality; pass `--clean` to force full rebuild
+- [x] **Lazy-load Chart.js** — N/A: HTML report files are wrapped in ` ```html ``` ` code fences, not actual rendered pages; Chart.js is not loaded at runtime
 
 ---
 
