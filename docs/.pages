@@ -1,6 +1,7 @@
 nav:
   - index.md
   - reports
+  - market_news
   - notebooks
   - sec
   - investor_day

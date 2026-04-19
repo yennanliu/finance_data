@@ -8,6 +8,7 @@ site/
 
 # Generated docs sub-dirs (rebuilt in CI by scripts/build_docs.py)
 docs/reports/
+docs/market_news/
 docs/notebooks/
 docs/sec/
 docs/investor_day/
@@ -16,6 +17,7 @@ docs/includes/
 
 # Generated Traditional Chinese docs (except index.md)
 docs/zh/reports/
+docs/zh/market_news/
 docs/zh/notebooks/
 docs/zh/sec/
 docs/zh/investor_day/
