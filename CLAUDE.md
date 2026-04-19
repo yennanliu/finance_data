@@ -1,0 +1,70 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Commands
+
+```bash
+# Install dependencies
+pip install -e ".[dev]"
+
+# Run all tests
+pytest tests/ -v
+
+# Run a single test file
+pytest tests/test_llm.py -v
+
+# Generate analysis locally
+python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider claude
+python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider openai
+
+# Build and preview docs site
+python3 scripts/build_docs.py && mkdocs serve
+
+# Trigger GitHub Actions workflow via CLI
+gh workflow run daily_analysis.yml -f ticker=MSFT -f analysis_type=technical-analysis
+
+# Trigger analysis via Makefile (fires GitHub Actions workflows)
+make analyze TICKERS="NVDA TSLA" TYPES="fundamental-analysis,technical-analysis"
+make analyze-mag7
+make deep-dive TICKERS="NVDA"
+```
+
+## Architecture
+
+The codebase generates AI-powered investment research reports and publishes them via MkDocs to GitHub Pages. Full architecture is in `docs/ARCHITECTURE.md`.
+
+### Core flow
+```
+scripts/generate_analysis.py
+  → scripts/analysis/utils/data_fetch.py   (yfinance + web scrapers → OHLCV, financials)
+  → scripts/analysis/utils/context.py      (assembles data into LLM-ready context, 12 branches)
+  → scripts/analysis/prompts/*.txt          (prompt templates, one per analysis type)
+  → scripts/analysis/utils/llm.py          (Claude or OpenAI API call)
+  → ai_gen_report/stock/<ticker>/<type>_<date>.md
+```
+
+`scripts/build_docs.py` then mirrors `ai_gen_report/` into `docs/` and `docs/zh/` so MkDocs can serve them.
+
+### Key files
+- `scripts/analysis/config/__init__.py` — `ANALYSIS_TYPES` dict (12 types), model/token defaults
+- `scripts/analysis/config/providers.py` — per-provider defaults (Claude: 8k tokens, OpenAI: 16k)
+- `scripts/analysis/utils/context.py` — 12-branch context assembler; touch when adding analysis types
+- `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides
+- `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
+- `.github/workflows/daily_analysis.yml` — cron that fires 42 jobs/day (21 tickers × 2 types)
+
+### Adding a new analysis type
+1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`
+2. Create prompt at `scripts/analysis/prompts/<type>.txt` (placeholders: `{ticker}`, `{financial_context}`, `{today}`)
+3. Add context-building branch in `scripts/analysis/utils/context.py`
+4. Test: `python scripts/generate_analysis.py AAPL --analysis-type <type>`
+
+### Adding a new ticker to daily schedule
+1. Edit `scripts/.ticker_schedule.json`
+2. Add cron entries in `.github/workflows/daily_analysis.yml`
+
+## Report output
+- Reports written to `ai_gen_report/stock/<ticker>/` as Markdown
+- `build_docs.py` copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
+- `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
