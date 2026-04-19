@@ -5,7 +5,7 @@ build_docs.py — Finance Hub docs builder
 Generates the `docs/` directory content from source files:
 
   • ai_gen_report/stock/       → docs/reports/<ticker>/
-  • ai_gen_report/market_news/ → docs/reports/market_news/<ticker>/
+  • ai_gen_report/market_news/ → docs/market_news/<ticker>/
   • notebook_llm/              → docs/notebooks/<ticker>/
   • 10-k/                      → docs/sec/10k.md   (index only, PDFs not copied)
   • 10-q/                      → docs/sec/10q.md
@@ -52,7 +52,12 @@ LANG_TEXT = {
         "available_reports": "Available Reports",
         "markdown_reports": "📄 Markdown Reports",
         "html_reports": "🌐 Interactive HTML Reports",
+        "fundamental_analysis": "📊 Fundamental Analysis",
+        "technical_analysis": "📈 Technical Analysis",
+        "other_reports": "🗂️ Other Reports",
         "analysis_reports": "Analysis Reports",
+        "market_news": "Market News",
+        "market_news_desc": "AI-generated daily market news and stock-specific headline analysis",
         "ai_generated": "AI-generated investment research reports",
         "disclaimer": "Disclaimer",
         "disclaimer_text": "All reports are for educational purposes only and do not constitute investment advice.",
@@ -104,7 +109,12 @@ LANG_TEXT = {
         "available_reports": "可用報告",
         "markdown_reports": "📄 Markdown 報告",
         "html_reports": "🌐 互動式 HTML 報告",
+        "fundamental_analysis": "📊 基本面分析",
+        "technical_analysis": "📈 技術分析",
+        "other_reports": "🗂️ 其他報告",
         "analysis_reports": "分析報告",
+        "market_news": "市場新聞",
+        "market_news_desc": "AI 生成的每日市場新聞與個股消息彙整",
         "ai_generated": "AI 生成的投資研究報告",
         "disclaimer": "免責聲明",
         "disclaimer_text": "所有報告僅供教育目的，不構成投資建議。",
@@ -200,7 +210,7 @@ def ensure(path: Path):
 
 def clean_generated(path: Path):
     """Remove generated sub-dirs, leave hand-crafted files."""
-    for sub in ["reports", "notebooks", "sec", "investor_day"]:
+    for sub in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
         target = path / sub
         if target.exists():
             shutil.rmtree(target)
@@ -251,6 +261,11 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue  # skip empty dirs
 
+        # Split md files by report type
+        technical_md = [f for f in md_files if f.name.startswith("technical_")]
+        fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
+        other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
+
         # Copy all md/html/other files
         for f in md_files + html_files + other_files:
             copy_file(f, dst_dir / f.name)
@@ -267,10 +282,26 @@ def build_reports(lang: str = "en"):
             "",
         ]
 
-        if md_files:
-            lines.append(f"### {t(lang, 'markdown_reports')}")
+        if fundamental_md:
+            lines.append(f"### {t(lang, 'fundamental_analysis')}")
             lines.append("")
-            for f in md_files:
+            for f in fundamental_md:
+                label = f.stem.replace("_", " ").title()
+                lines.append(f"- [{label}]({f.name})")
+            lines.append("")
+
+        if technical_md:
+            lines.append(f"### {t(lang, 'technical_analysis')}")
+            lines.append("")
+            for f in technical_md:
+                label = f.stem.replace("_", " ").title()
+                lines.append(f"- [{label}]({f.name})")
+            lines.append("")
+
+        if other_md:
+            lines.append(f"### {t(lang, 'other_reports')}")
+            lines.append("")
+            for f in other_md:
                 label = f.stem.replace("_", " ").title()
                 lines.append(f"- [{label}]({f.name})")
             lines.append("")
@@ -286,10 +317,11 @@ def build_reports(lang: str = "en"):
         write(dst_dir / "index.md", "\n".join(lines))
 
         # Row for top-level index table
-        report_count = len(md_files) + len(html_files)
-        md_badge = f"📄 {len(md_files)}" if md_files else ""
+        fund_badge = f"📊 {len(fundamental_md)}" if fundamental_md else ""
+        tech_badge = f"📈 {len(technical_md)}" if technical_md else ""
+        other_badge = f"🗂️ {len(other_md)}" if other_md else ""
         html_badge = f"🌐 {len(html_files)}" if html_files else ""
-        badges = " &nbsp; ".join(b for b in [md_badge, html_badge] if b)
+        badges = " &nbsp; ".join(b for b in [fund_badge, tech_badge, other_badge, html_badge] if b)
         report_index_rows.append(
             f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
             f"| {meta['name']} | {meta['sector']} "
@@ -307,6 +339,11 @@ def build_reports(lang: str = "en"):
         "",
         f"## {t(lang, 'report_index')}",
         "",
+        f"> 📊 = {t(lang, 'fundamental_analysis').replace('📊 ', '')}  &nbsp; "
+        f"📈 = {t(lang, 'technical_analysis').replace('📈 ', '')}  &nbsp; "
+        f"🗂️ = {t(lang, 'other_reports').replace('🗂️ ', '')}  &nbsp; "
+        f"🌐 = {t(lang, 'html_reports').replace('🌐 ', '')}",
+        "",
         f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} | |",
         "|---|--------|---------|--------|-------|---|",
     ] + report_index_rows
@@ -321,6 +358,10 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue
 
+        technical_md = [f for f in md_files if f.name.startswith("technical_")]
+        fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
+        other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
+
         top_lines += [
             "",
             f"---",
@@ -330,10 +371,24 @@ def build_reports(lang: str = "en"):
             f"**{t(lang, 'sector')}:** {meta['sector']}",
             "",
         ]
-        if md_files:
-            top_lines.append(f"**{t(lang, 'markdown_reports')}:**")
+        if fundamental_md:
+            top_lines.append(f"**{t(lang, 'fundamental_analysis')}:**")
             top_lines.append("")
-            for f in md_files:
+            for f in fundamental_md:
+                label = f.stem.replace("_", " ").title()
+                top_lines.append(f"- [{label}]({ticker}/{f.name})")
+            top_lines.append("")
+        if technical_md:
+            top_lines.append(f"**{t(lang, 'technical_analysis')}:**")
+            top_lines.append("")
+            for f in technical_md:
+                label = f.stem.replace("_", " ").title()
+                top_lines.append(f"- [{label}]({ticker}/{f.name})")
+            top_lines.append("")
+        if other_md:
+            top_lines.append(f"**{t(lang, 'other_reports')}:**")
+            top_lines.append("")
+            for f in other_md:
                 label = f.stem.replace("_", " ").title()
                 top_lines.append(f"- [{label}]({ticker}/{f.name})")
             top_lines.append("")
@@ -348,15 +403,15 @@ def build_reports(lang: str = "en"):
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
 
 
-# ── 1b. ai_gen_report/market_news → docs/reports/market_news/ ────────────────
+# ── 1b. ai_gen_report/market_news → docs/market_news/ ───────────────────────
 def build_market_news(lang: str = "en"):
     """Build market news section from market_news/<ticker>/market_news_<date>_<provider>.md"""
     docs_root = get_docs_root(lang)
-    DST_MARKET_NEWS = docs_root / "reports" / "market_news"
+    DST_MARKET_NEWS = docs_root / "market_news"
     ensure(DST_MARKET_NEWS)
 
     if not SRC_MARKET_NEWS.exists():
-        write(DST_MARKET_NEWS / "index.md", f"# Market News\n\nNo market news found.\n")
+        write(DST_MARKET_NEWS / "index.md", f"# {t(lang, 'market_news')}\n\nNo market news found.\n")
         return
 
     ticker_dirs = sorted([d for d in SRC_MARKET_NEWS.iterdir() if d.is_dir()])
@@ -397,15 +452,15 @@ def build_market_news(lang: str = "en"):
 
         # Generate per-ticker index
         lines = [
-            f"# {meta['flag']} {meta['name']} ({ticker.upper()}) — Market News",
+            f"# {meta['flag']} {meta['name']} ({ticker.upper()}) — {t(lang, 'market_news')}",
             "",
             f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
             "",
             "---",
             "",
-            "## 📰 Market News Reports",
+            f"## 📰 {t(lang, 'market_news')}",
             "",
-            "| Date | Report |",
+            f"| {t(lang, 'last_updated')} | {t(lang, 'reports')} |",
             "|------|--------|",
         ]
         for date_str, filename in news_files:
@@ -423,16 +478,16 @@ def build_market_news(lang: str = "en"):
 
     # Top-level market_news/index.md
     top_lines = [
-        "# 📰 Market News Reports",
+        f"# 📰 {t(lang, 'market_news')}",
         "",
-        f"> AI-generated daily market news analysis. {t(lang, 'last_built')}: **{TODAY}**",
+        f"> {t(lang, 'market_news_desc')}. {t(lang, 'last_built')}: **{TODAY}**",
         "",
         f"!!! warning \"{t(lang, 'disclaimer')}\"",
         f"    {t(lang, 'disclaimer_text')}",
         "",
-        "## Covered Stocks",
+        f"## {t(lang, 'company_index')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # Reports | Latest |",
+        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
         "|---|--------|---------|--------|---------|--------|",
     ] + index_rows
 
@@ -835,6 +890,7 @@ def build_nav_pages(lang: str = "en"):
         "nav:",
         "  - index.md",
         "  - reports",
+        "  - market_news",
         "  - notebooks",
         "  - sec",
         "  - investor_day",
@@ -843,6 +899,7 @@ def build_nav_pages(lang: str = "en"):
     ]))
 
     DST_REPORTS = docs_root / "reports"
+    DST_MARKET_NEWS = docs_root / "market_news"
     DST_NOTEBOOKS = docs_root / "notebooks"
     DST_SEC = docs_root / "sec"
     DST_INV_DAY = docs_root / "investor_day"
@@ -851,6 +908,11 @@ def build_nav_pages(lang: str = "en"):
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # Market News section: set display title in nav
+    if DST_MARKET_NEWS.exists():
+        market_news_title = t(lang, "market_news")
+        write(DST_MARKET_NEWS / ".pages", f"title: {market_news_title}\nnav:\n  - index.md\n  - ...\n")
 
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():
@@ -896,7 +958,7 @@ def main():
 
     # Clean previously generated dirs for both languages
     for lang_dir in [DOCS, DOCS_ZH]:
-        for subdir in ["reports", "notebooks", "sec", "investor_day"]:
+        for subdir in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
             path = lang_dir / subdir
             if path.exists():
                 shutil.rmtree(path)

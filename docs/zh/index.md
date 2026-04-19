@@ -7,13 +7,29 @@ description: AI 驅動的投資研究、SEC 文件與基本面分析
 
 <div class="grid cards" markdown>
 
--   :material-chart-line:{ .lg .middle } **分析報告**
+-   :material-chart-bar:{ .lg .middle } **基本面分析**
 
     ---
-    美股的 AI 生成基本面與內部交易報告
-    提供繁體中文及豐富的視覺化圖表。
+    美股的 AI 生成財報分析，涵蓋損益表、資產負債表、
+    現金流量表與投資建議。
 
-    [:octicons-arrow-right-24: 瀏覽報告](reports/index.md)
+    [:octicons-arrow-right-24: 瀏覽基本面](reports/index.md)
+
+-   :material-chart-line-variant:{ .lg .middle } **技術分析**
+
+    ---
+    AI 解讀均線、動能、支撐壓力與型態，
+    搭配每日技術走勢圖與交易建議。
+
+    [:octicons-arrow-right-24: 瀏覽技術面](reports/index.md)
+
+-   :material-newspaper-variant-outline:{ .lg .middle } **市場新聞**
+
+    ---
+    AI 彙整每日重大市場新聞、個股消息與盤勢重點，
+    快速掌握最新動態與影響面向。
+
+    [:octicons-arrow-right-24: 瀏覽新聞](market_news/index.md)
 
 -   :material-file-document-multiple:{ .lg .middle } **SEC 文件**
 
@@ -48,6 +64,7 @@ description: AI 驅動的投資研究、SEC 文件與基本面分析
 | 公司 | 類型 | 語言 | 日期 |
 |---------|------|----------|------|
 | [Ondas Inc. (ONDS)](reports/onds/index.md) | 基本面分析 | 繁體中文 | 2026-02 |
+| [NVIDIA (NVDA)](reports/nvda/index.md) | 技術分析 | 繁體中文 | 2026-04 |
 | [Microsoft (MSFT)](reports/msft/index.md) | 內部交易 | 繁體中文 | 2026-02 |
 | [Palantir (PLTR)](reports/pltr/index.md) | 綜合分析 | English | 2026-02 |
 
