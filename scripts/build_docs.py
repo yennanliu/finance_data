@@ -47,6 +47,17 @@ SRC_INV_DAY  = ROOT / "investor_day"
 
 TODAY = date.today().isoformat()
 
+# ── Site root path (must match site_url in mkdocs.yml) ───────────────────────
+# Used to build absolute cross-language links so the ZH index can link to the
+# EN report pages instead of duplicating all files.
+SITE_BASE = "/finance_data"
+
+# ── Build mode ────────────────────────────────────────────────────────────────
+# Pass --clean to force a full rebuild (deletes docs/ subdirs first).
+# Default (incremental) skips files that haven't changed, cutting build time
+# significantly on large repos.
+_INCREMENTAL = "--clean" not in sys.argv
+
 # ── Language-specific text ────────────────────────────────────────────────────
 LANG_TEXT = {
     "en": {
@@ -294,6 +305,9 @@ def slugify(text: str) -> str:
 
 def copy_file(src: Path, dst: Path):
     ensure(dst.parent)
+    # Incremental: skip if dst exists and source hasn't changed since last copy
+    if _INCREMENTAL and dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
+        return
     if src.suffix == ".md" and _MMDC:
         # Pre-render Mermaid blocks to SVG inline
         content = src.read_text(encoding="utf-8")
@@ -307,6 +321,9 @@ def copy_file(src: Path, dst: Path):
 
 def write(path: Path, content: str):
     ensure(path.parent)
+    # Incremental: skip if the generated content is identical to what's on disk
+    if _INCREMENTAL and path.exists() and path.read_text(encoding="utf-8") == content:
+        return
     path.write_text(content, encoding="utf-8")
     print(f"  write {path.relative_to(ROOT)}")
 
@@ -345,9 +362,18 @@ def build_reports(lang: str = "en"):
         fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
         other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
 
-        # Copy all md/html/other files
-        for f in md_files + html_files + other_files:
-            copy_file(f, dst_dir / f.name)
+        # EN: copy report files; ZH: skip copies — link to EN pages instead
+        if lang == "en":
+            for f in md_files + html_files + other_files:
+                copy_file(f, dst_dir / f.name)
+
+        # For ZH, links point to the EN pages (absolute site paths).
+        # For EN, links are relative (MkDocs resolves .md → directory URL).
+        def report_link(f: Path) -> str:
+            if lang == "zh":
+                # Absolute link → EN report page
+                return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
+            return f.name  # relative, resolved by MkDocs
 
         # Generate per-ticker index.md
         lines = [
@@ -366,7 +392,7 @@ def build_reports(lang: str = "en"):
             lines.append("")
             for f in fundamental_md:
                 label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({f.name})")
+                lines.append(f"- [{label}]({report_link(f)})")
             lines.append("")
 
         if technical_md:
@@ -374,7 +400,7 @@ def build_reports(lang: str = "en"):
             lines.append("")
             for f in technical_md:
                 label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({f.name})")
+                lines.append(f"- [{label}]({report_link(f)})")
             lines.append("")
 
         if other_md:
@@ -382,7 +408,7 @@ def build_reports(lang: str = "en"):
             lines.append("")
             for f in other_md:
                 label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({f.name})")
+                lines.append(f"- [{label}]({report_link(f)})")
             lines.append("")
 
         if html_files:
@@ -390,7 +416,10 @@ def build_reports(lang: str = "en"):
             lines.append("")
             for f in html_files:
                 label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({f.name}){{target=_blank}}")
+                if lang == "zh":
+                    lines.append(f"- [{label}]({SITE_BASE}/reports/{ticker}/{f.name}){{target=_blank}}")
+                else:
+                    lines.append(f"- [{label}]({f.name}){{target=_blank}}")
             lines.append("")
 
         write(dst_dir / "index.md", "\n".join(lines))
@@ -450,33 +479,41 @@ def build_reports(lang: str = "en"):
             f"**{t(lang, 'sector')}:** {meta['sector']}",
             "",
         ]
+        def top_link(f: Path) -> str:
+            if lang == "zh":
+                return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
+            return f"{ticker}/{f.name}"
+
         if fundamental_md:
             top_lines.append(f"**{t(lang, 'fundamental_analysis')}:**")
             top_lines.append("")
             for f in fundamental_md:
                 label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({ticker}/{f.name})")
+                top_lines.append(f"- [{label}]({top_link(f)})")
             top_lines.append("")
         if technical_md:
             top_lines.append(f"**{t(lang, 'technical_analysis')}:**")
             top_lines.append("")
             for f in technical_md:
                 label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({ticker}/{f.name})")
+                top_lines.append(f"- [{label}]({top_link(f)})")
             top_lines.append("")
         if other_md:
             top_lines.append(f"**{t(lang, 'other_reports')}:**")
             top_lines.append("")
             for f in other_md:
                 label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({ticker}/{f.name})")
+                top_lines.append(f"- [{label}]({top_link(f)})")
             top_lines.append("")
         if html_files:
             top_lines.append(f"**{t(lang, 'html_reports')}:**")
             top_lines.append("")
             for f in html_files:
                 label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [:material-open-in-new: {label}]({ticker}/{f.name}){{target=_blank .pdf-btn}}")
+                if lang == "zh":
+                    top_lines.append(f"- [:material-open-in-new: {label}]({SITE_BASE}/reports/{ticker}/{f.name}){{target=_blank .pdf-btn}}")
+                else:
+                    top_lines.append(f"- [:material-open-in-new: {label}]({ticker}/{f.name}){{target=_blank .pdf-btn}}")
             top_lines.append("")
 
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
@@ -512,19 +549,28 @@ def build_market_news(lang: str = "en"):
         news_files = []
 
         for md_file in md_files:
-            dst_file = dst_ticker_dir / md_file.name
-            copy_file(md_file, dst_file)
             # Extract date from filename: market_news_YYYY-MM-DD_openai.md
             parts = md_file.stem.split("_")  # ['market', 'news', 'YYYY-MM-DD', 'openai']
             date_str = parts[2] if len(parts) >= 3 else md_file.stem
-            news_files.append((date_str, dst_file.name))
+            if lang == "en":
+                dst_file = dst_ticker_dir / md_file.name
+                copy_file(md_file, dst_file)
+                news_files.append((date_str, dst_file.name, None))
+            else:
+                # ZH: link to EN page, no copy
+                en_url = f"{SITE_BASE}/market_news/{ticker}/{md_file.stem}/"
+                news_files.append((date_str, md_file.name, en_url))
 
         for date_dir in date_dirs:
             readme = date_dir / "README.md"
             if readme.exists():
-                dst_file = dst_ticker_dir / f"{date_dir.name}.md"
-                copy_file(readme, dst_file)
-                news_files.append((date_dir.name, dst_file.name))
+                if lang == "en":
+                    dst_file = dst_ticker_dir / f"{date_dir.name}.md"
+                    copy_file(readme, dst_file)
+                    news_files.append((date_dir.name, dst_file.name, None))
+                else:
+                    en_url = f"{SITE_BASE}/market_news/{ticker}/{date_dir.name}/"
+                    news_files.append((date_dir.name, f"{date_dir.name}.md", en_url))
 
         if not news_files:
             continue
@@ -542,8 +588,9 @@ def build_market_news(lang: str = "en"):
             f"| {t(lang, 'last_updated')} | {t(lang, 'reports')} |",
             "|------|--------|",
         ]
-        for date_str, filename in news_files:
-            lines.append(f"| {date_str} | [{date_str}]({filename}) |")
+        for date_str, filename, en_url in news_files:
+            link = en_url if en_url else filename
+            lines.append(f"| {date_str} | [{date_str}]({link}) |")
 
         write(dst_ticker_dir / "index.md", "\n".join(lines))
 
@@ -596,9 +643,18 @@ def build_notebooks(lang: str = "en"):
         txts  = sorted(ticker_dir.glob("*.txt"))
         mds   = sorted(ticker_dir.glob("*.md"))
 
-        # Copy everything (notebooks are few, manageable size)
-        for f in list(pdfs) + list(txts) + list(mds):
-            copy_file(f, dst_dir / f.name)
+        # EN: copy files; ZH: link to EN pages, no copy
+        if lang == "en":
+            for f in list(pdfs) + list(txts) + list(mds):
+                copy_file(f, dst_dir / f.name)
+
+        def nb_link(f: Path) -> str:
+            if lang == "zh":
+                # PDFs and non-md files keep the filename; md files use directory URL
+                if f.suffix == ".md":
+                    return f"{SITE_BASE}/notebooks/{ticker}/{f.stem}/"
+                return f"{SITE_BASE}/notebooks/{ticker}/{f.name}"
+            return f.name
 
         # Per-ticker index
         lines = [
@@ -615,7 +671,7 @@ def build_notebooks(lang: str = "en"):
             for f in pdfs:
                 size_kb = int(f.stat().st_size / 1024)
                 lines.append(
-                    f"- [:material-file-pdf-box: {f.stem}]({f.name}){{target=_blank}}  "
+                    f"- [:material-file-pdf-box: {f.stem}]({nb_link(f)}){{target=_blank}}  "
                     f"<small>({size_kb} KB)</small>"
                 )
             lines.append("")
@@ -623,7 +679,7 @@ def build_notebooks(lang: str = "en"):
         if txts or mds:
             lines += [f"## {t(lang, 'notes_outlines')}", ""]
             for f in list(txts) + list(mds):
-                lines.append(f"- [{f.stem}]({f.name})")
+                lines.append(f"- [{f.stem}]({nb_link(f)})")
             lines.append("")
 
         write(dst_dir / "index.md", "\n".join(lines))
@@ -1035,6 +1091,11 @@ def main():
     print(" Finance Hub — building docs/ (EN + ZH)")
     print(f"{'='*70}\n")
 
+    if _INCREMENTAL:
+        print("  ⚡ Incremental mode — only changed files will be written (pass --clean to force full rebuild)")
+    else:
+        print("  🧹 Full rebuild mode — cleaning previously generated directories")
+
     if _MMDC:
         print(f"  ⚡ mmdc found at {_MMDC} — Mermaid blocks will be pre-rendered to SVG")
         _load_mermaid_cache()
@@ -1042,13 +1103,14 @@ def main():
         print("  ℹ️  mmdc not found — Mermaid blocks will be rendered client-side")
         print("     Install with: npm install -g @mermaid-js/mermaid-cli")
 
-    # Clean previously generated dirs for both languages
-    for lang_dir in [DOCS, DOCS_ZH]:
-        for subdir in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
-            path = lang_dir / subdir
-            if path.exists():
-                shutil.rmtree(path)
-                print(f"  clean {path.relative_to(ROOT)}/")
+    # Clean previously generated dirs (full rebuild only)
+    if not _INCREMENTAL:
+        for lang_dir in [DOCS, DOCS_ZH]:
+            for subdir in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
+                path = lang_dir / subdir
+                if path.exists():
+                    shutil.rmtree(path)
+                    print(f"  clean {path.relative_to(ROOT)}/")
 
     # Build English version
     print(f"\n{'─'*70}")
