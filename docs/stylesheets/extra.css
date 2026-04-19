@@ -4,6 +4,13 @@
    Supports both light and dark modes
    ══════════════════════════════════════════════════════════════ */
 
+/* ── System font stack (replaces Google Fonts / Noto Sans TC network request) ── */
+:root {
+  --md-text-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+    "Hiragino Sans GB", "Microsoft JhengHei", sans-serif;
+  --md-code-font: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
 /* ── Dark mode variables (default) ── */
 [data-md-color-scheme="slate"] {
   --fp-bg: #09090b;
