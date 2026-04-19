@@ -34,10 +34,10 @@
 - [ ] Subset or swap **Noto Sans TC** to system CJK font stack to eliminate font blocking
 
 ### Medium effort (2–4 hrs each)
-- [ ] **Pre-render Mermaid to SVG** during `build_docs.py` so browser has no rendering work
-- [ ] **Extract inline CSS** from HTML reports into a shared stylesheet; minify during generation
-- [ ] Refactor `mathjax.js` → only typeset newly inserted nodes, not full-page clear+re-render on each navigation
-- [ ] Switch `clickable-rows.js` to **event delegation** (one listener on `<table>`, not N on rows)
+- [x] **Pre-render Mermaid to SVG** during `build_docs.py` — implemented in `build_docs.py`; activate by installing `npm install -g @mermaid-js/mermaid-cli` (renders + caches to `.mermaid_cache.json`)
+- [ ] **Extract inline CSS** from HTML reports into a shared stylesheet; minify during generation (low priority — only 8 legacy HTML files)
+- [x] Refactor `mathjax.js` — N/A: MathJax fully removed (zero math usage confirmed)
+- [x] Switch `clickable-rows.js` to **event delegation** — done: one listener on `document`, walks up to `<tr>`
 
 ### Architectural (4–8 hrs each)
 - [ ] **Single-source bilingual** — one `docs/` dir with language routing instead of duplicating all content into `docs/zh/`

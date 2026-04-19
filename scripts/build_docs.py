@@ -19,10 +19,14 @@ Run in CI:     automatically called before `mkdocs build`
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import re
 import shutil
+import subprocess
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -193,6 +197,74 @@ def get_meta(ticker: str) -> dict:
     })
 
 
+# ── Mermaid pre-rendering ─────────────────────────────────────────────────────
+_MMDC = shutil.which("mmdc")  # None if not installed
+_MERMAID_CACHE_FILE = ROOT / ".mermaid_cache.json"
+_mermaid_cache: dict[str, str] = {}
+
+
+def _load_mermaid_cache():
+    global _mermaid_cache
+    if _MERMAID_CACHE_FILE.exists():
+        try:
+            _mermaid_cache = json.loads(_MERMAID_CACHE_FILE.read_text())
+        except Exception:
+            _mermaid_cache = {}
+
+
+def _save_mermaid_cache():
+    _MERMAID_CACHE_FILE.write_text(json.dumps(_mermaid_cache, indent=2))
+
+
+def _render_mermaid_block(diagram: str) -> str | None:
+    """Render a Mermaid diagram string to an SVG string via mmdc.
+    Returns the SVG string, or None on failure."""
+    key = hashlib.md5(diagram.encode()).hexdigest()
+    if key in _mermaid_cache:
+        return _mermaid_cache[key]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "diagram.mmd"
+        dst = Path(tmpdir) / "diagram.svg"
+        src.write_text(diagram, encoding="utf-8")
+        result = subprocess.run(
+            [_MMDC, "-i", str(src), "-o", str(dst),
+             "--backgroundColor", "transparent",
+             "--theme", "dark"],
+            capture_output=True, timeout=30,
+        )
+        if result.returncode != 0 or not dst.exists():
+            return None
+        svg = dst.read_text(encoding="utf-8")
+        # Strip XML declaration and DOCTYPE if present
+        svg = re.sub(r"<\?xml[^>]*\?>\s*", "", svg)
+        svg = re.sub(r"<!DOCTYPE[^>]*>\s*", "", svg)
+        _mermaid_cache[key] = svg
+        return svg
+
+
+_MERMAID_FENCE_RE = re.compile(
+    r"```mermaid\n(.*?)```",
+    re.DOTALL,
+)
+
+
+def prerender_mermaid(content: str) -> str:
+    """Replace ```mermaid blocks with inline SVG if mmdc is available.
+    Falls back to leaving the block unchanged if rendering fails."""
+    if not _MMDC:
+        return content
+
+    def _replace(m: re.Match) -> str:
+        diagram = m.group(1).strip()
+        svg = _render_mermaid_block(diagram)
+        if svg:
+            return f'<div class="mermaid-svg">\n{svg}\n</div>'
+        return m.group(0)  # fallback: keep original
+
+    return _MERMAID_FENCE_RE.sub(_replace, content)
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def t(lang: str, key: str) -> str:
     """Get translated text for the given language and key."""
@@ -222,8 +294,15 @@ def slugify(text: str) -> str:
 
 def copy_file(src: Path, dst: Path):
     ensure(dst.parent)
-    shutil.copy2(src, dst)
-    print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}")
+    if src.suffix == ".md" and _MMDC:
+        # Pre-render Mermaid blocks to SVG inline
+        content = src.read_text(encoding="utf-8")
+        rendered = prerender_mermaid(content)
+        dst.write_text(rendered, encoding="utf-8")
+        print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}  (mermaid rendered)")
+    else:
+        shutil.copy2(src, dst)
+        print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}")
 
 
 def write(path: Path, content: str):
@@ -956,6 +1035,13 @@ def main():
     print(" Finance Hub — building docs/ (EN + ZH)")
     print(f"{'='*70}\n")
 
+    if _MMDC:
+        print(f"  ⚡ mmdc found at {_MMDC} — Mermaid blocks will be pre-rendered to SVG")
+        _load_mermaid_cache()
+    else:
+        print("  ℹ️  mmdc not found — Mermaid blocks will be rendered client-side")
+        print("     Install with: npm install -g @mermaid-js/mermaid-cli")
+
     # Clean previously generated dirs for both languages
     for lang_dir in [DOCS, DOCS_ZH]:
         for subdir in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
@@ -1023,6 +1109,10 @@ def main():
     print("\n[ZH 8/8] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="zh")
     build_abbreviations(lang="zh")
+
+    if _MMDC:
+        _save_mermaid_cache()
+        print(f"  Mermaid cache saved → {_MERMAID_CACHE_FILE.relative_to(ROOT)}")
 
     print(f"\n{'='*70}")
     print(" ✅  docs/ generated successfully (EN + ZH)")
