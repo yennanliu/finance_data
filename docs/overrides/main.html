@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 
+{% block htmltitle %}
+  {{ super() }}
+{% endblock %}
+
+{% block extrahead %}
+  <!--
+    Mobile reading improvements:
+    1. Viewport allows pinch-to-zoom (no user-scalable=no) for accessibility.
+    2. iOS search input font-size fix: inputs <16px trigger auto-zoom on iOS;
+       the inline style below ensures the search box stays at 16px.
+  -->
+  <style>
+    /* Prevent iOS Safari from auto-zooming when tapping the search box */
+    @media (max-width: 768px) {
+      .md-search__input {
+        font-size: 16px !important;
+      }
+    }
+  </style>
+{% endblock %}
+
 {% block header %}
   {{ super() }}
 {% endblock %}
