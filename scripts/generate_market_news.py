@@ -341,6 +341,7 @@ def generate_report(
     model: str,
     max_tokens: int,
     output_dir: Path,
+    output_filename: str | None = None,
 ) -> None:
     print(f"[1/4] Fetching ticker info for {ticker}…")
     info = fetch_ticker_info(ticker)
@@ -382,7 +383,8 @@ def generate_report(
     )
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = output_dir / "README.md"
+    filename = output_filename or f"market_news_{today}_{provider}.md"
+    output_file = output_dir / filename
     output_file.write_text(front_matter + report_body, encoding="utf-8")
 
     print(f"[4/4] Report saved → {output_file}")
@@ -430,7 +432,7 @@ def main() -> None:
         else Path(f"ai_gen_report/market_news/{ticker.lower()}")
     )
 
-    generate_report(ticker, args.provider, args.model, args.max_tokens, output_dir)
+    generate_report(ticker, args.provider, args.model, args.max_tokens, output_dir, args.output_file)
 
 
 if __name__ == "__main__":
