@@ -19,6 +19,35 @@ document.addEventListener('click', function(e) {
 
   var link = target.querySelector('a');
   if (link) {
-    window.location.href = link.href;
+    // Use link.click() instead of window.location.href so MkDocs Material's
+    // instant navigation (SPA router) handles the transition — avoids a full
+    // hard page reload (which appears as an "auto refresh" on iOS Safari).
+    link.click();
   }
 });
+
+// ── iOS pull-to-refresh prevention ──────────────────────────────────────────
+// CSS `overscroll-behavior-y: none` is unreliable on iOS Safari (<16) and
+// some Android WebViews. This JS approach works cross-platform:
+// when the page is already scrolled to the top and the user pulls DOWN,
+// preventDefault() cancels the native refresh gesture.
+(function () {
+  var touchStartY = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (e) {
+    var scrollTop =
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+    var touchY = e.touches[0].clientY;
+
+    // Only block when already at the top AND pulling downward
+    if (scrollTop === 0 && touchY > touchStartY) {
+      e.preventDefault();
+    }
+  }, { passive: false }); // passive: false required to allow preventDefault()
+})();
