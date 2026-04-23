@@ -784,6 +784,15 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   Mobile — Prevent pull-to-refresh auto-reload
+   ══════════════════════════════════════════════════════════════ */
+html {
+  /* Prevents the iOS/Android pull-to-refresh gesture from reloading
+     the page while still allowing normal vertical scrolling. */
+  overscroll-behavior-y: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1120px) {
@@ -815,4 +824,56 @@
   .fp-section { padding: 2.5rem 0; }
   .fp-section-title { font-size: 1.4rem; }
   .fp-stats-grid { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Mobile — Reading scale & typography
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Body text: 16px minimum prevents iOS auto-zoom on tap,
+     and is the recommended readable size for mobile. */
+  .md-typeset {
+    font-size: 1rem;        /* 16px */
+    line-height: 1.8;
+  }
+
+  /* Headings — scale down proportionally */
+  .md-typeset h1 { font-size: 1.6rem; }
+  .md-typeset h2 { font-size: 1.3rem; }
+  .md-typeset h3 { font-size: 1.1rem; }
+
+  /* Tables — bump font size and enable horizontal scroll */
+  .md-typeset table:not([class]) {
+    font-size: 0.9rem;      /* was 0.85rem — more legible on mobile */
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .md-typeset table:not([class]) th {
+    font-size: 0.8rem;      /* was 0.75rem */
+    white-space: nowrap;
+  }
+
+  /* Wider tap targets for table rows */
+  .md-typeset table tbody tr td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  /* Navigation sidebar — larger touch targets */
+  .md-nav__item .md-nav__link {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  /* Code blocks */
+  .md-typeset code {
+    font-size: 0.85rem;
+  }
+
+  /* Admonition text */
+  .md-typeset .admonition,
+  .md-typeset details {
+    font-size: 0.95rem;
+  }
 }
