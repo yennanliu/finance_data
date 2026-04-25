@@ -143,6 +143,7 @@ finance_data/
 - **SEC Filings:** [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar)
 - **AI Analysis:** [Claude AI](https://www.anthropic.com/) by Anthropic
 - **Annual Reports:** [annualreports.com](https://www.annualreports.com/)
+- **Google Finance - 10K Reports:** [Google Finance](https://www.google.com/finance/beta/quote/PLTR:NASDAQ?hl=en&tab=earnings)
 
 ---
 
