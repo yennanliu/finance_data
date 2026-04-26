@@ -165,21 +165,14 @@ def _ar_slug_via_search(ticker: str) -> Optional[str]:
 
 def annualreports_pdf(company_name: str, ticker: str, report_date: str, out_dir: Path) -> Optional[Path]:
     """Try to download a PDF from annualreports.com for the given report date."""
-    year  = report_date[:4]
-    month = report_date[5:7] if len(report_date) >= 7 else "12"
+    target_year = report_date[:4]
+    month       = report_date[5:7] if len(report_date) >= 7 else "12"
 
     slug = _ar_slug_via_search(ticker)
     if not slug:
         print(f"  [skip] annualreports.com: could not find slug for {ticker}")
         return None
     url = f"https://www.annualreports.com/Company/{slug}"
-
-    filename = f"{ticker}_{year}_{month}.pdf"
-    filepath = out_dir / filename
-
-    if filepath.exists():
-        print(f"  ⊘ Already exists: {filepath.name}")
-        return filepath
 
     try:
         time.sleep(1)
@@ -190,30 +183,38 @@ def annualreports_pdf(company_name: str, ticker: str, report_date: str, out_dir:
         r.raise_for_status()
         soup = BeautifulSoup(r.text, "html.parser")
 
-        # Find PDF link matching the year; fall back to most recent available
-        pdf_url = None
-        all_pdfs = []
+        # Collect all available PDFs (deduplicated)
+        seen, all_pdfs = set(), []
         for a in soup.find_all("a", href=True):
             href = a["href"]
-            if "HostedData/AnnualReportArchive" in href and href.endswith(".pdf"):
+            if "HostedData/AnnualReportArchive" in href and href.endswith(".pdf") and href not in seen:
+                seen.add(href)
                 full = f"https://www.annualreports.com{href}" if href.startswith("/") else href
                 m = re.search(r"_(\d{4})\.pdf", href)
                 if m:
                     all_pdfs.append((m.group(1), full))
 
         all_pdfs.sort(key=lambda x: x[0], reverse=True)  # newest first
+
+        pdf_url, actual_year = None, None
         for yr, u in all_pdfs:
-            if yr == year:
-                pdf_url = u
+            if yr == target_year:
+                pdf_url, actual_year = u, yr
                 break
-        # If exact year not found, use latest available
         if not pdf_url and all_pdfs:
-            latest_yr, pdf_url = all_pdfs[0]
-            print(f"  [info] Year {year} not found; using latest available: {latest_yr}")
+            actual_year, pdf_url = all_pdfs[0]
+            print(f"  [info] Year {target_year} not found; using latest available: {actual_year}")
 
         if not pdf_url:
             print(f"  [skip] annualreports.com: no PDFs found at all")
             return None
+
+        # Filename uses the year from the actual PDF, not the SEC report date
+        filename = f"{ticker}_{actual_year}_{month}.pdf"
+        filepath = out_dir / filename
+        if filepath.exists():
+            print(f"  ⊘ Already exists: {filepath.name}")
+            return filepath
 
         print(f"  Downloading PDF: {pdf_url}")
         time.sleep(1.5)
