@@ -1,0 +1,84 @@
+name: Daily Stock Watchlist
+
+on:
+  schedule:
+    - cron: "0 22 * * *"   # 22:00 UTC → 06:00 UTC+8 (before market open)
+
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "OpenAI model"
+        required: false
+        default: "gpt-4o"
+        type: choice
+        options:
+          - gpt-4o
+          - gpt-4o-mini
+      max_tokens:
+        description: "Max output tokens"
+        required: false
+        default: "8000"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "daily-stock-watchlist-${{ github.run_id }}"
+  cancel-in-progress: false
+
+jobs:
+  generate-watchlist:
+    name: Generate Fundamental Stock Watchlist
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install openai>=1.0.0
+
+      - name: Check API key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::OPEN_KEY_API secret is not set."
+            exit 1
+          fi
+          echo "✅ OPEN_KEY_API is set."
+
+      - name: Generate watchlist
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+        run: |
+          MODEL="${{ github.event.inputs.model || 'gpt-4o' }}"
+          MAX_TOKENS="${{ github.event.inputs.max_tokens || '8000' }}"
+          python scripts/generate_stock_watchlist.py \
+            --model "$MODEL" \
+            --max-tokens "$MAX_TOKENS"
+
+      - name: Commit and push watchlist
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ws/
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            DATE=$(date -u +"%Y-%m-%d")
+            git commit -m "chore: auto-generate stock watchlist ${DATE}"
+            git pull --rebase origin main
+            git push
+            echo "✅ Watchlist committed and pushed."
+          fi
