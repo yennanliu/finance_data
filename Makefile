@@ -53,3 +53,14 @@ html-report: ## Generate interactive HTML report — e.g. make html-report TICKE
 .PHONY: deep-dive
 deep-dive: ## All 4 new analysis types for a single stock — e.g. make deep-dive TICKERS="NVDA"
 	$(TRIGGER) $(TICKERS) --types earnings-call-analysis,insider-trading,institutional-ownership,report-generator
+
+## ── Stock watchlist ──────────────────────────────────────────────────────────
+WATCHLIST_MODEL     ?= gpt-4o
+WATCHLIST_TOKENS    ?= 8000
+
+.PHONY: watchlist
+watchlist: ## Trigger daily fundamental stock watchlist — e.g. make watchlist
+	$(GH) workflow run daily_stock_watchlist.yml \
+	  --repo $(GH_REPO) \
+	  -f model=$(WATCHLIST_MODEL) \
+	  -f max_tokens=$(WATCHLIST_TOKENS)
