@@ -44,7 +44,6 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add script directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis import (
@@ -68,11 +67,9 @@ def save_report(ticker: str, content: str, output_dir: Path,
     label = meta["label"]
     ext = meta.get("ext", ".md")
 
-    # Map provider to simple suffix
     model_suffix = "openai" if provider == "openai" else "claude"
     base = f"{prefix}_{TODAY}_{model_suffix}"
 
-    # Same-day deduplication: base.ext → base-2.ext → base-3.ext …
     path = output_dir / f"{base}{ext}"
     counter = 2
     while path.exists():
@@ -80,10 +77,8 @@ def save_report(ticker: str, content: str, output_dir: Path,
         counter += 1
 
     if ext == ".html":
-        # HTML output: write as-is
         path.write_text(content, encoding="utf-8")
     else:
-        # Markdown: prepend YAML frontmatter
         generated_by = "OpenAI API" if provider == "openai" else "Claude AI"
         frontmatter = (
             "---\n"
@@ -151,7 +146,6 @@ def main() -> None:
     data = fetch_data(ticker)
     context = build_context(data, analysis_type)
 
-    # Generate interactive candlestick chart for technical analysis (before LLM call for efficiency)
     chart_embed = ""
     if analysis_type == "technical-analysis" and data.get("hist") is not None:
         print("  Generating interactive candlestick chart with MA30/60/200 …")
@@ -160,7 +154,6 @@ def main() -> None:
             png_filename = chart_result.get("png_filename", "")
             plotly_html = chart_result.get("plotly_html", "")
 
-            # Create collapsible PNG section with Plotly interactive chart below
             if png_filename:
                 chart_embed = (
                     f'<details>\n'
