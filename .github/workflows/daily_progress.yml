@@ -1,0 +1,70 @@
+name: Daily Progress Summary
+
+# Runs after all cron jobs finish (last job ends ~00:20 UTC)
+on:
+  schedule:
+    - cron: "40 0 * * *"   # 00:40 UTC = 08:40 Taipei
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    name: Generate Progress Summary
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate progress file
+        run: |
+          DATE=$(date -u +"%Y-%m-%d")
+          YYYYMMDD=$(date -u +"%Y%m%d")
+          BASE_URL="https://yennanliu.github.io/finance_data/reports"
+          OUT="progress/progress_${YYYYMMDD}.txt"
+
+          mkdir -p progress
+
+          {
+            echo "Daily Report Summary — ${DATE}"
+            echo "Generated: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            echo "========================================"
+            echo ""
+
+            # Find all report files created/modified today
+            COUNT=0
+            while IFS= read -r -d '' FILE; do
+              # e.g. ai_gen_report/stock/nvda/technical-analysis_2026-05-03.md
+              TICKER=$(echo "$FILE" | sed 's|ai_gen_report/stock/||; s|/.*||')
+              FILENAME=$(basename "$FILE" .md)
+              URL="${BASE_URL}/${TICKER}/${FILENAME}/"
+              echo "- [${TICKER^^} ${FILENAME}](${URL})"
+              COUNT=$((COUNT + 1))
+            done < <(find ai_gen_report/stock -name "*_${DATE}.md" -print0 | sort -z)
+
+            echo ""
+            echo "Total: ${COUNT} report(s)"
+          } > "$OUT"
+
+          cat "$OUT"
+
+      - name: Commit and push progress file
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git pull --rebase origin main
+          git add progress/
+
+          if git diff --cached --quiet; then
+            echo "No new reports today."
+          else
+            DATE=$(date -u +"%Y-%m-%d")
+            git commit -m "chore: daily progress summary ${DATE}"
+            git push
+            echo "✅ Progress file committed."
+          fi
