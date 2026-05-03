@@ -14,6 +14,7 @@ import os
 import re
 import sys
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -23,7 +24,14 @@ import yfinance as yf
 
 DEFAULT_PROVIDER = "claude"
 DEFAULT_MODEL = "claude-sonnet-4-6"
-DEFAULT_TOKENS = 12000  # Increased to allow more comprehensive market news analysis (OpenAI gpt-4o max: 12000)
+DEFAULT_TOKENS = 12000
+
+_OPENAI_MAX_TOKENS: dict[str, int] = {
+    "gpt-4o": 16384,
+    "gpt-4o-mini": 16384,
+    "gpt-4-turbo": 4096,
+    "gpt-4": 8192,
+}
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -90,28 +98,28 @@ def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEE
     return items
 
 
-def fetch_news(ticker: str) -> list[dict]:
+def fetch_news(ticker: str, ticker_obj: yf.Ticker | None = None) -> list[dict]:
     """Collect news from yfinance + keyword-searched RSS feeds, deduplicate, and return."""
     source_counts: dict[str, int] = {}
 
-    # 1. Yahoo Finance
     yf_items: list[dict] = []
     try:
-        t = yf.Ticker(ticker)
+        t = ticker_obj or yf.Ticker(ticker)
         yf_items = t.news or []
         source_counts["yfinance"] = len(yf_items)
     except Exception as exc:
         print(f"  [WARN] yfinance news fetch failed: {exc}", file=sys.stderr)
         source_counts["yfinance"] = 0
 
-    # 2. RSS feeds — keyword search per ticker, top 5 from each
     rss_items: list[dict] = []
-    for name, url in RSS_FEEDS:
-        batch = _fetch_rss(url, name, ticker)
-        source_counts[name] = len(batch)
-        rss_items.extend(batch)
+    with ThreadPoolExecutor(max_workers=len(RSS_FEEDS)) as pool:
+        futures = {pool.submit(_fetch_rss, url, name, ticker): name for name, url in RSS_FEEDS}
+        for fut in as_completed(futures):
+            name = futures[fut]
+            batch = fut.result()
+            source_counts[name] = len(batch)
+            rss_items.extend(batch)
 
-    # Log per-source counts
     parts = [f"{src}: {n}" for src, n in source_counts.items()]
     print(f"      Sources → {', '.join(parts)}")
 
@@ -130,10 +138,10 @@ def fetch_news(ticker: str) -> list[dict]:
     return unique
 
 
-def fetch_ticker_info(ticker: str) -> dict:
+def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
     """Return basic info dict (price, sector, name…) from yfinance."""
     try:
-        t = yf.Ticker(ticker)
+        t = ticker_obj or yf.Ticker(ticker)
         info = t.info or {}
         return {
             "name": info.get("longName") or info.get("shortName", ticker),
@@ -149,19 +157,9 @@ def fetch_ticker_info(ticker: str) -> dict:
 
 
 def format_news_block(news_items: list[dict]) -> str:
-    """Convert yfinance news list to a readable text block for the prompt."""
+    """Convert news list to a readable text block for the prompt."""
     lines = []
-    # Filter out items with empty/missing critical fields
-    valid_items = [
-        item for item in news_items
-        if item.get("title") and item.get("title").strip()
-    ]
-
-    # If no valid items found, try using all items even if incomplete
-    if not valid_items:
-        valid_items = news_items
-
-    for i, item in enumerate(valid_items[:25], 1):
+    for i, item in enumerate(news_items[:25], 1):
         title = (item.get("title") or "").strip() or f"《未命名新聞 #{i}》"
         publisher = (item.get("publisher") or "").strip() or "未知來源"
         pub_ts = item.get("providerPublishTime", 0)
@@ -285,20 +283,10 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
         print("ERROR: OPENAI_API_KEY is not set.", file=sys.stderr)
         sys.exit(1)
 
-    # OpenAI models have different max token limits - use optimized values for market news
-    # gpt-4o & gpt-4o-mini: 128k context window, can support higher output limits
-    openai_max_tokens = {
-        "gpt-4o": 12000,         # Generous limit for detailed market news analysis
-        "gpt-4o-mini": 10000,    # Good limit for comprehensive analysis
-        "gpt-4-turbo": 4096,     # Hard limit for this older model
-        "gpt-4": 8192,           # Standard limit for older model
-    }
-    model_max = openai_max_tokens.get(model, 12000)
-    effective_max_tokens = min(max_tokens, model_max)
+    effective_max_tokens = min(max_tokens, _OPENAI_MAX_TOKENS.get(model, 16384))
     if effective_max_tokens != max_tokens:
         print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
 
-    # System message to improve output quality (matching Claude's detailed style)
     system_message = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
 
 你的分析必須遵循以下原則：
@@ -336,13 +324,8 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
     )
     text = response.choices[0].message.content
     usage = response.usage
-    total_tokens = usage.prompt_tokens + usage.completion_tokens
-    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}  total={total_tokens}"
-          f"  chars={len(text)}")
-
-    # Log if we're under-utilizing available tokens
-    if usage.completion_tokens < effective_max_tokens * 0.6:
-        print(f"  ℹ️  Token usage is {usage.completion_tokens}/{effective_max_tokens} ({100*usage.completion_tokens//effective_max_tokens}%) - report could be more detailed")
+    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}"
+          f"  total={usage.prompt_tokens + usage.completion_tokens}  chars={len(text)}")
     return text
 
 
@@ -355,13 +338,13 @@ def generate_report(
     output_filename: str | None = None,
 ) -> None:
     print(f"[1/4] Fetching ticker info for {ticker}…")
-    info = fetch_ticker_info(ticker)
+    ticker_obj = yf.Ticker(ticker)
+    info = fetch_ticker_info(ticker, ticker_obj)
 
     print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds)…")
-    news_items = fetch_news(ticker)
+    news_items = fetch_news(ticker, ticker_obj)
     print(f"      Found {len(news_items)} news items (from yfinance + RSS feeds).")
 
-    # Debug: Check data quality
     if news_items:
         valid_titles = sum(1 for item in news_items if item.get("title", "").strip())
         valid_publishers = sum(1 for item in news_items if item.get("publisher", "").strip())
@@ -370,7 +353,7 @@ def generate_report(
             print("[WARN] Less than 50% of news items have titles - data may be incomplete from yfinance")
 
     if not news_items:
-        print("[WARN] No news returned by yfinance. Report will note data unavailability.")
+        print("[WARN] No news found. Report will note data unavailability.")
 
     news_block = format_news_block(news_items) if news_items else "（目前無可用新聞資料）"
     prompt = build_prompt(ticker, info, news_block)
@@ -381,7 +364,6 @@ def generate_report(
     else:
         report_body = call_claude(prompt, model, max_tokens)
 
-    # YAML front-matter
     today = date.today().isoformat()
     front_matter = (
         "---\n"
