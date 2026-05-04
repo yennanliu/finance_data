@@ -82,7 +82,6 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git pull --rebase origin main
           git add progress/
 
           if git diff --cached --quiet; then
@@ -90,6 +89,11 @@ jobs:
           else
             DATE=$(date -u +"%Y-%m-%d")
             git commit -m "chore: daily progress summary ${DATE}"
+
+            echo "📥 Pulling latest changes from remote..."
+            git pull --rebase origin main
+
+            echo "📤 Pushing changes to remote..."
             git push
             echo "✅ Progress file committed."
           fi
