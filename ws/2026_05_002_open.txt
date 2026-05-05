@@ -1,0 +1,517 @@
+Generated: 2026-05-05 22:58 UTC
+Model: gpt-4o
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: SWAV
+Company: ShockWave Medical, Inc.
+Sector: Healthcare
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 35%
+  - EPS Growth (forward): 40%
+  - P/E (fwd): 30x  |  PEG: 0.75
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  ShockWave Medical is a leader in intravascular lithotripsy technology, which is revolutionizing the treatment of calcified cardiovascular disease. The company's proprietary technology provides a significant competitive advantage in a growing market driven by an aging population and increasing prevalence of cardiovascular conditions.
+Key Risk:
+  Regulatory hurdles and competition from alternative technologies could impact growth prospects.
+
+---
+Rank: 2
+Ticker: INMD
+Company: InMode Ltd.
+Sector: Healthcare
+Market Cap: ~$4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 18x  |  PEG: 0.6
+  - Debt/Equity: 0
+  - FCF Yield: 5%
+Investment Thesis:
+  InMode specializes in minimally invasive aesthetic medical treatments, benefiting from strong demand for cosmetic procedures. Its innovative radio-frequency technology offers a competitive edge, with a broad product portfolio catering to a growing consumer base.
+Key Risk:
+  Economic downturns could reduce discretionary spending on aesthetic treatments.
+
+---
+Rank: 3
+Ticker: TPL
+Company: Texas Pacific Land Corporation
+Sector: Energy
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 22x  |  PEG: 0.88
+  - Debt/Equity: 0
+  - FCF Yield: 4%
+Investment Thesis:
+  Texas Pacific Land Corporation holds vast land resources in Texas, benefiting from oil and gas royalties. Its asset-light model and exposure to energy price recovery provide a unique moat, with potential upside from renewable energy projects.
+Key Risk:
+  Volatility in oil prices could impact revenue from royalties.
+
+---
+Rank: 4
+Ticker: AMBA
+Company: Ambarella, Inc.
+Sector: Technology
+Market Cap: ~$3B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 25x  |  PEG: 1.14
+  - Debt/Equity: 0.05
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Ambarella focuses on AI vision processors, essential for autonomous vehicles and security systems. Its cutting-edge technology and partnerships with major automotive and tech companies provide a strong growth trajectory.
+Key Risk:
+  Intense competition in the semiconductor space could pressure margins.
+
+---
+Rank: 5
+Ticker: IIPR
+Company: Innovative Industrial Properties, Inc.
+Sector: Real Estate
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 30%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 20x  |  PEG: 0.71
+  - Debt/Equity: 0.13
+  - FCF Yield: 6%
+Investment Thesis:
+  As a REIT focused on the cannabis industry, Innovative Industrial Properties benefits from the growing legalization trend. Its sale-leaseback model offers a stable revenue stream and capitalizes on the expanding cannabis market.
+Key Risk:
+  Changes in cannabis regulation could impact tenant demand and rental income.
+
+---
+Rank: 6
+Ticker: SMCI
+Company: Super Micro Computer, Inc.
+Sector: Technology
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 24%
+  - P/E (fwd): 17x  |  PEG: 0.71
+  - Debt/Equity: 0.2
+  - FCF Yield: 4%
+Investment Thesis:
+  Super Micro Computer designs high-performance computing solutions, benefiting from the surge in data center demand and AI workloads. Its focus on energy-efficient systems provides a competitive advantage in a rapidly growing market.
+Key Risk:
+  Supply chain disruptions could affect production and delivery timelines.
+
+---
+Rank: 7
+Ticker: FND
+Company: Floor & Decor Holdings, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  Floor & Decor is a leading specialty retailer in the hard surface flooring market, benefiting from home renovation trends. Its extensive product selection and competitive pricing create a strong moat in a fragmented industry.
+Key Risk:
+  A slowdown in housing and renovation markets could impact sales growth.
+
+---
+Rank: 8
+Ticker: CRWD
+Company: CrowdStrike Holdings, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 35%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 35x  |  PEG: 1.17
+  - Debt/Equity: 0.3
+  - FCF Yield: 2%
+Investment Thesis:
+  CrowdStrike is a leader in cloud-native cybersecurity, capitalizing on the increasing need for robust digital protection. Its Falcon platform offers scalable solutions with a growing customer base across various industries.
+Key Risk:
+  Intense competition in the cybersecurity space could pressure pricing and margins.
+
+---
+Rank: 9
+Ticker: ALGM
+Company: Allegro MicroSystems, Inc.
+Sector: Technology
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 24x  |  PEG: 1.09
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Allegro MicroSystems specializes in sensor solutions for automotive and industrial applications, benefiting from the electrification and automation trends. Its innovative products and strategic partnerships provide a strong competitive position.
+Key Risk:
+  Dependence on the automotive sector exposes it to cyclical downturns.
+
+---
+Rank: 10
+Ticker: TOST
+Company: Toast, Inc.
+Sector: Technology
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 40%
+  - EPS Growth (forward): 35%
+  - P/E (fwd): 32x  |  PEG: 0.91
+  - Debt/Equity: 0.15
+  - FCF Yield: 2%
+Investment Thesis:
+  Toast provides cloud-based restaurant management software, benefiting from digital transformation in the hospitality industry. Its comprehensive platform and strong customer retention create a robust growth pathway.
+Key Risk:
+  Economic slowdowns could reduce restaurant spending on technology upgrades.
+
+---
+Rank: 11
+Ticker: ENPH
+Company: Enphase Energy, Inc.
+Sector: Energy
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 28%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 30x  |  PEG: 1
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Enphase Energy is a leader in solar microinverter technology, capitalizing on the global shift towards renewable energy. Its innovative solutions and strong market presence provide a competitive edge in the growing solar industry.
+Key Risk:
+  Changes in government incentives for solar energy could impact growth.
+
+---
+Rank: 12
+Ticker: BLDR
+Company: Builders FirstSource, Inc.
+Sector: Industrials
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 14x  |  PEG: 0.78
+  - Debt/Equity: 0.5
+  - FCF Yield: 4%
+Investment Thesis:
+  Builders FirstSource is a leading supplier of building materials, benefiting from residential construction and renovation trends. Its extensive distribution network and value-added services provide a strong competitive position.
+Key Risk:
+  A downturn in the housing market could negatively affect sales and profitability.
+
+---
+Rank: 13
+Ticker: NEWR
+Company: New Relic, Inc.
+Sector: Technology
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 27x  |  PEG: 1.08
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis:
+  New Relic provides observability solutions for software developers, benefiting from the increasing complexity of IT environments. Its platform's ability to monitor and improve application performance creates a strong growth trajectory.
+Key Risk:
+  Competition from larger tech companies could pressure market share and pricing.
+
+---
+Rank: 14
+Ticker: SI
+Company: Silvergate Capital Corporation
+Sector: Financials
+Market Cap: ~$2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 18x  |  PEG: 0.64
+  - Debt/Equity: 0.2
+  - FCF Yield: 5%
+Investment Thesis:
+  Silvergate Capital is a leading provider of financial infrastructure for the digital currency industry, benefiting from the growth of cryptocurrency adoption. Its Silvergate Exchange Network offers a competitive advantage in a niche market.
+Key Risk:
+  Regulatory changes in the cryptocurrency space could impact operations and growth.
+
+---
+Rank: 15
+Ticker: RGEN
+Company: Repligen Corporation
+Sector: Healthcare
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 24%
+  - P/E (fwd): 32x  |  PEG: 1.33
+  - Debt/Equity: 0.05
+  - FCF Yield: 3%
+Investment Thesis:
+  Repligen provides bioprocessing technologies, benefiting from the growing demand for biologics and gene therapies. Its innovative products and strategic partnerships position it well in a rapidly expanding market.
+Key Risk:
+  Dependence on a few large customers could impact revenue stability.
+
+---
+Rank: 16
+Ticker: FSLR
+Company: First Solar, Inc.
+Sector: Energy
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 25x  |  PEG: 1.25
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  First Solar is a leader in photovoltaic solar energy solutions, benefiting from the global transition to renewable energy. Its advanced thin-film technology and strong manufacturing capabilities provide a competitive edge.
+Key Risk:
+  Fluctuations in raw material prices could impact production costs and margins.
+
+---
+Rank: 17
+Ticker: PLNT
+Company: Planet Fitness, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.36
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  Planet Fitness is a leading fitness center operator, benefiting from the growing focus on health and wellness. Its affordable pricing model and strong brand recognition provide a competitive moat in a fragmented industry.
+Key Risk:
+  Economic downturns could reduce consumer spending on gym memberships.
+
+---
+Rank: 18
+Ticker: NVCR
+Company: NovoCure Limited
+Sector: Healthcare
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 35x  |  PEG: 1.25
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  NovoCure develops tumor treating fields technology, offering a novel approach to cancer treatment. Its innovative therapy and expanding clinical applications provide a strong growth trajectory in the oncology market.
+Key Risk:
+  Clinical trial setbacks or regulatory challenges could impact growth prospects.
+
+---
+Rank: 19
+Ticker: DOCU
+Company: DocuSign, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.3
+  - FCF Yield: 3%
+Investment Thesis:
+  DocuSign is a leader in electronic signature and agreement cloud solutions, benefiting from the digital transformation of business processes. Its comprehensive platform and strong customer base provide a competitive advantage.
+Key Risk:
+  Increased competition and pricing pressure could impact market share and margins.
+
+---
+Rank: 20
+Ticker: NET
+Company: Cloudflare, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 30%
+  - EPS Growth (forward): 32%
+  - P/E (fwd): 40x  |  PEG: 1.25
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Cloudflare provides a suite of cloud-based network services, benefiting from the growing demand for internet security and performance optimization. Its global network and innovative technology offer a strong competitive position.
+Key Risk:
+  High valuation and competition from larger tech companies could impact growth.
+
+---
+Rank: 21
+Ticker: APPN
+Company: Appian Corporation
+Sector: Technology
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 30x  |  PEG: 1.2
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Appian provides a low-code automation platform, benefiting from the increasing need for digital transformation and process automation. Its user-friendly solutions and strong customer base create a robust growth pathway.
+Key Risk:
+  Competition from larger enterprise software providers could pressure market share.
+
+---
+Rank: 22
+Ticker: HIMS
+Company: Hims & Hers Health, Inc.
+Sector: Healthcare
+Market Cap: ~$2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 30%
+  - EPS Growth (forward): 35%
+  - P/E (fwd): 25x  |  PEG: 0.71
+  - Debt/Equity: 0.05
+  - FCF Yield: 4%
+Investment Thesis:
+  Hims & Hers Health provides telehealth and wellness solutions, benefiting from the growing demand for digital healthcare services. Its direct-to-consumer model and expanding product offerings provide a strong growth trajectory.
+Key Risk:
+  Regulatory changes and competition in the telehealth space could impact growth.
+
+---
+Rank: 23
+Ticker: FIVN
+Company: Five9, Inc.
+Sector: Technology
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 32x  |  PEG: 1.14
+  - Debt/Equity: 0.2
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Five9 provides cloud contact center solutions, benefiting from the shift towards remote work and digital customer engagement. Its scalable platform and strong customer relationships provide a competitive advantage.
+Key Risk:
+  Intense competition from larger tech companies could pressure pricing and margins.
+
+---
+Rank: 24
+Ticker: ROKU
+Company: Roku, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.36
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Roku is a leader in streaming media devices and platform services, benefiting from the ongoing shift to digital entertainment. Its strong brand and expanding content partnerships provide a competitive moat.
+Key Risk:
+  Increased competition from tech giants could impact market share and profitability.
+
+---
+Rank: 25
+Ticker: TWST
+Company: Twist Bioscience Corporation
+Sector: Healthcare
+Market Cap: ~$3B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 28%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 35x  |  PEG: 1.17
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Twist Bioscience specializes in synthetic DNA manufacturing, benefiting from the growing demand for genetic research and biotechnology applications. Its innovative technology and expanding customer base provide a strong growth trajectory.
+Key Risk:
+  Technological advancements by competitors could impact market position.
+
+---
+Rank: 26
+Ticker: CRSR
+Company: Corsair Gaming, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 22x  |  PEG: 1.1
+  - Debt/Equity: 0.3
+  - FCF Yield: 3%
+Investment Thesis:
+  Corsair Gaming designs and sells high-performance gaming peripherals and hardware, benefiting from the growing popularity of gaming and esports. Its strong brand and product innovation provide a competitive advantage.
+Key Risk:
+  Supply chain disruptions and economic downturns could impact sales.
+
+---
+Rank: 27
+Ticker: SPT
+Company: Sprout Social, Inc.
+Sector: Technology
+Market Cap: ~$4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 28x  |  PEG: 1.12
+  - Debt/Equity: 0.05
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Sprout Social provides social media management solutions, benefiting from the increasing importance of digital marketing and customer engagement. Its user-friendly platform and strong customer retention create a robust growth pathway.
+Key Risk:
+  Competition from larger social media platforms could pressure market share and pricing.
+
+---
+Rank: 28
+Ticker: CHPT
+Company: ChargePoint Holdings, Inc.
+Sector: Industrials
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 35%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 35x  |  PEG: 1.17
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  ChargePoint is a leader in electric vehicle charging infrastructure, benefiting from the global shift towards electric mobility. Its extensive network and strategic partnerships provide a competitive advantage in a rapidly growing market.
+Key Risk:
+  Dependence on government incentives for EV adoption could impact growth.
+
+---
+Rank: 29
+Ticker: RUN
+Company: Sunrun Inc.
+Sector: Energy
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.36
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  Sunrun is a leading provider of residential solar energy systems, benefiting from the growing demand for renewable energy solutions. Its innovative financing models and strong customer base provide a competitive moat.
+Key Risk:
+  Changes in solar incentives and financing costs could impact growth.
+
+---
+Rank: 30
+Ticker: ZI
+Company: ZoomInfo Technologies Inc.
+Sector: Technology
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 32x  |  PEG: 1.14
+  - Debt/Equity: 0.3
+  - FCF Yield: 2.5%
+Investment Thesis:
+  ZoomInfo provides go-to-market intelligence solutions, benefiting from the increasing need for data-driven sales and marketing strategies. Its comprehensive platform and strong customer relationships provide a competitive advantage.
+Key Risk:
+  Competition from larger data analytics companies could impact market share and pricing.
+
+== SELECTION METHODOLOGY ==
+The selection process focused on identifying small to mid-cap US stocks with strong fundamental growth drivers, such as revenue and EPS growth, while maintaining a solid balance sheet with manageable debt and positive free cash flow. Stocks were screened to exclude mega-caps, trending or viral stocks, and those commonly featured in mainstream financial media. The focus was on companies with a competitive moat or structural tailwind, such as technological innovation or favorable demographic trends. Growth was prioritized but balanced with value considerations, favoring companies with a PEG ratio below 1.5. Macro themes like renewable energy, digital transformation, and healthcare innovation informed the final picks.
