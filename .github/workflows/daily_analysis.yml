@@ -1,4 +1,5 @@
 name: Daily Stock Analysis
+run-name: "Daily Stock Analysis ${{ github.event.inputs.ticker || github.event.schedule }}"
 
 # ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
 # Fundamental Analysis Schedule (17:00 - 20:30 UTC)
