@@ -1,4 +1,5 @@
 name: Daily Market News
+run-name: "Daily Market News ${{ github.event.inputs.ticker || github.event.schedule }}"
 
 # ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
 #   17:00 → 01:00  0050
