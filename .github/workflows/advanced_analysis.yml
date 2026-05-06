@@ -1,4 +1,5 @@
 name: Advanced Stock Analysis
+run-name: "Advanced Stock Analysis ${{ github.event.inputs.ticker }}"
 
 # Handles analysis types that benefit from extra inputs:
 #   earnings-call-analysis  — optional transcript URL
