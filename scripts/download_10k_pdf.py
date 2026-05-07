@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = ["requests", "beautifulsoup4"]
+# ///
 """Download recent 10-K PDFs from annualreports.com."""
 
 import argparse
