@@ -1,17 +1,9 @@
 #!/bin/bash
-# Batch download 10-K reports for VTI Top 25 companies
+# Batch download recent 5-year 10-K reports for VTI Top 25 companies
 
-echo "=========================================="
-echo "Batch 10-K Downloader - VTI Top 25"
-echo "=========================================="
-echo ""
-
-# Get the script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Array of company slugs from the data file
-declare -a COMPANIES=(
+declare -a SLUGS=(
     "nvidia-corporation"
     "apple-inc"
     "microsoft-corporation"
@@ -24,73 +16,39 @@ declare -a COMPANIES=(
     "oracle-corporation"
     "palantir-technologies-inc"
     "advanced-micro-devices-inc"
-    "Taiwan Semiconductor Manufacturing Co. Ltd."
+    "taiwan-semiconductor-manufacturing"
 )
 
 declare -a SYMBOLS=(
-    "NVDA"
-    "AAPL"
-    "MSFT"
-    "AMZN"
-    "AVGO"
-    "GOOGL"
-    "META"
-    "TSLA"
-    "BRK.B"
-    "ORCL"
-    "PLTR"
-    "AMD"
-    "TSM"
+    "NVDA" "AAPL" "MSFT" "AMZN" "AVGO"
+    "GOOGL" "META" "TSLA" "BRK.B" "ORCL"
+    "PLTR" "AMD" "TSM"
 )
 
-# Total count
-TOTAL=${#COMPANIES[@]}
+TOTAL=${#SLUGS[@]}
 SUCCESS=0
 FAILED=0
 
-# Log file
-LOG_FILE="$PROJECT_DIR/batch_download_$(date +%Y%m%d_%H%M%S).log"
-echo "Log file: $LOG_FILE"
-echo ""
+echo "Batch 10-K Downloader — VTI Top 25 (last 5 years)"
+echo "=================================================="
 
-# Loop through each company
-for i in "${!COMPANIES[@]}"; do
-    COMPANY="${COMPANIES[$i]}"
-    SYMBOL="${SYMBOLS[$i]}"
+for i in "${!SLUGS[@]}"; do
     INDEX=$((i + 1))
+    echo ""
+    echo "[$INDEX/$TOTAL] ${SYMBOLS[$i]}"
 
-    echo "=========================================="
-    echo "[$INDEX/$TOTAL] Processing: $SYMBOL - $COMPANY"
-    echo "=========================================="
+    uv run "$SCRIPT_DIR/download_10k_pdf.py" "${SLUGS[$i]}"
 
-    # Run the download script with uv
-    uv run "$SCRIPT_DIR/download_10k_pdf.py" "$COMPANY" 2>&1
-    EXIT_CODE=$?
-
-    # Check exit status
-    if [ $EXIT_CODE -eq 0 ]; then
+    if [ $? -eq 0 ]; then
         SUCCESS=$((SUCCESS + 1))
-        echo "✓ Completed: $SYMBOL" | tee -a "$LOG_FILE"
     else
         FAILED=$((FAILED + 1))
-        echo "✗ Failed: $SYMBOL" | tee -a "$LOG_FILE"
+        echo "  ✗ Failed: ${SYMBOLS[$i]}"
     fi
 
-    echo "" | tee -a "$LOG_FILE"
-
-    # Add a small delay between companies to be respectful
-    if [ $INDEX -lt $TOTAL ]; then
-        echo "Waiting 3 seconds before next company..." | tee -a "$LOG_FILE"
-        sleep 3
-    fi
+    [ $INDEX -lt $TOTAL ] && sleep 3
 done
 
-# Final summary
-echo "=========================================="
-echo "BATCH DOWNLOAD COMPLETE"
-echo "=========================================="
-echo "Total companies: $TOTAL"
-echo "Successful: $SUCCESS"
-echo "Failed: $FAILED"
-echo "Log file: $LOG_FILE"
-echo "=========================================="
+echo ""
+echo "=================================================="
+echo "Complete: $SUCCESS/$TOTAL succeeded, $FAILED failed"
