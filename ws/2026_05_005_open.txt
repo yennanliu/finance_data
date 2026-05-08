@@ -1,0 +1,517 @@
+Generated: 2026-05-08 22:58 UTC
+Model: gpt-4o
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: NXPI
+Company: NXP Semiconductors N.V.
+Sector: Technology
+Market Cap: ~$48B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 14x  |  PEG: 0.93
+  - Debt/Equity: 0.8
+  - FCF Yield: 6%
+Investment Thesis:
+  NXP Semiconductors is positioned to benefit from the increasing demand for semiconductors in automotive and IoT applications. Its strong portfolio in secure connectivity and processing solutions provides a competitive moat. Despite being a leader in its niche, it remains underappreciated by the broader market.
+Key Risk:
+  The cyclical nature of the semiconductor industry could lead to periods of volatility in earnings.
+
+---
+Rank: 2
+Ticker: SWKS
+Company: Skyworks Solutions, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 13x  |  PEG: 0.93
+  - Debt/Equity: 0.4
+  - FCF Yield: 5%
+Investment Thesis:
+  Skyworks Solutions is a key player in the RF semiconductor market, benefiting from the ongoing 5G rollout and increased demand for wireless connectivity. Its focus on high-performance analog semiconductors provides a strong competitive edge.
+Key Risk:
+  Dependence on a few large customers could lead to revenue concentration risk.
+
+---
+Rank: 3
+Ticker: CDNS
+Company: Cadence Design Systems, Inc.
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 25x  |  PEG: 1.2
+  - Debt/Equity: 0.2
+  - FCF Yield: 4%
+Investment Thesis:
+  Cadence Design Systems is a leader in electronic design automation software, crucial for semiconductor design. The ongoing complexity in chip design and the rise of AI applications provide structural tailwinds for growth.
+Key Risk:
+  Increased competition in the EDA space could pressure margins.
+
+---
+Rank: 4
+Ticker: VEEV
+Company: Veeva Systems Inc.
+Sector: Healthcare
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 30x  |  PEG: 1.25
+  - Debt/Equity: 0
+  - FCF Yield: 3%
+Investment Thesis:
+  Veeva Systems offers cloud-based solutions for the life sciences industry, capitalizing on the digital transformation in healthcare. Its deep industry expertise and strong customer relationships create a robust moat.
+Key Risk:
+  Regulatory changes in healthcare could impact its business model.
+
+---
+Rank: 5
+Ticker: FTNT
+Company: Fortinet, Inc.
+Sector: Technology
+Market Cap: ~$38B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 22x  |  PEG: 1.1
+  - Debt/Equity: 0.5
+  - FCF Yield: 4%
+Investment Thesis:
+  Fortinet is a leading provider of cybersecurity solutions, benefiting from the increasing need for robust security infrastructure. Its integrated security fabric and high-performance network security solutions offer a competitive advantage.
+Key Risk:
+  Rapid technological changes in cybersecurity could require continuous innovation.
+
+---
+Rank: 6
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.36
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Paycom Software provides cloud-based human capital management software, capitalizing on the shift towards digital HR solutions. Its comprehensive platform and strong customer satisfaction create a durable competitive edge.
+Key Risk:
+  Intense competition in the HCM software market could pressure pricing.
+
+---
+Rank: 7
+Ticker: SNPS
+Company: Synopsys, Inc.
+Sector: Technology
+Market Cap: ~$50B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 24x  |  PEG: 1.2
+  - Debt/Equity: 0.3
+  - FCF Yield: 4%
+Investment Thesis:
+  Synopsys is a leader in electronic design automation software, essential for semiconductor design and verification. The growing complexity of chip design and AI applications provide long-term growth opportunities.
+Key Risk:
+  Dependence on the semiconductor industry's cyclical nature could impact revenue.
+
+---
+Rank: 8
+Ticker: ZBRA
+Company: Zebra Technologies Corporation
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 18x  |  PEG: 1.1
+  - Debt/Equity: 0.6
+  - FCF Yield: 5%
+Investment Thesis:
+  Zebra Technologies provides innovative solutions in automatic identification and data capture, benefiting from the rise of IoT and digital transformation in logistics. Its strong brand and comprehensive product portfolio offer a competitive moat.
+Key Risk:
+  Economic downturns could reduce demand for its products in key industries.
+
+---
+Rank: 9
+Ticker: TER
+Company: Teradyne, Inc.
+Sector: Technology
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 16x  |  PEG: 1.0
+  - Debt/Equity: 0.2
+  - FCF Yield: 6%
+Investment Thesis:
+  Teradyne is a leading supplier of automated test equipment for semiconductors, benefiting from the increasing complexity of chip designs. Its expansion into industrial automation and robotics provides additional growth avenues.
+Key Risk:
+  Cyclical demand in the semiconductor industry could lead to revenue volatility.
+
+---
+Rank: 10
+Ticker: MTD
+Company: Mettler-Toledo International Inc.
+Sector: Healthcare
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 28x  |  PEG: 1.3
+  - Debt/Equity: 1.0
+  - FCF Yield: 4%
+Investment Thesis:
+  Mettler-Toledo is a global leader in precision instruments and services for laboratory and industrial applications. Its strong brand and focus on innovation provide a competitive edge in a niche market.
+Key Risk:
+  Currency fluctuations could impact its international revenue.
+
+---
+Rank: 11
+Ticker: ANET
+Company: Arista Networks, Inc.
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 17%
+  - P/E (fwd): 25x  |  PEG: 1.3
+  - Debt/Equity: 0
+  - FCF Yield: 3%
+Investment Thesis:
+  Arista Networks is a leader in high-performance networking solutions, benefiting from the growth in cloud computing and data centers. Its innovative technology and strong customer relationships provide a durable moat.
+Key Risk:
+  Intense competition from larger networking companies could impact market share.
+
+---
+Rank: 12
+Ticker: KEYS
+Company: Keysight Technologies, Inc.
+Sector: Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 20x  |  PEG: 1.2
+  - Debt/Equity: 0.4
+  - FCF Yield: 4%
+Investment Thesis:
+  Keysight Technologies is a leader in electronic measurement solutions, benefiting from the growth in 5G, IoT, and automotive electronics. Its strong R&D and comprehensive product portfolio offer a competitive advantage.
+Key Risk:
+  Economic slowdowns could reduce demand for its testing solutions.
+
+---
+Rank: 13
+Ticker: HUBS
+Company: HubSpot, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  HubSpot provides a leading cloud-based marketing, sales, and customer service platform, capitalizing on the shift towards digital marketing. Its strong brand and comprehensive platform create a competitive moat.
+Key Risk:
+  High valuation multiples could lead to stock volatility if growth expectations are not met.
+
+---
+Rank: 14
+Ticker: WST
+Company: West Pharmaceutical Services, Inc.
+Sector: Healthcare
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 32x  |  PEG: 1.4
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  West Pharmaceutical Services is a leader in drug packaging and delivery systems, benefiting from the growth in biologics and injectable drugs. Its strong customer relationships and innovation provide a competitive edge.
+Key Risk:
+  Regulatory changes in the pharmaceutical industry could impact its business model.
+
+---
+Rank: 15
+Ticker: FICO
+Company: Fair Isaac Corporation
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 28x  |  PEG: 1.3
+  - Debt/Equity: 2.0
+  - FCF Yield: 4%
+Investment Thesis:
+  Fair Isaac Corporation, known for its FICO scores, benefits from the increasing demand for credit scoring and analytics solutions. Its strong brand and proprietary algorithms provide a competitive moat.
+Key Risk:
+  Changes in credit reporting regulations could impact its business model.
+
+---
+Rank: 16
+Ticker: ALGN
+Company: Align Technology, Inc.
+Sector: Healthcare
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0
+  - FCF Yield: 3%
+Investment Thesis:
+  Align Technology is a leader in clear aligner orthodontics, benefiting from the trend towards aesthetic dental solutions. Its strong brand and technological innovation provide a durable competitive edge.
+Key Risk:
+  Intense competition from new entrants could pressure market share.
+
+---
+Rank: 17
+Ticker: CSGP
+Company: CoStar Group, Inc.
+Sector: Real Estate
+Market Cap: ~$35B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 40x  |  PEG: 1.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  CoStar Group is a leader in commercial real estate information and analytics, benefiting from the digital transformation in real estate. Its comprehensive database and analytics capabilities provide a competitive moat.
+Key Risk:
+  Economic downturns could impact demand for real estate analytics.
+
+---
+Rank: 18
+Ticker: TYL
+Company: Tyler Technologies, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Tyler Technologies provides integrated software solutions for local governments, benefiting from the trend towards digital government services. Its strong customer relationships and comprehensive platform create a competitive moat.
+Key Risk:
+  Budget constraints in local governments could impact software spending.
+
+---
+Rank: 19
+Ticker: TRMB
+Company: Trimble Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 25x  |  PEG: 1.3
+  - Debt/Equity: 0.5
+  - FCF Yield: 4%
+Investment Thesis:
+  Trimble provides advanced positioning solutions, benefiting from the growth in construction technology and precision agriculture. Its strong brand and innovation provide a competitive edge in its niche markets.
+Key Risk:
+  Economic downturns could impact demand in key industries like construction.
+
+---
+Rank: 20
+Ticker: SGEN
+Company: Seagen Inc.
+Sector: Healthcare
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 50x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Seagen is a leader in antibody-drug conjugates for cancer treatment, benefiting from the growing demand for targeted cancer therapies. Its strong pipeline and innovative technology provide a competitive moat.
+Key Risk:
+  Clinical trial failures could significantly impact its valuation.
+
+---
+Rank: 21
+Ticker: DOCU
+Company: DocuSign, Inc.
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 25x  |  PEG: 1.2
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  DocuSign is a leader in electronic signature solutions, benefiting from the shift towards digital document management. Its strong brand and comprehensive platform create a competitive moat.
+Key Risk:
+  Intense competition from other digital signature providers could pressure margins.
+
+---
+Rank: 22
+Ticker: OKTA
+Company: Okta, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 17%
+  - P/E (fwd): 30x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Okta is a leader in identity and access management solutions, benefiting from the increasing need for secure digital identities. Its strong customer relationships and comprehensive platform provide a competitive moat.
+Key Risk:
+  Rapid technological changes in cybersecurity could require continuous innovation.
+
+---
+Rank: 23
+Ticker: TEAM
+Company: Atlassian Corporation Plc
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 40x  |  PEG: 1.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  Atlassian provides collaboration and productivity software, benefiting from the shift towards remote work and digital collaboration. Its strong brand and comprehensive platform create a competitive moat.
+Key Risk:
+  High valuation multiples could lead to stock volatility if growth expectations are not met.
+
+---
+Rank: 24
+Ticker: RGEN
+Company: Repligen Corporation
+Sector: Healthcare
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 45x  |  PEG: 1.4
+  - Debt/Equity: 0
+  - FCF Yield: 2%
+Investment Thesis:
+  Repligen is a leader in bioprocessing technologies, benefiting from the growth in biologics and cell and gene therapies. Its strong product portfolio and innovation provide a competitive edge.
+Key Risk:
+  Intense competition from larger bioprocessing companies could impact market share.
+
+---
+Rank: 25
+Ticker: ENPH
+Company: Enphase Energy, Inc.
+Sector: Energy
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 25x  |  PEG: 1.1
+  - Debt/Equity: 0.2
+  - FCF Yield: 4%
+Investment Thesis:
+  Enphase Energy is a leader in microinverter technology for solar energy systems, benefiting from the shift towards renewable energy. Its strong brand and innovative technology provide a competitive moat.
+Key Risk:
+  Changes in government incentives for solar energy could impact demand.
+
+---
+Rank: 26
+Ticker: NVCR
+Company: NovoCure Limited
+Sector: Healthcare
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 50x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  NovoCure is a leader in tumor treating fields therapy for cancer, benefiting from the growing demand for innovative cancer treatments. Its strong clinical data and innovative technology provide a competitive moat.
+Key Risk:
+  Clinical trial failures could significantly impact its valuation.
+
+---
+Rank: 27
+Ticker: ZS
+Company: Zscaler, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 27%
+  - P/E (fwd): 35x  |  PEG: 1.3
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Zscaler is a leader in cloud-based cybersecurity solutions, benefiting from the shift towards cloud computing and secure access. Its strong brand and innovative platform provide a competitive moat.
+Key Risk:
+  Intense competition from larger cybersecurity companies could impact market share.
+
+---
+Rank: 28
+Ticker: LSPD
+Company: Lightspeed Commerce Inc.
+Sector: Technology
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 30%
+  - EPS Growth (forward): 32%
+  - P/E (fwd): 40x  |  PEG: 1.2
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  Lightspeed Commerce provides cloud-based point-of-sale and e-commerce solutions, benefiting from the shift towards digital commerce. Its strong brand and comprehensive platform create a competitive moat.
+Key Risk:
+  Intense competition in the e-commerce platform space could pressure margins.
+
+---
+Rank: 29
+Ticker: APPN
+Company: Appian Corporation
+Sector: Technology
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 17%
+  - P/E (fwd): 50x  |  PEG: 1.4
+  - Debt/Equity: 0
+  - FCF Yield: 2%
+Investment Thesis:
+  Appian provides a low-code automation platform, benefiting from the trend towards digital transformation and process automation. Its strong brand and innovative platform provide a competitive moat.
+Key Risk:
+  High valuation multiples could lead to stock volatility if growth expectations are not met.
+
+---
+Rank: 30
+Ticker: CRWD
+Company: CrowdStrike Holdings, Inc.
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 30%
+  - EPS Growth (forward): 32%
+  - P/E (fwd): 50x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  CrowdStrike is a leader in cloud-based endpoint security, benefiting from the increasing need for advanced cybersecurity solutions. Its strong brand and innovative platform provide a competitive moat.
+Key Risk:
+  Intense competition from larger cybersecurity companies could impact market share.
+
+== SELECTION METHODOLOGY ==
+The selection process involved screening for US-listed stocks with market caps between $500M and $50B, excluding those in the top-50 S&P 500 by market cap, and avoiding stocks currently trending in mainstream media or social platforms. The focus was on companies with strong revenue and EPS growth, manageable debt levels, and positive free cash flow or a clear path to it. We weighted growth potential against valuation, favoring stocks with a PEG ratio under 1.5. Macro and sector themes such as digital transformation, renewable energy, and healthcare innovation informed the picks, emphasizing companies with competitive moats or structural tailwinds.
