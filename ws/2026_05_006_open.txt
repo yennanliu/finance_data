@@ -1,0 +1,517 @@
+Generated: 2026-05-09 22:50 UTC
+Model: gpt-4o
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: FICO
+Company: Fair Isaac Corporation
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 22x  |  PEG: 1.47
+  - Debt/Equity: 1.5
+  - FCF Yield: 4%
+Investment Thesis:
+  Fair Isaac Corporation benefits from the growing importance of credit scoring in financial services. Its FICO scores are industry-standard, creating a strong moat. The company's analytics and decision management solutions are increasingly adopted across sectors, driving revenue.
+Key Risk:
+  Increased competition from alternative credit scoring models could pressure market share.
+
+---
+Rank: 2
+Ticker: ALGN
+Company: Align Technology, Inc.
+Sector: Healthcare
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Align Technology is a leader in clear aligners, benefiting from the shift towards aesthetic dentistry and orthodontics. Its technological edge and brand recognition provide a competitive moat, with international expansion offering further growth potential.
+Key Risk:
+  Economic downturns could reduce discretionary spending on orthodontics.
+
+---
+Rank: 3
+Ticker: FTNT
+Company: Fortinet, Inc.
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.36
+  - Debt/Equity: 0.5
+  - FCF Yield: 5%
+Investment Thesis:
+  Fortinet is a cybersecurity leader with a broad product portfolio and a strong focus on network security. Its integrated security fabric and high-performance firewalls provide a competitive edge in a rapidly growing market driven by increasing cyber threats.
+Key Risk:
+  Intense competition from other cybersecurity firms could impact pricing power.
+
+---
+Rank: 4
+Ticker: SNPS
+Company: Synopsys, Inc.
+Sector: Technology
+Market Cap: ~$50B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 25x  |  PEG: 1.25
+  - Debt/Equity: 0.4
+  - FCF Yield: 4%
+Investment Thesis:
+  Synopsys is a leader in electronic design automation (EDA) and semiconductor IP. As semiconductor complexity increases, Synopsys' tools are essential, providing a strong moat. Growth is supported by the ongoing semiconductor boom and AI advancements.
+Key Risk:
+  Dependency on semiconductor industry cycles could lead to revenue volatility.
+
+---
+Rank: 5
+Ticker: ANSS
+Company: ANSYS, Inc.
+Sector: Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 27x  |  PEG: 1.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  ANSYS is a leader in engineering simulation software, benefiting from increasing R&D and product design complexity across industries. Its broad application across automotive, aerospace, and electronics provides a diversified revenue stream.
+Key Risk:
+  Economic slowdowns could reduce R&D budgets, affecting demand for simulation software.
+
+---
+Rank: 6
+Ticker: CDNS
+Company: Cadence Design Systems, Inc.
+Sector: Technology
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 29x  |  PEG: 1.4
+  - Debt/Equity: 0.3
+  - FCF Yield: 4%
+Investment Thesis:
+  Cadence Design Systems provides critical tools for chip design, with strong demand driven by the semiconductor industry's growth. Its software and IP portfolio create a competitive edge, while AI and 5G developments offer additional growth avenues.
+Key Risk:
+  Market saturation and competitive pressures could limit pricing power.
+
+---
+Rank: 7
+Ticker: ZBRA
+Company: Zebra Technologies Corporation
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 20x  |  PEG: 1.25
+  - Debt/Equity: 0.4
+  - FCF Yield: 5%
+Investment Thesis:
+  Zebra Technologies specializes in enterprise asset intelligence solutions, benefiting from the digital transformation of supply chains. Its products enhance operational efficiency, providing a strong competitive moat in logistics and retail sectors.
+Key Risk:
+  Economic downturns could delay customer investments in new technology.
+
+---
+Rank: 8
+Ticker: TER
+Company: Teradyne, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 21x  |  PEG: 1.3
+  - Debt/Equity: 0.1
+  - FCF Yield: 4%
+Investment Thesis:
+  Teradyne is a leader in semiconductor testing equipment, benefiting from increased semiconductor production and complexity. Its robotics division offers additional growth potential as automation becomes more prevalent in manufacturing.
+Key Risk:
+  Cyclical nature of semiconductor industry could impact demand for testing equipment.
+
+---
+Rank: 9
+Ticker: TXRH
+Company: Texas Roadhouse, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 18x  |  PEG: 1.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Texas Roadhouse is a popular casual dining chain with a strong brand and customer loyalty. Its focus on quality and value provides a competitive edge, while expansion into new markets offers growth opportunities.
+Key Risk:
+  Rising labor and food costs could pressure margins.
+
+---
+Rank: 10
+Ticker: HUBS
+Company: HubSpot, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.3
+  - FCF Yield: 2%
+Investment Thesis:
+  HubSpot is a leader in inbound marketing and sales software, benefiting from the shift towards digital marketing. Its integrated platform and strong customer retention create a competitive moat, with international expansion driving growth.
+Key Risk:
+  Intense competition in the marketing software space could impact growth.
+
+---
+Rank: 11
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 32x  |  PEG: 1.3
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Paycom provides comprehensive HR and payroll software solutions, benefiting from the digital transformation of HR functions. Its user-friendly platform and strong customer service create a competitive advantage in a growing market.
+Key Risk:
+  Economic downturns could reduce spending on HR software.
+
+---
+Rank: 12
+Ticker: WDAY
+Company: Workday, Inc.
+Sector: Technology
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 17%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Workday is a leader in enterprise cloud applications for finance and human resources, benefiting from the shift to cloud-based solutions. Its strong customer base and continued innovation provide a competitive moat.
+Key Risk:
+  Competition from larger cloud providers could impact market share.
+
+---
+Rank: 13
+Ticker: SPLK
+Company: Splunk Inc.
+Sector: Technology
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 25x  |  PEG: 1.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  Splunk specializes in data analytics and monitoring software, benefiting from the growing importance of data-driven decision-making. Its scalable platform and strong customer base provide a competitive advantage.
+Key Risk:
+  Transition to a subscription model could impact short-term financials.
+
+---
+Rank: 14
+Ticker: TEAM
+Company: Atlassian Corporation Plc
+Sector: Technology
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 23%
+  - P/E (fwd): 35x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Atlassian provides collaboration and productivity software, benefiting from the shift to remote work and digital collaboration. Its strong brand and customer loyalty create a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from other productivity software providers could impact market share.
+
+---
+Rank: 15
+Ticker: VEEV
+Company: Veeva Systems Inc.
+Sector: Healthcare
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 30x  |  PEG: 1.4
+  - Debt/Equity: 0.05
+  - FCF Yield: 3%
+Investment Thesis:
+  Veeva Systems provides cloud-based solutions for the life sciences industry, benefiting from the digital transformation of healthcare. Its strong industry focus and regulatory expertise create a competitive moat.
+Key Risk:
+  Regulatory changes in the healthcare industry could impact demand for its products.
+
+---
+Rank: 16
+Ticker: NOW
+Company: ServiceNow, Inc.
+Sector: Technology
+Market Cap: ~$50B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  ServiceNow is a leader in digital workflow solutions, benefiting from the need for digital transformation across industries. Its platform and strong customer base provide a competitive advantage, with continued innovation driving growth.
+Key Risk:
+  Intense competition from other workflow software providers could impact growth.
+
+---
+Rank: 17
+Ticker: OKTA
+Company: Okta, Inc.
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Okta specializes in identity and access management solutions, benefiting from the increasing importance of cybersecurity. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger cybersecurity firms could impact market share.
+
+---
+Rank: 18
+Ticker: CRWD
+Company: CrowdStrike Holdings, Inc.
+Sector: Technology
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 40x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  CrowdStrike is a leader in cloud-delivered endpoint protection, benefiting from the increasing importance of cybersecurity. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Intense competition from other cybersecurity firms could impact market share.
+
+---
+Rank: 19
+Ticker: DOCU
+Company: DocuSign, Inc.
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 25x  |  PEG: 1.5
+  - Debt/Equity: 0.3
+  - FCF Yield: 3%
+Investment Thesis:
+  DocuSign is a leader in electronic signature solutions, benefiting from the shift towards digital transactions and remote work. Its strong brand and customer base provide a competitive moat, with international expansion driving growth.
+Key Risk:
+  Competition from other electronic signature providers could impact market share.
+
+---
+Rank: 20
+Ticker: ROKU
+Company: Roku, Inc.
+Sector: Communication Services
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 28x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  Roku is a leader in streaming platforms, benefiting from the shift towards streaming media consumption. Its strong brand and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger streaming platforms could impact market share.
+
+---
+Rank: 21
+Ticker: ZS
+Company: Zscaler, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Zscaler is a leader in cloud security solutions, benefiting from the increasing importance of cybersecurity. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Intense competition from other cybersecurity firms could impact market share.
+
+---
+Rank: 22
+Ticker: DDOG
+Company: Datadog, Inc.
+Sector: Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 40x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Datadog specializes in monitoring and analytics for IT infrastructure, benefiting from the shift towards cloud computing and digital transformation. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from other monitoring and analytics providers could impact market share.
+
+---
+Rank: 23
+Ticker: NET
+Company: Cloudflare, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Cloudflare is a leader in web performance and security solutions, benefiting from the increasing importance of cybersecurity and web performance. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Intense competition from other web performance and security providers could impact market share.
+
+---
+Rank: 24
+Ticker: MDB
+Company: MongoDB, Inc.
+Sector: Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 40x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  MongoDB is a leader in database solutions, benefiting from the shift towards cloud computing and digital transformation. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from other database providers could impact market share.
+
+---
+Rank: 25
+Ticker: TTD
+Company: The Trade Desk, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  The Trade Desk is a leader in programmatic advertising, benefiting from the shift towards digital advertising. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger advertising platforms could impact market share.
+
+---
+Rank: 26
+Ticker: SQ
+Company: Block, Inc.
+Sector: Technology
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 28x  |  PEG: 1.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  Block (formerly Square) specializes in financial services and mobile payments, benefiting from the shift towards digital payments. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger financial services providers could impact market share.
+
+---
+Rank: 27
+Ticker: SHOP
+Company: Shopify Inc.
+Sector: Technology
+Market Cap: ~$50B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Shopify is a leader in e-commerce solutions, benefiting from the shift towards online retail. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger e-commerce platforms could impact market share.
+
+---
+Rank: 28
+Ticker: TWLO
+Company: Twilio Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Twilio specializes in cloud communications, benefiting from the shift towards digital communication. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger communication providers could impact market share.
+
+---
+Rank: 29
+Ticker: SQM
+Company: Sociedad Química y Minera de Chile S.A.
+Sector: Materials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 25x  |  PEG: 1.5
+  - Debt/Equity: 0.3
+  - FCF Yield: 3%
+Investment Thesis:
+  SQM is a leader in lithium production, benefiting from the shift towards electric vehicles and renewable energy. Its strong position in the lithium market provides a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Fluctuations in lithium prices could impact financial performance.
+
+---
+Rank: 30
+Ticker: ENPH
+Company: Enphase Energy, Inc.
+Sector: Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2%
+Investment Thesis:
+  Enphase Energy specializes in solar microinverters, benefiting from the shift towards renewable energy. Its strong platform and customer base provide a competitive moat, with continued innovation driving growth.
+Key Risk:
+  Competition from larger solar energy providers could impact market share.
+
+== SELECTION METHODOLOGY ==
+The selection process focused on identifying companies with strong fundamental growth drivers, including revenue and EPS growth, while ensuring they were not mega-caps or trending stocks. The screening emphasized a balance of growth and value, prioritizing companies with a PEG ratio below 1.5. Sector and macroeconomic themes such as digital transformation, cybersecurity, and renewable energy informed the picks, with a focus on companies benefiting from structural tailwinds and possessing a clear competitive moat.
