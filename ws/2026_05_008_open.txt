@@ -1,0 +1,517 @@
+Generated: 2026-05-11 22:57 UTC
+Model: gpt-4o
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: ALGN
+Company: Align Technology, Inc.
+Sector: Healthcare
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 22x  |  PEG: 1.2
+  - Debt/Equity: 0.1
+  - FCF Yield: 4%
+Investment Thesis:
+  Align Technology benefits from a growing global demand for orthodontics, with its Invisalign product leading the clear aligner market. The company has a robust R&D pipeline and a strong brand, providing a competitive moat. Despite its strong fundamentals, it remains underappreciated in broader market discussions.
+Key Risk:
+  Competition from new entrants and pricing pressures could impact margins.
+
+---
+Rank: 2
+Ticker: FICO
+Company: Fair Isaac Corporation
+Sector: Information Technology
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 24x  |  PEG: 1.5
+  - Debt/Equity: 1.2
+  - FCF Yield: 3.5%
+Investment Thesis:
+  Fair Isaac Corporation is a leader in analytics software and credit scoring, benefiting from increased demand for data-driven financial insights. Its proprietary algorithms and extensive data partnerships create a significant moat. The stock is often overlooked due to its niche market focus.
+Key Risk:
+  Regulatory changes in credit scoring could impact business operations.
+
+---
+Rank: 3
+Ticker: MTD
+Company: Mettler-Toledo International Inc.
+Sector: Healthcare
+Market Cap: ~$28B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 27x  |  PEG: 1.3
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  Mettler-Toledo is a global leader in precision instruments and services for laboratories and industrial applications. The company's innovation in automation and analytics provides a competitive edge, with strong global demand for precision measurement driving growth.
+Key Risk:
+  Economic downturns could reduce capital spending in key markets.
+
+---
+Rank: 4
+Ticker: RGEN
+Company: Repligen Corporation
+Sector: Healthcare
+Market Cap: ~$9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.4
+  - Debt/Equity: 0.05
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Repligen is a key supplier in the bioprocessing industry, providing essential products for biologic drug production. The company benefits from the structural tailwind of increasing biologic drug approvals and manufacturing demand, with a strong innovation pipeline.
+Key Risk:
+  Dependency on a few large customers could impact revenue stability.
+
+---
+Rank: 5
+Ticker: TYL
+Company: Tyler Technologies, Inc.
+Sector: Information Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.3
+  - FCF Yield: 2.8%
+Investment Thesis:
+  Tyler Technologies is a leader in providing software solutions for local governments, benefiting from digital transformation trends in public sector administration. Its extensive suite of products and long-term contracts provide a strong competitive moat.
+Key Risk:
+  Budget constraints in local governments could slow new contract wins.
+
+---
+Rank: 6
+Ticker: CPRI
+Company: Capri Holdings Limited
+Sector: Consumer Discretionary
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 14x  |  PEG: 1.1
+  - Debt/Equity: 1.0
+  - FCF Yield: 5%
+Investment Thesis:
+  Capri Holdings, owner of luxury brands like Versace and Jimmy Choo, is poised for growth through brand expansion and increased global luxury demand. The company's strategic acquisitions and brand strength provide a competitive advantage.
+Key Risk:
+  Economic downturns could impact consumer spending on luxury goods.
+
+---
+Rank: 7
+Ticker: LPLA
+Company: LPL Financial Holdings Inc.
+Sector: Financials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 16x  |  PEG: 1.2
+  - Debt/Equity: 0.8
+  - FCF Yield: 4%
+Investment Thesis:
+  LPL Financial is a leading independent broker-dealer, benefiting from the trend towards fee-based advisory services. Its scalable platform and broad advisor network provide a competitive moat in the financial services industry.
+Key Risk:
+  Market volatility could impact asset-based revenue streams.
+
+---
+Rank: 8
+Ticker: IART
+Company: Integra LifeSciences Holdings Corporation
+Sector: Healthcare
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18x  |  PEG: 1.3
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.5%
+Investment Thesis:
+  Integra LifeSciences specializes in medical devices for neurosurgery and orthopedics, with a strong product pipeline and strategic acquisitions enhancing growth. Its focus on high-margin products and innovation provides a durable competitive advantage.
+Key Risk:
+  Regulatory hurdles and product recalls could impact growth.
+
+---
+Rank: 9
+Ticker: GGG
+Company: Graco Inc.
+Sector: Industrials
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 22x  |  PEG: 1.4
+  - Debt/Equity: 0.2
+  - FCF Yield: 3%
+Investment Thesis:
+  Graco is a leader in fluid handling systems, benefiting from industrial automation and infrastructure investments. Its strong brand and diverse product offerings create a competitive moat, with consistent innovation driving growth.
+Key Risk:
+  Cyclical demand in industrial markets could impact revenue.
+
+---
+Rank: 10
+Ticker: TECH
+Company: Bio-Techne Corporation
+Sector: Healthcare
+Market Cap: ~$14B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 26x  |  PEG: 1.3
+  - Debt/Equity: 0.3
+  - FCF Yield: 2.8%
+Investment Thesis:
+  Bio-Techne provides critical reagents and instruments for life sciences research, benefiting from increased R&D spending in biotechnology. Its extensive product portfolio and strategic acquisitions provide a strong competitive position.
+Key Risk:
+  Competition from larger players could impact market share.
+
+---
+Rank: 11
+Ticker: WEX
+Company: WEX Inc.
+Sector: Financials
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 20x  |  PEG: 1.3
+  - Debt/Equity: 0.7
+  - FCF Yield: 3.5%
+Investment Thesis:
+  WEX is a leader in corporate payment solutions, benefiting from the shift towards digital payments and fleet management services. Its strong technology platform and diverse client base provide a competitive moat.
+Key Risk:
+  Economic downturns could impact transaction volumes and revenues.
+
+---
+Rank: 12
+Ticker: ROL
+Company: Rollins, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Rollins is a leader in pest control services, with a strong brand and extensive service network. The company benefits from recurring revenue and a growing demand for pest control in residential and commercial markets.
+Key Risk:
+  Increased competition and regulatory changes could impact margins.
+
+---
+Rank: 13
+Ticker: HUBS
+Company: HubSpot, Inc.
+Sector: Information Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 45x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 1.5%
+Investment Thesis:
+  HubSpot is a leader in inbound marketing and sales software, benefiting from the shift towards digital marketing solutions. Its integrated platform and strong customer retention provide a competitive advantage.
+Key Risk:
+  High valuation and competition from larger software companies could impact growth.
+
+---
+Rank: 14
+Ticker: STLD
+Company: Steel Dynamics, Inc.
+Sector: Materials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 12x  |  PEG: 1.1
+  - Debt/Equity: 0.5
+  - FCF Yield: 5%
+Investment Thesis:
+  Steel Dynamics is a leading steel producer, benefiting from infrastructure spending and demand for sustainable steel products. Its vertically integrated operations and innovation in steel recycling provide a competitive moat.
+Key Risk:
+  Volatility in raw material prices could impact margins.
+
+---
+Rank: 15
+Ticker: POOL
+Company: Pool Corporation
+Sector: Consumer Discretionary
+Market Cap: ~$17B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 27x  |  PEG: 1.3
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  Pool Corporation is the largest distributor of swimming pool supplies, benefiting from the growing trend in outdoor living and home improvement. Its extensive distribution network and strong supplier relationships provide a competitive edge.
+Key Risk:
+  Weather-related disruptions and economic downturns could impact sales.
+
+---
+Rank: 16
+Ticker: TREX
+Company: Trex Company, Inc.
+Sector: Industrials
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 25x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.5%
+Investment Thesis:
+  Trex is a leader in composite decking and railing, benefiting from the trend towards sustainable building materials. Its strong brand and innovation in eco-friendly products provide a competitive moat.
+Key Risk:
+  Competition from traditional wood products and economic slowdowns could impact growth.
+
+---
+Rank: 17
+Ticker: DLB
+Company: Dolby Laboratories, Inc.
+Sector: Information Technology
+Market Cap: ~$9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 22x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  Dolby Laboratories is a leader in audio and imaging technologies, benefiting from increased demand for high-quality audio experiences in entertainment. Its strong brand and extensive patent portfolio provide a competitive moat.
+Key Risk:
+  Dependence on licensing revenue and competition from alternative technologies.
+
+---
+Rank: 18
+Ticker: AME
+Company: AMETEK, Inc.
+Sector: Industrials
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 24x  |  PEG: 1.4
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  AMETEK is a leader in electronic instruments and electromechanical devices, benefiting from industrial automation and aerospace demand. Its diversified product portfolio and focus on innovation provide a competitive advantage.
+Key Risk:
+  Economic downturns could impact industrial demand and growth.
+
+---
+Rank: 19
+Ticker: ZBRA
+Company: Zebra Technologies Corporation
+Sector: Information Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 21x  |  PEG: 1.3
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.5%
+Investment Thesis:
+  Zebra Technologies is a leader in enterprise asset intelligence solutions, benefiting from increased demand for automation and IoT in logistics and retail. Its strong technology platform and strategic acquisitions provide a competitive moat.
+Key Risk:
+  Supply chain disruptions and competition from larger tech firms.
+
+---
+Rank: 20
+Ticker: WST
+Company: West Pharmaceutical Services, Inc.
+Sector: Healthcare
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 30x  |  PEG: 1.4
+  - Debt/Equity: 0.2
+  - FCF Yield: 2.5%
+Investment Thesis:
+  West Pharmaceutical Services is a leader in injectable drug packaging and delivery systems, benefiting from increased demand for biologics and vaccines. Its strong customer relationships and innovation in drug delivery provide a competitive moat.
+Key Risk:
+  Regulatory changes and competition from alternative packaging solutions.
+
+---
+Rank: 21
+Ticker: ALNY
+Company: Alnylam Pharmaceuticals, Inc.
+Sector: Healthcare
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 40x  |  PEG: 1.5
+  - Debt/Equity: 0.3
+  - FCF Yield: 1.5%
+Investment Thesis:
+  Alnylam Pharmaceuticals is a leader in RNAi therapeutics, benefiting from a robust pipeline and recent drug approvals. Its proprietary technology platform and strategic partnerships provide a competitive advantage in the biotech sector.
+Key Risk:
+  Clinical trial failures and regulatory hurdles could impact growth.
+
+---
+Rank: 22
+Ticker: ANSS
+Company: ANSYS, Inc.
+Sector: Information Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis:
+  ANSYS is a leader in engineering simulation software, benefiting from increased demand for digital twin technology and product innovation. Its strong brand and extensive customer base provide a competitive moat.
+Key Risk:
+  High valuation and competition from emerging simulation technologies.
+
+---
+Rank: 23
+Ticker: MKTX
+Company: MarketAxess Holdings Inc.
+Sector: Financials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 3%
+Investment Thesis:
+  MarketAxess is a leader in electronic trading platforms for fixed-income securities, benefiting from the shift towards digital trading. Its strong network and technology platform provide a competitive advantage in the financial markets.
+Key Risk:
+  Market volatility and regulatory changes could impact trading volumes.
+
+---
+Rank: 24
+Ticker: FDS
+Company: FactSet Research Systems Inc.
+Sector: Financials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 27x  |  PEG: 1.4
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  FactSet provides financial data and analytics, benefiting from increased demand for data-driven investment decisions. Its strong client relationships and extensive data offerings provide a competitive moat.
+Key Risk:
+  Competition from larger data providers and price pressures.
+
+---
+Rank: 25
+Ticker: CTLT
+Company: Catalent, Inc.
+Sector: Healthcare
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 25x  |  PEG: 1.3
+  - Debt/Equity: 0.7
+  - FCF Yield: 2.5%
+Investment Thesis:
+  Catalent is a leader in drug delivery and development solutions, benefiting from increased demand for biologics and specialty drugs. Its strong manufacturing capabilities and strategic partnerships provide a competitive advantage.
+Key Risk:
+  Regulatory changes and competition from other CDMOs could impact growth.
+
+---
+Rank: 26
+Ticker: TDY
+Company: Teledyne Technologies Incorporated
+Sector: Industrials
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.4
+  - FCF Yield: 3%
+Investment Thesis:
+  Teledyne Technologies is a leader in instrumentation and digital imaging, benefiting from increased demand for high-tech solutions in aerospace and defense. Its diversified product portfolio and innovation provide a competitive moat.
+Key Risk:
+  Budget cuts in government spending could impact growth.
+
+---
+Rank: 27
+Ticker: SGEN
+Company: Seagen Inc.
+Sector: Healthcare
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 35x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 2%
+Investment Thesis:
+  Seagen is a leader in antibody-drug conjugates, benefiting from a strong pipeline and recent drug approvals. Its proprietary technology and strategic alliances provide a competitive advantage in oncology.
+Key Risk:
+  Clinical trial setbacks and regulatory challenges could impact growth.
+
+---
+Rank: 28
+Ticker: CSGP
+Company: CoStar Group, Inc.
+Sector: Information Technology
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 40x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis:
+  CoStar Group is a leader in commercial real estate information and analytics, benefiting from increased demand for data-driven real estate decisions. Its extensive database and strong client relationships provide a competitive moat.
+Key Risk:
+  Economic downturns and competition from emerging data platforms.
+
+---
+Rank: 29
+Ticker: CERN
+Company: Cerner Corporation
+Sector: Healthcare
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 22x  |  PEG: 1.3
+  - Debt/Equity: 0.3
+  - FCF Yield: 3%
+Investment Thesis:
+  Cerner is a leader in healthcare IT solutions, benefiting from increased demand for electronic health records and data analytics in healthcare. Its strong technology platform and customer base provide a competitive advantage.
+Key Risk:
+  Regulatory changes and competition from larger tech firms.
+
+---
+Rank: 30
+Ticker: ZTS
+Company: Zoetis Inc.
+Sector: Healthcare
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.5
+  - FCF Yield: 3%
+Investment Thesis:
+  Zoetis is a leader in animal health, benefiting from increased demand for pet care and livestock health solutions. Its strong brand and innovation in veterinary medicines provide a competitive moat.
+Key Risk:
+  Economic downturns and regulatory changes could impact growth.
+
+== SELECTION METHODOLOGY ==
+The selection process focused on identifying stocks with solid fundamental growth drivers, such as revenue and EPS growth, while avoiding the top-50 S&P 500 mega-caps and trending stocks. Emphasis was placed on companies with a manageable debt profile, positive free cash flow, and a clear competitive moat or structural tailwind. The screening process favored small to mid-cap stocks with market caps between $500M and $50B, ensuring a sweet spot for growth potential. Macro themes such as digital transformation, healthcare innovation, and sustainable materials informed the picks, balancing growth prospects with value considerations.
