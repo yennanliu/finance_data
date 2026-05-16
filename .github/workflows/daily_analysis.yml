@@ -487,6 +487,7 @@ jobs:
 
       # ── 5. Update workflow run title ─────────────────────────────
       - name: Update workflow run title
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
