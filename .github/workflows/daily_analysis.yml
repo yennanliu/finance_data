@@ -147,6 +147,7 @@ on:
 
 permissions:
   contents: write   # needed to commit & push generated report
+  actions: write    # needed to update workflow run display_title
 
 concurrency:
   group: "daily-analysis-${{ github.run_id }}"
@@ -484,7 +485,19 @@ jobs:
           echo "  Max tokens:    ${MAX_TOKENS}"
           echo "  Output dir:    ${OUTPUT_DIR}"
 
-      # ── 5. Verify API key secret is set ──────────────────────────
+      # ── 5. Update workflow run title ─────────────────────────────
+      - name: Update workflow run title
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TICKER="${{ steps.params.outputs.ticker }}"
+          ATYPE="${{ steps.params.outputs.analysis_type }}"
+          gh api \
+            --method PATCH \
+            "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            -f "display_title=Daily Stock Analysis ${TICKER} ${ATYPE}"
+
+      # ── 7. Verify API key secret is set ──────────────────────────
       - name: Check API key secret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -509,7 +522,7 @@ jobs:
             echo "✅ ANTHROPIC_API_KEY is set."
           fi
 
-      # ── 6. Generate report ────────────────────────────────────────
+      # ── 8. Generate report ────────────────────────────────────────
       - name: Generate analysis report
         timeout-minutes: 20
         env:
@@ -524,7 +537,7 @@ jobs:
             --model         "${{ steps.params.outputs.model }}" \
             --max-tokens    "${{ steps.params.outputs.max_tokens }}"
 
-      # ── 7. Commit & push ──────────────────────────────────────────
+      # ── 9. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
         run: |
           git config user.name  "github-actions[bot]"
