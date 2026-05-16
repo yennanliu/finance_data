@@ -22,57 +22,34 @@ jobs:
 
       - name: Generate progress file
         run: |
-          DATE=$(date -u +"%Y-%m-%d")
           YYYYMMDD=$(date -u +"%Y%m%d")
           ANALYSIS_BASE_URL="https://yennanliu.github.io/finance_data/reports"
           NEWS_BASE_URL="https://yennanliu.github.io/finance_data/market_news"
           OUT="progress/progress_${YYYYMMDD}.txt"
-          # Batch window: analysis runs 17:00–00:20 UTC, summary fires at 00:40 UTC.
-          # Most files are stamped with yesterday's UTC date, so match by mtime
-          # instead of filename date to capture the full ~8-hour batch in one pass.
-          WINDOW_MINUTES=720   # 12-hour window — safely covers the entire batch
 
           mkdir -p progress
 
           {
-            echo "Daily Report Summary — ${DATE}"
-            echo "Generated: $(date -u +'%Y-%m-%d %H:%M UTC')"
-            echo "========================================"
-            echo ""
-
-            # ── Stock analysis reports ────────────────────────────────
             echo "### Stock Analysis"
-            echo ""
-            ANALYSIS_COUNT=0
-            while IFS= read -r -d '' FILE; do
-              # e.g. ai_gen_report/stock/nvda/technical-analysis_2026-05-03.md
+            while IFS= read -r FILE; do
+              [ -z "$FILE" ] && continue
               TICKER=$(echo "$FILE" | sed 's|ai_gen_report/stock/||; s|/.*||')
               FILENAME=$(basename "$FILE" .md)
               URL="${ANALYSIS_BASE_URL}/${TICKER}/${FILENAME}/"
               echo "- [${TICKER^^} ${FILENAME}](${URL})"
-              ANALYSIS_COUNT=$((ANALYSIS_COUNT + 1))
-            done < <(find ai_gen_report/stock -name "*.md" -mmin -${WINDOW_MINUTES} -print0 | sort -z)
+            done < <(git log --since="12 hours ago" --name-only --pretty=format: -- ai_gen_report/stock | grep '\.md$' | sort -u)
 
-            echo ""
-
-            # ── Market news reports ───────────────────────────────────
-            echo "### Market News"
-            echo ""
-            NEWS_COUNT=0
             if [ -d ai_gen_report/market_news ]; then
-              while IFS= read -r -d '' FILE; do
-                # e.g. ai_gen_report/market_news/nvda/market_news_2026-05-03_openai.md
+              echo ""
+              echo "### Market News"
+              while IFS= read -r FILE; do
+                [ -z "$FILE" ] && continue
                 TICKER=$(echo "$FILE" | sed 's|ai_gen_report/market_news/||; s|/.*||')
                 FILENAME=$(basename "$FILE" .md)
                 URL="${NEWS_BASE_URL}/${TICKER}/${FILENAME}/"
                 echo "- [${TICKER^^} ${FILENAME}](${URL})"
-                NEWS_COUNT=$((NEWS_COUNT + 1))
-              done < <(find ai_gen_report/market_news -name "*.md" -mmin -${WINDOW_MINUTES} -print0 | sort -z)
+              done < <(git log --since="12 hours ago" --name-only --pretty=format: -- ai_gen_report/market_news | grep '\.md$' | sort -u)
             fi
-
-            echo ""
-            TOTAL=$((ANALYSIS_COUNT + NEWS_COUNT))
-            echo "Total: ${TOTAL} report(s) (${ANALYSIS_COUNT} analysis + ${NEWS_COUNT} news)"
           } > "$OUT"
 
           cat "$OUT"
