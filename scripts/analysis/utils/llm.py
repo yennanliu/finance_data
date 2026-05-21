@@ -242,13 +242,108 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     return text
 
 
+def call_gemini(ticker: str, context: str, analysis_type: str,
+                model: str, max_tokens: int) -> str:
+    """Call Gemini API and return the response text."""
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        logger.error("'google-genai' not installed. Run: pip install google-genai")
+        raise LLMError("google-genai library not found") from None
+
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key:
+        logger.error("GEMINI_API_KEY environment variable is not set")
+        raise LLMError("GEMINI_API_KEY not configured")
+
+    client = genai.Client(api_key=api_key)
+    system_template = _load_openai_system_message()
+    system_message = system_template.format(ticker=ticker)
+
+    template = PROMPT_MAP[analysis_type]
+    prompt = template.format(
+        ticker=ticker,
+        financial_context=context,
+        today=TODAY,
+    )
+
+    logger.info(f"Gemini API call: model={model}, max_tokens={max_tokens}")
+
+    config = types.GenerateContentConfig(
+        system_instruction=system_message,
+        max_output_tokens=max_tokens,
+        temperature=0.7,
+    )
+
+    max_retries = 5
+    base_delay = 30
+    text = ""
+    response = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=config,
+            )
+            text = response.text or ""
+            break
+        except Exception as e:
+            err_str = str(e)
+            if "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
+                if attempt == max_retries:
+                    raise
+                delay = base_delay * (2 ** (attempt - 1))
+                logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). "
+                               f"Retrying in {delay}s…")
+                time.sleep(delay)
+            else:
+                raise
+
+    usage = response.usage_metadata
+    logger.info(f"Response: input={usage.prompt_token_count}, "
+                f"output={usage.candidates_token_count}, chars={len(text)}")
+
+    for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
+        if not _is_refusal(text):
+            break
+        override = _refusal_override_prefix(ticker, retry)
+        temp = min(0.7 + retry * 0.15, 1.0)
+        logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), "
+                       f"retrying with temp={temp:.2f}…")
+        time.sleep(3)
+        retry_config = types.GenerateContentConfig(
+            system_instruction=system_message,
+            max_output_tokens=max_tokens,
+            temperature=temp,
+        )
+        response = client.models.generate_content(
+            model=model,
+            contents=override + prompt,
+            config=retry_config,
+        )
+        text = response.text or ""
+        usage = response.usage_metadata
+        logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
+                    f"output={usage.candidates_token_count}, chars={len(text)}")
+
+    if _is_refusal(text):
+        logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. "
+                       f"Returning last response.")
+
+    return text
+
+
 def call_llm(ticker: str, context: str, analysis_type: str,
              provider: str, model: str, max_tokens: int) -> str:
     """Dispatch to the appropriate LLM provider."""
     if provider == "openai":
         return call_openai(ticker, context, analysis_type, model, max_tokens)
+    elif provider == "gemini":
+        return call_gemini(ticker, context, analysis_type, model, max_tokens)
     else:
         return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
-__all__ = ["call_claude", "call_openai", "call_llm"]
+__all__ = ["call_claude", "call_openai", "call_gemini", "call_llm"]
