@@ -286,6 +286,13 @@ jobs:
           MODEL="${MODEL:-gpt-4o}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
+          # Auto-correct model when it doesn't match the chosen provider
+          case "$PROVIDER" in
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-pro" ;;
+            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
+            claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
+          esac
+
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
           DATE_TIME=$(date -u +"%Y-%m-%d")
