@@ -126,6 +126,7 @@ on:
         options:
           - openai
           - claude
+          - gemini
       model:
         description: "Model ID"
         required: false
@@ -140,6 +141,10 @@ on:
           - claude-sonnet-4-6
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
+          # Gemini models
+          - gemini-2.5-pro
+          - gemini-2.5-flash
+          - gemini-2.0-flash
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -177,7 +182,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic>=0.40.0 openai>=1.0.0 yfinance>=0.2.40 matplotlib>=3.8.0 mplfinance>=0.12.10 plotly>=5.0.0
+          pip install anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 yfinance>=0.2.40 matplotlib>=3.8.0 mplfinance>=0.12.10 plotly>=5.0.0
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
@@ -503,6 +508,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PROVIDER: ${{ steps.params.outputs.provider }}
         run: |
           if [ "$PROVIDER" = "openai" ]; then
@@ -513,6 +519,14 @@ jobs:
               exit 1
             fi
             echo "✅ OPEN_KEY_API is set."
+          elif [ "$PROVIDER" = "gemini" ]; then
+            if [ -z "$GEMINI_API_KEY" ]; then
+              echo "::error::GEMINI_API_KEY secret is not set."
+              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
+              echo "Name: GEMINI_API_KEY  |  Value: your Google Gemini API key"
+              exit 1
+            fi
+            echo "✅ GEMINI_API_KEY is set."
           else
             if [ -z "$ANTHROPIC_API_KEY" ]; then
               echo "::error::ANTHROPIC_API_KEY secret is not set."
@@ -529,6 +543,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python scripts/generate_analysis.py \
             "${{ steps.params.outputs.ticker }}" \
