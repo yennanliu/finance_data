@@ -22,8 +22,8 @@ from urllib.request import Request, urlopen
 
 import yfinance as yf
 
-DEFAULT_PROVIDER = "claude"
-DEFAULT_MODEL = "claude-sonnet-4-6"
+DEFAULT_PROVIDER = "openai"
+DEFAULT_MODEL = "gpt-4o"
 DEFAULT_TOKENS = 12000
 
 _OPENAI_MAX_TOKENS: dict[str, int] = {
@@ -329,6 +329,49 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
     return text
 
 
+_GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
+
+你的分析必須遵循以下原則：
+1. **新聞摘要總覽**：必須撰寫 400–600 字的完整摘要，整合所有新聞核心內容，讓讀者一覽全局
+2. **關鍵洞察**：提供 5–8 點深度洞察，每點須有具體說明與投資啟示，不得流於表面
+3. **深度分析**：每個章節必須提供詳盡、專業的分析，不得只有簡單的一兩句話
+4. **具體數據**：引用具體的財務數據、股價、估值倍數等數字支撐論點
+5. **專業格式**：使用完整的 Markdown 格式，包含表格、條列、emoji 視覺標記
+6. **風險評估**：詳細分析風險因素，使用 🟢🟡🔴 標記風險等級
+7. **報告長度**：報告應詳盡完整，至少 3000-5000 字以上"""
+
+
+def call_gemini(prompt: str, model: str, max_tokens: int) -> str:
+    """Call Gemini API and return the response text."""
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        print("ERROR: 'google-genai' not installed. Run: pip install google-genai", file=sys.stderr)
+        sys.exit(1)
+
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key:
+        print("ERROR: GEMINI_API_KEY is not set.", file=sys.stderr)
+        sys.exit(1)
+
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model=model,
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            system_instruction=_GEMINI_SYSTEM_MESSAGE,
+            max_output_tokens=max_tokens,
+            temperature=0.7,
+        ),
+    )
+    text = response.text or ""
+    usage = response.usage_metadata
+    print(f"  ✅ response  in={usage.prompt_token_count}  out={usage.candidates_token_count}"
+          f"  chars={len(text)}")
+    return text
+
+
 def generate_report(
     ticker: str,
     provider: str,
@@ -361,6 +404,8 @@ def generate_report(
     print(f"[3/4] Calling {provider.upper()} ({model}, max_tokens={max_tokens})…")
     if provider == "openai":
         report_body = call_openai(prompt, model, max_tokens)
+    elif provider == "gemini":
+        report_body = call_gemini(prompt, model, max_tokens)
     else:
         report_body = call_claude(prompt, model, max_tokens)
 
@@ -401,7 +446,7 @@ def main() -> None:
     parser.add_argument(
         "--provider",
         default=DEFAULT_PROVIDER,
-        choices=["claude", "openai"],
+        choices=["claude", "openai", "gemini"],
         help=f"AI provider (default: {DEFAULT_PROVIDER})",
     )
     parser.add_argument(
