@@ -6,6 +6,7 @@ requires-python = ">=3.9"
 dependencies = [
     "anthropic>=0.40.0",
     "openai>=1.0.0",
+    "google-genai>=1.0.0",
     "yfinance>=0.2.40",
     "plotly>=5.0.0",
     "beautifulsoup4>=4.14.2",

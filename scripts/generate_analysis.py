@@ -67,7 +67,7 @@ def save_report(ticker: str, content: str, output_dir: Path,
     label = meta["label"]
     ext = meta.get("ext", ".md")
 
-    model_suffix = "openai" if provider == "openai" else "claude"
+    model_suffix = provider  # "openai", "claude", or "gemini"
     base = f"{prefix}_{TODAY}_{model_suffix}"
 
     path = output_dir / f"{base}{ext}"
@@ -79,7 +79,7 @@ def save_report(ticker: str, content: str, output_dir: Path,
     if ext == ".html":
         path.write_text(content, encoding="utf-8")
     else:
-        generated_by = "OpenAI API" if provider == "openai" else "Claude AI"
+        generated_by = {"openai": "OpenAI API", "gemini": "Google Gemini API"}.get(provider, "Claude AI")
         frontmatter = (
             "---\n"
             f'title: "{ticker} {label} {TODAY}"\n'
@@ -116,7 +116,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--provider", default="openai",
-        choices=["claude", "openai"],
+        choices=["claude", "openai", "gemini"],
         help="AI provider (default: openai)",
     )
     p.add_argument(

@@ -9,4 +9,8 @@ PROVIDER_DEFAULTS = {
         "default_model": "gpt-4o",
         "default_tokens": 16000,
     },
+    "gemini": {
+        "default_model": "gemini-2.5-pro",
+        "default_tokens": 16000,
+    },
 }
