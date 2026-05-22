@@ -21,11 +21,11 @@ run-name: "Daily Stock Analysis ${{ github.event.inputs.ticker || github.event.s
 #   19:30 → 03:30  META          fundamental
 #   19:40 → 03:40  AMD           fundamental
 #   19:50 → 03:50  NVDA          fundamental
-#   20:00 → 04:00  NU            fundamental (new)
-#   20:10 → 04:10  VST           fundamental (new)
-#   20:20 → 04:20  ORCL          fundamental (new)
+#   20:00 → 04:00  NU            fundamental
+#   20:10 → 04:10  VST           fundamental
+#   20:20 → 04:20  ORCL          fundamental
 #
-# Technical Analysis Schedule (21:00 - 00:00 UTC)
+# Technical Analysis Schedule (21:00 - 00:20 UTC)
 #   21:00 → 05:00  0050          technical
 #   21:10 → 05:10  2330.tw       technical
 #   21:20 → 05:20  TSLA          technical
@@ -44,9 +44,9 @@ run-name: "Daily Stock Analysis ${{ github.event.inputs.ticker || github.event.s
 #   23:30 → 07:30  META          technical
 #   23:40 → 07:40  AMD           technical
 #   23:50 → 07:50  NVDA          technical
-#   00:00 → 08:00  NU            technical (new)
-#   00:10 → 08:10  VST           technical (new)
-#   00:20 → 08:20  ORCL          technical (new)
+#   00:00 → 08:00  NU            technical
+#   00:10 → 08:10  VST           technical
+#   00:20 → 08:20  ORCL          technical
 on:
   schedule:
     # ── Fundamental Analysis ──
@@ -68,9 +68,9 @@ on:
     - cron: "30 19 * * *"    # META fundamental
     - cron: "40 19 * * *"    # AMD fundamental
     - cron: "50 19 * * *"    # NVDA fundamental
-    - cron: "0 20 * * *"     # NU fundamental (new)
-    - cron: "10 20 * * *"    # VST fundamental (new)
-    - cron: "20 20 * * *"    # ORCL fundamental (new)
+    - cron: "0 20 * * *"     # NU fundamental
+    - cron: "10 20 * * *"    # VST fundamental
+    - cron: "20 20 * * *"    # ORCL fundamental
     # ── Technical Analysis ──
     - cron: "0 21 * * *"     # 0050 technical
     - cron: "10 21 * * *"    # 2330.tw technical
@@ -90,9 +90,9 @@ on:
     - cron: "30 23 * * *"    # META technical
     - cron: "40 23 * * *"    # AMD technical
     - cron: "50 23 * * *"    # NVDA technical
-    - cron: "0 0 * * *"      # NU technical (new)
-    - cron: "10 0 * * *"     # VST technical (new)
-    - cron: "20 0 * * *"     # ORCL technical (new)
+    - cron: "0 0 * * *"      # NU technical
+    - cron: "10 0 * * *"     # VST technical
+    - cron: "20 0 * * *"     # ORCL technical
 
   workflow_dispatch:
     inputs:
@@ -121,18 +121,22 @@ on:
       provider:
         description: "AI provider"
         required: false
-        default: "openai"
+        default: "gemini"
         type: choice
         options:
+          - gemini
           - openai
           - claude
-          - gemini
       model:
         description: "Model ID"
         required: false
-        default: "gpt-4o"
+        default: "gemini-2.5-flash"
         type: choice
         options:
+          # Gemini models
+          - gemini-2.5-flash
+          - gemini-2.5-pro
+          - gemini-2.0-flash
           # OpenAI models
           - gpt-4o
           - gpt-4o-mini
@@ -141,10 +145,6 @@ on:
           - claude-sonnet-4-6
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
-          # Gemini models
-          - gemini-2.5-pro
-          - gemini-2.5-flash
-          - gemini-2.0-flash
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -163,6 +163,10 @@ jobs:
     name: Generate Analysis
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      DEFAULT_PROVIDER: gemini
+      DEFAULT_MODEL: gemini-2.5-flash
+      DEFAULT_MAX_TOKENS: "16000"
 
     steps:
       # ── 1. Checkout ────────────────────────────────────────────────
@@ -186,7 +190,7 @@ jobs:
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
-      #   scheduled crons   → map to pre-configured ticker
+      #   scheduled crons   → map ticker/type via case; provider/model from job env defaults
       - name: Resolve analysis parameters
         id: params
         run: |
@@ -199,279 +203,66 @@ jobs:
             PROVIDER="${{ github.event.inputs.provider }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          # ── Fundamental Analysis Schedules ──
-          elif [ "$SCHEDULE" = "0 17 * * *" ]; then
-            TICKER="0050"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 17 * * *" ]; then
-            TICKER="2330.tw"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 17 * * *" ]; then
-            TICKER="TSLA"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 17 * * *" ]; then
-            TICKER="PL"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 17 * * *" ]; then
-            TICKER="GRAB"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 17 * * *" ]; then
-            TICKER="TSM"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 18 * * *" ]; then
-            TICKER="GOOG"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 18 * * *" ]; then
-            TICKER="AMZN"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 18 * * *" ]; then
-            TICKER="MSFT"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 18 * * *" ]; then
-            TICKER="SOFI"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 18 * * *" ]; then
-            TICKER="PLTR"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 18 * * *" ]; then
-            TICKER="RKLB"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 19 * * *" ]; then
-            TICKER="ONDS"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 19 * * *" ]; then
-            TICKER="AVAV"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 19 * * *" ]; then
-            TICKER="KTOS"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 19 * * *" ]; then
-            TICKER="META"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 19 * * *" ]; then
-            TICKER="AMD"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 19 * * *" ]; then
-            TICKER="NVDA"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 20 * * *" ]; then
-            TICKER="NU"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 20 * * *" ]; then
-            TICKER="VST"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 20 * * *" ]; then
-            TICKER="ORCL"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          # ── Technical Analysis Schedules ──
-          elif [ "$SCHEDULE" = "0 21 * * *" ]; then
-            TICKER="0050"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 21 * * *" ]; then
-            TICKER="2330.tw"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 21 * * *" ]; then
-            TICKER="TSLA"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 21 * * *" ]; then
-            TICKER="PL"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 21 * * *" ]; then
-            TICKER="GRAB"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 21 * * *" ]; then
-            TICKER="TSM"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 22 * * *" ]; then
-            TICKER="GOOG"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 22 * * *" ]; then
-            TICKER="AMZN"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 22 * * *" ]; then
-            TICKER="MSFT"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 22 * * *" ]; then
-            TICKER="SOFI"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 22 * * *" ]; then
-            TICKER="PLTR"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 22 * * *" ]; then
-            TICKER="RKLB"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 23 * * *" ]; then
-            TICKER="ONDS"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 23 * * *" ]; then
-            TICKER="AVAV"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 23 * * *" ]; then
-            TICKER="KTOS"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 23 * * *" ]; then
-            TICKER="META"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 23 * * *" ]; then
-            TICKER="AMD"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 23 * * *" ]; then
-            TICKER="NVDA"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 0 * * *" ]; then
-            TICKER="NU"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 0 * * *" ]; then
-            TICKER="VST"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 0 * * *" ]; then
-            TICKER="ORCL"
-            ANALYSIS_TYPE="technical-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
           else
-            # Fallback
-            TICKER="TSLA"
-            ANALYSIS_TYPE="fundamental-analysis"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
+            # Schedule → set only ticker + analysis type; provider/model use job-level defaults
+            case "$SCHEDULE" in
+              # ── Fundamental ────────────────────────────────────────
+              "0 17 * * *")   TICKER="0050";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 17 * * *")  TICKER="2330.tw"; ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 17 * * *")  TICKER="TSLA";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "30 17 * * *")  TICKER="PL";      ANALYSIS_TYPE="fundamental-analysis" ;;
+              "40 17 * * *")  TICKER="GRAB";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "50 17 * * *")  TICKER="TSM";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "0 18 * * *")   TICKER="GOOG";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 18 * * *")  TICKER="AMZN";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 18 * * *")  TICKER="MSFT";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "30 18 * * *")  TICKER="SOFI";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "40 18 * * *")  TICKER="PLTR";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "50 18 * * *")  TICKER="RKLB";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "0 19 * * *")   TICKER="ONDS";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 19 * * *")  TICKER="AVAV";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 19 * * *")  TICKER="KTOS";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "30 19 * * *")  TICKER="META";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "40 19 * * *")  TICKER="AMD";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "50 19 * * *")  TICKER="NVDA";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "0 20 * * *")   TICKER="NU";      ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 20 * * *")  TICKER="VST";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 20 * * *")  TICKER="ORCL";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              # ── Technical ──────────────────────────────────────────
+              "0 21 * * *")   TICKER="0050";    ANALYSIS_TYPE="technical-analysis" ;;
+              "10 21 * * *")  TICKER="2330.tw"; ANALYSIS_TYPE="technical-analysis" ;;
+              "20 21 * * *")  TICKER="TSLA";    ANALYSIS_TYPE="technical-analysis" ;;
+              "30 21 * * *")  TICKER="PL";      ANALYSIS_TYPE="technical-analysis" ;;
+              "40 21 * * *")  TICKER="GRAB";    ANALYSIS_TYPE="technical-analysis" ;;
+              "50 21 * * *")  TICKER="TSM";     ANALYSIS_TYPE="technical-analysis" ;;
+              "0 22 * * *")   TICKER="GOOG";    ANALYSIS_TYPE="technical-analysis" ;;
+              "10 22 * * *")  TICKER="AMZN";    ANALYSIS_TYPE="technical-analysis" ;;
+              "20 22 * * *")  TICKER="MSFT";    ANALYSIS_TYPE="technical-analysis" ;;
+              "30 22 * * *")  TICKER="SOFI";    ANALYSIS_TYPE="technical-analysis" ;;
+              "40 22 * * *")  TICKER="PLTR";    ANALYSIS_TYPE="technical-analysis" ;;
+              "50 22 * * *")  TICKER="RKLB";    ANALYSIS_TYPE="technical-analysis" ;;
+              "0 23 * * *")   TICKER="ONDS";    ANALYSIS_TYPE="technical-analysis" ;;
+              "10 23 * * *")  TICKER="AVAV";    ANALYSIS_TYPE="technical-analysis" ;;
+              "20 23 * * *")  TICKER="KTOS";    ANALYSIS_TYPE="technical-analysis" ;;
+              "30 23 * * *")  TICKER="META";    ANALYSIS_TYPE="technical-analysis" ;;
+              "40 23 * * *")  TICKER="AMD";     ANALYSIS_TYPE="technical-analysis" ;;
+              "50 23 * * *")  TICKER="NVDA";    ANALYSIS_TYPE="technical-analysis" ;;
+              "0 0 * * *")    TICKER="NU";      ANALYSIS_TYPE="technical-analysis" ;;
+              "10 0 * * *")   TICKER="VST";     ANALYSIS_TYPE="technical-analysis" ;;
+              "20 0 * * *")   TICKER="ORCL";    ANALYSIS_TYPE="technical-analysis" ;;
+              *)              TICKER="TSLA";    ANALYSIS_TYPE="fundamental-analysis" ;;
+            esac
           fi
 
-          # Apply defaults for empty values
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-fundamental-analysis}"
-          PROVIDER="${PROVIDER:-openai}"
-          MODEL="${MODEL:-gpt-4o}"
-          MAX_TOKENS="${MAX_TOKENS:-16000}"
+          PROVIDER="${PROVIDER:-${DEFAULT_PROVIDER}}"
+          MODEL="${MODEL:-${DEFAULT_MODEL}}"
+          MAX_TOKENS="${MAX_TOKENS:-${DEFAULT_MAX_TOKENS}}"
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-pro" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-flash" ;;
             openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
@@ -484,8 +275,8 @@ jobs:
           echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
           echo "provider=${PROVIDER}"            >> "$GITHUB_OUTPUT"
           echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
-          echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
-          echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
+          echo "max_tokens=${MAX_TOKENS}"        >> "$GITHUB_OUTPUT"
+          echo "output_dir=${OUTPUT_DIR}"        >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
           echo "  Event:         ${EVENT}"
@@ -510,7 +301,7 @@ jobs:
             "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             -f "display_title=Daily Stock Analysis ${TICKER} ${ATYPE}"
 
-      # ── 7. Verify API key secret is set ──────────────────────────
+      # ── 6. Verify API key secret is set ──────────────────────────
       - name: Check API key secret
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -521,30 +312,24 @@ jobs:
           if [ "$PROVIDER" = "openai" ]; then
             if [ -z "$OPENAI_API_KEY" ]; then
               echo "::error::OPEN_KEY_API secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: OPEN_KEY_API  |  Value: your OpenAI API key"
               exit 1
             fi
             echo "✅ OPEN_KEY_API is set."
           elif [ "$PROVIDER" = "gemini" ]; then
             if [ -z "$GEMINI_API_KEY" ]; then
               echo "::error::GEMINI_API_KEY secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: GEMINI_API_KEY  |  Value: your Google Gemini API key"
               exit 1
             fi
             echo "✅ GEMINI_API_KEY is set."
           else
             if [ -z "$ANTHROPIC_API_KEY" ]; then
               echo "::error::ANTHROPIC_API_KEY secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: ANTHROPIC_API_KEY  |  Value: your Anthropic API key"
               exit 1
             fi
             echo "✅ ANTHROPIC_API_KEY is set."
           fi
 
-      # ── 8. Generate report ────────────────────────────────────────
+      # ── 7. Generate report ────────────────────────────────────────
       - name: Generate analysis report
         timeout-minutes: 20
         env:
@@ -560,13 +345,12 @@ jobs:
             --model         "${{ steps.params.outputs.model }}" \
             --max-tokens    "${{ steps.params.outputs.max_tokens }}"
 
-      # ── 9. Commit & push ──────────────────────────────────────────
+      # ── 8. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Pull latest changes to avoid conflicts with concurrent jobs
           echo "📥 Pulling latest changes from remote..."
           git pull --rebase origin main
 
