@@ -66,18 +66,22 @@ on:
       provider:
         description: "AI provider"
         required: false
-        default: "openai"
+        default: "gemini"
         type: choice
         options:
+          - gemini
           - openai
           - claude
-          - gemini
       model:
         description: "Model ID"
         required: false
-        default: "gpt-4o"
+        default: "gemini-2.5-flash"
         type: choice
         options:
+          # Gemini models
+          - gemini-2.5-flash
+          - gemini-2.5-pro
+          - gemini-2.0-flash
           # OpenAI models
           - gpt-4o
           - gpt-4o-mini
@@ -86,10 +90,6 @@ on:
           - claude-sonnet-4-6
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
-          # Gemini models
-          - gemini-2.5-pro
-          - gemini-2.5-flash
-          - gemini-2.0-flash
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -107,6 +107,10 @@ jobs:
     name: Fetch & Generate News Report
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      DEFAULT_PROVIDER: gemini
+      DEFAULT_MODEL: gemini-2.5-flash
+      DEFAULT_MAX_TOKENS: "20000"
 
     steps:
       # ── 1. Checkout ────────────────────────────────────────────────
@@ -130,7 +134,7 @@ jobs:
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
-      #   scheduled crons   → map to pre-configured ticker
+      #   scheduled crons   → map ticker via case; provider/model from job env defaults
       - name: Resolve parameters
         id: params
         run: |
@@ -142,153 +146,47 @@ jobs:
             PROVIDER="${{ github.event.inputs.provider }}"
             MODEL="${{ github.event.inputs.model }}"
             MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          elif [ "$SCHEDULE" = "0 17 * * *" ]; then
-            TICKER="0050"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 17 * * *" ]; then
-            TICKER="2330.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 17 * * *" ]; then
-            TICKER="TSLA"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 17 * * *" ]; then
-            TICKER="PL"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 17 * * *" ]; then
-            TICKER="GRAB"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 17 * * *" ]; then
-            TICKER="TSM"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 18 * * *" ]; then
-            TICKER="GOOG"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 18 * * *" ]; then
-            TICKER="AMZN"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 18 * * *" ]; then
-            TICKER="MSFT"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 18 * * *" ]; then
-            TICKER="SOFI"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 18 * * *" ]; then
-            TICKER="PLTR"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 18 * * *" ]; then
-            TICKER="RKLB"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 19 * * *" ]; then
-            TICKER="ONDS"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 19 * * *" ]; then
-            TICKER="AVAV"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 19 * * *" ]; then
-            TICKER="KTOS"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 19 * * *" ]; then
-            TICKER="META"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 19 * * *" ]; then
-            TICKER="AMD"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 19 * * *" ]; then
-            TICKER="NVDA"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 20 * * *" ]; then
-            TICKER="NU"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 20 * * *" ]; then
-            TICKER="VST"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "20 20 * * *" ]; then
-            TICKER="ORCL"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "30 20 * * *" ]; then
-            TICKER="6206.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "40 20 * * *" ]; then
-            TICKER="3008.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "50 20 * * *" ]; then
-            TICKER="4766.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "0 21 * * *" ]; then
-            TICKER="6643.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
-          elif [ "$SCHEDULE" = "10 21 * * *" ]; then
-            TICKER="2317.tw"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
           else
-            # Fallback
-            TICKER="TSLA"
-            PROVIDER="openai"
-            MODEL="gpt-4o"
-            MAX_TOKENS="16000"
+            # Schedule → set only ticker; provider/model use job-level defaults
+            case "$SCHEDULE" in
+              "0 17 * * *")   TICKER="0050" ;;
+              "10 17 * * *")  TICKER="2330.tw" ;;
+              "20 17 * * *")  TICKER="TSLA" ;;
+              "30 17 * * *")  TICKER="PL" ;;
+              "40 17 * * *")  TICKER="GRAB" ;;
+              "50 17 * * *")  TICKER="TSM" ;;
+              "0 18 * * *")   TICKER="GOOG" ;;
+              "10 18 * * *")  TICKER="AMZN" ;;
+              "20 18 * * *")  TICKER="MSFT" ;;
+              "30 18 * * *")  TICKER="SOFI" ;;
+              "40 18 * * *")  TICKER="PLTR" ;;
+              "50 18 * * *")  TICKER="RKLB" ;;
+              "0 19 * * *")   TICKER="ONDS" ;;
+              "10 19 * * *")  TICKER="AVAV" ;;
+              "20 19 * * *")  TICKER="KTOS" ;;
+              "30 19 * * *")  TICKER="META" ;;
+              "40 19 * * *")  TICKER="AMD" ;;
+              "50 19 * * *")  TICKER="NVDA" ;;
+              "0 20 * * *")   TICKER="NU" ;;
+              "10 20 * * *")  TICKER="VST" ;;
+              "20 20 * * *")  TICKER="ORCL" ;;
+              "30 20 * * *")  TICKER="6206.tw" ;;
+              "40 20 * * *")  TICKER="3008.tw" ;;
+              "50 20 * * *")  TICKER="4766.tw" ;;
+              "0 21 * * *")   TICKER="6643.tw" ;;
+              "10 21 * * *")  TICKER="2317.tw" ;;
+              *)              TICKER="TSLA" ;;
+            esac
           fi
 
-          # Apply defaults for empty values
           TICKER="${TICKER:-TSLA}"
-          PROVIDER="${PROVIDER:-openai}"
-          MODEL="${MODEL:-gpt-4o}"
-          MAX_TOKENS="${MAX_TOKENS:-20000}"
+          PROVIDER="${PROVIDER:-${DEFAULT_PROVIDER}}"
+          MODEL="${MODEL:-${DEFAULT_MODEL}}"
+          MAX_TOKENS="${MAX_TOKENS:-${DEFAULT_MAX_TOKENS}}"
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-pro" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-flash" ;;
             openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
@@ -307,13 +205,13 @@ jobs:
           echo "output_file=${OUTPUT_FILE}"  >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
-          echo "  Event:      ${EVENT}"
-          echo "  Schedule:   ${SCHEDULE:-n/a}"
-          echo "  Ticker:     ${TICKER_UPPER}"
-          echo "  Provider:   ${PROVIDER}"
-          echo "  Model:      ${MODEL}"
-          echo "  Max tokens: ${MAX_TOKENS}"
-          echo "  Output dir: ${OUTPUT_DIR}"
+          echo "  Event:       ${EVENT}"
+          echo "  Schedule:    ${SCHEDULE:-n/a}"
+          echo "  Ticker:      ${TICKER_UPPER}"
+          echo "  Provider:    ${PROVIDER}"
+          echo "  Model:       ${MODEL}"
+          echo "  Max tokens:  ${MAX_TOKENS}"
+          echo "  Output dir:  ${OUTPUT_DIR}"
           echo "  Output file: ${OUTPUT_FILE}"
 
       # ── 5. Verify API key secret is set ──────────────────────────
@@ -327,24 +225,18 @@ jobs:
           if [ "$PROVIDER" = "openai" ]; then
             if [ -z "$OPENAI_API_KEY" ]; then
               echo "::error::OPEN_KEY_API secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: OPEN_KEY_API  |  Value: your OpenAI API key"
               exit 1
             fi
             echo "✅ OPEN_KEY_API is set."
           elif [ "$PROVIDER" = "gemini" ]; then
             if [ -z "$GEMINI_API_KEY" ]; then
               echo "::error::GEMINI_API_KEY secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: GEMINI_API_KEY  |  Value: your Google Gemini API key"
               exit 1
             fi
             echo "✅ GEMINI_API_KEY is set."
           else
             if [ -z "$ANTHROPIC_API_KEY" ]; then
               echo "::error::ANTHROPIC_API_KEY secret is not set."
-              echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
-              echo "Name: ANTHROPIC_API_KEY  |  Value: your Anthropic API key"
               exit 1
             fi
             echo "✅ ANTHROPIC_API_KEY is set."
@@ -372,18 +264,15 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Stage new files first before pulling
           git add "${{ steps.params.outputs.output_dir }}/"
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            # Create a temporary commit to preserve changes
             DATE=$(date -u +"%Y-%m-%d")
             TICKER="${{ steps.params.outputs.ticker }}"
             git commit -m "chore: auto-fetch ${TICKER} market-news ${DATE}"
 
-            # Pull latest changes to avoid conflicts with concurrent jobs
             echo "📥 Pulling latest changes from remote..."
             git pull --rebase origin main
 
