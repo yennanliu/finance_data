@@ -12,8 +12,8 @@
     ]
   },
   "defaults": {
-    "provider": "openai",
-    "model": "gpt-4o",
+    "provider": "gemini",
+    "model": "gemini-2.5-flash",
     "max_tokens": 16000
   }
 }
