@@ -1,0 +1,19 @@
+### Stock Analysis
+- [2330.TW technical_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/2330.tw/technical_analysis_2026-05-22_gemini/)
+- [AMZN fundamental_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/amzn/fundamental_analysis_2026-05-22_gemini/)
+- [META fundamental_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/meta/fundamental_analysis_2026-05-22_gemini/)
+- [META technical_analysis_2026-05-23_gemini](https://yennanliu.github.io/finance_data/reports/meta/technical_analysis_2026-05-23_gemini/)
+- [NU technical_analysis_2026-05-23_gemini](https://yennanliu.github.io/finance_data/reports/nu/technical_analysis_2026-05-23_gemini/)
+- [NVDA technical_analysis_2026-05-23_gemini](https://yennanliu.github.io/finance_data/reports/nvda/technical_analysis_2026-05-23_gemini/)
+- [ONDS fundamental_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/onds/fundamental_analysis_2026-05-22_gemini/)
+- [ORCL technical_analysis_2026-05-23_gemini](https://yennanliu.github.io/finance_data/reports/orcl/technical_analysis_2026-05-23_gemini/)
+- [PL fundamental_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/pl/fundamental_analysis_2026-05-22_gemini/)
+- [RKLB fundamental_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/rklb/fundamental_analysis_2026-05-22_gemini/)
+- [SOFI technical_analysis_2026-05-22_gemini](https://yennanliu.github.io/finance_data/reports/sofi/technical_analysis_2026-05-22_gemini/)
+- [VST technical_analysis_2026-05-23_gemini](https://yennanliu.github.io/finance_data/reports/vst/technical_analysis_2026-05-23_gemini/)
+
+### Market News
+- [AMZN market_news_2026-05-22_gemini](https://yennanliu.github.io/finance_data/market_news/amzn/market_news_2026-05-22_gemini/)
+- [AVAV market_news_2026-05-22_gemini](https://yennanliu.github.io/finance_data/market_news/avav/market_news_2026-05-22_gemini/)
+- [MSFT market_news_2026-05-22_gemini](https://yennanliu.github.io/finance_data/market_news/msft/market_news_2026-05-22_gemini/)
+- [RKLB market_news_2026-05-22_gemini](https://yennanliu.github.io/finance_data/market_news/rklb/market_news_2026-05-22_gemini/)
