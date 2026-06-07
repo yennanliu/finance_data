@@ -65,6 +65,16 @@ def _load_openai_system_message() -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _load_gemini_system_message() -> str:
+    """Load the Gemini-specific system message (shorter length target, no placeholder values)."""
+    path = Path(__file__).parent.parent / "prompts" / "gemini_system.txt"
+    return path.read_text(encoding="utf-8")
+
+
+# Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
+_GEMINI_MAX_TOKENS = 8000
+
+
 def _get_anthropic():
     """Lazy import of anthropic."""
     try:
@@ -257,8 +267,12 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
         logger.error("GEMINI_API_KEY environment variable is not set")
         raise LLMError("GEMINI_API_KEY not configured")
 
+    effective_max_tokens = min(max_tokens, _GEMINI_MAX_TOKENS)
+    if effective_max_tokens != max_tokens:
+        logger.info(f"Capping max_tokens from {max_tokens} to {effective_max_tokens} for Gemini")
+
     client = genai.Client(api_key=api_key)
-    system_template = _load_openai_system_message()
+    system_template = _load_gemini_system_message()
     system_message = system_template.format(ticker=ticker)
 
     template = PROMPT_MAP[analysis_type]
@@ -268,11 +282,11 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
         today=TODAY,
     )
 
-    logger.info(f"Gemini API call: model={model}, max_tokens={max_tokens}")
+    logger.info(f"Gemini API call: model={model}, max_tokens={effective_max_tokens}")
 
     config = types.GenerateContentConfig(
         system_instruction=system_message,
-        max_output_tokens=max_tokens,
+        max_output_tokens=effective_max_tokens,
         temperature=0.7,
     )
 
