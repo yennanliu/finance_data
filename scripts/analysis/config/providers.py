@@ -10,7 +10,7 @@ PROVIDER_DEFAULTS = {
         "default_tokens": 16000,
     },
     "gemini": {
-        "default_model": "gemini-2.5-pro",
+        "default_model": "gemini-3.5-flash",
         "default_tokens": 8000,
     },
 }

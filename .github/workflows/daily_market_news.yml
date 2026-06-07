@@ -75,12 +75,18 @@ on:
       model:
         description: "Model ID"
         required: false
-        default: "gemini-2.5-flash"
+        default: "gemini-3.5-flash"
         type: choice
         options:
-          # Gemini models
+          # Gemini 3.x models (latest)
+          - gemini-3.5-flash
+          - gemini-3.1-pro
+          - gemini-3.1-flash-lite
+          # Gemini 2.5 models (previous gen)
           - gemini-2.5-flash
           - gemini-2.5-pro
+          - gemini-2.5-flash-lite
+          # Gemini 2.0 models (legacy)
           - gemini-2.0-flash
           # OpenAI models
           - gpt-4o
@@ -109,7 +115,7 @@ jobs:
     timeout-minutes: 30
     env:
       DEFAULT_PROVIDER: gemini
-      DEFAULT_MODEL: gemini-2.5-flash
+      DEFAULT_MODEL: gemini-3.5-flash
       DEFAULT_MAX_TOKENS: "20000"
 
     steps:
@@ -186,7 +192,7 @@ jobs:
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-flash" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.5-flash" ;;
             openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
