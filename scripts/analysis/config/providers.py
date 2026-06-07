@@ -11,6 +11,6 @@ PROVIDER_DEFAULTS = {
     },
     "gemini": {
         "default_model": "gemini-2.5-pro",
-        "default_tokens": 16000,
+        "default_tokens": 8000,
     },
 }
