@@ -3,12 +3,12 @@
     "fundamental": [
       "0050", "2330.TW", "TSLA", "PL", "GRAB", "TSM", "GOOG", "AMZN",
       "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
-      "AMD", "NVDA", "NU", "VST", "ORCL"
+      "AMD", "NVDA", "NU", "VST", "ORCL", "INTC", "SPCX", "AVGO", "NBIS"
     ],
     "technical": [
       "0050", "2330.TW", "TSLA", "PL", "GRAB", "TSM", "GOOG", "AMZN",
       "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
-      "AMD", "NVDA", "NU", "VST", "ORCL"
+      "AMD", "NVDA", "NU", "VST", "ORCL", "INTC", "SPCX", "AVGO", "NBIS"
     ]
   },
   "defaults": {
