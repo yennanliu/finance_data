@@ -786,9 +786,18 @@
 /* ══════════════════════════════════════════════════════════════
    Mobile — Prevent pull-to-refresh auto-reload
    ══════════════════════════════════════════════════════════════ */
-html {
-  /* Prevents the iOS/Android pull-to-refresh gesture from reloading
-     the page while still allowing normal vertical scrolling. */
+/* Stops the iOS (16+) / Android pull-to-refresh gesture from reloading the
+   page, while still allowing normal vertical scrolling. Applied to every
+   element that can become the scroll container — `html`/`body` for normal
+   document scrolling and the Material layout wrappers, since in MkDocs
+   Material the active scroller varies by viewport and feature flags. This is
+   the native, performant replacement for the old passive:false touchmove
+   JS hack (which blocked the scroll thread and caused mobile lag). */
+html,
+body,
+.md-main,
+.md-content,
+[data-md-component="container"] {
   overscroll-behavior-y: none;
 }
 
@@ -875,5 +884,30 @@ html {
   .md-typeset .admonition,
   .md-typeset details {
     font-size: 0.95rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Performance — reduce continuous repaints
+   ══════════════════════════════════════════════════════════════ */
+/* The hero dot pulse and headline shimmer run `infinite`, repainting every
+   frame forever. On phones this drains battery and competes with scrolling,
+   adding to perceived slowness. Stop them on small screens and whenever the
+   user has asked for reduced motion. */
+@media (max-width: 768px) {
+  .fp-dot,
+  .fp-shimmer {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-dot,
+  .fp-shimmer {
+    animation: none;
+  }
+  .fp-shimmer {
+    /* Keep the text readable once the gradient sweep is disabled. */
+    -webkit-text-fill-color: var(--fp-text-secondary);
   }
 }
