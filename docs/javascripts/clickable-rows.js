@@ -1,5 +1,13 @@
 // Make table rows clickable by navigating to the first link in the row.
 // Uses event delegation: one listener on document, not one per row.
+//
+// NOTE: This file is PASSIVE-safe — it never calls preventDefault(), so it
+// does not block scrolling. Do NOT add scroll-blocking (passive:false) touch
+// handlers here. Pull-to-refresh prevention is handled in CSS via
+// `overscroll-behavior` (see stylesheets/extra.css), which is performant and
+// does not janky-up mobile scrolling. A previous passive:false touchmove
+// handler here ran JS synchronously on every scroll frame and was the cause
+// of severe scroll lag on mobile.
 document.addEventListener('click', function(e) {
   // Walk up from the click target to find a <tr>
   var target = e.target;
@@ -25,29 +33,3 @@ document.addEventListener('click', function(e) {
     link.click();
   }
 });
-
-// ── iOS pull-to-refresh prevention ──────────────────────────────────────────
-// CSS `overscroll-behavior-y: none` is unreliable on iOS Safari (<16) and
-// some Android WebViews. This JS approach works cross-platform:
-// when the page is already scrolled to the top and the user pulls DOWN,
-// preventDefault() cancels the native refresh gesture.
-(function () {
-  var touchStartY = 0;
-
-  document.addEventListener('touchstart', function (e) {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  document.addEventListener('touchmove', function (e) {
-    var scrollTop =
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      0;
-    var touchY = e.touches[0].clientY;
-
-    // Only block when already at the top AND pulling downward
-    if (scrollTop === 0 && touchY > touchStartY) {
-      e.preventDefault();
-    }
-  }, { passive: false }); // passive: false required to allow preventDefault()
-})();

@@ -24,6 +24,12 @@
 | 9 | **`clickable-rows.js` uses `querySelectorAll` on full DOM** | Runs on every page load instead of event delegation |
 | 10 | **No image compression** | Technical chart PNGs unoptimized |
 
+### Mobile-specific (slow scroll + "keeps refreshing")
+| # | Issue | Detail |
+|---|-------|--------|
+| 11 | **`passive:false` touchmove listener on `document`** | A scroll-blocking touch handler in `clickable-rows.js` (added to stop pull-to-refresh) ran JS synchronously on every scroll frame → severe scroll lag on phones. Root cause of "page loads very slow" on mobile. |
+| 12 | **Pull-to-refresh reloads the page** | iOS/Android pull-down-at-top gesture reloaded the page ("keeps refreshing"). `overscroll-behavior-y: none` was only set on `html`, missing Material's actual scroll container. |
+
 ---
 
 ## Fix List (Prioritized)
@@ -36,8 +42,13 @@
 ### Medium effort (2–4 hrs each)
 - [x] **Pre-render Mermaid to SVG** during `build_docs.py` — implemented in `build_docs.py`; activate by installing `npm install -g @mermaid-js/mermaid-cli` (renders + caches to `.mermaid_cache.json`)
 - [ ] **Extract inline CSS** from HTML reports into a shared stylesheet; minify during generation (low priority — only 8 legacy HTML files)
-- [x] Refactor `mathjax.js` — N/A: MathJax fully removed (zero math usage confirmed)
+- [x] Refactor `mathjax.js` — N/A: MathJax fully removed (zero math usage confirmed); orphan `docs/javascripts/mathjax.js` file now deleted
 - [x] Switch `clickable-rows.js` to **event delegation** — done: one listener on `document`, walks up to `<tr>`
+
+### Mobile fixes (done)
+- [x] **Remove `passive:false` touchmove handler** from `clickable-rows.js` — eliminated scroll-thread blocking; mobile scrolling is smooth again (issue #11)
+- [x] **Robust pull-to-refresh prevention** — `overscroll-behavior-y: none` now applied to `html, body, .md-main, .md-content, [data-md-component=container]` so it catches whichever element scrolls (issue #12)
+- [x] **Disable infinite hero animations on mobile** + honor `prefers-reduced-motion` — stops continuous repaints from `fp-dot`/`fp-shimmer` on phones
 
 ### Architectural (4–8 hrs each)
 - [x] **Single-source bilingual** — ZH tree now generates index-only pages; report/news/notebook files link to EN pages via absolute `SITE_BASE` paths instead of being copied (saves ~50% of `docs/` size)
@@ -51,9 +62,8 @@
 | File | Role |
 |------|------|
 | `mkdocs.yml` | Theme features, plugins, extra JS/CSS config |
-| `docs/javascripts/mathjax.js` | MathJax re-render hook — primary JS bottleneck |
-| `docs/javascripts/clickable-rows.js` | Row click handler — minor inefficiency |
-| `docs/stylesheets/extra.css` | 811-line custom CSS with animations |
+| `docs/javascripts/clickable-rows.js` | Row click handler (event delegation, passive-safe) |
+| `docs/stylesheets/extra.css` | Custom CSS, animations, mobile/overscroll rules |
 | `docs/overrides/home.html` | Heavy inline CSS/animations on landing page |
 | `scripts/build_docs.py` | Generates all docs; duplicates content for bilingual |
 | `scripts/analysis/utils/llm.py` | Report generation — controls report structure/size |
