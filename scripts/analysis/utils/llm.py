@@ -71,8 +71,8 @@ def _load_gemini_system_message() -> str:
     return path.read_text(encoding="utf-8")
 
 
-# Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
-_GEMINI_MAX_TOKENS = 8000
+# Gemini 2.5 Flash supports up to 65,536 output tokens; cap at 32k to stay reasonable
+_GEMINI_MAX_TOKENS = 32000
 
 
 def _get_anthropic():
