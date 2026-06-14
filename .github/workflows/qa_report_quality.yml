@@ -1,0 +1,79 @@
+name: QA Report Quality Check
+
+# Runs after all daily report-gen jobs complete.
+# Last report-gen cron: NBIS technical at 01:30 UTC
+# → QA runs at 02:00 UTC (30 min buffer)
+
+on:
+  schedule:
+    - cron: "0 2 * * *"     # 02:00 UTC = 10:00 Taipei (after all report-gen jobs)
+  workflow_dispatch:          # allow manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  quality-check:
+    name: Check Report Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]" --quiet || pip install yfinance --quiet
+
+      - name: Run quality checker
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          mkdir -p qa
+          python scripts/check_report_quality.py \
+            --csv "qa/bad_reports_${TODAY}.csv" \
+            --summary \
+            | tee "qa/summary_${TODAY}.txt"
+
+      - name: Generate QA index markdown
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          SUMMARY="qa/summary_${TODAY}.txt"
+          CSV="qa/bad_reports_${TODAY}.csv"
+
+          # Count bad reports from CSV (subtract header line)
+          BAD_COUNT=$(( $(wc -l < "$CSV") - 1 ))
+
+          cat > "qa/README.md" << EOF
+          # Report Quality Audit
+
+          | Field | Value |
+          |-------|-------|
+          | Last run | ${TODAY} |
+          | Bad reports found | ${BAD_COUNT} |
+          | CSV | [bad_reports_${TODAY}.csv](bad_reports_${TODAY}.csv) |
+          | Full summary | [summary_${TODAY}.txt](summary_${TODAY}.txt) |
+
+          ## Latest Summary
+
+          \`\`\`
+          $(cat "$SUMMARY")
+          \`\`\`
+          EOF
+
+      - name: Commit QA results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add qa/
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes in QA output — skipping commit."
+          else
+            TODAY=$(date -u +%Y-%m-%d)
+            git commit -m "chore: auto-generate QA quality report ${TODAY}"
+            git push
+          fi
