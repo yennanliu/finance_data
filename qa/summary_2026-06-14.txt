@@ -1,6 +1,6 @@
 
 ============================================================
-Total scanned : 2678
+Total scanned : 2693
 Bad reports   : 0  (0.0%)
 
 Issue breakdown:
