@@ -31,9 +31,6 @@ __pycache__/
 .venv/
 *.egg-info/
 
-# RAG eval context sidecars (regenerated alongside reports; see qa/RAG_EVALUATION.md)
-*.context.json
-
 # Jupyter
 .ipynb_checkpoints/
 # Mermaid pre-render cache
