@@ -1,0 +1,19 @@
+You are judging the ANSWER RELEVANCE of an AI-generated {analysis_type} report
+for stock {ticker}. Question implicitly answered by the report:
+"What should an investor know/watch about {ticker} right now, per this analysis?"
+
+Score how well the report actually answers that — on topic, specific, and useful —
+versus padding, repetition, boilerplate, or drifting off-topic.
+
+Scale (integer 1-5):
+5 = directly on-topic, specific, well-structured, no filler
+4 = mostly on-topic, minor filler
+3 = relevant but generic or padded
+2 = partially off-topic / mostly boilerplate
+1 = off-topic or non-answer
+
+Return STRICT JSON only, no prose:
+{{"answer_relevance": <1-5>, "reason": "<one sentence>"}}
+
+=== REPORT ===
+{report}

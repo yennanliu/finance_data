@@ -6,6 +6,43 @@
 
 ---
 
+## ✅ 實作狀態（已落地）
+
+本文的方法論已實作於 **`scripts/eval/`**，並把 context 留存接進兩條生成線：
+
+| 元件 | 檔案 | 對應階段 |
+| :--- | :--- | :--- |
+| Context 留存（sidecar） | `scripts/eval/context_store.py` + 兩個 generator 已接線 | **P0** |
+| LLM-as-judge（groundedness / context & answer relevance） | `scripts/eval/judges.py` + `scripts/eval/prompts/` | **P1 / P2** |
+| 檢索指標（precision / recall / F1） | `scripts/eval/retrieval.py` | **P3** |
+| 抽樣評估 CLI + 趨勢輸出 | `scripts/eval/run_eval.py` → `qa/eval_*.csv` | **P4** |
+| Eval set 範本 | `qa/eval_set/` | **P3** |
+| 單元測試 | `tests/test_eval.py`（12 passed，無需 API） | — |
+
+### 快速上手
+
+```bash
+# 0) 之後每次生成報告會自動寫出 <report>.context.json sidecar（可用 --no-context-sidecar 關閉）
+python scripts/generate_market_news.py PLTR --provider gemini
+
+# 1) 不打 API：只看「有多少報告已留存 context」(P0 覆蓋率)
+python3 scripts/eval/run_eval.py --root ai_gen_report/market_news --no-llm --summary
+
+# 2) 抽 10% 樣本、用 gpt-4o 當裁判，算 groundedness / relevance，輸出 CSV
+python3 scripts/eval/run_eval.py --root ai_gen_report/market_news \
+    --since 2026-06 --sample 0.1 --judge-provider openai --judge-model gpt-4o \
+    --csv qa/eval_2026-06-16.csv --summary
+
+# 3) 檢索 precision/recall（需 qa/eval_set/*.json 標註）
+python3 scripts/eval/run_eval.py --eval-set qa/eval_set --no-llm --summary
+```
+
+> 設計重點：sidecar 寫入 **絕不會中斷報告生成**（全程 try/except 降級為警告）；
+> sidecar 預設 **不入 git**（`.gitignore` 已加 `*.context.json`），因 CI 每天 42 份會膨脹 repo —— eval 在 **同一次 run** 內讀取即可；要做跨日趨勢再改設定。
+> 裁判預設用 **與生成不同的模型**（降低自我偏袒，見 §2.3）。
+
+---
+
 ## 0. 先認清：我們的「RAG」長什麼樣？
 
 本系統不是教科書式的「Vector DB → top-k chunks → LLM」，而是 **兩個檢索面（retrieval surface）**：
@@ -147,20 +184,22 @@ scripts/eval/
 
 > 注意：市場新聞報告 **已經有來源索引**（檔尾「📌 新聞來源索引」+ frontmatter `provider`），可先用它當粗略 retrieved_docs，但結構化的 `.context.json` 更可靠。
 
-### 3.3 Judge 實作骨架（`scripts/eval/judges.py`）
-```python
-from scripts.analysis.utils.llm import call_llm   # 重用既有 dispatcher
+### 3.3 Judge 實作（`scripts/eval/judges.py`）
+> ⚠️ 注意：`analysis.utils.llm.call_llm` 的簽章 **綁死了分析用的 prompt 模板**（`call_llm(ticker, context, analysis_type, …)`），不能拿來做通用對話。
+> 因此 judges **自帶一個 raw-completion 函式 `judge_complete()`**（沿用 `generate_market_news.py` 的三家 provider 呼叫法），不重用 `call_llm`。
 
-def groundedness(report_md: str, context: str, judge_model="claude-...") -> dict:
+```python
+def groundedness(report_md, context_text, *, provider="openai", model=None):
     """把報告拆成 atomic claims，逐條判斷是否被 context 支持。"""
-    prompt = open("scripts/eval/prompts/groundedness.txt").read().format(
-        report=report_md, context=context)
-    resp = call_llm(prompt, model=judge_model, max_tokens=2000)
-    claims = parse_json(resp)          # [{"claim":..., "supported":true/false, "evidence":...}]
-    supported = sum(c["supported"] for c in claims)
+    prompt = _load_prompt("groundedness.txt").format(
+        context=context_text, report=report_md, max_claims=40)
+    raw = judge_complete(prompt, provider, model, max_tokens=3500)  # raw 對話，非 call_llm
+    claims = extract_json(raw).get("claims", [])   # 容錯：剝 ```json``` 圍欄、抓首個 {/[
+    supported = sum(1 for c in claims if c.get("supported"))
     return {
         "groundedness": supported / max(len(claims), 1),
-        "unsupported_claims": [c for c in claims if not c["supported"]],  # ← 拿來抓幻覺
+        "n_unsupported": len(claims) - supported,
+        "unsupported_claims": [c for c in claims if not c.get("supported")],  # ← 抓幻覺
     }
 ```
 
@@ -231,11 +270,14 @@ python3 scripts/eval/run_eval.py --since 2026-06 --sample 0.1 --judge-model clau
 
 ## 6. 落地順序（Phased Rollout）
 
-1. **P0 — 留存 context**：先讓生成端輸出 `.context.json`，否則什麼都算不準。
-2. **P1 — Groundedness**：最高價值、不需 ground truth。抽樣跑，先抓數字幻覺。
-3. **P2 — Context/Answer Relevance**：同樣 LLM-judge，補上 retriever/generator 兩端視角。
-4. **P3 — Precision/Recall**：建小型 eval_set（先 tier-1 tickers），算檢索指標。
-5. **P4 — 趨勢化 + 警戒線**：每日寫 `qa/eval_*`，超紅線自動標記，接回 §5 的 retriever 改善。
+1. ✅ **P0 — 留存 context**：兩條生成線已自動輸出 `.context.json`（`context_store.py`）。
+2. ✅ **P1 — Groundedness**：`judges.groundedness`，最高價值、不需 ground truth。抽樣跑，先抓數字幻覺。
+3. ✅ **P2 — Context/Answer Relevance**：`judges.context_relevance` / `answer_relevance`，補上 retriever/generator 兩端視角。
+4. ✅ **P3 — Precision/Recall**：`retrieval.py` + `qa/eval_set/` 範本（先建 tier-1 tickers 標註）。
+5. ◑ **P4 — 趨勢化 + 警戒線**：`run_eval.py` 已能輸出 CSV + 紅線標記；**待辦**：排程每日寫 `qa/eval_*` 並接回 §5 的 retriever 改善。
+
+> **剩下的非程式工作**：(a) 人工/半自動建 `qa/eval_set/*.json` 標註，讓 precision/recall 有 ground truth；
+> (b) 把 `run_eval.py` 掛進 CI（接在 `check_report_quality.py` 之後）做每日趨勢。
 
 ---
 
