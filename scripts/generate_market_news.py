@@ -22,12 +22,6 @@ from urllib.request import Request, urlopen
 
 import yfinance as yf
 
-sys.path.insert(0, str(Path(__file__).parent))  # make `eval` importable
-try:
-    from eval.context_store import write_context_sidecar
-except Exception:  # eval toolkit optional — never block generation
-    write_context_sidecar = None
-
 DEFAULT_PROVIDER = "openai"
 DEFAULT_MODEL = "gpt-4o"
 DEFAULT_TOKENS = 12000
@@ -385,7 +379,6 @@ def generate_report(
     max_tokens: int,
     output_dir: Path,
     output_filename: str | None = None,
-    write_sidecar: bool = True,
 ) -> None:
     print(f"[1/4] Fetching ticker info for {ticker}…")
     ticker_obj = yf.Ticker(ticker)
@@ -433,25 +426,6 @@ def generate_report(
     output_file.write_text(front_matter + report_body, encoding="utf-8")
 
     print(f"[4/4] Report saved → {output_file}")
-
-    # P0: persist the retrieved news (context) next to the report for RAG eval.
-    if write_sidecar and write_context_sidecar:
-        retrieved_docs = [
-            {
-                "id": f"n{i}",
-                "title": (it.get("title") or "").strip(),
-                "publisher": (it.get("publisher") or "").strip(),
-                "link": (it.get("link") or "").strip(),
-                "providerPublishTime": it.get("providerPublishTime", 0),
-                "summary": (it.get("summary") or "").strip(),
-            }
-            for i, it in enumerate(news_items[:25], 1)
-        ]
-        write_context_sidecar(
-            output_file, ticker=ticker, analysis_type="market-news",
-            provider=provider, model=model, date=today,
-            context_text=news_block, retrieved_docs=retrieved_docs,
-        )
 
 
 def main() -> None:
