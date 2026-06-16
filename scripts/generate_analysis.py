@@ -57,11 +57,6 @@ from analysis import (
 )
 from analysis.utils.data_fetch import generate_plotly_candlestick_chart
 
-try:
-    from eval.context_store import write_context_sidecar
-except Exception:  # eval toolkit optional — never block generation
-    write_context_sidecar = None
-
 
 def save_report(ticker: str, content: str, output_dir: Path,
                 analysis_type: str, provider: str = "claude") -> Path:
@@ -132,10 +127,6 @@ def parse_args() -> argparse.Namespace:
         "--max-tokens", type=int, default=DEFAULT_TOKENS,
         help=f"Max output tokens (default: {DEFAULT_TOKENS})",
     )
-    p.add_argument(
-        "--no-context-sidecar", action="store_true",
-        help="Do not write the <report>.context.json sidecar used for RAG eval",
-    )
     return p.parse_args()
 
 
@@ -180,15 +171,7 @@ def main() -> None:
 
     print("[3/3] Saving report …")
     final_report = chart_embed + report
-    saved_path = save_report(ticker, final_report, output_dir, analysis_type, provider=provider)
-
-    # P0: persist the retrieval context next to the report for RAG eval.
-    if (write_context_sidecar and not args.no_context_sidecar
-            and ANALYSIS_TYPES[analysis_type].get("ext", ".md") == ".md"):
-        write_context_sidecar(
-            saved_path, ticker=ticker, analysis_type=analysis_type,
-            provider=provider, model=args.model, date=TODAY, context_text=context,
-        )
+    save_report(ticker, final_report, output_dir, analysis_type, provider=provider)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 
