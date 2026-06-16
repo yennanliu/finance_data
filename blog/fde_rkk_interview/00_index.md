@@ -50,6 +50,7 @@ RKK（Role-Knowledge / Architecture Reasoning）面試 **不考背書**，考的
 | 集數 | 主題 | 對應 JD 考點 | 狀態 |
 | :---: | :--- | :--- | :---: |
 | **EP01** | 銀行 GenAI Agent Platform — Discovery × 安全邊界 | 類別五 Discovery、類別二 Prompt Injection / Indirect Injection / Dual-Model / Sandbox / CMEK | ✅ |
+| **EP01b** | 🎙️ EP01 互動版 — 逐題 RKK 模擬面試（可貼的啟動 Prompt + 面試官答題本） | 同 EP01，改為互動演練 | ✅ |
 | **EP02** | Semantic Model Routing — Cost Engineering | 類別四 Semantic Model Routing、LLM-as-a-Judge | ✅ |
 | **EP03** | Context & Memory — 對抗 Token 通膨 | 類別一 Context Management、Tiered Memory、類別四 Context Caching | ✅ |
 | **EP04** | RAG 進階 — Hybrid Search × Re-ranking × RAG Triad | 類別一 Hybrid Search / Re-ranking、類別四 RAG Triad | ✅ |
