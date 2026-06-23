@@ -658,11 +658,11 @@
 
 .ip-breadcrumb {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fp-green);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -683,41 +683,104 @@
   margin-bottom: 2rem;
 }
 
-/* ── Inner page h1 styling ── */
+/* ══════════════════════════════════════════════════════════════
+   Inner Pages — Wider Grid
+   ══════════════════════════════════════════════════════════════ */
+
+/* Push the MkDocs Material main grid wider so the content column
+   isn't cramped — default is ~61rem (976px); 88rem ≈ 1408px */
+.md-grid {
+  max-width: 88rem;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Report / Inner Page — Typography & Readability
+   ══════════════════════════════════════════════════════════════ */
+
+/* Base body text — 17px for comfortable long-form reading */
+.md-typeset {
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  color: var(--fp-text-secondary);
+}
+
+.md-typeset p {
+  margin-bottom: 1.4rem;
+}
+
+/* Content inner — generous vertical breathing room */
+.md-content__inner {
+  padding-top: 3rem !important;
+  padding-bottom: 6rem !important;
+}
+
+/* ── h1 — report title, landing-page gradient style ── */
 .md-typeset h1 {
-  font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
+  font-size: clamp(2.5rem, 5vw, 3.75rem) !important;
   font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  line-height: 1.15 !important;
-  color: var(--fp-text) !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-  margin-bottom: 1.5rem !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.08 !important;
+  background: linear-gradient(to bottom, var(--fp-title-from) 30%, var(--fp-title-to) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  margin-bottom: 2.5rem !important;
   padding-bottom: 0 !important;
   border-bottom: none !important;
 }
 
-/* ── Section heading styling (h2) ── */
+/* ── h2 — landing-page section style with green accent line ── */
 .md-typeset h2 {
-  font-size: 1.25rem !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--fp-text) !important;
+  margin-top: 4.5rem !important;
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* Green accent line above each h2 — mirrors landing page section eyebrow */
+.md-typeset h2::before {
+  content: '';
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--fp-green);
+  border-radius: 1px;
+  margin-bottom: 1rem;
+}
+
+/* ── h3 — subsection headings ── */
+.md-typeset h3 {
+  font-size: 1.4rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.02em !important;
   color: var(--fp-text) !important;
-  margin-top: 2.5rem !important;
-  padding-bottom: 0.5rem !important;
-  border-bottom: 1px solid var(--fp-border) !important;
+  margin-top: 2.75rem !important;
+  margin-bottom: 0.875rem !important;
 }
 
-/* ── Table styling — card-like ── */
+/* ── h4 ── */
+.md-typeset h4 {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: var(--fp-text) !important;
+  margin-top: 2rem !important;
+}
+
+/* ── Table styling — card-like, more readable ── */
 .md-typeset table:not([class]) {
   border: 1px solid var(--fp-border);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   background: var(--fp-bg-card);
-  font-size: .85rem;
+  font-size: 0.95rem;
   width: 100%;
+  margin: 1.5rem 0;
 }
 
 .md-typeset table:not([class]) thead tr {
@@ -726,18 +789,19 @@
 
 .md-typeset table:not([class]) th {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: .72rem;
-  letter-spacing: .06em;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--fp-text-muted) !important;
   border-bottom: 1px solid var(--fp-border) !important;
-  padding: 0.625rem 1rem !important;
+  padding: 0.75rem 1.25rem !important;
 }
 
 .md-typeset table:not([class]) td {
   border-bottom: 1px solid var(--fp-border-dim) !important;
-  padding: 0.6rem 1rem !important;
+  padding: 0.85rem 1.35rem !important;
   color: var(--fp-text-secondary);
+  font-size: 1rem;
 }
 
 .md-typeset table:not([class]) tr:last-child td {
@@ -757,13 +821,14 @@
 
 /* ── Blockquote → info-strip ── */
 .md-typeset blockquote {
-  border-left: 2px solid var(--fp-green) !important;
+  border-left: 3px solid var(--fp-green) !important;
   background: var(--fp-bg-card) !important;
-  border-radius: 0 6px 6px 0;
-  padding: 0.75rem 1rem !important;
-  margin: 1.5rem 0 !important;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.5rem !important;
+  margin: 2rem 0 !important;
   color: var(--fp-text-secondary) !important;
-  font-size: 0.9rem !important;
+  font-size: 1rem !important;
+  line-height: 1.75;
 }
 
 .md-typeset blockquote strong {
@@ -775,17 +840,45 @@
   background: var(--fp-bg-card) !important;
   border: 1px solid var(--fp-border) !important;
   color: var(--fp-green) !important;
-  border-radius: 3px;
-  padding: 0.1em 0.35em !important;
-  font-size: 0.85em !important;
+  border-radius: 4px;
+  padding: 0.15em 0.4em !important;
+  font-size: 0.88em !important;
 }
 
 /* ── Admonition improvements ── */
 .md-typeset .admonition,
 .md-typeset details {
-  border-radius: 6px !important;
+  border-radius: 8px !important;
   border-left-width: 3px !important;
   background: var(--fp-bg-card) !important;
+  font-size: 0.97rem !important;
+}
+
+/* ── Left nav — compact labels for more reading room ── */
+.md-nav--primary .md-nav__item .md-nav__link {
+  font-size: 0.82rem;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+/* ── ToC sidebar — comfortable size ── */
+.md-nav--secondary .md-nav__link {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ── List items — more spacing ── */
+.md-typeset ul li,
+.md-typeset ol li {
+  margin-bottom: 0.4rem;
+  line-height: 1.8;
+}
+
+/* ── Code blocks ── */
+.md-typeset .highlight pre {
+  font-size: 0.9rem !important;
+  line-height: 1.65 !important;
+  border-radius: 8px !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -820,16 +913,6 @@
   border: none;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-}
-
-/* Table improvements */
-.md-typeset table:not([class]) {
-  font-size: .85rem;
-}
-.md-typeset table:not([class]) th {
-  font-size: .75rem;
-  letter-spacing: .04em;
-  text-transform: uppercase;
 }
 
 /* Make table rows clickable on report pages */
@@ -975,39 +1058,41 @@ body,
    Mobile — Reading scale & typography
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Body text: 16px minimum prevents iOS auto-zoom on tap,
-     and is the recommended readable size for mobile. */
+  /* Body text: 16px minimum prevents iOS auto-zoom on tap */
   .md-typeset {
-    font-size: 1rem;        /* 16px */
-    line-height: 1.8;
+    font-size: 1rem;
+    line-height: 1.85;
   }
 
-  /* Headings — scale down proportionally */
-  .md-typeset h1 { font-size: 1.6rem; }
-  .md-typeset h2 { font-size: 1.3rem; }
-  .md-typeset h3 { font-size: 1.1rem; }
+  /* Headings — scale down proportionally but stay large */
+  .md-typeset h1 { font-size: 2rem !important; }
+  .md-typeset h2 { font-size: 1.55rem !important; }
+  .md-typeset h3 { font-size: 1.2rem !important; }
 
-  /* Tables — bump font size and enable horizontal scroll */
+  /* h2 green accent line — smaller on mobile */
+  .md-typeset h2::before { width: 1.25rem; }
+
+  /* Tables — enable horizontal scroll */
   .md-typeset table:not([class]) {
-    font-size: 0.9rem;      /* was 0.85rem — more legible on mobile */
+    font-size: 0.9rem;
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .md-typeset table:not([class]) th {
-    font-size: 0.8rem;      /* was 0.75rem */
+    font-size: 0.75rem;
     white-space: nowrap;
   }
 
   /* Wider tap targets for table rows */
   .md-typeset table tbody tr td {
-    padding: 0.6rem 0.75rem;
+    padding: 0.65rem 0.9rem;
   }
 
-  /* Navigation sidebar — larger touch targets */
+  /* Navigation sidebar */
   .md-nav__item .md-nav__link {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding: 0.4rem 0.6rem;
   }
 
@@ -1020,6 +1105,11 @@ body,
   .md-typeset .admonition,
   .md-typeset details {
     font-size: 0.95rem;
+  }
+
+  .md-content__inner {
+    padding-top: 2rem !important;
+    padding-bottom: 3.5rem !important;
   }
 }
 
