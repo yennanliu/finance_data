@@ -57,6 +57,20 @@
   </script>
 {% endblock %}
 
+{% block content %}
+  {% if page.meta and page.meta.template == "home.html" %}
+    {{ super() }}
+  {% else %}
+    <div class="ip-page-header">
+      <div class="ip-breadcrumb">
+        {%- if page.parent %}{{ page.parent.title }} &nbsp;/&nbsp; {% endif %}{{ page.title }}
+      </div>
+      <div class="ip-divider"></div>
+    </div>
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
 {% block footer %}
   {{ super() }}
   <div class="md-footer__build-info">
