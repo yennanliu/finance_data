@@ -4,261 +4,965 @@
   {{ super() }}
 {% endblock %}
 
+{% block styles %}
+{{ super() }}
+<style>
+/* ─── Landing page (home.html) — lp- prefix, uses --fp-* project tokens ─── */
+
+.lp-page {
+  overflow-x: hidden;
+  background: var(--fp-bg);
+  color: var(--fp-text);
+}
+
+/* Reset MkDocs typeset defaults inside the landing page */
+.lp-page p, .lp-page h1, .lp-page h2, .lp-page h3, .lp-page h4 {
+  margin: 0;
+  line-height: inherit;
+}
+
+/* ─── Ticker strip ─── */
+.lp-ticker {
+  background: var(--fp-bg-alt);
+  border-bottom: 1px solid var(--fp-border);
+  height: 30px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  /* break out of MkDocs typeset padding */
+  margin: 0 -0.8rem;
+}
+
+.lp-ticker-track {
+  display: flex;
+  gap: 2.5rem;
+  animation: lp-scroll 50s linear infinite;
+  white-space: nowrap;
+  padding: 0 2.5rem 0 0;
+}
+
+.lp-ticker-track:hover { animation-play-state: paused; }
+
+@keyframes lp-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.lp-tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+}
+
+.lp-tick-sym { color: var(--fp-text); font-weight: 700; }
+.lp-tick-px  { color: var(--fp-text-muted); }
+.lp-tick-up  { color: var(--fp-green); }
+.lp-tick-dn  { color: var(--fp-red); }
+.lp-tick-sep { color: var(--fp-border); user-select: none; margin: 0 0.5rem; }
+
+/* ─── Container ─── */
+.lp-con {
+  max-width: 1140px;
+  margin: 0 auto;
+  width: min(100%, 1140px);
+  padding: 0 1.5rem;
+}
+
+/* ─── Full-bleed bands ─── */
+.lp-band {
+  margin: 0 -0.8rem;
+}
+
+/* ─── Hero ─── */
+.lp-hero {
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.lp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 15% 60%, rgba(34,197,94,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 85% 20%, rgba(120,119,198,0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.lp-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 4rem;
+  align-items: center;
+}
+
+.lp-eyebrow {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fp-green);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lp-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--fp-green);
+  flex-shrink: 0;
+}
+
+.lp-h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.035em !important;
+  color: var(--fp-text) !important;
+  margin-bottom: 1.5rem !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--fp-text) !important;
+}
+
+.lp-typewriter {
+  display: block;
+  color: var(--fp-green);
+  min-height: 1.2em;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.lp-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background: var(--fp-green);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: lp-blink 0.9s step-end infinite;
+  border-radius: 1px;
+}
+
+@keyframes lp-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.lp-desc {
+  font-size: 1rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.75 !important;
+  max-width: 500px;
+  margin-bottom: 2rem !important;
+}
+
+.lp-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.lp-btn-primary {
+  background: var(--fp-green) !important;
+  color: #09090b !important;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.7rem 1.75rem;
+  border-radius: 5px;
+  text-decoration: none !important;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  display: inline-block;
+}
+
+.lp-btn-primary:hover {
+  background: #16a34a !important;
+  box-shadow: 0 0 24px rgba(34,197,94,0.3);
+  transform: translateY(-1px);
+  color: #09090b !important;
+}
+
+.lp-btn-ghost {
+  color: var(--fp-text-secondary) !important;
+  font-size: 0.9375rem;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.15s, gap 0.15s;
+}
+
+.lp-btn-ghost:hover { color: var(--fp-text) !important; gap: 0.6rem; }
+
+.lp-hero-note {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.75rem !important;
+  color: var(--fp-text-muted) !important;
+  margin: 0 !important;
+}
+
+/* ─── Report card (hero visual) ─── */
+.lp-rcard {
+  background: var(--fp-bg-card);
+  border: 1px solid var(--fp-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 24px 64px rgba(0,0,0,0.5),
+    0 0 80px rgba(34,197,94,0.05);
+  transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.lp-rcard:hover {
+  transform: perspective(1200px) rotateY(-2deg) rotateX(0.5deg);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 32px 80px rgba(0,0,0,0.5),
+    0 0 100px rgba(34,197,94,0.08);
+}
+
+.lp-rcard-bar {
+  background: #111113;
+  padding: 0.625rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--fp-border);
+  gap: 0.75rem;
+}
+
+.lp-rcard-ticker {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fp-text);
+  letter-spacing: 0.05em;
+}
+
+.lp-rcard-type {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  color: var(--fp-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lp-live {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  color: var(--fp-green);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lp-live::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--fp-green);
+  animation: fp-pulse 1.5s infinite;
+}
+
+.lp-rcard-body { padding: 1.125rem; }
+
+.lp-rcard-hl {
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+  color: var(--fp-text) !important;
+  line-height: 1.4 !important;
+  margin-bottom: 1rem !important;
+}
+
+.lp-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.lp-metric {
+  background: var(--fp-bg);
+  border: 1px solid var(--fp-border-dim);
+  border-radius: 5px;
+  padding: 0.5rem 0.625rem;
+}
+
+.lp-metric-lbl {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fp-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.lp-metric-val {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--fp-text);
+}
+
+.lp-metric-val.g { color: var(--fp-green); }
+.lp-metric-val.r { color: var(--fp-red); }
+.lp-metric-val.a { color: var(--fp-yellow); }
+
+.lp-excerpt {
+  font-size: 0.8125rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.65 !important;
+  border-left: 2px solid var(--fp-green);
+  padding-left: 0.75rem;
+  font-style: italic;
+  margin-bottom: 0 !important;
+}
+
+.lp-rcard-foot {
+  border-top: 1px solid var(--fp-border);
+  padding: 0.625rem 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lp-tags { display: flex; gap: 0.4rem; }
+
+.lp-ctag {
+  background: rgba(34,197,94,0.12);
+  color: var(--fp-green);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lp-model-label {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  color: var(--fp-text-muted);
+}
+
+/* ─── Stats strip ─── */
+.lp-stats-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.lp-stat {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.lp-stat + .lp-stat { border-left: 1px solid var(--fp-border); }
+
+.lp-stat-num {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 2.25rem !important;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--fp-text) !important;
+  line-height: 1;
+  margin-bottom: 0.4rem !important;
+}
+
+.lp-stat-num span { color: var(--fp-green); }
+
+.lp-stat-lbl {
+  font-size: 0.8125rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.4;
+  margin: 0 !important;
+}
+
+/* ─── Generic section spacing ─── */
+.lp-section { padding: 5rem 0; }
+
+.lp-sec-eye {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fp-green);
+  margin-bottom: 0.75rem;
+}
+
+.lp-sec-h {
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--fp-text) !important;
+  margin-bottom: 0.75rem !important;
+  line-height: 1.2 !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--fp-text) !important;
+}
+
+.lp-sec-sub {
+  font-size: 1rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.7 !important;
+  max-width: 560px;
+  margin-bottom: 3rem !important;
+}
+
+/* ─── Analysis types grid ─── */
+.lp-an-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--fp-border);
+  border-radius: 8px;
+  overflow: hidden;
+  gap: 1px;
+  background: var(--fp-border);
+}
+
+.lp-an-card {
+  background: var(--fp-bg-card);
+  padding: 1.25rem;
+  transition: background 0.2s;
+}
+
+.lp-an-card:hover { background: var(--fp-bg-card-hover); }
+
+.lp-an-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  display: block;
+  line-height: 1;
+}
+
+.lp-an-name {
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  color: var(--fp-text) !important;
+  margin-bottom: 0.375rem !important;
+}
+
+.lp-an-desc {
+  font-size: 0.75rem !important;
+  color: var(--fp-text-muted) !important;
+  line-height: 1.55 !important;
+  margin: 0 !important;
+}
+
+/* ─── How it works ─── */
+.lp-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.lp-step-num {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fp-text-muted);
+  margin-bottom: 1rem;
+  border-top: 1px solid var(--fp-border);
+  padding-top: 1rem;
+}
+
+.lp-step-title {
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+  color: var(--fp-text) !important;
+  margin-bottom: 0.625rem !important;
+  line-height: 1.35 !important;
+}
+
+.lp-step-desc {
+  font-size: 0.875rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.7 !important;
+  margin-bottom: 1rem !important;
+}
+
+.lp-step-code {
+  background: var(--fp-bg);
+  border: 1px solid var(--fp-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  color: #90c4a0;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* ─── Latest reports grid ─── */
+.lp-reports {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.lp-rp {
+  background: var(--fp-bg-card);
+  border: 1px solid var(--fp-border);
+  border-radius: 8px;
+  padding: 1.125rem;
+  text-decoration: none !important;
+  color: inherit;
+  display: block;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.lp-rp:hover {
+  border-color: var(--fp-green);
+  box-shadow: 0 0 24px rgba(34,197,94,0.08);
+  transform: translateY(-2px);
+}
+
+.lp-rp-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.lp-rp-ticker {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: var(--fp-text) !important;
+  line-height: 1;
+  margin: 0 !important;
+}
+
+.lp-rp-co {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--fp-text-muted);
+  margin-top: 0.25rem;
+}
+
+.lp-rp-chg {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp-rp-chg.g { color: var(--fp-green); }
+.lp-rp-chg.r { color: var(--fp-red); }
+
+.lp-rp-sum {
+  font-size: 0.8125rem !important;
+  color: var(--fp-text-secondary) !important;
+  line-height: 1.65 !important;
+  margin-bottom: 1rem !important;
+}
+
+.lp-rp-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lp-rp-date {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  color: var(--fp-text-muted);
+}
+
+/* ─── CTA ─── */
+.lp-cta {
+  text-align: center;
+  padding: 6rem 0;
+  background:
+    radial-gradient(ellipse 900px 400px at 50% 0%, rgba(34,197,94,0.07) 0%, transparent 70%),
+    var(--fp-bg);
+}
+
+.lp-cta-h {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.035em !important;
+  color: var(--fp-text) !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.2 !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--fp-text) !important;
+}
+
+.lp-cta-sub {
+  color: var(--fp-text-secondary) !important;
+  font-size: 1rem !important;
+  max-width: 480px;
+  margin: 0 auto 2.5rem !important;
+  line-height: 1.7 !important;
+}
+
+.lp-cta-acts {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.lp-btn-outline {
+  color: var(--fp-text-secondary) !important;
+  font-size: 0.9375rem;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--fp-border);
+  border-radius: 5px;
+  text-decoration: none !important;
+  transition: border-color 0.15s, color 0.15s;
+  display: inline-block;
+}
+
+.lp-btn-outline:hover {
+  border-color: var(--fp-text-muted);
+  color: var(--fp-text) !important;
+}
+
+/* ─── Dividers ─── */
+.lp-divider {
+  border: none;
+  border-top: 1px solid var(--fp-border);
+  margin: 0 -0.8rem;
+}
+
+.lp-alt-bg {
+  background: var(--fp-bg-alt);
+  margin: 0 -0.8rem;
+  padding: 0 0.8rem;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .lp-hero-inner { grid-template-columns: 1fr; }
+  .lp-card-hide { display: none; }
+  .lp-stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .lp-stat + .lp-stat { border-left: none; border-top: 1px solid var(--fp-border); }
+  .lp-an-grid { grid-template-columns: repeat(2, 1fr); }
+  .lp-steps { grid-template-columns: 1fr; gap: 0; }
+  .lp-reports { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-ticker-track { animation: none; }
+  .lp-cursor { animation: none; }
+  .lp-live::before { animation: none; }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-  <div class="fp-wrapper">
+<div class="lp-page">
 
-    <!-- Hero -->
-    <header class="fp-hero">
-      <div class="fp-hero-glow"></div>
-      <div class="fp-container">
-        <div class="fp-hero-badge">
-          <span class="fp-dot"></span>
-          AI-Powered Research
-        </div>
-        <h1 class="fp-hero-title">Finance Data<br/>Research Hub</h1>
-        <p class="fp-hero-sub">
-          <strong>AI 驅動的美股投資研究平台</strong>
-        </p>
-        <p class="fp-hero-sub fp-shimmer">
-          基本面分析 / 技術分析 / SEC 文件 / 內線交易追蹤 / 市場新聞 — 全部繁體中文
-        </p>
-        <div class="fp-btn-group">
-          <a href="reports/" class="fp-btn-accent">瀏覽分析報告</a>
-          <a href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener" class="fp-btn-ghost">
-            <svg viewBox="0 0 98 96" fill="currentColor" style="width:1rem;height:1rem">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/>
-            </svg>
-            GitHub
-          </a>
-        </div>
-        <div class="fp-platform-pills">
-          <span class="fp-pill">Claude AI</span>
-          <span class="fp-pill">yfinance</span>
-          <span class="fp-pill">SEC EDGAR</span>
-          <span class="fp-pill">MkDocs</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Stats -->
-    <section class="fp-section fp-section-glow">
-      <div class="fp-container">
-        <div class="fp-stats-grid">
-          <div class="fp-stat-card">
-            <div class="fp-stat-value">30+</div>
-            <div class="fp-stat-label">覆蓋公司</div>
-          </div>
-          <div class="fp-stat-card">
-            <div class="fp-stat-value">500+</div>
-            <div class="fp-stat-label">SEC 文件</div>
-          </div>
-          <div class="fp-stat-card">
-            <div class="fp-stat-value">每日</div>
-            <div class="fp-stat-label">自動更新</div>
-          </div>
-          <div class="fp-stat-card">
-            <div class="fp-stat-value">繁中</div>
-            <div class="fp-stat-label">報告語言</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="fp-section fp-section-alt">
-      <div class="fp-container">
-        <div class="fp-section-hd">
-          <h2 class="fp-section-title">核心功能</h2>
-          <p class="fp-section-desc">從 SEC 文件到 AI 分析，一站式美股研究工具</p>
-        </div>
-        <div class="fp-grid fp-grid-3">
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
-            <h3>基本面分析</h3>
-            <p>AI 自動生成的財務報表分析，涵蓋損益表、資產負債表、現金流量表，附帶 ASCII 圖表與投資建議。</p>
-            <a href="reports/" class="fp-card-link">瀏覽報告 &rarr;</a>
-          </div>
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
-            </div>
-            <h3>技術分析</h3>
-            <p>AI 解讀均線、動能、支撐壓力與型態，搭配每日技術走勢圖與交易建議，把握進出場時機。</p>
-            <a href="reports/" class="fp-card-link">瀏覽分析 &rarr;</a>
-          </div>
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
-            </div>
-            <h3>市場新聞</h3>
-            <p>AI 彙整每日重大市場新聞、個股消息與盤勢重點，協助快速掌握最新動態與影響面向。</p>
-            <a href="market_news/" class="fp-card-link">瀏覽新聞 &rarr;</a>
-          </div>
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <h3>SEC 文件庫</h3>
-            <p>完整收錄 10-K、10-Q、13-F、6-K 年報季報，支援 30+ 家公司，直接從 EDGAR 下載。</p>
-            <a href="sec/10k/" class="fp-card-link">瀏覽文件 &rarr;</a>
-          </div>
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            </div>
-            <h3>AI 深度研究</h3>
-            <p>使用 NotebookLM 與 Claude AI 生成的深度研究筆記，涵蓋自動駕駛、國防科技、成長股等主題。</p>
-            <a href="notebooks/" class="fp-card-link">瀏覽筆記 &rarr;</a>
-          </div>
-
-          <div class="fp-card">
-            <div class="fp-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <h3>自動化工具</h3>
-            <p>Python 腳本自動從 SEC EDGAR 批量下載文件，支援 CIK 查詢、速率限制，每日 CI/CD 自動分析。</p>
-            <a href="scripts/" class="fp-card-link">查看工具 &rarr;</a>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Coverage Universe -->
-    <section class="fp-section fp-section-glow">
-      <div class="fp-container">
-        <div class="fp-section-hd">
-          <h2 class="fp-section-title">覆蓋範圍</h2>
-          <p class="fp-section-desc">持續擴展中的美股研究資料庫</p>
-        </div>
-        <div class="fp-grid fp-grid-3">
-
-          <div class="fp-card fp-card-accent">
-            <h3>分析報告</h3>
-            <div class="fp-ticker-list">
-              <span class="fp-ticker">AAPL</span>
-              <span class="fp-ticker">MSFT</span>
-              <span class="fp-ticker">NVDA</span>
-              <span class="fp-ticker">TSLA</span>
-              <span class="fp-ticker">PLTR</span>
-              <span class="fp-ticker">ONDS</span>
-              <span class="fp-ticker">GOOG</span>
-              <span class="fp-ticker">TSM</span>
-            </div>
-            <p class="fp-card-meta">基本面 / 內線交易 / 技術分析</p>
-          </div>
-
-          <div class="fp-card fp-card-accent">
-            <h3>10-K 年報</h3>
-            <div class="fp-ticker-list">
-              <span class="fp-ticker">AAPL</span>
-              <span class="fp-ticker">MSFT</span>
-              <span class="fp-ticker">NVDA</span>
-              <span class="fp-ticker">TSLA</span>
-              <span class="fp-ticker">META</span>
-              <span class="fp-ticker">AMZN</span>
-              <span class="fp-ticker">PLTR</span>
-              <span class="fp-ticker">RKLB</span>
-              <span class="fp-ticker">KTOS</span>
-            </div>
-            <p class="fp-card-meta">2015-2024 年度報告</p>
-          </div>
-
-          <div class="fp-card fp-card-accent">
-            <h3>AI 研究筆記</h3>
-            <div class="fp-ticker-list">
-              <span class="fp-ticker">ONDS</span>
-              <span class="fp-ticker">RKLB</span>
-              <span class="fp-ticker">AVAV</span>
-              <span class="fp-ticker">RCAT</span>
-              <span class="fp-ticker">TSLA</span>
-              <span class="fp-ticker">NEE</span>
-              <span class="fp-ticker">AMZN</span>
-            </div>
-            <p class="fp-card-meta">自動駕駛 / 國防 / 清潔能源</p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="fp-section fp-section-alt">
-      <div class="fp-container">
-        <div class="fp-section-hd">
-          <h2 class="fp-section-title">運作方式</h2>
-          <p class="fp-section-desc">全自動化的投資研究流程</p>
-        </div>
-        <div class="fp-steps">
-          <div class="fp-step">
-            <div class="fp-step-circle">1</div>
-            <div>
-              <strong>資料擷取</strong>
-              <p>透過 yfinance API 與 SEC EDGAR 自動下載最新財務數據與公開文件</p>
-            </div>
-          </div>
-          <div class="fp-step">
-            <div class="fp-step-circle">2</div>
-            <div>
-              <strong>AI 分析</strong>
-              <p>Claude AI 根據財報數據生成繁體中文分析報告，包含圖表與投資建議</p>
-            </div>
-          </div>
-          <div class="fp-step">
-            <div class="fp-step-circle">3</div>
-            <div>
-              <strong>自動部署</strong>
-              <p>GitHub Actions CI/CD 每日自動執行分析並部署至 GitHub Pages</p>
-            </div>
-          </div>
-          <div class="fp-step">
-            <div class="fp-step-circle">4</div>
-            <div>
-              <strong>即時瀏覽</strong>
-              <p>研究成果即時發布於本站，支援搜尋、分類瀏覽與深色模式</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Data Sources -->
-    <section class="fp-section">
-      <div class="fp-container">
-        <div class="fp-section-hd">
-          <h2 class="fp-section-title">資料來源</h2>
-        </div>
-        <div class="fp-grid fp-grid-2">
-          <div class="fp-card">
-            <h3>SEC EDGAR</h3>
-            <p>美國證券交易委員會官方電子資料庫，提供所有上市公司的公開申報文件。</p>
-          </div>
-          <div class="fp-card">
-            <h3>Claude AI</h3>
-            <p>Anthropic 的 AI 模型，用於分析財務數據並生成結構化的投資研究報告。</p>
-          </div>
-        </div>
-        <div class="fp-disclaimer">
-          <strong>免責聲明：</strong>本站所有分析僅供教育與研究用途，不構成任何投資建議。投資有風險，請自行判斷。
-        </div>
-      </div>
-    </section>
-
-    <!-- Build Info -->
-    <footer class="fp-build-info">
-      <div class="fp-container">
-        <p class="fp-build-info__text">
-          Build: __BUILD_DATE__ | v1.0.0 | MkDocs Material
-        </p>
-      </div>
-    </footer>
-
+  <!-- ── Ticker strip ── -->
+  <div class="lp-ticker">
+    <div class="lp-ticker-track">
+      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
+      <!-- duplicate for seamless loop -->
+      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
+      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
+    </div>
   </div>
+
+  <!-- ── Hero ── -->
+  <section class="lp-hero">
+    <div class="lp-con">
+      <div class="lp-hero-inner">
+
+        <div>
+          <div class="lp-eyebrow">Daily · Automated · Open Access</div>
+          <h1 class="lp-h1">
+            Deep research on<br>
+            <span class="lp-typewriter" id="lp-tw">US equities<span class="lp-cursor"></span></span>
+          </h1>
+          <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for 21 US equities, powered by Claude AI.</p>
+          <div class="lp-actions">
+            <a href="reports/" class="lp-btn-primary">Read Today's Reports</a>
+            <a href="#lp-how" class="lp-btn-ghost">How it works →</a>
+          </div>
+          <p class="lp-hero-note">42 analyses per day &nbsp;·&nbsp; 12 analysis types &nbsp;·&nbsp; No paywall</p>
+        </div>
+
+        <div class="lp-card-hide">
+          <div class="lp-rcard">
+            <div class="lp-rcard-bar">
+              <div>
+                <div class="lp-rcard-ticker">RKLB <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· NASDAQ</span></div>
+                <div class="lp-rcard-type">Technical Analysis · Jun 23, 2026</div>
+              </div>
+              <div class="lp-live">Live</div>
+            </div>
+            <div class="lp-rcard-body">
+              <p class="lp-rcard-hl">Rocket Lab: Ascending Triangle Above 50-Day MA — Accumulation Pattern Confirmed</p>
+              <div class="lp-metrics">
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">Price</div>
+                  <div class="lp-metric-val">$23.41</div>
+                </div>
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">RSI 14</div>
+                  <div class="lp-metric-val g">61.4</div>
+                </div>
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">MACD</div>
+                  <div class="lp-metric-val g">↑ Bull</div>
+                </div>
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">50-Day MA</div>
+                  <div class="lp-metric-val a">$21.80</div>
+                </div>
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">Volume</div>
+                  <div class="lp-metric-val">+34% avg</div>
+                </div>
+                <div class="lp-metric">
+                  <div class="lp-metric-lbl">Support</div>
+                  <div class="lp-metric-val">$21.40</div>
+                </div>
+              </div>
+              <p class="lp-excerpt">"RKLB traces a textbook ascending triangle above the 50-day MA. Volume profile supports institutional accumulation ahead of the next launch campaign..."</p>
+            </div>
+            <div class="lp-rcard-foot">
+              <div class="lp-tags">
+                <span class="lp-ctag">Technical</span>
+                <span class="lp-ctag">Space</span>
+              </div>
+              <span class="lp-model-label">claude-sonnet-4-6</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ── -->
+  <hr class="lp-divider">
+  <div class="lp-alt-bg">
+    <div class="lp-con">
+      <div class="lp-stats-inner">
+        <div class="lp-stat">
+          <div class="lp-stat-num">2<span>1</span></div>
+          <p class="lp-stat-lbl">US equities tracked daily</p>
+        </div>
+        <div class="lp-stat">
+          <div class="lp-stat-num">4<span>2</span></div>
+          <p class="lp-stat-lbl">Analyses generated per day</p>
+        </div>
+        <div class="lp-stat">
+          <div class="lp-stat-num">1<span>2</span></div>
+          <p class="lp-stat-lbl">Analysis types available</p>
+        </div>
+        <div class="lp-stat">
+          <div class="lp-stat-num">0<span>$</span></div>
+          <p class="lp-stat-lbl">Cost to read. Always free.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="lp-divider">
+
+  <!-- ── Analysis types ── -->
+  <section class="lp-section" id="lp-analysis">
+    <div class="lp-con">
+      <div class="lp-sec-eye">Coverage</div>
+      <h2 class="lp-sec-h">Twelve lenses. One stock.</h2>
+      <p class="lp-sec-sub">Each analysis type targets a different signal — from price action to SEC filings to competitive position. All generated fresh from live data, never from cached summaries.</p>
+
+      <div class="lp-an-grid">
+        <div class="lp-an-card"><span class="lp-an-icon">📊</span><p class="lp-an-name">Fundamental Analysis</p><p class="lp-an-desc">Revenue, margins, balance sheet, and long-term earnings drivers.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">📈</span><p class="lp-an-name">Technical Analysis</p><p class="lp-an-desc">Price action, MAs, RSI, MACD, volume, and chart pattern detection.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">💰</span><p class="lp-an-name">DCF Valuation</p><p class="lp-an-desc">Intrinsic value modeling with multi-scenario sensitivity analysis.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">📄</span><p class="lp-an-name">10-K Digest</p><p class="lp-an-desc">Annual report summaries — risks, strategy, and management commentary from SEC filings.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">🎯</span><p class="lp-an-name">Catalyst Calendar</p><p class="lp-an-desc">Upcoming earnings, product events, and macro catalysts with expected price impact.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">🏆</span><p class="lp-an-name">Competitor Analysis</p><p class="lp-an-desc">Competitive moat assessment, market share, and industry positioning.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">📞</span><p class="lp-an-name">Earnings Call Analysis</p><p class="lp-an-desc">Management tone, forward guidance signals, and hidden sentiment from transcripts.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">🏦</span><p class="lp-an-name">Institutional Ownership</p><p class="lp-an-desc">13F filing analysis — track smart money moves and ownership concentration shifts.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">👔</span><p class="lp-an-name">Insider Trading</p><p class="lp-an-desc">Form 4 filing review — who's buying and selling, and what the pattern signals.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">📉</span><p class="lp-an-name">Short Interest</p><p class="lp-an-desc">Short float, days-to-cover, and short squeeze potential from borrow data.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">⚡</span><p class="lp-an-name">Options Analysis</p><p class="lp-an-desc">IV, Greeks, put/call skew, and strategy selection for the current market setup.</p></div>
+        <div class="lp-an-card"><span class="lp-an-icon">💳</span><p class="lp-an-name">Dividend Analysis</p><p class="lp-an-desc">Capital allocation: dividends, buybacks, M&amp;A activity, and FCF deployment quality.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ── -->
+  <hr class="lp-divider">
+  <div class="lp-alt-bg">
+    <section class="lp-section" id="lp-how">
+      <div class="lp-con">
+        <div class="lp-sec-eye">Under the Hood</div>
+        <h2 class="lp-sec-h">Daily. Automated. Built from source data.</h2>
+        <p class="lp-sec-sub">No human editors touch these reports. Every analysis runs from live market data and public filings — assembled, interpreted, and published before markets open each day.</p>
+
+        <div class="lp-steps">
+          <div class="lp-step">
+            <div class="lp-step-num">Step 01 &nbsp;·&nbsp; Data Fetch</div>
+            <p class="lp-step-title">Live data assembled from market feeds and EDGAR</p>
+            <p class="lp-step-desc">yfinance collects OHLCV, financials, and earnings data. SEC EDGAR scrapers pull the latest filings. Everything normalizes into a structured context package ready for the model.</p>
+            <pre class="lp-step-code">yfinance + SEC EDGAR → data_fetch.py → context.py</pre>
+          </div>
+          <div class="lp-step">
+            <div class="lp-step-num">Step 02 &nbsp;·&nbsp; AI Analysis</div>
+            <p class="lp-step-title">Claude reads the numbers and writes the report</p>
+            <p class="lp-step-desc">The context goes to Claude Sonnet with a domain-specific prompt. The model runs full analysis, generates Mermaid charts, and produces structured markdown — no human in the loop.</p>
+            <pre class="lp-step-code">prompts/*.txt + context → llm.py → claude-sonnet-4-6</pre>
+          </div>
+          <div class="lp-step">
+            <div class="lp-step-num">Step 03 &nbsp;·&nbsp; Publish</div>
+            <p class="lp-step-title">GitHub Actions deploys 42 reports every morning</p>
+            <p class="lp-step-desc">Cron-triggered GitHub Actions fire 42 analysis jobs per day. Reports land in the MkDocs site and publish to GitHub Pages within minutes of generation.</p>
+            <pre class="lp-step-code">daily_analysis.yml → MkDocs → GitHub Pages</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <hr class="lp-divider">
+
+  <!-- ── Latest reports ── -->
+  <section class="lp-section" id="lp-reports">
+    <div class="lp-con">
+      <div class="lp-sec-eye">Latest</div>
+      <h2 class="lp-sec-h">Today's reports</h2>
+      <p class="lp-sec-sub">Generated this morning from live market data. Not cached. Not edited. These are the actual outputs from the pipeline.</p>
+
+      <div class="lp-reports">
+        <a href="reports/" class="lp-rp">
+          <div class="lp-rp-top">
+            <div>
+              <p class="lp-rp-ticker">RKLB</p>
+              <div class="lp-rp-co">Rocket Lab USA</div>
+            </div>
+            <span class="lp-rp-chg g">▲ +5.14%</span>
+          </div>
+          <p class="lp-rp-sum">Ascending triangle pattern holding above the 50-day MA. Volume accumulation and improving MACD suggest institutional positioning ahead of the next launch campaign.</p>
+          <div class="lp-rp-foot">
+            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
+            <span class="lp-rp-date">Jun 23, 2026</span>
+          </div>
+        </a>
+        <a href="reports/" class="lp-rp">
+          <div class="lp-rp-top">
+            <div>
+              <p class="lp-rp-ticker">KTOS</p>
+              <div class="lp-rp-co">Kratos Defense</div>
+            </div>
+            <span class="lp-rp-chg g">▲ +2.31%</span>
+          </div>
+          <p class="lp-rp-sum">Defense contract backlog expanding. Drone program wins are accelerating revenue visibility into FY2027 with the margin expansion story intact and incrementally de-risked.</p>
+          <div class="lp-rp-foot">
+            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
+            <span class="lp-rp-date">Jun 23, 2026</span>
+          </div>
+        </a>
+        <a href="reports/" class="lp-rp">
+          <div class="lp-rp-top">
+            <div>
+              <p class="lp-rp-ticker">AVAV</p>
+              <div class="lp-rp-co">AeroVironment</div>
+            </div>
+            <span class="lp-rp-chg r">▼ -0.55%</span>
+          </div>
+          <p class="lp-rp-sum">Near-term consolidation after a 40% YTD run. RSI cooling from overbought territory. Next catalyst: DOD procurement announcement expected Q3 — watch the $200 support level.</p>
+          <div class="lp-rp-foot">
+            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
+            <span class="lp-rp-date">Jun 23, 2026</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <hr class="lp-divider">
+  <section class="lp-cta">
+    <div class="lp-con">
+      <h2 class="lp-cta-h">Research that runs<br>while you sleep.</h2>
+      <p class="lp-cta-sub">42 analyses published automatically every morning. Zero subscription. Zero paywall. Just open it.</p>
+      <div class="lp-cta-acts">
+        <a href="reports/" class="lp-btn-primary">Open the Research Hub ↗</a>
+        <a href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener" class="lp-btn-outline">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+  (function () {
+    var phrases = [
+      "US equities.",
+      "RKLB — daily.",
+      "defense tech.",
+      "space stocks.",
+      "every morning.",
+      "12 lenses each.",
+    ];
+    var el = document.getElementById("lp-tw");
+    if (!el) return;
+
+    var pi = 0, ci = 0, deleting = false, wait = 0;
+
+    function tick() {
+      var target = phrases[pi];
+      if (!deleting) {
+        ci++;
+        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
+        if (ci === target.length) { deleting = true; wait = 28; }
+      } else {
+        if (wait-- > 0) { setTimeout(tick, 80); return; }
+        ci--;
+        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(tick, deleting ? 45 : 90);
+    }
+
+    tick();
+  })();
+</script>
 {% endblock %}
