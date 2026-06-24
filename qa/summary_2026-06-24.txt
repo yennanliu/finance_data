@@ -1,15 +1,3 @@
-# Report Quality Audit
-
-| Field | Value |
-|-------|-------|
-| Last run | 2026-06-24 |
-| Bad reports found | 4 |
-| CSV | [bad_reports_2026-06-24.csv](bad_reports_2026-06-24.csv) |
-| Full summary | [summary_2026-06-24.txt](summary_2026-06-24.txt) |
-
-## Latest Summary
-
-```
 
 ============================================================
 Total scanned : 3192
@@ -26,4 +14,3 @@ Top 10 tickers by bad-report count:
   pltr            1 / 153  bad
 
 CSV written → qa/bad_reports_2026-06-24.csv
-```
