@@ -713,7 +713,7 @@
           <div class="lp-eyebrow">Daily · Automated · Open Access</div>
           <h1 class="lp-h1">
             Deep research on<br>
-            <span class="lp-typewriter" id="lp-tw">US equities<span class="lp-cursor"></span></span>
+            <span class="lp-typewriter" id="lp-tw" data-phrases='["US equities.","RKLB — daily.","defense tech.","space stocks.","every morning.","12 lenses each."]'>US equities<span class="lp-cursor"></span></span>
           </h1>
           <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for 21 US equities, powered by Claude AI.</p>
           <div class="lp-actions">
@@ -934,16 +934,12 @@
 {{ super() }}
 <script>
   (function () {
-    var phrases = [
-      "US equities.",
-      "RKLB — daily.",
-      "defense tech.",
-      "space stocks.",
-      "every morning.",
-      "12 lenses each.",
-    ];
     var el = document.getElementById("lp-tw");
     if (!el) return;
+
+    var phrases;
+    try { phrases = JSON.parse(el.getAttribute("data-phrases")); } catch (e) { phrases = null; }
+    if (!phrases || !phrases.length) return;
 
     var pi = 0, ci = 0, deleting = false, wait = 0;
 
