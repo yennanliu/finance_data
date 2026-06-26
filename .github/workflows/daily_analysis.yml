@@ -377,8 +377,16 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Stash generated files so git pull --rebase can run cleanly
+          echo "📦 Stashing generated files..."
+          git stash --include-untracked || true
+
           echo "📥 Pulling latest changes from remote..."
           git pull --rebase origin main
+
+          # Restore generated files
+          echo "📂 Restoring generated files..."
+          git stash pop || true
 
           git add "${{ steps.params.outputs.output_dir }}/"
 
@@ -393,7 +401,10 @@ jobs:
             echo "📤 Pushing changes to remote..."
             for i in 1 2 3 4 5; do
               git push && echo "✅ Report committed and pushed." && break
-              echo "⚠️ Push failed (attempt $i), rebasing and retrying..."
+              echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
+              sleep 10
+              git stash
               git pull --rebase origin main
+              git stash pop || true
             done
           fi
