@@ -292,28 +292,37 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
 
     max_retries = 5
     base_delay = 30
-    text = ""
-    response = None
-    for attempt in range(1, max_retries + 1):
-        try:
-            response = client.models.generate_content(
-                model=model,
-                contents=prompt,
-                config=config,
-            )
-            text = response.text or ""
-            break
-        except Exception as e:
-            err_str = str(e)
-            if "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
-                if attempt == max_retries:
+
+    def _generate_with_retry(contents, cfg):
+        """Call generate_content, retrying rate-limit and transient server errors."""
+        for attempt in range(1, max_retries + 1):
+            try:
+                return client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=cfg,
+                )
+            except Exception as e:
+                err_str = str(e)
+                is_rate_limit = "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower()
+                is_transient = (
+                    "UNAVAILABLE" in err_str
+                    or "503" in err_str
+                    or "high demand" in err_str.lower()
+                    or "INTERNAL" in err_str
+                    or "500" in err_str
+                )
+                if (is_rate_limit or is_transient) and attempt < max_retries:
+                    delay = base_delay * (2 ** (attempt - 1))
+                    reason = "Rate limit hit" if is_rate_limit else "Transient server error"
+                    logger.warning(f"{reason} (attempt {attempt}/{max_retries}). "
+                                   f"Retrying in {delay}s…")
+                    time.sleep(delay)
+                else:
                     raise
-                delay = base_delay * (2 ** (attempt - 1))
-                logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). "
-                               f"Retrying in {delay}s…")
-                time.sleep(delay)
-            else:
-                raise
+
+    response = _generate_with_retry(prompt, config)
+    text = response.text or ""
 
     usage = response.usage_metadata
     logger.info(f"Response: input={usage.prompt_token_count}, "
@@ -332,11 +341,7 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
             max_output_tokens=max_tokens,
             temperature=temp,
         )
-        response = client.models.generate_content(
-            model=model,
-            contents=override + prompt,
-            config=retry_config,
-        )
+        response = _generate_with_retry(override + prompt, retry_config)
         text = response.text or ""
         usage = response.usage_metadata
         logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
