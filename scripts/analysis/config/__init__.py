@@ -6,7 +6,7 @@ from datetime import date
 
 TODAY = date.today().isoformat()
 DEFAULT_MODEL = "gpt-4o"
-DEFAULT_TOKENS = 16000
+DEFAULT_TOKENS = 32000
 
 ANALYSIS_TYPES = {
     "fundamental-analysis": {
