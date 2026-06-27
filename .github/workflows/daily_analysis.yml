@@ -166,7 +166,7 @@ on:
       max_tokens:
         description: "Max output tokens"
         required: false
-        default: "16000"
+        default: "32000"
 
 permissions:
   contents: write   # needed to commit & push generated report
@@ -184,7 +184,7 @@ jobs:
     env:
       DEFAULT_PROVIDER: gemini
       DEFAULT_MODEL: gemini-2.5-flash
-      DEFAULT_MAX_TOKENS: "16000"
+      DEFAULT_MAX_TOKENS: "32000"
 
     steps:
       # ── 1. Checkout ────────────────────────────────────────────────

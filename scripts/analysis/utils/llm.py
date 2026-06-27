@@ -71,8 +71,20 @@ def _load_gemini_system_message() -> str:
     return path.read_text(encoding="utf-8")
 
 
-# Gemini 2.5 Flash supports up to 65,536 output tokens; cap at 32k to stay reasonable
-_GEMINI_MAX_TOKENS = 32000
+# Gemini 2.5 Flash supports up to 65,536 output tokens. Note: 2.5 models are
+# "thinking" models whose internal reasoning tokens are also billed against
+# max_output_tokens, so the visible report shares this budget with thinking.
+# Use the full ceiling to leave ample room and avoid mid-sentence truncation.
+_GEMINI_MAX_TOKENS = 65536
+
+
+def _gemini_finish_reason(response) -> str:
+    """Return the first candidate's finish_reason as an upper-case string ('' if absent)."""
+    try:
+        reason = response.candidates[0].finish_reason
+    except (AttributeError, IndexError, TypeError):
+        return ""
+    return getattr(reason, "name", str(reason)).upper() if reason is not None else ""
 
 
 def _get_anthropic():
@@ -326,7 +338,29 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
 
     usage = response.usage_metadata
     logger.info(f"Response: input={usage.prompt_token_count}, "
-                f"output={usage.candidates_token_count}, chars={len(text)}")
+                f"output={usage.candidates_token_count}, chars={len(text)}, "
+                f"finish={_gemini_finish_reason(response)}")
+
+    # If the report was truncated by the token ceiling, retry once at the full
+    # model maximum. 2.5-flash thinking tokens share max_output_tokens, so a
+    # higher ceiling is what actually buys room for a complete report.
+    if _gemini_finish_reason(response) == "MAX_TOKENS" and effective_max_tokens < _GEMINI_MAX_TOKENS:
+        logger.warning(f"Response truncated (MAX_TOKENS) at {effective_max_tokens} tokens. "
+                       f"Retrying at {_GEMINI_MAX_TOKENS}…")
+        retry_cfg = types.GenerateContentConfig(
+            system_instruction=system_message,
+            max_output_tokens=_GEMINI_MAX_TOKENS,
+            temperature=0.7,
+        )
+        response = _generate_with_retry(prompt, retry_cfg)
+        text = response.text or ""
+        usage = response.usage_metadata
+        logger.info(f"Retry (max budget): input={usage.prompt_token_count}, "
+                    f"output={usage.candidates_token_count}, chars={len(text)}, "
+                    f"finish={_gemini_finish_reason(response)}")
+        if _gemini_finish_reason(response) == "MAX_TOKENS":
+            logger.warning(f"Still truncated at {_GEMINI_MAX_TOKENS} tokens — "
+                           f"report for {ticker} may be incomplete.")
 
     for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
         if not _is_refusal(text):
