@@ -87,6 +87,24 @@ def _gemini_finish_reason(response) -> str:
     return getattr(reason, "name", str(reason)).upper() if reason is not None else ""
 
 
+def _repeated_heading(text: str) -> str:
+    """Detect model degeneration: a markdown heading re-emitted later in the report.
+
+    When the model loops back and starts the report over (e.g. a second '### 1.1'),
+    the same heading line appears twice. Section headings should be unique, so any
+    exact-duplicate heading is a strong degeneration signal. Returns the offending
+    heading ('' if none)."""
+    seen = set()
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            key = stripped.lower()
+            if key in seen:
+                return stripped
+            seen.add(key)
+    return ""
+
+
 def _get_anthropic():
     """Lazy import of anthropic."""
     try:
@@ -341,11 +359,16 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
                 f"output={usage.candidates_token_count}, chars={len(text)}, "
                 f"finish={_gemini_finish_reason(response)}")
 
-    # If the report was truncated by the token ceiling, retry once at the full
-    # model maximum. 2.5-flash thinking tokens share max_output_tokens, so a
-    # higher ceiling is what actually buys room for a complete report.
-    if _gemini_finish_reason(response) == "MAX_TOKENS" and effective_max_tokens < _GEMINI_MAX_TOKENS:
-        logger.warning(f"Response truncated (MAX_TOKENS) at {effective_max_tokens} tokens. "
+    # Two failure modes warrant a one-shot retry at the full model ceiling:
+    #   1. Truncation (finish_reason=MAX_TOKENS) — report cut off mid-content.
+    #   2. Degeneration — the model looped back and re-emitted a section heading.
+    # Both are driven by token pressure (2.5-flash thinking tokens share
+    # max_output_tokens), so retrying with maximum headroom is the lever that helps.
+    truncated = _gemini_finish_reason(response) == "MAX_TOKENS"
+    dup_heading = _repeated_heading(text)
+    if (truncated or dup_heading) and effective_max_tokens < _GEMINI_MAX_TOKENS:
+        why = "truncated (MAX_TOKENS)" if truncated else f"degenerate (repeated heading {dup_heading!r})"
+        logger.warning(f"Response {why} at {effective_max_tokens} tokens. "
                        f"Retrying at {_GEMINI_MAX_TOKENS}…")
         retry_cfg = types.GenerateContentConfig(
             system_instruction=system_message,
@@ -361,6 +384,9 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
         if _gemini_finish_reason(response) == "MAX_TOKENS":
             logger.warning(f"Still truncated at {_GEMINI_MAX_TOKENS} tokens — "
                            f"report for {ticker} may be incomplete.")
+        elif _repeated_heading(text):
+            logger.warning(f"Still degenerate (repeated heading {_repeated_heading(text)!r}) "
+                           f"at {_GEMINI_MAX_TOKENS} tokens — report for {ticker} may be malformed.")
 
     for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
         if not _is_refusal(text):
