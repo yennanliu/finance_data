@@ -30,8 +30,10 @@ def generate_plotly_candlestick_chart(hist, ticker: str, output_dir: str = None)
         import pandas as pd
         from pathlib import Path
 
-        # Use last 200 trading days for good chart visibility
-        df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
+        # Use last 200 trading days for good chart visibility. The Plotly
+        # candlestick uses only OHLC + computed MAs, so Volume is not required
+        # (some indices/funds/forex tickers lack it).
+        df = hist[["Open", "High", "Low", "Close"]].tail(200).copy()
 
         # Calculate MAs
         df["MA30"] = df["Close"].rolling(window=30).mean()
@@ -178,8 +180,12 @@ def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
         import matplotlib.patches as mpatches
         matplotlib.use("Agg")  # headless backend, no display
 
-        # Use last 200 trading days for good chart visibility
-        df = hist[["Open", "High", "Low", "Close", "Volume"]].tail(200).copy()
+        # Use last 200 trading days for good chart visibility. Include Volume
+        # only if the ticker actually has it (indices/funds/forex may not).
+        cols = ["Open", "High", "Low", "Close"]
+        if "Volume" in hist.columns:
+            cols.append("Volume")
+        df = hist[cols].tail(200).copy()
 
         # Define MA periods and colors
         ma_config = [(30, "#2196F3"), (60, "#9C27B0"), (200, "#212121")]
@@ -213,7 +219,7 @@ def generate_candlestick_chart(hist, ticker: str, output_path: str) -> str:
             df,
             type="candle",
             mav=tuple(mavs),
-            volume=True,
+            volume="Volume" in df.columns,
             style=style,
             mavcolors=ma_colors,
             title=f"{ticker}  |  MA{mavs}  |  最近200交易日",
