@@ -25,16 +25,18 @@ for _p in (_REPO_ROOT, _SCRIPTS):
 
 @pytest.fixture
 def sample_hist() -> pd.DataFrame:
-    """100 days of trending OHLCV data, enough to exercise every MA window."""
-    dates = pd.date_range("2024-01-01", periods=100, freq="D")
-    prices = [100 + i + (i % 5 - 2) * 0.5 for i in range(100)]
+    """300 days of trending OHLCV data — enough to exercise every MA window
+    (the longest is MA240), not just the short ones."""
+    n = 300
+    dates = pd.date_range("2024-01-01", periods=n, freq="D")
+    prices = [100 + i + (i % 5 - 2) * 0.5 for i in range(n)]
     return pd.DataFrame(
         {
             "Open": [p + 0.2 for p in prices],
             "High": [p + 1 for p in prices],
             "Low": [p - 1 for p in prices],
             "Close": [p + 0.5 for p in prices],
-            "Volume": [1_000_000 + i * 10_000 for i in range(100)],
+            "Volume": [1_000_000 + i * 10_000 for i in range(n)],
         },
         index=dates,
     )

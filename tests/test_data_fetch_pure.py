@@ -44,6 +44,8 @@ def test_ma_charts_with_data(sample_hist):
     assert "移動平均線" in out
     assert "MA  5" in out
     assert "MA240" in out
+    # 300 rows is enough for every window, so none should hit the fallback.
+    assert "資料不足" not in out
 
 
 def test_ma_charts_insufficient_data():

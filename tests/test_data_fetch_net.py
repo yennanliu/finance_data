@@ -177,6 +177,55 @@ def test_fetch_data_assembles_dict(monkeypatch):
     assert "finviz_text" in out
 
 
+def test_get_yf_raises_datafetcherror_when_missing(monkeypatch):
+    import sys as _sys
+    from scripts.analysis.exceptions import DataFetchError
+    # A None entry makes `import yfinance` raise ImportError.
+    monkeypatch.setitem(_sys.modules, "yfinance", None)
+    with pytest.raises(DataFetchError):
+        data_fetch._get_yf()
+
+
+def test_fetch_data_degrades_when_info_raises(monkeypatch):
+    import types as _types
+
+    class _InfoFails:
+        news = []
+
+        def __init__(self, symbol):
+            self._e = pd.DataFrame()
+
+        @property
+        def info(self):
+            raise RuntimeError("rate limited")
+
+        def history(self, period="2y"):
+            return pd.DataFrame()  # empty → price fields None, no crash
+
+        upgrades_downgrades = property(lambda s: s._e)
+        insider_transactions = property(lambda s: s._e)
+        major_holders = property(lambda s: s._e)
+        institutional_holders = property(lambda s: s._e)
+        mutualfund_holders = property(lambda s: s._e)
+        earnings_history = property(lambda s: s._e)
+        financials = property(lambda s: s._e)
+        quarterly_financials = property(lambda s: s._e)
+        balance_sheet = property(lambda s: s._e)
+        quarterly_balance_sheet = property(lambda s: s._e)
+        cashflow = property(lambda s: s._e)
+        quarterly_cashflow = property(lambda s: s._e)
+
+    monkeypatch.setattr(data_fetch, "_get_yf",
+                        lambda: _types.SimpleNamespace(Ticker=_InfoFails))
+    monkeypatch.setattr(data_fetch, "fetch_finviz", lambda t: {})
+    monkeypatch.setattr(data_fetch, "fetch_stockanalysis", lambda t: {})
+    monkeypatch.setattr(data_fetch, "fetch_roic", lambda t: {})
+
+    out = fetch_data("X")
+    assert out["ticker"] == "X"
+    assert out["info"] == {}     # info failure degraded, did not crash
+
+
 def test_fetch_data_insider_with_missing_values(monkeypatch):
     """A row with None Shares/Value must not discard the whole insider section."""
     import types as _types

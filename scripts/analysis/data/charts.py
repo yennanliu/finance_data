@@ -142,16 +142,20 @@ def _generate_mplfinance_chart(df, ticker: str, output_path) -> str:
     include_volume = "Volume" in chart_df.columns
 
     style = mpf.make_mpf_style(base_mpf_style="charles")
-    fig, axes = mpf.plot(
-        chart_df,
+    # Only request MA windows the data can support; mplfinance raises if a
+    # window exceeds the row count (e.g. a recent IPO with < 200 days).
+    mavs = tuple(p for p in (30, 60, 200) if len(chart_df) >= p)
+    plot_kwargs = dict(
         type="candle",
-        mav=(30, 60, 200),
         volume=include_volume,
         style=style,
-        title=f"{ticker}  |  MA(30/60/200)  |  最近200交易日",
+        title=f"{ticker}  |  MA{list(mavs)}  |  最近200交易日",
         figsize=(12, 7),
         returnfig=True,
     )
+    if mavs:
+        plot_kwargs["mav"] = mavs
+    fig, axes = mpf.plot(chart_df, **plot_kwargs)
 
     fig.savefig(str(output_path), dpi=150, bbox_inches="tight")
     import matplotlib.pyplot as plt
