@@ -63,7 +63,9 @@ def test_generate_watchlist_happy_path(monkeypatch):
 
 def test_generate_watchlist_retries_on_rate_limit(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "k")
-    monkeypatch.setattr(gsw.time, "sleep", lambda *_: None)
+    # The rate-limit sleep now happens inside the shared run_openai runner.
+    from analysis.utils import llm as llm_mod
+    monkeypatch.setattr(llm_mod.time, "sleep", lambda *_: None)
 
     class RL(Exception):
         pass
