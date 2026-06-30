@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import os
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
 
-import openai
+sys.path.insert(0, str(Path(__file__).parent))
+
+from analysis.llm import run_openai
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 
@@ -84,39 +85,20 @@ def _output_path() -> Path:
 # ── OpenAI call ───────────────────────────────────────────────────────────────
 
 def generate_watchlist(model: str = "gpt-4o", max_tokens: int = 8000) -> str:
-    api_key = os.environ.get("OPENAI_API_KEY", "")
-    if not api_key:
+    # Preserve the original clean-exit UX on a missing key (vs. a raised LLMError).
+    if not os.environ.get("OPENAI_API_KEY"):
         sys.exit("ERROR: OPENAI_API_KEY environment variable is not set.")
 
-    client = openai.OpenAI(api_key=api_key)
     today = datetime.utcnow().strftime("%Y-%m-%d")
-
     print(f"Calling {model} to generate watchlist for {today}…")
 
-    max_retries = 3
-    for attempt in range(1, max_retries + 1):
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                max_tokens=max_tokens,
-                temperature=0.4,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": USER_PROMPT.format(today=today)},
-                ],
-            )
-            break
-        except openai.RateLimitError:
-            if attempt == max_retries:
-                raise
-            delay = 30 * (2 ** (attempt - 1))
-            print(f"Rate limit (attempt {attempt}/{max_retries}). Retrying in {delay}s…")
-            time.sleep(delay)
-
-    text = response.choices[0].message.content
-    usage = response.usage
-    print(f"Tokens: input={usage.prompt_tokens}, output={usage.completion_tokens}")
-    return text
+    # Reuse the shared OpenAI runner: watchlist uses temp=0.4, 3 rate-limit
+    # retries, no per-model token cap, and no refusal escalation.
+    return run_openai(
+        "", USER_PROMPT.format(today=today), SYSTEM_PROMPT,
+        model=model, max_tokens=max_tokens, temperature=0.4,
+        max_retries=3, refusal_retry=False, cap_tokens=False,
+    )
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────

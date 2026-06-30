@@ -46,55 +46,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from analysis import (
-    ANALYSIS_TYPES,
-    DEFAULT_MODEL,
-    DEFAULT_TOKENS,
-    TODAY,
-    fetch_data,
-    build_context,
-    call_llm,
-)
-from analysis.utils.data_fetch import generate_plotly_candlestick_chart
+from analysis import ANALYSIS_TYPES, DEFAULT_MODEL, DEFAULT_TOKENS, TODAY
+from analysis.pipeline import run_analysis, save_analysis_report
 
 
 def save_report(ticker: str, content: str, output_dir: Path,
                 analysis_type: str, provider: str = "claude") -> Path:
-    """Save report with YAML frontmatter and same-day deduplication."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    meta = ANALYSIS_TYPES[analysis_type]
-    prefix = meta["filename_prefix"]
-    label = meta["label"]
-    ext = meta.get("ext", ".md")
+    """Save report with YAML frontmatter and same-day deduplication.
 
-    model_suffix = provider  # "openai", "claude", or "gemini"
-    base = f"{prefix}_{TODAY}_{model_suffix}"
-
-    path = output_dir / f"{base}{ext}"
-    counter = 2
-    while path.exists():
-        path = output_dir / f"{base}-{counter}{ext}"
-        counter += 1
-
-    if ext == ".html":
-        path.write_text(content, encoding="utf-8")
-    else:
-        generated_by = {"openai": "OpenAI API", "gemini": "Google Gemini API"}.get(provider, "Claude AI")
-        frontmatter = (
-            "---\n"
-            f'title: "{ticker} {label} {TODAY}"\n'
-            f"date: {TODAY}\n"
-            f"ticker: {ticker}\n"
-            f"analysis_type: {analysis_type}\n"
-            f"provider: {provider}\n"
-            "language: zh-TW\n"
-            f"generated_by: {generated_by} (scripts/generate_analysis.py)\n"
-            "---\n\n"
-        )
-        path.write_text(frontmatter + content, encoding="utf-8")
-
-    print(f"  ✅ saved → {path}")
-    return path
+    Thin wrapper over :func:`analysis.pipeline.save_analysis_report`.
+    """
+    return save_analysis_report(ticker, content, output_dir, analysis_type, provider=provider)
 
 
 def parse_args() -> argparse.Namespace:
@@ -142,36 +104,7 @@ def main() -> None:
     sep = "=" * max(70, len(banner) + 4)
     print(f"\n{sep}\n{banner}\n{sep}\n")
 
-    print("[1/3] Fetching financial data from Yahoo Finance …")
-    data = fetch_data(ticker)
-    context = build_context(data, analysis_type)
-
-    chart_embed = ""
-    if analysis_type == "technical-analysis" and data.get("hist") is not None:
-        print("  Generating interactive candlestick chart with MA30/60/200 …")
-        chart_result = generate_plotly_candlestick_chart(data["hist"], ticker, str(output_dir))
-        if isinstance(chart_result, dict) and chart_result.get("plotly_html"):
-            png_filename = chart_result.get("png_filename", "")
-            plotly_html = chart_result.get("plotly_html", "")
-
-            if png_filename:
-                chart_embed = (
-                    f'<details>\n'
-                    f'<summary>📊 靜態圖表 (點擊展開)</summary>\n'
-                    f'<img src="{png_filename}" alt="Technical Chart" style="max-width:100%;">\n'
-                    f'</details>\n'
-                    f'\n'
-                    f'{plotly_html}\n\n'
-                )
-            else:
-                chart_embed = plotly_html + "\n\n"
-
-    print(f"[2/3] Calling {provider.upper()} API …")
-    report = call_llm(ticker, context, analysis_type, provider, args.model, args.max_tokens)
-
-    print("[3/3] Saving report …")
-    final_report = chart_embed + report
-    save_report(ticker, final_report, output_dir, analysis_type, provider=provider)
+    run_analysis(ticker, analysis_type, provider, args.model, args.max_tokens, output_dir)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 

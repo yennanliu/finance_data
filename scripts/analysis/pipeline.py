@@ -1,0 +1,96 @@
+"""Run layer: orchestrate a single analysis report end-to-end.
+
+fetch (data) → assemble (context) → optional chart → generate (llm) → publish.
+This is importable so an analysis can be produced programmatically; the
+``generate_analysis.py`` CLI is a thin wrapper over :func:`run_analysis`.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from .config import ANALYSIS_TYPES, TODAY
+from .context import build_context
+from .data.charts import generate_plotly_candlestick_chart
+from .data.sources import fetch_data
+from .llm import call_llm
+from .publish import dedup_path, frontmatter
+
+_GENERATED_BY = {"openai": "OpenAI API", "gemini": "Google Gemini API"}
+
+
+def build_technical_chart_embed(data: dict, ticker: str, output_dir) -> str:
+    """Return the Markdown/HTML chart embed for technical reports ('' if none)."""
+    if data.get("hist") is None:
+        return ""
+    print("  Generating interactive candlestick chart with MA30/60/200 …")
+    chart_result = generate_plotly_candlestick_chart(data["hist"], ticker, str(output_dir))
+    if not (isinstance(chart_result, dict) and chart_result.get("plotly_html")):
+        return ""
+    png_filename = chart_result.get("png_filename", "")
+    plotly_html = chart_result.get("plotly_html", "")
+    if png_filename:
+        return (
+            f'<details>\n'
+            f'<summary>📊 靜態圖表 (點擊展開)</summary>\n'
+            f'<img src="{png_filename}" alt="Technical Chart" style="max-width:100%;">\n'
+            f'</details>\n'
+            f'\n'
+            f'{plotly_html}\n\n'
+        )
+    return plotly_html + "\n\n"
+
+
+def save_analysis_report(ticker: str, content: str, output_dir: Path,
+                         analysis_type: str, provider: str = "claude") -> Path:
+    """Save report with YAML frontmatter and same-day deduplication."""
+    output_dir = Path(output_dir)
+    meta = ANALYSIS_TYPES[analysis_type]
+    prefix = meta["filename_prefix"]
+    label = meta["label"]
+    ext = meta.get("ext", ".md")
+
+    base = f"{prefix}_{TODAY}_{provider}"  # provider: "openai" | "claude" | "gemini"
+    path = dedup_path(output_dir, base, ext)
+
+    if ext == ".html":
+        path.write_text(content, encoding="utf-8")
+    else:
+        generated_by = _GENERATED_BY.get(provider, "Claude AI")
+        fm = frontmatter({
+            "title": f'"{ticker} {label} {TODAY}"',
+            "date": TODAY,
+            "ticker": ticker,
+            "analysis_type": analysis_type,
+            "provider": provider,
+            "language": "zh-TW",
+            "generated_by": f"{generated_by} (scripts/generate_analysis.py)",
+        })
+        path.write_text(fm + content, encoding="utf-8")
+
+    print(f"  ✅ saved → {path}")
+    return path
+
+
+def run_analysis(ticker: str, analysis_type: str, provider: str,
+                 model: str, max_tokens: int, output_dir: Path) -> Path:
+    """Fetch data, build context, generate the report, and save it. Returns path."""
+    output_dir = Path(output_dir)
+
+    print("[1/3] Fetching financial data from Yahoo Finance …")
+    data = fetch_data(ticker)
+    context = build_context(data, analysis_type)
+
+    chart_embed = ""
+    if analysis_type == "technical-analysis":
+        chart_embed = build_technical_chart_embed(data, ticker, output_dir)
+
+    print(f"[2/3] Calling {provider.upper()} API …")
+    report = call_llm(ticker, context, analysis_type, provider, model, max_tokens)
+
+    print("[3/3] Saving report …")
+    return save_analysis_report(ticker, chart_embed + report, output_dir,
+                                analysis_type, provider=provider)
+
+
+__all__ = ["run_analysis", "save_analysis_report", "build_technical_chart_embed"]

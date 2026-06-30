@@ -3,6 +3,10 @@
 import pytest
 
 import generate_analysis as ga
+# Patch the SAME pipeline module object generate_analysis imports. The script
+# runs with scripts/ on sys.path and imports the bare `analysis.pipeline`, which
+# is a distinct module identity from `scripts.analysis.pipeline` under pytest.
+from analysis import pipeline
 
 pytestmark = pytest.mark.integration
 
@@ -69,15 +73,16 @@ def test_parse_args_overrides(monkeypatch):
 # ── main (wired with mocked layers) ──────────────────────────────────────────
 
 def test_main_writes_report(monkeypatch, tmp_path):
-    monkeypatch.setattr(ga, "fetch_data", lambda ticker: {"hist": None})
-    monkeypatch.setattr(ga, "build_context", lambda data, atype: "CONTEXT")
+    # Orchestration lives in analysis.pipeline; patch its layer dependencies.
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
     captured = {}
 
     def fake_llm(ticker, context, atype, provider, model, max_tokens):
         captured.update(ticker=ticker, context=context, atype=atype, provider=provider)
         return "# Report\nbody"
 
-    monkeypatch.setattr(ga, "call_llm", fake_llm)
+    monkeypatch.setattr(pipeline, "call_llm", fake_llm)
     monkeypatch.setattr("sys.argv", [
         "generate_analysis.py", "msft",
         "--analysis-type", "fundamental-analysis",
