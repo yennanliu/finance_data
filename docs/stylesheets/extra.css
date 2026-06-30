@@ -1198,7 +1198,6 @@ body,
 .md-typeset h2,
 .md-typeset h3 {
   overflow-wrap: break-word;
-  word-break: break-word;
 }
 
 /* Embedded iframes / video (HTML report previews) stay fluid. */
@@ -1206,11 +1205,6 @@ body,
 .md-typeset video,
 .md-typeset canvas {
   max-width: 100%;
-}
-
-/* Final guard: nothing in the article column may cause sideways page scroll. */
-.md-content__inner {
-  overflow-x: hidden;
 }
 
 /* Tablet range (≈iPad portrait) — tables read better with a slightly smaller
