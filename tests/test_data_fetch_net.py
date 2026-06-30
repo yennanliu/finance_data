@@ -8,8 +8,10 @@ import pandas as pd
 import pytest
 from bs4 import BeautifulSoup
 
-from scripts.analysis.utils import data_fetch
-from scripts.analysis.utils.data_fetch import (
+# Patch targets must be the canonical module where these functions live and
+# resolve their globals (analysis.data.sources), not the utils.data_fetch shim.
+from scripts.analysis.data import sources as data_fetch
+from scripts.analysis.data.sources import (
     fetch_finviz, fetch_stockanalysis, fetch_roic, fetch_data, _get_soup,
 )
 
