@@ -45,7 +45,10 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.tabs.link
-    - navigation.expand
+    # navigation.expand removed (perf): forced the full 5k-page tree to render
+    # expanded into every page (~1 MB HTML each). navigation.prune emits only
+    # the nav subtree for the current page, cutting per-page weight ~80-95%.
+    - navigation.prune
     - navigation.footer
     - navigation.indexes
     - navigation.instant
