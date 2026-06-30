@@ -46,11 +46,54 @@ SRC_6K       = ROOT / "6-k"
 SRC_INV_DAY  = ROOT / "investor_day"
 
 TODAY = date.today().isoformat()
+# Fixed once at module load so retention filtering is identical across the
+# sequential EN/ZH builds even if the run crosses midnight.
+TODAY_DATE = date.fromisoformat(TODAY)
 
 # ── Site root path (must match site_url in mkdocs.yml) ───────────────────────
 # Used to build absolute cross-language links so the ZH index can link to the
 # EN report pages instead of duplicating all files.
 SITE_BASE = "/finance_data"
+
+# ── Publishing controls ───────────────────────────────────────────────────────
+# Perf fix #4 — retention window. Reports / market-news older than this many
+# days are NOT mirrored into the published site (the source files under
+# ai_gen_report/ are never touched, so this is fully reversible). This caps the
+# deploy payload, build time, and search-index size as daily reports accumulate.
+# Set REPORT_RETENTION_DAYS=0 to publish everything.
+RETENTION_DAYS = int(os.environ.get("REPORT_RETENTION_DAYS", "120"))
+
+# Perf fix #1 — search-index slimming. Prepended to dated report / news /
+# notebook *body* pages so the MkDocs Material search plugin skips their (very
+# large) full text. Index & landing pages stay searchable, so tickers and
+# report titles remain discoverable while search_index.json stays small.
+SEARCH_EXCLUDE_FM = "---\nsearch:\n  exclude: true\n---\n\n"
+
+_DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+
+
+def _file_date(f: Path) -> "date | None":
+    """Parse a YYYY-MM-DD date embedded in a filename; None if absent/invalid."""
+    m = _DATE_RE.search(f.name)
+    if not m:
+        return None
+    try:
+        return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    except ValueError:
+        return None
+
+
+def within_retention(f: Path) -> bool:
+    """True if f should be published: recent enough, undated, or retention off.
+
+    Undated files (hand-written pages, indexes) always publish.
+    """
+    if RETENTION_DAYS <= 0:
+        return True
+    d = _file_date(f)
+    if d is None:
+        return True
+    return (TODAY_DATE - d).days <= RETENTION_DAYS
 
 # ── Build mode ────────────────────────────────────────────────────────────────
 # Pass --clean to force a full rebuild (deletes docs/ subdirs first).
@@ -303,18 +346,25 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9_-]", "-", text.lower()).strip("-")
 
 
-def copy_file(src: Path, dst: Path):
+def copy_file(src: Path, dst: Path, prepend: str = ""):
+    """Copy src → dst. For Markdown, optionally prepend front matter and
+    pre-render Mermaid; uses a content-equality incremental check so a changed
+    `prepend` is always applied. Binary files use a cheap mtime check."""
     ensure(dst.parent)
-    # Incremental: skip if dst exists and source hasn't changed since last copy
-    if _INCREMENTAL and dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
-        return
-    if src.suffix == ".md" and _MMDC:
-        # Pre-render Mermaid blocks to SVG inline
+    if src.suffix == ".md":
         content = src.read_text(encoding="utf-8")
-        rendered = prerender_mermaid(content)
-        dst.write_text(rendered, encoding="utf-8")
-        print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}  (mermaid rendered)")
+        if _MMDC:
+            # Pre-render Mermaid blocks to SVG inline
+            content = prerender_mermaid(content)
+        content = prepend + content
+        if _INCREMENTAL and dst.exists() and dst.read_text(encoding="utf-8") == content:
+            return
+        dst.write_text(content, encoding="utf-8")
+        print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}")
     else:
+        # Incremental: skip if dst exists and source hasn't changed since last copy
+        if _INCREMENTAL and dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
+            return
         shutil.copy2(src, dst)
         print(f"  copy  {src.relative_to(ROOT)}  →  {dst.relative_to(ROOT)}")
 
@@ -354,6 +404,11 @@ def build_reports(lang: str = "en"):
         html_files = [f for f in files if f.suffix == ".html"]
         other_files = [f for f in files if f.suffix not in (".md", ".html", "") and f.is_file()]
 
+        # Perf fix #4 — only publish reports within the retention window
+        md_files    = [f for f in md_files if within_retention(f)]
+        html_files  = [f for f in html_files if within_retention(f)]
+        other_files = [f for f in other_files if within_retention(f)]
+
         if not (md_files or html_files):
             continue  # skip empty dirs
 
@@ -364,7 +419,10 @@ def build_reports(lang: str = "en"):
 
         # EN: copy report files; ZH: skip copies — link to EN pages instead
         if lang == "en":
-            for f in md_files + html_files + other_files:
+            for f in md_files:
+                # Perf fix #1 — exclude report bodies from the search index
+                copy_file(f, dst_dir / f.name, prepend=SEARCH_EXCLUDE_FM)
+            for f in html_files + other_files:
                 copy_file(f, dst_dir / f.name)
 
         # For ZH, links point to the EN pages (absolute site paths).
@@ -461,8 +519,8 @@ def build_reports(lang: str = "en"):
         ticker = ticker_dir.name.lower()
         meta = get_meta(ticker)
         files = sorted(ticker_dir.iterdir(), key=lambda f: f.name)
-        md_files   = [f for f in files if f.suffix == ".md"]
-        html_files = [f for f in files if f.suffix == ".html"]
+        md_files   = [f for f in files if f.suffix == ".md" and within_retention(f)]
+        html_files = [f for f in files if f.suffix == ".html" and within_retention(f)]
         if not (md_files or html_files):
             continue
 
@@ -540,12 +598,13 @@ def build_market_news(lang: str = "en"):
         ensure(dst_ticker_dir)
 
         # Get all market_news_*.md files directly in ticker dir
+        # Perf fix #4 — only publish news within the retention window
         md_files = sorted(
-            [f for f in ticker_dir.iterdir() if f.is_file() and f.name.startswith("market_news_") and f.suffix == ".md"],
+            [f for f in ticker_dir.iterdir() if f.is_file() and f.name.startswith("market_news_") and f.suffix == ".md" and within_retention(f)],
             reverse=True,
         )
         # Also support legacy README.md in date subdirs
-        date_dirs = sorted([d for d in ticker_dir.iterdir() if d.is_dir()], reverse=True)
+        date_dirs = sorted([d for d in ticker_dir.iterdir() if d.is_dir() and within_retention(d)], reverse=True)
         news_files = []
 
         for md_file in md_files:
@@ -554,7 +613,7 @@ def build_market_news(lang: str = "en"):
             date_str = parts[2] if len(parts) >= 3 else md_file.stem
             if lang == "en":
                 dst_file = dst_ticker_dir / md_file.name
-                copy_file(md_file, dst_file)
+                copy_file(md_file, dst_file, prepend=SEARCH_EXCLUDE_FM)
                 news_files.append((date_str, dst_file.name, None))
             else:
                 # ZH: link to EN page, no copy
@@ -566,7 +625,7 @@ def build_market_news(lang: str = "en"):
             if readme.exists():
                 if lang == "en":
                     dst_file = dst_ticker_dir / f"{date_dir.name}.md"
-                    copy_file(readme, dst_file)
+                    copy_file(readme, dst_file, prepend=SEARCH_EXCLUDE_FM)
                     news_files.append((date_dir.name, dst_file.name, None))
                 else:
                     en_url = f"{SITE_BASE}/market_news/{ticker}/{date_dir.name}/"
@@ -621,6 +680,12 @@ def build_market_news(lang: str = "en"):
 
 
 # ── 2. notebook_llm → docs/notebooks/ ────────────────────────────────────────
+# Perf fix #5 — notebook PDFs (14–19 MB each, ~200 MB total) are NOT copied into
+# the published site. They are linked from GitHub raw instead, mirroring how the
+# 10-K PDFs are handled. Keeps the GitHub Pages payload small.
+NOTEBOOK_RAW_BASE = "https://raw.githubusercontent.com/yennanliu/finance_data/main/notebook_llm"
+
+
 def build_notebooks(lang: str = "en"):
     docs_root = get_docs_root(lang)
     DST_NOTEBOOKS = docs_root / "notebooks"
@@ -643,14 +708,20 @@ def build_notebooks(lang: str = "en"):
         txts  = sorted(ticker_dir.glob("*.txt"))
         mds   = sorted(ticker_dir.glob("*.md"))
 
-        # EN: copy files; ZH: link to EN pages, no copy
+        # EN: copy text/markdown only — PDFs are linked from GitHub (perf fix #5).
+        # ZH: link to EN pages, no copy.
         if lang == "en":
-            for f in list(pdfs) + list(txts) + list(mds):
-                copy_file(f, dst_dir / f.name)
+            for f in txts + mds:
+                # Exclude notebook bodies from the search index (perf fix #1)
+                prepend = SEARCH_EXCLUDE_FM if f.suffix == ".md" else ""
+                copy_file(f, dst_dir / f.name, prepend=prepend)
 
         def nb_link(f: Path) -> str:
+            # PDFs are not published with the site — link to the GitHub raw copy.
+            if f.suffix == ".pdf":
+                return f"{NOTEBOOK_RAW_BASE}/{ticker_dir.name}/{f.name}"
             if lang == "zh":
-                # PDFs and non-md files keep the filename; md files use directory URL
+                # md files use directory URL; other non-md files keep the filename
                 if f.suffix == ".md":
                     return f"{SITE_BASE}/notebooks/{ticker}/{f.stem}/"
                 return f"{SITE_BASE}/notebooks/{ticker}/{f.name}"
@@ -1048,6 +1119,21 @@ def build_nav_pages(lang: str = "en"):
     if DST_MARKET_NEWS.exists():
         market_news_title = t(lang, "market_news")
         write(DST_MARKET_NEWS / ".pages", f"title: {market_news_title}\nnav:\n  - index.md\n  - ...\n")
+
+    # Perf fix #2b — keep individual dated reports OUT of the global nav tree.
+    # Without this, awesome-pages adds every report page (~3,500) to the nav, so
+    # navigation.prune can only trim collapsed branches and deep pages still
+    # render thousands of nav links (~590 KB HTML each). Listing only index.md
+    # per ticker keeps the sidebar to one entry per ticker; the report pages are
+    # still built by MkDocs and reached via the per-ticker index tables.
+    # (mkdocs.yml sets validation.nav.omitted_files: info so --strict tolerates
+    # these intentionally-orphaned pages.)
+    for section in [DST_REPORTS, DST_MARKET_NEWS]:
+        if not section.exists():
+            continue
+        for ticker_dir in section.iterdir():
+            if ticker_dir.is_dir():
+                write(ticker_dir / ".pages", "nav:\n  - index.md\n")
 
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():

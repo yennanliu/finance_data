@@ -3,12 +3,12 @@
 > AI 驅動的美股投資研究平台 — 基本面分析、SEC 文件、內線交易追蹤、技術分析，全部繁體中文。
 
 <p align="center">
-  <img src="docs/pic/demo_1.png" width="80%" alt="Landing Page"/>
+  <img src="docs/pic/demo_1.webp" width="80%" alt="Landing Page"/>
 </p>
 
 <p align="center">
-  <img src="docs/pic/demo_2.png" width="49%" alt="Analysis Reports Index"/>
-  <img src="docs/pic/demo_3.png" width="49%" alt="Fundamental Analysis Report"/>
+  <img src="docs/pic/demo_2.webp" width="49%" alt="Analysis Reports Index"/>
+  <img src="docs/pic/demo_3.webp" width="49%" alt="Fundamental Analysis Report"/>
 </p>
 
 **Live Site:** [yennanliu.github.io/finance_data](https://yennanliu.github.io/finance_data/)
