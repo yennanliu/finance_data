@@ -46,6 +46,9 @@ SRC_6K       = ROOT / "6-k"
 SRC_INV_DAY  = ROOT / "investor_day"
 
 TODAY = date.today().isoformat()
+# Fixed once at module load so retention filtering is identical across the
+# sequential EN/ZH builds even if the run crosses midnight.
+TODAY_DATE = date.fromisoformat(TODAY)
 
 # ── Site root path (must match site_url in mkdocs.yml) ───────────────────────
 # Used to build absolute cross-language links so the ZH index can link to the
@@ -90,7 +93,7 @@ def within_retention(f: Path) -> bool:
     d = _file_date(f)
     if d is None:
         return True
-    return (date.today() - d).days <= RETENTION_DAYS
+    return (TODAY_DATE - d).days <= RETENTION_DAYS
 
 # ── Build mode ────────────────────────────────────────────────────────────────
 # Pass --clean to force a full rebuild (deletes docs/ subdirs first).
@@ -708,7 +711,7 @@ def build_notebooks(lang: str = "en"):
         # EN: copy text/markdown only — PDFs are linked from GitHub (perf fix #5).
         # ZH: link to EN pages, no copy.
         if lang == "en":
-            for f in list(txts) + list(mds):
+            for f in txts + mds:
                 # Exclude notebook bodies from the search index (perf fix #1)
                 prepend = SEARCH_EXCLUDE_FM if f.suffix == ".md" else ""
                 copy_file(f, dst_dir / f.name, prepend=prepend)
