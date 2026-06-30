@@ -14,6 +14,11 @@ pytest tests/ -v
 # Run a single test file
 pytest tests/test_llm.py -v
 
+# NOTE: .python-version pins 3.9 (often not installed locally). The suite is
+# verified under Python 3.13 — if `pytest` can't find an interpreter, run it
+# explicitly, e.g. `python3.13 -m pytest tests/ -v`. Tests are fully offline
+# (network/SDK/selenium boundaries are mocked); no API keys required.
+
 # Generate analysis locally
 python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider claude
 python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider openai
