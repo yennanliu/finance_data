@@ -1,18 +1,32 @@
 """
-LLM API wrappers for Claude and OpenAI.
+LLM provider layer for Claude, OpenAI, and Gemini.
+
+Two tiers:
+  * ``run_claude`` / ``run_openai`` / ``run_gemini`` — generic provider runners
+    that take an arbitrary (system_message, prompt) and own the cross-cutting
+    plumbing: API-key checks, model token caps, rate-limit retries, refusal
+    detection/escalation, and (Gemini) truncation/degeneration recovery. These
+    are reused by the standalone generator scripts so provider logic lives in
+    exactly one place.
+  * ``call_claude`` / ``call_openai`` / ``call_gemini`` — analysis-report entry
+    points that build the prompt from ``PROMPT_MAP[analysis_type]`` and the
+    per-provider system template, then delegate to the matching runner.
+  * ``call_llm`` — dispatches by provider name.
+
+NOTE: this module is the canonical home for the ``call_*`` functions; tests
+patch ``scripts.analysis.utils.llm.call_openai`` etc. and rely on ``call_llm``
+resolving them as module globals, so they must stay defined here.
 """
 
 from __future__ import annotations
 
 import os
-import re
-import sys
 import time
 from pathlib import Path
 
 from ..config import TODAY
 from ..exceptions import LLMError
-from ..prompts import PROMPT_MAP, load_prompt
+from ..prompts import PROMPT_MAP
 from .logging_utils import setup_logger
 
 logger = setup_logger(__name__)
@@ -23,6 +37,19 @@ _REFUSAL_PATTERNS = [
     "無法提供", "過於龐大", "I cannot", "I'm unable", "I can't",
 ]
 _MAX_REFUSAL_RETRIES = 5
+
+# OpenAI model token limits
+OPENAI_MAX_TOKENS = {
+    "gpt-4o": 16384,
+    "gpt-4o-mini": 16384,
+    "gpt-4-turbo": 4096,
+    "gpt-4": 8192,
+}
+
+# Gemini 2.5 Flash supports up to 65,536 output tokens. Note: 2.5 models are
+# "thinking" models whose internal reasoning tokens are also billed against
+# max_output_tokens, so the visible report shares this budget with thinking.
+_GEMINI_MAX_TOKENS = 65536
 
 
 def _is_refusal(text: str) -> bool:
@@ -50,14 +77,6 @@ def _refusal_override_prefix(ticker: str, attempt: int) -> str:
         )
     return base
 
-# OpenAI model token limits
-OPENAI_MAX_TOKENS = {
-    "gpt-4o": 16384,
-    "gpt-4o-mini": 16384,
-    "gpt-4-turbo": 4096,
-    "gpt-4": 8192,
-}
-
 
 def _load_openai_system_message() -> str:
     """Load the OpenAI system message template."""
@@ -69,13 +88,6 @@ def _load_gemini_system_message() -> str:
     """Load the Gemini-specific system message (shorter length target, no placeholder values)."""
     path = Path(__file__).parent.parent / "prompts" / "gemini_system.txt"
     return path.read_text(encoding="utf-8")
-
-
-# Gemini 2.5 Flash supports up to 65,536 output tokens. Note: 2.5 models are
-# "thinking" models whose internal reasoning tokens are also billed against
-# max_output_tokens, so the visible report shares this budget with thinking.
-# Use the full ceiling to leave ample room and avoid mid-sentence truncation.
-_GEMINI_MAX_TOKENS = 65536
 
 
 def _gemini_finish_reason(response) -> str:
@@ -115,9 +127,12 @@ def _get_anthropic():
         raise LLMError("anthropic library not found") from None
 
 
-def call_claude(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
-    """Call Claude API and return the response text."""
+# ── Generic provider runners ─────────────────────────────────────────────────
+
+def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
+               model: str, max_tokens: int, temperature: float | None = None,
+               max_retries: int = 5, refusal_retry: bool = True) -> str:
+    """Call Claude with an arbitrary prompt; handle rate-limit + refusal retries."""
     anthropic = _get_anthropic()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -126,68 +141,59 @@ def call_claude(ticker: str, context: str, analysis_type: str,
         raise LLMError("ANTHROPIC_API_KEY not configured")
 
     client = anthropic.Anthropic(api_key=api_key)
-    template = PROMPT_MAP[analysis_type]
-    prompt = template.format(
-        ticker=ticker,
-        financial_context=context,
-        today=TODAY,
-    )
-
     logger.info(f"Claude API call: model={model}, max_tokens={max_tokens}")
 
-    max_retries = 5
-    base_delay = 30  # seconds
+    def _create(content: str, temp: float | None):
+        kwargs = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "messages": [{"role": "user", "content": content}],
+        }
+        if system_message:
+            kwargs["system"] = system_message
+        if temp is not None:
+            kwargs["temperature"] = temp
+        return client.messages.create(**kwargs)
+
+    base_delay = 30
     for attempt in range(1, max_retries + 1):
         try:
-            response = client.messages.create(
-                model=model,
-                max_tokens=max_tokens,
-                messages=[{"role": "user", "content": prompt}],
-            )
+            response = _create(prompt, temperature)
             break
         except anthropic.RateLimitError:
             if attempt == max_retries:
                 raise
             delay = base_delay * (2 ** (attempt - 1))
-            logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). "
-                          f"Retrying in {delay}s…")
+            logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). Retrying in {delay}s…")
             time.sleep(delay)
 
     text = "\n\n".join(b.text for b in response.content if hasattr(b, "text"))
     usage = response.usage
-    logger.info(f"Response: input={usage.input_tokens}, output={usage.output_tokens}, "
-                f"chars={len(text)}")
+    logger.info(f"Response: input={usage.input_tokens}, output={usage.output_tokens}, chars={len(text)}")
 
-    # Retry on refusal with escalating override
-    for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
-        if not _is_refusal(text):
-            break
-        override = _refusal_override_prefix(ticker, retry)
-        temp = min(0.7 + retry * 0.15, 1.0)
-        logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), "
-                      f"retrying with temp={temp:.2f}…")
-        time.sleep(3)
-        response = client.messages.create(
-            model=model,
-            max_tokens=max_tokens,
-            temperature=temp,
-            messages=[{"role": "user", "content": override + prompt}],
-        )
-        text = "\n\n".join(b.text for b in response.content if hasattr(b, "text"))
-        usage = response.usage
-        logger.info(f"Retry {retry}: input={usage.input_tokens}, output={usage.output_tokens}, "
-                    f"chars={len(text)}")
-
-    if _is_refusal(text):
-        logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. "
-                      f"Returning last response.")
+    if refusal_retry:
+        for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
+            if not _is_refusal(text):
+                break
+            override = _refusal_override_prefix(ticker, retry)
+            temp = min(0.7 + retry * 0.15, 1.0)
+            logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying with temp={temp:.2f}…")
+            time.sleep(3)
+            response = _create(override + prompt, temp)
+            text = "\n\n".join(b.text for b in response.content if hasattr(b, "text"))
+            usage = response.usage
+            logger.info(f"Retry {retry}: input={usage.input_tokens}, output={usage.output_tokens}, chars={len(text)}")
+        if _is_refusal(text):
+            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
 
     return text
 
 
-def call_openai(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
-    """Call OpenAI API and return the response text."""
+def run_openai(ticker: str, prompt: str, system_message: str, *,
+               model: str, max_tokens: int, temperature: float = 0.7,
+               max_retries: int = 5, refusal_retry: bool = True,
+               cap_tokens: bool = True) -> str:
+    """Call OpenAI chat completions with an arbitrary system/user prompt."""
     try:
         import openai
     except ImportError:
@@ -199,46 +205,36 @@ def call_openai(ticker: str, context: str, analysis_type: str,
         logger.error("OPENAI_API_KEY environment variable is not set")
         raise LLMError("OPENAI_API_KEY not configured")
 
-    # Apply model-specific token limits
-    model_max = OPENAI_MAX_TOKENS.get(model, 16384)
-    effective_max_tokens = min(max_tokens, model_max)
-    if effective_max_tokens != max_tokens:
-        logger.info(f"Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
-
-    # Load and format system message
-    system_template = _load_openai_system_message()
-    system_message = system_template.format(ticker=ticker)
+    effective_max_tokens = max_tokens
+    if cap_tokens:
+        effective_max_tokens = min(max_tokens, OPENAI_MAX_TOKENS.get(model, 16384))
+        if effective_max_tokens != max_tokens:
+            logger.info(f"Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
 
     client = openai.OpenAI(api_key=api_key)
-    template = PROMPT_MAP[analysis_type]
-    prompt = template.format(
-        ticker=ticker,
-        financial_context=context,
-        today=TODAY,
-    )
-
     logger.info(f"OpenAI API call: model={model}, max_tokens={effective_max_tokens}")
 
-    max_retries = 5
-    base_delay = 30  # seconds
+    def _create(content: str, temp: float):
+        return client.chat.completions.create(
+            model=model,
+            max_tokens=effective_max_tokens,
+            temperature=temp,
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": content},
+            ],
+        )
+
+    base_delay = 30
     for attempt in range(1, max_retries + 1):
         try:
-            response = client.chat.completions.create(
-                model=model,
-                max_tokens=effective_max_tokens,
-                temperature=0.7,
-                messages=[
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": prompt},
-                ],
-            )
+            response = _create(prompt, temperature)
             break
         except openai.RateLimitError:
             if attempt == max_retries:
                 raise
             delay = base_delay * (2 ** (attempt - 1))
-            logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). "
-                          f"Retrying in {delay}s…")
+            logger.warning(f"Rate limit hit (attempt {attempt}/{max_retries}). Retrying in {delay}s…")
             time.sleep(delay)
 
     text = response.choices[0].message.content
@@ -247,34 +243,22 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     logger.info(f"Response: input={usage.prompt_tokens}, output={usage.completion_tokens}, "
                 f"total={total_tokens}, chars={len(text)}")
 
-    # Retry on refusal responses with escalating override + temperature
-    for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
-        if not _is_refusal(text):
-            break
-        override = _refusal_override_prefix(ticker, retry)
-        temp = min(0.7 + retry * 0.15, 1.2)  # escalate: 0.85, 1.0, 1.15, 1.2, 1.2
-        logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), "
-                      f"retrying with temp={temp:.2f}…")
-        time.sleep(3)
-        retry_response = client.chat.completions.create(
-            model=model,
-            max_tokens=effective_max_tokens,
-            temperature=temp,
-            messages=[
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": override + prompt},
-            ],
-        )
-        text = retry_response.choices[0].message.content
-        retry_usage = retry_response.usage
-        logger.info(f"Retry {retry}: input={retry_usage.prompt_tokens}, "
-                    f"output={retry_usage.completion_tokens}, chars={len(text)}")
+    if refusal_retry:
+        for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
+            if not _is_refusal(text):
+                break
+            override = _refusal_override_prefix(ticker, retry)
+            temp = min(0.7 + retry * 0.15, 1.2)  # escalate: 0.85, 1.0, 1.15, 1.2, 1.2
+            logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying with temp={temp:.2f}…")
+            time.sleep(3)
+            retry_response = _create(override + prompt, temp)
+            text = retry_response.choices[0].message.content
+            retry_usage = retry_response.usage
+            logger.info(f"Retry {retry}: input={retry_usage.prompt_tokens}, "
+                        f"output={retry_usage.completion_tokens}, chars={len(text)}")
+        if _is_refusal(text):
+            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
 
-    if _is_refusal(text):
-        logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. "
-                      f"Returning last response.")
-
-    # Log if under-utilizing available tokens
     if usage.completion_tokens < effective_max_tokens * 0.7:
         pct = 100 * usage.completion_tokens // effective_max_tokens
         logger.info(f"Token usage is {usage.completion_tokens}/{effective_max_tokens} "
@@ -282,9 +266,17 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     return text
 
 
-def call_gemini(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
-    """Call Gemini API and return the response text."""
+def run_gemini(ticker: str, prompt: str, system_message: str, *,
+               model: str, max_tokens: int, temperature: float = 0.7,
+               max_retries: int = 5, refusal_retry: bool = True,
+               recover_truncation: bool = True,
+               token_ceiling: int = _GEMINI_MAX_TOKENS) -> str:
+    """Call Gemini with an arbitrary system/user prompt.
+
+    Beyond rate-limit and refusal retries, optionally recovers from truncation
+    (finish_reason=MAX_TOKENS) or degeneration (repeated heading) by retrying
+    once at the full ``token_ceiling``.
+    """
     try:
         from google import genai
         from google.genai import types
@@ -297,121 +289,114 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
         logger.error("GEMINI_API_KEY environment variable is not set")
         raise LLMError("GEMINI_API_KEY not configured")
 
-    effective_max_tokens = min(max_tokens, _GEMINI_MAX_TOKENS)
+    effective_max_tokens = min(max_tokens, token_ceiling)
     if effective_max_tokens != max_tokens:
         logger.info(f"Capping max_tokens from {max_tokens} to {effective_max_tokens} for Gemini")
 
     client = genai.Client(api_key=api_key)
-    system_template = _load_gemini_system_message()
-    system_message = system_template.format(ticker=ticker)
 
-    template = PROMPT_MAP[analysis_type]
-    prompt = template.format(
-        ticker=ticker,
-        financial_context=context,
-        today=TODAY,
-    )
+    def _config(max_out: int, temp: float):
+        return types.GenerateContentConfig(
+            system_instruction=system_message,
+            max_output_tokens=max_out,
+            temperature=temp,
+        )
 
-    logger.info(f"Gemini API call: model={model}, max_tokens={effective_max_tokens}")
-
-    config = types.GenerateContentConfig(
-        system_instruction=system_message,
-        max_output_tokens=effective_max_tokens,
-        temperature=0.7,
-    )
-
-    max_retries = 5
     base_delay = 30
 
     def _generate_with_retry(contents, cfg):
         """Call generate_content, retrying rate-limit and transient server errors."""
         for attempt in range(1, max_retries + 1):
             try:
-                return client.models.generate_content(
-                    model=model,
-                    contents=contents,
-                    config=cfg,
-                )
+                return client.models.generate_content(model=model, contents=contents, config=cfg)
             except Exception as e:
                 err_str = str(e)
                 is_rate_limit = "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower()
                 is_transient = (
-                    "UNAVAILABLE" in err_str
-                    or "503" in err_str
+                    "UNAVAILABLE" in err_str or "503" in err_str
                     or "high demand" in err_str.lower()
-                    or "INTERNAL" in err_str
-                    or "500" in err_str
+                    or "INTERNAL" in err_str or "500" in err_str
                 )
                 if (is_rate_limit or is_transient) and attempt < max_retries:
                     delay = base_delay * (2 ** (attempt - 1))
                     reason = "Rate limit hit" if is_rate_limit else "Transient server error"
-                    logger.warning(f"{reason} (attempt {attempt}/{max_retries}). "
-                                   f"Retrying in {delay}s…")
+                    logger.warning(f"{reason} (attempt {attempt}/{max_retries}). Retrying in {delay}s…")
                     time.sleep(delay)
                 else:
                     raise
 
-    response = _generate_with_retry(prompt, config)
+    response = _generate_with_retry(prompt, _config(effective_max_tokens, temperature))
     text = response.text or ""
-
     usage = response.usage_metadata
-    logger.info(f"Response: input={usage.prompt_token_count}, "
-                f"output={usage.candidates_token_count}, chars={len(text)}, "
-                f"finish={_gemini_finish_reason(response)}")
+    logger.info(f"Response: input={usage.prompt_token_count}, output={usage.candidates_token_count}, "
+                f"chars={len(text)}, finish={_gemini_finish_reason(response)}")
 
-    # Two failure modes warrant a one-shot retry at the full model ceiling:
-    #   1. Truncation (finish_reason=MAX_TOKENS) — report cut off mid-content.
-    #   2. Degeneration — the model looped back and re-emitted a section heading.
-    # Both are driven by token pressure (2.5-flash thinking tokens share
-    # max_output_tokens), so retrying with maximum headroom is the lever that helps.
-    truncated = _gemini_finish_reason(response) == "MAX_TOKENS"
-    dup_heading = _repeated_heading(text)
-    if (truncated or dup_heading) and effective_max_tokens < _GEMINI_MAX_TOKENS:
-        why = "truncated (MAX_TOKENS)" if truncated else f"degenerate (repeated heading {dup_heading!r})"
-        logger.warning(f"Response {why} at {effective_max_tokens} tokens. "
-                       f"Retrying at {_GEMINI_MAX_TOKENS}…")
-        retry_cfg = types.GenerateContentConfig(
-            system_instruction=system_message,
-            max_output_tokens=_GEMINI_MAX_TOKENS,
-            temperature=0.7,
-        )
-        response = _generate_with_retry(prompt, retry_cfg)
-        text = response.text or ""
-        usage = response.usage_metadata
-        logger.info(f"Retry (max budget): input={usage.prompt_token_count}, "
-                    f"output={usage.candidates_token_count}, chars={len(text)}, "
-                    f"finish={_gemini_finish_reason(response)}")
-        if _gemini_finish_reason(response) == "MAX_TOKENS":
-            logger.warning(f"Still truncated at {_GEMINI_MAX_TOKENS} tokens — "
-                           f"report for {ticker} may be incomplete.")
-        elif _repeated_heading(text):
-            logger.warning(f"Still degenerate (repeated heading {_repeated_heading(text)!r}) "
-                           f"at {_GEMINI_MAX_TOKENS} tokens — report for {ticker} may be malformed.")
+    if recover_truncation:
+        truncated = _gemini_finish_reason(response) == "MAX_TOKENS"
+        dup_heading = _repeated_heading(text)
+        if (truncated or dup_heading) and effective_max_tokens < token_ceiling:
+            why = "truncated (MAX_TOKENS)" if truncated else f"degenerate (repeated heading {dup_heading!r})"
+            logger.warning(f"Response {why} at {effective_max_tokens} tokens. Retrying at {token_ceiling}…")
+            response = _generate_with_retry(prompt, _config(token_ceiling, temperature))
+            text = response.text or ""
+            usage = response.usage_metadata
+            logger.info(f"Retry (max budget): input={usage.prompt_token_count}, "
+                        f"output={usage.candidates_token_count}, chars={len(text)}, "
+                        f"finish={_gemini_finish_reason(response)}")
+            if _gemini_finish_reason(response) == "MAX_TOKENS":
+                logger.warning(f"Still truncated at {token_ceiling} tokens — report for {ticker} may be incomplete.")
+            elif _repeated_heading(text):
+                logger.warning(f"Still degenerate (repeated heading {_repeated_heading(text)!r}) "
+                               f"at {token_ceiling} tokens — report for {ticker} may be malformed.")
 
-    for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
-        if not _is_refusal(text):
-            break
-        override = _refusal_override_prefix(ticker, retry)
-        temp = min(0.7 + retry * 0.15, 1.0)
-        logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), "
-                       f"retrying with temp={temp:.2f}…")
-        time.sleep(3)
-        retry_config = types.GenerateContentConfig(
-            system_instruction=system_message,
-            max_output_tokens=max_tokens,
-            temperature=temp,
-        )
-        response = _generate_with_retry(override + prompt, retry_config)
-        text = response.text or ""
-        usage = response.usage_metadata
-        logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
-                    f"output={usage.candidates_token_count}, chars={len(text)}")
-
-    if _is_refusal(text):
-        logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. "
-                       f"Returning last response.")
+    if refusal_retry:
+        for retry in range(1, _MAX_REFUSAL_RETRIES + 1):
+            if not _is_refusal(text):
+                break
+            override = _refusal_override_prefix(ticker, retry)
+            temp = min(0.7 + retry * 0.15, 1.0)
+            logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying with temp={temp:.2f}…")
+            time.sleep(3)
+            response = _generate_with_retry(override + prompt, _config(max_tokens, temp))
+            text = response.text or ""
+            usage = response.usage_metadata
+            logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
+                        f"output={usage.candidates_token_count}, chars={len(text)}")
+        if _is_refusal(text):
+            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
 
     return text
+
+
+# ── Analysis-report entry points (PROMPT_MAP-driven) ─────────────────────────
+
+def call_claude(ticker: str, context: str, analysis_type: str,
+                model: str, max_tokens: int) -> str:
+    """Call Claude API for an analysis report and return the response text."""
+    prompt = PROMPT_MAP[analysis_type].format(
+        ticker=ticker, financial_context=context, today=TODAY,
+    )
+    return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens)
+
+
+def call_openai(ticker: str, context: str, analysis_type: str,
+                model: str, max_tokens: int) -> str:
+    """Call OpenAI API for an analysis report and return the response text."""
+    system_message = _load_openai_system_message().format(ticker=ticker)
+    prompt = PROMPT_MAP[analysis_type].format(
+        ticker=ticker, financial_context=context, today=TODAY,
+    )
+    return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
+
+
+def call_gemini(ticker: str, context: str, analysis_type: str,
+                model: str, max_tokens: int) -> str:
+    """Call Gemini API for an analysis report and return the response text."""
+    system_message = _load_gemini_system_message().format(ticker=ticker)
+    prompt = PROMPT_MAP[analysis_type].format(
+        ticker=ticker, financial_context=context, today=TODAY,
+    )
+    return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
 
 
 def call_llm(ticker: str, context: str, analysis_type: str,
@@ -425,4 +410,8 @@ def call_llm(ticker: str, context: str, analysis_type: str,
         return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
-__all__ = ["call_claude", "call_openai", "call_gemini", "call_llm"]
+__all__ = [
+    "run_claude", "run_openai", "run_gemini",
+    "call_claude", "call_openai", "call_gemini", "call_llm",
+    "OPENAI_MAX_TOKENS",
+]
