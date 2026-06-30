@@ -967,6 +967,24 @@
 /* Wide table scroll */
 .wide-table { overflow-x: auto; }
 
+/* Universal table scroll container (added by responsive-tables.js).
+   Confines wide tables to their own horizontal scroll so they never push the
+   whole page sideways. Scrolls only when the table overflows, so desktop
+   tables stay full-width with no scrollbar. */
+.md-typeset .md-table-scroll {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;   /* momentum scroll on iOS */
+  overscroll-behavior-x: contain;       /* don't chain to page/history-swipe */
+  margin: 0 0 1rem;
+}
+.md-typeset .md-table-scroll > table {
+  margin: 0;
+  width: auto;            /* size to content, then scroll if wider than wrap */
+  min-width: 100%;        /* but fill the container when it's narrower */
+}
+
 /* ══════════════════════════════════════════════════════════════
    Build Info Footer
    ══════════════════════════════════════════════════════════════ */
@@ -1072,17 +1090,20 @@ body,
   /* h2 green accent line — smaller on mobile */
   .md-typeset h2::before { width: 1.25rem; }
 
-  /* Tables — enable horizontal scroll */
+  /* Tables — horizontal scroll is handled by the .md-table-scroll wrapper
+     (responsive-tables.js); here we just tune type scale for small screens. */
   .md-typeset table:not([class]) {
     font-size: 0.9rem;
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .md-typeset table:not([class]) th {
     font-size: 0.75rem;
     white-space: nowrap;
+  }
+
+  /* Keep long cell text readable instead of forcing an extreme table width. */
+  .md-typeset table:not([class]) td {
+    min-width: 7rem;
   }
 
   /* Wider tap targets for table rows */
@@ -1135,5 +1156,77 @@ body,
   .fp-shimmer {
     /* Keep the text readable once the gradient sweep is disabled. */
     -webkit-text-fill-color: var(--fp-text-secondary);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Cross-device fluid content (iOS / Android / web)
+   Make charts, diagrams, images and long text fit any viewport so
+   nothing forces the page to scroll horizontally.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Content images (e.g. technical-chart PNGs) never exceed their column. */
+.md-typeset img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mermaid diagrams — pre-rendered SVG (mmdc) or client-side. Scale the SVG to
+   the column width; if a diagram is intrinsically wider, let its own wrapper
+   scroll horizontally instead of stretching the page. */
+.md-typeset .mermaid,
+.md-typeset .mermaid-svg {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+}
+.md-typeset .mermaid svg,
+.md-typeset .mermaid-svg svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Long unbroken tokens (URLs, tickers, IDs) wrap instead of overflowing. */
+.md-typeset p,
+.md-typeset li,
+.md-typeset td,
+.md-typeset th,
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Embedded iframes / video (HTML report previews) stay fluid. */
+.md-typeset iframe,
+.md-typeset video,
+.md-typeset canvas {
+  max-width: 100%;
+}
+
+/* Final guard: nothing in the article column may cause sideways page scroll. */
+.md-content__inner {
+  overflow-x: hidden;
+}
+
+/* Tablet range (≈iPad portrait) — tables read better with a slightly smaller
+   scale and the scroll wrapper already prevents page overflow. */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .md-typeset table:not([class]) {
+    font-size: 0.92rem;
+  }
+}
+
+/* Respect device notches/rounded corners on the article padding (iOS). */
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .md-content__inner {
+      padding-left: max(0.8rem, env(safe-area-inset-left));
+      padding-right: max(0.8rem, env(safe-area-inset-right));
+    }
   }
 }
