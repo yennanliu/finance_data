@@ -10,17 +10,16 @@
 (function () {
   function wrapTables() {
     // Material content tables carry no class; skip ones already wrapped.
-    var tables = document.querySelectorAll('.md-typeset table:not([class])');
-    for (var i = 0; i < tables.length; i++) {
-      var table = tables[i];
-      var parent = table.parentNode;
-      if (!parent) continue;
-      if (parent.classList && parent.classList.contains('md-table-scroll')) continue;
-      var wrap = document.createElement('div');
+    const tables = document.querySelectorAll('.md-typeset table:not([class])');
+    tables.forEach(table => {
+      const parent = table.parentNode;
+      if (!parent) return;
+      if (parent.classList && parent.classList.contains('md-table-scroll')) return;
+      const wrap = document.createElement('div');
       wrap.className = 'md-table-scroll';
       parent.insertBefore(wrap, table);
       wrap.appendChild(table);
-    }
+    });
   }
 
   // Material's instant navigation (navigation.instant) swaps page content
