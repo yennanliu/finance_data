@@ -10,7 +10,6 @@ Usage:
 """
 
 import argparse
-import os
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -22,16 +21,14 @@ from urllib.request import Request, urlopen
 
 import yfinance as yf
 
+sys.path.insert(0, str(Path(__file__).parent))
+
+from analysis.llm import run_claude, run_openai, run_gemini
+from analysis.publish import frontmatter
+
 DEFAULT_PROVIDER = "openai"
 DEFAULT_MODEL = "gpt-4o"
 DEFAULT_TOKENS = 12000
-
-_OPENAI_MAX_TOKENS: dict[str, int] = {
-    "gpt-4o": 16384,
-    "gpt-4o-mini": 16384,
-    "gpt-4-turbo": 4096,
-    "gpt-4": 8192,
-}
 
 # Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
 _GEMINI_MAX_TOKENS = 8000
@@ -259,38 +256,8 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
-def call_claude(prompt: str, model: str, max_tokens: int) -> str:
-    """Call Claude API and return the response text."""
-    import anthropic
-
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        print("ERROR: ANTHROPIC_API_KEY is not set.", file=sys.stderr)
-        sys.exit(1)
-
-    client = anthropic.Anthropic(api_key=api_key)
-    message = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return message.content[0].text
-
-
-def call_openai(prompt: str, model: str, max_tokens: int) -> str:
-    """Call OpenAI API and return the response text."""
-    import openai
-
-    api_key = os.environ.get("OPENAI_API_KEY", "")
-    if not api_key:
-        print("ERROR: OPENAI_API_KEY is not set.", file=sys.stderr)
-        sys.exit(1)
-
-    effective_max_tokens = min(max_tokens, _OPENAI_MAX_TOKENS.get(model, 16384))
-    if effective_max_tokens != max_tokens:
-        print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
-
-    system_message = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
+# News-specific system messages (differ from the analysis-report PROMPT_MAP).
+_OPENAI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
 
 你的分析必須遵循以下原則：
 1. **新聞摘要總覽**：必須撰寫 400–600 字的完整摘要，整合所有新聞核心內容，讓讀者一覽全局
@@ -307,22 +274,6 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
 - 跳過標題為「未命名」或「N/A」的條目，不對其進行內容推演
 - 若新聞數量有限，深度分析現有重點新聞即可，無需填充虛假內容"""
 
-    client = openai.OpenAI(api_key=api_key)
-    response = client.chat.completions.create(
-        model=model,
-        max_tokens=effective_max_tokens,
-        temperature=0.7,
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": prompt},
-        ],
-    )
-    text = response.choices[0].message.content
-    usage = response.usage
-    print(f"  ✅ response  in={usage.prompt_tokens}  out={usage.completion_tokens}"
-          f"  total={usage.prompt_tokens + usage.completion_tokens}  chars={len(text)}")
-    return text
-
 
 _GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
 
@@ -337,39 +288,23 @@ _GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁�
 8. **新聞誠信**：只分析實際提供的新聞，不捏造或推測不存在的新聞標題與事件"""
 
 
+def call_claude(prompt: str, model: str, max_tokens: int) -> str:
+    """Generate a market-news report via Claude (no refusal retry, no system msg)."""
+    return run_claude("", prompt, None, model=model, max_tokens=max_tokens,
+                      refusal_retry=False)
+
+
+def call_openai(prompt: str, model: str, max_tokens: int) -> str:
+    """Generate a market-news report via OpenAI (news system msg, no refusal retry)."""
+    return run_openai("", prompt, _OPENAI_SYSTEM_MESSAGE, model=model,
+                      max_tokens=max_tokens, refusal_retry=False)
+
+
 def call_gemini(prompt: str, model: str, max_tokens: int) -> str:
-    """Call Gemini API and return the response text."""
-    try:
-        from google import genai
-        from google.genai import types
-    except ImportError:
-        print("ERROR: 'google-genai' not installed. Run: pip install google-genai", file=sys.stderr)
-        sys.exit(1)
-
-    api_key = os.environ.get("GEMINI_API_KEY", "")
-    if not api_key:
-        print("ERROR: GEMINI_API_KEY is not set.", file=sys.stderr)
-        sys.exit(1)
-
-    effective_max_tokens = min(max_tokens, _GEMINI_MAX_TOKENS)
-    if effective_max_tokens != max_tokens:
-        print(f"  [INFO] Capping max_tokens from {max_tokens} to {effective_max_tokens} for Gemini")
-
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model=model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            system_instruction=_GEMINI_SYSTEM_MESSAGE,
-            max_output_tokens=effective_max_tokens,
-            temperature=0.7,
-        ),
-    )
-    text = response.text or ""
-    usage = response.usage_metadata
-    print(f"  ✅ response  in={usage.prompt_token_count}  out={usage.candidates_token_count}"
-          f"  chars={len(text)}")
-    return text
+    """Generate a market-news report via Gemini (8k cap, no recovery/refusal retry)."""
+    return run_gemini("", prompt, _GEMINI_SYSTEM_MESSAGE, model=model,
+                      max_tokens=max_tokens, token_ceiling=_GEMINI_MAX_TOKENS,
+                      recover_truncation=False, refusal_retry=False)
 
 
 def generate_report(
@@ -410,15 +345,13 @@ def generate_report(
         report_body = call_claude(prompt, model, max_tokens)
 
     today = date.today().isoformat()
-    front_matter = (
-        "---\n"
-        f"ticker: {ticker}\n"
-        f"date: {today}\n"
-        "type: market-news\n"
-        f"provider: {provider}\n"
-        f"model: {model}\n"
-        "---\n\n"
-    )
+    front_matter = frontmatter({
+        "ticker": ticker,
+        "date": today,
+        "type": "market-news",
+        "provider": provider,
+        "model": model,
+    })
 
     output_dir.mkdir(parents=True, exist_ok=True)
     filename = output_filename or f"market_news_{today}_{provider}.md"
