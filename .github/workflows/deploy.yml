@@ -4,18 +4,19 @@ on:
   push:
     branches:
       - main
+    # Perf fix #6 — debounce. Content dirs (ai_gen_report/**, notebook_llm/**,
+    # SEC filings, …) are written by ~42 daily analysis jobs; deploying on each
+    # push queued dozens of full-site (752 MB) builds per day. Content is now
+    # published by the nightly cron below. Pushes only auto-deploy when the
+    # site's own config or hand-crafted assets change.
     paths:
-      - "ai_gen_report/**"
-      - "notebook_llm/**"
-      - "10-k/**"
-      - "10-q/**"
-      - "13-f/**"
-      - "investor_day/**"
-      - "README.md"
       - "mkdocs.yml"
-      - "docs/**"
       - "scripts/build_docs.py"
       - ".github/workflows/deploy.yml"
+      - "docs/overrides/**"
+      - "docs/stylesheets/**"
+      - "docs/javascripts/**"
+      - "docs/includes/**"
   schedule:
     # ── Consolidated nightly deploy (UTC) ───────────────────────────────────
     # Runs after ALL other cron jobs complete:
@@ -42,8 +43,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0          # full history for git-revision-date plugin
+        # Shallow checkout (default fetch-depth: 1). The previous full-history
+        # clone (fetch-depth: 0) was for a git-revision-date plugin that is not
+        # installed — it only cost time cloning ~2.3 GB of binary history.
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
