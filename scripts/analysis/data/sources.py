@@ -6,9 +6,9 @@ pure formatters for the scraped payloads live alongside their fetchers.
 from __future__ import annotations
 
 import re
-import sys
 import time
 
+from ..exceptions import DataFetchError
 from ..utils.formatting import money
 
 
@@ -340,8 +340,9 @@ def _get_yf():
     try:
         import yfinance as yf
         return yf
-    except ImportError:
-        sys.exit("ERROR: 'yfinance' not installed.  Run: pip install yfinance")
+    except ImportError as exc:
+        # Raise (don't sys.exit) so callers / test runners can handle it.
+        raise DataFetchError("'yfinance' not installed. Run: pip install yfinance") from exc
 
 
 def fetch_data(ticker: str) -> dict:
@@ -349,7 +350,13 @@ def fetch_data(ticker: str) -> dict:
     yf = _get_yf()
     print(f"  → yfinance: {ticker}")
     t = yf.Ticker(ticker)
-    info = t.info or {}
+    # .info is network-dependent and frequently raises (rate limits, bad
+    # tickers, API drift); degrade to an empty dict rather than crash the run.
+    try:
+        info = t.info or {}
+    except Exception as e:
+        print(f"  ⚠ Failed to fetch ticker info: {e}")
+        info = {}
 
     # price history (2Y for richer technical context)
     try:
