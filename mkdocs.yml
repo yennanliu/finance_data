@@ -153,3 +153,4 @@ extra_css:
 
 extra_javascript:
   - javascripts/clickable-rows.js
+  - javascripts/responsive-tables.js
