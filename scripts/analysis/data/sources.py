@@ -22,6 +22,21 @@ _HEADERS = {
 }
 
 
+def _num(value, default: float = 0.0) -> float:
+    """Coerce a possibly None/NaN/str value to float; return ``default`` on failure.
+
+    Holder/insider rows from yfinance routinely carry missing values; formatting
+    those with ``:,.0f`` / ``:.2%`` would raise and (under the broad try/except
+    around each section) silently discard the *entire* section. This keeps a bad
+    cell from sinking the rest.
+    """
+    try:
+        f = float(value)
+    except (TypeError, ValueError):
+        return default
+    return default if f != f else f  # NaN → default
+
+
 def _get_soup(url: str, retries: int = 2):
     """Fetch a URL and return a BeautifulSoup object."""
     import requests
@@ -34,6 +49,9 @@ def _get_soup(url: str, retries: int = 2):
                 return BeautifulSoup(resp.text, "html.parser")
             if resp.status_code == 403:
                 return None  # blocked, skip
+            # Other non-200s (e.g. transient 5xx) → raise so the retry path
+            # applies its backoff instead of immediately re-requesting.
+            resp.raise_for_status()
         except Exception:
             if attempt < retries:
                 time.sleep(1)
@@ -383,7 +401,7 @@ def fetch_data(ticker: str) -> dict:
                 date_str = str(dt)[:10]
                 name = str(row.get("Insider", row.get("Name", "")))[:24]
                 tx_type = str(row.get("Transaction", ""))[:16]
-                shares = row.get("Shares", 0)
+                shares = _num(row.get("Shares"))
                 value = row.get("Value", 0)
                 try:
                     flag = "🟢" if "Purchase" in tx_type or "Buy" in tx_type else "🔴" if "Sale" in tx_type or "Sell" in tx_type else "⬜"
@@ -418,8 +436,8 @@ def fetch_data(ticker: str) -> dict:
             lines = ["  持股機構                          股數            持股%        價值          變化%"]
             for _, row in ih.iterrows():
                 holder = str(row.get("Holder", ""))[:32]
-                shares = row.get("Shares", 0)
-                pct_out = row.get("% Out", float("nan"))
+                shares = _num(row.get("Shares"))
+                pct_out = _num(row.get("% Out"), float("nan"))
                 value = row.get("Value", 0)
                 chg = row.get("% Change", float("nan"))
                 try:
@@ -442,8 +460,8 @@ def fetch_data(ticker: str) -> dict:
             lines = ["  基金名稱                              股數            持股%        價值"]
             for _, row in mf.iterrows():
                 holder = str(row.get("Holder", ""))[:36]
-                shares = row.get("Shares", 0)
-                pct = row.get("% Out", float("nan"))
+                shares = _num(row.get("Shares"))
+                pct = _num(row.get("% Out"), float("nan"))
                 value = row.get("Value", 0)
                 lines.append(f"  {holder:<36}  {shares:>14,.0f}  {pct:.2%}  {money(value)}")
             mutualfund_text = "\n".join(lines)
