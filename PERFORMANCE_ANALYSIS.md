@@ -2,7 +2,7 @@
 
 **Target:** https://yennj12.js.org/finance_data/ (Cloudflare → GitHub Pages, MkDocs Material)
 **First analysed:** 2026-06-30 · all numbers are real measurements.
-**Status:** Fixes #1–#6 implemented (see [Changelog](#changelog)).
+**Status:** Fixes #1–#6 + #2b implemented & verified (see [Changelog](#changelog)).
 
 ---
 
@@ -82,7 +82,8 @@ queuing dozens of full 752 MB deploys daily (`concurrency: cancel-in-progress: f
 | # | Action | Impact | Effort | Status |
 |---|---|---|---|---|
 | 1 | Scope/shrink the search index (exclude report bodies) | 195 MB → <5 MB | Low | ✅ Done |
-| 2 | Remove `navigation.expand`; add `navigation.prune` | 1 MB → ~100 KB per page | Low | ✅ Done |
+| 2 | Remove `navigation.expand`; add `navigation.prune` | shallow pages 1 MB → 53 KB | Low | ✅ Done |
+| 2b | Drop individual reports from global nav (per-ticker `.pages`) | deep pages 590 → 195 KB; built HTML 3.1 GB → 503 MB | Med | ✅ Done |
 | 3 | Remove `fetch-depth: 0` from `deploy.yml` | Faster CI | Trivial | ✅ Done |
 | 4 | Retention window: only publish recent reports | Smaller index, build, payload | Med | ✅ Done |
 | 5 | Move large PDFs off Pages; WebP the screenshots | −200+ MB deploy | Med | ✅ Done |
@@ -97,7 +98,11 @@ queuing dozens of full 752 MB deploys daily (`concurrency: cancel-in-progress: f
 | **`search_index.json`** (uncompressed) | **195 MB** | **0.86 MB** | **−99.6%** |
 | `search_index.json` (gzip wire) | 29.7 MB | **0.04 MB** | −99.9% |
 | **Homepage HTML** | 1.07 MB (5,309 links) | **53 KB (8 nav links)** | **−95%** |
-| Report page (gzip wire) | 55 KB | **35 KB** | −36% |
+| **Deep report page** (raw / nav links) | 1.057 MB / 3,605 | **195 KB / 112** *(after #2b)* | **−82%** |
+| Deep report page (gzip wire) | 55 KB | **12 KB** *(after #2b)* | −78% |
+| **Total built HTML** | ~3.1 GB (avg 590 KB) | **503 MB (avg 94 KB)** *(after #2b)* | **−84%** |
+| Built `site/` total | ~3.3 GB | **713 MB** *(after #2b)* | −78% |
+| `mkdocs build` (strict) | ~15 min | **~6.5 min** *(after #2b)* | −56% |
 | `docs/` deploy payload | 752 MB | **387 MB** | −49% |
 | Notebook PDFs in deploy | ~200 MB | **60 KB** (linked from GitHub) | −99.9% |
 | Published report md files | 5,028 | **3,486** (120-day window) | −31% |
@@ -108,33 +113,18 @@ queuing dozens of full 752 MB deploys daily (`concurrency: cancel-in-progress: f
 **Headline:** the unusable 195 MB search index is now **0.86 MB** — the single biggest
 user-facing win. Search now works on mobile. The homepage dropped from 1.07 MB to 53 KB.
 
-### ⚠️ Important nuance — deep pages are only partially fixed
-`navigation.prune` is confirmed active and works perfectly at the **top of the tree**
-(homepage: 8 nav links, 53 KB). But a **deep report page still renders ~3,605 nav links /
-590 KB** of HTML, because all ~3,500 individual dated report pages live in the global nav
-tree and a deep page expands a large branch of it. Net effect:
-
-- **End users:** fine — Pages serves gzipped, so a deep page is ~35 KB over the wire (down
-  from 55 KB).
-- **Build/deploy:** total built HTML is **~3.1 GB** (5,492 files × avg 590 KB). This inflates
-  build time (~15 min for `mkdocs build`) and the deploy artifact, and trends toward the
-  GitHub Pages 1 GB limit.
-
-The clean completion is **Fix #2b** below.
+### ✅ Deep pages — resolved by Fix #2b
+Initially, `navigation.prune` fixed only the **top of the tree** (homepage: 8 nav links,
+53 KB) while a deep report page still rendered ~3,605 nav links / 590 KB, because all ~3,500
+dated report pages lived in the global nav. **Fix #2b** (per-ticker `.pages` listing only
+`index.md`) removed them from the nav tree — reports stay built and reachable via the
+per-ticker index tables. Result: deep page **3,605 → 112 nav links, 590 KB → 195 KB raw
+(12 KB gzip)**, total built HTML **3.1 GB → 503 MB**, strict build **15 → 6.5 min**.
+Verified with `mkdocs build --strict` (exit 0).
 
 ---
 
 ## 6. Follow-ups (not yet done)
-
-### 🔴 Fix #2b — remove individual reports from the global nav (high impact)
-Today each ticker report dir has no `.pages`, so awesome-pages adds **every dated report** to
-the nav. Writing a per-ticker `.pages` containing only `nav:\n  - index.md` keeps just the
-~80 ticker index pages in the sidebar; individual reports stay **built and reachable via the
-per-ticker index tables** (and the top-level reports index), just not in the sidebar tree.
-Expected effect: deep-page nav drops from ~3,600 links to ~80, leaf HTML ~590 KB → ~60 KB,
-and total built HTML from ~3.1 GB to a few hundred MB.
-*Product decision:* a 3,500-entry sidebar is not usable anyway, so this is also a UX
-improvement — but it does change how users browse, so it was left for sign-off.
 
 ### Other
 - **Report chart PNGs (160 MB, 1,378 files):** convert to WebP + lazy-load. Requires touching
@@ -167,6 +157,10 @@ pre-render code and remove that client-side cost for free.
 ---
 
 ## Changelog
+- **2026-06-30** — Fix #2b: per-ticker `.pages` (only `index.md`) removes ~3,500 dated report
+  pages from the global nav; added `validation.nav.omitted_files: info` so `--strict` tolerates
+  the orphaned-from-nav (still-built) pages. Deep page 590 KB → 195 KB, built HTML 3.1 GB →
+  503 MB. Verified with `mkdocs build --strict`.
 - **2026-06-30** — Implemented fixes #1–#6.
   - `scripts/build_docs.py`: retention window (`REPORT_RETENTION_DAYS`, default 120d),
     `search.exclude` front-matter on report/news/notebook bodies, notebook PDFs linked from

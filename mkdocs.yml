@@ -11,6 +11,15 @@ edit_uri: edit/main/docs/
 docs_dir: docs
 site_dir: site
 
+# ── Validation ────────────────────────────────────────────────────────────────
+# Individual dated report/news pages are intentionally excluded from the nav
+# (perf fix #2b in build_docs.py) — they stay reachable via per-ticker index
+# tables. Keep "pages not in nav" at INFO so `mkdocs build --strict` does not
+# treat these deliberate omissions as errors.
+validation:
+  nav:
+    omitted_files: info
+
 # ── Theme ────────────────────────────────────────────────────────────────────
 theme:
   name: material
