@@ -23,8 +23,10 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 | Category | Description | Location |
 |----------|-------------|----------|
-| Analysis Reports | AI-generated fundamental analysis, insider trading reports, technical analysis | `ai_gen_report/stock/` |
+| Analysis Reports | 12 AI-generated analysis types — fundamental, technical, valuation, insider trading, institutional ownership, earnings-call, sector, and more | `ai_gen_report/stock/` |
 | Market News | Daily AI-curated market news per ticker | `ai_gen_report/market_news/` |
+| Stock Watchlist | Pre-market AI-generated fundamental watchlist | `ai_gen_report/` |
+| Progress & QA Reports | Auto-generated daily progress summaries and report-quality (QA) checks | `ai_gen_report/` |
 | SEC Filings | 10-K, 10-Q, 13-F, 6-K filings for 30+ companies | `10-k/`, `10-q/`, `13-f/`, `6-k/` |
 | AI Research Notes | Deep-dive notebooks via NotebookLM (defense, autonomous systems, energy) | `notebook_llm/` |
 | Investor Day Materials | Presentation decks and transcripts | `investor_day/` |
@@ -32,28 +34,39 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 ### Coverage
 
-**Analysis Reports:** AAPL, MSFT, NVDA, TSLA, PLTR, ONDS, GOOG, TSM, META, AMZN, and more
+**Daily Analysis (25 tickers, fundamental + technical):** 0050, 2330.TW, TSLA, PL, GRAB, TSM, GOOG, AMZN, MSFT, SOFI, PLTR, RKLB, ONDS, AVAV, KTOS, META, AMD, NVDA, NU, VST, ORCL, INTC, SPCX, AVGO, NBIS
+
+**Analysis Types (12):** fundamental-analysis, technical-analysis, stock-eval, stock-valuation, financial-report-analyst, earnings-call-analysis, insider-trading, institutional-ownership, sector-analysis, economics-analysis, portfolio-review, report-generator
 
 **SEC 10-K Filings:** 30+ companies across tech, defense, energy, and financials
 
 **AI Research Notes:** ONDS, RKLB, AVAV, RCAT, TSLA, NEE, AMZN
+
+### Recent Updates
+
+- **Multi-provider LLM support** — generate with Claude, OpenAI, or Google Gemini (Gemini `gemini-2.5-flash` is now the daily-CI default); see `scripts/analysis/config/providers.py`
+- **Site size cut 3.1 GB → 503 MB (-84%)** — search-index trimming, pruned navigation, WebP screenshots, GitHub-raw PDF links, 120-day retention, and a single nightly deploy. Full write-up: [部署效能調校全紀錄](https://yennj12.js.org/yennj12_blog_V4/posts/mkdocs-site-size-deploy-perf-tuning-zh/)
+- **Responsive content** — tables, charts, and articles render cleanly across iOS / Android / web
+- **Advanced analysis pipeline** — earnings-call, insider-trading, institutional-ownership, and interactive HTML reports via `advanced_analysis.yml`
+- **Automated QA & housekeeping** — daily report-quality checks (`qa_report_quality.yml`), refusal-post cleanup (`cleanup_refusals.yml`), and daily progress summaries (`daily_progress.yml`)
+- **Taiwan market coverage** — added TW-listed tickers (0050, 2330.TW)
 
 ---
 
 ## How It Works
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌────────────────┐     ┌──────────────┐
-│  Data Fetch  │────▶│  AI Analysis  │────▶│  Auto Deploy   │────▶│  Browse Site  │
-│  yfinance    │     │  Claude AI    │     │  GitHub Actions │     │  GitHub Pages │
-│  SEC EDGAR   │     │  繁體中文報告  │     │  Daily CI/CD   │     │  MkDocs       │
-└─────────────┘     └──────────────┘     └────────────────┘     └──────────────┘
+┌─────────────┐     ┌──────────────────┐     ┌────────────────┐     ┌──────────────┐
+│  Data Fetch  │────▶│   AI Analysis    │────▶│  Auto Deploy   │────▶│  Browse Site  │
+│  yfinance    │     │ Claude / OpenAI  │     │  GitHub Actions │     │  GitHub Pages │
+│  SEC EDGAR   │     │ Gemini · 繁中報告 │     │  Nightly CI/CD  │     │  MkDocs       │
+└─────────────┘     └──────────────────┘     └────────────────┘     └──────────────┘
 ```
 
 1. **Data Fetch** — `yfinance` API pulls live financial data; scripts download filings from SEC EDGAR
-2. **AI Analysis** — `scripts/generate_analysis.py` sends data to Claude AI, which produces structured Markdown reports with ASCII charts
-3. **Auto Deploy** — GitHub Actions runs analysis daily (10:00 AM Taipei time) and deploys via `mkdocs build`
-4. **Browse Site** — Reports published at [yennanliu.github.io/finance_data](https://yennanliu.github.io/finance_data/) with search, dark/light mode, and category navigation
+2. **AI Analysis** — `scripts/generate_analysis.py` sends data to your chosen provider (Claude, OpenAI, or Gemini), which produces structured Markdown reports with ASCII charts
+3. **Auto Deploy** — GitHub Actions runs analysis daily and publishes via a single nightly `mkdocs build` (consolidated from 42 per-job deploys)
+4. **Browse Site** — Reports published at [yennanliu.github.io/finance_data](https://yennanliu.github.io/finance_data/) with search, dark/light mode, responsive layout, and category navigation
 
 ---
 
@@ -62,13 +75,19 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 ### Generate an analysis report locally
 
 ```bash
-pip install anthropic yfinance
+pip install -e ".[dev]"   # installs anthropic, openai, google-genai, yfinance, mkdocs, …
 
-# Set your API key
-export ANTHROPIC_API_KEY="sk-..."
+# Set the API key for the provider you want to use
+export ANTHROPIC_API_KEY="sk-..."   # Claude
+export OPENAI_API_KEY="sk-..."      # OpenAI
+export GEMINI_API_KEY="..."         # Gemini (daily-CI default)
 
-# Generate a fundamental analysis for AAPL
+# Generate a fundamental analysis for AAPL (default provider: Claude)
 python3 scripts/generate_analysis.py AAPL
+
+# Choose provider and analysis type
+python3 scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider gemini
+python3 scripts/generate_analysis.py NVDA --analysis-type stock-valuation --provider openai
 ```
 
 Output saved to `ai_gen_report/stock/aapl/fundamental_analysis_YYYY-MM-DD.md`
@@ -131,9 +150,15 @@ finance_data/
 
 | Workflow | Schedule | What It Does |
 |----------|----------|-------------|
-| `daily_analysis.yml` | 02:00 UTC daily | Generates AI analysis for configured tickers, commits to repo |
-| `daily_market_news.yml` | Daily (staggered) | Fetches market news per ticker |
-| `deploy.yml` | On push + 01:10 UTC | Builds docs and deploys to GitHub Pages |
+| `daily_analysis.yml` | Daily (staggered) | Generates fundamental + technical analysis for 25 tickers, commits to repo |
+| `daily_market_news.yml` | Daily (staggered) | Fetches AI-curated market news per ticker |
+| `daily_stock_watchlist.yml` | 22:00 UTC (pre-market) | Builds a fundamental stock watchlist |
+| `advanced_analysis.yml` | Manual / dispatch | Earnings-call, insider-trading, 13-F, and interactive HTML reports |
+| `qa_report_quality.yml` | 02:00 UTC daily | Quality-checks the day's generated reports |
+| `cleanup_refusals.yml` | 02:00 UTC daily | Removes reports containing LLM refusal messages |
+| `daily_progress.yml` | 00:40 UTC daily | Generates a daily progress summary |
+| `download_10k.yml` | Manual / dispatch | Downloads SEC 10-K filings on demand |
+| `deploy.yml` | Nightly + on push | Builds docs and deploys to GitHub Pages (single consolidated build) |
 
 ---
 
@@ -141,9 +166,15 @@ finance_data/
 
 - **Financial Data:** [Yahoo Finance](https://finance.yahoo.com/) via yfinance (no API key needed)
 - **SEC Filings:** [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar)
-- **AI Analysis:** [Claude AI](https://www.anthropic.com/) by Anthropic
+- **AI Analysis:** [Claude](https://www.anthropic.com/) (Anthropic), [OpenAI](https://openai.com/), and [Gemini](https://ai.google.dev/) — provider is selectable per run
 - **Annual Reports:** [annualreports.com](https://www.annualreports.com/)
 - **Google Finance - 10K Reports:** [Google Finance](https://www.google.com/finance/beta/quote/PLTR:NASDAQ?hl=en&tab=earnings)
+
+---
+
+## Further Reading
+
+- **把站台從 3.1GB 砍到 503MB：finance_data 部署效能調校全紀錄** — engineering write-up on the MkDocs site-size and deploy-performance tuning (search index, navigation pruning, WebP, retention, nightly deploy): [yennj12.js.org](https://yennj12.js.org/yennj12_blog_V4/posts/mkdocs-site-size-deploy-perf-tuning-zh/)
 
 ---
 
