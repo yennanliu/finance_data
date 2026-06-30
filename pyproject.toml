@@ -22,3 +22,16 @@ dev = [
     "pytest>=7.0",
     "pytest-mock>=3.0",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Put both the repo root and scripts/ on sys.path so tests can import either
+# `scripts.analysis.*` (package-qualified) or `analysis.*` / the bare entry
+# scripts (`generate_analysis`, ...) the same way the CLIs do at runtime.
+pythonpath = [".", "scripts"]
+markers = [
+    "unit: fast, fully offline unit tests",
+    "integration: tests that exercise multiple modules with network/SDK boundaries mocked",
+    "live: opt-in tests that hit real network/APIs (deselected by default)",
+]
+addopts = "-ra"
