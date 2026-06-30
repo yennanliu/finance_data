@@ -47,6 +47,31 @@ def test_get_soup_returns_none_on_exception(monkeypatch):
     assert _get_soup("http://x", retries=1) is None
 
 
+def test_get_soup_retries_with_backoff_on_5xx(monkeypatch):
+    # A transient 5xx must go through the retry/backoff path, not silently
+    # fall through and re-request immediately.
+    sleeps = {"n": 0}
+    monkeypatch.setattr(data_fetch.time, "sleep", lambda *_: sleeps.__setitem__("n", sleeps["n"] + 1))
+
+    class R:
+        status_code = 503
+        text = ""
+
+        def raise_for_status(self):
+            raise RuntimeError("503 Server Error")
+
+    calls = {"n": 0}
+
+    def get(*a, **k):
+        calls["n"] += 1
+        return R()
+
+    monkeypatch.setattr("requests.get", get)
+    assert _get_soup("http://x", retries=2) is None
+    assert calls["n"] == 3       # initial + 2 retries
+    assert sleeps["n"] == 2      # slept between retries (backoff applied)
+
+
 # ── fetch_finviz ─────────────────────────────────────────────────────────────
 
 def test_fetch_finviz_parses_pairs(monkeypatch):
@@ -150,3 +175,51 @@ def test_fetch_data_assembles_dict(monkeypatch):
     assert out["income"] is None
     # finviz text formatted from stub
     assert "finviz_text" in out
+
+
+def test_fetch_data_insider_with_missing_values(monkeypatch):
+    """A row with None Shares/Value must not discard the whole insider section."""
+    import types as _types
+    ins = pd.DataFrame(
+        {"Insider": ["Jane Doe"], "Transaction": ["Sale"], "Shares": [None], "Value": [None]},
+        index=pd.to_datetime(["2024-01-01"]),
+    )
+
+    class T(_FakeTicker):
+        insider_transactions = property(lambda self: ins)
+
+    fake_yf = _types.SimpleNamespace(Ticker=lambda s: T(s))
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: fake_yf)
+    monkeypatch.setattr(data_fetch, "fetch_finviz", lambda t: {})
+    monkeypatch.setattr(data_fetch, "fetch_stockanalysis", lambda t: {})
+    monkeypatch.setattr(data_fetch, "fetch_roic", lambda t: {})
+
+    out = fetch_data("X")
+    assert "Jane Doe" in out["insider_text"]          # section survived
+    assert out["insider_text"] != "  (no data)"
+
+
+# ── charts: volume-less tickers must still render ────────────────────────────
+
+def _ohlc_no_volume(rows=80):
+    idx = pd.date_range("2024-01-01", periods=rows, freq="D")
+    base = [100 + i * 0.2 for i in range(rows)]
+    return pd.DataFrame(
+        {"Open": base, "High": [b + 1 for b in base],
+         "Low": [b - 1 for b in base], "Close": base},
+        index=idx,
+    )
+
+
+def test_plotly_chart_without_volume_column():
+    from scripts.analysis.data.charts import generate_plotly_candlestick_chart
+    out = generate_plotly_candlestick_chart(_ohlc_no_volume(), "IDX")
+    assert out["plotly_html"]  # chart produced despite no Volume column
+
+
+def test_mplfinance_chart_without_volume_column(tmp_path):
+    from scripts.analysis.data.charts import generate_candlestick_chart
+    png = tmp_path / "chart.png"
+    result = generate_candlestick_chart(_ohlc_no_volume(), "IDX", str(png))
+    assert result == str(png)
+    assert png.exists()
