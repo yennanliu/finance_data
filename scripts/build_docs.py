@@ -1117,6 +1117,21 @@ def build_nav_pages(lang: str = "en"):
         market_news_title = t(lang, "market_news")
         write(DST_MARKET_NEWS / ".pages", f"title: {market_news_title}\nnav:\n  - index.md\n  - ...\n")
 
+    # Perf fix #2b — keep individual dated reports OUT of the global nav tree.
+    # Without this, awesome-pages adds every report page (~3,500) to the nav, so
+    # navigation.prune can only trim collapsed branches and deep pages still
+    # render thousands of nav links (~590 KB HTML each). Listing only index.md
+    # per ticker keeps the sidebar to one entry per ticker; the report pages are
+    # still built by MkDocs and reached via the per-ticker index tables.
+    # (mkdocs.yml sets validation.nav.omitted_files: info so --strict tolerates
+    # these intentionally-orphaned pages.)
+    for section in [DST_REPORTS, DST_MARKET_NEWS]:
+        if not section.exists():
+            continue
+        for ticker_dir in section.iterdir():
+            if ticker_dir.is_dir():
+                write(ticker_dir / ".pages", "nav:\n  - index.md\n")
+
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():
         write(DST_NOTEBOOKS / ".pages", "title: NotebookLLM\nnav:\n  - index.md\n  - ...\n")
