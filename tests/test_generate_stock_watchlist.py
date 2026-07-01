@@ -1,9 +1,9 @@
 """Integration tests for the generate_stock_watchlist CLI entry script."""
 
+import sys
 import types
 from datetime import datetime, timezone
 
-import openai
 import pytest
 
 import generate_stock_watchlist as gsw
@@ -15,11 +15,34 @@ def _ns(**kw):
     return types.SimpleNamespace(**kw)
 
 
-def _fake_response(text="WATCHLIST"):
+def _fake_response(text="WATCHLIST", finish_reason="STOP"):
+    """A minimal Gemini-shaped response (text + finish_reason + usage_metadata)."""
+    reason = type("Reason", (), {"name": finish_reason})()
     return _ns(
-        choices=[_ns(message=_ns(content=text))],
-        usage=_ns(prompt_tokens=10, completion_tokens=20),
+        text=text,
+        candidates=[_ns(finish_reason=reason)],
+        usage_metadata=_ns(prompt_token_count=10, candidates_token_count=20),
     )
+
+
+def _install_gemini(monkeypatch, generate_content):
+    """Install a fake ``google.genai`` SDK whose Client uses generate_content."""
+    google_mod = types.ModuleType("google")
+    genai_mod = types.ModuleType("google.genai")
+    types_mod = types.ModuleType("google.genai.types")
+
+    types_mod.GenerateContentConfig = lambda **kw: _ns(**kw)
+
+    class Client:
+        def __init__(self, api_key=None):
+            self.models = _ns(generate_content=generate_content)
+
+    genai_mod.Client = Client
+    genai_mod.types = types_mod
+    google_mod.genai = genai_mod
+    monkeypatch.setitem(sys.modules, "google", google_mod)
+    monkeypatch.setitem(sys.modules, "google.genai", genai_mod)
+    monkeypatch.setitem(sys.modules, "google.genai.types", types_mod)
 
 
 def _redirect_ws(monkeypatch, tmp_path):
@@ -47,40 +70,33 @@ def test_output_path_sequence(monkeypatch, tmp_path):
 # ── generate_watchlist ───────────────────────────────────────────────────────
 
 def test_generate_watchlist_missing_key_exits(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     with pytest.raises(SystemExit):
         gsw.generate_watchlist()
 
 
 def test_generate_watchlist_happy_path(monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "k")
-    create = lambda **kw: _fake_response("30 stocks here")
-    monkeypatch.setattr(openai, "OpenAI",
-                        lambda api_key=None: _ns(chat=_ns(completions=_ns(create=create))))
-    out = gsw.generate_watchlist(model="gpt-4o", max_tokens=8000)
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    _install_gemini(monkeypatch, lambda **kw: _fake_response("30 stocks here"))
+    out = gsw.generate_watchlist(model="gemini-2.5-flash", max_tokens=8000)
     assert out == "30 stocks here"
 
 
 def test_generate_watchlist_retries_on_rate_limit(monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "k")
-    # The rate-limit sleep now happens inside the shared run_openai runner.
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    # The rate-limit sleep now happens inside the shared run_gemini runner.
     from analysis.utils import llm as llm_mod
     monkeypatch.setattr(llm_mod.time, "sleep", lambda *_: None)
 
-    class RL(Exception):
-        pass
-
-    monkeypatch.setattr(openai, "RateLimitError", RL)
     calls = {"n": 0}
 
-    def create(**kw):
+    def generate_content(**kw):
         calls["n"] += 1
         if calls["n"] == 1:
-            raise RL()
+            raise Exception("RESOURCE_EXHAUSTED: quota exceeded")
         return _fake_response("ok")
 
-    monkeypatch.setattr(openai, "OpenAI",
-                        lambda api_key=None: _ns(chat=_ns(completions=_ns(create=create))))
+    _install_gemini(monkeypatch, generate_content)
     out = gsw.generate_watchlist()
     assert out == "ok"
     assert calls["n"] == 2
