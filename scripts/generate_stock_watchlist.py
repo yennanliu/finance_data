@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from analysis.llm import run_openai
+from analysis.llm import run_gemini
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 
@@ -82,22 +82,22 @@ def _output_path() -> Path:
     return ws / f"{prefix}_{seq:03d}_open.txt"
 
 
-# ── OpenAI call ───────────────────────────────────────────────────────────────
+# ── Gemini call ───────────────────────────────────────────────────────────────
 
-def generate_watchlist(model: str = "gpt-4o", max_tokens: int = 8000) -> str:
+def generate_watchlist(model: str = "gemini-2.5-flash", max_tokens: int = 8000) -> str:
     # Preserve the original clean-exit UX on a missing key (vs. a raised LLMError).
-    if not os.environ.get("OPENAI_API_KEY"):
-        sys.exit("ERROR: OPENAI_API_KEY environment variable is not set.")
+    if not os.environ.get("GEMINI_API_KEY"):
+        sys.exit("ERROR: GEMINI_API_KEY environment variable is not set.")
 
     today = datetime.utcnow().strftime("%Y-%m-%d")
     print(f"Calling {model} to generate watchlist for {today}…")
 
-    # Reuse the shared OpenAI runner: watchlist uses temp=0.4, 3 rate-limit
-    # retries, no per-model token cap, and no refusal escalation.
-    return run_openai(
+    # Reuse the shared Gemini runner: watchlist uses temp=0.4, 3 rate-limit
+    # retries, and no refusal escalation.
+    return run_gemini(
         "", USER_PROMPT.format(today=today), SYSTEM_PROMPT,
         model=model, max_tokens=max_tokens, temperature=0.4,
-        max_retries=3, refusal_retry=False, cap_tokens=False,
+        max_retries=3, refusal_retry=False,
     )
 
 
@@ -106,7 +106,7 @@ def generate_watchlist(model: str = "gpt-4o", max_tokens: int = 8000) -> str:
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Generate fundamental stock watchlist")
-    parser.add_argument("--model", default="gpt-4o")
+    parser.add_argument("--model", default="gemini-2.5-flash")
     parser.add_argument("--max-tokens", type=int, default=8000)
     args = parser.parse_args()
 
