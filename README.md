@@ -174,6 +174,7 @@ finance_data/
 
 ## Further Reading
 
+- **finance_data 是怎麼運作的** - 用 Cron + LLM 全自動生成股票研究報告 ? [Blog](https://yennj12.js.org/yennj12_blog_V4/posts/finance-data-ai-pipeline-how-it-works-zh/)
 - **把站台從 3.1GB 砍到 503MB：finance_data 部署效能調校全紀錄** — engineering write-up on the MkDocs site-size and deploy-performance tuning (search index, navigation pruning, WebP, retention, nightly deploy): [yennj12.js.org](https://yennj12.js.org/yennj12_blog_V4/posts/mkdocs-site-size-deploy-perf-tuning-zh/)
 
 ---
