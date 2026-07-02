@@ -1,0 +1,457 @@
+Generated: 2026-07-02 23:11 UTC
+Model: gemini-2.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: MCO
+Company: Moody's Corporation
+Sector: Financial Services
+Market Cap: ~$85B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 28x  |  PEG: 2.0
+  - Debt/Equity: 1.5
+  - FCF Yield: 3.5%
+Investment Thesis: Moody's benefits from a duopoly in credit ratings, a critical and regulated service with high barriers to entry and recurring revenue. Its analytics division (MA) is a growing SaaS business providing essential risk management tools. The structural tailwind of global debt markets and increasing regulatory complexity ensures sustained demand for its services, making it a compounder despite its size.
+Key Risk: Regulatory changes impacting rating agencies or a significant downturn in global debt issuance could temper growth.
+
+---
+Rank: 2
+Ticker: TDG
+Company: TransDigm Group Incorporated
+Sector: Aerospace & Defense
+Market Cap: ~$70B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 35x  |  PEG: 1.9
+  - Debt/Equity: 3.0
+  - FCF Yield: 4.0%
+Investment Thesis: TransDigm is a highly specialized aerospace component manufacturer, often the sole source for critical parts with long product lifecycles and high switching costs. Its aftermarket focus provides resilient, high-margin revenue. The ongoing recovery in air travel and defense spending, coupled with its proven acquisition strategy, drives consistent earnings growth.
+Key Risk: High debt load could be problematic in a severe economic downturn or if interest rates rise significantly.
+
+---
+Rank: 3
+Ticker: WMS
+Company: Advanced Drainage Systems, Inc.
+Sector: Industrials
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 25x  |  PEG: 1.6
+  - Debt/Equity: 0.8
+  - FCF Yield: 4.5%
+Investment Thesis: ADS is a leader in plastic pipe solutions for water management, benefiting from aging infrastructure replacement, increased focus on stormwater management, and sustainable building practices. Its superior product performance (lighter, easier to install) and extensive distribution network create a strong moat in a growing market. Infrastructure spending bills provide a long-term tailwind.
+Key Risk: Cyclicality of construction markets and raw material (resin) price volatility could impact profitability.
+
+---
+Rank: 4
+Ticker: ROP
+Company: Roper Technologies, Inc.
+Sector: Industrials
+Market Cap: ~$55B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 32x  |  PEG: 2.5
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.0%
+Investment Thesis: Roper is a diversified technology company with a portfolio of niche market leaders, primarily in software and engineered products. Its decentralized operating model and focus on high-margin, recurring revenue businesses (many with strong moats) drive consistent cash flow and shareholder returns. The company's disciplined M&A strategy adds to its compounding power.
+Key Risk: Integration risks from acquisitions and potential overpayment for targets could dilute value.
+
+---
+Rank: 5
+Ticker: IDXX
+Company: IDEXX Laboratories, Inc.
+Sector: Healthcare
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 38x  |  PEG: 2.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 2.5%
+Investment Thesis: IDEXX is a dominant player in veterinary diagnostics, benefiting from the secular trend of pet humanization and increased spending on pet healthcare. Its integrated ecosystem of instruments, consumables, and software creates high switching costs for veterinarians, ensuring recurring revenue and strong pricing power. International expansion offers significant growth runway.
+Key Risk: Intense competition in certain diagnostic segments or a slowdown in pet adoption rates could impact growth.
+
+---
+Rank: 6
+Ticker: VEEV
+Company: Veeva Systems Inc.
+Sector: Healthcare Technology
+Market Cap: ~$35B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 45x  |  PEG: 2.3
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: Veeva is the leading cloud software provider for the life sciences industry, offering mission-critical solutions from R&D to commercialization. Its deep industry expertise and comprehensive suite of products create a powerful network effect and high switching costs, making it indispensable to its pharmaceutical and biotech clients. The industry's digital transformation is a strong tailwind.
+Key Risk: Dependence on the life sciences industry and potential for increased competition from larger tech players.
+
+---
+Rank: 7
+Ticker: WM
+Company: Waste Management, Inc.
+Sector: Industrials
+Market Cap: ~$80B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 26x  |  PEG: 2.6
+  - Debt/Equity: 1.0
+  - FCF Yield: 4.0%
+Investment Thesis: Waste Management is the largest integrated waste services provider in North America, benefiting from a highly regulated industry with significant barriers to entry (landfill ownership, collection infrastructure). Its essential services provide stable, recurring revenue, and its investments in recycling and renewable energy from landfills offer long-term growth avenues.
+Key Risk: Economic downturns can reduce waste volumes, and increasing environmental regulations could raise operating costs.
+
+---
+Rank: 8
+Ticker: CEG
+Company: Constellation Energy Corporation
+Sector: Utilities
+Market Cap: ~$75B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 22x  |  PEG: 1.5
+  - Debt/Equity: 0.9
+  - FCF Yield: 5.0%
+Investment Thesis: Constellation is the largest producer of carbon-free energy in the US, primarily through its nuclear fleet. It's a direct beneficiary of the clean energy transition and government incentives for nuclear power. Its stable, dispatchable clean energy output is increasingly valued as grids decarbonize, offering a clear path to sustained earnings growth and strong cash flow.
+Key Risk: High capital intensity of nuclear power and potential for regulatory shifts or unexpected outages.
+
+---
+Rank: 9
+Ticker: PWR
+Company: Quanta Services, Inc.
+Sector: Industrials
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 17%
+  - P/E (fwd): 28x  |  PEG: 1.6
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.0%
+Investment Thesis: Quanta Services is a leading specialized contractor for infrastructure solutions in electric power, communications, and pipeline industries. It benefits from massive long-term investments in grid modernization, renewable energy integration, and 5G deployment. Its scale, expertise, and strong customer relationships provide a significant competitive advantage in critical infrastructure.
+Key Risk: Dependence on large-scale infrastructure projects and potential for project delays or cost overruns.
+
+---
+Rank: 10
+Ticker: CDNS
+Company: Cadence Design Systems, Inc.
+Sector: Technology
+Market Cap: ~$90B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 40x  |  PEG: 2.2
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis: Cadence is a critical enabler of the semiconductor industry, providing electronic design automation (EDA) software and IP. Its tools are essential for designing complex chips, creating high switching costs and a recurring revenue model. The ongoing demand for advanced semiconductors (AI, IoT, automotive) provides a strong, long-term secular tailwind.
+Key Risk: Cyclicality of the semiconductor industry and intense competition with Synopsys.
+
+---
+Rank: 11
+Ticker: ANET
+Company: Arista Networks, Inc.
+Sector: Technology
+Market Cap: ~$100B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.6
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: Arista is a leader in high-performance, cloud-grade networking solutions, particularly for hyperscale data centers and enterprise cloud. Its software-driven approach and focus on open standards provide superior performance and flexibility. The explosion of AI and cloud computing drives continuous demand for its high-speed, low-latency networking equipment.
+Key Risk: High customer concentration (hyperscalers) and intense competition from larger networking vendors.
+
+---
+Rank: 12
+Ticker: EW
+Company: Edwards Lifesciences Corporation
+Sector: Healthcare
+Market Cap: ~$50B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 32x  |  PEG: 2.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 2.5%
+Investment Thesis: Edwards is a pioneer and market leader in transcatheter aortic valve replacement (TAVR) and critical care monitoring. Its innovative, less-invasive heart valve therapies address a growing patient population with high unmet needs. The aging global population and continuous innovation in structural heart disease provide a strong, defensible growth trajectory.
+Key Risk: Regulatory hurdles for new product approvals and intense competition in the medical device space.
+
+---
+Rank: 13
+Ticker: LH
+Company: LabCorp
+Sector: Healthcare
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 18x  |  PEG: 1.6
+  - Debt/Equity: 0.7
+  - FCF Yield: 5.0%
+Investment Thesis: LabCorp is a leading global life sciences company providing comprehensive laboratory services and drug development solutions. Its scale, extensive test menu, and integrated offering create a significant moat. The aging population, increasing chronic disease prevalence, and growing demand for personalized medicine drive consistent demand for diagnostic testing and clinical trials.
+Key Risk: Reimbursement pressures from government and private payers, and potential for increased competition from new diagnostic technologies.
+
+---
+Rank: 14
+Ticker: FICO
+Company: Fair Isaac Corporation
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 40x  |  PEG: 3.1
+  - Debt/Equity: 2.0
+  - FCF Yield: 2.0%
+Investment Thesis: FICO is synonymous with credit scoring, holding a dominant position in a critical aspect of financial services. Its proprietary scoring models and analytics platforms are deeply embedded in lending decisions, creating high switching costs and recurring revenue. The increasing complexity of financial risk management ensures continued demand for its solutions.
+Key Risk: Regulatory changes impacting credit scoring models or alternative credit assessment methods gaining traction.
+
+---
+Rank: 15
+Ticker: SWKS
+Company: Skyworks Solutions, Inc.
+Sector: Technology
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 18x  |  PEG: 1.2
+  - Debt/Equity: 0.0
+  - FCF Yield: 6.0%
+Investment Thesis: Skyworks is a leading provider of analog and mixed-signal semiconductors, critical for wireless connectivity across mobile, automotive, IoT, and infrastructure markets. The proliferation of 5G, Wi-Fi 6/7, and connected devices ensures strong demand for its highly integrated solutions. Its strong R&D and deep customer relationships provide a competitive edge.
+Key Risk: High customer concentration (Apple) and cyclicality of the smartphone market.
+
+---
+Rank: 16
+Ticker: DOCN
+Company: DigitalOcean Holdings, Inc.
+Sector: Technology
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 28x  |  PEG: 1.1
+  - Debt/Equity: 0.2
+  - FCF Yield: 4.0%
+Investment Thesis: DigitalOcean provides cloud infrastructure services tailored for developers and small-to-medium businesses (SMBs). Its simplified platform, transparent pricing, and strong community support attract a growing segment of the cloud market underserved by hyperscalers. The ongoing shift to cloud computing and the rise of independent developers provide a significant growth runway.
+Key Risk: Intense competition from larger cloud providers and potential for customer churn among SMBs.
+
+---
+Rank: 17
+Ticker: ENPH
+Company: Enphase Energy, Inc.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.0%
+Investment Thesis: Enphase is a leading global supplier of microinverter-based solar-plus-storage systems. Its integrated energy management platform offers superior performance, reliability, and safety for residential and small commercial solar installations. The accelerating adoption of rooftop solar and home energy storage, driven by decarbonization and energy independence, provides a massive market opportunity.
+Key Risk: Exposure to interest rate sensitivity for solar financing, intense competition, and policy changes.
+
+---
+Rank: 18
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 35x  |  PEG: 1.9
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.5%
+Investment Thesis: Paycom offers a comprehensive, single-database human capital management (HCM) software solution, simplifying payroll, HR, and talent management for mid-market companies. Its proprietary Beti product drives employee self-service, reducing errors and saving clients money, creating strong stickiness and a clear ROI. The ongoing digital transformation of HR functions is a strong tailwind.
+Key Risk: Intense competition in the HCM software market and potential for slower customer acquisition.
+
+---
+Rank: 19
+Ticker: SAIA
+Company: Saia, Inc.
+Sector: Industrials
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 22x  |  PEG: 1.5
+  - Debt/Equity: 0.2
+  - FCF Yield: 4.0%
+Investment Thesis: Saia is a leading less-than-truckload (LTL) carrier, benefiting from a highly fragmented market and strong pricing power due to its efficient hub-and-spoke network. Its strategic investments in network expansion and technology are driving market share gains and improved operating efficiency. The ongoing demand for resilient supply chains supports long-term growth.
+Key Risk: Cyclicality of the freight market, fuel price volatility, and labor availability challenges.
+
+---
+Rank: 20
+Ticker: ATKR
+Company: Atkore Inc.
+Sector: Industrials
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 12x  |  PEG: 1.0
+  - Debt/Equity: 0.5
+  - FCF Yield: 8.0%
+Investment Thesis: Atkore is a leading manufacturer of electrical and mechanical infrastructure products, essential for construction and industrial applications. It benefits from robust demand in data centers, renewable energy, and industrial automation. Its strong brand, broad product portfolio, and efficient operations generate significant free cash flow, often overlooked by the market.
+Key Risk: Cyclicality of construction and industrial end markets, and raw material price fluctuations.
+
+---
+Rank: 21
+Ticker: SITE
+Company: SiteOne Landscape Supply, Inc.
+Sector: Industrials
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 20x  |  PEG: 1.5
+  - Debt/Equity: 0.7
+  - FCF Yield: 4.5%
+Investment Thesis: SiteOne is the largest and only national wholesale distributor of landscape supplies in the US, serving a highly fragmented customer base. Its scale, extensive product offering, and acquisition strategy consolidate the market, driving efficiency and market share gains. The secular trend of outdoor living and professional landscape maintenance provides a stable demand backdrop.
+Key Risk: Cyclicality of residential and commercial construction, and weather-dependent demand for certain products.
+
+---
+Rank: 22
+Ticker: FIVN
+Company: Five9, Inc.
+Sector: Technology
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 38x  |  PEG: 1.7
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.5%
+Investment Thesis: Five9 is a leading provider of cloud contact center software (CCaaS), enabling businesses to manage customer interactions more efficiently. The shift from on-premise to cloud solutions is a powerful tailwind, and Five9's AI-powered features enhance agent productivity and customer experience. Its strong enterprise focus and continuous innovation drive robust growth.
+Key Risk: Intense competition in the CCaaS market and potential for customer churn if service quality falters.
+
+---
+Rank: 23
+Ticker: APG
+Company: APi Group Corporation
+Sector: Industrials
+Market Cap: ~$9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 25x  |  PEG: 1.7
+  - Debt/Equity: 0.8
+  - FCF Yield: 4.0%
+Investment Thesis: APi Group is a leading provider of safety, specialty, and industrial services, with a significant presence in fire protection and security. Its recurring inspection and service revenue, coupled with a disciplined acquisition strategy, drives consistent growth and strong cash flow. Regulatory requirements for fire and life safety provide a stable, non-discretionary demand base.
+Key Risk: Integration risks from frequent acquisitions and cyclicality in new construction markets.
+
+---
+Rank: 24
+Ticker: PCTY
+Company: Paylocity Holding Corporation
+Sector: Technology
+Market Cap: ~$10B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: Paylocity provides cloud-based human capital management (HCM) software for mid-market companies. Its intuitive platform and focus on employee experience (engagement, learning, analytics) differentiate it in a competitive market. The ongoing digital transformation of HR and the need for modern workforce management tools ensure strong demand.
+Key Risk: Intense competition from larger and smaller HCM providers, and potential for slower customer adoption.
+
+---
+Rank: 25
+Ticker: BLDR
+Company: Builders FirstSource, Inc.
+Sector: Industrials
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 15x  |  PEG: 1.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 6.0%
+Investment Thesis: Builders FirstSource is the largest supplier of building materials and components to professional homebuilders in the US. Its scale, integrated solutions (e.g., pre-fabricated components), and strategic acquisitions drive efficiency and market share gains. The long-term housing shortage and demand for affordable housing provide a structural tailwind, despite cyclicality.
+Key Risk: High sensitivity to interest rates and the cyclical nature of the residential construction market.
+
+---
+Rank: 26
+Ticker: GRMN
+Company: Garmin Ltd.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 20x  |  PEG: 1.7
+  - Debt/Equity: 0.0
+  - FCF Yield: 5.0%
+Investment Thesis: Garmin is a diversified technology company known for its GPS-enabled products across fitness, outdoor, aviation, marine, and auto segments. Its strong brand, continuous innovation, and focus on niche, high-margin markets provide a defensible moat. The growing demand for health & wellness tech, outdoor recreation, and advanced avionics ensures steady growth.
+Key Risk: Intense competition in consumer electronics and potential for market saturation in certain product categories.
+
+---
+Rank: 27
+Ticker: VRSK
+Company: Verisk Analytics, Inc.
+Sector: Financial Services
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 28x  |  PEG: 2.8
+  - Debt/Equity: 0.8
+  - FCF Yield: 3.5%
+Investment Thesis: Verisk is a leading data analytics and risk assessment firm, primarily serving the insurance industry. Its proprietary data sets, predictive analytics, and deep industry expertise create high switching costs and a recurring revenue model. The increasing complexity of risk management and regulatory demands ensure continuous demand for its essential services.
+Key Risk: Dependence on the insurance industry and potential for new data sources or AI to disrupt its core offerings.
+
+---
+Rank: 28
+Ticker: TCOM
+Company: Trip.com Group Limited
+Sector: Consumer Discretionary
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 20x  |  PEG: 0.8
+  - Debt/Equity: 0.3
+  - FCF Yield: 5.0%
+Investment Thesis: Trip.com is the largest online travel agency (OTA) in China and a significant global player. It benefits from the massive, long-term growth of outbound and domestic travel from China, as well as broader global travel recovery. Its comprehensive platform, strong brand recognition, and strategic investments position it to capture significant market share.
+Key Risk: Geopolitical tensions impacting international travel, renewed COVID-19 related travel restrictions, and intense competition from other OTAs.
+
+---
+Rank: 29
+Ticker: RBA
+Company: Ritchie Bros. Auctioneers Incorporated
+Sector: Industrials
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 22x  |  PEG: 1.8
+  - Debt/Equity: 0.5
+  - FCF Yield: 4.0%
+Investment Thesis: Ritchie Bros. is the world's largest industrial auctioneer, providing a critical marketplace for heavy equipment and trucks. Its global reach, strong brand, and integrated online/onsite auction model create a network effect moat. The ongoing need for equipment turnover across construction, agriculture, and transportation sectors provides a stable transaction base.
+Key Risk: Cyclicality of heavy equipment markets and potential for increased competition from online marketplaces.
+
+---
+Rank: 30
+Ticker: GPN
+Company: Global Payments Inc.
+Sector: Financial Technology
+Market Cap: ~$35B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18x  |  PEG: 1.4
+  - Debt/Equity: 0.9
+  - FCF Yield: 6.0%
+Investment Thesis: Global Payments is a leading provider of payment technology and software solutions for merchants and financial institutions globally. The secular shift from cash to digital payments, coupled with its integrated software offerings for specific verticals, drives consistent revenue growth. Its scale and comprehensive ecosystem provide a strong competitive advantage.
+Key Risk: Intense competition in the payments processing industry and potential for regulatory changes impacting transaction fees.
+
+== SELECTION METHODOLOGY ==
+The screening logic prioritized companies demonstrating a clear, durable competitive moat or strong structural tailwind, ensuring long-term relevance and pricing power. To avoid "market media darlings" and mega-caps, I explicitly filtered out the top 50 S&P 500 companies by market cap and avoided any stock frequently highlighted in mainstream financial news or showing characteristics of speculative momentum. Growth was balanced with value, favoring companies with double-digit revenue and EPS growth, but with a strong preference for a PEG ratio below 1.5, indicating that growth is not excessively priced in. Balance sheet strength, evidenced by manageable debt (Debt/Equity generally below 1.0, with exceptions for highly cash-generative businesses) and robust free cash flow generation, was a critical filter for financial resilience. Macro and sector themes informing the picks included digital transformation (SaaS, FinTech, cloud infrastructure), aging demographics and healthcare innovation, infrastructure modernization, industrial automation, clean energy transition, and resilient supply chains. The market cap sweet spot of $500M-$50B was strictly adhered to, targeting the small-to-mid cap space where under-the-radar opportunities are more prevalent.
