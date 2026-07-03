@@ -1,0 +1,457 @@
+Generated: 2026-07-03 23:08 UTC
+Model: gemini-2.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: CDNS
+Company: Cadence Design Systems, Inc.
+Sector: Technology (Semiconductors/Software)
+Market Cap: ~$95B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 32x  |  PEG: 1.45
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.5%
+Investment Thesis: Cadence is a critical enabler of semiconductor innovation, providing electronic design automation (EDA) software and IP. As chip complexity explodes with AI, IoT, and advanced computing, Cadence's indispensable tools create high switching costs and a strong competitive moat. Its recurring revenue model and consistent innovation make it a foundational growth play often overshadowed by the chip manufacturers themselves.
+Key Risk: Cyclicality in the semiconductor industry could temporarily impact design starts and software license renewals.
+
+---
+Rank: 2
+Ticker: SNPS
+Company: Synopsys, Inc.
+Sector: Technology (Semiconductors/Software)
+Market Cap: ~$105B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 29x  |  PEG: 1.45
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.2%
+Investment Thesis: Synopsys, alongside Cadence, forms a duopoly in the essential EDA software market. Its tools are vital for designing and verifying complex chips, benefiting from the same secular trends in semiconductor demand and design complexity. The company's strong R&D, deep customer relationships, and high barriers to entry ensure sticky revenue and long-term growth as the digital world expands.
+Key Risk: Intense competition within the EDA space could lead to pricing pressure or increased R&D costs to maintain leadership.
+
+---
+Rank: 3
+Ticker: VEEV
+Company: Veeva Systems Inc.
+Sector: Healthcare (Software)
+Market Cap: ~$35B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 23%
+  - P/E (fwd): 38x  |  PEG: 1.65
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: Veeva is the dominant cloud software provider for the life sciences industry, offering mission-critical solutions for R&D, clinical trials, regulatory compliance, and commercial operations. Its deep vertical expertise, comprehensive suite of products, and high switching costs create a powerful moat. The ongoing digital transformation in pharma and biotech ensures a long runway for growth.
+Key Risk: Reliance on the highly regulated and often slow-moving pharmaceutical industry for growth, and potential for increased competition from larger enterprise software players.
+
+---
+Rank: 4
+Ticker: IDXX
+Company: IDEXX Laboratories, Inc.
+Sector: Healthcare (Diagnostics)
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 17%
+  - P/E (fwd): 35x  |  PEG: 2.05
+  - Debt/Equity: 0.5
+  - FCF Yield: 2.5%
+Investment Thesis: IDEXX is a global leader in veterinary diagnostics and software, benefiting from the secular trend of increasing pet humanization and spending. Its recurring revenue from consumables, strong installed base of instruments, and integrated software solutions create a powerful ecosystem and high customer retention. This defensive growth stock offers consistent performance regardless of broader economic cycles.
+Key Risk: High valuation relative to growth, and potential for new diagnostic technologies to disrupt its established market position.
+
+---
+Rank: 5
+Ticker: MSCI
+Company: MSCI Inc.
+Sector: Financials (Data & Analytics)
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 30x  |  PEG: 2.0
+  - Debt/Equity: 1.2
+  - FCF Yield: 3.8%
+Investment Thesis: MSCI is a critical provider of investment decision support tools, including global equity indices, portfolio analytics, and ESG data. Its indices are benchmarks for trillions in assets, creating an incredibly sticky, recurring revenue stream with high operating leverage. The growth of passive investing, demand for sophisticated analytics, and ESG integration provide strong tailwinds for continued expansion.
+Key Risk: Dependence on global financial market activity and potential for increased regulatory scrutiny on index providers.
+
+---
+Rank: 6
+Ticker: DT
+Company: Dynatrace, Inc.
+Sector: Technology (Software)
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 28%
+  - P/E (fwd): 35x  |  PEG: 1.25
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.0%
+Investment Thesis: Dynatrace offers an AI-powered observability platform that helps enterprises monitor and optimize their complex cloud and hybrid IT environments. As digital transformation accelerates and cloud adoption deepens, the need for automated, intelligent monitoring becomes paramount. Dynatrace's unified platform and strong R&D position it as a leader in a critical and growing software category.
+Key Risk: Intense competition in the observability market from both established players and new entrants, potentially leading to pricing pressure.
+
+---
+Rank: 7
+Ticker: PTC
+Company: PTC Inc.
+Sector: Technology (Software/Industrials)
+Market Cap: ~$22B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 28x  |  PEG: 1.4
+  - Debt/Equity: 0.7
+  - FCF Yield: 4.5%
+Investment Thesis: PTC provides product lifecycle management (PLM) and industrial IoT (IIoT) software, essential for digital transformation in manufacturing and engineering. Its sticky, mission-critical software helps companies design, manufacture, operate, and service complex products more efficiently. The ongoing industrial digitalization trend and shift to subscription revenue provide a long runway for profitable growth.
+Key Risk: Macroeconomic slowdowns could impact industrial capital expenditures and software adoption rates.
+
+---
+Rank: 8
+Ticker: ANSS
+Company: ANSYS, Inc.
+Sector: Technology (Software/Industrials)
+Market Cap: ~$28B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 33x  |  PEG: 1.85
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: ANSYS is the global leader in engineering simulation software, crucial for product development across virtually every industry from aerospace to automotive to healthcare. Its highly specialized tools enable companies to innovate faster and reduce physical prototyping costs, creating a deep moat and high switching costs. The increasing complexity of products and systems drives continuous demand for its solutions.
+Key Risk: High valuation and potential for new simulation technologies or open-source alternatives to gain traction.
+
+---
+Rank: 9
+Ticker: RMD
+Company: ResMed Inc.
+Sector: Healthcare (Medical Devices)
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 27x  |  PEG: 1.8
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.5%
+Investment Thesis: ResMed is a global leader in connected health solutions for sleep apnea, COPD, and other respiratory conditions. The aging global population and increasing awareness of sleep disorders provide a strong demographic tailwind. Its integrated hardware, software, and services model creates recurring revenue and a strong competitive position, often overlooked due to its niche focus.
+Key Risk: Intense competition in the sleep apnea market and potential for reimbursement changes to impact profitability.
+
+---
+Rank: 10
+Ticker: ALGN
+Company: Align Technology, Inc.
+Sector: Healthcare (Medical Devices)
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: Align Technology is the pioneer and market leader in clear aligner therapy (Invisalign) and digital intraoral scanners (iTero). It benefits from the growing demand for aesthetic dentistry and the shift from traditional braces to more convenient, digital solutions. Its strong brand, extensive patent portfolio, and global distribution network provide a significant competitive advantage.
+Key Risk: Increased competition from lower-cost clear aligner providers and potential for consumer discretionary spending to fluctuate.
+
+---
+Rank: 11
+Ticker: AME
+Company: AMETEK, Inc.
+Sector: Industrials
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 24x  |  PEG: 1.85
+  - Debt/Equity: 0.6
+  - FCF Yield: 4.0%
+Investment Thesis: AMETEK is a highly diversified global manufacturer of electronic instruments and electromechanical devices. Its niche, high-performance products serve critical applications across various industries, providing stability and resilience. A disciplined acquisition strategy, strong operational execution, and consistent free cash flow generation make it a reliable, under-the-radar industrial compounder.
+Key Risk: Exposure to cyclical industrial end markets and integration risks associated with frequent acquisitions.
+
+---
+Rank: 12
+Ticker: XYL
+Company: Xylem Inc.
+Sector: Industrials (Water Technology)
+Market Cap: ~$32B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 28x  |  PEG: 1.75
+  - Debt/Equity: 0.7
+  - FCF Yield: 3.0%
+Investment Thesis: Xylem is a global leader in water technology, providing pumps, treatment systems, and analytical instrumentation for utilities, industrial, and residential applications. The escalating global water crisis, aging infrastructure, and increasing regulatory demands create a powerful, long-term structural tailwind. Xylem's essential products and services offer defensive growth and a clear societal benefit.
+Key Risk: Significant exposure to municipal infrastructure spending, which can be subject to government budget cycles and political priorities.
+
+---
+Rank: 13
+Ticker: PH
+Company: Parker-Hannifin Corporation
+Sector: Industrials
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 20x  |  PEG: 1.65
+  - Debt/Equity: 0.8
+  - FCF Yield: 5.0%
+Investment Thesis: Parker-Hannifin is a global leader in motion and control technologies, providing essential components and systems for a vast array of industrial and aerospace applications. Its highly engineered products, broad portfolio, and global distribution network create a strong competitive moat. The company benefits from industrial automation, electrification, and aerospace recovery trends, offering stable, profitable growth.
+Key Risk: Cyclicality of industrial and aerospace end markets can lead to revenue and earnings volatility.
+
+---
+Rank: 14
+Ticker: PWR
+Company: Quanta Services, Inc.
+Sector: Industrials (Infrastructure Services)
+Market Cap: ~$28B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25x  |  PEG: 1.4
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.5%
+Investment Thesis: Quanta Services is a leading specialized contractor for infrastructure solutions, primarily focused on electric power, communications, and pipeline infrastructure. It benefits immensely from the energy transition (grid modernization, renewables integration), broadband expansion, and aging infrastructure replacement. Its scale, expertise, and strong customer relationships provide a significant competitive advantage in a fragmented market.
+Key Risk: Project-based revenue can lead to quarterly variability, and dependence on government spending or utility capital expenditure cycles.
+
+---
+Rank: 15
+Ticker: MKTX
+Company: MarketAxess Holdings Inc.
+Sector: Financials (Electronic Trading)
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 28x  |  PEG: 2.0
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.0%
+Investment Thesis: MarketAxess operates a leading electronic trading platform for fixed-income securities, particularly corporate bonds. It benefits from the secular shift from voice-based to electronic trading, offering greater transparency, liquidity, and efficiency. Its network effect and proprietary trading protocols create a strong moat, positioning it for continued market share gains in a massive market.
+Key Risk: Dependence on fixed-income trading volumes, which can be volatile, and increasing competition from other electronic trading venues.
+
+---
+Rank: 16
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology (Software)
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.6
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis: Paycom provides a comprehensive, cloud-based human capital management (HCM) software solution for payroll, HR, and talent management. Its single-database platform offers superior efficiency and compliance for mid-market companies, driving high customer retention and strong recurring revenue. The increasing complexity of HR and payroll regulations ensures ongoing demand for its integrated solution.
+Key Risk: Intense competition in the HCM market from larger, more diversified players and potential for slower customer acquisition in a mature market.
+
+---
+Rank: 17
+Ticker: HQY
+Company: HealthEquity, Inc.
+Sector: Healthcare (Financial Services/Software)
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 28x  |  PEG: 1.1
+  - Debt/Equity: 0.6
+  - FCF Yield: 4.0%
+Investment Thesis: HealthEquity is a leading administrator of Health Savings Accounts (HSAs) and other health reimbursement arrangements. It benefits from the growing adoption of consumer-directed healthcare plans, which are driven by rising healthcare costs. Its recurring service revenue, float income from HSA assets, and integrated technology platform create a sticky business with a long growth runway.
+Key Risk: Sensitivity to interest rate changes (impacting float income) and potential for changes in healthcare policy or HSA regulations.
+
+---
+Rank: 18
+Ticker: UPLD
+Company: Upland Software, Inc.
+Sector: Technology (Software)
+Market Cap: ~$1.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 18x  |  PEG: 1.2
+  - Debt/Equity: 0.8
+  - FCF Yield: 8.0%
+Investment Thesis: Upland Software provides cloud-based enterprise work management software across various niche applications (e.g., project management, marketing automation, contact center). Its strategy of acquiring vertical software solutions and integrating them onto a common platform generates significant free cash flow. It's an under-the-radar play on enterprise software consolidation, offering value and cash generation.
+Key Risk: High debt load from acquisitions and potential for integration challenges or slower organic growth from its diverse portfolio.
+
+---
+Rank: 19
+Ticker: SAIA
+Company: Saia, Inc.
+Sector: Industrials (Logistics)
+Market Cap: ~$16B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 22x  |  PEG: 1.45
+  - Debt/Equity: 0.1
+  - FCF Yield: 4.0%
+Investment Thesis: Saia is a leading less-than-truckload (LTL) freight carrier, a segment known for its strong pricing power and network density moat. The company has been consistently investing in its network and technology, gaining market share and improving efficiency. E-commerce growth and the need for reliable, regional shipping solutions provide a long-term tailwind for LTL carriers like Saia.
+Key Risk: Highly cyclical industry sensitive to economic downturns, and potential for increased labor costs or regulatory changes.
+
+---
+Rank: 20
+Ticker: PKI
+Company: PerkinElmer, Inc.
+Sector: Healthcare (Life Sciences Tools)
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 23x  |  PEG: 1.65
+  - Debt/Equity: 0.4
+  - FCF Yield: 4.5%
+Investment Thesis: PerkinElmer provides instruments, reagents, and software for diagnostics, life science research, and environmental/food testing. Its essential tools support critical scientific discovery and quality control, benefiting from long-term trends in healthcare innovation, personalized medicine, and food safety. The company's diversified portfolio and recurring revenue from consumables offer stability and growth.
+Key Risk: Exposure to R&D spending cycles in pharma/biotech and potential for competitive pressure in specific diagnostic or analytical segments.
+
+---
+Rank: 21
+Ticker: FLS
+Company: Flowserve Corporation
+Sector: Industrials
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 19x  |  PEG: 1.05
+  - Debt/Equity: 0.7
+  - FCF Yield: 6.0%
+Investment Thesis: Flowserve is a leading global provider of industrial flow management equipment, including pumps, valves, and seals, along with related services. Its products are critical for infrastructure in energy, chemical, water, and general industrial sectors. The company benefits from aging infrastructure replacement, energy transition investments, and a high-margin aftermarket services business, making it a compelling value-oriented industrial play.
+Key Risk: Cyclicality of capital expenditures in heavy industries and potential for project delays or cancellations.
+
+---
+Rank: 22
+Ticker: IEX
+Company: IDEX Corporation
+Sector: Industrials
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 25x  |  PEG: 2.1
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.5%
+Investment Thesis: IDEX is a diversified industrial company that manufactures highly engineered products, including fluidics, optics, and fire & safety equipment. Its niche market leadership, strong brands, and focus on high-margin, mission-critical applications provide a durable competitive advantage. The company's consistent innovation and disciplined capital allocation support steady, profitable growth.
+Key Risk: Exposure to various industrial end markets, making it susceptible to broad economic slowdowns.
+
+---
+Rank: 23
+Ticker: DOV
+Company: Dover Corporation
+Sector: Industrials
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 20x  |  PEG: 1.8
+  - Debt/Equity: 0.6
+  - FCF Yield: 4.5%
+Investment Thesis: Dover is a diversified global manufacturer of specialized industrial products and solutions, with segments in Engineered Products, Clean Energy & Fueling, Imaging & Identification, and Pumps & Process Solutions. Its focus on niche markets with high barriers to entry, strong brands, and a significant aftermarket revenue component provides resilience. It's a steady compounder benefiting from various industrial trends.
+Key Risk: Diversified nature means exposure to multiple cyclical end markets, and potential for slower growth in some mature segments.
+
+---
+Rank: 24
+Ticker: EMN
+Company: Eastman Chemical Company
+Sector: Materials
+Market Cap: ~$7B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 16x  |  PEG: 1.05
+  - Debt/Equity: 1.0
+  - FCF Yield: 7.0%
+Investment Thesis: Eastman Chemical is a specialty materials company focused on advanced materials, additives, and functional products. It differentiates itself through innovation and application-specific solutions rather than commodity chemicals. The company benefits from trends in sustainable materials, circular economy, and performance-enhancing additives across diverse end markets, offering attractive value for a specialty chemical player.
+Key Risk: Exposure to raw material price volatility, cyclicality in some end markets, and competition from other specialty chemical producers.
+
+---
+Rank: 25
+Ticker: FMC
+Company: FMC Corporation
+Sector: Materials (Agricultural Chemicals)
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.4
+  - Debt/Equity: 1.1
+  - FCF Yield: 6.0%
+Investment Thesis: FMC is a leading global agricultural sciences company providing crop protection solutions, including insecticides, herbicides, and fungicides. The growing global population and increasing demand for food security drive the need for effective crop protection. FMC's strong R&D pipeline, proprietary active ingredients, and global distribution network provide a defensible moat in an essential industry.
+Key Risk: Exposure to agricultural commodity cycles, weather patterns, and regulatory changes concerning crop protection products.
+
+---
+Rank: 26
+Ticker: INGR
+Company: Ingredion Incorporated
+Sector: Consumer Staples (Food Ingredients)
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 15x  |  PEG: 1.5
+  - Debt/Equity: 0.6
+  - FCF Yield: 6.5%
+Investment Thesis: Ingredion is a global provider of ingredient solutions to the food, beverage, and industrial sectors. It benefits from consumer trends towards plant-based foods, clean label products, and healthier eating. Its specialized starches, sweeteners, and texturizers are essential inputs for a wide range of products, providing stable, recurring revenue and a defensive business model.
+Key Risk: Exposure to commodity price volatility (e.g., corn, tapioca) and potential for changes in consumer preferences or food regulations.
+
+---
+Rank: 27
+Ticker: KXS
+Company: Kinaxis Inc.
+Sector: Technology (Software)
+Market Cap: ~$4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 38x  |  PEG: 1.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: Kinaxis provides cloud-based supply chain planning and concurrent execution software. In an era of increasing supply chain complexity and volatility, its real-time, end-to-end platform is becoming mission-critical for large enterprises. The focus on resilience and agility in supply chains provides a strong secular tailwind for this niche, high-growth software provider.
+Key Risk: Smaller market presence compared to larger enterprise software vendors and potential for slower adoption in conservative industries.
+
+---
+Rank: 28
+Ticker: ENV
+Company: Envestnet, Inc.
+Sector: Financials (Wealth Management Tech)
+Market Cap: ~$3B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25x  |  PEG: 1.4
+  - Debt/Equity: 0.5
+  - FCF Yield: 4.0%
+Investment Thesis: Envestnet provides an integrated platform of wealth management technology and services to financial advisors and institutions. It benefits from the ongoing shift to fee-based advisory models and the need for comprehensive digital solutions. Its broad ecosystem of financial products, data analytics, and advisor tools creates a sticky platform with recurring revenue.
+Key Risk: Dependence on financial market performance (impacting AUM-based fees) and intense competition in the wealth tech space.
+
+---
+Rank: 29
+Ticker: VRSN
+Company: VeriSign, Inc.
+Sector: Technology (Internet Infrastructure)
+Market Cap: ~$11B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 22x  |  PEG: 2.2
+  - Debt/Equity: 0.0
+  - FCF Yield: 5.5%
+Investment Thesis: VeriSign operates the authoritative registry for the .com and .net top-level domains, making it an essential and highly profitable piece of global internet infrastructure. Its government-mandated monopoly, high operating leverage, and consistent free cash flow generation make it a unique, defensive asset. It's a steady compounder with predictable revenue growth from domain registrations.
+Key Risk: Regulatory oversight of domain pricing and potential for shifts in internet usage patterns away from traditional domain names.
+
+---
+Rank: 30
+Ticker: EPAM
+Company: EPAM Systems, Inc.
+Sector: Technology (IT Services)
+Market Cap: ~$16B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25x  |  PEG: 1.4
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.0%
+Investment Thesis: EPAM is a leading global provider of software engineering and digital platform development services, known for its high-quality talent and complex project execution. It benefits from the ongoing enterprise demand for digital transformation, cloud migration, and AI integration. Its strong delivery capabilities and client relationships drive consistent growth in a fragmented market.
+Key Risk: Significant exposure to geopolitical risks due to a large portion of its workforce in Eastern Europe, and potential for economic downturns to reduce IT spending.
+
+== SELECTION METHODOLOGY ==
+The screening process began by identifying macro and sector themes expected to drive sustainable, long-term growth into 2026 and beyond, avoiding areas prone to speculative bubbles. These themes included digital transformation (enterprise software, AI enablement), industrial automation, healthcare innovation (medtech, diagnostics), critical infrastructure modernization (water, power, logistics), and specialty materials. Companies were then filtered to exclude mega-caps (S&P 500 top-50) and those frequently highlighted in mainstream financial media or exhibiting meme/momentum stock characteristics. The focus was on established businesses with strong competitive moats, such as high switching costs, network effects, proprietary technology, or regulatory barriers to entry. Quantitative screening prioritized robust fundamental growth (double-digit revenue and EPS growth), healthy balance sheets (low debt, strong free cash flow or clear path to it), and attractive valuations (PEG ratio ideally below 1.5, with some flexibility for higher-quality, higher-growth names). The final ranking emphasized a combination of conviction in the investment thesis, strength of the competitive moat, consistency of growth, and valuation, prioritizing companies with a clear path to compounding shareholder value over the long term while remaining relatively under-the-radar.
