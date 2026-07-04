@@ -28,6 +28,7 @@ run-name: "Daily Market News ${{ github.event.inputs.ticker || github.event.sche
 #   20:50 → 04:50  4766.tw  南寶
 #   21:00 → 05:00  6643.tw  M31
 #   21:10 → 05:10  2317.tw  鴻海
+#   21:20 → 05:20  SPCX
 on:
   schedule:
     - cron: "0 17 * * *"     # 0050
@@ -56,6 +57,7 @@ on:
     - cron: "50 20 * * *"    # 4766.tw
     - cron: "0 21 * * *"     # 6643.tw
     - cron: "10 21 * * *"    # 2317.tw
+    - cron: "20 21 * * *"    # SPCX
 
   workflow_dispatch:
     inputs:
@@ -181,6 +183,7 @@ jobs:
               "50 20 * * *")  TICKER="4766.tw" ;;
               "0 21 * * *")   TICKER="6643.tw" ;;
               "10 21 * * *")  TICKER="2317.tw" ;;
+              "20 21 * * *")  TICKER="SPCX" ;;
               *)              TICKER="TSLA" ;;
             esac
           fi

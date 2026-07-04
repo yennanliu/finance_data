@@ -62,6 +62,30 @@ After the 30 stocks, add a section:
 == SELECTION METHODOLOGY ==
 <Brief paragraph on the screening logic used: what criteria filtered out hot stocks, \
 how you weighted growth vs. value, and what macro/sector themes informed the picks>
+
+Finally, after everything above (which must be in English), add a Traditional Chinese \
+(繁體中文) translation of the ENTIRE watchlist at the very bottom, under this exact header:
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+Translate all 30 stock entries and the selection methodology into Traditional Chinese, \
+keeping the SAME plain-text layout. Keep tickers, company names, and numeric metrics \
+unchanged; translate the field labels and prose. Use these field label translations:
+  Rank → 排名
+  Ticker → 代碼
+  Company → 公司
+  Sector → 產業
+  Market Cap → 市值
+  Key Metrics (estimated) → 關鍵指標（估算）
+  Revenue Growth (YoY) → 營收成長（年增率）
+  EPS Growth (forward) → 每股盈餘成長（預估）
+  P/E (fwd) → 本益比（預估）
+  PEG → 本益成長比
+  Debt/Equity → 負債權益比
+  FCF Yield → 自由現金流殖利率
+  Investment Thesis → 投資論點
+  Key Risk → 主要風險
+  == SELECTION METHODOLOGY == → == 選股方法論 ==
 """
 
 
@@ -84,7 +108,7 @@ def _output_path() -> Path:
 
 # ── Gemini call ───────────────────────────────────────────────────────────────
 
-def generate_watchlist(model: str = "gemini-2.5-flash", max_tokens: int = 8000) -> str:
+def generate_watchlist(model: str = "gemini-2.5-flash", max_tokens: int = 16000) -> str:
     # Preserve the original clean-exit UX on a missing key (vs. a raised LLMError).
     if not os.environ.get("GEMINI_API_KEY"):
         sys.exit("ERROR: GEMINI_API_KEY environment variable is not set.")
@@ -107,7 +131,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="Generate fundamental stock watchlist")
     parser.add_argument("--model", default="gemini-2.5-flash")
-    parser.add_argument("--max-tokens", type=int, default=8000)
+    parser.add_argument("--max-tokens", type=int, default=16000)
     args = parser.parse_args()
 
     content = generate_watchlist(model=args.model, max_tokens=args.max_tokens)
