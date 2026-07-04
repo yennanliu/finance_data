@@ -19,7 +19,7 @@ on:
       max_tokens:
         description: "Max output tokens"
         required: false
-        default: "8000"
+        default: "16000"
 
 permissions:
   contents: write
@@ -64,7 +64,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           MODEL="${{ github.event.inputs.model || 'gemini-2.5-flash' }}"
-          MAX_TOKENS="${{ github.event.inputs.max_tokens || '8000' }}"
+          MAX_TOKENS="${{ github.event.inputs.max_tokens || '16000' }}"
           python scripts/generate_stock_watchlist.py \
             --model "$MODEL" \
             --max-tokens "$MAX_TOKENS"

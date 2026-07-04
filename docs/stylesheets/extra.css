@@ -206,6 +206,16 @@
   border-bottom: 1px solid #1e1e22;
 }
 
+[data-md-color-scheme="slate"] .md-tabs__link {
+  color: #a1a1aa;
+  opacity: 1;
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link--active,
+[data-md-color-scheme="slate"] .md-tabs__link:hover {
+  color: #fafafa;
+}
+
 /* ══════════════════════════════════════════════════════════════
    Front Page — Full Layout
    ══════════════════════════════════════════════════════════════ */
