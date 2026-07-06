@@ -1,0 +1,912 @@
+Generated: 2026-07-06 23:16 UTC
+Model: gemini-2.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: MANH
+Company: Manhattan Associates, Inc.
+Sector: Software
+Market Cap: ~$18.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 35x  |  PEG: 1.9
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.5%
+Investment Thesis: Manhattan Associates is a leader in supply chain and omnichannel commerce software, a critical and growing area as businesses prioritize efficiency and resilience. Their cloud-based solutions provide a sticky moat, driven by complex implementations and high switching costs. The ongoing digital transformation of logistics and retail provides a long runway for consistent, high-margin growth, yet it remains largely overlooked compared to broader SaaS plays.
+Key Risk: Intense competition from larger enterprise software vendors and potential slowdown in enterprise IT spending could impact growth.
+
+---
+Rank: 2
+Ticker: ITRI
+Company: Itron, Inc.
+Sector: Industrials
+Market Cap: ~$4.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 22x  |  PEG: 0.9
+  - Debt/Equity: 0.8
+  - FCF Yield: 4.0%
+Investment Thesis: Itron is a key enabler of smart grids and smart cities, providing solutions for energy and water management. The global push for grid modernization, resource conservation, and utility digitalization creates a strong, secular tailwind. Their comprehensive portfolio of hardware, software, and services offers a defensible position in essential infrastructure, with significant operating leverage as recurring revenue grows.
+Key Risk: Large project-based revenue can lead to quarterly lumpiness, and regulatory delays in utility spending could slow adoption.
+
+---
+Rank: 3
+Ticker: FDS
+Company: FactSet Research Systems Inc.
+Sector: Financial Services
+Market Cap: ~$17.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 28x  |  PEG: 2.3
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.0%
+Investment Thesis: FactSet provides essential financial data and analytics to investment professionals, a mission-critical service with high switching costs. The increasing complexity of financial markets and demand for sophisticated data tools ensures steady demand. Their subscription-based model provides predictable revenue and strong free cash flow generation, making it a reliable compounder often overshadowed by flashier FinTech names.
+Key Risk: Dependence on the financial services industry means a significant downturn could impact client spending and retention.
+
+---
+Rank: 4
+Ticker: ROP
+Company: Roper Technologies, Inc.
+Sector: Industrials
+Market Cap: ~$48.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 38x  |  PEG: 3.8
+  - Debt/Equity: 0.6
+  - FCF Yield: 2.0%
+Investment Thesis: Roper is a diversified technology company with a unique acquisition-led strategy, focusing on niche market leaders with high recurring revenue and strong free cash flow. Their portfolio spans software, medical products, and industrial technologies, providing resilience and consistent growth. The company's decentralized model and focus on capital allocation excellence make it a long-term compounder that rarely garners mainstream attention.
+Key Risk: Valuation is often high, and successful execution of its acquisition strategy is critical for continued growth.
+
+---
+Rank: 5
+Ticker: WMS
+Company: Advanced Drainage Systems, Inc.
+Sector: Industrials
+Market Cap: ~$15.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 28x  |  PEG: 1.9
+  - Debt/Equity: 0.7
+  - FCF Yield: 3.5%
+Investment Thesis: Advanced Drainage Systems is a leader in plastic pipe solutions for water management, benefiting from aging infrastructure replacement and increased focus on stormwater management. Their superior, environmentally friendly products are gaining market share from traditional materials. Infrastructure spending tailwinds and a strong competitive position in a non-discretionary market provide a solid foundation for growth.
+Key Risk: Cyclicality of construction and housing markets could impact demand, and raw material price volatility is a concern.
+
+---
+Rank: 6
+Ticker: DOCN
+Company: DigitalOcean Holdings, Inc.
+Sector: Technology
+Market Cap: ~$4.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 25x  |  PEG: 0.8
+  - Debt/Equity: 0.2
+  - FCF Yield: 5.0%
+Investment Thesis: DigitalOcean provides cloud infrastructure specifically tailored for developers, startups, and SMBs, a massive and underserved market. Their simplified platform, transparent pricing, and strong community appeal create a sticky ecosystem. As more businesses move to the cloud, DigitalOcean offers a compelling alternative to hyperscalers, driving strong customer acquisition and expansion.
+Key Risk: Intense competition from larger cloud providers and potential for customer churn among smaller businesses.
+
+---
+Rank: 7
+Ticker: ENPH
+Company: Enphase Energy, Inc.
+Sector: Technology
+Market Cap: ~$25.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.0%
+Investment Thesis: Enphase is a leader in microinverter technology for solar energy, a critical component for residential and commercial solar installations. Their integrated energy management system provides superior reliability, efficiency, and safety. The global transition to renewable energy and increasing demand for energy independence provide a massive long-term growth driver, with a strong brand and technological edge.
+Key Risk: Highly dependent on solar policy and incentives, and intense competition in the renewable energy sector.
+
+---
+Rank: 8
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology
+Market Cap: ~$15.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 32x  |  PEG: 1.8
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.8%
+Investment Thesis: Paycom offers a comprehensive, single-database human capital management (HCM) software solution, driving efficiency and compliance for businesses. The shift from fragmented HR systems to integrated platforms continues to fuel demand. Their strong sales execution, high retention rates, and ability to cross-sell additional modules ensure consistent revenue growth and profitability in a non-discretionary enterprise software segment.
+Key Risk: Intense competition from other HCM providers and potential for slower growth as market penetration increases.
+
+---
+Rank: 9
+Ticker: DECK
+Company: Deckers Outdoor Corporation
+Sector: Consumer Discretionary
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 25x  |  PEG: 2.1
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.0%
+Investment Thesis: Deckers owns powerful lifestyle brands like Hoka and UGG, which consistently demonstrate strong consumer appeal and pricing power. Hoka, in particular, continues to capture significant market share in the performance footwear category due to its innovative design and comfort. The company's ability to innovate and manage its brand portfolio effectively provides a durable moat in the competitive apparel and footwear market.
+Key Risk: Fashion trends can be fickle, and over-reliance on a few key brands poses concentration risk.
+
+---
+Rank: 10
+Ticker: CEG
+Company: Constellation Energy Corporation
+Sector: Utilities
+Market Cap: ~$40.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 20x  |  PEG: 1.3
+  - Debt/Equity: 1.5
+  - FCF Yield: 6.0%
+Investment Thesis: Constellation Energy is the largest producer of carbon-free energy in the US, primarily through its nuclear fleet. As the world prioritizes decarbonization and energy security, nuclear power is gaining renewed appreciation as a reliable baseload source. The company benefits from government incentives for clean energy and a stable, regulated revenue stream, positioning it as a critical player in the energy transition.
+Key Risk: High capital intensity of nuclear power, regulatory risks, and potential for unexpected plant outages.
+
+---
+Rank: 11
+Ticker: TTD
+Company: The Trade Desk, Inc.
+Sector: Technology
+Market Cap: ~$35.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 45x  |  PEG: 1.8
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: The Trade Desk operates a leading independent demand-side platform (DSP) for digital advertising, benefiting from the secular shift to programmatic and connected TV (CTV) advertising. Their transparent, data-driven platform offers superior targeting and measurement capabilities for advertisers. The growing importance of data privacy and the deprecation of third-party cookies further solidify its position as a trusted partner in the evolving ad tech landscape.
+Key Risk: Intense competition from other ad tech platforms and potential regulatory changes impacting data collection and usage.
+
+---
+Rank: 12
+Ticker: TDG
+Company: TransDigm Group Incorporated
+Sector: Industrials
+Market Cap: ~$45.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 35x  |  PEG: 2.3
+  - Debt/Equity: 3.0
+  - FCF Yield: 3.0%
+Investment Thesis: TransDigm is a highly specialized aerospace component manufacturer, primarily serving the aftermarket with proprietary parts. Their business model thrives on high barriers to entry, long product lifecycles, and significant pricing power due to sole-source positions. The recovery in air travel and long-term growth in defense spending provide a stable demand environment for their essential components.
+Key Risk: High debt load makes it sensitive to interest rate changes, and dependence on aerospace cycles.
+
+---
+Rank: 13
+Ticker: VRSK
+Company: Verisk Analytics, Inc.
+Sector: Industrials
+Market Cap: ~$38.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 30x  |  PEG: 3.0
+  - Debt/Equity: 0.7
+  - FCF Yield: 2.5%
+Investment Thesis: Verisk provides data analytics and risk assessment solutions, primarily to the insurance industry. Their proprietary datasets and analytical tools are deeply embedded in client workflows, creating high switching costs and a strong moat. The increasing complexity of risk management and regulatory requirements ensures consistent demand for their essential services, driving predictable, high-margin revenue.
+Key Risk: Dependence on the insurance industry and potential for new data sources or AI tools to disrupt their offerings.
+
+---
+Rank: 14
+Ticker: PCTY
+Company: Paylocity Holding Corporation
+Sector: Technology
+Market Cap: ~$10.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 30x  |  PEG: 1.4
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.5%
+Investment Thesis: Paylocity offers cloud-based human capital management (HCM) and payroll software to mid-market companies. Their intuitive platform and focus on employee experience drive strong adoption and retention. The ongoing digital transformation of HR functions and the need for modern, integrated solutions provide a robust growth runway, allowing Paylocity to continue gaining market share.
+Key Risk: Intense competition in the HCM space and the challenge of scaling customer acquisition efficiently.
+
+---
+Rank: 15
+Ticker: CRWD
+Company: CrowdStrike Holdings, Inc.
+Sector: Technology
+Market Cap: ~$40.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 25%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 50x  |  PEG: 1.7
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: CrowdStrike is a leader in cloud-native endpoint and workload protection, offering a superior security platform with AI-driven threat detection. The escalating threat landscape and the shift to cloud security provide a massive and urgent market opportunity. Their Falcon platform's modularity and network effects create a powerful competitive advantage, driving strong customer growth and expansion.
+Key Risk: High valuation, intense competition from other cybersecurity vendors, and the constant need to innovate against evolving threats.
+
+---
+Rank: 16
+Ticker: RMD
+Company: ResMed Inc.
+Sector: Healthcare
+Market Cap: ~$30.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 30x  |  PEG: 2.5
+  - Debt/Equity: 0.3
+  - FCF Yield: 2.5%
+Investment Thesis: ResMed is a global leader in connected health solutions for sleep apnea, COPD, and other respiratory conditions. The aging global population and increasing awareness of these chronic diseases ensure a growing patient base. Their innovative devices and digital health platforms create a strong ecosystem, providing recurring revenue and a durable competitive moat in an essential healthcare segment.
+Key Risk: Regulatory changes, reimbursement pressures, and intense competition from other medical device manufacturers.
+
+---
+Rank: 17
+Ticker: VEEV
+Company: Veeva Systems Inc.
+Sector: Healthcare
+Market Cap: ~$45.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 40x  |  PEG: 2.7
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: Veeva Systems is the dominant cloud software provider for the life sciences industry, offering mission-critical solutions for R&D, commercial operations, and regulatory compliance. Their deep industry expertise and comprehensive suite of products create a highly sticky platform with significant network effects. The ongoing digital transformation of pharma and biotech ensures a long runway for growth.
+Key Risk: High valuation, dependence on the life sciences industry, and potential for increased competition from generalist software providers.
+
+---
+Rank: 18
+Ticker: MKL
+Company: Markel Group Inc.
+Sector: Financial Services
+Market Cap: ~$25.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 20x  |  PEG: 2.0
+  - Debt/Equity: 0.4
+  - FCF Yield: 5.0%
+Investment Thesis: Markel is a diversified financial holding company with three segments: specialty insurance, investments (Markel Ventures), and a public equity portfolio. Its "mini-Berkshire" model focuses on long-term value creation through disciplined underwriting and strategic acquisitions of quality businesses. The combination of stable insurance operations and growth-oriented non-insurance businesses provides a resilient, compounding growth engine.
+Key Risk: Exposure to catastrophic events in its insurance segment, and the success of Markel Ventures acquisitions is crucial.
+
+---
+Rank: 19
+Ticker: MCO
+Company: Moody's Corporation
+Sector: Financial Services
+Market Cap: ~$40.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 30x  |  PEG: 3.0
+  - Debt/Equity: 1.5
+  - FCF Yield: 2.5%
+Investment Thesis: Moody's is a leading provider of credit ratings and risk analysis, operating in an essential, oligopolistic industry with high barriers to entry. Their ratings are deeply embedded in global financial markets, providing a powerful competitive moat. The increasing demand for transparency and risk management, coupled with recurring revenue from subscriptions, ensures stable, long-term growth.
+Key Risk: Cyclicality of debt issuance markets, regulatory scrutiny, and potential for disruption from new rating methodologies.
+
+---
+Rank: 20
+Ticker: CDNS
+Company: Cadence Design Systems, Inc.
+Sector: Technology
+Market Cap: ~$48.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 40x  |  PEG: 2.7
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.0%
+Investment Thesis: Cadence is a critical enabler of semiconductor and electronic system design, providing essential electronic design automation (EDA) software and IP. The increasing complexity of chip design, driven by AI, 5G, and IoT, ensures sustained demand for their advanced tools. Their deep technological expertise and sticky, subscription-based software create a formidable moat in a high-growth, foundational industry.
+Key Risk: Dependence on the cyclical semiconductor industry and intense competition from other EDA vendors.
+
+---
+Rank: 21
+Ticker: ANSS
+Company: Ansys, Inc.
+Sector: Technology
+Market Cap: ~$28.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 35x  |  PEG: 2.9
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.5%
+Investment Thesis: Ansys is a global leader in engineering simulation software, allowing companies to virtually test and optimize product designs across various physics. The accelerating trend of digital transformation and the need for faster, more efficient product development across industries (automotive, aerospace, electronics) drive demand. Their comprehensive suite of simulation tools creates a deep moat and high switching costs.
+Key Risk: High valuation, intense competition from other simulation software providers, and dependence on R&D spending by industrial clients.
+
+---
+Rank: 22
+Ticker: EW
+Company: Edwards Lifesciences Corporation
+Sector: Healthcare
+Market Cap: ~$40.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 35x  |  PEG: 3.2
+  - Debt/Equity: 0.1
+  - FCF Yield: 2.0%
+Investment Thesis: Edwards Lifesciences is a pioneer and leader in structural heart disease and critical care monitoring. Their innovative transcatheter aortic valve replacement (TAVR) technology addresses a large, underserved patient population with significant clinical benefits. The aging demographic and continuous innovation in less invasive procedures provide a strong, long-term growth trajectory in a high-margin medical device segment.
+Key Risk: Intense competition in the TAVR market, regulatory hurdles for new products, and reimbursement pressures.
+
+---
+Rank: 23
+Ticker: SHW
+Company: Sherwin-Williams Company
+Sector: Materials
+Market Cap: ~$45.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 30x  |  PEG: 3.0
+  - Debt/Equity: 1.5
+  - FCF Yield: 2.0%
+Investment Thesis: Sherwin-Williams is a global leader in paints and coatings, benefiting from strong brand recognition, extensive distribution networks, and a diversified customer base (DIY, professional, industrial). Their proprietary formulations and direct-to-consumer model create a sustainable competitive advantage. The long-term demand for maintenance, renovation, and new construction provides a stable, compounding business.
+Key Risk: Cyclicality of housing and construction markets, raw material price volatility, and potential for economic downturns.
+
+---
+Rank: 24
+Ticker: AMCR
+Company: Amcor plc
+Sector: Materials
+Market Cap: ~$18.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 4%
+  - EPS Growth (forward): 7%
+  - P/E (fwd): 15x  |  PEG: 2.1
+  - Debt/Equity: 0.8
+  - FCF Yield: 6.0%
+Investment Thesis: Amcor is a global leader in responsible packaging solutions, benefiting from steady demand for consumer staples and a growing focus on sustainable packaging. Their broad portfolio, global reach, and R&D capabilities provide a strong competitive moat. The essential nature of packaging and the shift towards more eco-friendly materials ensure resilient demand and opportunities for innovation.
+Key Risk: Raw material price volatility, currency fluctuations, and intense competition in the packaging industry.
+
+---
+Rank: 25
+Ticker: ADSK
+Company: Autodesk, Inc.
+Sector: Technology
+Market Cap: ~$48.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 35x  |  PEG: 2.9
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.5%
+Investment Thesis: Autodesk is a dominant provider of 3D design, engineering, and entertainment software, with flagship products like AutoCAD. Their deeply entrenched software in architecture, engineering, construction (AEC), and manufacturing creates high switching costs and a powerful ecosystem. The ongoing digital transformation of these industries and the adoption of BIM (Building Information Modeling) ensure long-term growth.
+Key Risk: Cyclicality of construction and manufacturing sectors, and intense competition from other design software providers.
+
+---
+Rank: 26
+Ticker: WDAY
+Company: Workday, Inc.
+Sector: Technology
+Market Cap: ~$45.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 40x  |  PEG: 2.0
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis: Workday is a leading provider of cloud-based human capital management (HCM) and financial management software for large enterprises. Their unified platform and focus on user experience drive strong adoption and high customer satisfaction. The ongoing digital transformation of HR and finance functions in large organizations provides a significant and sticky market opportunity.
+Key Risk: High valuation, intense competition from other enterprise software vendors, and the challenge of expanding into new markets.
+
+---
+Rank: 27
+Ticker: WM
+Company: Waste Management, Inc.
+Sector: Industrials
+Market Cap: ~$35.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 8%
+  - P/E (fwd): 28x  |  PEG: 3.5
+  - Debt/Equity: 1.0
+  - FCF Yield: 3.0%
+Investment Thesis: Waste Management is the largest provider of comprehensive waste management services in North America, operating in an essential, highly regulated industry with significant barriers to entry. Their extensive network of landfills and collection routes creates a powerful economic moat. Stable demand for waste services and increasing focus on recycling and renewable energy from landfills provide predictable cash flows and long-term stability.
+Key Risk: High capital expenditures, environmental regulations, and potential for economic downturns to impact waste generation.
+
+---
+Rank: 28
+Ticker: CE
+Company: Celanese Corporation
+Sector: Materials
+Market Cap: ~$12.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 18x  |  PEG: 1.8
+  - Debt/Equity: 1.8
+  - FCF Yield: 7.0%
+Investment Thesis: Celanese is a global technology and specialty materials company, producing a wide range of engineered polymers and acetyl products. Their proprietary technology, global scale, and integrated production model provide a strong competitive advantage. Diversified end markets and a focus on high-value applications ensure resilient demand and strong free cash flow generation, often overlooked in the broader chemicals sector.
+Key Risk: Cyclicality of chemical markets, raw material price volatility, and high debt load.
+
+---
+Rank: 29
+Ticker: SWK
+Company: Stanley Black & Decker, Inc.
+Sector: Industrials
+Market Cap: ~$15.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 18x  |  PEG: 1.2
+  - Debt/Equity: 1.0
+  - FCF Yield: 5.0%
+Investment Thesis: Stanley Black & Decker is a global leader in tools and outdoor power equipment, with iconic brands like DEWALT and Stanley. The company benefits from strong brand loyalty, extensive distribution, and a diversified product portfolio serving professional and DIY users. Strategic focus on innovation and operational efficiency, coupled with long-term demand for home improvement and infrastructure, provides a compelling value proposition.
+Key Risk: Cyclicality of housing and construction markets, intense competition, and potential for supply chain disruptions.
+
+---
+Rank: 30
+Ticker: GRMN
+Company: Garmin Ltd.
+Sector: Consumer Discretionary
+Market Cap: ~$25.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 25x  |  PEG: 2.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.5%
+Investment Thesis: Garmin is a diversified technology company known for its GPS products, but it has successfully pivoted into higher-growth, higher-margin segments like fitness wearables, marine, aviation, and outdoor recreation. Their strong brand, vertical integration, and focus on niche markets with passionate users create a durable competitive advantage. The company's consistent innovation and strong balance sheet support long-term growth.
+Key Risk: Intense competition in consumer electronics, rapid technological change, and potential for economic downturns to impact discretionary spending.
+
+== SELECTION METHODOLOGY ==
+The selection methodology focused on identifying high-quality, under-the-radar US companies poised for long-term growth, steering clear of mega-caps, mainstream media darlings, and speculative momentum plays. I screened for companies with market caps between $500M and $50B, prioritizing those with consistent revenue and EPS growth trajectories, often with expanding margins or a clear path to improved profitability. A strong balance sheet, characterized by manageable debt and positive free cash flow, was a non-negotiable criterion. The core of the selection involved identifying companies with durable competitive moats—be it proprietary technology, strong brand equity, high switching costs, or essential services within an oligopolistic industry—and structural tailwinds from long-term trends like digital transformation, decarbonization, aging demographics, or infrastructure modernization. Value was assessed through a forward P/E and PEG ratio, with a preference for PEG below 1.5, though some higher-quality growth names with strong moats were included if their long-term prospects justified a higher multiple. Macro themes such as supply chain resilience, specialized software, sustainable infrastructure, and niche healthcare/consumer trends informed the sector diversity.
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: MANH
+公司: Manhattan Associates, Inc.
+產業: 軟體
+市值: ~$18.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 35x  |  本益成長比: 1.9
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.5%
+投資論點: Manhattan Associates 是供應鏈和全通路商務軟體的領導者，隨著企業優先考慮效率和韌性，這是一個關鍵且不斷成長的領域。他們的雲端解決方案提供了一個具備高轉換成本的堅固護城河。物流和零售業持續的數位轉型為其帶來了長期穩定、高利潤的成長空間，但與更廣泛的SaaS公司相比，它仍被市場低估。
+主要風險: 來自大型企業軟體供應商的激烈競爭以及企業IT支出潛在的放緩可能會影響成長。
+
+---
+排名: 2
+代碼: ITRI
+公司: Itron, Inc.
+產業: 工業
+市值: ~$4.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 22x  |  本益成長比: 0.9
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 4.0%
+投資論點: Itron 是智慧電網和智慧城市的關鍵推動者，提供能源和水資源管理解決方案。全球對電網現代化、資源保護和公用事業數位化的推動創造了強勁的長期順風。他們全面的硬體、軟體和服務組合在基礎設施領域提供了防禦性地位，隨著經常性收入的增長，營運槓桿顯著。
+主要風險: 大型專案收入可能導致季度波動，公用事業支出監管延遲可能會減緩採用速度。
+
+---
+排名: 3
+代碼: FDS
+公司: FactSet Research Systems Inc.
+產業: 金融服務
+市值: ~$17.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 28x  |  本益成長比: 2.3
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 3.0%
+投資論點: FactSet 為投資專業人士提供必要的金融數據和分析，這是一項任務關鍵型服務，具有高轉換成本。金融市場日益複雜以及對複雜數據工具的需求確保了穩定的需求。其訂閱模式提供可預測的收入和強勁的自由現金流產生，使其成為一個可靠的複合型成長股，但常被更引人注目的金融科技公司所掩蓋。
+主要風險: 對金融服務業的依賴意味著嚴重的經濟衰退可能會影響客戶支出和留存。
+
+---
+排名: 4
+代碼: ROP
+公司: Roper Technologies, Inc.
+產業: 工業
+市值: ~$48.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 38x  |  本益成長比: 3.8
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 2.0%
+投資論點: Roper 是一家多元化科技公司，擁有獨特的收購主導策略，專注於利基市場領導者，這些公司具有高經常性收入和強勁的自由現金流。其產品組合涵蓋軟體、醫療產品和工業技術，提供韌性和持續成長。該公司的去中心化模式和對資本配置卓越的關注使其成為一個長期複合型成長股，很少引起主流關注。
+主要風險: 估值通常較高，成功執行其收購策略對持續成長至關重要。
+
+---
+排名: 5
+代碼: WMS
+公司: Advanced Drainage Systems, Inc.
+產業: 工業
+市值: ~$15.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 28x  |  本益成長比: 1.9
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 3.5%
+投資論點: Advanced Drainage Systems 是水資源管理塑膠管解決方案的領導者，受益於老舊基礎設施的更換以及對雨水管理的日益關注。其優越、環保的產品正在從傳統材料中奪取市場份額。基礎設施支出的順風以及在非自由裁量市場中的強大競爭地位為成長提供了堅實的基礎。
+主要風險: 建築和房地產市場的週期性可能影響需求，原材料價格波動是一個問題。
+
+---
+排名: 6
+代碼: DOCN
+公司: DigitalOcean Holdings, Inc.
+產業: 科技
+市值: ~$4.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 30%
+  - 本益比（預估）: 25x  |  本益成長比: 0.8
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 5.0%
+投資論點: DigitalOcean 提供專為開發者、新創公司和中小企業量身定制的雲端基礎設施，這是一個龐大且服務不足的市場。他們簡化的平台、透明的定價和強大的社群吸引力創造了一個具黏著性的生態系統。隨著越來越多的企業轉向雲端，DigitalOcean 為超大規模供應商提供了一個引人注目的替代方案，推動了強勁的客戶獲取和擴張。
+主要風險: 來自大型雲端供應商的激烈競爭以及小型企業客戶流失的可能性。
+
+---
+排名: 7
+代碼: ENPH
+公司: Enphase Energy, Inc.
+產業: 科技
+市值: ~$25.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 30x  |  本益成長比: 1.5
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 3.0%
+投資論點: Enphase 是太陽能微型逆變器技術的領導者，這是住宅和商業太陽能裝置的關鍵組件。其整合能源管理系統提供卓越的可靠性、效率和安全性。全球向可再生能源的轉型以及對能源獨立性的日益增長的需求提供了巨大的長期成長動力，並擁有強大的品牌和技術優勢。
+主要風險: 高度依賴太陽能政策和激勵措施，以及可再生能源領域的激烈競爭。
+
+---
+排名: 8
+代碼: PAYC
+公司: Paycom Software, Inc.
+產業: 科技
+市值: ~$15.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 32x  |  本益成長比: 1.8
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.8%
+投資論點: Paycom 提供全面的單一資料庫人力資本管理（HCM）軟體解決方案，為企業提高效率和合規性。從分散式人力資源系統轉向整合平台的趨勢持續推動需求。其強大的銷售執行力、高客戶留存率以及交叉銷售額外模組的能力，確保了非自由裁量企業軟體領域的持續收入增長和盈利能力。
+主要風險: 來自其他HCM供應商的激烈競爭以及隨著市場滲透率增加而可能出現的成長放緩。
+
+---
+排名: 9
+代碼: DECK
+公司: Deckers Outdoor Corporation
+產業: 非必需消費品
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 25x  |  本益成長比: 2.1
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 4.0%
+投資論點: Deckers 擁有 Hoka 和 UGG 等強大的生活方式品牌，這些品牌持續展現出強勁的消費者吸引力和定價能力。特別是 Hoka，由於其創新的設計和舒適性，在高性能鞋類領域持續佔據顯著市場份額。該公司創新和有效管理其品牌組合的能力，在競爭激烈的服裝和鞋類市場中提供了持久的護城河。
+主要風險: 時尚潮流變化無常，過度依賴幾個關鍵品牌會帶來集中風險。
+
+---
+排名: 10
+代碼: CEG
+公司: Constellation Energy Corporation
+產業: 公用事業
+市值: ~$40.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 20x  |  本益成長比: 1.3
+  - 負債權益比: 1.5
+  - 自由現金流殖利率: 6.0%
+投資論點: Constellation Energy 是美國最大的無碳能源生產商，主要透過其核電廠。隨著世界優先考慮脫碳和能源安全，核電作為可靠的基載能源重新受到重視。該公司受益於清潔能源的政府激勵措施和穩定、受監管的收入流，使其成為能源轉型中的關鍵參與者。
+主要風險: 核電的高資本密集度、監管風險以及意外停機的可能性。
+
+---
+排名: 11
+代碼: TTD
+公司: The Trade Desk, Inc.
+產業: 科技
+市值: ~$35.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 20%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 45x  |  本益成長比: 1.8
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.0%
+投資論點: The Trade Desk 經營著領先的獨立需求方平台（DSP），用於數位廣告，受益於向程式化和聯網電視（CTV）廣告的長期轉變。其透明、數據驅動的平台為廣告商提供了卓越的目標定位和衡量能力。數據隱私日益重要以及第三方Cookie的淘汰進一步鞏固了其在不斷發展的廣告科技領域作為值得信賴的合作夥伴的地位。
+主要風險: 來自其他廣告科技平台的激烈競爭以及可能影響數據收集和使用的監管變化。
+
+---
+排名: 12
+代碼: TDG
+公司: TransDigm Group Incorporated
+產業: 工業
+市值: ~$45.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 35x  |  本益成長比: 2.3
+  - 負債權益比: 3.0
+  - 自由現金流殖利率: 3.0%
+投資論點: TransDigm 是一家高度專業化的航空航天零部件製造商，主要透過專有零件服務售後市場。其商業模式受益於高進入壁壘、長產品生命週期以及由於獨家供應地位而產生的顯著定價能力。航空旅行的復甦和國防支出的長期增長為其基本零部件提供了穩定的需求環境。
+主要風險: 高額債務使其對利率變化敏感，並依賴航空航天週期。
+
+---
+排名: 13
+代碼: VRSK
+公司: Verisk Analytics, Inc.
+產業: 工業
+市值: ~$38.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 30x  |  本益成長比: 3.0
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 2.5%
+投資論點: Verisk 主要為保險業提供數據分析和風險評估解決方案。其專有數據集和分析工具深入嵌入客戶工作流程，創造了高轉換成本和強大的護城河。風險管理和監管要求日益複雜，確保了對其基本服務的持續需求，推動了可預測的高利潤收入。
+主要風險: 依賴保險業以及新數據源或AI工具可能顛覆其產品。
+
+---
+排名: 14
+代碼: PCTY
+公司: Paylocity Holding Corporation
+產業: 科技
+市值: ~$10.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 22%
+  - 本益比（預估）: 30x  |  本益成長比: 1.4
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 3.5%
+投資論點: Paylocity 為中型市場公司提供基於雲端的人力資本管理（HCM）和薪資軟體。其直觀的平台和對員工體驗的關注推動了強勁的採用和留存。人力資源職能的持續數位轉型以及對現代化、整合解決方案的需求提供了強勁的成長空間，使Paylocity能夠繼續擴大市場份額。
+主要風險: HCM領域的激烈競爭以及有效擴大客戶獲取的挑戰。
+
+---
+排名: 15
+代碼: CRWD
+公司: CrowdStrike Holdings, Inc.
+產業: 科技
+市值: ~$40.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 25%
+  - 每股盈餘成長（預估）: 30%
+  - 本益比（預估）: 50x  |  本益成長比: 1.7
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.0%
+投資論點: CrowdStrike 是雲原生端點和工作負載保護的領導者，提供卓越的AI驅動威脅檢測安全平台。不斷升級的威脅情勢和向雲端安全的轉變提供了巨大而緊迫的市場機會。其Falcon平台的模組化和網絡效應創造了強大的競爭優勢，推動了強勁的客戶增長和擴張。
+主要風險: 高估值、來自其他網絡安全供應商的激烈競爭以及不斷創新以應對不斷演變的威脅。
+
+---
+排名: 16
+代碼: RMD
+公司: ResMed Inc.
+產業: 醫療保健
+市值: ~$30.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 30x  |  本益成長比: 2.5
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 2.5%
+投資論點: ResMed 是全球領先的睡眠呼吸中止症、慢性阻塞性肺病（COPD）和其他呼吸道疾病的聯網健康解決方案供應商。全球人口老化以及對這些慢性疾病日益增長的認識確保了不斷增長的患者群體。其創新設備和數位健康平台創造了一個強大的生態系統，在基本醫療保健領域提供了經常性收入和持久的競爭護城河。
+主要風險: 監管變化、報銷壓力以及來自其他醫療設備製造商的激烈競爭。
+
+---
+排名: 17
+代碼: VEEV
+公司: Veeva Systems Inc.
+產業: 醫療保健
+市值: ~$45.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 40x  |  本益成長比: 2.7
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.0%
+投資論點: Veeva Systems 是生命科學產業主導的雲端軟體供應商，為研發、商業運營和監管合規提供任務關鍵型解決方案。其深厚的行業專業知識和全面的產品套件創造了一個高度黏著的平台，具有顯著的網絡效應。製藥和生物技術的持續數位轉型確保了長期的成長空間。
+主要風險: 高估值、對生命科學產業的依賴以及來自通用軟體供應商的競爭加劇。
+
+---
+排名: 18
+代碼: MKL
+公司: Markel Group Inc.
+產業: 金融服務
+市值: ~$25.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 20x  |  本益成長比: 2.0
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 5.0%
+投資論點: Markel 是一家多元化金融控股公司，擁有三個部門：專業保險、投資（Markel Ventures）和公開股權投資組合。其「迷你巴菲特」模式透過嚴格的承保和對優質企業的戰略收購，專注於長期價值創造。穩定的保險業務和以成長為導向的非保險業務相結合，提供了一個有韌性、複合型成長的引擎。
+主要風險: 保險業務面臨災難性事件的風險，Markel Ventures 收購的成功至關重要。
+
+---
+排名: 19
+代碼: MCO
+公司: Moody's Corporation
+產業: 金融服務
+市值: ~$40.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 30x  |  本益成長比: 3.0
+  - 負債權益比: 1.5
+  - 自由現金流殖利率: 2.5%
+投資論點: Moody's 是領先的信用評級和風險分析提供商，在一個具有高進入壁壘的必需品寡頭壟斷行業中運營。他們的評級深入嵌入全球金融市場，提供了強大的競爭護城河。對透明度和風險管理日益增長的需求，加上訂閱帶來的經常性收入，確保了穩定、長期的增長。
+主要風險: 債務發行市場的週期性、監管審查以及新評級方法可能帶來的顛覆。
+
+---
+排名: 20
+代碼: CDNS
+公司: Cadence Design Systems, Inc.
+產業: 科技
+市值: ~$48.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 40x  |  本益成長比: 2.7
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 2.0%
+投資論點: Cadence 是半導體和電子系統設計的關鍵推動者，提供必要的電子設計自動化（EDA）軟體和IP。由AI、5G和物聯網驅動的晶片設計日益複雜，確保了對其先進工具的持續需求。其深厚的技術專業知識和具黏著性的訂閱式軟體在一個高成長、基礎性產業中創造了強大的護城河。
+主要風險: 依賴週期性的半導體產業以及來自其他EDA供應商的激烈競爭。
+
+---
+排名: 21
+代碼: ANSS
+公司: Ansys, Inc.
+產業: 科技
+市值: ~$28.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 35x  |  本益成長比: 2.9
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.5%
+投資論點: Ansys 是工程模擬軟體的全球領導者，允許公司在各種物理領域虛擬測試和優化產品設計。數位轉型加速的趨勢以及各行業（汽車、航空航天、電子）對更快、更高效產品開發的需求推動了需求。其全面的模擬工具套件創造了深厚的護城河和高轉換成本。
+主要風險: 高估值、來自其他模擬軟體供應商的激烈競爭以及對工業客戶研發支出的依賴。
+
+---
+排名: 22
+代碼: EW
+公司: Edwards Lifesciences Corporation
+產業: 醫療保健
+市值: ~$40.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 35x  |  本益成長比: 3.2
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 2.0%
+投資論點: Edwards Lifesciences 是結構性心臟病和重症監護監測領域的先驅和領導者。其創新的經導管主動脈瓣置換術（TAVR）技術解決了大量服務不足的患者群體，並帶來顯著的臨床益處。人口老化和微創手術的持續創新在高利潤醫療設備領域提供了強勁的長期成長軌跡。
+主要風險: TAVR市場的激烈競爭、新產品的監管障礙以及報銷壓力。
+
+---
+排名: 23
+代碼: SHW
+公司: Sherwin-Williams Company
+產業: 材料
+市值: ~$45.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 30x  |  本益成長比: 3.0
+  - 負債權益比: 1.5
+  - 自由現金流殖利率: 2.0%
+投資論點: Sherwin-Williams 是全球油漆和塗料的領導者，受益於強大的品牌認知度、廣泛的分銷網絡和多元化的客戶群（DIY、專業、工業）。其專有配方和直接面向消費者的模式創造了可持續的競爭優勢。長期對維護、翻新和新建築的需求為其提供了穩定、複合型成長的業務。
+主要風險: 房地產和建築市場的週期性、原材料價格波動以及潛在的經濟衰退。
+
+---
+排名: 24
+代碼: AMCR
+公司: Amcor plc
+產業: 材料
+市值: ~$18.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 4%
+  - 每股盈餘成長（預估）: 7%
+  - 本益比（預估）: 15x  |  本益成長比: 2.1
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 6.0%
+投資論點: Amcor 是負責任包裝解決方案的全球領導者，受益於消費必需品的穩定需求以及對可持續包裝日益增長的關注。其廣泛的產品組合、全球影響力和研發能力提供了強大的競爭護城河。包裝的本質屬性以及向更環保材料的轉變確保了彈性需求和創新機會。
+主要風險: 原材料價格波動、匯率波動以及包裝行業的激烈競爭。
+
+---
+排名: 25
+代碼: ADSK
+公司: Autodesk, Inc.
+產業: 科技
+市值: ~$48.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 35x  |  本益成長比: 2.9
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.5%
+投資論點: Autodesk 是3D設計、工程和娛樂軟體的主導供應商，擁有AutoCAD等旗艦產品。其軟體在建築、工程、施工（AEC）和製造業中根深蒂固，創造了高轉換成本和強大的生態系統。這些產業的持續數位轉型以及BIM（建築資訊模型）的採用確保了長期成長。
+主要風險: 建築和製造業的週期性以及來自其他設計軟體供應商的激烈競爭。
+
+---
+排名: 26
+代碼: WDAY
+公司: Workday, Inc.
+產業: 科技
+市值: ~$45.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 40x  |  本益成長比: 2.0
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.0%
+投資論點: Workday 是為大型企業提供雲端人力資本管理（HCM）和財務管理軟體的領先供應商。其統一平台和對用戶體驗的關注推動了強勁的採用和高客戶滿意度。大型組織中人力資源和財務職能的持續數位轉型提供了巨大且具黏著性的市場機會。
+主要風險: 高估值、來自其他企業軟體供應商的激烈競爭以及擴展新市場的挑戰。
+
+---
+排名: 27
+代碼: WM
+公司: Waste Management, Inc.
+產業: 工業
+市值: ~$35.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 8%
+  - 本益比（預估）: 28x  |  本益成長比: 3.5
+  - 負債權益比: 1.0
+  - 自由現金流殖利率: 3.0%
+投資論點: Waste Management 是北美最大的綜合廢物管理服務提供商，在一個必需品、高度監管且具有顯著進入壁壘的行業中運營。其廣泛的垃圾填埋場和收集路線網絡創造了強大的經濟護城河。對廢物服務的穩定需求以及對垃圾填埋場回收和可再生能源的日益關注提供了可預測的現金流和長期穩定性。
+主要風險: 高資本支出、環境法規以及經濟衰退可能影響廢物產生量。
+
+---
+排名: 28
+代碼: CE
+公司: Celanese Corporation
+產業: 材料
+市值: ~$12.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 18x  |  本益成長比: 1.8
+  - 負債權益比: 1.8
+  - 自由現金流殖利率: 7.0%
+投資論點: Celanese 是一家全球科技和特種材料公司，生產各種工程聚合物和乙醯產品。其專有技術、全球規模和整合生產模式提供了強大的競爭優勢。多元化的終端市場和對高價值應用的關注確保了彈性需求和強勁的自由現金流產生，在更廣泛的化學品行業中常被忽視。
+主要風險: 化學品市場的週期性、原材料價格波動以及高額債務。
+
+---
+排名: 29
+代碼: SWK
+公司: Stanley Black & Decker, Inc.
+產業: 工業
+市值: ~$15.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 18x  |  本益成長比: 1.2
+  - 負債權益比: 1.0
+  - 自由現金流殖利率: 5.0%
+投資論點: Stanley Black & Decker 是工具和戶外動力設備的全球領導者，擁有DEWALT和Stanley等標誌性品牌。該公司受益於強大的品牌忠誠度、廣泛的分銷以及服務於專業和DIY用戶的多元化產品組合。對創新和營運效率的戰略關注，加上對家居裝修和基礎設施的長期需求，提供了引人注目的價值主張。
+主要風險: 房地產和建築市場的週期性、激烈競爭以及潛在的供應鏈中斷。
+
+---
+排名: 30
+代碼: GRMN
+公司: Garmin Ltd.
+產業: 非必需消費品
+市值: ~$25.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（（預估）: 10%
+  - 本益比（預估）: 25x  |  本益成長比: 2.5
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 3.5%
+投資論點: Garmin 是一家多元化科技公司，以其GPS產品而聞名，但已成功轉型進入健身穿戴設備、航海、航空和戶外休閒等高成長、高利潤領域。其強大的品牌、垂直整合以及對擁有熱情用戶的利基市場的關注，創造了持久的競爭優勢。該公司持續的創新和強勁的資產負債表支持長期成長。
+主要風險: 消費電子產品的激烈競爭、技術快速變化以及經濟衰退可能影響非必需消費品支出。
+
+== 選股方法論 ==
+本次選股方法論專注於識別高品質、被低估的美國公司，這些公司具備長期成長潛力，同時避免了巨型市值公司、主流媒體熱門股和投機性動能股。我篩選了市值介於5億美元至500億美元的公司，優先考慮那些營收和每股盈餘成長軌跡穩定、通常具有擴大毛利率或明確盈利改善路徑的公司。穩健的資產負債表，以可控的債務和正向的自由現金流為特徵，是一個不可協商的標準。選股的核心在於識別那些擁有持久競爭護城河——無論是專有技術、強大品牌資產、高轉換成本，還是寡頭壟斷行業中的基本服務——並受益於數位轉型、脫碳、人口老化或基礎設施現代化等長期趨勢所帶來的結構性順風的公司。價值評估透過預估本益比和本益成長比進行，偏好本益成長比低於1.5的公司，儘管一些具有強大護城河的優質成長股，如果其長期前景證明較高倍數合理，也被納入。供應鏈韌性、專業軟體、可持續基礎設施以及利基醫療保健/消費趨勢等宏觀主題為產業多元化提供了依據。
