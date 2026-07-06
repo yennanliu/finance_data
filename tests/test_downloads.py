@@ -40,8 +40,15 @@ def test_extract_pdf_links_dedupes():
 
 
 def test_parse_company_name_from_title():
-    soup = BeautifulSoup("<title>Apple Inc. | AnnualReports.com</title>", "html.parser")
-    assert d10.parse_company_name(soup, "fallback") == "Apple_Inc"
+    # Current site uses " - "; older pages used " | ". Both must yield the same name.
+    for sep in (" - ", " | "):
+        soup = BeautifulSoup(f"<title>Apple Inc.{sep}AnnualReports.com</title>", "html.parser")
+        assert d10.parse_company_name(soup, "fallback") == "Apple_Inc"
+
+
+def test_parse_company_name_keeps_hyphen_in_name():
+    soup = BeautifulSoup("<title>The Coca-Cola Company - AnnualReports.com</title>", "html.parser")
+    assert d10.parse_company_name(soup, "fallback") == "The_Coca-Cola_Company"
 
 
 def test_parse_company_name_fallback_when_no_title():

@@ -8,7 +8,6 @@
 import argparse
 import re
 import time
-from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -17,7 +16,6 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://www.annualreports.com"
 SAVE_DIR = Path(__file__).parent.parent / "10-k"
-DEFAULT_YEARS = 5
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -57,12 +55,11 @@ def parse_company_name(soup, fallback):
     title = soup.find("title")
     if not title:
         return fallback
-    m = re.match(r"^([^|]+)", title.text.strip())
-    if not m:
-        return fallback
-    name = re.sub(r"AnnualReports\.com", "", m.group(1), flags=re.I)
-    name = re.sub(r"[^\w\s-]", "", name).strip()
-    return re.sub(r"\s+", "_", name)
+    # Title is "<Company> - AnnualReports.com" (older pages used " | " instead).
+    name = re.split(r"\s*[|-]\s*AnnualReports\.com", title.text, flags=re.I)[0]
+    name = re.sub(r"[^\w\s-]", "", name).strip()  # drop punctuation like "."
+    name = re.sub(r"\s+", "_", name)
+    return name or fallback
 
 
 def download_pdf(url, filepath):
@@ -83,9 +80,7 @@ def download_pdf(url, filepath):
         return False
 
 
-def download_10k(company_slug, years=DEFAULT_YEARS):
-    start_year = datetime.now().year - years + 1
-
+def download_10k(company_slug, start_year=None, end_year=None):
     soup = fetch_page(company_slug)
     if not soup:
         return False
@@ -95,12 +90,17 @@ def download_10k(company_slug, years=DEFAULT_YEARS):
     company_dir.mkdir(parents=True, exist_ok=True)
     print(f"Company: {name} | Dir: {company_dir}")
 
-    links = [(yr, url) for yr, url in extract_pdf_links(soup) if yr >= start_year]
+    links = extract_pdf_links(soup)
+    if start_year:
+        links = [(yr, url) for yr, url in links if yr >= start_year]
+    if end_year:
+        links = [(yr, url) for yr, url in links if yr <= end_year]
     if not links:
-        print(f"No reports found since {start_year}")
+        window = f" for {start_year}–{end_year}" if (start_year or end_year) else ""
+        print(f"No reports found{window}")
         return True
 
-    print(f"\nFound {len(links)} report(s) >= {start_year}:")
+    print(f"\nFound {len(links)} report(s):")
     ok = 0
     for i, (yr, url) in enumerate(links, 1):
         filepath = company_dir / f"{name}_{yr}_10K.pdf"
@@ -119,12 +119,12 @@ def download_10k(company_slug, years=DEFAULT_YEARS):
 def main():
     parser = argparse.ArgumentParser(description="Download 10-K PDFs from annualreports.com")
     parser.add_argument("company_slug", help="Company URL slug (e.g., apple-inc)")
-    parser.add_argument(
-        "--years", type=int, default=DEFAULT_YEARS,
-        help=f"Number of recent years to download (default: {DEFAULT_YEARS})",
-    )
+    parser.add_argument("--start-year", type=int,
+                        help="Earliest report year to download (inclusive)")
+    parser.add_argument("--end-year", type=int,
+                        help="Latest report year to download (inclusive)")
     args = parser.parse_args()
-    download_10k(args.company_slug, args.years)
+    download_10k(args.company_slug, args.start_year, args.end_year)
 
 
 if __name__ == "__main__":
