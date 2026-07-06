@@ -1,15 +1,3 @@
-# Report Quality Audit
-
-| Field | Value |
-|-------|-------|
-| Last run | 2026-07-06 |
-| Bad reports found | 24 |
-| CSV | [bad_reports_2026-07-06.csv](bad_reports_2026-07-06.csv) |
-| Full summary | [summary_2026-07-06.txt](summary_2026-07-06.txt) |
-
-## Latest Summary
-
-```
 
 ============================================================
 Total scanned : 3731
@@ -33,4 +21,3 @@ Top 10 tickers by bad-report count:
   amzn            1 / 171  bad
 
 CSV written → qa/bad_reports_2026-07-06.csv
-```
