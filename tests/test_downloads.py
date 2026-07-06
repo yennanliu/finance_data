@@ -202,6 +202,60 @@ def test_get_filings_filters_by_form_and_sorts(monkeypatch):
     assert out[0]["accession"] == "a-2023"
 
 
+def test_get_filings_pages_into_archive_files(monkeypatch):
+    """When the requested window reaches past the 'recent' block, older filings
+    are pulled from the paginated archive files too (GOOG/META case)."""
+    main = {"filings": {
+        "recent": {
+            "form": ["10-K"],
+            "filingDate": ["2025-02-01"],
+            "accessionNumber": ["a-2025"],
+            "primaryDocument": ["d2025.htm"],
+        },
+        "files": [{"name": "CIK-submissions-001.json"}],
+    }}
+    archive = {
+        "form": ["10-K", "8-K", "10-K"],
+        "filingDate": ["2021-02-01", "2021-03-01", "2020-02-01"],
+        "accessionNumber": ["a-2021", "k-2021", "a-2020"],
+        "primaryDocument": ["d2021.htm", "k.htm", "d2020.htm"],
+    }
+
+    def fake_get(url, *a, **k):
+        return _Resp(main if url.endswith("CIK0000320193.json") else archive)
+
+    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
+    monkeypatch.setattr(edgar.requests, "get", fake_get)
+
+    out = edgar.get_filings("0000320193", "10-K", years=20)
+    # recent (2025) + archive (2021, 2020); 8-K dropped; newest first
+    assert [f["date"] for f in out] == ["2025-02-01", "2021-02-01", "2020-02-01"]
+
+
+def test_get_filings_skips_archives_when_recent_covers_window(monkeypatch):
+    # recent already reaches back to 2010, well before any realistic cutoff, so
+    # the archive files must not be fetched.
+    payload = {"filings": {
+        "recent": {
+            "form": ["10-K", "10-K"],
+            "filingDate": ["2025-02-01", "2010-02-01"],
+            "accessionNumber": ["a-2025", "a-2010"],
+            "primaryDocument": ["d2025.htm", "d2010.htm"],
+        },
+        "files": [{"name": "should-not-be-fetched.json"}],
+    }}
+    fetched = []
+
+    def fake_get(url, *a, **k):
+        fetched.append(url)
+        return _Resp(payload)
+
+    monkeypatch.setattr(edgar.requests, "get", fake_get)
+    out = edgar.get_filings("0000320193", "10-K", years=3)  # recent oldest (2010) predates cutoff
+    assert [f["date"] for f in out] == ["2025-02-01"]
+    assert len(fetched) == 1  # archive file never requested
+
+
 def test_download_10k_falls_back_to_20f(monkeypatch, tmp_path):
     """Foreign private issuers file 20-F; when no 10-K exists we retry as 20-F."""
     monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)

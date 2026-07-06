@@ -31,20 +31,41 @@ def get_cik(ticker):
     return None
 
 
+def _matching_filings(block, form_type, cutoff):
+    """Pull the (date, accession, primary_doc) of every filing of ``form_type``
+    filed in or after ``cutoff`` from one submissions block (arrays keyed by
+    column)."""
+    out = []
+    for i, form in enumerate(block.get("form", [])):
+        if form == form_type and int(block["filingDate"][i][:4]) >= cutoff:
+            out.append({
+                "date": block["filingDate"][i],
+                "accession": block["accessionNumber"][i],
+                "primary_doc": block["primaryDocument"][i],
+            })
+    return out
+
+
 def get_filings(cik, form_type, years):
     r = requests.get(f"{DATA_URL}/submissions/CIK{cik}.json", headers=HEADERS, timeout=30)
     r.raise_for_status()
-    recent = r.json()["filings"]["recent"]
+    filings = r.json()["filings"]
     cutoff = datetime.now().year - years + 1
 
-    results = []
-    for i, form in enumerate(recent["form"]):
-        if form == form_type and int(recent["filingDate"][i][:4]) >= cutoff:
-            results.append({
-                "date": recent["filingDate"][i],
-                "accession": recent["accessionNumber"][i],
-                "primary_doc": recent["primaryDocument"][i],
-            })
+    results = _matching_filings(filings["recent"], form_type, cutoff)
+
+    # The "recent" block holds only ~1000 filings; high-volume filers (e.g. GOOG,
+    # META) page older filings into separate archive files. Fetch those too when
+    # the requested window reaches back beyond what "recent" covers.
+    recent_dates = [d for d in filings["recent"].get("filingDate", []) if d]
+    oldest_recent = int(min(recent_dates)[:4]) if recent_dates else cutoff
+    if oldest_recent > cutoff:
+        for extra in filings.get("files", []):
+            time.sleep(0.2)
+            er = requests.get(f"{DATA_URL}/submissions/{extra['name']}", headers=HEADERS, timeout=30)
+            er.raise_for_status()
+            results.extend(_matching_filings(er.json(), form_type, cutoff))
+
     return sorted(results, key=lambda x: x["date"], reverse=True)
 
 
