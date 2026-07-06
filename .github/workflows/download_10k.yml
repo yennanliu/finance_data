@@ -1,25 +1,39 @@
 name: Download 10-K Reports
 
+# Pulls annual reports from SEC EDGAR (always current; 10-K, with automatic
+# 20-F fallback for foreign private issuers). Two ways to run:
+#   * Scheduled (1st of each month): refresh every ticker already under 10-k/.
+#   * Manual: leave "ticker" blank to refresh ALL, or set it to one ticker.
+# Updates are incremental — existing report files are skipped, only missing
+# filings are downloaded and committed.
+
 on:
+  schedule:
+    - cron: "0 7 1 * *" # 1st of each month, 07:00 UTC
   workflow_dispatch:
     inputs:
-      company_slug:
-        description: "Company slug from annualreports.com (e.g., apple-inc, tesla-inc)"
-        required: true
-        type: string
-      year:
-        description: "Specific year to download (leave empty for all available)"
+      ticker:
+        description: "Single ticker to fetch (leave blank to refresh ALL stocks under 10-k/)"
         required: false
+        type: string
+      years:
+        description: "How many recent years to fetch"
+        required: false
+        default: "3"
         type: string
 
 permissions:
   contents: write
 
+concurrency:
+  group: download-10k
+  cancel-in-progress: false
+
 jobs:
   download-10k:
-    name: Download 10-K PDF
+    name: Download 10-K report(s)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
@@ -27,44 +41,55 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: "3.13"
+          cache: pip
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
-
-      - name: Download 10-K report(s)
         run: |
-          SLUG="${{ github.event.inputs.company_slug }}"
-          YEAR="${{ github.event.inputs.year }}"
+          python -m pip install --upgrade pip
+          pip install requests playwright
+          python -m playwright install --with-deps chromium
 
-          if [ -n "$YEAR" ]; then
-            python scripts/download_10k_pdf.py "$SLUG" --start-year "$YEAR" --end-year "$YEAR"
+      - name: Download report(s)
+        env:
+          TICKER: ${{ github.event.inputs.ticker }}
+          YEARS: ${{ github.event.inputs.years || '3' }}
+        run: |
+          if [ -n "$TICKER" ]; then
+            # Manual single-ticker run.
+            python scripts/download_10k_edgar.py "$TICKER" --years "$YEARS"
           else
-            python scripts/download_10k_pdf.py "$SLUG"
+            # Scheduled / manual "all" run: every ticker already tracked under
+            # 10-k/ (self-maintaining — download a new company once and it is
+            # refreshed from then on). Existing report files are skipped.
+            for dir in 10-k/*/; do
+              t="$(basename "$dir")"
+              echo "::group::$t"
+              python scripts/download_10k_edgar.py "$t" --years "$YEARS" || true
+              echo "::endgroup::"
+            done
           fi
 
-      - name: Commit and push
+      - name: Commit and push new reports
+        env:
+          TICKER: ${{ github.event.inputs.ticker }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add 10-k/
-
           if git diff --cached --quiet; then
-            echo "No new reports downloaded."
+            echo "No new reports."
           else
-            SLUG="${{ github.event.inputs.company_slug }}"
-            YEAR="${{ github.event.inputs.year }}"
-            if [ -n "$YEAR" ]; then
-              git commit -m "chore: download ${SLUG} 10-K ${YEAR}"
+            if [ -n "$TICKER" ]; then
+              MSG="chore: download $TICKER 10-K reports"
             else
-              git commit -m "chore: download ${SLUG} 10-K reports"
+              MSG="chore: monthly 10-K refresh from SEC EDGAR"
             fi
+            git commit -m "$MSG"
             git pull --rebase origin main
             git push
-            echo "Reports committed and pushed."
+            echo "Committed and pushed."
           fi
