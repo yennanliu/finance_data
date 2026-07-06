@@ -1,0 +1,40 @@
+name: Scraper Smoke Test
+
+# Weekly live check that the annualreports.com 10-K scraper still parses the
+# site (PDF links + company name). Unlike tests.yml this DOES hit the network —
+# it exists to catch site-structure changes early, the kind that previously
+# broke download_10k_pdf.py.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Live scraper smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest>=7.0 beautifulsoup4>=4.14.2 requests>=2.32.5
+
+      - name: Run live smoke test
+        env:
+          RUN_LIVE: "1"
+        run: python -m pytest tests/test_downloads_live.py -v -m live
