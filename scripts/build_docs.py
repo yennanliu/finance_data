@@ -892,7 +892,7 @@ def build_10k_index(lang: str = "en"):
         f"{t(lang, 'download_desc')}:",
         "",
         "```bash",
-        "# Download 5 most recent 10-Ks for a ticker",
+        "# Download all available 10-Ks for a company (or use --start-year/--end-year)",
         "python scripts/download_10k_pdf.py apple-inc",
         "",
         "# Download for multiple companies (batch)",
@@ -923,7 +923,7 @@ def build_other_sec(lang: str = "en"):
         "## Download",
         "",
         "```bash",
-        "python scripts/download_10k_pdf.py AAPL --form 10-Q",
+        "python scripts/download_10k_edgar.py AAPL --form 10-Q",
         "```",
     ]
     write(DST_SEC / "10q.md", "\n".join(lines_10q))
