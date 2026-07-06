@@ -96,3 +96,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # The site is large (~752 MB, tens of thousands of report files).
+          # deploy-pages' default 10-min timeout / 10-error tolerance is too
+          # tight for a sync this size, which surfaces as an intermittent
+          # "Deployment failed, try again later." during the syncing_files
+          # phase. Give the sync more room to complete.
+          timeout: 1800000      # 30 min (default 600000 = 10 min)
+          error_count: 25       # tolerate more transient sync errors (default 10)
