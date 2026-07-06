@@ -51,6 +51,20 @@ def extract_pdf_links(soup):
     return sorted(links, reverse=True)  # newest first
 
 
+def select_years(links, start_year=None, end_year=None):
+    """Keep (year, url) pairs within the inclusive [start_year, end_year] window.
+
+    Either bound may be None (open-ended). Filtering is purely value-based — it
+    never depends on the current date, so recent reports are not dropped just
+    because the archive lags the calendar year. Input order is preserved.
+    """
+    return [
+        (yr, url) for yr, url in links
+        if (start_year is None or yr >= start_year)
+        and (end_year is None or yr <= end_year)
+    ]
+
+
 def parse_company_name(soup, fallback):
     title = soup.find("title")
     if not title:
@@ -90,11 +104,7 @@ def download_10k(company_slug, start_year=None, end_year=None):
     company_dir.mkdir(parents=True, exist_ok=True)
     print(f"Company: {name} | Dir: {company_dir}")
 
-    links = extract_pdf_links(soup)
-    if start_year:
-        links = [(yr, url) for yr, url in links if yr >= start_year]
-    if end_year:
-        links = [(yr, url) for yr, url in links if yr <= end_year]
+    links = select_years(extract_pdf_links(soup), start_year, end_year)
     if not links:
         window = f" for {start_year}–{end_year}" if (start_year or end_year) else ""
         print(f"No reports found{window}")
