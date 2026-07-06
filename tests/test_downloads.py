@@ -202,6 +202,55 @@ def test_get_filings_filters_by_form_and_sorts(monkeypatch):
     assert out[0]["accession"] == "a-2023"
 
 
+def test_download_10k_falls_back_to_20f(monkeypatch, tmp_path):
+    """Foreign private issuers file 20-F; when no 10-K exists we retry as 20-F."""
+    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
+    monkeypatch.setattr(edgar, "SAVE_DIR", tmp_path)
+    monkeypatch.setattr(edgar, "get_cik", lambda t: "0000000001")
+    monkeypatch.setattr(edgar, "find_pdf_in_filing", lambda cik, acc: None)
+
+    forms_tried = []
+
+    def fake_get_filings(cik, form, years):
+        forms_tried.append(form)
+        if form == "10-K":
+            return []  # foreign filer → no 10-K
+        return [{"date": "2025-04-01", "accession": "a-2025", "primary_doc": "d.htm"}]
+
+    monkeypatch.setattr(edgar, "get_filings", fake_get_filings)
+
+    saved = []
+
+    def fake_download_as_pdf(url, path):
+        saved.append(path)
+        path.write_bytes(b"%PDF-1.4")
+        return True
+
+    monkeypatch.setattr(edgar, "download_as_pdf", fake_download_as_pdf)
+
+    assert edgar.download_10k("TSMFAKE", years=3) is True
+    assert forms_tried == ["10-K", "20-F"]  # tried 10-K first, then fell back
+    assert [p.name for p in saved] == ["TSMFAKE_2025_20-F.pdf"]
+
+
+def test_download_10k_no_fallback_when_10k_exists(monkeypatch, tmp_path):
+    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
+    monkeypatch.setattr(edgar, "SAVE_DIR", tmp_path)
+    monkeypatch.setattr(edgar, "get_cik", lambda t: "0000000001")
+    monkeypatch.setattr(edgar, "find_pdf_in_filing", lambda cik, acc: None)
+    monkeypatch.setattr(edgar, "download_as_pdf", lambda url, path: True)
+
+    forms_tried = []
+
+    def fake_get_filings(cik, form, years):
+        forms_tried.append(form)
+        return [{"date": "2025-04-01", "accession": "a", "primary_doc": "d.htm"}]
+
+    monkeypatch.setattr(edgar, "get_filings", fake_get_filings)
+    edgar.download_10k("AAPL", years=1)
+    assert forms_tried == ["10-K"]  # 10-K found → never queries 20-F
+
+
 # ── download_grab_6k: extract_pdf_links ──────────────────────────────────────
 
 def test_grab_extract_pdf_links():

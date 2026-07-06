@@ -124,6 +124,13 @@ def download_10k(ticker, years=DEFAULT_YEARS, form_type="10-K"):
 
     time.sleep(0.3)
     filings = get_filings(cik, form_type, years)
+    if not filings and form_type == "10-K":
+        # Foreign private issuers (e.g. TSM) file 20-F instead of 10-K.
+        time.sleep(0.3)
+        alt = get_filings(cik, "20-F", years)
+        if alt:
+            print("  No 10-K found; falling back to 20-F (foreign private issuer)")
+            form_type, filings = "20-F", alt
     if not filings:
         print(f"  No {form_type} filings found in the last {years} years")
         return True
