@@ -240,6 +240,12 @@ COMPANY_META: dict[str, dict] = {
     "sofi":     {"name": "SoFi Technologies",         "flag": "💳", "sector": "Fintech"},
     "vst":      {"name": "Vistra Corp.",              "flag": "⚡", "sector": "Utilities / Nuclear"},
     "vava":     {"name": "Vava (AeroVironment)",      "flag": "✈️",  "sector": "Defense"},
+    "amd":      {"name": "Advanced Micro Devices",    "flag": "🔴", "sector": "Semiconductors"},
+    "avgo":     {"name": "Broadcom Inc.",             "flag": "📡", "sector": "Semiconductors"},
+    "brk.b":    {"name": "Berkshire Hathaway",        "flag": "🏦", "sector": "Conglomerate / Insurance"},
+    "goog":     {"name": "Alphabet Inc.",             "flag": "🔍", "sector": "Search / Cloud"},
+    "orcl":     {"name": "Oracle Corp.",              "flag": "🗄️",  "sector": "Enterprise Software / Cloud"},
+    "tsm":      {"name": "Taiwan Semiconductor",      "flag": "🇹🇼", "sector": "Semiconductors / Foundry"},
 }
 
 def get_meta(ticker: str) -> dict:
@@ -892,11 +898,10 @@ def build_10k_index(lang: str = "en"):
         f"{t(lang, 'download_desc')}:",
         "",
         "```bash",
-        "# Download all available 10-Ks for a company (or use --start-year/--end-year)",
-        "python scripts/download_10k_pdf.py apple-inc",
-        "",
-        "# Download for multiple companies (batch)",
-        "bash scripts/batch_download_vti_top25.sh",
+        "# Reports here are auto-refreshed monthly from SEC EDGAR via GitHub Actions.",
+        "# To fetch manually — recent 10-Ks for a ticker (auto-detects 20-F for",
+        "# foreign filers like TSM); existing files are skipped:",
+        "python scripts/download_10k_edgar.py AAPL --years 3",
         "```",
         "",
         "See the [Scripts page](../scripts.md) for full documentation.",
