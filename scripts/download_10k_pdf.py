@@ -65,6 +65,17 @@ def select_years(links, start_year=None, end_year=None):
     ]
 
 
+def _window_label(start_year=None, end_year=None):
+    """Human-readable description of an inclusive year window for log messages."""
+    if start_year and end_year:
+        return f" for {start_year}–{end_year}"
+    if start_year:
+        return f" since {start_year}"
+    if end_year:
+        return f" up to {end_year}"
+    return ""
+
+
 def parse_company_name(soup, fallback):
     title = soup.find("title")
     if not title:
@@ -106,8 +117,7 @@ def download_10k(company_slug, start_year=None, end_year=None):
 
     links = select_years(extract_pdf_links(soup), start_year, end_year)
     if not links:
-        window = f" for {start_year}–{end_year}" if (start_year or end_year) else ""
-        print(f"No reports found{window}")
+        print(f"No reports found{_window_label(start_year, end_year)}")
         return True
 
     print(f"\nFound {len(links)} report(s):")
@@ -134,6 +144,8 @@ def main():
     parser.add_argument("--end-year", type=int,
                         help="Latest report year to download (inclusive)")
     args = parser.parse_args()
+    if args.start_year and args.end_year and args.start_year > args.end_year:
+        parser.error("--start-year cannot be greater than --end-year")
     download_10k(args.company_slug, args.start_year, args.end_year)
 
 
