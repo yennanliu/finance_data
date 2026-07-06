@@ -78,6 +78,17 @@ def test_select_years_inclusive_bounds():
 
 
 @pytest.mark.unit
+def test_window_label_never_shows_none():
+    # Regression: one-sided windows must not render "None" as a bound.
+    assert d10._window_label(2020, 2023) == " for 2020–2023"
+    assert d10._window_label(start_year=2020) == " since 2020"
+    assert d10._window_label(end_year=2023) == " up to 2023"
+    assert d10._window_label() == ""
+    for label in (d10._window_label(2020), d10._window_label(end_year=2023)):
+        assert "None" not in label
+
+
+@pytest.mark.unit
 def test_select_years_is_date_independent():
     """Regression: the old --years cutoff was computed from datetime.now(), so a
     report labelled 2024 fetched in 2026 got dropped. Value-based bounds must not."""
