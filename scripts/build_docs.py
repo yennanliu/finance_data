@@ -102,7 +102,7 @@ def within_retention(f: Path) -> bool:
 RECENT_COUNT = 8
 
 
-def by_date_desc(files: "list[Path]") -> "list[Path]":
+def by_date_desc(files: list[Path]) -> list[Path]:
     """Sort report files newest-first by the date embedded in the filename,
     falling back to reverse filename order for undated files."""
     return sorted(files, key=lambda f: (_file_date(f) or date.min, f.name), reverse=True)
@@ -455,12 +455,9 @@ def build_reports(lang: str = "en"):
             continue  # skip empty dirs
 
         # Split md files by report type, newest-first so the latest is on top.
-        technical_md = [f for f in md_files if f.name.startswith("technical_")]
-        fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
-        other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
-        fundamental_md = by_date_desc(fundamental_md)
-        technical_md = by_date_desc(technical_md)
-        other_md = by_date_desc(other_md)
+        technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
+        fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
+        other_md = by_date_desc([f for f in md_files if not f.name.startswith(("technical_", "fundamental_"))])
         html_files = by_date_desc(html_files)
 
         # EN: copy report files; ZH: skip copies — link to EN pages instead
@@ -484,7 +481,7 @@ def build_reports(lang: str = "en"):
                 return f"{SITE_BASE}/reports/{ticker}/{f.name}"
             return f.name
 
-        def emit_section(heading: str, ordered: "list[Path]", link_fn):
+        def emit_section(heading: str, ordered: list[Path], link_fn):
             """Append a report section: the RECENT_COUNT newest shown directly,
             the remainder folded into a collapsible 'Show N older' block."""
             if not ordered:
@@ -624,7 +621,7 @@ def build_reports(lang: str = "en"):
                 return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
             return f"{ticker}/{f.name}"
 
-        def emit_top_section(label_key: str, ordered: "list[Path]"):
+        def emit_top_section(label_key: str, ordered: list[Path]):
             """Newest-first list on the top-level index: newest RECENT_COUNT
             shown, the rest collapsed."""
             if not ordered:
