@@ -144,6 +144,7 @@ LANG_TEXT = {
         "technical_analysis": "📈 Technical Analysis",
         "other_reports": "🗂️ Other Reports",
         "analysis_reports": "Analysis Reports",
+        "reports_nav_title": "AI Gen Reports",
         "market_news": "Market News",
         "market_news_desc": "AI-generated daily market news and stock-specific headline analysis",
         "ai_generated": "AI-generated investment research reports",
@@ -205,6 +206,7 @@ LANG_TEXT = {
         "technical_analysis": "📈 技術分析",
         "other_reports": "🗂️ 其他報告",
         "analysis_reports": "分析報告",
+        "reports_nav_title": "AI 生成報告",
         "market_news": "市場新聞",
         "market_news_desc": "AI 生成的每日市場新聞與個股消息彙整",
         "ai_generated": "AI 生成的投資研究報告",
@@ -563,10 +565,14 @@ def build_reports(lang: str = "en"):
         other_badge = f"🗂️ {len(other_md)}" if other_md else ""
         html_badge = f"🌐 {len(html_files)}" if html_files else ""
         badges = " &nbsp; ".join(b for b in [fund_badge, tech_badge, other_badge, html_badge] if b)
+        # Company name is redundant for tickers we have no metadata for (name
+        # defaults to the ticker itself) — show a dash instead of repeating it.
+        company = meta["name"] if meta["name"] != ticker.upper() else "—"
+        # Whole rows are clickable (javascripts/clickable-rows.js), so no
+        # separate "View" column is needed — the linked ticker doubles as it.
         report_index_rows.append(
-            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
-            f"| {meta['name']} | {meta['sector']} "
-            f"| {badges} | [View →]({ticker}/index.md) |"
+            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
+            f"| {company} | {meta['sector']} | {badges} |"
         )
 
     # Top-level reports/index.md
@@ -585,8 +591,8 @@ def build_reports(lang: str = "en"):
         f"🗂️ = {t(lang, 'other_reports').replace('🗂️ ', '')}  &nbsp; "
         f"🌐 = {t(lang, 'html_reports').replace('🌐 ', '')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} | |",
-        "|---|--------|---------|--------|-------|---|",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} |",
+        "|--------|---------|--------|-------|",
     ] + report_index_rows
 
     # Per-ticker detail sections
@@ -731,9 +737,10 @@ def build_market_news(lang: str = "en"):
 
         # Row for top-level index
         latest_date = news_files[0][0] if news_files else "—"
+        company = meta["name"] if meta["name"] != ticker.upper() else "—"
         index_rows.append(
-            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
-            f"| {meta['name']} | {meta['sector']} "
+            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
+            f"| {company} | {meta['sector']} "
             f"| {len(news_files)} | {latest_date} |"
         )
 
@@ -748,8 +755,8 @@ def build_market_news(lang: str = "en"):
         "",
         f"## {t(lang, 'company_index')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
-        "|---|--------|---------|--------|---------|--------|",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
+        "|--------|---------|--------|---------|--------|",
     ] + index_rows
 
     write(DST_MARKET_NEWS / "index.md", "\n".join(top_lines))
@@ -1185,10 +1192,14 @@ def build_nav_pages(lang: str = "en"):
     DST_SEC = docs_root / "sec"
     DST_INV_DAY = docs_root / "investor_day"
 
-    for subdir in [DST_REPORTS, DST_SEC, DST_INV_DAY]:
+    for subdir in [DST_SEC, DST_INV_DAY]:
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # Reports section: rename the nav tab from "Reports" → "AI Gen Reports"
+    if DST_REPORTS.exists():
+        write(DST_REPORTS / ".pages", f"title: {t(lang, 'reports_nav_title')}\nnav:\n  - index.md\n  - ...\n")
 
     # Market News section: set display title in nav
     if DST_MARKET_NEWS.exists():
@@ -1208,7 +1219,9 @@ def build_nav_pages(lang: str = "en"):
             continue
         for ticker_dir in section.iterdir():
             if ticker_dir.is_dir():
-                write(ticker_dir / ".pages", "nav:\n  - index.md\n")
+                # Uppercase the ticker in the nav sidebar (awesome-pages would
+                # otherwise title-case the folder name → "Sndk", "Tsla").
+                write(ticker_dir / ".pages", f"title: {ticker_dir.name.upper()}\nnav:\n  - index.md\n")
 
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():
