@@ -95,6 +95,32 @@ def within_retention(f: Path) -> bool:
         return True
     return (TODAY_DATE - d).days <= RETENTION_DAYS
 
+
+# Number of most-recent reports shown directly per section; the rest are tucked
+# into a collapsible "Show N older reports" block so daily reports don't produce
+# a giant wall of links.
+RECENT_COUNT = 8
+
+
+def by_date_desc(files: list[Path]) -> list[Path]:
+    """Sort report files newest-first by the date embedded in the filename,
+    falling back to reverse filename order for undated files."""
+    return sorted(files, key=lambda f: (_file_date(f) or date.min, f.name), reverse=True)
+
+
+def report_label(f: Path) -> str:
+    """Human-friendly label for a dated report file: 'YYYY-MM-DD · Provider'.
+
+    Drops the redundant analysis-type prefix (the section heading already says
+    it) and falls back to a title-cased stem for files without an embedded date.
+    """
+    m = _DATE_RE.search(f.stem)
+    if not m:
+        return f.stem.replace("_", " ").title()
+    date_str = m.group(0)
+    provider = f.stem[m.end():].strip("_-").replace("_", " ").title()
+    return f"{date_str} · {provider}" if provider else date_str
+
 # ── Build mode ────────────────────────────────────────────────────────────────
 # Pass --clean to force a full rebuild (deletes docs/ subdirs first).
 # Default (incremental) skips files that haven't changed, cutting build time
@@ -108,12 +134,17 @@ LANG_TEXT = {
         "last_built": "Last built",
         "sector": "Sector",
         "available_reports": "Available Reports",
+        "latest_reports": "🆕 Latest Reports",
+        "open_latest": "Open latest",
+        "latest": "Latest",
+        "show_older": "Show {n} older reports",
         "markdown_reports": "📄 Markdown Reports",
         "html_reports": "🌐 Interactive HTML Reports",
         "fundamental_analysis": "📊 Fundamental Analysis",
         "technical_analysis": "📈 Technical Analysis",
         "other_reports": "🗂️ Other Reports",
         "analysis_reports": "Analysis Reports",
+        "reports_nav_title": "AI Gen Reports",
         "market_news": "Market News",
         "market_news_desc": "AI-generated daily market news and stock-specific headline analysis",
         "ai_generated": "AI-generated investment research reports",
@@ -165,12 +196,17 @@ LANG_TEXT = {
         "last_built": "最後建置",
         "sector": "產業",
         "available_reports": "可用報告",
+        "latest_reports": "🆕 最新報告",
+        "open_latest": "查看最新",
+        "latest": "最新",
+        "show_older": "顯示其他 {n} 份報告",
         "markdown_reports": "📄 Markdown 報告",
         "html_reports": "🌐 互動式 HTML 報告",
         "fundamental_analysis": "📊 基本面分析",
         "technical_analysis": "📈 技術分析",
         "other_reports": "🗂️ 其他報告",
         "analysis_reports": "分析報告",
+        "reports_nav_title": "AI 生成報告",
         "market_news": "市場新聞",
         "market_news_desc": "AI 生成的每日市場新聞與個股消息彙整",
         "ai_generated": "AI 生成的投資研究報告",
@@ -418,10 +454,11 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue  # skip empty dirs
 
-        # Split md files by report type
-        technical_md = [f for f in md_files if f.name.startswith("technical_")]
-        fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
-        other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
+        # Split md files by report type, newest-first so the latest is on top.
+        technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
+        fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
+        other_md = by_date_desc([f for f in md_files if not f.name.startswith(("technical_", "fundamental_"))])
+        html_files = by_date_desc(html_files)
 
         # EN: copy report files; ZH: skip copies — link to EN pages instead
         if lang == "en":
@@ -439,6 +476,29 @@ def build_reports(lang: str = "en"):
                 return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
             return f.name  # relative, resolved by MkDocs
 
+        def html_link(f: Path) -> str:
+            if lang == "zh":
+                return f"{SITE_BASE}/reports/{ticker}/{f.name}"
+            return f.name
+
+        def emit_section(heading: str, ordered: list[Path], link_fn):
+            """Append a report section: the RECENT_COUNT newest shown directly,
+            the remainder folded into a collapsible 'Show N older' block."""
+            if not ordered:
+                return
+            lines.append(f"### {heading}")
+            lines.append("")
+            for f in ordered[:RECENT_COUNT]:
+                lines.append(f"- [{report_label(f)}]({link_fn(f)})")
+            lines.append("")
+            older = ordered[RECENT_COUNT:]
+            if older:
+                lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
+                lines.append("")
+                for f in older:
+                    lines.append(f"    - [{report_label(f)}]({link_fn(f)})")
+                lines.append("")
+
         # Generate per-ticker index.md
         lines = [
             f"# {meta['flag']} {meta['name']} ({ticker.upper()})",
@@ -447,43 +507,51 @@ def build_reports(lang: str = "en"):
             "",
             "---",
             "",
-            f"## {t(lang, 'available_reports')}",
-            "",
         ]
 
+        # Quick-access cards → the single newest report of each type.
+        cards = []
         if fundamental_md:
-            lines.append(f"### {t(lang, 'fundamental_analysis')}")
-            lines.append("")
-            for f in fundamental_md:
-                label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({report_link(f)})")
-            lines.append("")
-
+            cards.append((t(lang, "fundamental_analysis"), fundamental_md[0], report_link, False))
         if technical_md:
-            lines.append(f"### {t(lang, 'technical_analysis')}")
+            cards.append((t(lang, "technical_analysis"), technical_md[0], report_link, False))
+        if other_md:
+            cards.append((t(lang, "other_reports"), other_md[0], report_link, False))
+        if html_files:
+            cards.append((t(lang, "html_reports"), html_files[0], html_link, True))
+        if cards:
+            lines.append(f"## {t(lang, 'latest_reports')}")
             lines.append("")
-            for f in technical_md:
-                label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({report_link(f)})")
+            lines.append('<div class="grid cards" markdown>')
+            lines.append("")
+            for title, f, link_fn, is_html in cards:
+                blank = "{target=_blank}" if is_html else ""
+                lines.append(f"-   __{title}__")
+                lines.append("")
+                lines.append(f"    ---")
+                lines.append("")
+                lines.append(f"    **{t(lang, 'latest')}:** {report_label(f)}")
+                lines.append("")
+                lines.append(
+                    f"    [:octicons-arrow-right-24: {t(lang, 'open_latest')}]"
+                    f"({link_fn(f)}){blank}"
+                )
+                lines.append("")
+            lines.append("</div>")
             lines.append("")
 
-        if other_md:
-            lines.append(f"### {t(lang, 'other_reports')}")
-            lines.append("")
-            for f in other_md:
-                label = f.stem.replace("_", " ").title()
-                lines.append(f"- [{label}]({report_link(f)})")
-            lines.append("")
+        lines.append(f"## {t(lang, 'available_reports')}")
+        lines.append("")
+
+        emit_section(t(lang, "fundamental_analysis"), fundamental_md, report_link)
+        emit_section(t(lang, "technical_analysis"), technical_md, report_link)
+        emit_section(t(lang, "other_reports"), other_md, report_link)
 
         if html_files:
             lines.append(f"### {t(lang, 'html_reports')}")
             lines.append("")
             for f in html_files:
-                label = f.stem.replace("_", " ").title()
-                if lang == "zh":
-                    lines.append(f"- [{label}]({SITE_BASE}/reports/{ticker}/{f.name}){{target=_blank}}")
-                else:
-                    lines.append(f"- [{label}]({f.name}){{target=_blank}}")
+                lines.append(f"- [{report_label(f)}]({html_link(f)}){{target=_blank}}")
             lines.append("")
 
         write(dst_dir / "index.md", "\n".join(lines))
@@ -494,10 +562,14 @@ def build_reports(lang: str = "en"):
         other_badge = f"🗂️ {len(other_md)}" if other_md else ""
         html_badge = f"🌐 {len(html_files)}" if html_files else ""
         badges = " &nbsp; ".join(b for b in [fund_badge, tech_badge, other_badge, html_badge] if b)
+        # Company name is redundant for tickers we have no metadata for (name
+        # defaults to the ticker itself) — show a dash instead of repeating it.
+        company = meta["name"] if meta["name"] != ticker.upper() else "—"
+        # Whole rows are clickable (javascripts/clickable-rows.js), so no
+        # separate "View" column is needed — the linked ticker doubles as it.
         report_index_rows.append(
-            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
-            f"| {meta['name']} | {meta['sector']} "
-            f"| {badges} | [View →]({ticker}/index.md) |"
+            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
+            f"| {company} | {meta['sector']} | {badges} |"
         )
 
     # Top-level reports/index.md
@@ -516,8 +588,8 @@ def build_reports(lang: str = "en"):
         f"🗂️ = {t(lang, 'other_reports').replace('🗂️ ', '')}  &nbsp; "
         f"🌐 = {t(lang, 'html_reports').replace('🌐 ', '')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} | |",
-        "|---|--------|---------|--------|-------|---|",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} |",
+        "|--------|---------|--------|-------|",
     ] + report_index_rows
 
     # Per-ticker detail sections
@@ -530,9 +602,10 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue
 
-        technical_md = [f for f in md_files if f.name.startswith("technical_")]
-        fundamental_md = [f for f in md_files if f.name.startswith("fundamental_")]
-        other_md = [f for f in md_files if f not in technical_md and f not in fundamental_md]
+        technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
+        fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
+        other_md = by_date_desc([f for f in md_files if not f.name.startswith(("technical_", "fundamental_"))])
+        html_files = by_date_desc(html_files)
 
         top_lines += [
             "",
@@ -548,32 +621,32 @@ def build_reports(lang: str = "en"):
                 return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
             return f"{ticker}/{f.name}"
 
-        if fundamental_md:
-            top_lines.append(f"**{t(lang, 'fundamental_analysis')}:**")
+        def emit_top_section(label_key: str, ordered: list[Path]):
+            """Newest-first list on the top-level index: newest RECENT_COUNT
+            shown, the rest collapsed."""
+            if not ordered:
+                return
+            top_lines.append(f"**{t(lang, label_key)}:**")
             top_lines.append("")
-            for f in fundamental_md:
-                label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({top_link(f)})")
+            for f in ordered[:RECENT_COUNT]:
+                top_lines.append(f"- [{report_label(f)}]({top_link(f)})")
             top_lines.append("")
-        if technical_md:
-            top_lines.append(f"**{t(lang, 'technical_analysis')}:**")
-            top_lines.append("")
-            for f in technical_md:
-                label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({top_link(f)})")
-            top_lines.append("")
-        if other_md:
-            top_lines.append(f"**{t(lang, 'other_reports')}:**")
-            top_lines.append("")
-            for f in other_md:
-                label = f.stem.replace("_", " ").title()
-                top_lines.append(f"- [{label}]({top_link(f)})")
-            top_lines.append("")
+            older = ordered[RECENT_COUNT:]
+            if older:
+                top_lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
+                top_lines.append("")
+                for f in older:
+                    top_lines.append(f"    - [{report_label(f)}]({top_link(f)})")
+                top_lines.append("")
+
+        emit_top_section("fundamental_analysis", fundamental_md)
+        emit_top_section("technical_analysis", technical_md)
+        emit_top_section("other_reports", other_md)
         if html_files:
             top_lines.append(f"**{t(lang, 'html_reports')}:**")
             top_lines.append("")
             for f in html_files:
-                label = f.stem.replace("_", " ").title()
+                label = report_label(f)
                 if lang == "zh":
                     top_lines.append(f"- [:material-open-in-new: {label}]({SITE_BASE}/reports/{ticker}/{f.name}){{target=_blank .pdf-btn}}")
                 else:
@@ -661,9 +734,10 @@ def build_market_news(lang: str = "en"):
 
         # Row for top-level index
         latest_date = news_files[0][0] if news_files else "—"
+        company = meta["name"] if meta["name"] != ticker.upper() else "—"
         index_rows.append(
-            f"| {meta['flag']} [{ticker.upper()}]({ticker}/index.md) "
-            f"| {meta['name']} | {meta['sector']} "
+            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
+            f"| {company} | {meta['sector']} "
             f"| {len(news_files)} | {latest_date} |"
         )
 
@@ -678,8 +752,8 @@ def build_market_news(lang: str = "en"):
         "",
         f"## {t(lang, 'company_index')}",
         "",
-        f"| | {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
-        "|---|--------|---------|--------|---------|--------|",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
+        "|--------|---------|--------|---------|--------|",
     ] + index_rows
 
     write(DST_MARKET_NEWS / "index.md", "\n".join(top_lines))
@@ -1115,10 +1189,14 @@ def build_nav_pages(lang: str = "en"):
     DST_SEC = docs_root / "sec"
     DST_INV_DAY = docs_root / "investor_day"
 
-    for subdir in [DST_REPORTS, DST_SEC, DST_INV_DAY]:
+    for subdir in [DST_SEC, DST_INV_DAY]:
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # Reports section: rename the nav tab from "Reports" → "AI Gen Reports"
+    if DST_REPORTS.exists():
+        write(DST_REPORTS / ".pages", f"title: {t(lang, 'reports_nav_title')}\nnav:\n  - index.md\n  - ...\n")
 
     # Market News section: set display title in nav
     if DST_MARKET_NEWS.exists():
@@ -1138,7 +1216,9 @@ def build_nav_pages(lang: str = "en"):
             continue
         for ticker_dir in section.iterdir():
             if ticker_dir.is_dir():
-                write(ticker_dir / ".pages", "nav:\n  - index.md\n")
+                # Uppercase the ticker in the nav sidebar (awesome-pages would
+                # otherwise title-case the folder name → "Sndk", "Tsla").
+                write(ticker_dir / ".pages", f"title: {ticker_dir.name.upper()}\nnav:\n  - index.md\n")
 
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():
