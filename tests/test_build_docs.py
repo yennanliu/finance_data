@@ -160,6 +160,17 @@ def test_sanitize_wraps_bare_node_no_space_arrow():
     assert "短期 --> " in out and '["AI 技術需求"]' in out
 
 
+def test_sanitize_collapses_id_bracket_after_pipe_and_amp():
+    # `id [label]` gaps after a pipe edge-label or `&` join must close so the
+    # label gets quoted; a `&` INSIDE a quoted label must be left untouched.
+    out = bd.sanitize_mermaid(
+        'graph TD\n    A -->|lbl| B [C (x)]\n    D & E [F (y)] --> G\n'
+        '    X --> H["MACD & RSI"]')
+    assert 'B["C (x)"]' in out
+    assert 'E["F (y)"]' in out
+    assert 'H["MACD & RSI"]' in out  # unchanged — no double-spacing
+
+
 def test_sample_helpers_toggle(monkeypatch):
     monkeypatch.setattr(bd, "SAMPLE_BUILD", False)
     assert bd._sample([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]
