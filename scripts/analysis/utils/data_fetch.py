@@ -16,6 +16,7 @@ from ..data.sources import (  # noqa: F401
 )
 from ..data.technicals import (  # noqa: F401
     price_ascii_chart, compute_moving_average_charts, compute_technicals,
+    compute_levels,
 )
 from ..data.charts import (  # noqa: F401
     generate_plotly_candlestick_chart, generate_candlestick_chart,
