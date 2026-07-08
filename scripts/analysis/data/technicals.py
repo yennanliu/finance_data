@@ -19,6 +19,103 @@ def price_ascii_chart(price_series: dict) -> str:
     return "\n".join(lines)
 
 
+def _cluster_levels(levels, tol_pct=0.015):
+    """Merge levels within tol_pct of each other into a single averaged level."""
+    if not levels:
+        return []
+    levels = sorted(levels)
+    clusters = [[levels[0]]]
+    for lv in levels[1:]:
+        prev = clusters[-1][-1]
+        denom = abs(prev) or 1.0  # guard against zero / negative reference
+        if abs(lv - prev) / denom <= tol_pct:
+            clusters[-1].append(lv)
+        else:
+            clusters.append([lv])
+    return [sum(c) / len(c) for c in clusters]
+
+
+def compute_levels(hist) -> str:
+    """Compute swing-pivot support/resistance and Fibonacci retracement levels.
+
+    All numbers are derived from the OHLCV data so the LLM can cite them
+    verbatim instead of inventing precise-looking price levels.
+    """
+    if hist is None or hist.empty:
+        return "  (no OHLC data for levels)"
+    try:
+        close = hist["Close"]
+        high = hist["High"]
+        low = hist["Low"]
+
+        last = float(close.iloc[-1])
+
+        # ── Swing pivots (fractal highs/lows over last ~1y of daily bars) ──
+        window = 5
+        h = high.tail(252).reset_index(drop=True)
+        l = low.tail(252).reset_index(drop=True)
+        n = len(h)
+        swing_highs, swing_lows = [], []
+        for i in range(window, n - window):
+            seg_h = h.iloc[i - window:i + window + 1]
+            seg_l = l.iloc[i - window:i + window + 1]
+            if h.iloc[i] == seg_h.max():
+                swing_highs.append(float(h.iloc[i]))
+            if l.iloc[i] == seg_l.min():
+                swing_lows.append(float(l.iloc[i]))
+
+        # Resistances: clustered swing highs at/above current price (nearest first)
+        res = [lv for lv in _cluster_levels(swing_highs) if lv >= last]
+        res = sorted(res)[:3]
+        # Supports: clustered swing lows at/below current price (nearest first)
+        sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last]
+        sup = sorted(sup, reverse=True)[:3]
+
+        res_lines = [
+            f"  R{i+1}:  ${lv:8.2f}   ({(lv/last-1)*100:+.2f}% from price)"
+            for i, lv in enumerate(res)
+        ] or ["  (no swing-high resistance detected above current price)"]
+        sup_lines = [
+            f"  S{i+1}:  ${lv:8.2f}   ({(lv/last-1)*100:+.2f}% from price)"
+            for i, lv in enumerate(sup)
+        ] or ["  (no swing-low support detected below current price)"]
+
+        # ── Fibonacci retracement over the 52-week range ──
+        hi = float(high.tail(252).max())
+        lo = float(low.tail(252).min())
+        rng = hi - lo
+        fibs = [
+            ("0.0%  (52W High)", hi),
+            ("23.6%", hi - 0.236 * rng),
+            ("38.2%", hi - 0.382 * rng),
+            ("50.0%", hi - 0.500 * rng),
+            ("61.8%", hi - 0.618 * rng),
+            ("78.6%", hi - 0.786 * rng),
+            ("100.0% (52W Low)", lo),
+        ]
+        fib_lines = [
+            f"  {label:<18} ${price:8.2f}"
+            + ("  ◄ 現價附近" if abs(price - last) / last <= 0.01 else "")
+            for label, price in fibs
+        ]
+
+        return f"""
+  ── 關鍵價位（由 OHLCV 計算，非估算）──
+  當前價格:  ${last:.2f}
+
+  阻力位 (Resistance) — 近一年波段高點聚類：
+{chr(10).join(res_lines)}
+
+  支撐位 (Support) — 近一年波段低點聚類：
+{chr(10).join(sup_lines)}
+
+  ── 斐波那契回調（52週區間 ${lo:.2f} → ${hi:.2f}）──
+{chr(10).join(fib_lines)}
+"""
+    except Exception as exc:
+        return f"  (levels computation error: {exc})"
+
+
 def compute_moving_average_charts(hist) -> str:
     """Generate ASCII charts for moving averages (5, 10, 20, 60, 120, 240 days)."""
     if hist is None or hist.empty:
@@ -231,6 +328,9 @@ def compute_technicals(hist) -> str:
         # Get MA charts
         ma_charts = compute_moving_average_charts(hist)
 
+        # Computed support/resistance + Fibonacci levels
+        levels = compute_levels(hist)
+
         return f"""
   ── 當前技術指標快照 ──
   收盤價:       ${last:.2f}
@@ -268,7 +368,7 @@ def compute_technicals(hist) -> str:
   20日均量:     {last_avg_vol:,.0f}  (量比: {na(vol_ratio)}x)
   50日均量:     {last_avg_vol50:,.0f}
   OBV趨勢:      {obv_trend}
-
+{levels}
   ── 近20週收盤走勢 ──
 {chr(10).join(ohlcv_lines)}
 """
