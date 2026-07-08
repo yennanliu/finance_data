@@ -127,6 +127,38 @@ def report_label(f: Path) -> str:
 # significantly on large repos.
 _INCREMENTAL = "--clean" not in sys.argv
 
+# ── Sample-build mode ─────────────────────────────────────────────────────────
+# When SAMPLE_BUILD is set, cap the number of tickers/companies and the number
+# of files built per directory so CI can exercise the whole pipeline on a tiny
+# subset in seconds (see .github/workflows/sample_build.yml). This is a smoke
+# test of the build code — it is never used by the production deploy from main.
+SAMPLE_BUILD = os.environ.get("SAMPLE_BUILD", "").strip().lower() in ("1", "true", "yes")
+SAMPLE_LIMIT = max(1, int(os.environ.get("SAMPLE_LIMIT", "3") or "3"))
+# Optional comma-separated allowlist of tickers/companies to build in sample
+# mode (matched case-insensitively against directory names). Lets CI target
+# mermaid-heavy pages deterministically. Empty → just take the first N dirs.
+SAMPLE_TICKERS = [s.strip().lower() for s in os.environ.get("SAMPLE_TICKERS", "").split(",") if s.strip()]
+
+
+def _sample(items):
+    """Cap a list to SAMPLE_LIMIT items in sample-build mode; else pass through."""
+    items = list(items)
+    return items[:SAMPLE_LIMIT] if SAMPLE_BUILD else items
+
+
+def _sample_dirs(dirs):
+    """Cap a list of ticker/company directories in sample mode. Honours
+    SAMPLE_TICKERS when any match; otherwise falls back to the first N dirs."""
+    if not SAMPLE_BUILD:
+        return dirs
+    dirs = list(dirs)
+    if SAMPLE_TICKERS:
+        picked = [d for d in dirs if d.name.lower() in SAMPLE_TICKERS]
+        if picked:
+            return picked[:SAMPLE_LIMIT]
+    return dirs[:SAMPLE_LIMIT]
+
+
 # ── Language-specific text ────────────────────────────────────────────────────
 LANG_TEXT = {
     "en": {
@@ -345,6 +377,155 @@ _MERMAID_FENCE_RE = re.compile(
 )
 
 
+# ── Mermaid syntax repair ─────────────────────────────────────────────────────
+# LLM-generated flowcharts routinely emit labels that mermaid cannot parse
+# ("Syntax error in text"): unquoted parens/slashes/colons in node & subgraph
+# labels, lone `%` comments, trailing emoji after a node, spaces between id and
+# bracket, and bare node references with spaces. These repairs run on every
+# build (CI has no mmdc, so blocks render client-side and must be valid).
+_MM_MULTI = ["((", "([", "[(", "[[", "{{"]
+_MM_MULTI_CLOSE = {"((": "))", "([": "])", "[(": ")]", "[[": "]]", "{{": "}}"}
+_MM_SINGLE_CLOSE = {"[": "]", "(": ")", "{": "}"}
+_MM_KEYWORDS = ("subgraph", "end", "class", "classDef", "style", "click",
+                "linkStyle", "direction", "graph", "flowchart")
+_MM_BARE = re.compile(r"[^\w.\-]")
+_MM_TRAILING_EMOJI = re.compile(
+    r"([\]\)}])[ \t]+([\U0001F300-\U0001FAFF☀-➿️←-⇿]+)[ \t]*$", re.MULTILINE)
+_MM_EDGE = re.compile(r"\s*(-->|---|-\.->|-\.-|===|==>|--[ox]|<-->)\s*")
+
+
+def _mm_is_id_char(ch: str) -> bool:
+    return ch.isalnum() or ch == "_" or ord(ch) > 0x2E7F  # incl. CJK
+
+
+def _mm_quote(inner: str) -> str:
+    s = inner.strip()
+    if not s or '"' in inner:
+        return inner
+    if len(s) >= 2 and s[0] == '"' and s[-1] == '"':
+        return inner
+    return f'"{inner}"'
+
+
+def _mm_scan_quote(s: str) -> str:
+    """Wrap every flowchart node label in quotes. The shape is decided at its
+    opening delimiter, so a closer char inside a label (e.g. the `)` in
+    `C1[MA20 (下方)]`) is never mistaken for the shape's real close."""
+    out, i, n = [], 0, len(s)
+    while i < n:
+        op = close = None
+        if i > 0 and _mm_is_id_char(s[i - 1]):
+            if s[i:i + 2] in _MM_MULTI:
+                op, close = s[i:i + 2], _MM_MULTI_CLOSE[s[i:i + 2]]
+            elif s[i] in _MM_SINGLE_CLOSE:
+                op, close = s[i], _MM_SINGLE_CLOSE[s[i]]
+        if op:
+            j = s.find(close, i + len(op))
+            inner = s[i + len(op):j] if j != -1 else None
+            if j != -1 and "\n" not in inner:
+                out.append(op + _mm_quote(inner) + close)
+                i = j + len(close)
+                continue
+        out.append(s[i])
+        i += 1
+    return "".join(out)
+
+
+def _mm_fix_subgraph_title(m: "re.Match") -> str:
+    indent, rest = m.group(1), m.group(2).rstrip()
+    if not rest or rest.startswith('"'):
+        return m.group(0)
+    mb = re.match(r"(\S+)\s*\[(.+)\]$", rest)
+    if mb:
+        return f"{indent}subgraph {mb.group(1)} [{_mm_quote(mb.group(2))}]"
+    if "[" in rest:
+        return m.group(0)
+    if ('"' not in rest) and re.search(r"[()]", rest):
+        return f'{indent}subgraph "{rest}"'
+    return m.group(0)
+
+
+def _mm_collapse_id_bracket(diagram: str) -> str:
+    out = []
+    for line in diagram.split("\n"):
+        if line.lstrip().split(" ", 1)[0] in _MM_KEYWORDS:
+            out.append(line)
+            continue
+        line = re.sub(r"(?m)^(\s*)([\w.\-]+)[ \t]+([\[({])", r"\1\2\3", line)
+        # Also collapse `id [label]` gaps right after an edge arrow, a pipe
+        # edge-label close, or an `&` node-join (e.g. `A -->|x| B [y]`).
+        line = re.sub(r"(-->|---|-\.->|==>|===|\||&)([ \t]*)([\w.\-]+)[ \t]+([\[({])",
+                      r"\1 \3\4", line)
+        out.append(line)
+    return "\n".join(out)
+
+
+def _mm_wrap_bare_nodes(diagram: str) -> str:
+    """Wrap edge endpoints that are not valid node ids (e.g. `股價突破 $20`) as
+    `nbN["…"]`, mapping identical text to one id so references stay connected."""
+    ids: "dict[str, str]" = {}
+
+    def node_id(text: str) -> str:
+        text = text.strip()
+        if text not in ids:
+            ids[text] = f"nb{len(ids) + 1}"
+        return ids[text]
+
+    def fix_atom(atom: str) -> str:
+        s = atom.strip()
+        if not s or not _MM_BARE.search(s):
+            return atom
+        return f'{node_id(s)}["{s}"]'
+
+    out = []
+    for line in diagram.split("\n"):
+        stripped = line.lstrip()
+        if (not _MM_EDGE.search(line) or any(c in line for c in "[]{}()|")
+                or stripped.split(" ", 1)[0] in _MM_KEYWORDS):
+            out.append(line)
+            continue
+        indent = line[:len(line) - len(stripped)]
+        tokens = _MM_EDGE.split(line)
+        rebuilt = []
+        for k, tok in enumerate(tokens):
+            if k % 2 == 1:
+                rebuilt.append(f" {tok} ")
+            else:
+                rebuilt.append(" & ".join(fix_atom(a) for a in tok.split("&")))
+        out.append(indent + "".join(rebuilt).strip())
+    return "\n".join(out)
+
+
+def sanitize_mermaid(diagram: str) -> str:
+    """Repair common mermaid syntax errors in a single diagram. No-op for
+    non-flowchart types (pie/gantt/mindmap/quadrantChart)."""
+    first = diagram.lstrip().split("\n", 1)[0].strip().lower()
+    if not (first.startswith("graph") or first.startswith("flowchart")):
+        return diagram
+    diagram = re.sub(r"(?m)^(\s*)%(?!%)", r"\1%%", diagram)
+    # Mermaid keywords are lowercase; the LLM sometimes emits SUBGRAPH / END.
+    diagram = re.sub(r"(?mi)^(\s*)subgraph\b", r"\1subgraph", diagram)
+    diagram = re.sub(r"(?mi)^(\s*)end(\s*)$", r"\1end\2", diagram)
+    diagram = re.sub(r"(?m)^(\s*)subgraph\s+(.+)$", _mm_fix_subgraph_title, diagram)
+    diagram = _MM_TRAILING_EMOJI.sub(r"\1", diagram)
+    # Pipe edge labels `-->|text|` break on parens/`$`/`->`; quote their text.
+    diagram = re.sub(r"\|([^|\n]+)\|",
+                     lambda m: "|" + _mm_quote(m.group(1)) + "|", diagram)
+    diagram = _mm_collapse_id_bracket(diagram)
+    diagram = _mm_wrap_bare_nodes(diagram)
+    diagram = _mm_scan_quote(diagram)
+    return diagram
+
+
+def sanitize_mermaid_blocks(content: str) -> str:
+    """Apply sanitize_mermaid to every ```mermaid fence in a Markdown string.
+    Runs on every build, independent of mmdc, so blocks are valid whether they
+    are pre-rendered to SVG or rendered client-side."""
+    def _repl(m: "re.Match") -> str:
+        return "```mermaid\n" + sanitize_mermaid(m.group(1)) + "```"
+    return _MERMAID_FENCE_RE.sub(_repl, content)
+
+
 def prerender_mermaid(content: str) -> str:
     """Replace ```mermaid blocks with inline SVG if mmdc is available.
     Falls back to leaving the block unchanged if rendering fails."""
@@ -395,6 +576,9 @@ def copy_file(src: Path, dst: Path, prepend: str = ""):
     ensure(dst.parent)
     if src.suffix == ".md":
         content = src.read_text(encoding="utf-8")
+        # Repair LLM Mermaid syntax on every build (CI has no mmdc, so blocks
+        # render client-side and must parse cleanly).
+        content = sanitize_mermaid_blocks(content)
         if _MMDC:
             # Pre-render Mermaid blocks to SVG inline
             content = prerender_mermaid(content)
@@ -432,7 +616,7 @@ def build_reports(lang: str = "en"):
         write(DST_REPORTS / "index.md", f"# {t(lang, 'reports')}\n\nNo reports found.\n")
         return
 
-    tickers = sorted([d for d in SRC_STOCK.iterdir() if d.is_dir()])
+    tickers = _sample_dirs(sorted([d for d in SRC_STOCK.iterdir() if d.is_dir()]))
 
     for ticker_dir in tickers:
         ticker = ticker_dir.name.lower()
@@ -450,6 +634,11 @@ def build_reports(lang: str = "en"):
         md_files    = [f for f in md_files if within_retention(f)]
         html_files  = [f for f in html_files if within_retention(f)]
         other_files = [f for f in other_files if within_retention(f)]
+
+        # Sample-build: cap files per ticker so a smoke build stays tiny.
+        md_files    = _sample(md_files)
+        html_files  = _sample(html_files)
+        other_files = _sample(other_files)
 
         if not (md_files or html_files):
             continue  # skip empty dirs
@@ -597,8 +786,9 @@ def build_reports(lang: str = "en"):
         ticker = ticker_dir.name.lower()
         meta = get_meta(ticker)
         files = sorted(ticker_dir.iterdir(), key=lambda f: f.name)
-        md_files   = [f for f in files if f.suffix == ".md" and within_retention(f)]
-        html_files = [f for f in files if f.suffix == ".html" and within_retention(f)]
+        # Cap identically to the copy loop above so sample builds stay link-consistent.
+        md_files   = _sample([f for f in files if f.suffix == ".md" and within_retention(f)])
+        html_files = _sample([f for f in files if f.suffix == ".html" and within_retention(f)])
         if not (md_files or html_files):
             continue
 
@@ -667,7 +857,7 @@ def build_market_news(lang: str = "en"):
         write(DST_MARKET_NEWS / "index.md", f"# {t(lang, 'market_news')}\n\nNo market news found.\n")
         return
 
-    ticker_dirs = sorted([d for d in SRC_MARKET_NEWS.iterdir() if d.is_dir()])
+    ticker_dirs = _sample_dirs(sorted([d for d in SRC_MARKET_NEWS.iterdir() if d.is_dir()]))
     index_rows: list[str] = []
 
     for ticker_dir in ticker_dirs:
@@ -678,12 +868,12 @@ def build_market_news(lang: str = "en"):
 
         # Get all market_news_*.md files directly in ticker dir
         # Perf fix #4 — only publish news within the retention window
-        md_files = sorted(
+        md_files = _sample(sorted(
             [f for f in ticker_dir.iterdir() if f.is_file() and f.name.startswith("market_news_") and f.suffix == ".md" and within_retention(f)],
             reverse=True,
-        )
+        ))
         # Also support legacy README.md in date subdirs
-        date_dirs = sorted([d for d in ticker_dir.iterdir() if d.is_dir() and within_retention(d)], reverse=True)
+        date_dirs = _sample(sorted([d for d in ticker_dir.iterdir() if d.is_dir() and within_retention(d)], reverse=True))
         news_files = []
 
         for md_file in md_files:
@@ -775,7 +965,7 @@ def build_notebooks(lang: str = "en"):
         write(DST_NOTEBOOKS / "index.md", f"# {t(lang, 'ai_notebooks')}\n\nNo notebooks found.\n")
         return
 
-    ticker_dirs = sorted([d for d in SRC_NOTEBOOK.iterdir() if d.is_dir()])
+    ticker_dirs = _sample_dirs(sorted([d for d in SRC_NOTEBOOK.iterdir() if d.is_dir()]))
     index_rows: list[str] = []
 
     for ticker_dir in ticker_dirs:
@@ -784,9 +974,9 @@ def build_notebooks(lang: str = "en"):
         dst_dir = DST_NOTEBOOKS / ticker
         ensure(dst_dir)
 
-        pdfs  = sorted(ticker_dir.glob("*.pdf"))
-        txts  = sorted(ticker_dir.glob("*.txt"))
-        mds   = sorted(ticker_dir.glob("*.md"))
+        pdfs  = _sample(sorted(ticker_dir.glob("*.pdf")))
+        txts  = _sample(sorted(ticker_dir.glob("*.txt")))
+        mds   = _sample(sorted(ticker_dir.glob("*.md")))
 
         # EN: copy text/markdown only — PDFs are linked from GitHub (perf fix #5).
         # ZH: link to EN pages, no copy.
@@ -877,12 +1067,12 @@ def build_10k_index(lang: str = "en"):
         write(DST_SEC / "10k.md", f"# {t(lang, 'annual_reports')}\n\nNo filings found.\n")
         return
 
-    company_dirs = sorted([d for d in SRC_10K.iterdir() if d.is_dir()])
+    company_dirs = _sample_dirs(sorted([d for d in SRC_10K.iterdir() if d.is_dir()]))
     table_rows: list[str] = []
     total_pdfs = 0
 
     for company_dir in company_dirs:
-        pdfs = sorted(company_dir.glob("*.pdf"), key=lambda p: p.name, reverse=True)
+        pdfs = _sample(sorted(company_dir.glob("*.pdf"), key=lambda p: p.name, reverse=True))
         if not pdfs:
             continue
         total_pdfs += len(pdfs)
@@ -1020,7 +1210,7 @@ def build_other_sec(lang: str = "en"):
 
     # 6-K (Grab)
     grab_6k = SRC_6K / "grab"
-    pdfs_6k = list(grab_6k.glob("*.pdf")) if grab_6k.exists() else []
+    pdfs_6k = _sample(list(grab_6k.glob("*.pdf"))) if grab_6k.exists() else []
     lines_6k = [
         "# 6-K Current Reports",
         "",
@@ -1064,13 +1254,13 @@ def build_investor_day(lang: str = "en"):
         return
 
     rows: list[str] = []
-    for company_dir in sorted([d for d in SRC_INV_DAY.iterdir() if d.is_dir()]):
+    for company_dir in _sample_dirs(sorted([d for d in SRC_INV_DAY.iterdir() if d.is_dir()])):
         ticker = company_dir.name.lower()
         meta = get_meta(ticker)
         dst_dir = DST_INV_DAY / ticker
         ensure(dst_dir)
 
-        pdfs = sorted(company_dir.glob("*.pdf"))
+        pdfs = _sample(sorted(company_dir.glob("*.pdf")))
         for pdf in pdfs:
             copy_file(pdf, dst_dir / pdf.name)
             size_mb = round(pdf.stat().st_size / 1024 / 1024, 1)
@@ -1268,6 +1458,10 @@ def main():
         print("  ⚡ Incremental mode — only changed files will be written (pass --clean to force full rebuild)")
     else:
         print("  🧹 Full rebuild mode — cleaning previously generated directories")
+
+    if SAMPLE_BUILD:
+        print(f"  🧪 SAMPLE build — capped to {SAMPLE_LIMIT} tickers/companies and "
+              f"{SAMPLE_LIMIT} files per category (smoke test; not for production)")
 
     if _MMDC:
         print(f"  ⚡ mmdc found at {_MMDC} — Mermaid blocks will be pre-rendered to SVG")

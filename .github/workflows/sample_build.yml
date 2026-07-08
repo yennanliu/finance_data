@@ -1,0 +1,101 @@
+name: Sample Build (smoke test)
+
+# Exercises the FULL site-build pipeline (scripts/build_docs.py + mkdocs) on a
+# tiny sample — a few tickers, a few files per category — so we can tell whether
+# a change to the build code still works without the ~752 MB / thousands-of-page
+# production build. Also runs a Mermaid zero-regression gate (mmdc) proving the
+# LLM-syntax repair in build_docs.sanitize_mermaid is safe on real content.
+#
+# The built sample site is uploaded as a downloadable artifact. It NEVER touches
+# the production GitHub Pages site (that deploys only from main via deploy.yml).
+
+on:
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Comma-separated tickers to sample (dir names)"
+        default: "aapl,msft,nvda"
+      limit:
+        description: "Max tickers/companies and files per category"
+        default: "3"
+  pull_request:
+    branches: [main]
+    paths:
+      - "mkdocs.yml"
+      - "scripts/build_docs.py"
+      - "scripts/validate_sample_site.py"
+      - ".github/workflows/sample_build.yml"
+      - "docs/overrides/**"
+      - "docs/stylesheets/**"
+      - "docs/javascripts/**"
+      - "docs/includes/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "sample-build-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  sample-build:
+    name: Build & validate sample site
+    runs-on: ubuntu-latest
+    env:
+      SAMPLE_BUILD: "1"
+      SAMPLE_TICKERS: ${{ github.event.inputs.tickers || 'aapl,msft,nvda' }}
+      SAMPLE_LIMIT: ${{ github.event.inputs.limit || '3' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install MkDocs & plugins
+        run: |
+          pip install --upgrade pip
+          pip install \
+            mkdocs-material==9.5.* \
+            mkdocs-awesome-pages-plugin \
+            mkdocs-minify-plugin \
+            Pillow \
+            cairosvg
+
+      # Build WITHOUT mmdc on PATH so Mermaid blocks stay as fences (matching the
+      # production client-side render) and the validator can check them itself.
+      - name: Generate sample docs content
+        run: python scripts/build_docs.py --clean
+
+      - name: Inject build date into templates
+        run: |
+          BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
+          sed -i "s/__BUILD_DATE__/${BUILD_DATE} (SAMPLE)/g" docs/overrides/main.html
+          sed -i "s/__BUILD_DATE__/${BUILD_DATE} (SAMPLE)/g" docs/overrides/home.html
+
+      - name: Build MkDocs site (strict)
+        run: mkdocs build --clean --strict
+
+      - name: Set up Node & Mermaid CLI (for validation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install mermaid-cli
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Validate sample site (structure + Mermaid zero-regression)
+        run: |
+          echo '{"args":["--no-sandbox"]}' > "$RUNNER_TEMP/puppeteer.json"
+          PUPPETEER_CONFIG="$RUNNER_TEMP/puppeteer.json" python scripts/validate_sample_site.py
+
+      - name: Upload sample site artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-site
+          path: site/
+          retention-days: 7
+          if-no-files-found: warn
