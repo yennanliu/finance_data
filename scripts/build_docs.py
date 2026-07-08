@@ -1218,7 +1218,9 @@ def build_nav_pages(lang: str = "en"):
             if ticker_dir.is_dir():
                 # Uppercase the ticker in the nav sidebar (awesome-pages would
                 # otherwise title-case the folder name → "Sndk", "Tsla").
-                write(ticker_dir / ".pages", f"title: {ticker_dir.name.upper()}\nnav:\n  - index.md\n")
+                # Quote the value: all-digit tickers (e.g. "0050") are otherwise
+                # parsed as YAML ints and awesome-pages rejects a non-string title.
+                write(ticker_dir / ".pages", f'title: "{ticker_dir.name.upper()}"\nnav:\n  - index.md\n')
 
     # Notebooks section: set display title to "NotebookLLM" in nav
     if DST_NOTEBOOKS.exists():
