@@ -206,6 +206,7 @@ Target (High):   {fmt_price(info.get('targetHighPrice'))}
         return "\n".join([
             company_hdr,
             f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
+            _market_overview(info, data),
             technicals,
             analyst,
             upgrades_block,
