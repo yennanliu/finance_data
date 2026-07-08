@@ -26,7 +26,9 @@ def _cluster_levels(levels, tol_pct=0.015):
     levels = sorted(levels)
     clusters = [[levels[0]]]
     for lv in levels[1:]:
-        if abs(lv - clusters[-1][-1]) / clusters[-1][-1] <= tol_pct:
+        prev = clusters[-1][-1]
+        denom = abs(prev) or 1.0  # guard against zero / negative reference
+        if abs(lv - prev) / denom <= tol_pct:
             clusters[-1].append(lv)
         else:
             clusters.append([lv])
@@ -63,10 +65,10 @@ def compute_levels(hist) -> str:
                 swing_lows.append(float(l.iloc[i]))
 
         # Resistances: clustered swing highs at/above current price (nearest first)
-        res = [lv for lv in _cluster_levels(swing_highs) if lv >= last * 0.999]
+        res = [lv for lv in _cluster_levels(swing_highs) if lv >= last]
         res = sorted(res)[:3]
         # Supports: clustered swing lows at/below current price (nearest first)
-        sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last * 1.001]
+        sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last]
         sup = sorted(sup, reverse=True)[:3]
 
         res_lines = [
@@ -81,7 +83,7 @@ def compute_levels(hist) -> str:
         # ── Fibonacci retracement over the 52-week range ──
         hi = float(high.tail(252).max())
         lo = float(low.tail(252).min())
-        rng = hi - lo or 1.0
+        rng = hi - lo
         fibs = [
             ("0.0%  (52W High)", hi),
             ("23.6%", hi - 0.236 * rng),
