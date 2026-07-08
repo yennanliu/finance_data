@@ -151,3 +151,84 @@ def test_get_meta_unknown_ticker_defaults():
     meta = bd.get_meta("zzzz")
     assert meta["name"] == "ZZZZ"
     assert meta["sector"] == "Equity"
+
+
+# ── sample-build mode ────────────────────────────────────────────────────────
+
+def test_sanitize_wraps_bare_node_no_space_arrow():
+    out = bd.sanitize_mermaid("graph TD\n    短期-->AI 技術需求")
+    assert "短期 --> " in out and '["AI 技術需求"]' in out
+
+
+def test_sample_helpers_toggle(monkeypatch):
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", False)
+    assert bd._sample([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", True)
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 2)
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", [])
+    assert bd._sample([1, 2, 3, 4, 5]) == [1, 2]
+
+
+def test_sample_dirs_respects_allowlist(monkeypatch, tmp_path):
+    dirs = [tmp_path / n for n in ("aaa", "bbb", "ccc")]
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", True)
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 3)
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", ["ccc"])
+    assert [d.name for d in bd._sample_dirs(dirs)] == ["ccc"]
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", [])
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 2)
+    assert [d.name for d in bd._sample_dirs(dirs)] == ["aaa", "bbb"]
+
+
+def _mk_report(dirpath: Path, name: str, body: str):
+    dirpath.mkdir(parents=True, exist_ok=True)
+    (dirpath / name).write_text(body, encoding="utf-8")
+
+
+def _patch_sample_env(monkeypatch, tmp_path, src_stock, *, limit, tickers):
+    docs = tmp_path / "docs"
+    for attr, val in [
+        ("ROOT", tmp_path), ("SRC_STOCK", src_stock),
+        ("DOCS", docs), ("DOCS_ZH", docs / "zh"),
+        ("_INCREMENTAL", False), ("_MMDC", None),
+        ("SAMPLE_BUILD", True), ("SAMPLE_LIMIT", limit), ("SAMPLE_TICKERS", tickers),
+    ]:
+        monkeypatch.setattr(bd, attr, val)
+    return docs
+
+
+def test_sample_build_reports_caps_and_sanitizes(tmp_path, monkeypatch):
+    # 3 tickers × 3 dated reports, each with a flowchart whose node label has
+    # unquoted parens. Same date (today → within retention), distinct provider.
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    diagram = "```mermaid\ngraph TD\n    A[ADX (14) = 26.95] --> B\n```"
+    for tk in ("aaa", "bbb", "ccc"):
+        for provider in ("claude", "gemini", "openai"):
+            _mk_report(src_stock / tk,
+                       f"technical_analysis_{bd.TODAY}_{provider}.md",
+                       f"# {tk} report\n\n{diagram}\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=2, tickers=[])
+
+    bd.build_reports(lang="en")
+
+    report_dirs = sorted(p.name for p in (docs / "reports").iterdir() if p.is_dir())
+    assert report_dirs == ["aaa", "bbb"]                 # capped to 2 tickers
+    for tk in report_dirs:
+        mds = list((docs / "reports" / tk).glob("technical_*.md"))
+        assert len(mds) == 2                             # capped to 2 files/ticker
+        for md in mds:
+            assert 'A["ADX (14) = 26.95"]' in md.read_text(encoding="utf-8")
+    assert (docs / "reports" / "index.md").exists()
+
+
+def test_sample_build_reports_respects_sample_tickers(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    for tk in ("aaa", "bbb", "ccc"):
+        _mk_report(src_stock / tk,
+                   f"technical_analysis_{bd.TODAY}_openai.md", "# report\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=3, tickers=["ccc"])
+
+    bd.build_reports(lang="en")
+
+    report_dirs = sorted(p.name for p in (docs / "reports").iterdir() if p.is_dir())
+    assert report_dirs == ["ccc"]
