@@ -452,7 +452,9 @@ def _mm_collapse_id_bracket(diagram: str) -> str:
             out.append(line)
             continue
         line = re.sub(r"(?m)^(\s*)([\w.\-]+)[ \t]+([\[({])", r"\1\2\3", line)
-        line = re.sub(r"(-->|---|-\.->|==>|===)([ \t]+)([\w.\-]+)[ \t]+([\[({])",
+        # Also collapse `id [label]` gaps right after an edge arrow, a pipe
+        # edge-label close, or an `&` node-join (e.g. `A -->|x| B [y]`).
+        line = re.sub(r"(-->|---|-\.->|==>|===|\||&)([ \t]*)([\w.\-]+)[ \t]+([\[({])",
                       r"\1 \3\4", line)
         out.append(line)
     return "\n".join(out)
