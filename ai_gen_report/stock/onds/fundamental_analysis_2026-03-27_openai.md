@@ -27,10 +27,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 - **核心評分儀表板**
   ```mermaid
   graph TD;
-      基本面(4/10) --> 成長(6/10);
-      成長 --> 獲利(3/10);
-      獲利 --> 財務健康(5/10);
-      財務健康 --> 估值(2/10);
+      基本面("4/10") --> 成長("6/10");
+      成長 --> 獲利("3/10");
+      獲利 --> 財務健康("5/10");
+      財務健康 --> 估值("2/10");
   ```
 
 - **5大投資論點 + 3大風險**
@@ -63,10 +63,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 - **業務結構與收入來源**
   ```mermaid
   graph TD;
-      Ondas Inc. --> Ondas Networks;
-      Ondas Inc. --> Ondas Autonomous Systems;
-      Ondas Networks --> FullMAX SDR Platform;
-      Ondas Autonomous Systems --> Optimus;
+      nb1["Ondas Inc."] --> nb2["Ondas Networks"];
+      nb1["Ondas Inc."] --> nb3["Ondas Autonomous Systems"];
+      nb2["Ondas Networks"] --> nb4["FullMAX SDR Platform"];
+      nb3["Ondas Autonomous Systems"] --> Optimus;
   ```
 
 - **市場地位**
@@ -347,8 +347,8 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
   ```mermaid
   graph TD
       成長型 --> ONDS;
-      價值型 --> Competitor A;
-      股息型 --> Competitor B;
+      價值型 --> nb1["Competitor A"];
+      股息型 --> nb2["Competitor B"];
       短期交易 --> ONDS;
   ```
 

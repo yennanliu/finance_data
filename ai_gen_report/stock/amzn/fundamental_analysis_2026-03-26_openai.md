@@ -30,10 +30,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TB
-    基本面(9/10) --> 成長(8/10)
-    成長 --> 獲利(9/10)
-    獲利 --> 財務健康(8/10)
-    財務健康 --> 估值(7/10)
+    基本面("9/10") --> 成長("8/10")
+    成長 --> 獲利("9/10")
+    獲利 --> 財務健康("8/10")
+    財務健康 --> 估值("7/10")
 ```
 
 ### 5大投資論點 + 3大風險
@@ -73,10 +73,10 @@ graph TB
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[Amazon.com, Inc.]
-    A --> B[North America]
-    A --> C[International]
-    A --> D[AWS]
+    A["Amazon.com, Inc."]
+    A --> B["North America"]
+    A --> C["International"]
+    A --> D["AWS"]
 ```
 
 ### 市場地位
@@ -159,9 +159,9 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[總資產]
-    A --> B[流動資產: $229.08B]
-    A --> C[非流動資產: $588.96B]
+    A["總資產"]
+    A --> B["流動資產: $229.08B"]
+    A --> C["非流動資產: $588.96B"]
 ```
 
 ### 流動性指標表格

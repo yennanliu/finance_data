@@ -101,13 +101,13 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] --> B([下行趨勢])
-    B --> C{現價低於MA200}
-    C -->|繼續下行| D[週線趨勢]
-    D --> E(中期走勢反彈)
-    E --> F{短期走勢}
-    F -->|盤整| G[日線趨勢]
-    G --> H(短期波動)
+    A["月線趨勢"] --> B(["下行趨勢"])
+    B --> C{"現價低於MA200"}
+    C -->|"繼續下行"| D["週線趨勢"]
+    D --> E("中期走勢反彈")
+    E --> F{"短期走勢"}
+    F -->|"盤整"| G["日線趨勢"]
+    G --> H("短期波動")
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -151,8 +151,8 @@ $3.00 ┤
 ```mermaid
 graph TD
     ADX["ADX 22.71"]
-    ADX -->|弱趨勢| WeakTrend["盤整市場"]
-    ADX -->|強趨勢| StrongTrend["趨勢增強"]
+    ADX -->|"弱趨勢"| WeakTrend["盤整市場"]
+    ADX -->|"強趨勢"| StrongTrend["趨勢增強"]
 ```
 
 ---
@@ -249,18 +249,18 @@ $3.00 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA20["MA20 上漲"] -->|看多| Bullish
-    MA50["MA50 下跌"] -->|看空| Bearish
+    MA20["MA20 上漲"] -->|"看多"| Bullish
+    MA50["MA50 下跌"] -->|"看空"| Bearish
     RSI["RSI 67.68"] --> Neutral
-    MACD["MACD 看多"] -->|確認| Bullish
+    MACD["MACD 看多"] -->|"確認"| Bullish
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| Bullish["看多"]
-    C["長期 MA200"] -->|價格下方| Bearish["看空"]
+    A["短期 MA20"] -->|"價格上方"| Bullish["看多"]
+    C["長期 MA200"] -->|"價格下方"| Bearish["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -273,8 +273,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD 線"] -->|高於| Signal["訊號線"]
-    Signal -->|多頭動能| Histogram["柱狀圖"]
+    MACD["MACD 線"] -->|"高於"| Signal["訊號線"]
+    Signal -->|"多頭動能"| Histogram["柱狀圖"]
 ```
 
 ### 📦 布林通道分析
@@ -345,9 +345,9 @@ $3.38 ┤  (下軌)
 
 ```mermaid
 graph TD
-    Start["開始"] -->|觀察現價| Decision{"多空決策"}
-    Decision -->|看多| Long["多頭策略"]
-    Decision -->|看空| Short["空頭策略"]
+    Start["開始"] -->|"觀察現價"| Decision{"多空決策"}
+    Decision -->|"看多"| Long["多頭策略"]
+    Decision -->|"看空"| Short["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -404,9 +404,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Scenario1["樂觀情境"] -->|市場反彈| Increase["增持"]
-    Scenario2["悲觀情境"] -->|市場下跌| Decrease["減持"]
-    Scenario3["中性情境"] -->|盤整| Hold["觀望"]
+    Scenario1["樂觀情境"] -->|"市場反彈"| Increase["增持"]
+    Scenario2["悲觀情境"] -->|"市場下跌"| Decrease["減持"]
+    Scenario3["中性情境"] -->|"盤整"| Hold["觀望"]
 ```
 
 ### 🛡️ 風險管理重要提醒

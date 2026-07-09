@@ -145,7 +145,7 @@ $100 ┤       ██████ 阻力
 
 ```mermaid
 graph TD
-    ADX["ADX 指數"] --> |23.02, 弱趨勢| TREND["盤整行情"]
+    ADX["ADX 指數"] --> |"23.02, 弱趨勢"| TREND["盤整行情"]
     TREND --> DECISION["觀望為宜"]
 ```
 
@@ -234,19 +234,19 @@ $100 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20["MA20"] --> |價格下方| SIGNAL1["看空"]
-    MA50["MA50"] --> |價格下方| SIGNAL2["看空"]
-    MA200["MA200"] --> |價格下方| SIGNAL3["看空"]
-    RSI["RSI"] --> |超賣| SIGNAL4["潛在反彈"]
-    MACD["MACD"] --> |看空| SIGNAL5["持續空頭"]
+    MA20["MA20"] --> |"價格下方"| SIGNAL1["看空"]
+    MA50["MA50"] --> |"價格下方"| SIGNAL2["看空"]
+    MA200["MA200"] --> |"價格下方"| SIGNAL3["看空"]
+    RSI["RSI"] --> |"超賣"| SIGNAL4["潛在反彈"]
+    MACD["MACD"] --> |"看空"| SIGNAL5["持續空頭"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    SHORT["短期 MA20"] --> |價格上方| BULL["看多"]
-    LONG["長期 MA200"] --> |價格下方| BEAR["看空"]
+    SHORT["短期 MA20"] --> |"價格上方"| BULL["看多"]
+    LONG["長期 MA200"] --> |"價格下方"| BEAR["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -259,8 +259,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD 線"] --> |低於訊號線| SIGNAL["看空"]
-    HIST["柱狀圖"] --> |負值| SIGNAL["看空"]
+    MACD["MACD 線"] --> |"低於訊號線"| SIGNAL["看空"]
+    HIST["柱狀圖"] --> |"負值"| SIGNAL["看空"]
 ```
 
 ### 📦 布林通道分析

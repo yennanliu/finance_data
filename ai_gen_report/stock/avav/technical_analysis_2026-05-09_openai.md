@@ -102,9 +102,9 @@ graph LR
 
 ```mermaid
 graph TD
-    M["月線趨勢"] -->|下跌| W["週線趨勢"]
-    W -->|下跌| D["日線趨勢"]
-    D -->|下跌| T["短期趨勢"]
+    M["月線趨勢"] -->|"下跌"| W["週線趨勢"]
+    W -->|"下跌"| D["日線趨勢"]
+    D -->|"下跌"| T["短期趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -145,8 +145,8 @@ $168 ┤●━━━━━━━━━━━━━━━━━━━━━━●
 
 ```mermaid
 graph TD
-    ADX["ADX (14)"] -->|<25| 弱趨勢
-    +DI --> 空頭主導
+    ADX["ADX (14)"] -->|"<25"| 弱趨勢
+    nb1["+DI"] --> 空頭主導
     -DI --> 空頭主導
 ```
 
@@ -167,8 +167,8 @@ graph TD
 
 ```mermaid
 graph TD
-    HeadShoulder["頭肩頂形態"] -->|確認| TargetPrice["目標價計算"]
-    DoubleTop["雙頂形態"] -->|未確認| TargetPrice
+    HeadShoulder["頭肩頂形態"] -->|"確認"| TargetPrice["目標價計算"]
+    DoubleTop["雙頂形態"] -->|"未確認"| TargetPrice
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -246,17 +246,17 @@ $120 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20 -->|下方| MACD
-    RSI -->|接近超賣| MACD
-    MACD -->|空頭| 綜合評級
+    MA20 -->|"下方"| MACD
+    RSI -->|"接近超賣"| MACD
+    MACD -->|"空頭"| 綜合評級
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格下方| B["看空"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格下方"| B["看空"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -270,8 +270,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD 線"] -->|低於| Signal["訊號線"]
-    Histogram["柱狀圖"] -->|負值| 看空
+    MACD["MACD 線"] -->|"低於"| Signal["訊號線"]
+    Histogram["柱狀圖"] -->|"負值"| 看空
 ```
 
 - MACD 線：-8.464

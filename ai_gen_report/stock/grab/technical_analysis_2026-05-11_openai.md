@@ -253,9 +253,9 @@ $3.00 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|下方| 趨勢["空頭趨勢"]
-    RSI["RSI"] -->|超賣| 反彈["反彈可能"]
-    MACD["MACD"] -->|空頭| 趨勢
+    MA20["MA20"] -->|"下方"| 趨勢["空頭趨勢"]
+    RSI["RSI"] -->|"超賣"| 反彈["反彈可能"]
+    MACD["MACD"] -->|"空頭"| 趨勢
 ```
 
 ### 📈 移動平均線排列分析
@@ -264,8 +264,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格下方| B["看空"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格下方"| B["看空"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -280,8 +280,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD Line"] -->|< Signal Line| Bearish["看空信號"]
-    Signal_Line["Signal Line"] -->|> MACD Line| Bullish["看多信號"]
+    MACD_Line["MACD Line"] -->|"< Signal Line"| Bearish["看空信號"]
+    Signal_Line["Signal Line"] -->|"> MACD Line"| Bullish["看多信號"]
 ```
 
 ### 📦 布林通道分析

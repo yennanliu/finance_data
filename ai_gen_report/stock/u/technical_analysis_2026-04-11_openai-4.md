@@ -98,10 +98,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線 - 長期趨勢]
-    B[週線 - 中期趨勢]
-    C[日線 - 短期趨勢]
-    A -->|看空| B -->|中性| C -->|中性偏多|
+    A["月線 - 長期趨勢"]
+    B["週線 - 中期趨勢"]
+    C["日線 - 短期趨勢"]
+    A -->|"看空"| B -->|"中性"| C -->|"中性偏多"|
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -143,9 +143,9 @@ $18.23 ║███████████████████████�
 
 ```mermaid
 graph TD
-    ADX["ADX 22.18"] -->|弱趨勢| Conclusion["盤整行情"]
-    +DI["+DI 28.15"] -->|多頭主導| Conclusion
-    -DI["-DI 22.72"] -->|低於+DI| Conclusion
+    ADX["ADX 22.18"] -->|"弱趨勢"| Conclusion["盤整行情"]
+    +DI["+DI 28.15"] -->|"多頭主導"| Conclusion
+    -DI["-DI 22.72"] -->|"低於+DI"| Conclusion
 ```
 
 ---
@@ -159,9 +159,9 @@ graph TD
     HSD["頭肩頂形態"]
     DB["雙底形態"]
     TL["上升三角形"]
-    HSD -->|確認| Conclusion["看空"]
-    DB -->|尚未確認| Conclusion["中性"]
-    TL -->|形成中| Conclusion["看多"]
+    HSD -->|"確認"| Conclusion["看空"]
+    DB -->|"尚未確認"| Conclusion["中性"]
+    TL -->|"形成中"| Conclusion["看多"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -237,19 +237,19 @@ $16.68 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA["移動平均線"] -->|短期看多| Conclusion["中性偏多"]
-    RSI["RSI"] -->|接近超買| Conclusion
-    MACD["MACD"] -->|多頭| Conclusion
-    ATR["ATR"] -->|高波動| Conclusion
+    MA["移動平均線"] -->|"短期看多"| Conclusion["中性偏多"]
+    RSI["RSI"] -->|"接近超買"| Conclusion
+    MACD["MACD"] -->|"多頭"| Conclusion
+    ATR["ATR"] -->|"高波動"| Conclusion
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|價格上方| B["看多"]
-    MA50["MA50"] -->|價格接近| N["中性"]
-    MA200["MA200"] -->|價格下方| D["看空"]
+    MA20["MA20"] -->|"價格上方"| B["看多"]
+    MA50["MA50"] -->|"價格接近"| N["中性"]
+    MA200["MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -262,9 +262,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDL["MACD 線"] -->|0.038| Conclusion["看多"]
-    SignalL["Signal 線"] -->|-0.463| Conclusion
-    HistL["Histogram"] -->|+0.501| Conclusion
+    MACDL["MACD 線"] -->|"0.038"| Conclusion["看多"]
+    SignalL["Signal 線"] -->|"-0.463"| Conclusion
+    HistL["Histogram"] -->|"+0.501"| Conclusion
 ```
 
 ### 📦 布林通道分析
@@ -328,7 +328,7 @@ $21.62 ┤      ●(現價)
 graph TD
     短期["短期看多"] --> 中期["中期中性"]
     中期 --> 長期["長期看空"]
-    短期 -->|強動能| 中期 -->|弱動能| 長期
+    短期 -->|"強動能"| 中期 -->|"弱動能"| 長期
 ```
 
 ---
@@ -341,8 +341,8 @@ graph TD
 
 ```mermaid
 graph TD
-    觀察["市場觀察"] -->|短期看多| 多頭策略
-    觀察 -->|長期看空| 空頭策略
+    觀察["市場觀察"] -->|"短期看多"| 多頭策略
+    觀察 -->|"長期看空"| 空頭策略
     多頭策略 --> 結論["進場時機"]
     空頭策略 --> 結論
 ```
@@ -404,8 +404,8 @@ graph TD
 graph TD
     樂觀["市場反彈強勁"] --> 基本["市場維持盤整"]
     基本 --> 悲觀["市場繼續下跌"]
-    基本 -->|市場信心回升| 樂觀
-    基本 -->|外部風險加劇| 悲觀
+    基本 -->|"市場信心回升"| 樂觀
+    基本 -->|"外部風險加劇"| 悲觀
 ```
 
 ### 🛡️ 風險管理重要提醒

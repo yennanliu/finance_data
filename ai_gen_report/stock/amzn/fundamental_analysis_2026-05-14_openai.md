@@ -449,9 +449,9 @@ graph LR
     ROE --> AssetTurnover
     ROE --> EquityMultiplier
 
-    NetProfitMargin --> "12.2%"
-    AssetTurnover --> "0.56x"
-    EquityMultiplier --> "3.6x"
+    NetProfitMargin --> nb1[""12.2%""]
+    AssetTurnover --> nb2[""0.56x""]
+    EquityMultiplier --> nb3[""3.6x""]
 ```
 
 ### 6.4 獲利能力儀表板
@@ -463,9 +463,9 @@ graph TD
     OM["營業利潤率"]
     NM["淨利率"]
 
-    GM --> "50.6%"
-    OM --> "13.1%"
-    NM --> "12.2%"
+    GM --> nb1[""50.6%""]
+    OM --> nb2[""13.1%""]
+    NM --> nb3[""12.2%""]
 ```
 
 ---

@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線週期 (長期)"] -->|多頭趨勢| B["週線週期 (中期)"]
-    B -->|高檔震盪與修正| C["日線週期 (短期)"]
-    C -->|空頭主導/尋求築底| D["交易決策: 逢低買入 (Buy on Diops)"]
+    A["月線週期 (長期)"] -->|"多頭趨勢"| B["週線週期 (中期)"]
+    B -->|"高檔震盪與修正"| C["日線週期 (短期)"]
+    C -->|"空頭主導/尋求築底"| D["交易決策: 逢低買入 (Buy on Diops)"]
     
     style A fill:#d4edda,stroke:#28a745,stroke-width:2px
     style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -160,8 +160,8 @@ $250 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 18.95"] -->|小于 25| Range["無趨勢/盤整格局"]
-    DI["+DI (23.58) vs -DI (28.41)"] -->|DI- 大于 DI+| Bear["空方暫時主導市場"]
+    ADX["ADX 數值: 18.95"] -->|"小于 25"| Range["無趨勢/盤整格局"]
+    DI["+DI (23.58) vs -DI (28.41)"] -->|"DI- 大于 DI+"| Bear["空方暫時主導市場"]
     Range --> Action["策略：避免追漲殺跌，改用區間交易或網格布局"]
     Bear --> Action
 ```
@@ -191,8 +191,8 @@ graph TD
         RS["右肩: $410.70 (6月21日)"]
         NL["頸線支撐: $381.47 (6月14日)"]
     end
-    H&S -->|跌破頸線| Down["技術面轉弱，下尋深層支撐"]
-    H&S -->|守住頸線並突破右肩| Fail["形態失效，重回多頭"]
+    H&S -->|"跌破頸線"| Down["技術面轉弱，下尋深層支撐"]
+    H&S -->|"守住頸線並突破右肩"| Fail["形態失效，重回多頭"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -295,11 +295,11 @@ graph LR
 
 ```mermaid
 graph TD
-    Price["價格跌破 MA20/50"] -->|確認| MACD["MACD 死叉於零軸下"]
-    Price -->|矛盾| Stoch["Stochastic 超賣 (%K=17.98)"]
-    Stoch -->|暗示| Bounce["短期隨時有技術性反彈"]
-    MACD -->|暗示| Limit["反彈空間受限於 MA20/50 阻力"]
-    Volume["成交量萎縮"] -->|確認| Bounce
+    Price["價格跌破 MA20/50"] -->|"確認"| MACD["MACD 死叉於零軸下"]
+    Price -->|"矛盾"| Stoch["Stochastic 超賣 (%K=17.98)"]
+    Stoch -->|"暗示"| Bounce["短期隨時有技術性反彈"]
+    MACD -->|"暗示"| Limit["反彈空間受限於 MA20/50 阻力"]
+    Volume["成交量萎縮"] -->|"確認"| Bounce
 ```
 
 ### 📈 移動平均線 (MA) 排列分析
@@ -411,8 +411,8 @@ graph TD
 ```mermaid
 graph TD
     Start["分析當前現價: $392.13"] --> Dec{"交易週期選擇?"}
-    Dec -->|短線交易 (1-2週)| ShortTerm["策略 A: 區間高拋低吸"]
-    Dec -->|中長線波段 (1-3個月)| LongTerm["策略 B: 年線低吸布局"]
+    Dec -->|"短線交易 (1-2週)"| ShortTerm["策略 A: 區間高拋低吸"]
+    Dec -->|"中長線波段 (1-3個月)"| LongTerm["策略 B: 年線低吸布局"]
     
     ShortTerm --> S_Entry["進場點: $381.47 - $385.00"]
     S_Entry --> S_SL["止損點: $375.00"]
