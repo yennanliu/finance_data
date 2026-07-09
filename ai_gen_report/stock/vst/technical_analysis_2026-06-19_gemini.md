@@ -112,16 +112,16 @@ graph LR
 
 ```mermaid
 graph TD
-    A[多時框趨勢分析] --> B(月線: 長期趨勢)
-    A --> C(週線: 中期趨勢)
-    A --> D(日線: 短期趨勢)
+    A["多時框趨勢分析"] --> B("月線: 長期趨勢")
+    A --> C("週線: 中期趨勢")
+    A --> D("日線: 短期趨勢")
     
     B --> B1["🟢 歷史牛市結構 (MA240向上)"]
     C --> C1["🟡 寬幅箱體震盪 ($132.66 - $219.21)"]
     D --> D1["🟢 雙底反彈，挑戰阻力 ($158.83)"]
     
-    B1 & C1 & D1 --> E{趨勢整合結論}
-    E -->|結論| F["長期牛市底色不變，中期進入籌碼換手期，短期買盤嘗試發動反攻"]
+    B1 & C1 & D1 --> E{"趨勢整合結論"}
+    E -->|"結論"| F["長期牛市底色不變，中期進入籌碼換手期，短期買盤嘗試發動反攻"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -168,8 +168,8 @@ $130 ┤
 
 ```mermaid
 graph LR
-    ADX_Val["ADX 15.08\n(極弱趨勢)"] -->|判斷| Range["進入無趨勢盤整區間"]
-    DI_Diff["+DI (27.74) > -DI (17.58)"] -->|判斷| Bull_Bias["多頭在盤整中佔據微弱優勢"]
+    ADX_Val["ADX 15.08\n(極弱趨勢)"] -->|"判斷"| Range["進入無趨勢盤整區間"]
+    DI_Diff["+DI (27.74) > -DI (17.58)"] -->|"判斷"| Bull_Bias["多頭在盤整中佔據微弱優勢"]
     
     Range & Bull_Bias --> Strategy["交易策略：低吸高拋\n避免追漲殺跌"]
 ```
@@ -311,14 +311,14 @@ graph TD
     Price --> Momentum_Signal{"動能系統"}
     Price --> Volatility_Signal{"波動與量能"}
     
-    MA_Signal -->|價格 > MA20| MA_Bull["🟢 短期看多"]
-    MA_Signal -->|價格 < MA200| MA_Bear["🔴 長期偏弱"]
+    MA_Signal -->|"價格 > MA20"| MA_Bull["🟢 短期看多"]
+    MA_Signal -->|"價格 < MA200"| MA_Bear["🔴 長期偏弱"]
     
-    Momentum_Signal -->|MACD 金叉| MACD_Bull["🟢 動能轉強"]
-    Momentum_Signal -->|RSI = 52.48| RSI_Neutral["🟡 中性震盪"]
+    Momentum_Signal -->|"MACD 金叉"| MACD_Bull["🟢 動能轉強"]
+    Momentum_Signal -->|"RSI = 52.48"| RSI_Neutral["🟡 中性震盪"]
     
-    Volatility_Signal -->|OBV > MA| OBV_Bull["🟢 量能支撐"]
-    Volatility_Signal -->|ADX = 15.08| ADX_Range["🟡 弱趨勢/盤整"]
+    Volatility_Signal -->|"OBV > MA"| OBV_Bull["🟢 量能支撐"]
+    Volatility_Signal -->|"ADX = 15.08"| ADX_Range["🟡 弱趨勢/盤整"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -450,8 +450,8 @@ graph TD
 graph TD
     Start["當前現價: $158.83"] --> Dec1{"突破 $160.23 頸線？"}
     
-    Dec1 -->|是 (放量突破)| Strategy_A["策略 A: 突破追多\n進場點: $161.50"]
-    Dec1 -->|否 (回踩測試)| Strategy_B["策略 B: 回踩低吸\n進場點: $151.00"]
+    Dec1 -->|"是 (放量突破)"| Strategy_A["策略 A: 突破追多\n進場點: $161.50"]
+    Dec1 -->|"否 (回踩測試)"| Strategy_B["策略 B: 回踩低吸\n進場點: $151.00"]
     
     Strategy_A --> Target_A["目標價 T1: $173.65\n目標價 T2: $186.15"]
     Strategy_B --> Target_B["目標價 T1: $160.23\n目標價 T2: $173.65"]
@@ -525,9 +525,9 @@ graph TD
     Scenario --> Base_S["2. 基準情境 (50% 概率)"]
     Scenario --> Bear_S["3. 悲觀情境 (15% 概率)"]
     
-    Bull_S -->|描述| BS_1["突破 $160.23 頸線後暴量上攻\n兩週內直奔 $173.65"]
-    Base_S -->|描述| BaS_1["在 $150.00 - $165.00 寬幅震盪\n緩步推升，符合 ADX 盤整定義"]
-    Bear_S -->|描述| BeS_1["受大盤拖累跌破 $148.00\n二次探底至 $132.66"]
+    Bull_S -->|"描述"| BS_1["突破 $160.23 頸線後暴量上攻\n兩週內直奔 $173.65"]
+    Base_S -->|"描述"| BaS_1["在 $150.00 - $165.00 寬幅震盪\n緩步推升，符合 ADX 盤整定義"]
+    Bear_S -->|"描述"| BeS_1["受大盤拖累跌破 $148.00\n二次探底至 $132.66"]
 ```
 
 ### 🛡️ 風險管理重要提醒

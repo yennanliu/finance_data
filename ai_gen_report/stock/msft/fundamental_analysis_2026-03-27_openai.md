@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-    基本面-->8;
-    成長-->9;
-    獲利-->9;
-    財務健康-->8;
-    估值-->7;
+    基本面 --> 8;
+    成長 --> 9;
+    獲利 --> 9;
+    財務健康 --> 8;
+    估值 --> 7;
 ```
 - **基本面**：8/10
 - **成長**：9/10
@@ -73,9 +73,9 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-    A[Microsoft Corporation] --> B[Productivity and Business Processes]
-    A --> C[Intelligent Cloud]
-    A --> D[More Personal Computing]
+    A["Microsoft Corporation"] --> B["Productivity and Business Processes"]
+    A --> C["Intelligent Cloud"]
+    A --> D["More Personal Computing"]
 ```
 
 ### 市場地位
@@ -152,11 +152,11 @@ pie
 ### 資產結構
 ```mermaid
 graph TD;
-    A[資產] --> B[流動資產]
-    A --> C[非流動資產]
-    B --> D[現金及現金等價物]
-    B --> E[應收賬款]
-    C --> F[不動產及設備]
+    A["資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
+    B --> D["現金及現金等價物"]
+    B --> E["應收賬款"]
+    C --> F["不動產及設備"]
 ```
 
 ### 流動性指標
@@ -233,9 +233,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD;
-    淨利率-->40.5%
-    資產週轉率-->0.37
-    槓桿比-->2.3
+    淨利率 --> nb1["40.5%"]
+    資產週轉率 --> 0.37
+    槓桿比 --> 2.3
 ```
 
 ## 7. 估值深度分析
@@ -288,9 +288,9 @@ TAM: $1.5T ▓░░░░░░░░░░
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD;
-    短期-->新產品
-    中期-->市場擴張
-    長期-->策略性收購
+    短期 --> 新產品
+    中期 --> 市場擴張
+    長期 --> 策略性收購
 ```
 
 ## 9. 風險矩陣
@@ -331,10 +331,10 @@ graph TD;
 ### 投資人適配度
 ```mermaid
 graph TD;
-    成長型-->MSFT
-    價值型-->AAPL
-    股息型-->GOOGL
-    短期交易-->AMZN
+    成長型 --> MSFT
+    價值型 --> AAPL
+    股息型 --> GOOGL
+    短期交易 --> AMZN
 ```
 
 ### 關鍵監控指標

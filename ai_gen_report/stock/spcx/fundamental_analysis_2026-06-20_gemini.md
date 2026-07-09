@@ -330,12 +330,12 @@ graph LR
     FIN["股權與債務融資<br/>+$27.48B"]
     CASH["淨現金增加<br/>+$13.36B"]
 
-    NI -->|加上非現金調整| DA
+    NI -->|"加上非現金調整"| DA
     DA --> WC
     WC --> OCF
-    OCF -->|扣除資本開支| CAPEX
+    OCF -->|"扣除資本開支"| CAPEX
     CAPEX --> FCF
-    FCF -->|融資活動補足| FIN
+    FCF -->|"融資活動補足"| FIN
     FIN --> CASH
 ```
 

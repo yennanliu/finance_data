@@ -31,10 +31,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TB
-    A[基本面: 7/10] --> B[成長: 8/10]
-    A --> C[獲利: 6/10]
-    A --> D[財務健康: 8/10]
-    A --> E[估值: 5/10]
+    A["基本面: 7/10"] --> B["成長: 8/10"]
+    A --> C["獲利: 6/10"]
+    A --> D["財務健康: 8/10"]
+    A --> E["估值: 5/10"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -74,11 +74,11 @@ graph TB
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[Grab Holdings Limited] --> B[GrabFood]
-    A --> C[GrabMart]
-    A --> D[GrabExpress]
-    A --> E[GrabAds]
-    A --> F[Grab for Business]
+    A["Grab Holdings Limited"] --> B["GrabFood"]
+    A --> C["GrabMart"]
+    A --> D["GrabExpress"]
+    A --> E["GrabAds"]
+    A --> F["Grab for Business"]
 ```
 
 ### 市場地位
@@ -172,13 +172,13 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[資產] --> B[流動資產]
-    A --> C[非流動資產]
-    B --> D[現金及等價物]
-    B --> E[應收帳款]
-    B --> F[存貨]
-    C --> G[固定資產]
-    C --> H[無形資產]
+    A["資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
+    B --> D["現金及等價物"]
+    B --> E["應收帳款"]
+    B --> F["存貨"]
+    C --> G["固定資產"]
+    C --> H["無形資產"]
 ```
 
 ### 流動性指標表格
@@ -209,9 +209,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A[營業活動現金流] --> B[投資活動現金流]
-    B --> C[融資活動現金流]
-    C --> D[淨增減現金]
+    A["營業活動現金流"] --> B["投資活動現金流"]
+    B --> C["融資活動現金流"]
+    C --> D["淨增減現金"]
 ```
 
 ### FCF 轉換率趨勢表格

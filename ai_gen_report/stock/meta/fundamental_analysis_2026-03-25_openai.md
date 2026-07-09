@@ -30,9 +30,9 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-    基本面(8/10) --> 成長(7/10);
-    獲利(9/10) --> 財務健康(8/10);
-    財務健康 --> 估值(6/10);
+    基本面("8/10") --> 成長("7/10");
+    獲利("9/10") --> 財務健康("8/10");
+    財務健康 --> 估值("6/10");
 ```
 
 ### 5大投資論點 + 3大風險
@@ -66,13 +66,13 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-    META --> FoA[Family of Apps];
-    META --> RL[Reality Labs];
+    META --> FoA["Family of Apps"];
+    META --> RL["Reality Labs"];
     FoA --> Facebook;
     FoA --> Instagram;
     FoA --> WhatsApp;
-    RL --> VR[Virtual Reality];
-    RL --> AI[AI Glasses];
+    RL --> VR["Virtual Reality"];
+    RL --> AI["AI Glasses"];
 ```
 
 ### 市場地位
@@ -232,9 +232,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD
-    淨利潤率(30.1%) --> 資產週轉率(0.54);
-    資產週轉率 --> 槓桿比(1.8);
-    槓桿比 --> ROE(30.2%);
+    淨利潤率("30.1%") --> 資產週轉率("0.54");
+    資產週轉率 --> 槓桿比("1.8");
+    槓桿比 --> ROE("30.2%");
 ```
 
 ## 7. 估值深度分析
@@ -287,8 +287,8 @@ TAM: $1.5T ▓▓▓░░░
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD
-    短期(新產品) --> 中期(市場擴張);
-    中期 --> 長期(技術突破);
+    短期("新產品") --> 中期("市場擴張");
+    中期 --> 長期("技術突破");
 ```
 
 ## 9. 風險矩陣

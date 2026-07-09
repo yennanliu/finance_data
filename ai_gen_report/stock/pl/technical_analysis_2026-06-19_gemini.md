@@ -112,9 +112,9 @@ graph TD
     Weekly["週線圖 (Medium-Term)\n中期高位回撤與籌碼整理\n評級: 🟡 Neutral"]
     Daily["日線圖 (Short-Term)\n短期極速殺跌與超賣\n評級: 🔴 Bearish"]
 
-    Monthly -->|支撐引力| Weekly
-    Weekly -->|超賣反彈需求| Daily
-    Daily -->|尋求底部確認| Support["MA200 關鍵支撐區\n$23.85 - $22.00"]
+    Monthly -->|"支撐引力"| Weekly
+    Weekly -->|"超賣反彈需求"| Daily
+    Daily -->|"尋求底部確認"| Support["MA200 關鍵支撐區\n$23.85 - $22.00"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -172,7 +172,7 @@ $22.00 ════════════════════════�
 ```mermaid
 graph TD
     A["ADX(14) = 33.23\n(趨勢強度 > 25)"] --> B{"趨勢判定"}
-    B -->|強烈趨勢行情| C["非盤整、非無方向震盪"]
+    B -->|"強烈趨勢行情"| C["非盤整、非無方向震盪"]
     C --> D{"方向判定"}
     D -->|"-DI (28.26) > +DI (12.70)"| E["🔴 空頭絕對主導趨勢"]
     D -->|"+DI (12.70) 處於低位"| F["🟢 多頭動能完全熄火"]
@@ -313,19 +313,19 @@ graph TD
     MACD_System --> Conflict
     BB_System --> Conflict
     
-    Conflict -->|短線矛盾| Bounce["預期: 短期超賣反彈 (RSI/布林主導)"]
-    Conflict -->|中線確認| Downtrend["預期: 中期繼續尋底 (均線/MACD主導)"]
+    Conflict -->|"短線矛盾"| Bounce["預期: 短期超賣反彈 (RSI/布林主導)"]
+    Conflict -->|"中線確認"| Downtrend["預期: 中期繼續尋底 (均線/MACD主導)"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["MA20 ($38.84)"] -->|跌破 🔴| Price_Val["現價 ($28.23)"]
-    MA50["MA50 ($38.35)"] -->|跌破 🔴| Price_Val
-    MA120["MA120 ($31.07)"] -->|跌破 🔴| Price_Val
-    Price_Val -->|獲得支撐 🟢| MA240["MA240 ($20.98)"]
-    Price_Val -->|即將測試 🟢| MA200["MA200 ($23.85)"]
+    MA20["MA20 ($38.84)"] -->|"跌破 🔴"| Price_Val["現價 ($28.23)"]
+    MA50["MA50 ($38.35)"] -->|"跌破 🔴"| Price_Val
+    MA120["MA120 ($31.07)"] -->|"跌破 🔴"| Price_Val
+    Price_Val -->|"獲得支撐 🟢"| MA240["MA240 ($20.98)"]
+    Price_Val -->|"即將測試 🟢"| MA200["MA200 ($23.85)"]
 ```
 
 雖然長期移動平均線依然呈現多頭排列（MA20 > MA50 > MA200），但這屬於**滯後性多頭**。當前股價已全面跌破短期（MA5: $29.28、MA10: $30.74）及中期（MA20、MA50、MA60: $37.42、MA120: $31.07）均線。
@@ -423,11 +423,11 @@ RSI(14) 強度與區間定位：
 ```mermaid
 graph TD
     Start["當前現價: $28.23"] --> Check_S1{"是否守住 S1 ($26.54)?"}
-    Check_S1 -->|是 (縮量企穩)| Aggressive_Buy["🟢 策略 A (左側激進型)\n輕倉搶超賣反彈"]
-    Check_S1 -->|否 (放量跌破)| Check_S2{"是否測試 S2 ($23.85)?"}
+    Check_S1 -->|"是 (縮量企穩)"| Aggressive_Buy["🟢 策略 A (左側激進型)\n輕倉搶超賣反彈"]
+    Check_S1 -->|"否 (放量跌破)"| Check_S2{"是否測試 S2 ($23.85)?"}
     
-    Check_S2 -->|是 (放量長下影)| Conservative_Buy["🟢 策略 B (右側穩健型)\n年線共振區重倉佈局"]
-    Check_S2 -->|否 (無抵抗暴跌)| Stop_Observe["🔴 觀望\n暫停任何買入操作"]
+    Check_S2 -->|"是 (放量長下影)"| Conservative_Buy["🟢 策略 B (右側穩健型)\n年線共振區重倉佈局"]
+    Check_S2 -->|"否 (無抵抗暴跌)"| Stop_Observe["🔴 觀望\n暫停任何買入操作"]
     
     Aggressive_Buy --> Target_A["目標價 T1: $31.15\n目標價 T2: $33.86"]
     Conservative_Buy --> Target_B["目標價 T1: $28.23\n目標價 T2: $33.86\n長期目標: $39.80"]

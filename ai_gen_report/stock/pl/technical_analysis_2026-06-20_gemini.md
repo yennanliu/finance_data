@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線圖 (長期)"] -->| secular Bull Trend | B["價格處於 2024 年以來牛市回撤 50% 處"]
-    C["週線圖 (中期)"] -->| Correction Phase | D["三週內從 $51.14 急跌至 $28.23，高點套牢盤重"]
-    E["日線圖 (短期)"] -->| Downward Climax | F["RSI 觸及 17.22 極端值，空頭動能耗盡邊緣"]
+    A["月線圖 (長期)"] -->|" secular Bull Trend "| B["價格處於 2024 年以來牛市回撤 50% 處"]
+    C["週線圖 (中期)"] -->|" Correction Phase "| D["三週內從 $51.14 急跌至 $28.23，高點套牢盤重"]
+    E["日線圖 (短期)"] -->|" Downward Climax "| F["RSI 觸及 17.22 極端值，空頭動能耗盡邊緣"]
     B --> G["結構性支撐區 $23.85 - $28.00"]
     D --> G
     F --> G
@@ -162,9 +162,9 @@ $5.00  ┤ ● (6.25)                      ● (24.14)
 
 ```mermaid
 graph TD
-    A["ADX(14) = 33.23"] -->| > 25 | B["強烈趨勢行情 (Strong Trend)"]
+    A["ADX(14) = 33.23"] -->|" > 25 "| B["強烈趨勢行情 (Strong Trend)"]
     C["DI 分布"] --> D["-DI (28.26) vs +DI (12.70)"]
-    D -->| -DI 顯著佔優 | E["空頭完全主導市場 (Bearish Dominance)"]
+    D -->|" -DI 顯著佔優 "| E["空頭完全主導市場 (Bearish Dominance)"]
     B --> F["結論：當前處於強烈的下行趨勢中，不可盲目左側重倉做多"]
     E --> F
 ```
@@ -291,8 +291,8 @@ graph TD
         RSI_Oversold["RSI = 17.22 (極度超賣)"]
         Stoch_Oversold["Stoch %K = 7.77 (超賣)"]
     end
-    Trend_Indicators -->|壓制反彈空間| Price["現價 $28.23"]
-    Momentum_Indicators -->|醞釀爆發性反彈| Price
+    Trend_Indicators -->|"壓制反彈空間"| Price["現價 $28.23"]
+    Momentum_Indicators -->|"醞釀爆發性反彈"| Price
 ```
 
 ### 📈 移動平均線排列分析
@@ -301,9 +301,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A["MA20 ($38.84)"] -->| > | B["MA50 ($38.35)"]
-    B -->| > | C["MA200 ($23.85)"]
-    D["當前均線系統秩序"] -->| 理論上 | E["仍維持多頭排列 (MA20>MA50>MA200)"]
+    A["MA20 ($38.84)"] -->|" > "| B["MA50 ($38.35)"]
+    B -->|" > "| C["MA200 ($23.85)"]
+    D["當前均線系統秩序"] -->|" 理論上 "| E["仍維持多頭排列 (MA20>MA50>MA200)"]
     E --> F["結論：這是一次 secular bull market 中的超級大回撤，而非熊市的開始"]
 ```
 
@@ -409,9 +409,9 @@ $21.34 ──────╲─────────────────�
 ```mermaid
 graph TD
     Start["分析現價 $28.23"] --> Decision{"交易風格選擇?"}
-    Decision -->|左側交易 (超賣博弈)| PlanA["策略 A: 50%回調位即時買入"]
-    Decision -->|右側交易 (穩健安全)| PlanB["策略 B: 等待 MA200 附近企穩買入"]
-    Decision -->|順勢交易 (反彈做空)| PlanC["策略 C: 逢高反彈至 R1 阻力做空"]
+    Decision -->|"左側交易 (超賣博弈)"| PlanA["策略 A: 50%回調位即時買入"]
+    Decision -->|"右側交易 (穩健安全)"| PlanB["策略 B: 等待 MA200 附近企穩買入"]
+    Decision -->|"順勢交易 (反彈做空)"| PlanC["策略 C: 逢高反彈至 R1 阻力做空"]
     
     PlanA --> EntryA["進場點: $28.00 - $28.30\n止損: $25.50\n目標: $33.48"]
     PlanB --> EntryB["進場點: $23.85 - $24.50\n止損: $21.00\n目標: $31.00"]

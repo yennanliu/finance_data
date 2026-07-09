@@ -109,9 +109,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線級別 (長期)"] -->|高檔震盪修正| B["週線級別 (中期)"]
-    B -->|構築大型雙底結構| C["日線級別 (短期)"]
-    C -->|極度超賣 + 底背離| D["尋求短期反彈契機"]
+    A["月線級別 (長期)"] -->|"高檔震盪修正"| B["週線級別 (中期)"]
+    B -->|"構築大型雙底結構"| C["日線級別 (短期)"]
+    C -->|"極度超賣 + 底背離"| D["尋求短期反彈契機"]
     
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -164,8 +164,8 @@ $540 ┤  █   █   █   █   █   █   █   █   █   █   █   █ 
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 17.44"] -->|小于 25| Range["無趨勢 / 盤整行情"]
-    DI_Compare["-DI (35.27) > +DI (21.90)"] -->|空頭主導| BearDominant["空頭暫時掌控市場"]
+    ADX["ADX 數值: 17.44"] -->|"小于 25"| Range["無趨勢 / 盤整行情"]
+    DI_Compare["-DI (35.27) > +DI (21.90)"] -->|"空頭主導"| BearDominant["空頭暫時掌控市場"]
     Range & BearDominant --> Verdict["結論：空頭動能衰竭，進入底部震盪區間"]
 ```
 
@@ -191,7 +191,7 @@ graph TD
     subgraph W_Bottom ["W底 (雙重底) 形態結構"]
         LeftBot["左底: $520.26 (2026-03)"] --> Neck["頸線: $688.55 (2026-04)"]
         Neck --> RightBot["右底: $566.98 (當前)"]
-        RightBot -->|預期突破| Target["量度漲幅目標: $856.84"]
+        RightBot -->|"預期突破"| Target["量度漲幅目標: $856.84"]
     end
 ```
 
@@ -310,11 +310,11 @@ graph LR
 ```mermaid
 graph TD
     Price["價格: $566.98"]
-    MA["均線空頭排列"] -->|看空| Price
-    MACD["MACD 零軸下死叉"] -->|看空| Price
-    RSI["RSI 底背離"] -->|看多| Price
-    Stoch["Stoch 超賣金叉"] -->|看多| Price
-    BB["%B 0.06 觸及下軌"] -->|看多| Price
+    MA["均線空頭排列"] -->|"看空"| Price
+    MACD["MACD 零軸下死叉"] -->|"看空"| Price
+    RSI["RSI 底背離"] -->|"看多"| Price
+    Stoch["Stoch 超賣金叉"] -->|"看多"| Price
+    BB["%B 0.06 觸及下軌"] -->|"看多"| Price
     
     style RSI fill:#bfb,stroke:#333
     style Stoch fill:#bfb,stroke:#333
@@ -446,10 +446,10 @@ graph TD
 ```mermaid
 graph TD
     Start["分析現價: $566.98"] --> Dec1{"是否跌破 S1 ($561.69)?"}
-    Dec1 -->|否| PlanA["執行策略 A (左側低吸)"]
-    Dec1 -->|是| Dec2{"是否跌破 S3 ($520.26)?"}
-    Dec2 -->|否| PlanB["執行策略 B (右側突破)"]
-    Dec2 -->|是| StopLoss["無條件止損，退出觀望"]
+    Dec1 -->|"否"| PlanA["執行策略 A (左側低吸)"]
+    Dec1 -->|"是"| Dec2{"是否跌破 S3 ($520.26)?"}
+    Dec2 -->|"否"| PlanB["執行策略 B (右側突破)"]
+    Dec2 -->|"是"| StopLoss["無條件止損，退出觀望"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -519,9 +519,9 @@ graph TD
 ```mermaid
 graph TD
     Scenario["META 未來走勢場景分析"]
-    Scenario -->|樂觀 (35% 概率)| Bull["場景 A: 站穩 $561 反彈, 突破 $604, 邁向 $657"]
-    Scenario -->|基本 (50% 概率)| Base["場景 B: 在 $550-$590 區間寬幅震盪, 磨平均線阻力"]
-    Scenario -->|悲觀 (15% 概率)| Bear["場景 C: 跌破 $520 終極防線, 尋求 $480 支撐"]
+    Scenario -->|"樂觀 (35% 概率)"| Bull["場景 A: 站穩 $561 反彈, 突破 $604, 邁向 $657"]
+    Scenario -->|"基本 (50% 概率)"| Base["場景 B: 在 $550-$590 區間寬幅震盪, 磨平均線阻力"]
+    Scenario -->|"悲觀 (15% 概率)"| Bear["場景 C: 跌破 $520 終極防線, 尋求 $480 支撐"]
     
     style Bull fill:#bfb,stroke:#333
     style Base fill:#bbf,stroke:#333

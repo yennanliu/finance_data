@@ -135,7 +135,7 @@ $12 ────────────────
 
 ```mermaid
 graph TD
-    ADX["ADX(14): 14.87"] -->|弱趨勢| Trend["盤整"]
+    ADX["ADX(14): 14.87"] -->|"弱趨勢"| Trend["盤整"]
     Trend --> Signal{"空頭主導"}
 ```
 
@@ -220,8 +220,8 @@ $11.75 ║███████████████████████�
 
 ```mermaid
 graph TD
-    RSI["RSI: 29.56"] -->|超賣| M["看多"]
-    MACD["MACD: -0.177"] -->|空頭| M
+    RSI["RSI: 29.56"] -->|"超賣"| M["看多"]
+    MACD["MACD: -0.177"] -->|"空頭"| M
     M --> Final{"中性偏空"}
 ```
 
@@ -229,8 +229,8 @@ graph TD
 
 ```mermaid
 graph TD
-    ShortMA["MA20: $14.67"] -->|價格下方| Bearish["空頭"]
-    LongMA["MA200: $15.46"] -->|價格下方| Bearish
+    ShortMA["MA20: $14.67"] -->|"價格下方"| Bearish["空頭"]
+    LongMA["MA200: $15.46"] -->|"價格下方"| Bearish
     Bearish --> FinalState{"空頭排列"}
 ```
 
@@ -244,8 +244,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD線: -0.177"] -->|低於訊號線| Bearish["看空"]
-    Signal_Line["訊號線: -0.113"] -->|空頭| Bearish
+    MACD_Line["MACD線: -0.177"] -->|"低於訊號線"| Bearish["看空"]
+    Signal_Line["訊號線: -0.113"] -->|"空頭"| Bearish
     Bearish --> Histogram{"柱狀圖: -0.063"}
 ```
 
@@ -321,8 +321,8 @@ graph TD
 
 ```mermaid
 graph TD
-    Entry["進場點"] -->|價格上漲突破| Long["多頭策略"]
-    Exit["止損點"] -->|價格跌破關鍵支撐| Short["空頭策略"]
+    Entry["進場點"] -->|"價格上漲突破"| Long["多頭策略"]
+    Exit["止損點"] -->|"價格跌破關鍵支撐"| Short["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -380,9 +380,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"] -->|突破阻力| Scenario{"價格上漲"}
-    Base["基本情境"] -->|盤整| Scenario
-    Pessimistic["悲觀情境"] -->|跌破支撐| Scenario{"價格下跌"}
+    Optimistic["樂觀情境"] -->|"突破阻力"| Scenario{"價格上漲"}
+    Base["基本情境"] -->|"盤整"| Scenario
+    Pessimistic["悲觀情境"] -->|"跌破支撐"| Scenario{"價格下跌"}
 ```
 
 ### 🛡️ 風險管理重要提醒

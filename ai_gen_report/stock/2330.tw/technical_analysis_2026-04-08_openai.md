@@ -137,7 +137,7 @@ graph TD
     ADX["ADX(14)：15.86 弱趨勢/盤整"]
     +DI["+DI：36.14"]
     -DI["-DI：26.20"]
-    ADX --> +DI
+    ADX --> nb1["+DI"]
     ADX --> -DI
 ```
 

@@ -251,7 +251,7 @@ graph TD;
     Current --> OCA["Other Current Assets\n$25.7B"]
 
     NonCurrent --> PP&E["📦 Property, Plant & Equipment\n$229.79B"]
-    NonCurrent --> I|Immaterial|["🚀 Intangibles & Goodwill\n$149.99B"]
+    NonCurrent --> I|"Immaterial"|["🚀 Intangibles & Goodwill\n$149.99B"]
     NonCurrent --> LT_INV["證券化投資\n$41.27B"]
 ```
 

@@ -95,11 +95,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線圖 (長期趨勢)"] -->|年線 MA200 向上發散| B["🟢 絕對多頭市場 (Bull Market)"]
+    A["月線圖 (長期趨勢)"] -->|"年線 MA200 向上發散"| B["🟢 絕對多頭市場 (Bull Market)"]
     B --> C["週線圖 (中期趨勢)"]
-    C -->|高點逐步墊高 / 支撐不破| D["🟢 中期上升通道"]
+    C -->|"高點逐步墊高 / 支撐不破"| D["🟢 中期上升通道"]
     D --> E["日線圖 (短期趨勢)"]
-    E -->|高檔震盪整理 / 守穩 MA20| F["🟡 短期強勢整理 (Consolidation)"]
+    E -->|"高檔震盪整理 / 守穩 MA20"| F["🟡 短期強勢整理 (Consolidation)"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -162,8 +162,8 @@ $165 ┤●━━━━━━━━━━━━━━━━━━━━━━━
 ```mermaid
 graph LR
     ADX["ADX = 28.50"] --> T1{"趨勢強度判斷"}
-    T1 -->|> 25| T2["🟢 趨勢行情 (Trending Market)"]
-    T1 -->|< 20| T3["🔴 盤整行情 (Ranging Market)"]
+    T1 -->|"> 25"| T2["🟢 趨勢行情 (Trending Market)"]
+    T1 -->|"< 20"| T3["🔴 盤整行情 (Ranging Market)"]
     T2 --> D1["+DI = 31.20 (多頭力量)"]
     T2 --> D2["-DI = 15.80 (空頭力量)"]
     D1 & D2 --> F["+DI > -DI 且 ADX 趨於上行<br/>結論：多頭趨勢仍在加速中"]
@@ -293,14 +293,14 @@ graph TD
     Price --> Vol["成交量: 量縮拉回"]
     Price --> Osc["震盪指標"]
     
-    MA -->|MA20 > MA50| Bull1["🟢 趨勢確認 (Trend Confirmed)"]
-    Vol -->|OBV 創新高| Bull2["🟢 資金流入 (Accumulation)"]
+    MA -->|"MA20 > MA50"| Bull1["🟢 趨勢確認 (Trend Confirmed)"]
+    Vol -->|"OBV 創新高"| Bull2["🟢 資金流入 (Accumulation)"]
     
     Osc --> RSI["RSI(14) = 62.50"]
     Osc --> MACD["MACD DIF > DEA"]
     
-    RSI -->|無頂背離| Bull3["🟢 動能健康 (Healthy Momentum)"]
-    MACD -->|柱狀體翻正| Bull4["🟢 短線轉強 (Bullish Crossover)"]
+    RSI -->|"無頂背離"| Bull3["🟢 動能健康 (Healthy Momentum)"]
+    MACD -->|"柱狀體翻正"| Bull4["🟢 短線轉強 (Bullish Crossover)"]
     
     Bull1 & Bull2 & Bull3 & Bull4 --> Verdict["🏆 結論：多項指標共振，無走勢背離，買盤結構紮實"]
 ```
@@ -418,8 +418,8 @@ graph TD
 ```mermaid
 graph TD
     Start["分析現價 NT$205.50"] --> Dec{"交易者類型?"}
-    Dec -->|穩健型 / 波段交易| StratA["策略 A: 逢低買進 (Pullback Buy)"]
-    Dec -->|激進型 / 突破交易| StratB["策略 B: 突破買進 (Breakout Buy)"]
+    Dec -->|"穩健型 / 波段交易"| StratA["策略 A: 逢低買進 (Pullback Buy)"]
+    Dec -->|"激進型 / 突破交易"| StratB["策略 B: 突破買進 (Breakout Buy)"]
     
     StratA --> EntryA["進場點: NT$201.50 - NT$203.00<br/>(接近 MA20 與 200元關卡)"]
     EntryA --> StopA["停損點: NT$197.50<br/>(跌破前低 198.00)"]

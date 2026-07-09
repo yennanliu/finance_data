@@ -62,6 +62,23 @@ def test_html_leak(tmp_path):
     assert "HTML_LEAK" in crq.parse_file(p).issues
 
 
+def test_mermaid_broken_flowchart(tmp_path):
+    body = (_good_body()
+            + "\n```mermaid\ngraph TD\n    A[ADX(14) = 17.44] --> B{未來 (估)}\n```\n")
+    p = _write(tmp_path, "aapl", "technical_analysis_2026-01-01_gemini.md", body)
+    issue = crq.parse_file(p)
+    assert "MERMAID" in issue.issues
+    assert "mermaid=" in issue.note
+
+
+def test_mermaid_valid_flowchart_not_flagged(tmp_path):
+    # Quoted labels (what the generator now emits) must not trip the detector.
+    body = (_good_body()
+            + '\n```mermaid\ngraph TD\n    A["ADX(14) = 17.44"] --> B{"未來 (估)"}\n```\n')
+    p = _write(tmp_path, "aapl", "technical_analysis_2026-01-01_gemini.md", body)
+    assert "MERMAID" not in crq.parse_file(p).issues
+
+
 def test_cutoff_trailing_comma(tmp_path):
     body = _good_body() + "\n因此我們的結論是，"
     p = _write(tmp_path, "aapl", "fundamental_analysis_2026-01-01_claude.md", body)
