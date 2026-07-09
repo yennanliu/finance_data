@@ -218,13 +218,26 @@ def mermaid_syntax_issues(content: str) -> "list[str]":
     """Return every unrenderable-Mermaid snippet across all ```mermaid fences in
     a Markdown string (empty if all blocks are valid). Used by the report
     quality checker to flag reports whose diagrams would fail on GitHub."""
-    issues: "list[str]" = []
+    return [snip for _, snip in mermaid_issue_locations(content)]
+
+
+def mermaid_issue_locations(content: str) -> "list[tuple[int, str]]":
+    """Like :func:`mermaid_syntax_issues`, but each snippet is paired with its
+    1-based line number in ``content`` — so a reporter can point at the exact
+    line (e.g. a GitHub Actions ``file=…,line=…`` annotation)."""
+    locs: "list[tuple[int, str]]" = []
     for m in _MERMAID_FENCE_RE.finditer(content):
-        issues.extend(_diagram_syntax_issues(m.group(1)))
-    return issues
+        block = m.group(1)
+        base_line = content.count("\n", 0, m.start(1)) + 1  # 1st line of block body
+        for snip in _diagram_syntax_issues(block):
+            idx = block.find(snip)
+            line_in_block = block.count("\n", 0, idx) if idx != -1 else 0
+            locs.append((base_line + line_in_block, snip))
+    return locs
 
 
 __all__ = [
-    "sanitize_mermaid", "sanitize_mermaid_blocks", "mermaid_syntax_issues",
+    "sanitize_mermaid", "sanitize_mermaid_blocks",
+    "mermaid_syntax_issues", "mermaid_issue_locations",
     "_MERMAID_FENCE_RE",
 ]

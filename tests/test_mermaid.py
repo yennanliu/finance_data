@@ -9,6 +9,7 @@ can run both at report-generation time and again at docs-build time.
 from __future__ import annotations
 
 from analysis.utils.mermaid import (
+    mermaid_issue_locations,
     mermaid_syntax_issues,
     sanitize_mermaid,
     sanitize_mermaid_blocks,
@@ -117,3 +118,16 @@ def test_detector_ignores_non_mermaid_and_non_flowchart():
     assert mermaid_syntax_issues("prose (with parens) only") == []
     assert mermaid_syntax_issues("```python\nx = foo(1)\n```") == []
     assert mermaid_syntax_issues("```mermaid\npie\n    \"A (x)\" : 5\n```") == []
+
+
+def test_detector_reports_correct_line_numbers():
+    content = (
+        "line1\n"                       # 1
+        "line2\n"                       # 2
+        "```mermaid\n"                  # 3
+        "graph TD\n"                    # 4  (block body starts here)
+        "    A[ok] --> B[ADX(14)]\n"    # 5  <- offending
+        "```\n"                         # 6
+    )
+    locs = mermaid_issue_locations(content)
+    assert locs == [(5, "[ADX(14)]")]
