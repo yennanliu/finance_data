@@ -853,7 +853,7 @@ graph TD
     MT --> MT3["Logistics Network Optimization & Automation"]
     MT --> MT4["Healthcare Initiatives (e.g., Rx, One Medical)"]
 
-    LT --> LT1["New Verticals & Technologies (e.g., Robotics, Space)"]
+    LT --> LT1["New Verticals & Technologies(e.g., Robotics, Space)"]
     LT --> LT2["Sustainable Practices & ESG Leadership"]
     LT --> LT3["Global Digital Transformation"]
     LT --> LT4["Advanced AI/ML Integration"]

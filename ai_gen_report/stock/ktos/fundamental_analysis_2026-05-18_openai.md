@@ -124,13 +124,13 @@ graph TD
 
 ```mermaid
 graph TD;
-    Kratos[Kratos Defense & Security]<br/>Market Cap: $10.17B<br/>Revenue: $1.42B];
-    Kratos --> KGS[Kratos Government Solutions<br/>$920M - 65%]
-    Kratos --> Unmanned[Unmanned Systems<br/>$500M - 35%]
-    KGS --> Virtual[Virtualized Ground Systems]
-    KGS --> Software[Command and Control Software]
-    Unmanned --> Drones[Advanced Drone Systems]
-    Unmanned --> AI[AI-driven Aerial Technology]
+    Kratos["Kratos Defense & Security"]<br/>Market Cap: $10.17B<br/>Revenue: $1.42B];
+    Kratos --> KGS["Kratos Government Solutions<br/>$920M - 65%"]
+    Kratos --> Unmanned["Unmanned Systems<br/>$500M - 35%"]
+    KGS --> Virtual["Virtualized Ground Systems"]
+    KGS --> Software["Command and Control Software"]
+    Unmanned --> Drones["Advanced Drone Systems"]
+    Unmanned --> AI["AI-driven Aerial Technology"]
 ```
 
 ### 2.2 市場份額
@@ -242,13 +242,13 @@ pie title 費用結構 2025
 
 ```mermaid
 graph TD;
-    Assets[Total Assets: $4.04B];
-    Assets --> CurrentAssets[Current Assets: $2.31B];
-    Assets --> NonCurrentAssets[Non-Current Assets: $1.73B];
-    CurrentAssets --> Cash[Cash and Equivalents: $1.46B];
-    CurrentAssets -->Receivables[Receivables: $0.53B];
-    NonCurrentAssets --> PPE[Property, Plant, & Equip: $0.46B];
-    NonCurrentAssets --> Goodwill[Goodwill: $0.88B];
+    Assets["Total Assets: $4.04B"];
+    Assets --> CurrentAssets["Current Assets: $2.31B"];
+    Assets --> NonCurrentAssets["Non-Current Assets: $1.73B"];
+    CurrentAssets --> Cash["Cash and Equivalents: $1.46B"];
+    CurrentAssets -->Receivables["Receivables: $0.53B"];
+    NonCurrentAssets --> PPE["Property, Plant, & Equip: $0.46B"];
+    NonCurrentAssets --> Goodwill["Goodwill: $0.88B"];
 ```
 
 ### 4.2 流動性指標分析
@@ -294,12 +294,12 @@ graph TD;
 
 ```mermaid
 graph LR;
-    NetIncome[Net Income: $22M];
-    NetIncome --> OpCashFlow[Operating Cash Flow: $-40.3M];
-    OpCashFlow --> CapEx[Capital Expenditure: $-95.3M];
-    OpCashFlow --> FCF[Free Cash Flow: $-137.4M];
-    FCF --> Dividends[Dividends & Share Buybacks: Not Applicable];
-    FCF --> NetChange[Net Change in Cash: Increase];
+    NetIncome["Net Income: $22M"];
+    NetIncome --> OpCashFlow["Operating Cash Flow: $-40.3M"];
+    OpCashFlow --> CapEx["Capital Expenditure: $-95.3M"];
+    OpCashFlow --> FCF["Free Cash Flow: $-137.4M"];
+    FCF --> Dividends["Dividends & Share Buybacks: Not Applicable"];
+    FCF --> NetChange["Net Change in Cash: Increase"];
 ```
 
 ### 5.2 FCF 轉換率趨勢

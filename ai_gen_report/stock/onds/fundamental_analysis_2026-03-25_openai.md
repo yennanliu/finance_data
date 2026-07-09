@@ -31,10 +31,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph TB
-    A(基本面) -->|7| B(成長)
-    A -->|5| C(獲利)
-    A -->|6| D(財務健康)
-    A -->|4| E(估值)
+    A("基本面") -->|"7"| B("成長")
+    A -->|"5"| C("獲利")
+    A -->|"6"| D("財務健康")
+    A -->|"4"| E("估值")
 ```
 
 ### 5大投資論點 + 3大風險
@@ -74,10 +74,10 @@ graph TB
 
 ```mermaid
 graph TD
-    A[Ondas Inc.] --> B[Ondas Networks]
-    A --> C[Ondas Autonomous Systems]
-    B --> D[FullMAX SDR Platform]
-    C --> E[Optimus]
+    A["Ondas Inc."] --> B["Ondas Networks"]
+    A --> C["Ondas Autonomous Systems"]
+    B --> D["FullMAX SDR Platform"]
+    C --> E["Optimus"]
 ```
 
 ### 市場地位
@@ -162,10 +162,10 @@ pie
 
 ```mermaid
 graph TD
-    A[總資產] --> B[流動資產]
-    A --> C[非流動資產]
-    B --> D[現金與約當現金]
-    B --> E[應收帳款]
+    A["總資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
+    B --> D["現金與約當現金"]
+    B --> E["應收帳款"]
 ```
 
 ### 流動性指標
@@ -200,9 +200,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A(營業現金流) --> B(投資現金流)
-    B --> C(融資現金流)
-    C --> D(現金淨增減)
+    A("營業現金流") --> B("投資現金流")
+    B --> C("融資現金流")
+    C --> D("現金淨增減")
 ```
 
 ### FCF 轉換率趨勢
@@ -258,9 +258,9 @@ graph LR
 
 ```mermaid
 graph TB
-    A(ROE) -->|1| B(淨利率)
-    A -->|2| C(資產週轉率)
-    A -->|3| D(槓桿比)
+    A("ROE") -->|"1"| B("淨利率")
+    A -->|"2"| C("資產週轉率")
+    A -->|"3"| D("槓桿比")
 ```
 
 ---
@@ -324,9 +324,9 @@ TAM規模: $100B
 
 ```mermaid
 graph TD
-    A(現有產品擴張) --> B(新技術研發)
-    A --> C(跨區市場)
-    B --> D(戰略合作)
+    A("現有產品擴張") --> B("新技術研發")
+    A --> C("跨區市場")
+    B --> D("戰略合作")
 ```
 
 ---

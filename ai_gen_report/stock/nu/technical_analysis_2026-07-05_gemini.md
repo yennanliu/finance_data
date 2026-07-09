@@ -117,23 +117,23 @@ NU在不同時間框架下的趨勢表現出明顯的分歧，這要求投資者
 
 ```mermaid
 graph TD
-    A[月線趨勢 - 24個月] --> B{長期視角}
-    B --> B1[2024年低點後震盪上行]
-    B --> B2[2026年1月高點後修正]
-    B1 --> C[當前價格 $13.61]
+    A["月線趨勢 - 24個月"] --> B{"長期視角"}
+    B --> B1["2024年低點後震盪上行"]
+    B --> B2["2026年1月高點後修正"]
+    B1 --> C["當前價格 $13.61"]
     B2 --> C
-    C --> D[週線趨勢 - 近20週]
-    D --> D1[2026年4月高點後快速下跌]
-    D --> D2[2026年5-6月築底反彈]
-    D1 --> E[日線趨勢 - 近期]
+    C --> D["週線趨勢 - 近20週"]
+    D --> D1["2026年4月高點後快速下跌"]
+    D --> D2["2026年5-6月築底反彈"]
+    D1 --> E["日線趨勢 - 近期"]
     D2 --> E
-    E --> E1[價格站上MA20/MA50]
-    E --> E2[MACD金叉，RSI超買]
-    E1 --> F{綜合判斷}
+    E --> E1["價格站上MA20/MA50"]
+    E --> E2["MACD金叉，RSI超買"]
+    E1 --> F{"綜合判斷"}
     E2 --> F
-    F --> G[長期：🟡 震盪偏空 (修正中)]
-    F --> H[中期：🟡 築底反彈 (仍有壓力)]
-    F --> I[短期：🟢 強勁上漲 (超買風險高)]
+    F --> G["長期：🟡 震盪偏空 (修正中)"]
+    F --> H["中期：🟡 築底反彈 (仍有壓力)"]
+    F --> I["短期：🟢 強勁上漲 (超買風險高)"]
 ```
 
 **長期趨勢 (月線)**：從2024年12月的低點$10.36開始，NU經歷了一波顯著的上漲行情，直至2026年1月達到$17.75的階段性高點。然而，隨後股價進入修正階段，從高點下跌超過20%，顯示長期上漲動能已減弱，目前處於震盪偏空的修正趨勢中。儘管如此，當前價格$13.61仍高於2024年的大部分時間，表明其仍具備一定的長期成長潛力，但需突破關鍵阻力才能確認新一輪上漲。
@@ -202,14 +202,14 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而非方向
 
 ```mermaid
 graph TD
-    A[ADX(14) 值: 20.49] --> B{趨勢強度判斷}
-    B --> C{ADX < 25?}
-    C -- 是 --> D[弱趨勢/盤整行情]
-    C -- 否 --> E[強趨勢行情]
-    D --> F{+DI (31.23) vs -DI (17.58)}
-    F --> F1[+DI > -DI: 多頭主導]
-    F1 --> G{綜合結論}
-    G --> G1[🟡 市場處於弱趨勢或盤整階段，但多頭力量暫時佔優勢]
+    A["ADX(14) 值: 20.49"] --> B{"趨勢強度判斷"}
+    B --> C{"ADX < 25?"}
+    C -- 是 --> D["弱趨勢/盤整行情"]
+    C -- 否 --> E["強趨勢行情"]
+    D --> F{"+DI (31.23) vs -DI (17.58)"}
+    F --> F1["+DI > -DI: 多頭主導"]
+    F1 --> G{"綜合結論"}
+    G --> G1["🟡 市場處於弱趨勢或盤整階段，但多頭力量暫時佔優勢"]
 ```
 
 **ADX強度對照表**：
@@ -236,18 +236,18 @@ NU的ADX(14)數值為**20.49**，明顯低於25的門檻，這表明當前市場
 
 ```mermaid
 graph TD
-    A[價格走勢分析] --> B{下跌修正後反彈}
-    B --> C[2026年1月高點 $17.75]
-    B --> D[2026年5月低點 $12.19]
-    B --> E[2026年6月次低點 $11.97]
-    D -- 反彈至 --> F[2026年5月底 $13.13]
-    E -- 反彈至 --> G[當前 $13.61]
-    F -- 與 --> E -- 構成 --> H[潛在雙重底 (W底) 形態]
-    H --> I[頸線確認點: $13.13]
-    I --> J[突破頸線 $13.13]
-    J -- 伴隨 --> K[量能放大]
-    K --> L[形態目標價計算]
-    L --> M[最終形態判斷]
+    A["價格走勢分析"] --> B{"下跌修正後反彈"}
+    B --> C["2026年1月高點 $17.75"]
+    B --> D["2026年5月低點 $12.19"]
+    B --> E["2026年6月次低點 $11.97"]
+    D -- 反彈至 --> F["2026年5月底 $13.13"]
+    E -- 反彈至 --> G["當前 $13.61"]
+    F -- 與 --> E -- 構成 --> H["潛在雙重底 (W底) 形態"]
+    H --> I["頸線確認點: $13.13"]
+    I --> J["突破頸線 $13.13"]
+    J -- 伴隨 --> K["量能放大"]
+    K --> L["形態目標價計算"]
+    L --> M["最終形態判斷"]
 ```
 
 **分析**：
@@ -414,15 +414,15 @@ $12.19 ║███████████████████████�
 
 ```mermaid
 graph TD
-    A[價格 $13.61] --> B[MA系統: 🟢短期看漲, 🔴長期看跌]
-    A --> C[RSI(14): 🔴超買 (79.01)]
-    A --> D[MACD: 🟢金叉, 動能柱擴大]
-    A --> E[Stochastics: 🔴超買 (%K 83.29, %D 84.42)]
-    A --> F[ADX(14): 🟡弱趨勢 (20.49), 但+DI主導]
-    A --> G[布林通道: 🔴價格觸及上軌 (BB %B 0.95)]
-    A --> H[成交量: 🟢量能放大, OBV確認]
+    A["價格 $13.61"] --> B["MA系統: 🟢短期看漲, 🔴長期看跌"]
+    A --> C["RSI(14): 🔴超買 (79.01)"]
+    A --> D["MACD: 🟢金叉, 動能柱擴大"]
+    A --> E["Stochastics: 🔴超買 (%K 83.29, %D 84.42)"]
+    A --> F["ADX(14): 🟡弱趨勢 (20.49), 但+DI主導"]
+    A --> G["布林通道: 🔴價格觸及上軌 (BB %B 0.95)"]
+    A --> H["成交量: 🟢量能放大, OBV確認"]
 
-    B --> I{綜合訊號}
+    B --> I{"綜合訊號"}
     C --> I
     D --> I
     E --> I
@@ -430,8 +430,8 @@ graph TD
     G --> I
     H --> I
 
-    I --> J[短期動能強勁，但面臨超買和長期均線壓力]
-    J --> K[需警惕回調風險，關注關鍵阻力位能否突破]
+    I --> J["短期動能強勁，但面臨超買和長期均線壓力"]
+    J --> K["需警惕回調風險，關注關鍵阻力位能否突破"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -440,30 +440,30 @@ NU的移動平均線系統呈現出短期與長期趨勢的明顯衝突。
 
 ```mermaid
 graph TD
-    P[當前價格 $13.61]
-    MA20[MA20: $12.56]
-    MA50[MA50: $13.10]
-    MA200[MA200: $15.28]
+    P["當前價格 $13.61"]
+    MA20["MA20: $12.56"]
+    MA50["MA50: $13.10"]
+    MA200["MA200: $15.28"]
 
-    P -->|上方| MA20
-    P -->|上方| MA50
-    P -->|下方| MA200
+    P -->|"上方"| MA20
+    P -->|"上方"| MA50
+    P -->|"下方"| MA200
 
-    MA20 -->|低於| MA50 -->|低於| MA200
+    MA20 -->|"低於"| MA50 -->|"低於"| MA200
 
     subgraph 均線排列判斷
-        Direction[均線排列: MA20 < MA50 < MA200] --> Bearish[🔴 空頭排列]
+        Direction["均線排列: MA20 < MA50 < MA200"] --> Bearish["🔴 空頭排列"]
     end
 
     subgraph 價格與均線關係
-        ShortTerm[價格 > 短期MA] --> BullishShort[🟢 短期多頭趨勢]
-        LongTerm[價格 < 長期MA] --> BearishLong[🔴 長期空頭趨勢]
+        ShortTerm["價格 > 短期MA"] --> BullishShort["🟢 短期多頭趨勢"]
+        LongTerm["價格 < 長期MA"] --> BearishLong["🔴 長期空頭趨勢"]
     end
 
-    Bearish --> Conflict{趨勢衝突}
+    Bearish --> Conflict{"趨勢衝突"}
     BullishShort --> Conflict
     BearishLong --> Conflict
-    Conflict --> Conclusion[🟡 短期反彈強勁，但長期趨勢仍偏空]
+    Conflict --> Conclusion["🟡 短期反彈強勁，但長期趨勢仍偏空"]
 ```
 
 **分析**：
@@ -495,37 +495,37 @@ RSI(14): 79.01
 
 ```mermaid
 graph TD
-    P[當前價格 $13.61]
+    P["當前價格 $13.61"]
 
     subgraph Moving Averages
-        MA20[MA20: $12.56] -->|價格上方| P_MA_Up(🟢 短期看漲)
-        MA50[MA50: $13.10] -->|價格上方| P_MA_Up
-        MA200[MA200: $15.28] -->|價格下方| P_MA_Down(🔴 長期看跌)
-        MA_Arrangement[均線排列: MA20 < MA50 < MA200] --> MA_Bear(🔴 空頭排列)
+        MA20["MA20: $12.56"] -->|"價格上方"| P_MA_Up("🟢 短期看漲")
+        MA50["MA50: $13.10"] -->|"價格上方"| P_MA_Up
+        MA200["MA200: $15.28"] -->|"價格下方"| P_MA_Down("🔴 長期看跌")
+        MA_Arrangement["均線排列: MA20 < MA50 < MA200"] --> MA_Bear("🔴 空頭排列")
     end
 
     subgraph Oscillators
-        RSI[RSI(14): 79.01] --> RSI_Overbought(🔴 超買區)
-        MACD_Line[MACD: 0.122] -->|高於| MACD_Signal[MACD Signal: -0.055]
-        MACD_Hist[MACD Hist: +0.178] --> MACD_Bull(🟢 多頭動能增強)
-        StochK[Stoch %K: 83.29] --> Stoch_Overbought(🔴 超買區)
-        StochD[Stoch %D: 84.42] --> Stoch_Overbought
+        RSI["RSI(14): 79.01"] --> RSI_Overbought("🔴 超買區")
+        MACD_Line["MACD: 0.122"] -->|"高於"| MACD_Signal["MACD Signal: -0.055"]
+        MACD_Hist["MACD Hist: +0.178"] --> MACD_Bull("🟢 多頭動能增強")
+        StochK["Stoch %K: 83.29"] --> Stoch_Overbought("🔴 超買區")
+        StochD["Stoch %D: 84.42"] --> Stoch_Overbought
     end
 
     subgraph Trend & Volatility
-        ADX[ADX(14): 20.49] --> ADX_Weak(🟡 弱趨勢/盤整)
-        DI_Plus[+DI: 31.23] -->|高於| DI_Minus[-DI: 17.58] --> DI_Bull(🟢 多頭主導)
-        BB_Upper[BB上軌: $13.73] -->|價格接近| BB_Tight(🔴 價格偏高,或觸及通道邊緣)
-        BB_PercentB[BB %B: 0.95] --> BB_Overbought(🔴 超買)
-        ATR[ATR(14): $0.46] --> ATR_Moderate(🟡 中等波動)
+        ADX["ADX(14): 20.49"] --> ADX_Weak("🟡 弱趨勢/盤整")
+        DI_Plus["+DI: 31.23"] -->|"高於"| DI_Minus["-DI: 17.58"] --> DI_Bull("🟢 多頭主導")
+        BB_Upper["BB上軌: $13.73"] -->|"價格接近"| BB_Tight("🔴 價格偏高,或觸及通道邊緣")
+        BB_PercentB["BB %B: 0.95"] --> BB_Overbought("🔴 超買")
+        ATR["ATR(14): $0.46"] --> ATR_Moderate("🟡 中等波動")
     end
 
     subgraph Volume
-        LatestVol[最新成交量: 55.8M] -->|高於| AvgVol[20日/50日均量]
-        OBV_Trend[OBV趨勢: OBV > MA] --> OBV_Bull(🟢 量能支撐上漲)
+        LatestVol["最新成交量: 55.8M"] -->|"高於"| AvgVol["20日/50日均量"]
+        OBV_Trend["OBV趨勢: OBV > MA"] --> OBV_Bull("🟢 量能支撐上漲")
     end
 
-    P_MA_Up --> Overall_Conclusion(📝 綜合結論)
+    P_MA_Up --> Overall_Conclusion("📝 綜合結論")
     P_MA_Down --> Overall_Conclusion
     MA_Bear --> Overall_Conclusion
     RSI_Overbought --> Overall_Conclusion
@@ -538,7 +538,7 @@ graph TD
     ATR_Moderate --> Overall_Conclusion
     OBV_Bull --> Overall_Conclusion
 
-    Overall_Conclusion --> Final_Verdict[🟡 股價短期強勢反彈，但超買與長期壓力並存，需謹慎]
+    Overall_Conclusion --> Final_Verdict["🟡 股價短期強勢反彈，但超買與長期壓力並存，需謹慎"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -669,23 +669,23 @@ NU在不同時間框架下的趨勢表現出明顯的分歧，這要求投資者
 
 ```mermaid
 graph TD
-    A[月線趨勢 - 24個月] --> B{長期視角}
-    B --> B1[2024年低點後震盪上行]
-    B --> B2[2026年1月高點後修正]
-    B1 --> C[當前價格 $13.61]
+    A["月線趨勢 - 24個月"] --> B{"長期視角"}
+    B --> B1["2024年低點後震盪上行"]
+    B --> B2["2026年1月高點後修正"]
+    B1 --> C["當前價格 $13.61"]
     B2 --> C
-    C --> D[週線趨勢 - 近20週]
-    D --> D1[2026年4月高點後快速下跌]
-    D --> D2[2026年5-6月築底反彈]
-    D1 --> E[日線趨勢 - 近期]
+    C --> D["週線趨勢 - 近20週"]
+    D --> D1["2026年4月高點後快速下跌"]
+    D --> D2["2026年5-6月築底反彈"]
+    D1 --> E["日線趨勢 - 近期"]
     D2 --> E
-    E --> E1[價格站上MA20/MA50]
-    E --> E2[MACD金叉，RSI超買]
-    E1 --> F{綜合判斷}
+    E --> E1["價格站上MA20/MA50"]
+    E --> E2["MACD金叉，RSI超買"]
+    E1 --> F{"綜合判斷"}
     E2 --> F
-    F --> G[長期：🟡 震盪偏空 (修正中)]
-    F --> H[中期：🟡 築底反彈 (仍有壓力)]
-    F --> I[短期：🟢 強勁上漲 (超買風險高)]
+    F --> G["長期：🟡 震盪偏空 (修正中)"]
+    F --> H["中期：🟡 築底反彈 (仍有壓力)"]
+    F --> I["短期：🟢 強勁上漲 (超買風險高)"]
 ```
 
 **長期趨勢 (月線)**：從2024年12月的低點$10.36開始，NU經歷了一波顯著的上漲行情，直至2026年1月達到$17.75的階段性高點。然而，隨後股價進入修正階段，從高點下跌超過20%，顯示長期上漲動能已減弱，目前處於震盪偏空的修正趨勢中。儘管如此，當前價格$13.61仍高於2024年的大部分時間，表明其仍具備一定的長期成長潛力，但需突破關鍵阻力才能確認新一輪上漲。
@@ -754,14 +754,14 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而非方向
 
 ```mermaid
 graph TD
-    A[ADX(14) 值: 20.49] --> B{趨勢強度判斷}
-    B --> C{ADX < 25?}
-    C -- 是 --> D[弱趨勢/盤整行情]
-    C -- 否 --> E[強趨勢行情]
-    D --> F{+DI (31.23) vs -DI (17.58)}
-    F --> F1[+DI > -DI: 多頭主導]
-    F1 --> G{綜合結論}
-    G --> G1[🟡 市場處於弱趨勢或盤整階段，但多頭力量暫時佔優勢]
+    A["ADX(14) 值: 20.49"] --> B{"趨勢強度判斷"}
+    B --> C{"ADX < 25?"}
+    C -- 是 --> D["弱趨勢/盤整行情"]
+    C -- 否 --> E["強趨勢行情"]
+    D --> F{"+DI (31.23) vs -DI (17.58)"}
+    F --> F1["+DI > -DI: 多頭主導"]
+    F1 --> G{"綜合結論"}
+    G --> G1["🟡 市場處於弱趨勢或盤整階段，但多頭力量暫時佔優勢"]
 ```
 
 **ADX強度對照表**：
@@ -788,18 +788,18 @@ NU的ADX(14)數值為**20.49**，明顯低於25的門檻，這表明當前市場
 
 ```mermaid
 graph TD
-    A[價格走勢分析] --> B{下跌修正後反彈}
-    B --> C[2026年1月高點 $17.75]
-    B --> D[2026年5月低點 $12.19]
-    B --> E[2026年6月次低點 $11.97]
-    D -- 反彈至 --> F[2026年5月底 $13.13]
-    E -- 反彈至 --> G[當前 $13.61]
-    F -- 與 --> E -- 構成 --> H[潛在雙重底 (W底) 形態]
-    H --> I[頸線確認點: $13.13]
-    I --> J[突破頸線 $13.13]
-    J -- 伴隨 --> K[量能放大]
-    K --> L[形態目標價計算]
-    L --> M[最終形態判斷: 🟢 雙重底形態已初步確認]
+    A["價格走勢分析"] --> B{"下跌修正後反彈"}
+    B --> C["2026年1月高點 $17.75"]
+    B --> D["2026年5月低點 $12.19"]
+    B --> E["2026年6月次低點 $11.97"]
+    D -- 反彈至 --> F["2026年5月底 $13.13"]
+    E -- 反彈至 --> G["當前 $13.61"]
+    F -- 與 --> E -- 構成 --> H["潛在雙重底 (W底) 形態"]
+    H --> I["頸線確認點: $13.13"]
+    I --> J["突破頸線 $13.13"]
+    J -- 伴隨 --> K["量能放大"]
+    K --> L["形態目標價計算"]
+    L --> M["最終形態判斷: 🟢 雙重底形態已初步確認"]
 ```
 
 **分析**：
@@ -968,37 +968,37 @@ $12.19 ║███████████████████████�
 
 ```mermaid
 graph TD
-    P[當前價格 $13.61]
+    P["當前價格 $13.61"]
 
     subgraph Moving Averages
-        MA20[MA20: $12.56] -->|價格上方| P_MA_Up(🟢 短期看漲)
-        MA50[MA50: $13.10] -->|價格上方| P_MA_Up
-        MA200[MA200: $15.28] -->|價格下方| P_MA_Down(🔴 長期看跌)
-        MA_Arrangement[均線排列: MA20 < MA50 < MA200] --> MA_Bear(🔴 空頭排列)
+        MA20["MA20: $12.56"] -->|"價格上方"| P_MA_Up("🟢 短期看漲")
+        MA50["MA50: $13.10"] -->|"價格上方"| P_MA_Up
+        MA200["MA200: $15.28"] -->|"價格下方"| P_MA_Down("🔴 長期看跌")
+        MA_Arrangement["均線排列: MA20 < MA50 < MA200"] --> MA_Bear("🔴 空頭排列")
     end
 
     subgraph Oscillators
-        RSI[RSI(14): 79.01] --> RSI_Overbought(🔴 超買區)
-        MACD_Line[MACD: 0.122] -->|高於| MACD_Signal[MACD Signal: -0.055]
-        MACD_Hist[MACD Hist: +0.178] --> MACD_Bull(🟢 多頭動能增強)
-        StochK[Stoch %K: 83.29] --> Stoch_Overbought(🔴 超買區)
-        StochD[Stoch %D: 84.42] --> Stoch_Overbought
+        RSI["RSI(14): 79.01"] --> RSI_Overbought("🔴 超買區")
+        MACD_Line["MACD: 0.122"] -->|"高於"| MACD_Signal["MACD Signal: -0.055"]
+        MACD_Hist["MACD Hist: +0.178"] --> MACD_Bull("🟢 多頭動能增強")
+        StochK["Stoch %K: 83.29"] --> Stoch_Overbought("🔴 超買區")
+        StochD["Stoch %D: 84.42"] --> Stoch_Overbought
     end
 
     subgraph Trend & Volatility
-        ADX[ADX(14): 20.49] --> ADX_Weak(🟡 弱趨勢/盤整)
-        DI_Plus[+DI: 31.23] -->|高於| DI_Minus[-DI: 17.58] --> DI_Bull(🟢 多頭主導)
-        BB_Upper[BB上軌: $13.73] -->|價格接近| BB_Tight(🔴 價格偏高,或觸及通道邊緣)
-        BB_PercentB[BB %B: 0.95] --> BB_Overbought(🔴 超買)
-        ATR[ATR(14): $0.46] --> ATR_Moderate(🟡 中等波動)
+        ADX["ADX(14): 20.49"] --> ADX_Weak("🟡 弱趨勢/盤整")
+        DI_Plus["+DI: 31.23"] -->|"高於"| DI_Minus["-DI: 17.58"] --> DI_Bull("🟢 多頭主導")
+        BB_Upper["BB上軌: $13.73"] -->|"價格接近"| BB_Tight("🔴 價格偏高,或觸及通道邊緣")
+        BB_PercentB["BB %B: 0.95"] --> BB_Overbought("🔴 超買")
+        ATR["ATR(14): $0.46"] --> ATR_Moderate("🟡 中等波動")
     end
 
     subgraph Volume
-        LatestVol[最新成交量: 55.8M] -->|高於| AvgVol[20日/50日均量]
-        OBV_Trend[OBV趨勢: OBV > MA] --> OBV_Bull(🟢 量能支撐上漲)
+        LatestVol["最新成交量: 55.8M"] -->|"高於"| AvgVol["20日/50日均量"]
+        OBV_Trend["OBV趨勢: OBV > MA"] --> OBV_Bull("🟢 量能支撐上漲")
     end
 
-    P_MA_Up --> Overall_Conclusion(📝 綜合結論)
+    P_MA_Up --> Overall_Conclusion("📝 綜合結論")
     P_MA_Down --> Overall_Conclusion
     MA_Bear --> Overall_Conclusion
     RSI_Overbought --> Overall_Conclusion
@@ -1011,7 +1011,7 @@ graph TD
     ATR_Moderate --> Overall_Conclusion
     OBV_Bull --> Overall_Conclusion
 
-    Overall_Conclusion --> Final_Verdict[🟡 股價短期強勢反彈，但超買與長期壓力並存，需謹慎]
+    Overall_Conclusion --> Final_Verdict["🟡 股價短期強勢反彈，但超買與長期壓力並存，需謹慎"]
 ```
 
 ### 📈 移動平均線排列分析

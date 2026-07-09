@@ -446,8 +446,8 @@ graph LR
     CapEx --> FCF["Free Cash Flow (FY2025): $-137.4M"]
     FCF --> FinancingActivities["Financing Activities (Estimated): $+200M (e.g., Debt reduction, Equity issuance)"]
     FinancingActivities --> NetCashChange["Net Cash Change (FY2025): $+231.3M"]
-    NetCashChange --> CashEnd["Cash & Equivalents (FY2025): $560.6M"]
-    CashStart["Cash & Equivalents (FY2024): $329.3M"] --> CashEnd
+    NetCashChange --> CashEnd["Cash & Equivalents(FY2025): $560.6M"]
+    CashStart["Cash & Equivalents(FY2024): $329.3M"] --> CashEnd
 ```
 **備註：**
 *   **Operating Cash Flow (OCF_Est)**：由於原始數據中為NaN，此處為分析師根據淨利潤和自由現金流推斷的估計值，反映了淨利潤在營運層面的調整（如折舊攤銷、營運資金變動等），以使其與自由現金流的計算邏輯一致。

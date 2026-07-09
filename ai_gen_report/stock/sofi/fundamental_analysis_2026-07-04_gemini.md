@@ -459,16 +459,16 @@ graph LR
     NET_CASH_CHANGE["淨現金變化 (Net Cash & Equivalents Change)<br/>FY2025: +$2.39B"]
 
     NI --> OCF
-    OCF --> FCF_FROM_OCF[營業活動產生的現金流]
-    FCF_FROM_OCF -- 減去 --> CAPEX
+    OCF --> FCF_FROM_OCF["營業活動產生的現金流"]
+    nb1["FCF_FROM_OCF -- 減去"] --> CAPEX
     CAPEX --> FCF
 
     FCF --> INVESTING["投資活動現金流"]
     INVESTING --> FINANCING["融資活動現金流"]
     FINANCING --> NET_CASH_CHANGE
 
-    NET_CASH_CHANGE -- 來自 --> CCE_START[期初現金及等價物]
-    CCE_START -- 導致 --> CCE_END[期末現金及等價物]
+    NET_CASH_CHANGE -- 來自 --> CCE_START["期初現金及等價物"]
+    CCE_START -- 導致 --> CCE_END["期末現金及等價物"]
 
     CCE_START["期初現金及等價物<br/>FY2024: $2.54B"]
     CCE_END["期末現金及等價物<br/>FY2025: $4.93B"]

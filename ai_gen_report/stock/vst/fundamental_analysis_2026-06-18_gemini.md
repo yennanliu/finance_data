@@ -152,8 +152,8 @@ graph TD
     RET --> COM["Commercial & Industrial<br/>長期合約、穩定現金流"]
 
     %% 協同效應
-    NUC -->|直接購電協議 PPA| AI["💻 AI 數據中心 (Hyperscalers)"]
-    GEN -->|實物對沖| RET
+    NUC -->|"直接購電協議 PPA"| AI["💻 AI 數據中心 (Hyperscalers)"]
+    GEN -->|"實物對沖"| RET
 ```
 
 ### 2.2 市場份額

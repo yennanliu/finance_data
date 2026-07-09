@@ -129,7 +129,7 @@ Intel Corporation (INTC) 目前正經歷其創立以來最深刻的轉型，從�
 graph TD
     INTC["Intel Corporation<br/>市值: $664.84B | TTM 營收: $53.76B"]
     CCG["Client Computing Group (CCG)<br/>營收佔比 ~53%"]
-    DCAI["Data Center & AI (DCAI)<br/>營收佔比 ~28%"]
+    DCAI["Data Center & AI(DCAI)<br/>營收佔比 ~28%"]
     IF["Intel Foundry (晶圓代工)<br/>營收佔比 ~12% (主要內部抵銷)"]
     OTH["Other (Mobileye, Altera, NEX)<br/>營收佔比 ~7%"]
 

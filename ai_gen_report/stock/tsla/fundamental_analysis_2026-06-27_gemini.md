@@ -968,7 +968,7 @@ graph TD
     MT --> MT3["🌐 Geographic Market Penetration"]
     MT --> MT4["⚙️ Advanced Manufacturing Innovations"]
 
-    LT --> LT1["🤖 AI & Robotics (Optimus Humanoid Robot)"]
+    LT --> LT1["🤖 AI & Robotics(Optimus Humanoid Robot)"]
     LT --> LT2["🔬 Battery Technology Breakthroughs"]
     LT --> LT3["💡 Integrated Energy Ecosystem (Virtual Power Plants)"]
     LT --> LT4["🚀 Space Exploration Synergy (Starlink, SpaceX)"]

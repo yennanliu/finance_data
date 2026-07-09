@@ -119,8 +119,8 @@ graph TD
     Monthly["月線圖 (長期 - Bullish)\n趨勢：🟢 強勢多頭\nMA200 向上，高點持續抬升"] --> Weekly["週線圖 (中期 - Corrective)\n趨勢：🟡 深度回檔\n跌破 10週均線，尋求 40週均線支撐"]
     Weekly --> Daily["日線圖 (短期 - Bearish)\n趨勢：🔴 空頭主導\nMA5/10/20 空頭排列，跌破布林中軌"]
     Daily --> Action{"交易決策"}
-    Action -->|長線投資者| Buy["分批逢低買入 (接近 MA200)"]
-    Action -->|短線交易者| Short["反彈無力時順勢做空"]
+    Action -->|"長線投資者"| Buy["分批逢低買入 (接近 MA200)"]
+    Action -->|"短線交易者"| Short["反彈無力時順勢做空"]
 ```
 
 ---
@@ -172,13 +172,13 @@ $150 ┤ ●  ●   │  ●  │  │  ●        │  │  │  │    │    
 
 ```mermaid
 graph TD
-    ADX_Value["ADX 實際值: 23.43"] --> ADX_Range{ADX 區間判斷}
-    ADX_Range -->|> 25| Strong["強趨勢行情\n適合均線突破策略"]
-    ADX_Range -->|< 25| Weak["弱趨勢/震盪行情\n適合指標超買超賣策略"]
+    ADX_Value["ADX 實際值: 23.43"] --> ADX_Range{"ADX 區間判斷"}
+    ADX_Range -->|"> 25"| Strong["強趨勢行情\n適合均線突破策略"]
+    ADX_Range -->|"< 25"| Weak["弱趨勢/震盪行情\n適合指標超買超賣策略"]
     
-    DI_Relation["+DI (20.35) vs -DI (29.33)"] --> DI_Verdict{多空主導權}
-    DI_Verdict -->|+DI > -DI| Bulls["🟢 多頭主導"]
-    DI_Verdict -->|-DI > +DI| Bears["🔴 空頭主導"]
+    DI_Relation["+DI (20.35) vs -DI (29.33)"] --> DI_Verdict{"多空主導權"}
+    DI_Verdict -->|"+DI > -DI"| Bulls["🟢 多頭主導"]
+    DI_Verdict -->|"-DI > +DI"| Bears["🔴 空頭主導"]
     
     Weak --> Final["結論：目前為【無趨勢的空頭修正】，價格易出現無預警反彈，但整體重心下移"]
     Bears --> Final
@@ -331,9 +331,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MA5["MA5 ($385.70)"] -->|向下交叉| MA20["MA20 ($418.73)"]
-    MA10["MA10 ($415.39)"] -->|向下交叉| MA50["MA50 ($406.45)"]
-    MA20 -->|壓制| Price["當前價格 ($382.07)"]
+    MA5["MA5 ($385.70)"] -->|"向下交叉"| MA20["MA20 ($418.73)"]
+    MA10["MA10 ($415.39)"] -->|"向下交叉"| MA50["MA50 ($406.45)"]
+    MA20 -->|"壓制"| Price["當前價格 ($382.07)"]
 ```
 
 *   **均線狀態**：**短期空頭排列，長期多頭排列**。
@@ -448,9 +448,9 @@ $358.51 ───────●────────────────
 
 ```mermaid
 graph TD
-    Price_Action{"當前股價: $382.07"} -->|反彈至 R1/R2| Short_Strategy["策略 C: 逢高做空\n目標 $358, 止損 $428"]
-    Price_Action -->|回落至 S2| Long_Strategy_A["策略 A: 左側年線抄底\n目標 $418, 止損 $338"]
-    Price_Action -->|放量突破 R1| Long_Strategy_B["策略 B: 右側突破做多\n目標 $446, 止損 $371"]
+    Price_Action{"當前股價: $382.07"} -->|"反彈至 R1/R2"| Short_Strategy["策略 C: 逢高做空\n目標 $358, 止損 $428"]
+    Price_Action -->|"回落至 S2"| Long_Strategy_A["策略 A: 左側年線抄底\n目標 $418, 止損 $338"]
+    Price_Action -->|"放量突破 R1"| Long_Strategy_B["策略 B: 右側突破做多\n目標 $446, 止損 $371"]
 ```
 
 ---

@@ -373,7 +373,7 @@ graph LR
     FCF --> DEBT_PAY
     FCF --> REPURCHASE
     FCF --> DIVIDEND
-    DEBT_PAY & REPURCHASE & DIVIDEND --> NET_CASH
+    DEBT_PAY   &   REPURCHASE   &   DIVIDEND --> NET_CASH
 ```
 
 ### 5.2 FCF 轉換率趨勢

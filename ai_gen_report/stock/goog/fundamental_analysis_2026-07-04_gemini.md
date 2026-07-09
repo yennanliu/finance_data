@@ -151,7 +151,7 @@ graph TD
     A --> OB
 
     GS --> GS1["廣告 (Search, YouTube, Network)<br/>(主要收入來源)"]
-    GS --> GS2["Android & Chrome (平台)<br/>(生態系統核心)"]
+    GS --> GS2["Android & Chrome(平台)<br/>(生態系統核心)"]
     GS --> GS3["Devices (Pixel, Nest)<br/>(硬體產品)"]
     GS --> GS4["Google Play (應用商店)<br/>(數位內容分發)"]
 

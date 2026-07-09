@@ -169,8 +169,8 @@ $445.18 ═══════════════════●════
 
 ```mermaid
 graph TD
-    ADX_Value["ADX 讀值: 28.32"] -->|ADX > 25| Trend_Active["確定進入趨勢行情 (非盤整)"]
-    DI_Compare["+DI: 28.63 vs -DI: 20.81"] -->|+DI > -DI| Bull_Control["多頭仍掌握市場主導權"]
+    ADX_Value["ADX 讀值: 28.32"] -->|"ADX > 25"| Trend_Active["確定進入趨勢行情 (非盤整)"]
+    DI_Compare["+DI: 28.63 vs -DI: 20.81"] -->|"+DI > -DI"| Bull_Control["多頭仍掌握市場主導權"]
     Trend_Active --> Joint_Verdict
     Bull_Control --> Joint_Verdict
     Joint_Verdict["綜合研判: 多頭趨勢仍存，但斜率趨緩"]
@@ -196,8 +196,8 @@ graph TD
 ```mermaid
 graph TD
     Flag_Pole["1. 強勁旗桿 (Pole)\n$203.43 暴漲至 $558.37"] --> Flag_Body["2. 旗部整理 (Flag Body)\n在 $445.18 - $558.37 震盪"]
-    Flag_Body -->|向上突破 $558.37| Bull_Breakout["多頭旗形突破\n量能需 > 50M"]
-    Flag_Body -->|跌破 $501.86| Wedge_Breakdown["上升楔形跌破\n轉向中期修正"]
+    Flag_Body -->|"向上突破 $558.37"| Bull_Breakout["多頭旗形突破\n量能需 > 50M"]
+    Flag_Body -->|"跌破 $501.86"| Wedge_Breakdown["上升楔形跌破\n轉向中期修正"]
 ```
 
 ### 🕯️ 重要K線形態分析（近 5 週關鍵 K 線）
@@ -409,10 +409,10 @@ $$\text{Price } \uparrow \quad \text{vs} \quad \text{RSI } \downarrow \implies \
 
 ```mermaid
 graph TD
-    Start["當前價格 $537.37"] --> Choice{交易風格選擇}
-    Choice -->|1. 突破型 (右側)| Breakout["策略 A: 歷史新高突破法\n● 觸發點: 突破 $558.37"]
-    Choice -->|2. 回踩型 (左側)| Pullback["策略 B: 箱體下軌低吸法\n● 進場點: $501.86 - $472.01"]
-    Choice -->|3. 做空型 (逆勢)| Short["策略 C: 楔形破位做空法\n● 觸發點: 跌破 $501.86"]
+    Start["當前價格 $537.37"] --> Choice{"交易風格選擇"}
+    Choice -->|"1. 突破型 (右側)"| Breakout["策略 A: 歷史新高突破法\n● 觸發點: 突破 $558.37"]
+    Choice -->|"2. 回踩型 (左側)"| Pullback["策略 B: 箱體下軌低吸法\n● 進場點: $501.86 - $472.01"]
+    Choice -->|"3. 做空型 (逆勢)"| Short["策略 C: 楔形破位做空法\n● 觸發點: 跌破 $501.86"]
 ```
 
 ### 🟢 多頭策略詳情

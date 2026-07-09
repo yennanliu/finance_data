@@ -462,7 +462,7 @@ RKLB 的現金流量表反映了其作為一家成長型公司的典型特徵：
 ```mermaid
 graph LR
     NI["Net Income (FY2025): -$198.21M"]
-    DA["Depreciation & Amortization (FY2025): +$44M"]
+    DA["Depreciation & Amortization(FY2025): +$44M"]
     WC["Working Capital Changes (FY2025): +$32.7M"]
     OCF["Operating Cash Flow (FY2025): -$165.52M"]
     CAPEX["Capital Expenditure (FY2025): -$156.28M"]
@@ -470,11 +470,11 @@ graph LR
     Financing["Financing Activities (FY2025): +$826.5M (估計)"]
     NetCashChange["Net Cash Change (FY2025): +$557.62M"]
 
-    NI -- Adjustments --> OCF
-    OCF -- Less --> CAPEX
-    CAPEX -- Equals --> FCF
-    FCF -- Plus --> Financing
-    Financing -- Equals --> NetCashChange
+    nb1["NI -- Adjustments"] --> OCF
+    nb2["OCF -- Less"] --> CAPEX
+    nb3["CAPEX -- Equals"] --> FCF
+    nb4["FCF -- Plus"] --> Financing
+    nb5["Financing -- Equals"] --> NetCashChange
 
     style NI fill:#f9f,stroke:#333,stroke-width:2px
     style OCF fill:#f9f,stroke:#333,stroke-width:2px

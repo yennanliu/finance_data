@@ -126,23 +126,23 @@ VST的綜合技術評分顯示其處於一個相對中性的偏空震盪區間�
 
 ```mermaid
 graph TD
-    A[月線趨勢 - 長期] --> A1{2025年7月高點後震盪下跌}
-    A1 --> A2[目前處於長期下降趨勢的盤整區間]
-    A2 -- 價格低於MA200 --> Bearish_Long[🔴 長期趨勢偏空]
+    A["月線趨勢 - 長期"] --> A1{"2025年7月高點後震盪下跌"}
+    A1 --> A2["目前處於長期下降趨勢的盤整區間"]
+    A2 -- 價格低於MA200 --> Bearish_Long["🔴 長期趨勢偏空"]
 
-    B[週線趨勢 - 中期] --> B1{2026年3月/5月兩次探底後反彈}
-    B1 --> B2[MA20/MA50由下彎轉為走平或輕微上翹]
-    B2 -- 價格站上MA20/MA50 --> Neutral_Mid[🟡 中期趨勢震盪偏多]
+    B["週線趨勢 - 中期"] --> B1{"2026年3月/5月兩次探底後反彈"}
+    B1 --> B2["MA20/MA50由下彎轉為走平或輕微上翹"]
+    B2 -- 價格站上MA20/MA50 --> Neutral_Mid["🟡 中期趨勢震盪偏多"]
 
-    C[日線趨勢 - 短期] --> C1{近期從$139.68反彈至$160.23}
-    C1 --> C2[MACD金叉，RSI處於強勢區間]
-    C2 -- 價格站穩短期均線 --> Bullish_Short[🟢 短期趨勢偏多]
+    C["日線趨勢 - 短期"] --> C1{"近期從$139.68反彈至$160.23"}
+    C1 --> C2["MACD金叉，RSI處於強勢區間"]
+    C2 -- 價格站穩短期均線 --> Bullish_Short["🟢 短期趨勢偏多"]
 
-    Bearish_Long -- 構成阻力 --> Overall_Trend[📈 VST 多時框架趨勢總結]
-    Neutral_Mid -- 提供支撐 --> Overall_Trend
-    Bullish_Short -- 提供動能 --> Overall_Trend
+    Bearish_Long -- 構成阻力 --> Overall_Trend["📈 VST 多時框架趨勢總結"]
+    nb1["Neutral_Mid -- 提供支撐"] --> Overall_Trend
+    nb2["Bullish_Short -- 提供動能"] --> Overall_Trend
 
-    Overall_Trend --> Conclusion{綜合判斷：長期空頭趨勢下的短期反彈}
+    Overall_Trend --> Conclusion{"綜合判斷：長期空頭趨勢下的短期反彈"}
 ```
 
 **多時框解讀**：

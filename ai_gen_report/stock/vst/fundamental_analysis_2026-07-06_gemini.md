@@ -353,12 +353,12 @@ graph TD
     TA --> CA["Current Assets ($9.02B - Mar'26)<br/>佔總資產21.8%"]
     TA --> NCA["Non-Current Assets ($32.29B - Mar'26)<br/>佔總資產78.2%"]
 
-    CA --> CashEQ["Cash & Equivalents ($671M)"]
+    CA --> CashEQ["Cash & Equivalents($671M)"]
     CA --> AR["Accounts Receivable ($1.98B)"]
     CA --> Inventory["Inventory ($1.03B)"]
     CA --> OthCA["Other Current Assets ($5.33B)"]
 
-    NCA --> PPE["Net Property, Plant & Equipment ($19.88B)"]
+    NCA --> PPE["Net Property, Plant & Equipment($19.88B)"]
     NCA --> LTInv["Long-Term Investments ($5.00B)"]
     NCA --> Goodwill["Goodwill ($2.81B)"]
     NCA --> OthIA["Other Intangible Assets ($2.36B)"]

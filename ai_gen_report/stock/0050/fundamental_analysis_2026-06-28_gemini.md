@@ -399,11 +399,11 @@ graph LR
     I["投資者資金"] -- 申購 --> ETF_CREATION["ETF 單位創設"]
     ETF_CREATION -- 資金流入 --> ETF_FUND["0050 基金"]
     ETF_FUND -- 買入 --> HOLDINGS["成分股投資"]
-    HOLDINGS -- 股息收入 --> ETF_FUND
+    nb1["HOLDINGS -- 股息收入"] --> ETF_FUND
     ETF_FUND -- 費用支出 --> EXPENSES["營運費用"]
     ETF_FUND -- 股息分配 --> DIVIDENDS["投資者股息"]
     ETF_FUND -- 資金流出 --> ETF_REDEMPTION["ETF 單位贖回"]
-    ETF_REDEMPTION -- 贖回 --> I
+    nb2["ETF_REDEMPTION -- 贖回"] --> I
 ```
 
 **分析：** 投資者透過申購 ETF 單位將資金注入基金，基金用這些資金購買成分股。成分股產生的股息收入會回到基金，扣除營運費用後，再分配給投資者。當投資者贖回 ETF 單位時，基金會出售部分成分股或使用現金來支付贖回款。這種機制確保了 ETF 的市場價格與其淨值保持一致，並有效管理資金流動。

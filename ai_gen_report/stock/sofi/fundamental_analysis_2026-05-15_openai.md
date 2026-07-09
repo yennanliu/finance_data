@@ -113,23 +113,23 @@ graph TD
 
 ```mermaid
 graph TD;
-    SOFI[SoFi Technologies, Inc.: 市值$20.02B, 年營收$3.91B]
-    LENDING[Lending: 40%]
-    TECH_PLATFORM[Tech. Platform: 30%]
-    FIN_SERVICES[Financial Services: 30%]
+    SOFI["SoFi Technologies, Inc.: 市值$20.02B, 年營收$3.91B"]
+    LENDING["Lending: 40%"]
+    TECH_PLATFORM["Tech. Platform: 30%"]
+    FIN_SERVICES["Financial Services: 30%"]
 
     SOFI --> LENDING
     SOFI --> TECH_PLATFORM
     SOFI --> FIN_SERVICES
 
-    LENDING --> PD[個人貸款]
-    LENDING --> SD[學生貸款]
-    LENDING --> HD[房屋抵押貸款]
+    LENDING --> PD["個人貸款"]
+    LENDING --> SD["學生貸款"]
+    LENDING --> HD["房屋抵押貸款"]
 
-    TECH_PLATFORM --> GAL[Galileo 平台]
-    FIN_SERVICES --> BM[銀行服務與儲蓄]
-    FIN_SERVICES --> IP[投資管理]
-    FIN_SERVICES --> INS[保險]
+    TECH_PLATFORM --> GAL["Galileo 平台"]
+    FIN_SERVICES --> BM["銀行服務與儲蓄"]
+    FIN_SERVICES --> IP["投資管理"]
+    FIN_SERVICES --> INS["保險"]
 ```
 
 ### 2.2 市場份額

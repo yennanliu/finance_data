@@ -140,7 +140,7 @@ graph TD
     LAUNCH --> L3["NASA 及美國國防部載人/貨運合約"]
 
     CONN --> C1["Consumer Broadband (消費者寬頻訂閱)"]
-    CONN --> C2["Enterprise & Maritime (企業、海事、航空專網)"]
+    CONN --> C2["Enterprise & Maritime(企業、海事、航空專網)"]
     CONN --> C3["Starshield (星盾國防安全通訊)"]
     CONN --> C4["Direct-to-Cell (手機直連衛星服務)"]
 ```
