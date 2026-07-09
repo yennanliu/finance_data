@@ -31,10 +31,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph TD
-    A[基本面] -->|7| B[成長]
-    B -->|8| C[獲利]
-    C -->|6| D[財務健康]
-    D -->|5| E[估值]
+    A["基本面"] -->|"7"| B["成長"]
+    B -->|"8"| C["獲利"]
+    C -->|"6"| D["財務健康"]
+    D -->|"5"| E["估值"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -75,9 +75,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A[Tesla] --> B[汽車]
-    A --> C[能源]
-    A --> D[服務]
+    A["Tesla"] --> B["汽車"]
+    A --> C["能源"]
+    A --> D["服務"]
 ```
 
 ### 市場地位
@@ -166,8 +166,8 @@ pie
 
 ```mermaid
 graph TD
-    A[資產] --> B[流動資產]
-    A --> C[非流動資產]
+    A["資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
 ```
 
 ### 流動性指標
@@ -202,9 +202,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A[營業現金流] --> B[投資現金流]
-    B --> C[融資現金流]
-    C --> D[淨現金流]
+    A["營業現金流"] --> B["投資現金流"]
+    B --> C["融資現金流"]
+    C --> D["淨現金流"]
 ```
 
 ### FCF 轉換率趨勢
@@ -261,8 +261,8 @@ graph LR
 
 ```mermaid
 graph
-    ROE -->|4.9%| ROA
-    ROA -->|2.1%| ROIC
+    ROE -->|"4.9%"| ROA
+    ROA -->|"2.1%"| ROIC
 ```
 
 ---

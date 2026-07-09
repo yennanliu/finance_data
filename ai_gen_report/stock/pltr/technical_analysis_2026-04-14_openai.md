@@ -102,9 +102,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] -->|下降| B[週線趨勢]
-    B -->|盤整| C[日線趨勢]
-    C -->|下降| D[短期趨勢]
+    A["月線趨勢"] -->|"下降"| B["週線趨勢"]
+    B -->|"盤整"| C["日線趨勢"]
+    C -->|"下降"| D["短期趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -139,7 +139,7 @@ $120 ┤    ●
 ```mermaid
 graph TD
     ADX["ADX = 20.69"]
-    ADX -->|弱趨勢| TRENDS[盤整市場]
+    ADX -->|"弱趨勢"| TRENDS["盤整市場"]
 ```
 
 ---
@@ -227,18 +227,18 @@ $100 ║████████████████████████
 
 ```mermaid
 graph TD
-    RSI["RSI(14)"] -->|34.31| SIGNAL["中性偏空"]
-    MACD["MACD"] -->|空頭| SIGNAL
-    MA["均線排列"] -->|空頭排列| SIGNAL
+    RSI["RSI(14)"] -->|"34.31"| SIGNAL["中性偏空"]
+    MACD["MACD"] -->|"空頭"| SIGNAL
+    MA["均線排列"] -->|"空頭排列"| SIGNAL
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格下方| D["看空"]
-    B["中期 MA50"] -->|價格下方| D
-    C["長期 MA200"] -->|價格下方| D
+    A["短期 MA20"] -->|"價格下方"| D["看空"]
+    B["中期 MA50"] -->|"價格下方"| D
+    C["長期 MA200"] -->|"價格下方"| D
 ```
 
 ### 📉 RSI(14) 分析
@@ -250,8 +250,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_LINE["MACD Line"] -->|低於| SIGNAL_LINE["Signal Line"]
-    SIGNAL_LINE -->|空頭| HIST["柱狀圖顯示空頭"]
+    MACD_LINE["MACD Line"] -->|"低於"| SIGNAL_LINE["Signal Line"]
+    SIGNAL_LINE -->|"空頭"| HIST["柱狀圖顯示空頭"]
 ```
 
 ### 📦 布林通道分析
@@ -318,10 +318,10 @@ $120 ┤        ●
 
 ```mermaid
 graph TD
-    A[進場策略] --> B[多頭策略]
-    B --> C[進場條件合適]
-    A --> D[空頭策略]
-    D --> E[反彈結束後進場]
+    A["進場策略"] --> B["多頭策略"]
+    B --> C["進場條件合適"]
+    A --> D["空頭策略"]
+    D --> E["反彈結束後進場"]
 ```
 
 ### 🟢 多頭策略詳情

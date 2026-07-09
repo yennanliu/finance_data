@@ -333,8 +333,8 @@ RSI 目前讀數為 **32.25**。
 
 ```mermaid
 graph LR
-    MACD_Line["MACD 線: -1.087"] -->|低於| Signal_Line["信號線: 4.033"]
-    Signal_Line -->|導致| Hist_Negative["柱狀圖: -5.120 (🔴 看空)"]
+    MACD_Line["MACD 線: -1.087"] -->|"低於"| Signal_Line["信號線: 4.033"]
+    Signal_Line -->|"導致"| Hist_Negative["柱狀圖: -5.120 (🔴 看空)"]
     Hist_Negative --> Action["等待柱狀圖縮短 (綠柱出現) 作為買入訊號"]
 ```
 
@@ -417,11 +417,11 @@ ORCL 目前的 52 週 Beta 約為 **1.15**，與標普500指數（SPY）呈現�
 ```mermaid
 graph TD
     Start["分析 ORCL 當前價位 $184.29"] --> Check_S1{"是否守住 MA60 ($180.88)？"}
-    Check_S1 -->|是 (守住)| Strategy_A["🟢 策略 A：左側逢低買入 (反彈波段)"]
-    Check_S1 -->|否 (跌破)| Check_S2{"是否在 MA120 ($173.33) 企穩？"}
+    Check_S1 -->|"是 (守住)"| Strategy_A["🟢 策略 A：左側逢低買入 (反彈波段)"]
+    Check_S1 -->|"否 (跌破)"| Check_S2{"是否在 MA120 ($173.33) 企穩？"}
     
-    Check_S2 -->|是 (企穩)| Strategy_B["🟢 策略 B：右側確認買入"]
-    Check_S2 -->|否 (跌破)| Strategy_C["🔴 策略 C：順勢做空 (目標 $145)"]
+    Check_S2 -->|"是 (企穩)"| Strategy_B["🟢 策略 B：右側確認買入"]
+    Check_S2 -->|"否 (跌破)"| Strategy_C["🔴 策略 C：順勢做空 (目標 $145)"]
     
     Strategy_A --> Target_A["目標價 1: $205.22 (MA20)<br/>目標價 2: $225.78 (前高)"]
     Strategy_B --> Target_B["目標價 1: $188.39 (MA50)<br/>目標價 2: $204.05 (MA200)"]

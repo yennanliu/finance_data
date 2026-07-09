@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-    基本面-->8
-    成長-->9
-    獲利-->6
-    財務健康-->7
-    估值-->5
+    基本面 --> 8
+    成長 --> 9
+    獲利 --> 6
+    財務健康 --> 7
+    估值 --> 5
 ```
 
 ### 5大投資論點 + 3大風險
@@ -65,12 +65,12 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-    Kratos-->Kratos Government Solutions
-    Kratos-->Unmanned Systems
-    Kratos Government Solutions-->Defense
-    Kratos Government Solutions-->National Security
-    Unmanned Systems-->Aerospace
-    Unmanned Systems-->Defense
+    Kratos --> nb1["Kratos Government Solutions"]
+    Kratos --> nb2["Unmanned Systems"]
+    nb1["Kratos Government Solutions"] --> Defense
+    nb1["Kratos Government Solutions"] --> nb3["National Security"]
+    nb2["Unmanned Systems"] --> Aerospace
+    nb2["Unmanned Systems"] --> Defense
 ```
 
 ### 市場地位
@@ -150,10 +150,10 @@ pie
 ### 資產結構
 ```mermaid
 graph TD;
-    Total_Assets-->Current_Assets[$1.26B]
-    Total_Assets-->Non-Current_Assets
-    Non-Current_Assets-->Property_Plant_Equipment
-    Non-Current_Assets-->Intangible_Assets
+    Total_Assets-->Current_Assets["$1.26B"]
+    Total_Assets --> Non-Current_Assets
+    Non-Current_Assets --> Property_Plant_Equipment
+    Non-Current_Assets --> Intangible_Assets
 ```
 
 ### 流動性指標
@@ -181,10 +181,10 @@ graph TD;
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    營業現金流-->-42.10M
-    投資現金流-->-95.30M
-    融資現金流-->+67.40M
-    總流-->-70.00M
+    營業現金流 --> -42.10M
+    投資現金流 --> -95.30M
+    融資現金流 --> nb1["+67.40M"]
+    總流 --> -70.00M
 ```
 
 ### FCF 轉換率趨勢
@@ -229,9 +229,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD;
-    淨利率-->1.6
-    資產週轉率-->0.8
-    財務槓桿-->1.0
+    淨利率 --> 1.6
+    資產週轉率 --> 0.8
+    財務槓桿 --> 1.0
 ```
 
 ## 7. 估值深度分析
@@ -285,9 +285,9 @@ TAM $100B ██████████
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD;
-    短期-->新產品
-    中期-->國際擴展
-    長期-->技術創新
+    短期 --> 新產品
+    中期 --> 國際擴展
+    長期 --> 技術創新
 ```
 
 ## 9. 風險矩陣
@@ -328,10 +328,10 @@ graph TD;
 ### 投資人適配度
 ```mermaid
 graph TD;
-    成長型-->適合
-    價值型-->不適合
-    股息型-->不適合
-    短期交易-->適合
+    成長型 --> 適合
+    價值型 --> 不適合
+    股息型 --> 不適合
+    短期交易 --> 適合
 ```
 
 ### 關鍵監控指標

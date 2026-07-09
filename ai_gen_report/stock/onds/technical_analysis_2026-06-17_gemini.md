@@ -114,11 +114,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線圖: 長期多頭] -->|24個月大底完成| B[週線圖: 中期高位震盪/修正]
-    B -->|跌破布林中軌| C[日線圖: 短期空頭下行]
-    C -->|跌破MA200| D{決策節點: $9.20 攻防}
-    D -->|守住| E[構築雙底/反彈]
-    D -->|失守| F[向MA240-$8.23尋求支撐]
+    A["月線圖: 長期多頭"] -->|"24個月大底完成"| B["週線圖: 中期高位震盪/修正"]
+    B -->|"跌破布林中軌"| C["日線圖: 短期空頭下行"]
+    C -->|"跌破MA200"| D{"決策節點: $9.20 攻防"}
+    D -->|"守住"| E["構築雙底/反彈"]
+    D -->|"失守"| F["向MA240-$8.23尋求支撐"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖
@@ -181,12 +181,12 @@ ONDS 月線走勢圖（過去12個月）
 
 ```mermaid
 graph TD
-    ADX[ADX 數值: 17.07] -->|小于 25| Range[無趨勢/盤整格局]
-    DI_Compare{+DI vs -DI}
-    DI_Compare -->|+DI: 20.55| Bull[多頭力量]
-    DI_Compare -->|-DI: 24.84| Bear[空頭力量]
-    Bear -->|領先 4.29| BearDominated[空頭暫時主導市場]
-    Range --> Verdict[操作策略: 避免追漲殺跌, 採區間低吸]
+    ADX["ADX 數值: 17.07"] -->|"小于 25"| Range["無趨勢/盤整格局"]
+    DI_Compare{"+DI vs -DI"}
+    DI_Compare -->|"+DI: 20.55"| Bull["多頭力量"]
+    DI_Compare -->|"-DI: 24.84"| Bear["空頭力量"]
+    Bear -->|"領先 4.29"| BearDominated["空頭暫時主導市場"]
+    Range --> Verdict["操作策略: 避免追漲殺跌, 採區間低吸"]
 ```
 
 * **ADX 強度對照分析**：
@@ -203,11 +203,11 @@ ONDS 在日線與週線圖表上呈現出非常經典的**「雙重頂（Double 
 
 ```mermaid
 graph TD
-    A[2026-01 高點: $10.36] -->|回調至| B[2026-03 底位: $8.80]
-    B -->|再次拉升至| C[2026-05 高點: $13.22]
-    C -->|高位假突破後暴跌| D[當前逼近頸線: $9.21]
-    D -->|若有效跌破 $8.80| E[雙頂形態確立: 量測目標 $4.38]
-    D -->|若守住 $8.80 - $9.00| F[形成寬幅箱體震盪]
+    A["2026-01 高點: $10.36"] -->|"回調至"| B["2026-03 底位: $8.80"]
+    B -->|"再次拉升至"| C["2026-05 高點: $13.22"]
+    C -->|"高位假突破後暴跌"| D["當前逼近頸線: $9.21"]
+    D -->|"若有效跌破 $8.80"| E["雙頂形態確立: 量測目標 $4.38"]
+    D -->|"若守住 $8.80 - $9.00"| F["形成寬幅箱體震盪"]
 ```
 
 ### 🕯️ 重要 K 線形態分析（近期關鍵節點）
@@ -311,13 +311,13 @@ $ 8.23 ║███████████████████████�
 
 ```mermaid
 graph TD
-    Price[價格跌破 MA20/50] --> MACD_Dead[MACD 死叉且 Hist 下行]
-    Price --> RSI_Div[RSI 頂背離確認]
-    Price --> OBV_Weak[OBV < MA 量能萎縮]
-    MACD_Dead & RSI_Div & OBV_Weak --> BearConfirm[🔴 空頭共振: 下行趨勢確立]
-    Stoch_Oversold[Stoch %K=3.32 超賣] -->|矛盾訊號| BounceExpected[🟡 短期隨時有技術性反彈]
-    BearConfirm --> MainStrategy[主策略: 反彈逢高做空]
-    BounceExpected --> SubStrategy[次策略: 嚴格止損的超賣博弈]
+    Price["價格跌破 MA20/50"] --> MACD_Dead["MACD 死叉且 Hist 下行"]
+    Price --> RSI_Div["RSI 頂背離確認"]
+    Price --> OBV_Weak["OBV < MA 量能萎縮"]
+    MACD_Dead & RSI_Div & OBV_Weak --> BearConfirm["🔴 空頭共振: 下行趨勢確立"]
+    Stoch_Oversold["Stoch %K=3.32 超賣"] -->|"矛盾訊號"| BounceExpected["🟡 短期隨時有技術性反彈"]
+    BearConfirm --> MainStrategy["主策略: 反彈逢高做空"]
+    BounceExpected --> SubStrategy["次策略: 嚴格止損的超賣博弈"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -430,19 +430,19 @@ ONDS 目前的均線系統呈現**「長多短空」**的割裂狀態：
 
 ```mermaid
 graph TD
-    Start[當前價: $9.21] --> Decision{是否跌破 $8.80 頸線?}
-    Decision -->|是: 跌破| ShortStrategy[🔴 啟動策略 B: 破位做空]
-    Decision -->|否: 守住並反彈| LongStrategy[🟢 啟動策略 A: 超賣反彈做多]
+    Start["當前價: $9.21"] --> Decision{"是否跌破 $8.80 頸線?"}
+    Decision -->|"是: 跌破"| ShortStrategy["🔴 啟動策略 B: 破位做空"]
+    Decision -->|"否: 守住並反彈"| LongStrategy["🟢 啟動策略 A: 超賣反彈做多"]
     
-    LongStrategy --> LongEntry[進場點: $8.90 - $9.10]
-    LongEntry --> LongSL[止損點: $8.15]
-    LongEntry --> LongT1[目標價 T1: $10.10]
-    LongEntry --> LongT2[目標價 T2: $10.60]
+    LongStrategy --> LongEntry["進場點: $8.90 - $9.10"]
+    LongEntry --> LongSL["止損點: $8.15"]
+    LongEntry --> LongT1["目標價 T1: $10.10"]
+    LongEntry --> LongT2["目標價 T2: $10.60"]
     
-    ShortStrategy --> ShortEntry[進場點: $8.70 破位追空]
-    ShortEntry --> ShortSL[止損點: $9.50]
-    ShortEntry --> ShortT1[目標價 T1: $7.35]
-    ShortEntry --> ShortT2[目標價 T2: $6.70]
+    ShortStrategy --> ShortEntry["進場點: $8.70 破位追空"]
+    ShortEntry --> ShortSL["止損點: $9.50"]
+    ShortEntry --> ShortT1["目標價 T1: $7.35"]
+    ShortEntry --> ShortT2["目標價 T2: $6.70"]
 ```
 
 ### 🟢 多頭策略（策略 A）：超賣反彈做多（基於 $8.80 支撐守住）
@@ -499,13 +499,13 @@ graph TD
 
 ```mermaid
 graph TD
-    A[ONDS 未來走勢預測] --> B[樂觀場景: 30% 機率]
-    A --> C[基準場景: 50% 機率]
-    A --> D[悲觀場景: 20% 機率]
+    A["ONDS 未來走勢預測"] --> B["樂觀場景: 30% 機率"]
+    A --> C["基準場景: 50% 機率"]
+    A --> D["悲觀場景: 20% 機率"]
     
-    B --> B1[守住 $9.00, 快速收復 MA200, 上攻 $10.60]
-    C --> C1[跌破 $8.80, 在 MA240-$8.23 附近止跌築底]
-    D --> D1[放量跌破 $8.00, 雙頂完全釋放, 下探 $6.68]
+    B --> B1["守住 $9.00, 快速收復 MA200, 上攻 $10.60"]
+    C --> C1["跌破 $8.80, 在 MA240-$8.23 附近止跌築底"]
+    D --> D1["放量跌破 $8.00, 雙頂完全釋放, 下探 $6.68"]
 ```
 
 ### 🛡️ 風險管理重要提醒

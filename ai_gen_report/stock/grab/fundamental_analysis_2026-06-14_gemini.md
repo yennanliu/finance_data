@@ -351,12 +351,12 @@ graph LR
     SH["Share Repurchases & Others<br/>-$400M"]
     NET_CASH["Net Cash Flow<br/>-$576M"]
 
-    NI --> |+ Non-cash| DA
-    DA --> |+ Working Cap| WC
+    NI --> |"+ Non-cash"| DA
+    DA --> |"+ Working Cap"| WC
     WC --> OCF
-    OCF --> |+ Capex| CAPEX
+    OCF --> |"+ Capex"| CAPEX
     CAPEX --> FCF
-    FCF --> |+ Financing| SH
+    FCF --> |"+ Financing"| SH
     SH --> NET_CASH
 ```
 
@@ -475,9 +475,9 @@ graph TD
     OP["Operating Margin<br/>3.04%"]
     NP["Net Margin<br/>8.73%"]
 
-    GP --> |減: SG&A 24.5%| OP
-    GP --> |減: R&D 12.7%| OP
-    OP --> |加: 利息淨收入 + 其他| NP
+    GP --> |"減: SG&A 24.5%"| OP
+    GP --> |"減: R&D 12.7%"| OP
+    OP --> |"加: 利息淨收入 + 其他"| NP
 ```
 
 ---

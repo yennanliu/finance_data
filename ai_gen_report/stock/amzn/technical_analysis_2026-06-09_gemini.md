@@ -211,8 +211,8 @@ graph TD
     DI_Compare{"DMI 狀態比較<br/>-DI (34.82) vs +DI (14.70)"}
     
     ADX_Value --> DI_Compare
-    DI_Compare -->|'-DI' 遠大於 '+DI'| BearTrend["🔴 空頭趨勢主導"]
-    DI_Compare -->|乖離率過大| Rebound["🟡 潛在超賣反彈"]
+    DI_Compare -->|"'-DI' 遠大於 '+DI'"| BearTrend["🔴 空頭趨勢主導"]
+    DI_Compare -->|"乖離率過大"| Rebound["🟡 潛在超賣反彈"]
     
     style ADX_Value fill:#fff3e0,stroke:#ffb74d,stroke-width:2px
     style BearTrend fill:#ffebee,stroke:#e57373,stroke-width:2px

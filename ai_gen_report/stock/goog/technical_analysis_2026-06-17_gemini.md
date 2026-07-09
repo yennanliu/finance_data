@@ -364,11 +364,11 @@ graph TD
         OBV["OBV > MA<br/>(資金支持 🟢)"]
     end
     
-    RSI -->|確認| MACD
-    MA_System -->|支持| OBV
+    RSI -->|"確認"| MACD
+    MA_System -->|"支持"| OBV
     
-    Momentum_Indicators -->|矛盾與整固| Trend_Indicators
-    Trend_Indicators -->|主導長線| Verdict["綜合結論: 短期震盪蓄勢，長線牛市未變"]
+    Momentum_Indicators -->|"矛盾與整固"| Trend_Indicators
+    Trend_Indicators -->|"主導長線"| Verdict["綜合結論: 短期震盪蓄勢，長線牛市未變"]
 ```
 
 ---
@@ -511,9 +511,9 @@ graph TD
 graph TD
     Start["🔍 監控現價: $371.10"] --> Decision{"🎯 價格走勢如何演變?"}
     
-    Decision -->|路徑 A: 向上突破 $376.20| Buy_Breakout["🟢 執行策略 A (突破跟進)<br/>進場點: $376.50<br/>目標: $396.80 / $410.00"]
-    Decision -->|路徑 B: 向下回試 $362.20| Buy_Dip["🟢 執行策略 B (逢低吸納)<br/>進場點: $362.50<br/>目標: $383.00 / $396.00"]
-    Decision -->|路徑 C: 跌破 $358.00| Short_Trade["🔴 執行策略 C (弱勢放空)<br/>進場點: $357.50<br/>目標: $333.55 / $308.73"]
+    Decision -->|"路徑 A: 向上突破 $376.20"| Buy_Breakout["🟢 執行策略 A (突破跟進)<br/>進場點: $376.50<br/>目標: $396.80 / $410.00"]
+    Decision -->|"路徑 B: 向下回試 $362.20"| Buy_Dip["🟢 執行策略 B (逢低吸納)<br/>進場點: $362.50<br/>目標: $383.00 / $396.00"]
+    Decision -->|"路徑 C: 跌破 $358.00"| Short_Trade["🔴 執行策略 C (弱勢放空)<br/>進場點: $357.50<br/>目標: $333.55 / $308.73"]
     
     Buy_Breakout --> Risk1["設止損於 $361.00<br/>風報比: 1.31x / 2.16x"]
     Buy_Dip --> Risk2["設止損於 $349.00<br/>風報比: 1.52x / 2.48x"]
