@@ -263,7 +263,7 @@ graph TD
     CurrentAssets --> Inventory
     
     NonCurrentAssets --> LongTermInvestments
-    NonCurrentAssets --> PP & E
+    NonCurrentAssets --> PP&E
 ```
 
 ### 4.2 流動性指標分析

@@ -30,10 +30,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph LR
-    A("基本面") -->|"8/10"| B("成長")
-    A -->|"7/10"| C("獲利")
-    A -->|"6/10"| D("財務健康")
-    A -->|"5/10"| E("估值")
+    A(基本面) -->|8/10| B(成長)
+    A -->|7/10| C(獲利)
+    A -->|6/10| D(財務健康)
+    A -->|5/10| E(估值)
 ```
 
 ### 5大投資論點 + 3大風險
@@ -73,12 +73,12 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["AVAV"] --> B["Autonomous Systems"]
-    A --> C["Space, Cyber and Directed Energy"]
-    B --> D["Uncrewed Aircraft Systems"]
-    B --> E["Kinesis Command Software"]
-    C --> F["Counter-UAS"]
-    C --> G["Precision Strike"]
+    A[AVAV] --> B[Autonomous Systems]
+    A --> C[Space, Cyber and Directed Energy]
+    B --> D[Uncrewed Aircraft Systems]
+    B --> E[Kinesis Command Software]
+    C --> F[Counter-UAS]
+    C --> G[Precision Strike]
 ```
 
 ### 市場地位
@@ -166,12 +166,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A["總資產"] --> B["流動資產"]
-    A --> C["非流動資產"]
-    B --> D["現金及等價物"]
-    B --> E["應收帳款"]
-    C --> F["固定資產"]
-    C --> G["其他資產"]
+    A[總資產] --> B[流動資產]
+    A --> C[非流動資產]
+    B --> D[現金及等價物]
+    B --> E[應收帳款]
+    C --> F[固定資產]
+    C --> G[其他資產]
 ```
 
 ### 流動性指標表格
@@ -206,9 +206,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A["營業活動現金流"] -->|"負"| B["投資活動現金流"]
-    B -->|"負"| C["融資活動現金流"]
-    C -->|"淨增減"| D["現金及等價物變動"]
+    A[營業活動現金流] -->|負| B[投資活動現金流]
+    B -->|負| C[融資活動現金流]
+    C -->|淨增減| D[現金及等價物變動]
 ```
 
 ### FCF 轉換率趨勢表格
@@ -264,9 +264,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph LR
-    A("淨利率") -->|"5.3%"| B("資產週轉率")
-    A -->|"0.5"| C("槓桿比")
-    A -->|"1.5"| D("ROE")
+    A(淨利率) -->|5.3%| B(資產週轉率)
+    A -->|0.5| C(槓桿比)
+    A -->|1.5| D(ROE)
 ```
 
 ---

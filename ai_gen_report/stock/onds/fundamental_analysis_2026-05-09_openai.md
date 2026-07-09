@@ -121,7 +121,7 @@ graph TD
 
 ```mermaid
 graph TD
-    ONDS["ONDAS Inc. |" 市值：$4.44B "| 年營收：$50.73M"]
+    ONDS["ONDAS Inc. | 市值：$4.44B | 年營收：$50.73M"]
 
     ONS["ONDAS Networks"]
     OAS["ONDAS Autonomous Systems"]

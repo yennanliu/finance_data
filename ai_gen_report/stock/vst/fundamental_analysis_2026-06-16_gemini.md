@@ -359,12 +359,12 @@ graph LR
     DIVIDEND["股息支付<br/>-$498M"]
     NET_CASH["淨現金變化<br/>-$1.22B"]
 
-    NET_INC -->|"加上非現金費用"| DA
-    DA -->|"營運資金優化"| WC_VAR
+    NET_INC -->|加上非現金費用| DA
+    DA -->|營運資金優化| WC_VAR
     WC_VAR --> OCF
-    OCF -->|"扣除 Capex"| CAPEX
+    OCF -->|扣除 Capex| CAPEX
     CAPEX --> FCF
-    FCF -->|"超出部分由債務融資支持"| SHARE_BUY
+    FCF -->|超出部分由債務融資支持| SHARE_BUY
     SHARE_BUY --> DIVIDEND
     DIVIDEND --> NET_CASH
 ```
@@ -485,9 +485,9 @@ graph TD
     OP["營業利益<br/>$3.53B (OM: 18.1%*)"]
     NP["淨利<br/>$1.21B (NM: 6.2%*)"]
 
-    REVENUE -->|"扣除燃料與購電成本 $9.18B"| GP
-    GP -->|"扣除營運維護與折舊 $2.18B"| OP
-    OP -->|"扣除利息與稅收 $2.32B"| NP
+    REVENUE -->|扣除燃料與購電成本 $9.18B| GP
+    GP -->|扣除營運維護與折舊 $2.18B| OP
+    OP -->|扣除利息與稅收 $2.32B| NP
 ```
 *\*註：此處百分比為基於 StockAnalysis TTM 原始數據計算之比例，與 Yahoo Finance 調整後 Profitability 指標（GM 38.6%, OM 26.6%）存在口徑差異，本報告同時列出以示客觀。*
 

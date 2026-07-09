@@ -286,7 +286,7 @@ graph TD
     CurrentAssets --> Receivables
     CurrentAssets --> Inventory
 
-    NonCurrentAssets --> PP & E
+    NonCurrentAssets --> PP&E
     NonCurrentAssets --> Intangibles
     NonCurrentAssets --> OtherAssets
 ```
@@ -335,11 +335,11 @@ graph TD
 
 ```mermaid
 graph LR
-    A["淨利"] --> B["營業現金流"]
-    B --> C["資本支出"]
-    C --> D["自由現金流"]
-    D --> E["股息/回購"]
-    E --> F["淨現金變化"]
+    A[淨利] --> B[營業現金流]
+    B --> C[資本支出]
+    C --> D[自由現金流]
+    D --> E[股息/回購]
+    E --> F[淨現金變化]
 ```
 
 ### 5.2 FCF 轉換率趨勢

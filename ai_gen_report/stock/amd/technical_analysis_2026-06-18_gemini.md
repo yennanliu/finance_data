@@ -108,8 +108,8 @@ AMD 的多時框分析呈現出典型的「**大週期極強、中週期震盪�
 
 ```mermaid
 graph TD
-    Monthly["月線級別 (長線)<br/>超強上升通道<br/>MA200 向上"] -->|"支持"| Weekly["週線級別 (中線)<br/>高位箱體震盪<br/>出現頂背離"]
-    Weekly -->|"制約"| Daily["日線級別 (短線)<br/>跌破 MA5<br/>回測 MA20 支撐"]
+    Monthly["月線級別 (長線)<br/>超強上升通道<br/>MA200 向上"] -->|支持| Weekly["週線級別 (中線)<br/>高位箱體震盪<br/>出現頂背離"]
+    Weekly -->|制約| Daily["日線級別 (短線)<br/>跌破 MA5<br/>回測 MA20 支撐"]
     
     style Monthly fill:#d4edda,stroke:#28a745,stroke-width:2px
     style Weekly fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -174,8 +174,8 @@ AMD 目前的 ADX(14) 數值為 **29.28**，這表明市場仍處於明確的**�
 ```mermaid
 graph TD
     ADX["ADX = 29.28<br/>(強趨勢)"] --> DI_Compare{"+DI vs -DI"}
-    DI_Compare -->|"+DI = 28.77"| Bull["多頭佔優"]
-    DI_Compare -->|"-DI = 22.11"| Bear["空頭偏弱"]
+    DI_Compare -->|+DI = 28.77| Bull["多頭佔優"]
+    DI_Compare -->|-DI = 22.11| Bear["空頭偏弱"]
     Bull --> Signal["目前仍為多頭趨勢，但 ADX 開始自高點下滑，暗示趨勢動能正在減弱"]
 ```
 
@@ -201,8 +201,8 @@ graph TD
     A["前高 $558.37 (52W High)"] --> B["回檔至 $466.38 (頸線支撐)"]
     B --> C["反彈至現價 $512.48"]
     C --> D{"未來路徑抉擇"}
-    D -->|"路徑一: 突破"| E["突破 $558.37<br/>解鎖多頭新空間"]
-    D -->|"路徑二: 受阻"| F["受阻回落跌破 $466.38<br/>確立雙重頂 (看空)"]
+    D -->|路徑一: 突破| E["突破 $558.37<br/>解鎖多頭新空間"]
+    D -->|路徑二: 受阻| F["受阻回落跌破 $466.38<br/>確立雙重頂 (看空)"]
 ```
 
 ### 🕯️ 重要 K 線形態分析
@@ -338,7 +338,7 @@ RSI (14)     :   97.4 (極度超買) ───►  80.7 (動能下滑)   ──�
 
 ```mermaid
 graph LR
-    MACD["MACD (28.467)"] -->|"跌破"| Signal["Signal (33.184)"]
+    MACD["MACD (28.467)"] -->|跌破| Signal["Signal (33.184)"]
     Signal --> DeathCross["🔴 形成死亡交叉"]
     DeathCross --> Hist["柱狀體 -4.717 且持續擴大"]
     Hist --> Action["暗示短期修正尚未結束，不宜盲目追高"]
@@ -437,9 +437,9 @@ $438.36 ──────●─────────────────
 ```mermaid
 graph TD
     Start["當前現價 $512.48"] --> Decision{"市場走勢抉擇"}
-    Decision -->|"路徑 A: 回檔至 $497.37"| Long_S1["策略 A: 逢低買進 (多)"]
-    Decision -->|"路徑 B: 突破 $516.10"| Long_R1["策略 B: 突破追多 (多)"]
-    Decision -->|"路徑 C: 高檔受阻 $512.48"| Short_A["策略 C: 雙頂做空 (空)"]
+    Decision -->|路徑 A: 回檔至 $497.37| Long_S1["策略 A: 逢低買進 (多)"]
+    Decision -->|路徑 B: 突破 $516.10| Long_R1["策略 B: 突破追多 (多)"]
+    Decision -->|路徑 C: 高檔受阻 $512.48| Short_A["策略 C: 雙頂做空 (空)"]
     
     Long_S1 --> Long_S1_Details["進場: $498.50<br/>止損: $479.50<br/>目標: $555.00"]
     Long_R1 --> Long_R1_Details["進場: $518.00<br/>止損: $497.00<br/>目標: $595.00"]
@@ -526,9 +526,9 @@ graph TD
 graph TD
     Scenario{"市場情境模擬"}
     
-    Scenario -->|"1. 樂觀情境 (Bullish)"| Bull["突破 $516.10 且補量<br/>目標指向 $558.37"]
-    Scenario -->|"2. 基本情境 (Base)"| Base["在 $490.00 - $520.00 區間<br/>進行高檔箱體震盪以時間換空間"]
-    Scenario -->|"3. 悲觀情境 (Bearish)"| Bear["跌破 $497.37<br/>引發多頭踩踏<br/>下探 $466.38 甚至 $404.94"]
+    Scenario -->|1. 樂觀情境 (Bullish)| Bull["突破 $516.10 且補量<br/>目標指向 $558.37"]
+    Scenario -->|2. 基本情境 (Base)| Base["在 $490.00 - $520.00 區間<br/>進行高檔箱體震盪以時間換空間"]
+    Scenario -->|3. 悲觀情境 (Bearish)| Bear["跌破 $497.37<br/>引發多頭踩踏<br/>下探 $466.38 甚至 $404.94"]
     
     style Bull fill:#d4edda,stroke:#28a745,stroke-width:2px
     style Base fill:#fff3cd,stroke:#ffc107,stroke-width:2px

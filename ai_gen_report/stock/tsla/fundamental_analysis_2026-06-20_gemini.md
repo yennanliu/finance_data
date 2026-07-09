@@ -390,12 +390,12 @@ graph LR
     FIN["融資/回購/其他<br/>-$4.57B"]
     NET_CASH["淨現金增加<br/>+$0.68B"]
 
-    NI --> |"調整"| OCF
-    DA --> |"調整"| OCF
-    SBC --> |"調整"| OCF
-    WC --> |"調整"| OCF
-    OCF --> |"減去 Capex"| FCF
-    FCF --> |"減去融資活動"| NET_CASH
+    NI --> |調整| OCF
+    DA --> |調整| OCF
+    SBC --> |調整| OCF
+    WC --> |調整| OCF
+    OCF --> |減去 Capex| FCF
+    FCF --> |減去融資活動| NET_CASH
     FIN --> NET_CASH
 ```
 

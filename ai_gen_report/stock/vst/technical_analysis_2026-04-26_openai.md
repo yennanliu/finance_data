@@ -102,9 +102,9 @@ graph LR
 
 ```mermaid
 graph TD
-    Month["月線趨勢"] -->|"上升"| Week["週線趨勢"]
-    Week -->|"盤整"| Day["日線趨勢"]
-    Day -->|"上升"| Conclusion["趨勢綜合結論：上升"]
+    Month["月線趨勢"] -->|上升| Week["週線趨勢"]
+    Week -->|盤整| Day["日線趨勢"]
+    Day -->|上升| Conclusion["趨勢綜合結論：上升"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -143,7 +143,7 @@ $123 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX: 11.99"] -->|"弱趨勢/盤整"| Trend["趨勢強度：盤整"]
+    ADX["ADX: 11.99"] -->|弱趨勢/盤整| Trend["趨勢強度：盤整"]
 ```
 
 ---
@@ -154,8 +154,8 @@ graph TD
 
 ```mermaid
 graph TD
-    HSH["頭肩頂形態"] -->|"形成中"| Analysis["形態分析結論：待確認"]
-    DT["雙頂形態"] -->|"否定"| Analysis
+    HSH["頭肩頂形態"] -->|形成中| Analysis["形態分析結論：待確認"]
+    DT["雙頂形態"] -->|否定| Analysis
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -228,17 +228,17 @@ $140 ║████████████████████████
 
 ```mermaid
 graph TD
-    RSI["RSI: 65.07 中性"] -->|"無背離"| Analysis["動能中性"]
-    MACD["MACD: 0.496 看多"] -->|"訊號線上方"| Analysis
-    MA["MA排列：空頭"] -->|"MA200下方"| Analysis
+    RSI["RSI: 65.07 中性"] -->|無背離| Analysis["動能中性"]
+    MACD["MACD: 0.496 看多"] -->|訊號線上方| Analysis
+    MA["MA排列：空頭"] -->|MA200下方| Analysis
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|"價格上方"| B["看多"]
-    C["長期 MA200"] -->|"價格下方"| D["看空"]
+    A["短期 MA20"] -->|價格上方| B["看多"]
+    C["長期 MA200"] -->|價格下方| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -251,8 +251,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD 線: 上升"] -->|"訊號線上方"| Bullish["多頭"]
-    Signal_Line["訊號線: 平緩"] -->|"柱狀圖增長"| Bullish
+    MACD_Line["MACD 線: 上升"] -->|訊號線上方| Bullish["多頭"]
+    Signal_Line["訊號線: 平緩"] -->|柱狀圖增長| Bullish
 ```
 
 ### 📦 布林通道分析
@@ -316,8 +316,8 @@ $147 ┤  下軌
 
 ```mermaid
 graph TD
-    Buy["多頭策略"] -->|"條件滿足"| Execute["執行"]
-    Sell["空頭策略"] -->|"條件滿足"| Execute
+    Buy["多頭策略"] -->|條件滿足| Execute["執行"]
+    Sell["空頭策略"] -->|條件滿足| Execute
 ```
 
 ### 🟢 多頭策略詳情
@@ -375,9 +375,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"] -->|"突破阻力"| NewHigh["創新高"]
-    Base["基本情境"] -->|"盤整"| Stable["穩定"]
-    Pessimistic["悲觀情境"] -->|"跌破支撐"| NewLow["創新低"]
+    Optimistic["樂觀情境"] -->|突破阻力| NewHigh["創新高"]
+    Base["基本情境"] -->|盤整| Stable["穩定"]
+    Pessimistic["悲觀情境"] -->|跌破支撐| NewLow["創新低"]
 ```
 
 ### 🛡️ 風險管理重要提醒

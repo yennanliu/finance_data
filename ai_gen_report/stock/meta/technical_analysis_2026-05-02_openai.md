@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] -->|"下降"| B["週線趨勢"]
-    B -->|"盤整"| C["日線趨勢"]
-    C -->|"短期上升"| D["短期趨勢變化"]
+    A[月線趨勢] -->|下降| B[週線趨勢]
+    B -->|盤整| C[日線趨勢]
+    C -->|短期上升| D[短期趨勢變化]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -141,15 +141,15 @@ $400 ┤    ●(低點)
 
 ```mermaid
 graph TD
-    E["週線支撐"] -->|"支撐於 $600"| F["壓力位 $650"]
+    E[週線支撐] -->|支撐於 $600| F[壓力位 $650]
 ```
 
 ### ⚡ 趨勢強度評估（ADX 解讀）
 
 ```mermaid
 graph TD
-    ADX["ADX 指標"] -->|"低於 25"| WEAK_TREND["顯示弱趨勢"]
-    WEAK_TREND -->|"盤整行情"| OBSERVE["觀察後市突破"]
+    ADX[ADX 指標] -->|低於 25| WEAK_TREND[顯示弱趨勢]
+    WEAK_TREND -->|盤整行情| OBSERVE[觀察後市突破]
 ```
 
 ---
@@ -239,18 +239,18 @@ $550 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA["移動平均線"] -->|"看空信號"| RSI["RSI指標"]
-    MACD["MACD指標"] -->|"空頭動能"| BB["布林通道"]
-    BB -->|"中軌附近"| VOL["成交量"]
+    MA["移動平均線"] -->|看空信號| RSI["RSI指標"]
+    MACD["MACD指標"] -->|空頭動能| BB["布林通道"]
+    BB -->|中軌附近| VOL["成交量"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格下方"| BEAR["看空"]
-    MA50["中期 MA50"] -->|"價格下方"| BEAR
-    MA200["長期 MA200"] -->|"價格下方"| BEAR
+    MA20["短期 MA20"] -->|價格下方| BEAR["看空"]
+    MA50["中期 MA50"] -->|價格下方| BEAR
+    MA200["長期 MA200"] -->|價格下方| BEAR
 ```
 
 ### 📉 RSI(14) 分析
@@ -263,8 +263,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_LINE["MACD 線"] -->|"低於訊號線"| SIGNAL_LINE["訊號線"]
-    HISTOGRAM["柱狀圖"] -->|"負值"| BEARISH["空頭動能"]
+    MACD_LINE["MACD 線"] -->|低於訊號線| SIGNAL_LINE["訊號線"]
+    HISTOGRAM["柱狀圖"] -->|負值| BEARISH["空頭動能"]
 ```
 
 ### 📦 布林通道分析
@@ -339,8 +339,8 @@ $550 ┤
 
 ```mermaid
 graph TD
-    LONG_STRATEGY["多頭策略"] -->|"強勢反彈"| ENTRY_POINT["考慮進場"]
-    SHORT_STRATEGY["空頭策略"] -->|"價格低於均線"| WAIT["觀望"]
+    LONG_STRATEGY["多頭策略"] -->|強勢反彈| ENTRY_POINT["考慮進場"]
+    SHORT_STRATEGY["空頭策略"] -->|價格低於均線| WAIT["觀望"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -398,9 +398,9 @@ graph TD
 
 ```mermaid
 graph TD
-    OPTIMISTIC["樂觀情境"] -->|"突破阻力"| GROWTH["持續上漲"]
-    BASE["基本情境"] -->|"橫盤整理"| STABILITY["穩定"]
-    PESSIMISTIC["悲觀情境"] -->|"跌破支撐"| DECLINE["持續下跌"]
+    OPTIMISTIC["樂觀情境"] -->|突破阻力| GROWTH["持續上漲"]
+    BASE["基本情境"] -->|橫盤整理| STABILITY["穩定"]
+    PESSIMISTIC["悲觀情境"] -->|跌破支撐| DECLINE["持續下跌"]
 ```
 
 ### 🛡️ 風險管理重要提醒

@@ -133,7 +133,7 @@ $340 ┤    ●
 ```mermaid
 graph TD
     ADX值 --> 弱趨勢
-    nb1["+DI > -DI"] --> 多頭主導
+    +DI > -DI --> 多頭主導
 ```
 
 ---
@@ -226,8 +226,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MA20 --> nb1["高於 MA50"]
-    MA50 --> nb2["高於 MA200"]
+    MA20 --> 高於 MA50
+    MA50 --> 高於 MA200
 ```
 
 ### 📉 RSI(14) 分析

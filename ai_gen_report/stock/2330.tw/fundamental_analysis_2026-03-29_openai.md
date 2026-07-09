@@ -473,7 +473,7 @@ graph TD
 
     獲利能力 --> 毛利率
     獲利能力 --> 淨利率
-    獲利能力 --> nb1["EBITDA Margin"]
+    獲利能力 --> EBITDA Margin
     獲利能力 --> 營業利潤率
 ```
 

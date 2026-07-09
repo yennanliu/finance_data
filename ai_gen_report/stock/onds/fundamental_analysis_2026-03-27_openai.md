@@ -27,10 +27,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 - **核心評分儀表板**
   ```mermaid
   graph TD;
-      基本面("4/10") --> 成長("6/10");
-      成長 --> 獲利("3/10");
-      獲利 --> 財務健康("5/10");
-      財務健康 --> 估值("2/10");
+      基本面(4/10) --> 成長(6/10);
+      成長 --> 獲利(3/10);
+      獲利 --> 財務健康(5/10);
+      財務健康 --> 估值(2/10);
   ```
 
 - **5大投資論點 + 3大風險**
@@ -63,10 +63,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 - **業務結構與收入來源**
   ```mermaid
   graph TD;
-      nb1["Ondas Inc."] --> nb2["Ondas Networks;"]
-      nb1["Ondas Inc."] --> nb3["Ondas Autonomous Systems;"]
-      nb4["Ondas Networks"] --> nb5["FullMAX SDR Platform;"]
-      nb6["Ondas Autonomous Systems"] --> nb7["Optimus;"]
+      Ondas Inc. --> Ondas Networks;
+      Ondas Inc. --> Ondas Autonomous Systems;
+      Ondas Networks --> FullMAX SDR Platform;
+      Ondas Autonomous Systems --> Optimus;
   ```
 
 - **市場地位**
@@ -149,11 +149,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
   ```mermaid
   graph TD;
-      資產 --> nb1["流動資產;"]
-      資產 --> nb2["非流動資產;"]
-      流動資產 --> nb3["現金與現金等價物;"]
-      流動資產 --> nb4["應收帳款;"]
-      非流動資產 --> nb5["固定資產;"]
+      資產 --> 流動資產;
+      資產 --> 非流動資產;
+      流動資產 --> 現金與現金等價物;
+      流動資產 --> 應收帳款;
+      非流動資產 --> 固定資產;
   ```
 
 - **流動性指標表格**
@@ -182,9 +182,9 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
   ```mermaid
   graph LR;
-      營業活動 --> nb1["投資活動;"]
-      投資活動 --> nb2["融資活動;"]
-      融資活動 --> nb3["淨增減;"]
+      營業活動 --> 投資活動;
+      投資活動 --> 融資活動;
+      融資活動 --> 淨增減;
   ```
 
 - **FCF 轉換率**
@@ -237,9 +237,9 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
   ```mermaid
   graph TD;
-      淨利率 --> nb1["資產週轉率;"]
-      資產週轉率 --> nb2["槓桿比;"]
-      槓桿比 --> nb3["ROE;"]
+      淨利率 --> 資產週轉率;
+      資產週轉率 --> 槓桿比;
+      槓桿比 --> ROE;
   ```
 
 ## 7. 估值深度分析
@@ -297,9 +297,9 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
   ```mermaid
   graph TD
-      短期 --> nb1["新產品開發;"]
-      中期 --> nb2["國際市場擴張;"]
-      長期 --> nb3["技術創新;"]
+      短期 --> 新產品開發;
+      中期 --> 國際市場擴張;
+      長期 --> 技術創新;
   ```
 
 ## 9. 風險矩陣
@@ -346,10 +346,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
   ```mermaid
   graph TD
-      成長型 --> nb1["ONDS;"]
-      價值型 --> nb2["Competitor A;"]
-      股息型 --> nb3["Competitor B;"]
-      短期交易 --> nb1["ONDS;"]
+      成長型 --> ONDS;
+      價值型 --> Competitor A;
+      股息型 --> Competitor B;
+      短期交易 --> ONDS;
   ```
 
 - **關鍵監控指標**

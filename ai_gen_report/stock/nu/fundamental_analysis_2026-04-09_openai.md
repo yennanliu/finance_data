@@ -122,11 +122,11 @@ graph TD
 
 ```mermaid
 graph TD
-    ALL["“Nu Holdings Ltd. 全景圖”"]
+    ALL[“Nu Holdings Ltd. 全景圖”]
 
-    Nu1["“金融服務”"]
-    Nu2["“南美洲市場”"]
-    Nu3["“多地區收入”"]
+    Nu1[“金融服務”]
+    Nu2[“南美洲市場”]
+    Nu3[“多地區收入”]
 
     All --> Nu1
     All --> Nu2

@@ -441,14 +441,14 @@ Grab 的現金流量狀況在近年來經歷了顯著改善，特別是營運現
 
 ```mermaid
 graph LR
-    A["淨利潤: $268.00M"] --> B["非現金項目調整: +$249.00M"]
-    B --> C["營運資金變動: +$62.00M"]
-    C --> D["營運現金流: $79.00M"]
-    D --> E["資本支出: -$123.00M"]
-    E --> F["自由現金流: -$44.00M"]
-    F --> G["籌資活動現金流: +$1.41B"]
-    G --> H["投資活動現金流: -$883.00M"]
-    H --> I["現金淨變動: +$483.00M"]
+    A[淨利潤: $268.00M] --> B[非現金項目調整: +$249.00M]
+    B --> C[營運資金變動: +$62.00M]
+    C --> D[營運現金流: $79.00M]
+    D --> E[資本支出: -$123.00M]
+    E --> F[自由現金流: -$44.00M]
+    F --> G[籌資活動現金流: +$1.41B]
+    G --> H[投資活動現金流: -$883.00M]
+    H --> I[現金淨變動: +$483.00M]
 ```
 *註：數據基於 FY2025 年度現金流量表。非現金項目調整和營運資金變動為推算值，以使營運現金流匹配。籌資活動現金流 = (Total Debt FY25 - Total Debt FY24) + (Stockholders Equity FY25 - Stockholders Equity FY24 - Net Income FY25) - (Cash Dividends Paid FY25)。投資活動現金流 = (Total Assets FY25 - Total Assets FY24 - Net PP&E change - Goodwill change - LT Investments change - Other NCA change) + Capital Expenditure。*
 

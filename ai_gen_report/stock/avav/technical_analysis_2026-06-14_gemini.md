@@ -161,8 +161,8 @@ ADX (Average Directional Index) 是判斷市場是否存在趨勢及趨勢強度
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 20.40"] -->|"小于 25"| Consolidation["🟡 盤整/無趨勢行情\n避免使用趨勢型指標 (如均線交叉)\n應採用震盪型指標 (如 Stoch, RSI)"]
-    DI_Relation["+DI (22.21) > -DI (19.01)"] -->|"多頭微幅佔優"| BullBias["🟢 買盤力量略大於賣盤\n但缺乏趨勢動能配合"]
+    ADX["ADX(14) = 20.40"] -->|小于 25| Consolidation["🟡 盤整/無趨勢行情\n避免使用趨勢型指標 (如均線交叉)\n應採用震盪型指標 (如 Stoch, RSI)"]
+    DI_Relation["+DI (22.21) > -DI (19.01)"] -->|多頭微幅佔優| BullBias["🟢 買盤力量略大於賣盤\n但缺乏趨勢動能配合"]
     Consolidation + BullBias --> Conclusion["🎯 結論：低位震盪築底，適合逢低買入，不宜追高"]
 ```
 
@@ -187,7 +187,7 @@ graph TD
 graph TD
     LeftBottom["左底 (S2: $156.00)\n2026-05-17 創下"] --> Neckline["頸線阻力 (R1: $207.24)\n2026-05-31 觸及"]
     Neckline --> RightBottom["右底 (當前打底中: $170.58)\n2026-06-14 進行回踩"]
-    RightBottom -->|"未來預期突破"| Breakout["突破頸線 $207.24"]
+    RightBottom -->|未來預期突破| Breakout["突破頸線 $207.24"]
     Breakout --> Target["🎯 形態理論目標價: $256.48"]
 ```
 
@@ -402,9 +402,9 @@ RSI(14) 強度進度條
 graph TD
     Start["🔍 評估當前價位 $170.58"] --> Decision{"選擇交易風格"}
     
-    Decision -->|"左側交易 (穩健型)"| StrategyA["🟢 策略 A: 區間低吸\n在 $158 - $165 之間分批進場"]
-    Decision -->|"右側交易 (突破型)"| StrategyB["🟢 策略 B: 突破追擊\n等日線收盤突破 $207.24 頸線進場"]
-    Decision -->|"反彈做空 (投機型)"| StrategyC["🔴 策略 C: 逢高做空\n在 $182 - $185 均線阻力區做空"]
+    Decision -->|左側交易 (穩健型)| StrategyA["🟢 策略 A: 區間低吸\n在 $158 - $165 之間分批進場"]
+    Decision -->|右側交易 (突破型)| StrategyB["🟢 策略 B: 突破追擊\n等日線收盤突破 $207.24 頸線進場"]
+    Decision -->|反彈做空 (投機型)| StrategyC["🔴 策略 C: 逢高做空\n在 $182 - $185 均線阻力區做空"]
     
     StrategyA --> TargetA["目標價: T1 $182.24 / T2 $207.24"]
     StrategyB --> TargetB["目標價: T1 $235.00 / T2 $259.63"]

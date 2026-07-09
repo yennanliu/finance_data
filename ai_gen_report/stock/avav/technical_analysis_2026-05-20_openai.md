@@ -140,7 +140,7 @@ $160 ┼───────現價──────
 
 ```mermaid
 graph TD
-    ADX["ADX = 20.42"] -->|"弱趨勢"| Trend["盤整行情 <25"]
+    ADX["ADX = 20.42"] -->|弱趨勢| Trend["盤整行情 <25"]
 ```
 
 ---
@@ -151,7 +151,7 @@ graph TD
 
 ```mermaid
 graph TD
-    HST["頭肩頂形成"] -->|"目標價 $130"| Analysis["形態確認"]
+    HST["頭肩頂形成"] -->|目標價 $130| Analysis["形態確認"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -225,18 +225,18 @@ $130 ║██████████║ 強支撐 S2
 
 ```mermaid
 graph TD
-    MA20["MA20 = $177.95"] -->|"低於現價"| Signal["空頭"]
-    MACD["MACD 看空"] -->|"柱狀圖負值"| Signal
-    RSI["RSI = 35.86"] -->|"中性偏弱"| Signal
+    MA20["MA20 = $177.95"] -->|低於現價| Signal["空頭"]
+    MACD["MACD 看空"] -->|柱狀圖負值| Signal
+    RSI["RSI = 35.86"] -->|中性偏弱| Signal
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格下方"| B["看空"]
-    MA50["中期 MA50"] -->|"價格下方"| B
-    MA200["長期 MA200"] -->|"價格下方"| B
+    MA20["短期 MA20"] -->|價格下方| B["看空"]
+    MA50["中期 MA50"] -->|價格下方| B
+    MA200["長期 MA200"] -->|價格下方| B
 ```
 
 ### 📉 RSI(14) 分析
@@ -248,9 +248,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD Line = -10.140"] -->|"低於 Signal"| Bearish["看空"]
-    SignalLine["Signal Line = -9.140"] -->|"低於 0"| Bearish
-    Histogram["Hist = -0.999"] -->|"負值"| Bearish
+    MACDLine["MACD Line = -10.140"] -->|低於 Signal| Bearish["看空"]
+    SignalLine["Signal Line = -9.140"] -->|低於 0| Bearish
+    Histogram["Hist = -0.999"] -->|負值| Bearish
 ```
 
 ### 📦 布林通道分析
@@ -373,9 +373,9 @@ RSI      ██████░░░░░░░░░░░░░░░  45/100
 
 ```mermaid
 graph TD
-    Base["基準情境"] -->|"價格持平或小幅波動"| Risk["觀望"]
-    Bearish["悲觀情境"] -->|"價格大幅跌破支撐"| Risk
-    Bullish["樂觀情境"] -->|"價格突破阻力"| Risk
+    Base["基準情境"] -->|價格持平或小幅波動| Risk["觀望"]
+    Bearish["悲觀情境"] -->|價格大幅跌破支撐| Risk
+    Bullish["樂觀情境"] -->|價格突破阻力| Risk
 ```
 
 ### 🛡️ 風險管理重要提醒

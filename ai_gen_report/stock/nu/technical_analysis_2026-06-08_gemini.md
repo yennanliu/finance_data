@@ -107,9 +107,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線圖: 長期上升趨勢破位"] -->|"MA200 失守"| B["週線圖: 中期修正波段"]
-    B -->|"ADX 30.54 空頭主導"| C["日線圖: 短期超跌尋求支撐"]
-    C -->|"RSI 底背離"| D{"交易決策: 逢低分批佈局或靜待打底完成"}
+    A[月線圖: 長期上升趨勢破位] -->|MA200 失守| B[週線圖: 中期修正波段]
+    B -->|ADX 30.54 空頭主導| C[日線圖: 短期超跌尋求支撐]
+    C -->|RSI 底背離| D{交易決策: 逢低分批佈局或靜待打底完成}
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -164,7 +164,7 @@ $10.00 ┤       ●
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 30.54 (強趨勢)"] --> DI_Compare{"比較 +DI 與 -DI"}
+    ADX["ADX 數值: 30.54 (強趨勢)"] --> DI_Compare{比較 +DI 與 -DI}
     DI_Compare -->|"-DI (36.05) > +DI (18.99)"| BearTrend["🔴 強烈空頭趨勢主導"]
     DI_Compare -->|"+DI > -DI"| BullTrend["🟢 強烈多頭趨勢主導"]
     BearTrend --> Action["操作建議: 嚴禁盲目摸底，以反彈做空或分批左側交易為主"]
@@ -187,11 +187,11 @@ graph TD
 
 ```mermaid
 graph TD
-    Sub1["2026年1月高點 $18.04"] --> DoubleTop["雙重頂/ M頭形態"]
-    Sub2["2026年2月高點 $17.75"] --> DoubleTop
-    DoubleTop -->|"跌破頸線 $14.50"| TargetCalc["形態理論跌幅目標計算"]
-    TargetCalc -->|"H = $3.54"| TargetPrice["理論目標價: $10.96"]
-    TargetPrice -->|"目前最低達 $11.20"| NearTarget["已極度接近目標區間，下行空間有限"]
+    Sub1[2026年1月高點 $18.04] --> DoubleTop[雙重頂/ M頭形態]
+    Sub2[2026年2月高點 $17.75] --> DoubleTop
+    DoubleTop -->|跌破頸線 $14.50| TargetCalc[形態理論跌幅目標計算]
+    TargetCalc -->|H = $3.54| TargetPrice["理論目標價: $10.96"]
+    TargetPrice -->|目前最低達 $11.20| NearTarget["已極度接近目標區間，下行空間有限"]
 ```
 
 ### 🕯️ 重要K線形態分析

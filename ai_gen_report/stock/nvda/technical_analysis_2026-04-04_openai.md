@@ -90,10 +90,10 @@ graph LR
 
 ```mermaid
 graph TD
-    LongTerm["長期趨勢 (月線)"] -->|"上升趨勢"| MidTerm["中期趨勢 (週線)"]
-    MidTerm -->|"盤整"| ShortTerm["短期趨勢 (日線)"]
-    ShortTerm -->|"下降趨勢"| Conclusion["結論"]
-    Conclusion -->|"中性偏多"| Result["最終判斷"]
+    LongTerm["長期趨勢 (月線)"] -->|上升趨勢| MidTerm["中期趨勢 (週線)"]
+    MidTerm -->|盤整| ShortTerm["短期趨勢 (日線)"]
+    ShortTerm -->|下降趨勢| Conclusion["結論"]
+    Conclusion -->|中性偏多| Result["最終判斷"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -126,8 +126,8 @@ $138 ┤    ●(2024-11低點)
 
 ```mermaid
 graph TD
-    ADXValue["ADX = 22.04"] -->|"弱趨勢"| TrendType["盤整行情"]
-    TrendType -->|"+DI < -DI"| BearishBias["偏空"]
+    ADXValue["ADX = 22.04"] -->|弱趨勢| TrendType["盤整行情"]
+    TrendType -->|+DI < -DI| BearishBias["偏空"]
 ```
 
 ---
@@ -138,8 +138,8 @@ graph TD
 
 ```mermaid
 graph TD
-    HeadShoulders["頭肩頂形態"] -->|"完成"| TargetPrice["目標價: $165"]
-    DoubleTop["雙頂形態"] -->|"未完成"| NoAction["暫不操作"]
+    HeadShoulders["頭肩頂形態"] -->|完成| TargetPrice["目標價: $165"]
+    DoubleTop["雙頂形態"] -->|未完成| NoAction["暫不操作"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -215,20 +215,20 @@ $150 ║████████████████████████
 
 ```mermaid
 graph TD
-    MAGroup["MA排列"] -->|"空頭排列"| Bearish
-    RSIGroup["RSI 46.9"] -->|"中性"| Neutral
-    MACDGroup["MACD Histogram +0.024"] -->|"看多"| Bullish
-    ADXGroup["ADX 22.04"] -->|"弱趨勢"| WeakTrend
-    BBGroup["布林中軌 $177.62"] -->|"支撐"| Support
+    MAGroup["MA排列"] -->|空頭排列| Bearish
+    RSIGroup["RSI 46.9"] -->|中性| Neutral
+    MACDGroup["MACD Histogram +0.024"] -->|看多| Bullish
+    ADXGroup["ADX 22.04"] -->|弱趨勢| WeakTrend
+    BBGroup["布林中軌 $177.62"] -->|支撐| Support
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["MA20: $177.62"] -->|"下方"| CurrentPrice["現價: $177.39"]
-    MA50["MA50: $182.64"] -->|"下方"| CurrentPrice
-    MA200["MA200: $179.80"] -->|"下方"| CurrentPrice
+    MA20["MA20: $177.62"] -->|下方| CurrentPrice["現價: $177.39"]
+    MA50["MA50: $182.64"] -->|下方| CurrentPrice
+    MA200["MA200: $179.80"] -->|下方| CurrentPrice
 ```
 
 ### 📉 RSI(14) 分析
@@ -241,8 +241,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD: -2.903"] -->|"看多"| SignalLine["Signal: -2.926"]
-    Histogram["Histogram: +0.024"] -->|"看多"| BullishSignal
+    MACDLine["MACD: -2.903"] -->|看多| SignalLine["Signal: -2.926"]
+    Histogram["Histogram: +0.024"] -->|看多| BullishSignal
 ```
 
 ### 📦 布林通道分析
@@ -397,9 +397,9 @@ graph TD
     CurrentPrice --> Base
     CurrentPrice --> Pessimistic
     
-    Optimistic -->|"突破 $186"| TargetPrice["目標價: $200"]
-    Base -->|"盤整於 $170-$180"| NeutralZone["中性區域"]
-    Pessimistic -->|"跌破 $170"| BearishTarget["目標價: $150"]
+    Optimistic -->|突破 $186| TargetPrice["目標價: $200"]
+    Base -->|盤整於 $170-$180| NeutralZone["中性區域"]
+    Pessimistic -->|跌破 $170| BearishTarget["目標價: $150"]
 ```
 
 ### 🛡️ 風險管理重要提醒

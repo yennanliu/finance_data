@@ -262,7 +262,7 @@ pie title 成本支出結構（FY2026）
 graph TD
     ASSETS["Total Assets: $206.80B <br/> 珲鿧党显昂先...<| シャ.ต柿？"]
     
-    ASSETS2["强增資"]
+    ASSETS2[强增資]
     
     ASSETS2 --> CA["Current ($技术=上坦%&='》《*..."]
     ASSETS2 -->

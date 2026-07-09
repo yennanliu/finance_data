@@ -27,11 +27,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-    基本面 --> 8
-    成長 --> 7
-    獲利 --> 6
-    財務健康 --> 5
-    估值 --> 7
+    基本面-->8
+    成長-->7
+    獲利-->6
+    財務健康-->5
+    估值-->7
 ```
 
 ### 5大投資論點 + 3大風險
@@ -60,12 +60,12 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-    Lending --> PersonalLoans
-    Lending --> StudentLoans
-    Lending --> HomeLoans
-    TechPlatform --> Galileo
-    FinancialServices --> Investment
-    FinancialServices --> Insurance
+    Lending-->PersonalLoans
+    Lending-->StudentLoans
+    Lending-->HomeLoans
+    TechPlatform-->Galileo
+    FinancialServices-->Investment
+    FinancialServices-->Insurance
 ```
 
 ### 市場地位
@@ -141,12 +141,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD;
-    Assets --> CurrentAssets
-    Assets --> NonCurrentAssets
-    CurrentAssets --> Cash
-    CurrentAssets --> Receivables
-    NonCurrentAssets --> Property
-    NonCurrentAssets --> Investments
+    Assets-->CurrentAssets
+    Assets-->NonCurrentAssets
+    CurrentAssets-->Cash
+    CurrentAssets-->Receivables
+    NonCurrentAssets-->Property
+    NonCurrentAssets-->Investments
 ```
 
 ### 流動性指標
@@ -171,9 +171,9 @@ graph TD;
 ### 現金流量瀑布圖
 ```mermaid
 graph LR;
-    A("營業活動") -->|"-$3.74B"| B("投資活動")
-    B -->|"-$251.12M"| C("融資活動")
-    C -->|"+$1.20B"| D("淨增減")
+    A(營業活動) -->|-$3.74B| B(投資活動)
+    B -->|-$251.12M| C(融資活動)
+    C -->|+$1.20B| D(淨增減)
 ```
 
 ### FCF 轉換率趨勢
@@ -212,9 +212,9 @@ ROE = 淨利率 (13.4%) × 資產週轉率 (0.08) × 槓桿比 (7.0)
 ### 獲利能力儀表板
 ```mermaid
 graph TD;
-    淨利率 --> nb1["13.4%"]
-    資產週轉率 --> 0.08
-    槓桿比 --> 7.0
+    淨利率-->13.4%
+    資產週轉率-->0.08
+    槓桿比-->7.0
 ```
 
 ## 7. 估值深度分析
@@ -264,9 +264,9 @@ gantt
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD;
-    短期 --> 新產品
-    中期 --> 市場擴展
-    長期 --> 技術優化
+    短期-->新產品
+    中期-->市場擴展
+    長期-->技術優化
 ```
 
 ## 9. 風險矩陣

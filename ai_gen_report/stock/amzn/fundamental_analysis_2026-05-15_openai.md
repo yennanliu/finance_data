@@ -331,7 +331,7 @@ graph LR
     NetCashChange["淨現金變化：$9.81B"]
 
     NetIncome --> OpCashFlow
-    OpCashFlow -->|"扣除"| CapEx
+    OpCashFlow -->|扣除| CapEx
     CapEx --> FCF
     FCF --> NetCashChange
 ```

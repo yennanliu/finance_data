@@ -103,9 +103,9 @@ graph LR
 
 ```mermaid
 graph TD
-    Month["月線趨勢"] -->|"上升趨勢"| Week["週線趨勢"]
-    Week -->|"盤整"| Day["日線趨勢"]
-    Day -->|"短期強勢"| Hourly["小時線趨勢"]
+    Month["月線趨勢"] -->|上升趨勢| Week["週線趨勢"]
+    Week -->|盤整| Day["日線趨勢"]
+    Day -->|短期強勢| Hourly["小時線趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -147,7 +147,7 @@ $650 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX 分析"] -->|"<25 盤整"| Conclusion["弱趨勢"]
+    ADX["ADX 分析"] -->|<25 盤整| Conclusion["弱趨勢"]
 ```
 
 ---
@@ -248,8 +248,8 @@ graph TD
 
 ```mermaid
 graph TD
-    ShortMA["短期 MA20"] -->|"價格上方"| LongMA["長期 MA200"]
-    LongMA -->|"價格下方"| Conclusion["空頭排列"]
+    ShortMA["短期 MA20"] -->|價格上方| LongMA["長期 MA200"]
+    LongMA -->|價格下方| Conclusion["空頭排列"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -262,7 +262,7 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD 線"] -->|"在上"| SignalLine["訊號線"]
+    MACDLine["MACD 線"] -->|在上| SignalLine["訊號線"]
     SignalLine --> Histogram["柱狀圖"]
     Histogram --> Conclusion["多頭趨勢"]
 ```
@@ -338,8 +338,8 @@ $650 ┤
 ```mermaid
 graph TD
     Start["開始"] --> CheckTrend["檢查趨勢"]
-    CheckTrend -->|"上升"| LongStrategy["多頭策略"]
-    CheckTrend -->|"下降"| ShortStrategy["空頭策略"]
+    CheckTrend -->|上升| LongStrategy["多頭策略"]
+    CheckTrend -->|下降| ShortStrategy["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情

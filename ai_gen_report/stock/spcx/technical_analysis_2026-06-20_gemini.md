@@ -136,9 +136,9 @@ $149.34 ┤          ● (M3 低點 $149.34)
 
 ```mermaid
 graph LR
-    ADX_Val["ADX 數值: 91.37"] -->|" > 25 "| StrongTrend["極強趨勢確立"]
-    ADX_Val -->|" > 80 "| Overextended["趨勢極度鈍化/超買"]
-    DI_Relation["+DI (10.83) > -DI (7.06)"] -->|"多頭佔優"| BullishControl["買方掌握控制權"]
+    ADX_Val["ADX 數值: 91.37"] -->| > 25 | StrongTrend["極強趨勢確立"]
+    ADX_Val -->| > 80 | Overextended["趨勢極度鈍化/超買"]
+    DI_Relation["+DI (10.83) > -DI (7.06)"] -->|多頭佔優| BullishControl["買方掌握控制權"]
     StrongTrend & Overextended & BullishControl --> Conclusion["結論: 避免盲目追高，等待拉回支撐位佈局"]
 ```
 
@@ -159,8 +159,8 @@ graph TD
     A["52W 高點 $225.64"] --> B["波段低點 $160.95 (構築右腳)"]
     B --> C["本週大陽線拉升至 $185.00"]
     C --> D{"形態識別"}
-    D -->|"中期"| E["雙重底 (Double Bottom) 確立"]
-    D -->|"短期"| F["下降通道/楔形 向上突破"]
+    D -->|中期| E["雙重底 (Double Bottom) 確立"]
+    D -->|短期| F["下降通道/楔形 向上突破"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -391,9 +391,9 @@ graph TD
 ```mermaid
 graph TD
     Start["當前價格 $185.00"] --> Condition{"市場走勢抉擇"}
-    Condition -->|"回踩支撐 $178.50"| StrategyA["實施策略 A: 逢低買進 (波段)"]
-    Condition -->|"直接突破 $189.00"| StrategyB["實施策略 B: 突破追多 (短線)"]
-    Condition -->|"受阻 $193.30 滯漲"| StrategyC["實施策略 C: 逢高做空 (逆勢)"]
+    Condition -->|回踩支撐 $178.50| StrategyA["實施策略 A: 逢低買進 (波段)"]
+    Condition -->|直接突破 $189.00| StrategyB["實施策略 B: 突破追多 (短線)"]
+    Condition -->|受阻 $193.30 滯漲| StrategyC["實施策略 C: 逢高做空 (逆勢)"]
     
     StrategyA --> TargetA["目標價: $196.50 / $215.00"]
     StrategyB --> TargetB["目標價: $205.00 / $225.00"]
@@ -456,15 +456,15 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "悲觀場景 (Bearish)"
+    subgraph 悲觀場景 (Bearish)
         A1["跌破 $178.50 支撐"] --> A2["下探雙底右腳 $160.95"]
         A2 --> A3["跌破 $160.95 則形態失效，下探 $149.34"]
     end
-    subgraph "基準場景 (Base Case)"
+    subgraph 基準場景 (Base Case)
         B1["回調至 $178.50 - $180.00 止跌"] --> B2["震盪蓄勢，化解 RSI 背離"]
         B2 --> B3["放量突破 $193.30，挑戰 $205.00"]
     end
-    subgraph "樂觀場景 (Bullish)"
+    subgraph 樂觀場景 (Bullish)
         C1["直接放量突破 $189.00"] --> C2["快速收復 $193.30 頸線"]
         C2 --> C3["主升浪展開，挑戰 $225.64 歷史高點"]
     end

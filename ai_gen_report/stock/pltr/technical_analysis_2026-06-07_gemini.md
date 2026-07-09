@@ -170,8 +170,8 @@ $130 ═════════════════════════
 ```mermaid
 graph TD
     ADX["ADX(14) = 14.50\n(弱趨勢/盤整)"] --> DI_Compare{"比較 +DI 與 -DI"}
-    DI_Compare -->|"+DI = 26.57"| Bull["多頭力量"]
-    DI_Compare -->|"-DI = 30.76"| Bear["空頭力量"]
+    DI_Compare -->|+DI = 26.57| Bull["多頭力量"]
+    DI_Compare -->|-DI = 30.76| Bear["空頭力量"]
     Bull & Bear --> NetBear["-DI > +DI (空頭微幅主導)"]
     NetBear --> MarketState["市場狀態：縮量築底箱體震盪\n操作策略：不追空，逢低分批佈局多單"]
 ```

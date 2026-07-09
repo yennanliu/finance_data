@@ -89,10 +89,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] --> B["週線趨勢"] --> C["日線趨勢"]
-    A --> D["長期空頭"]
-    B --> E["中期空頭"]
-    C --> F["短期弱勢反彈"]
+    A[月線趨勢] --> B[週線趨勢] --> C[日線趨勢]
+    A --> D[長期空頭]
+    B --> E[中期空頭]
+    C --> F[短期弱勢反彈]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -126,11 +126,11 @@ $440 ┤    ●(低點)
 
 ```mermaid
 graph TD
-    ADX["ADX: 32.31 強趨勢"]
-    +DI["+DI: 13.49"]
-    -DI["-DI: 40.53"]
-    ADX --> |"空頭主導"| -DI
-    ADX --> |"弱多頭"| +DI
+    ADX[ADX: 32.31 強趨勢]
+    +DI[+DI: 13.49]
+    -DI[-DI: 40.53]
+    ADX --> |空頭主導| -DI
+    ADX --> |弱多頭| +DI
 ```
 
 ---
@@ -141,11 +141,11 @@ graph TD
 
 ```mermaid
 graph TD
-    H["頭肩頂形態"]
-    D["雙頂形態"]
-    T["三角形形態"]
-    H --> |"確認中"| D
-    D --> |"潛在"| T
+    H[頭肩頂形態]
+    D[雙頂形態]
+    T[三角形形態]
+    H --> |確認中| D
+    D --> |潛在| T
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -222,23 +222,23 @@ $342 ║████████████████████████
 
 ```mermaid
 graph TD
-    M["MA 系統"] --> R["RSI"]
+    M[MA 系統] --> R[RSI]
     R --> M
     M --> MACD
     MACD --> M
-    B["布林通道"] --> M
-    M --> V["成交量"]
+    B[布林通道] --> M
+    M --> V[成交量]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["MA20: $390.84"]
-    MA50["MA50: $408.09"]
-    MA200["MA200: $476.82"]
-    MA20 --> |"空頭排列"| MA50
-    MA50 --> |"空頭排列"| MA200
+    MA20[MA20: $390.84]
+    MA50[MA50: $408.09]
+    MA200[MA200: $476.82]
+    MA20 --> |空頭排列| MA50
+    MA50 --> |空頭排列| MA200
 ```
 
 ### 📉 RSI(14) 分析
@@ -251,11 +251,11 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD: -13.078"]
-    Signal["Signal: -10.097"]
-    Hist["Hist: -2.981"]
-    MACD --> |"空頭"| Signal
-    Hist --> |"增強"| MACD
+    MACD[MACD: -13.078]
+    Signal[Signal: -10.097]
+    Hist[Hist: -2.981]
+    MACD --> |空頭| Signal
+    Hist --> |增強| MACD
 ```
 
 ### 📦 布林通道分析
@@ -313,9 +313,9 @@ quadrantChart
 
 ```mermaid
 graph TD
-    S["短期訊號"] --> M["中期訊號"] --> L["長期訊號"]
-    S --> |"反彈"| M
-    M --> |"偏空"| L
+    S[短期訊號] --> M[中期訊號] --> L[長期訊號]
+    S --> |反彈| M
+    M --> |偏空| L
 ```
 
 ---
@@ -326,10 +326,10 @@ graph TD
 
 ```mermaid
 graph TD
-    A["觀察支撐位"]
-    B["突破確認"]
-    C["進場策略"]
-    D["止損設置"]
+    A[觀察支撐位]
+    B[突破確認]
+    C[進場策略]
+    D[止損設置]
     A --> B
     B --> C
     C --> D
@@ -390,11 +390,11 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"]
-    Base["基本情境"]
-    Pessimistic["悲觀情境"]
-    Optimistic --> |"價格突破 $425"| Base
-    Base --> |"價格持續低迷"| Pessimistic
+    Optimistic[樂觀情境]
+    Base[基本情境]
+    Pessimistic[悲觀情境]
+    Optimistic --> |價格突破 $425| Base
+    Base --> |價格持續低迷| Pessimistic
 ```
 
 ### 🛡️ 風險管理重要提醒
