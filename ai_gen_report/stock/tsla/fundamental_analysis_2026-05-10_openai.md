@@ -411,9 +411,9 @@ graph LR
     AssetTurnover["資產週轉率<br/>0.56"]
     EquityMultiplier["財務槓桿<br/>2.20"]
 
-    ROE -->  NetMargin
-    ROE -->  AssetTurnover
-    ROE -->  EquityMultiplier
+    ROE --> NetMargin
+    ROE --> AssetTurnover
+    ROE --> EquityMultiplier
 ```
 
 ### 6.4 獲利能力儀表板

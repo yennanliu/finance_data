@@ -127,17 +127,17 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢 - 長期] --> B{股價走勢}
-    B --> B1[⬆️ 強勁上升趨勢]
-    B1 --> B2[MA200 穩固向上]
-    B2 --> C[週線趨勢 - 中期]
-    C --> C1[⬆️ 穩步上漲，近期高位震盪]
-    C1 --> C2[MA50 支撐有效]
-    C2 --> D[日線趨勢 - 短期]
-    D --> D1[⬇️/↔️ 高位震盪，動能減弱]
-    D1 --> D2[RSI 頂背離，MACD 轉空]
-    D2 --> E[綜合判斷]
-    E --> F{長期多頭，短期面臨回調壓力}
+    A["月線趨勢 - 長期"] --> B{"股價走勢"}
+    B --> B1["⬆️ 強勁上升趨勢"]
+    B1 --> B2["MA200 穩固向上"]
+    B2 --> C["週線趨勢 - 中期"]
+    C --> C1["⬆️ 穩步上漲，近期高位震盪"]
+    C1 --> C2["MA50 支撐有效"]
+    C2 --> D["日線趨勢 - 短期"]
+    D --> D1["⬇️/↔️ 高位震盪，動能減弱"]
+    D1 --> D2["RSI 頂背離，MACD 轉空"]
+    D2 --> E["綜合判斷"]
+    E --> F{"長期多頭，短期面臨回調壓力"}
 ```
 
 **多時框架詳細解讀：**
@@ -218,12 +218,12 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而不判斷
 
 ```mermaid
 graph TD
-    A[ADX(14) = 29.32] --> B{趨勢強度判斷}
-    B -- ADX > 25 --> C[✅ 強趨勢行情]
-    C --> D[+DI = 35.00]
-    C --> E[-DI = 15.31]
-    D -- +DI > -DI --> F[🟢 多頭主導趨勢]
-    F --> G[結論：2330.TW 處於強勁的多頭趨勢中]
+    A["ADX(14) = 29.32"] --> B{"趨勢強度判斷"}
+    B -- ADX > 25 --> C["✅ 強趨勢行情"]
+    C --> D["+DI = 35.00"]
+    C --> E["-DI = 15.31"]
+    D -- +DI > -DI --> F["🟢 多頭主導趨勢"]
+    F --> G["結論：2330.TW 處於強勁的多頭趨勢中"]
 ```
 
 **ADX 強度對照表：**
@@ -253,15 +253,15 @@ graph TD
 
 ```mermaid
 graph TD
-    A[股價歷史走勢] --> B{識別潛在形態}
-    B -- 2026-02至2026-03回調 --> C[高位調整]
-    C -- 2026-03至2026-05再次上漲 --> D[動能減弱]
-    D --> E{可能形態}
-    E -- 高位震盪，量能不濟 --> F[⚠️ 上升楔形 (Rising Wedge) - 潛在看空反轉]
-    E -- 或 --> G[🟡 擴散形態 (Broadening Formation) - 波動加劇]
-    F --> H[形態確認條件：跌破下邊界]
-    G --> I[形態確認條件：突破新高或跌破關鍵支撐]
-    H --> J[目標價計算]
+    A["股價歷史走勢"] --> B{"識別潛在形態"}
+    B -- 2026-02至2026-03回調 --> C["高位調整"]
+    C -- 2026-03至2026-05再次上漲 --> D["動能減弱"]
+    D --> E{"可能形態"}
+    E -- 高位震盪，量能不濟 --> F["⚠️ 上升楔形 (Rising Wedge) - 潛在看空反轉"]
+    E -- 或 --> G["🟡 擴散形態 (Broadening Formation) - 波動加劇"]
+    F --> H["形態確認條件：跌破下邊界"]
+    G --> I["形態確認條件：突破新高或跌破關鍵支撐"]
+    H --> J["目標價計算"]
     I --> J
 ```
 
@@ -453,7 +453,7 @@ $1760.00 ─ 0% 底部 (波段起點，強支撐)
 graph TD
     PRICE["當前價格: $2295.00"]
 
-    SUBGRAPH_MA[移動平均線系統]
+    SUBGRAPH_MA["移動平均線系統"]
         MA_20["MA20: $2252.25"]
         MA_50["MA50: $2077.90"]
         MA_200["MA200: $1625.94"]
@@ -462,9 +462,9 @@ graph TD
         MA_20 --> MA_SIGNAL
         MA_50 --> MA_SIGNAL
         MA_200 --> MA_SIGNAL
-    END
+    end
 
-    SUBGRAPH_MOMENTUM[動能指標]
+    SUBGRAPH_MOMENTUM["動能指標"]
         RSI_14["RSI(14): 50.56"]
         RSI_DIV["⚠️ RSI 頂背離"]
         MACD_LINE["MACD: 52.249"]
@@ -475,9 +475,9 @@ graph TD
         MACD_LINE --> MACD_HIST
         MACD_SIG --> MACD_HIST
         MACD_HIST --> MACD_SIGNAL
-    END
+    end
 
-    SUBGRAPH_TREND[趨勢強度指標]
+    SUBGRAPH_TREND["趨勢強度指標"]
         ADX_14["ADX(14): 29.32"]
         DI_PLUS["+DI: 35.00"]
         DI_MINUS["-DI: 15.31"]
@@ -485,9 +485,9 @@ graph TD
         ADX_14 --> ADX_SIGNAL
         DI_PLUS --> ADX_SIGNAL
         DI_MINUS --> ADX_SIGNAL
-    END
+    end
 
-    SUBGRAPH_VOLATILITY[波動率與成交量]
+    SUBGRAPH_VOLATILITY["波動率與成交量"]
         BB_UPPER["BB上軌: $2339.34"]
         BB_MID["BB中軌: $2252.25"]
         BB_LOWER["BB下軌: $2165.16"]
@@ -502,14 +502,14 @@ graph TD
         VOL_RECENT --> VOL_SIGNAL
         VOL_AVG20 --> VOL_SIGNAL
         OBV_TREND --> VOL_SIGNAL
-    END
+    end
 
     PRICE --> SUBGRAPH_MA
     PRICE --> SUBGRAPH_MOMENTUM
     PRICE --> SUBGRAPH_TREND
     PRICE --> SUBGRAPH_VOLATILITY
 
-    MA_SIGNAL --> CONFLICT[⚠️ 指標矛盾]
+    MA_SIGNAL --> CONFLICT["⚠️ 指標矛盾"]
     ADX_SIGNAL --> CONFLICT
 
     RSI_DIV --> CONFLICT

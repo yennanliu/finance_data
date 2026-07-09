@@ -125,22 +125,22 @@ ORCL 的多時框架趨勢分析顯示，從長期到短期，整體趨勢均處
 
 ```mermaid
 graph TD
-    A[長期趨勢 (月線)] --> B{2025-09 高點 $279.04 後震盪下跌}
-    B --> C[當前價格 $147.76 遠低於歷史高點]
-    C --> D[長期均線 MA200 位於價格上方]
-    D --> E(長期趨勢: 🔴 熊市)
+    A["長期趨勢 (月線)"] --> B{"2025-09 高點 $279.04 後震盪下跌"}
+    B --> C["當前價格 $147.76 遠低於歷史高點"]
+    C --> D["長期均線 MA200 位於價格上方"]
+    D --> E("長期趨勢: 🔴 熊市")
 
-    F[中期趨勢 (週線)] --> G{2026-05 高點 $225.78 後急劇下跌}
-    G --> H[價格低於所有中期均線 (MA20, MA50, MA60, MA120)]
-    H --> I[MACD 柱狀圖持續為負]
-    I --> J(中期趨勢: 🔴 熊市)
+    F["中期趨勢 (週線)"] --> G{"2026-05 高點 $225.78 後急劇下跌"}
+    G --> H["價格低於所有中期均線 (MA20, MA50, MA60, MA120)"]
+    H --> I["MACD 柱狀圖持續為負"]
+    I --> J("中期趨勢: 🔴 熊市")
 
-    K[短期趨勢 (日線/週)](近20週) --> L{2026-06 價格從 $213.68 急跌至 $147.76}
-    L --> M[RSI/Stoch 極度超賣]
-    M --> N[短期均線 MA5, MA10 均向下發散]
-    N --> O(短期趨勢: 🔴 強烈下跌)
+    K["短期趨勢 (日線/週)"](近20週) --> L{"2026-06 價格從 $213.68 急跌至 $147.76"}
+    L --> M["RSI/Stoch 極度超賣"]
+    M --> N["短期均線 MA5, MA10 均向下發散"]
+    N --> O("短期趨勢: 🔴 強烈下跌")
 
-    E & J & O --> P(總結: ORCL 處於全面空頭趨勢)
+    E & J & O --> P("總結: ORCL 處於全面空頭趨勢")
 ```
 
 **多時框趨勢解讀**：
@@ -204,12 +204,12 @@ ADX 指標用於衡量趨勢的強度，而非方向。當 ADX 值高於 25 時�
 
 ```mermaid
 graph TD
-    A[ADX(14) 值: 26.67] --> B{ADX > 25?}
-    B -- 是 --> C[趨勢強勁]
-    C --> D[比較 +DI 和 -DI]
-    D -- +DI (16.23) < -DI (38.90) --> E[空頭力量主導]
-    E --> F(結論: ORCL 處於強勁的空頭趨勢中)
-    B -- 否 --> G[趨勢不明顯/盤整]
+    A["ADX(14) 值: 26.67"] --> B{"ADX > 25?"}
+    B -- 是 --> C["趨勢強勁"]
+    C --> D["比較 +DI 和 -DI"]
+    D -- +DI (16.23) < -DI (38.90) --> E["空頭力量主導"]
+    E --> F("結論: ORCL 處於強勁的空頭趨勢中")
+    B -- 否 --> G["趨勢不明顯/盤整"]
 ```
 
 **ADX 強度對照表**：
@@ -234,16 +234,16 @@ ORCL 的近期走勢顯示，在經歷了 5 月份的快速反彈後，6 月份�
 
 ```mermaid
 graph TD
-    A[價格走勢分析] --> B{識別潛在形態}
-    B --> C{2026-05 反彈至 $225.78}
-    B --> D{2026-06 快速下跌至 $147.76}
+    A["價格走勢分析"] --> B{"識別潛在形態"}
+    B --> C{"2026-05 反彈至 $225.78"}
+    B --> D{"2026-06 快速下跌至 $147.76"}
     C --> E[形成潛在"M"型頂部或雙重頂雛形]
     D --> F[跌破關鍵支撐，形成"下降旗形"或"下降三角形"初期]
-    E & F --> G{形態確認}
-    G -- "M"型頂部 --> H[頸線 $184.13 被有效跌破]
-    G -- 下降旗形 --> I[在下跌趨勢中形成短暫盤整]
+    E & F --> G{"形態確認"}
+    G -- "M"型頂部 --> H["頸線 $184.13 被有效跌破"]
+    G -- 下降旗形 --> I["在下跌趨勢中形成短暫盤整"]
     H --> J(結論: 🔴 "M"型頂部形態確認，頸線 $184.13 已跌破，下跌趨勢持續)
-    I --> K(結論: 🔴 若在 $140-$150 區間盤整，可能形成下降旗形，預示進一步下跌)
+    I --> K("結論: 🔴 若在 $140-$150 區間盤整，可能形成下降旗形，預示進一步下跌")
 ```
 
 **形態識別解讀**：
@@ -403,21 +403,21 @@ ORCL 的技術指標呈現出高度一致的空頭訊號，除了極度超賣的
 
 ```mermaid
 graph TD
-    PRICE_ACTION[價格行為: $147.76] --> MA_SYSTEM[移動平均線系統: 🔴 所有均線均在價格上方並向下傾斜]
-    PRICE_ACTION --> RSI_IND[RSI(14): 🟢 11.25 (極度超賣)]
-    PRICE_ACTION --> MACD_IND[MACD: 🔴 -11.823 (MACD線 < 訊號線, 柱狀圖為負)]
-    PRICE_ACTION --> ADX_IND[ADX(14): 🔴 26.67 (-DI > +DI, 強空頭趨勢)]
-    PRICE_ACTION --> BB_IND[布林通道: 🔴 價格位於下軌附近]
-    PRICE_ACTION --> VOLUME_IND[成交量: 🔴 OBV趨勢疲弱, 下跌放量]
+    PRICE_ACTION["價格行為: $147.76"] --> MA_SYSTEM["移動平均線系統: 🔴 所有均線均在價格上方並向下傾斜"]
+    PRICE_ACTION --> RSI_IND["RSI(14): 🟢 11.25 (極度超賣)"]
+    PRICE_ACTION --> MACD_IND["MACD: 🔴 -11.823 (MACD線 < 訊號線, 柱狀圖為負)"]
+    PRICE_ACTION --> ADX_IND["ADX(14): 🔴 26.67 (-DI > +DI, 強空頭趨勢)"]
+    PRICE_ACTION --> BB_IND["布林通道: 🔴 價格位於下軌附近"]
+    PRICE_ACTION --> VOLUME_IND["成交量: 🔴 OBV趨勢疲弱, 下跌放量"]
 
-    MA_SYSTEM --> BEAR_TREND[確認強勁空頭趨勢]
-    RSI_IND --> POTENTIAL_BOUNCE[潛在超賣反彈機會]
-    MACD_IND --> BEAR_MOMENTUM[強勁空頭動能]
-    ADX_IND --> TREND_STRENGTH[趨勢強度確認]
-    BB_IND --> EXTREME_BEARISH[極端看跌位置]
-    VOLUME_IND --> LACK_OF_BUYING[買盤不足，賣壓持續]
+    MA_SYSTEM --> BEAR_TREND["確認強勁空頭趨勢"]
+    RSI_IND --> POTENTIAL_BOUNCE["潛在超賣反彈機會"]
+    MACD_IND --> BEAR_MOMENTUM["強勁空頭動能"]
+    ADX_IND --> TREND_STRENGTH["趨勢強度確認"]
+    BB_IND --> EXTREME_BEARISH["極端看跌位置"]
+    VOLUME_IND --> LACK_OF_BUYING["買盤不足，賣壓持續"]
 
-    BEAR_TREND & BEAR_MOMENTUM & TREND_STRENGTH & EXTREME_BEARISH & LACK_OF_BUYING --> OVERALL_BEARISH[綜合結論: 🔴 強烈空頭，短期或有超賣反彈，但趨勢未變]
+    BEAR_TREND & BEAR_MOMENTUM & TREND_STRENGTH & EXTREME_BEARISH & LACK_OF_BUYING --> OVERALL_BEARISH["綜合結論: 🔴 強烈空頭，短期或有超賣反彈，但趨勢未變"]
     POTENTIAL_BOUNCE --> OVERALL_BEARISH
 ```
 
@@ -430,33 +430,33 @@ ORCL 的移動平均線系統呈現出典型的空頭排列和壓制狀態。
 
 ```mermaid
 graph TD
-    CURRENT_PRICE[當前價格: $147.76]
-    MA5[MA 5: $154.29]
-    MA10[MA 10: $169.53]
-    MA20[MA 20: $192.78]
-    MA50[MA 50: $188.46]
-    MA60[MA 60: $182.38]
-    MA120[MA 120: $171.50]
-    MA200[MA 200: $201.40]
-    MA240[MA 240: $208.24]
+    CURRENT_PRICE["當前價格: $147.76"]
+    MA5["MA 5: $154.29"]
+    MA10["MA 10: $169.53"]
+    MA20["MA 20: $192.78"]
+    MA50["MA 50: $188.46"]
+    MA60["MA 60: $182.38"]
+    MA120["MA 120: $171.50"]
+    MA200["MA 200: $201.40"]
+    MA240["MA 240: $208.24"]
 
-    CURRENT_PRICE -->|遠低於| MA5
-    CURRENT_PRICE -->|遠低於| MA10
-    CURRENT_PRICE -->|遠低於| MA20
-    CURRENT_PRICE -->|遠低於| MA50
-    CURRENT_PRICE -->|遠低於| MA60
-    CURRENT_PRICE -->|遠低於| MA120
-    CURRENT_PRICE -->|遠低於| MA200
-    CURRENT_PRICE -->|遠低於| MA240
+    CURRENT_PRICE -->|"遠低於"| MA5
+    CURRENT_PRICE -->|"遠低於"| MA10
+    CURRENT_PRICE -->|"遠低於"| MA20
+    CURRENT_PRICE -->|"遠低於"| MA50
+    CURRENT_PRICE -->|"遠低於"| MA60
+    CURRENT_PRICE -->|"遠低於"| MA120
+    CURRENT_PRICE -->|"遠低於"| MA200
+    CURRENT_PRICE -->|"遠低於"| MA240
 
-    MA5 -->|向下傾斜 (-4.23%)| DOWN_MA5
-    MA10 -->|向下傾斜 (-12.84%)| DOWN_MA10
-    MA20 -->|向下傾斜 (-23.35%)| DOWN_MA20
-    MA60 -->|向下傾斜 (-18.98%)| DOWN_MA60
-    MA120 -->|向下傾斜 (-13.84%)| DOWN_MA120
-    MA240 -->|向下傾斜 (-29.04%)| DOWN_MA240
+    MA5 -->|"向下傾斜 (-4.23%)"| DOWN_MA5
+    MA10 -->|"向下傾斜 (-12.84%)"| DOWN_MA10
+    MA20 -->|"向下傾斜 (-23.35%)"| DOWN_MA20
+    MA60 -->|"向下傾斜 (-18.98%)"| DOWN_MA60
+    MA120 -->|"向下傾斜 (-13.84%)"| DOWN_MA120
+    MA240 -->|"向下傾斜 (-29.04%)"| DOWN_MA240
 
-    DOWN_MA5 & DOWN_MA10 & DOWN_MA20 & DOWN_MA60 & DOWN_MA120 & DOWN_MA240 --> BEARISH_ALIGNMENT[均線空頭排列與壓制: 🔴 強烈看空]
+    DOWN_MA5 & DOWN_MA10 & DOWN_MA20 & DOWN_MA60 & DOWN_MA120 & DOWN_MA240 --> BEARISH_ALIGNMENT["均線空頭排列與壓制: 🔴 強烈看空"]
 ```
 
 **移動平均線排列分析**：
@@ -501,13 +501,13 @@ MACD (移動平均線收斂發散指標) 用於識別趨勢的動能和方向。
 
 ```mermaid
 graph TD
-    MACD_LINE[MACD線: -11.823] -->|低於| SIGNAL_LINE[訊號線: -5.349]
-    SIGNAL_LINE -->|向下延伸| NEGATIVE_HIST[柱狀圖: -6.474 (為負且擴大)]
+    MACD_LINE["MACD線: -11.823"] -->|"低於"| SIGNAL_LINE["訊號線: -5.349"]
+    SIGNAL_LINE -->|"向下延伸"| NEGATIVE_HIST["柱狀圖: -6.474 (為負且擴大)"]
 
-    MACD_LINE --> BEARISH_CROSS[MACD線在訊號線下方，形成空頭交叉]
-    NEGATIVE_HIST --> INCREASING_BEAR_MOMENTUM[空頭動能正在增強]
+    MACD_LINE --> BEARISH_CROSS["MACD線在訊號線下方，形成空頭交叉"]
+    NEGATIVE_HIST --> INCREASING_BEAR_MOMENTUM["空頭動能正在增強"]
 
-    BEARISH_CROSS & INCREASING_BEAR_MOMENTUM --> OVERALL_MACD_BEARISH[綜合MACD訊號: 🔴 強烈看空]
+    BEARISH_CROSS & INCREASING_BEAR_MOMENTUM --> OVERALL_MACD_BEARISH["綜合MACD訊號: 🔴 強烈看空"]
 ```
 
 **MACD 訊號解讀**：
@@ -647,27 +647,27 @@ ORCL 的多時框架分析顯示，無論是長期、中期還是短期，該股
 
 ```mermaid
 graph TD
-    subgraph 短期 (Daily/Weekly)
-        S_TREND[趨勢: 🔴 急跌]
-        S_MOMENTUM[動能: 🟢 超賣 (RSI, Stoch)]
-        S_MA[均線: 🔴 空頭發散]
-        S_VOLUME[成交量: 🔴 下跌放量]
+    subgraph "短期 (Daily/Weekly)"
+        S_TREND["趨勢: 🔴 急跌"]
+        S_MOMENTUM["動能: 🟢 超賣 (RSI, Stoch)"]
+        S_MA["均線: 🔴 空頭發散"]
+        S_VOLUME["成交量: 🔴 下跌放量"]
     end
 
-    subgraph 中期 (Weekly/Monthly)
-        M_TREND[趨勢: 🔴 下跌]
-        M_MOMENTUM[動能: 🔴 弱]
-        M_MA[均線: 🔴 空頭壓制]
-        M_PATTERN[形態: 🔴 M型頂部確認]
+    subgraph "中期 (Weekly/Monthly)"
+        M_TREND["趨勢: 🔴 下跌"]
+        M_MOMENTUM["動能: 🔴 弱"]
+        M_MA["均線: 🔴 空頭壓制"]
+        M_PATTERN["形態: 🔴 M型頂部確認"]
     end
 
-    subgraph 長期 (Monthly/Quarterly)
-        L_TREND[趨勢: 🔴 熊市]
-        L_MA[均線: 🔴 價格遠低於MA200]
-        L_SUPPORT[支撐: 🟡 接近歷史低點]
+    subgraph "長期 (Monthly/Quarterly)"
+        L_TREND["趨勢: 🔴 熊市"]
+        L_MA["均線: 🔴 價格遠低於MA200"]
+        L_SUPPORT["支撐: 🟡 接近歷史低點"]
     end
 
-    S_TREND --> CONSISTENCY[訊號一致性分析]
+    S_TREND --> CONSISTENCY["訊號一致性分析"]
     S_MOMENTUM --> CONSISTENCY
     S_MA --> CONSISTENCY
     S_VOLUME --> CONSISTENCY
@@ -679,8 +679,8 @@ graph TD
     L_MA --> CONSISTENCY
     L_SUPPORT --> CONSISTENCY
 
-    CONSISTENCY --> CONCLUSION{綜合結論: 🔴 全面空頭，短期超賣不改大勢}
-    CONCLUSION -- 風險 --> HIGH_RISK[高風險: 繼續下跌或短暫反彈後再跌]
+    CONSISTENCY --> CONCLUSION{"綜合結論: 🔴 全面空頭，短期超賣不改大勢"}
+    CONCLUSION -- 風險 --> HIGH_RISK["高風險: 繼續下跌或短暫反彈後再跌"]
 ```
 
 **綜合訊號矩陣解讀**：
@@ -698,17 +698,17 @@ ORCL 的多時框架訊號顯示出高度的一致性：從長期到短期，所
 
 ```mermaid
 graph TD
-    A[當前ORCL狀態: 🔴 強烈空頭趨勢, 🟢 極度超賣] --> B{趨勢 vs. 反彈}
+    A["當前ORCL狀態: 🔴 強烈空頭趨勢, 🟢 極度超賣"] --> B{"趨勢 vs. 反彈"}
 
-    B -- 順勢交易 (風險較低) --> C[等待反彈至阻力位做空]
-    C --> D[確認阻力有效性 (K線, 量能)]
-    D --> E[設置空頭策略]
+    B -- 順勢交易 (風險較低) --> C["等待反彈至阻力位做空"]
+    C --> D["確認阻力有效性 (K線, 量能)"]
+    D --> E["設置空頭策略"]
 
-    B -- 逆勢交易 (風險較高) --> F[等待超賣止跌訊號做多]
-    F --> G[確認強力支撐 (52W低點, BB下軌)]
-    G --> H[設置多頭策略]
+    B -- 逆勢交易 (風險較高) --> F["等待超賣止跌訊號做多"]
+    F --> G["確認強力支撐 (52W低點, BB下軌)"]
+    G --> H["設置多頭策略"]
 
-    E --> I(交易策略建議)
+    E --> I("交易策略建議")
     H --> I
 ```
 
@@ -793,25 +793,25 @@ ORCL 目前的技術面極度悲觀，投資者在進行任何交易前都必須
 
 ```mermaid
 graph TD
-    A[當前狀態: ORCL 處於強勁下跌趨勢，極度超賣]
+    A["當前狀態: ORCL 處於強勁下跌趨勢，極度超賣"]
 
-    A --> B{樂觀情境 (低機率)}
-    B --> B1[觸及強支撐 ($134.57, $130.61) 後V型反轉]
-    B1 --> B2[RSI/MACD 底背離確認，市場情緒迅速扭轉]
-    B2 --> B3[價格快速突破短期均線阻力，形成反轉形態]
-    B3 --> B4[潛在目標: $170 - $190 區間]
+    A --> B{"樂觀情境 (低機率)"}
+    B --> B1["觸及強支撐 ($134.57, $130.61) 後V型反轉"]
+    B1 --> B2["RSI/MACD 底背離確認，市場情緒迅速扭轉"]
+    B2 --> B3["價格快速突破短期均線阻力，形成反轉形態"]
+    B3 --> B4["潛在目標: $170 - $190 區間"]
 
-    A --> C{基本情境 (中機率)}
-    C --> C1[短期超賣反彈至 MA5 ($154.29) 或 MA10 ($169.53) 附近]
-    C1 --> C2[反彈後再次受阻，未能有效突破關鍵均線]
-    C2 --> C3[價格繼續在 $130 - $160 區間震盪築底]
-    C3 --> C4[潛在目標: 繼續測試 $134.57 或 $130.61]
+    A --> C{"基本情境 (中機率)"}
+    C --> C1["短期超賣反彈至 MA5 ($154.29) 或 MA10 ($169.53) 附近"]
+    C1 --> C2["反彈後再次受阻，未能有效突破關鍵均線"]
+    C2 --> C3["價格繼續在 $130 - $160 區間震盪築底"]
+    C3 --> C4["潛在目標: 繼續測試 $134.57 或 $130.61"]
 
-    A --> D{悲觀情境 (中高機率)}
-    D --> D1[跌破 $134.57 (52W 低點) 和 $130.61 (布林下軌)]
-    D1 --> D2[引發恐慌性拋售，加速下跌]
-    D2 --> D3[市場對基本面或前景極度悲觀]
-    D3 --> D4[潛在目標: $120 甚至更低]
+    A --> D{"悲觀情境 (中高機率)"}
+    D --> D1["跌破 $134.57 (52W 低點) 和 $130.61 (布林下軌)"]
+    D1 --> D2["引發恐慌性拋售，加速下跌"]
+    D2 --> D3["市場對基本面或前景極度悲觀"]
+    D3 --> D4["潛在目標: $120 甚至更低"]
 ```
 
 **風險場景分析解讀**：

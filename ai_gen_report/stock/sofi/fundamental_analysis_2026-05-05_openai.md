@@ -127,7 +127,7 @@ graph TD
     TechPlatform["技術平台<br/>佔比：25%"]
     FinServices["金融服務<br/>佔比：15%"]
 
-    SOFI --> Lending 
+    SOFI --> Lending
     SOFI --> TechPlatform
     SOFI --> FinServices
 

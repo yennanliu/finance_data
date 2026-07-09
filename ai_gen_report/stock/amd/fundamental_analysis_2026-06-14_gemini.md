@@ -392,12 +392,12 @@ graph LR
     BUYBACK["股份回購<br/>-$1.50B"]
     NET_CASH["淨現金增加<br/>+$5.24B"]
 
-    NI -->|加上非現金費用| DA
-    DA -->|調整營運資金| WC
+    NI -->|"加上非現金費用"| DA
+    DA -->|"調整營運資金"| WC
     WC --> OCF
-    OCF -->|扣除資本支出| CAPEX
+    OCF -->|"扣除資本支出"| CAPEX
     CAPEX --> FCF
-    FCF -->|分配資本| BUYBACK
+    FCF -->|"分配資本"| BUYBACK
     BUYBACK --> NET_CASH
 ```
 

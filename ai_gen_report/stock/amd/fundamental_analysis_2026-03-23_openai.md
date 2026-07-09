@@ -36,10 +36,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph LR
-    基本面(4/10) --> 獲利(5/10)
-    獲利 --> 成長(8/10)
-    成長 --> 財務健康(7/10)
-    財務健康 --> 估值(6/10)
+    基本面("4/10") --> 獲利("5/10")
+    獲利 --> 成長("8/10")
+    成長 --> 財務健康("7/10")
+    財務健康 --> 估值("6/10")
 ```
 
 ### 5大投資論點 + 3大風險
@@ -81,13 +81,13 @@ graph LR
 
 ```mermaid
 graph TD
-    A[AMD] --> B[Data Center]
-    A --> C[Client and Gaming]
-    A --> D[Embedded]
-    B --> E[AI Accelerators]
-    B --> F[Microprocessors]
-    C --> G[GPUs]
-    D --> H[Embedded Processors]
+    A["AMD"] --> B["Data Center"]
+    A --> C["Client and Gaming"]
+    A --> D["Embedded"]
+    B --> E["AI Accelerators"]
+    B --> F["Microprocessors"]
+    C --> G["GPUs"]
+    D --> H["Embedded Processors"]
 ```
 
 ### 市場地位
@@ -187,13 +187,13 @@ pie
 
 ```mermaid
 graph TD
-    A[資產] --> B[流動資產]
-    A --> C[非流動資產]
-    B --> D[現金及現金等價物]
-    B --> E[應收帳款]
-    B --> F[存貨]
-    C --> G[固定資產]
-    C --> H[無形資產]
+    A["資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
+    B --> D["現金及現金等價物"]
+    B --> E["應收帳款"]
+    B --> F["存貨"]
+    C --> G["固定資產"]
+    C --> H["無形資產"]
 ```
 
 ### 流動性指標
@@ -228,9 +228,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A[營業現金流] --> B[投資現金流]
-    B --> C[融資現金流]
-    C --> D[淨增減]
+    A["營業現金流"] --> B["投資現金流"]
+    B --> C["融資現金流"]
+    C --> D["淨增減"]
 ```
 
 ### FCF 轉換率趨勢
