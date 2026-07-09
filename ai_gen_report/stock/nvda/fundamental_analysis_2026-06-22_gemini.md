@@ -131,7 +131,7 @@ NVIDIA 已經從一家傳統的圖形處理器（GPU）硬體廠商，成功演�
 graph TD
     NVDA["NVIDIA Corporation<br/>(市值: $5.05T | TTM 營收: $253.49B)"]
 
-    CN["Compute & Networking (運算與網路)<br/>營收佔比: ~88% ($223.1B)"]
+    CN["Compute & Networking(運算與網路)<br/>營收佔比: ~88% ($223.1B)"]
     GR["Graphics (圖形業務)<br/>營收佔比: ~12% ($30.4B)"]
 
     NVDA --> CN
@@ -338,9 +338,9 @@ graph LR
     FCF["自由現金流 (FCF)<br/>$115.15B"]
     ALLOC["資本配置<br/>- 股份回購: ~$45B<br/>- 股息發放: $0.97B"]
 
-    NI --> |調整| WC
+    NI --> |"調整"| WC
     WC --> OCF
-    OCF --> |扣除| CAPEX
+    OCF --> |"扣除"| CAPEX
     CAPEX --> FCF
     FCF --> ALLOC
 ```

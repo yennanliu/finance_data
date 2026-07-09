@@ -146,10 +146,10 @@ graph TD
     DELIVERY --> GE["GrabExpress (包裹快遞)"]
 
     MOBILITY --> RH["Ride-Hailing (網約車)"]
-    MOBILITY --> RB["Rental & Subscription (租賃訂閱)"]
+    MOBILITY --> RB["Rental & Subscription(租賃訂閱)"]
 
     FINTECH --> PY["Payments (支付)"]
-    FINTECH --> LG["Lending & Insurance (借貸與保險)"]
+    FINTECH --> LG["Lending & Insurance(借貸與保險)"]
 
     ENTERPRISE_ADS --> GA["GrabAds (廣告解決方案)"]
     ENTERPRISE_ADS --> GB["Grab for Business (企業管理平台)"]
@@ -453,11 +453,11 @@ graph LR
     CASH_DIVIDENDS["現金股利: $0.00"]
     NET_CASH_CHANGE["淨現金變化 (FY2025): $470.00M"]
 
-    NetIncome -- 非現金調整 --> OCF
-    OCF -- 減去 --> CAPEX
-    CAPEX -- 等於 --> FCF
-    FCF -- 減去 --> CASH_DIVIDENDS
-    CASH_DIVIDENDS -- 加上/減去 融資/投資活動 --> NET_CASH_CHANGE
+    nb1["NetIncome -- 非現金調整"] --> OCF
+    nb2["OCF -- 減去"] --> CAPEX
+    nb3["CAPEX -- 等於"] --> FCF
+    nb4["FCF -- 減去"] --> CASH_DIVIDENDS
+    nb5["CASH_DIVIDENDS -- 加上/減去 融資/投資活動"] --> NET_CASH_CHANGE
 ```
 **現金流量瀑布圖分析：**
 從 2025 財年的數據來看，Grab 的淨利潤為 $268.00M，但其營運現金流僅為 $79.00M。這表明淨利潤中包含了一定量的非現金收益或一次性調整。例如，折舊攤銷等非現金費用、股份支付費用等會對淨利潤和營運現金流產生差異。
@@ -703,9 +703,9 @@ graph LR
     ASSET_TURNOVER["資產周轉率<br/>0.30x"]
     FINANCIAL_LEVERAGE["財務槓桿<br/>1.40x"]
 
-    ROE -- = --> NET_PROFIT_MARGIN
-    ROE -- * --> ASSET_TURNOVER
-    ROE -- * --> FINANCIAL_LEVERAGE
+    nb1["ROE -- ="] --> NET_PROFIT_MARGIN
+    nb2["ROE -- *"] --> ASSET_TURNOVER
+    nb2["ROE -- *"] --> FINANCIAL_LEVERAGE
 ```
 *計算說明 (TTM Mar '26)：
 - 淨利率 = 淨利潤 $310M / 總營收 $3.55B = 8.73%。 (Market Data 淨利率 10.7%，我使用 StockAnalysis 的 TTM 淨利潤 $310M)
@@ -723,9 +723,9 @@ graph LR
     ATO_CALC["資產周轉率<br/>0.30x"]
     FL_CALC["財務槓桿<br/>1.74x"]
 
-    ROE_CALC -- = --> NPM_CALC
-    ROE_CALC -- * --> ATO_CALC
-    ROE_CALC -- * --> FL_CALC
+    nb1["ROE_CALC -- ="] --> NPM_CALC
+    nb2["ROE_CALC -- *"] --> ATO_CALC
+    nb2["ROE_CALC -- *"] --> FL_CALC
 ```
 **杜邦三因素分解分析 (TTM Mar '26)：**
 - **淨利率 (Net Profit Margin)**：8.73%。這表示 Grab 每產生 $1 營收，能帶來 $0.0873 的淨利潤。相較於過去的虧損，這是顯著的進步，但對於科技平台而言，仍有提升空間。

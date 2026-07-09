@@ -343,7 +343,7 @@ graph TD
     CA --> Inv["Inventory ($21.40B)"]
     CA --> OCA["Other Current Assets ($3.18B)"]
 
-    NCA --> PPE["Net Property, Plant & Equipment ($13.25B)"]
+    NCA --> PPE["Net Property, Plant & Equipment($13.25B)"]
     NCA --> GW_IA["Goodwill & Intangible Assets ($24.14B)"]
     NCA --> LTI["Long-Term Investments ($22.25B)"]
     NCA --> OLT["Other Long-Term Assets ($21.56B)"]

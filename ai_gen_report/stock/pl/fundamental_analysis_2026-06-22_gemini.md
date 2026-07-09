@@ -295,7 +295,7 @@ graph TD
     CA --> C2["Accounts Receivable<br/>$61.61M"]
     CA --> C3["Other Current Assets<br/>$56.53M"]
 
-    NCA --> N1["Net PP&E (Satellites)<br/>$198.65M"]
+    NCA --> N1["Net PP& E(Satellites)<br/>$198.65M"]
     NCA --> N2["Goodwill & Intangibles<br/>$189.25M"]
     NCA --> N3["Other Long-Term Assets<br/>$14.12M"]
 ```

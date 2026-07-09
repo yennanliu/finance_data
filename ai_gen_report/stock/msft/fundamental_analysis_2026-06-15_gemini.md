@@ -146,7 +146,7 @@ graph TD
     IC --> IC3["Enterprise Support Services"]
 
     MPC --> MPC1["Windows OEM & Commercial"]
-    MPC --> MPC2["Xbox Gaming & Content (Activision Blizzard)"]
+    MPC --> MPC2["Xbox Gaming & Content(Activision Blizzard)"]
     MPC --> MPC3["Surface Devices & Search Ads"]
 ```
 
@@ -324,7 +324,7 @@ graph TD
     CA --> CA2["Accounts Receivable: $60.04B"]
     CA --> CA3["Inventory & Others: $37.02B"]
 
-    NCA --> NCA1["Net Property, Plant & Equipment (PPE): $307.63B"]
+    NCA --> NCA1["Net Property, Plant & Equipment(PPE): $307.63B"]
     NCA --> NCA2["Goodwill & Intangibles: $138.99B"]
     NCA --> NCA3["Long-Term Investments & Others: $72.28B"]
 ```
@@ -395,12 +395,12 @@ graph LR
     REP["Share Repurchases & Others<br/>-$20.00B"]
     NET_CASH["Net Cash Change<br/>+$26.42B"]
 
-    NI --> |+ 非現金調整| DA
+    NI --> |"+ 非現金調整"| DA
     DA --> OCF
-    OCF --> |- 資本支出| CAPEX
+    OCF --> |"- 資本支出"| CAPEX
     CAPEX --> FCF
-    FCF --> |- 派發股息| DIV
-    DIV --> |- 股份回購| REP
+    FCF --> |"- 派發股息"| DIV
+    DIV --> |"- 股份回購"| REP
     REP --> NET_CASH
 ```
 

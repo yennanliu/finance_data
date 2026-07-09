@@ -637,7 +637,7 @@ graph TD
     PROFITABILITY --> NM["Net Profit Margin: -45.0% (TTM)"]
 
     GM --> GM_DRIVERS["✅ 規模經濟效益<br/>✅ 成本控制改善<br/>✅ 產品組合優化"]
-    OM --> OM_DRIVERS["❌ 巨額R&D投入 ($8.64B in FY25)<br/>❌ 高額SGA費用"]
+    OM --> OM_DRIVERS["❌ 巨額R& D投入($8.64B in FY25)<br/>❌ 高額SGA費用"]
     NM --> NM_DRIVERS["❌ 高額利息支出 ($1.95B in FY25)<br/>❌ 稅務影響 (虧損抵扣)"]
 
     GM_DRIVERS --> STARLINK_SCALE["Starlink衛星量產降低成本"]

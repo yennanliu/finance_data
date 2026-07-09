@@ -137,7 +137,7 @@ NVIDIA 的業務結構清晰，主要圍繞其 GPU 技術展開，並延伸至�
 graph TD
     NVDA_OVERVIEW["NVIDIA Corporation<br/>市值: $5.19T<br/>TTM 營收: $253.49B"]
 
-    CN["Compute & Networking (資料中心)<br/>預估佔比: ~80%<br/>預估金額: ~$202.79B"]
+    CN["Compute & Networking(資料中心)<br/>預估佔比: ~80%<br/>預估金額: ~$202.79B"]
     G["Graphics (遊戲 & 專業視覺化)<br/>預估佔比: ~20%<br/>預估金額: ~$50.70B"]
 
     CN --> CNAI["AI 基礎設施 & 加速運算<br/>(H100, GH200, NVLink, DGX, HGX)<br/>主要客戶: 雲服務商 (CSP), 大型企業"]

@@ -386,7 +386,7 @@ graph TD
     CA --> INV["Inventory (TTM: $299.28M)<br/>佔 CA 17.6%"]
     CA --> OCA["Other Current Assets (TTM: $88.23M)<br/>佔 CA 5.2%"]
 
-    NCA --> PPE["Net Property, Plant & Equipment (TTM: $250.68M)<br/>佔 NCA 6.7%"]
+    NCA --> PPE["Net Property, Plant & Equipment(TTM: $250.68M)<br/>佔 NCA 6.7%"]
     NCA --> OIA["Other Intangible Assets (TTM: $925.93M)<br/>佔 NCA 24.7%"]
     NCA --> GW["Goodwill (TTM: $2.46B)<br/>佔 NCA 65.6%"]
     NCA --> LTI["Long-Term Investments (TTM: $61.66M)<br/>佔 NCA 1.6%"]

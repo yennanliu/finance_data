@@ -431,9 +431,9 @@ graph LR
     ROE --> ASSET_TURNOVER
     ROE --> FINANCIAL_LEVERAGE
 
-    NET_MARGIN -- 45.1% --> ROE
-    ASSET_TURNOVER -- 0.37x --> ROE
-    FINANCIAL_LEVERAGE -- 2.0x --> ROE
+    nb1["NET_MARGIN -- 45.1%"] --> ROE
+    nb2["ASSET_TURNOVER -- 0.37x"] --> ROE
+    nb3["FINANCIAL_LEVERAGE -- 2.0x"] --> ROE
 ```
 
 ### 6.4 獲利能力儀表板
@@ -450,9 +450,9 @@ graph TD
     PROFITABILITY --> OPERATING_MARGIN
     PROFITABILITY --> NET_MARGIN
 
-    GROSS_MARGIN -- 成本控制優秀 --> PROFITABILITY
-    OPERATING_MARGIN -- 運營效率高 --> PROFITABILITY
-    NET_MARGIN -- 盈利能力強 --> PROFITABILITY
+    nb1["GROSS_MARGIN -- 成本控制優秀"] --> PROFITABILITY
+    nb2["OPERATING_MARGIN -- 運營效率高"] --> PROFITABILITY
+    nb3["NET_MARGIN -- 盈利能力強"] --> PROFITABILITY
 ```
 
 ---

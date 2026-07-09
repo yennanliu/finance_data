@@ -935,7 +935,7 @@ graph TD
 
     LT --> LT1["Generative AI & Machine Learning"]
     LT --> LT2["Advanced Logistics Automation"]
-    LT --> LT3["New Ventures & Innovation (e.g., Project Kuiper)"]
+    LT --> LT3["New Ventures & Innovation(e.g., Project Kuiper)"]
 ```
 **分析：**
 *   **短期驅動:** AWS 持續作為高利潤增長引擎，廣告業務的快速擴張提供新的營收來源，以及電商業務在物流和供應鏈上的效率提升，將共同推動近期業績增長。

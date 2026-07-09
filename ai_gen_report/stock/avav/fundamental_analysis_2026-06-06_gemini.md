@@ -72,7 +72,7 @@ graph TD
     M --> M2["✅ 高轉換成本與政府認證"]
     MG --> MG1["✅ 成功整合收購"]
     MG --> MG2["🟡 需改善成本控制"]
-    I --> I1["✅ 大量R&D投入 ($121.12M TTM)"]
+    I --> I1["✅ 大量R& D投入($121.12M TTM)"]
     I --> I2["✅ 領先的UAS和LM技術"]
 ```
 
@@ -160,7 +160,7 @@ graph TD
     UAS_SMALL["小型UAS<br/>(e.g., Raven, Wasp, Puma)"]
     UAS_MEDIUM["中型UAS<br/>(e.g., JUMP 20, Quantix Recon)"]
     KINESIS["Kinesis 指揮控制軟體"]
-    C_UAS_PS["反無人機 (C-UAS) & 精準打擊 (Precision Strike)<br/>(e.g., Switchblade 300/600 巡飛彈藥)"]
+    C_UAS_PS["反無人機 (C-UAS) & 精準打擊(Precision Strike)<br/>(e.g., Switchblade 300/600 巡飛彈藥)"]
 
     HAPS["高空假衛星 (HAPS)"]
     CYBER_SOL["網路安全解決方案"]

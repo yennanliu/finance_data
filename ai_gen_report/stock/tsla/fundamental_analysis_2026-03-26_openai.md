@@ -30,10 +30,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD
-    A[基本面: 7] --> B[成長: 6]
-    B --> C[獲利: 5]
-    C --> D[財務健康: 8]
-    D --> E[估值: 4]
+    A["基本面: 7"] --> B["成長: 6"]
+    B --> C["獲利: 5"]
+    C --> D["財務健康: 8"]
+    D --> E["估值: 4"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -70,8 +70,8 @@ graph TD
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[Tesla, Inc.] --> B[Automotive]
-    A --> C[Energy Generation and Storage]
+    A["Tesla, Inc."] --> B["Automotive"]
+    A --> C["Energy Generation and Storage"]
 ```
 
 ### 市場地位
@@ -150,8 +150,8 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[Total Assets] --> B[流動資產]
-    A --> C[非流動資產]
+    A["Total Assets"] --> B["流動資產"]
+    A --> C["非流動資產"]
 ```
 
 ### 流動性指標表格
@@ -182,9 +182,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A[營業現金流] --> B[投資現金流]
-    B --> C[融資現金流]
-    C --> D[淨增減]
+    A["營業現金流"] --> B["投資現金流"]
+    B --> C["融資現金流"]
+    C --> D["淨增減"]
 ```
 
 ### FCF 轉換率趨勢表格
@@ -233,8 +233,8 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD
-    A[淨利率: 4.0%] --> B[資產週轉率: 0.52]
-    B --> C[槓桿比: 2.4]
+    A["淨利率: 4.0%"] --> B["資產週轉率: 0.52"]
+    B --> C["槓桿比: 2.4"]
 ```
 
 ---
@@ -293,10 +293,10 @@ gantt
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD
-    A[短期] --> B[新產品]
-    A --> C[市場需求]
-    B --> D[技術提升]
-    C --> E[政策支持]
+    A["短期"] --> B["新產品"]
+    A --> C["市場需求"]
+    B --> D["技術提升"]
+    C --> E["政策支持"]
 ```
 
 ---
@@ -341,9 +341,9 @@ graph TD
 ### 投資人適配度
 ```mermaid
 graph TD
-    A[成長型] --> B[價值型]
-    A --> C[股息型]
-    B --> D[短期交易]
+    A["成長型"] --> B["價值型"]
+    A --> C["股息型"]
+    B --> D["短期交易"]
 ```
 
 ### 關鍵監控指標

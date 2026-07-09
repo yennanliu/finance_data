@@ -128,9 +128,9 @@ graph TD;
     PACK["Packaging & Testing<br/>9% / $0.34T"];
     OTH["Other Services<br/>5% / $0.19T"];
 
-    Company --> WAF;
-    Company --> PACK;
-    Company --> OTH;
+    Company --> nb1["WAF;"]
+    Company --> nb2["PACK;"]
+    Company --> nb3["OTH;"]
 
     WAF --> WAF1["CMOS"];
     WAF --> WAF2["Mixed-Signal"];

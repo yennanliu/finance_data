@@ -150,7 +150,7 @@ graph TD
     ORCL_Overview --> Other["其他服務<br/>佔總營收約 1-5%<br/>諮詢、專業服務等"]
 
     Cloud_Services_Support --> SaaS["軟體即服務 (SaaS)<br/>Oracle Fusion Cloud ERP, EPM, SCM, HCM, NetSuite"]
-    Cloud_Services_Support --> IaaS_PaaS["基礎設施即服務 (IaaS) & 平台即服務 (PaaS)<br/>Oracle Cloud Infrastructure (OCI)"]
+    Cloud_Services_Support --> IaaS_PaaS["基礎設施即服務 (IaaS) & 平台即服務(PaaS)<br/>Oracle Cloud Infrastructure (OCI)"]
     Cloud_Services_Support --> Support["客戶支援服務<br/>傳統軟體授權的持續支援"]
 
     Cloud_License_OnPremise_License --> Cloud_License["雲端許可證<br/>一次性雲端軟體許可"]

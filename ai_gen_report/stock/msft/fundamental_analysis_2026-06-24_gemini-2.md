@@ -384,13 +384,13 @@ graph TD
     CA["Current Assets (Mar'26: $175.33B)"]
     NCA["Non-Current Assets (Mar'26: $518.90B)"]
 
-    CA --> CCE["Cash & Equivalents ($32.11B)"]
+    CA --> CCE["Cash & Equivalents($32.11B)"]
     CA --> STI["Short-Term Investments ($46.17B)"]
     CA --> AR["Accounts Receivable ($60.04B)"]
     CA --> INV["Inventory ($1.22B)"]
     CA --> OCA["Other Current Assets ($35.80B)"]
 
-    NCA --> PPNE["Net Property, Plant & Equipment ($307.63B)"]
+    NCA --> PPNE["Net Property, Plant & Equipment($307.63B)"]
     NCA --> GW["Goodwill ($119.66B)"]
     NCA --> OIA["Other Intangible Assets ($19.33B)"]
     NCA --> LTI["Long-Term Investments ($33.68B)"]

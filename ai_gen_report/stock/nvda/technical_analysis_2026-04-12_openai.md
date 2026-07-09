@@ -155,8 +155,8 @@ graph TD
     ADX["ADX 弱趨勢 (19.10)"]
     +DI["+DI 多頭主導 (31.64)"]
     -DI["-DI 空頭 (26.41)"]
-    ADX --> |低於 25|盤整
-    +DI --> |高於 -DI|多頭
+    ADX --> |"低於 25"|盤整
+    +DI --> |"高於 -DI"|多頭
 ```
 
 ---
@@ -258,8 +258,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
     A --> C
 ```
 
@@ -277,8 +277,8 @@ graph TD
     MACDLine["MACD 線"]
     SignalLine["訊號線"]
     Histogram["柱狀圖"]
-    MACDLine -->|多頭| Histogram
-    SignalLine -->|低於 MACD| Histogram
+    MACDLine -->|"多頭"| Histogram
+    SignalLine -->|"低於 MACD"| Histogram
 ```
 
 ### 📦 布林通道分析

@@ -310,13 +310,13 @@ mindmap
 
 ```mermaid
 graph LR
-    PORTFOLIO["50檔成分股"] -->|發放現金股利| ETF_INC["0050 基金帳戶"]
-    CAPITAL_GAIN["已實現資本利得"] -->|符合配息條件| ETF_INC
+    PORTFOLIO["50檔成分股"] -->|"發放現金股利"| ETF_INC["0050 基金帳戶"]
+    CAPITAL_GAIN["已實現資本利得"] -->|"符合配息條件"| ETF_INC
     
-    ETF_INC -->|扣除 0.43% 費用| DIV_POOL["可分配收益池"]
+    ETF_INC -->|"扣除 0.43% 費用"| DIV_POOL["可分配收益池"]
     
-    DIV_POOL -->|1月發放 (約佔 65%)| DIV_JAN["1月配息 (核心)"]
-    DIV_POOL -->|7月發放 (約佔 35%)| DIV_JUL["7月配息 (中期)"]
+    DIV_POOL -->|"1月發放 (約佔 65%)"| DIV_JAN["1月配息 (核心)"]
+    DIV_POOL -->|"7月發放 (約佔 35%)"| DIV_JUL["7月配息 (中期)"]
 ```
 
 ### 5.2 歷年配息與殖利率表現

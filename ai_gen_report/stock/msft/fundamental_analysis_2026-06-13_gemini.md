@@ -151,7 +151,7 @@ graph TD
     PBP --> PBP3["Dynamics 365 (SaaS ERP/CRM)"]
 
     MPC --> MPC1["Windows OEM & Commercial Licenses"]
-    MPC --> MPC2["Xbox Hardware & Content (Activision Blizzard)"]
+    MPC --> MPC2["Xbox Hardware & Content(Activision Blizzard)"]
     MPC --> MPC3["Search & News Advertising (Bing AI)"]
 ```
 

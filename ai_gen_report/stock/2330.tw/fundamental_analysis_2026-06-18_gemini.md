@@ -377,11 +377,11 @@ graph LR
     DIV["📅 股利發放<br/>-$466.78B TWD"]
     NC["📈 淨現金增加<br/>+$525.60B TWD"]
 
-    NI --> |調整| DEP
+    NI --> |"調整"| DEP
     DEP --> OCF
     NWC --> OCF
-    OCF --> |扣除 CapEx| FCF
-    FCF --> |扣除股利| NC
+    OCF --> |"扣除 CapEx"| FCF
+    FCF --> |"扣除股利"| NC
     DIV --> NC
 ```
 

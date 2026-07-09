@@ -766,7 +766,7 @@ graph TD
     MT --> MT2["📶 Automotive & IoT Growth"]
     MT --> MT3["🤝 Diversified Customer Portfolio"]
 
-    LT --> LT1["🥽 Next-Gen Process R&D (A14/A10)"]
+    LT --> LT1["🥽 Next-Gen Process R& D(A14/A10)"]
     LT --> LT2["⌚ Advanced Packaging Innovation"]
     LT --> LT3["🌐 Geographic Diversification Success"]
     LT --> LT4["💡 New Technology Applications (Metaverse, Quantum)"]

@@ -28,10 +28,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph LR
-    基本面(基本面) --> |8/10|成長
-    成長 --> |9/10|獲利
-    獲利 --> |9/10|財務健康
-    財務健康 --> |8/10|估值
+    基本面("基本面") --> |"8/10"|成長
+    成長 --> |"9/10"|獲利
+    獲利 --> |"9/10"|財務健康
+    財務健康 --> |"8/10"|估值
 ```
 
 ### 5大投資論點 + 3大風險
@@ -67,12 +67,12 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[Alphabet Inc.] --> B[Google Services]
-    A --> C[Google Cloud]
-    A --> D[Other Bets]
-    B --> |Ads, Search, YouTube| E[Revenue]
-    C --> |Cloud Services| F[Revenue]
-    D --> |Innovative Projects| G[Revenue]
+    A["Alphabet Inc."] --> B["Google Services"]
+    A --> C["Google Cloud"]
+    A --> D["Other Bets"]
+    B --> |"Ads, Search, YouTube"| E["Revenue"]
+    C --> |"Cloud Services"| F["Revenue"]
+    D --> |"Innovative Projects"| G["Revenue"]
 ```
 
 ### 市場地位
@@ -157,12 +157,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    Assets[總資產] --> Current[流動資產]
-    Assets --> NonCurrent[非流動資產]
-    Current --> Cash[現金]
-    Current --> Inventory[存貨]
-    NonCurrent --> PPE[固定資產]
-    NonCurrent --> Intangibles[無形資產]
+    Assets["總資產"] --> Current["流動資產"]
+    Assets --> NonCurrent["非流動資產"]
+    Current --> Cash["現金"]
+    Current --> Inventory["存貨"]
+    NonCurrent --> PPE["固定資產"]
+    NonCurrent --> Intangibles["無形資產"]
 ```
 
 ### 流動性指標表格

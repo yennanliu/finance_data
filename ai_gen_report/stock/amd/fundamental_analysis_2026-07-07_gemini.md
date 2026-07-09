@@ -365,7 +365,7 @@ graph TD
     CA --> INV["Inventory (存貨)<br/>$8.05B"]
     CA --> OCA["Other Current Assets (其他流動資產)<br/>$2.20B"]
 
-    NCA --> PPNE["Property, Plant & Equipment (不動產、廠房及設備)<br/>$2.72B"]
+    NCA --> PPNE["Property, Plant & Equipment(不動產、廠房及設備)<br/>$2.72B"]
     NCA --> OIA["Other Intangible Assets (其他無形資產)<br/>$16.15B"]
     NCA --> GW["Goodwill (商譽)<br/>$25.34B"]
     NCA --> OLT["Other Long-Term Assets (其他長期資產)<br/>$6.79B"]

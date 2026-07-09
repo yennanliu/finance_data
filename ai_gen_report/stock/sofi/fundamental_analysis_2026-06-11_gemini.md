@@ -154,7 +154,7 @@ graph TD
     TECH --> TECH1
     TECH --> TECH2
 
-    FIN1["SoFi Checking & Savings (高利存款)"]
+    FIN1["SoFi Checking & Savings(高利存款)"]
     FIN2["SoFi Invest (證券經紀)"]
     FIN3["SoFi Credit Card & 其他"]
     FIN --> FIN1

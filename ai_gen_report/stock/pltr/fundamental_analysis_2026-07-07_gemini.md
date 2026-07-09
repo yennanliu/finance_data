@@ -147,26 +147,26 @@ Palantir 的業務主要分為兩大板塊：**政府業務 (Government)** 和 *
 
 ```mermaid
 graph TD
-    A[PLTR 總覽] --> B{業務板塊}
-    B --> C(政府業務 Government)
-    B --> D(商業業務 Commercial)
+    A["PLTR 總覽"] --> B{"業務板塊"}
+    B --> C("政府業務 Government")
+    B --> D("商業業務 Commercial")
 
-    C --> C1[Gotham平台]
-    C --> C2[國防 intelligence 應用]
-    C3[公共衛生 Public Health]
-    C4[政府合約收入]
+    C --> C1["Gotham平台"]
+    C --> C2["國防 intelligence 應用"]
+    C3["公共衛生 Public Health"]
+    C4["政府合約收入"]
 
-    D --> D1[Foundry平台]
-    D --> D2[AI平台 AIP]
-    D --> D3[製造業 Manufacturing]
-    D --> D4[金融服務 Financial Services]
-    D --> D5[醫療保健 Healthcare]
-    D6[商業訂閱收入]
+    D --> D1["Foundry平台"]
+    D --> D2["AI平台 AIP"]
+    D --> D3["製造業 Manufacturing"]
+    D --> D4["金融服務 Financial Services"]
+    D --> D5["醫療保健 Healthcare"]
+    D6["商業訂閱收入"]
 
-    A -- "市值: $322.13B" --> B
-    A -- "TTM營收: $5.22B" --> B
-    C -- "佔比估計: ~55-60%" --> C4
-    D -- "佔比估計: ~40-45%" --> D6
+    nb1["A -- "市值: $322.13B""] --> B
+    nb2["A -- "TTM營收: $5.22B""] --> B
+    nb3["C -- "佔比估計: ~55-60%""] --> C4
+    nb4["D -- "佔比估計: ~40-45%""] --> D6
 ```
 
 ### 2.2 市場份額
@@ -572,9 +572,9 @@ graph LR
     ROE --> AT["資產週轉率 (0.48x)"]
     ROE --> EM["權益乘數 (財務槓桿) (2.48x)"]
 
-    NPM -- "淨利潤 / 營收" --> ROE
-    AT -- "營收 / 總資產" --> ROE
-    EM -- "總資產 / 股東權益" --> ROE
+    nb1["NPM -- "淨利潤 / 營收""] --> ROE
+    nb2["AT -- "營收 / 總資產""] --> ROE
+    nb3["EM -- "總資產 / 股東權益""] --> ROE
 ```
 **分析** (基於 TTM 數據估算)：
 *   **淨利率 (Net Profit Margin)**：TTM 為 **43.7%**。這是 ROE 的主要驅動因素之一，表明公司在營收中保留了相當大比例的利潤。
@@ -597,9 +597,9 @@ graph TD
     OM --> OMD["規模經濟效應<br/>費用控制"]
     NPM --> NPMD["核心業務盈利<br/>有效稅務管理"]
 
-    PM -- "驅動因素" --> GMD
-    PM -- "驅動因素" --> OMD
-    PM -- "驅動因素" --> NPMD
+    nb1["PM -- "驅動因素""] --> GMD
+    nb1["PM -- "驅動因素""] --> OMD
+    nb1["PM -- "驅動因素""] --> NPMD
 ```
 **分析**：Palantir 的獲利能力儀表板清晰展示了其從毛利率到淨利率的強勁表現。高毛利率得益於其專有軟體的獨特性和低邊際成本。營業利益率和淨利率的大幅提升，則體現了公司在營收規模擴大後，有效實現了規模經濟和費用控制。這種全方位的獲利能力提升，是公司轉型成功的關鍵標誌。
 

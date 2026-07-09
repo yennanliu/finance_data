@@ -125,7 +125,7 @@ graph TD
 
     PLTR --> GOTHAM["Palantir Gotham<br/>收入來源: 60%"]
     PLTR --> FOUNDRY["Palantir Foundry<br/>收入來源: 30%"]
-    PLTR --> APOLLO ["Palantir Apollo<br/>收入來源: 10%"]
+    PLTR --> APOLLO["Palantir Apollo<br/>收入來源: 10%"]
 
     GOTHAM --> DEFENSE["Defense Applications<br/>收入: $2.69B"]
     FOUNDRY --> ENTERPRISE["Enterprise Solutions<br/>收入: $1.34B"]

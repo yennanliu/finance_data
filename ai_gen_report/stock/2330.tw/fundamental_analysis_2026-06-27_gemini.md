@@ -323,7 +323,7 @@ graph TD
         CA --> OC["Other Current Assets: ~$480.84B (12.60% of CA)"]
 
     TA --> NCA["Non-Current Assets: $4.11T (51.83%)"]
-        NCA --> PPE["Property Plant & Equipment (Net): 主要部分"]
+        NCA --> PPE["Property Plant & Equipment(Net): 主要部分"]
         NCA --> IA["Intangible Assets"]
         NCA --> ONA["Other Non-Current Assets"]
 ```
@@ -955,7 +955,7 @@ graph TD
         CA --> OC["Other Current Assets: $480.84B (12.60% of CA)"]
 
     TA --> NCA["Non-Current Assets: $4.11T (51.83%)"]
-        NCA --> PPE["Property Plant & Equipment (Net): 主要部分"]
+        NCA --> PPE["Property Plant & Equipment(Net): 主要部分"]
         NCA --> IA["Intangible Assets"]
         NCA --> ONA["Other Non-Current Assets"]
 ```
