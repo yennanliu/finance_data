@@ -15,6 +15,7 @@ from .data.charts import generate_plotly_candlestick_chart
 from .data.sources import fetch_data
 from .llm import call_llm
 from .publish import dedup_path, frontmatter
+from .utils.mermaid import sanitize_mermaid_blocks
 
 _GENERATED_BY = {"openai": "OpenAI API", "gemini": "Google Gemini API"}
 
@@ -56,6 +57,12 @@ def save_analysis_report(ticker: str, content: str, output_dir: Path,
     if ext == ".html":
         path.write_text(content, encoding="utf-8")
     else:
+        # Repair LLM-emitted Mermaid syntax (unquoted parens/colons in node
+        # labels, etc.) so the source .md GitHub renders directly is valid,
+        # not only the docs-site copy. Only ```mermaid fences are touched, so
+        # any embedded chart HTML is left byte-for-byte intact. Idempotent, so
+        # build_docs re-running it later is a no-op.
+        content = sanitize_mermaid_blocks(content)
         generated_by = _GENERATED_BY.get(provider, "Claude AI")
         fm = frontmatter({
             "title": f'"{ticker} {label} {TODAY}"',
