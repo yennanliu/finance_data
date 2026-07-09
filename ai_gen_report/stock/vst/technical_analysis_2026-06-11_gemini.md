@@ -110,7 +110,7 @@ graph LR
 
 ```mermaid
 graph TD
-    A[多時框趨勢透視] --> B["月線級別 (24個月)"]
+    A["多時框趨勢透視"] --> B["月線級別 (24個月)"]
     A --> C["週線級別 (20週)"]
     A --> D["日線級別 (短期)"]
     
@@ -183,13 +183,13 @@ $139.68 ═══════════════════════●
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 14.40"] -->|小于 25| Range["無趨勢/盤整格局 (Ranging Market)"]
+    ADX["ADX 數值: 14.40"] -->|"小于 25"| Range["無趨勢/盤整格局 (Ranging Market)"]
     Range --> Strategy["操作策略: 高拋低吸 / 靜待突破"]
     
-    DMI["DMI 指標分布"] -->|Negative DI| DI_Minus["-DI: 24.01"]
-    DMI -->|Positive DI| DI_Plus["+DI: 19.23"]
+    DMI["DMI 指標分布"] -->|"Negative DI"| DI_Minus["-DI: 24.01"]
+    DMI -->|"Positive DI"| DI_Plus["+DI: 19.23"]
     
-    DI_Minus -->|大于| DI_Plus --> Bear_Dominant["空頭暫時主導，但缺乏趨勢動能"]
+    DI_Minus -->|"大于"| DI_Plus --> Bear_Dominant["空頭暫時主導，但缺乏趨勢動能"]
 ```
 
 #### ADX 趨勢強度對照表

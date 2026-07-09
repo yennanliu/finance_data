@@ -90,8 +90,8 @@ graph LR
 
 ```mermaid
 graph TD
-    M[月線趨勢] -->|空頭| W[週線趨勢]
-    W -->|空頭| D[日線趨勢]
+    M["月線趨勢"] -->|"空頭"| W["週線趨勢"]
+    W -->|"空頭"| D["日線趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖
@@ -124,7 +124,7 @@ $140 ┤    ●(低點)
 
 ```mermaid
 graph TD
-    ADX[ADX: 20.14] -->|弱趨勢| P[盤整行情]
+    ADX["ADX: 20.14"] -->|"弱趨勢"| P["盤整行情"]
 ```
 
 ---
@@ -135,9 +135,9 @@ graph TD
 
 ```mermaid
 graph TD
-    H[頭肩頂] --> T1[完成]
-    D[雙頂] --> T2[形成中]
-    T[三角形] --> T3[待確認]
+    H["頭肩頂"] --> T1["完成"]
+    D["雙頂"] --> T2["形成中"]
+    T["三角形"] --> T3["待確認"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -312,8 +312,8 @@ VST 的 Beta 值顯示其與市場的相關性程度需要進一步分析以確�
 
 ```mermaid
 graph TD
-    START["開始分析"] -->|多頭策略| BULL_CASE["符合多頭條件"]
-    START -->|空頭策略| BEAR_CASE["符合空頭條件"]
+    START["開始分析"] -->|"多頭策略"| BULL_CASE["符合多頭條件"]
+    START -->|"空頭策略"| BEAR_CASE["符合空頭條件"]
     BULL_CASE --> STRATEGY_A["策略 A"]
     BEAR_CASE --> STRATEGY_B["策略 B"]
 ```
@@ -374,9 +374,9 @@ graph TD
 
 ```mermaid
 graph TD
-    BASE["基本情境"] -->|價格持穩| STABLE["維持盤整"]
-    OPTIMISTIC["樂觀情境"] -->|反彈至$180| BULLISH["突破上升"]
-    PESSIMISTIC["悲觀情境"] -->|跌破$140| BEARISH["進一步下跌"]
+    BASE["基本情境"] -->|"價格持穩"| STABLE["維持盤整"]
+    OPTIMISTIC["樂觀情境"] -->|"反彈至$180"| BULLISH["突破上升"]
+    PESSIMISTIC["悲觀情境"] -->|"跌破$140"| BEARISH["進一步下跌"]
 ```
 
 ### 🛡️ 風險管理重要提醒

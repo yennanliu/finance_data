@@ -131,8 +131,8 @@ graph TD
 
     Other_Services & Connectivity["其它<br/>占 5% 收"]
     
-    NUOverview --> Retail_Banking & Digital_Platform
-    NUOverview --> Credit_Solutions & Investment_Platform
+    NUOverview --> Retail_Banking  &  Digital_Platform
+    NUOverview --> Credit_Solutions  &  Investment_Platform
     Retail_Banking & Digital_Platform --> Customer&Payments["Consumer 向 Individual 化）
 ```
   * 營業整理處於........篇筑 roles 坎類景。

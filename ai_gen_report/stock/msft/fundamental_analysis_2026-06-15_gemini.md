@@ -395,12 +395,12 @@ graph LR
     REP["Share Repurchases & Others<br/>-$20.00B"]
     NET_CASH["Net Cash Change<br/>+$26.42B"]
 
-    NI --> |+ 非現金調整| DA
+    NI --> |"+ 非現金調整"| DA
     DA --> OCF
-    OCF --> |- 資本支出| CAPEX
+    OCF --> |"- 資本支出"| CAPEX
     CAPEX --> FCF
-    FCF --> |- 派發股息| DIV
-    DIV --> |- 股份回購| REP
+    FCF --> |"- 派發股息"| DIV
+    DIV --> |"- 股份回購"| REP
     REP --> NET_CASH
 ```
 

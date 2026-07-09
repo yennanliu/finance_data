@@ -122,11 +122,11 @@ graph TD;
     R2["商業產品<br>佔比：20%"];
     R3["無人機系統<br>佔比：40%"];
 
-    KTOS --> KGS;
-    KTOS --> US;
-    KGS --> R1;
-    KGS --> R2;
-    US --> R3;
+    KTOS --> nb1["KGS;"]
+    KTOS --> nb2["US;"]
+    KGS --> nb3["R1;"]
+    KGS --> nb4["R2;"]
+    US --> nb5["R3;"]
 ```
 
 ### 2.2 市場份額

@@ -116,9 +116,9 @@ graph TD
     Weekly["📅 週線級別 (中期)\n下降通道震盪築底\n支撐位: $139.68\n趨勢: 🟡 中性"]
     Daily["📅 日線級別 (短期)\n均線下方箱體整理\n阻力位: $149.73\n趨勢: 🔴 弱勢"]
 
-    Monthly -->|深度修正至黃金分割位| Weekly
-    Weekly -->|波動收窄，籌碼換手| Daily
-    Daily -->|等待突破信號| Action["🎯 區間低吸 / 突破追進"]
+    Monthly -->|"深度修正至黃金分割位"| Weekly
+    Weekly -->|"波動收窄，籌碼換手"| Daily
+    Daily -->|"等待突破信號"| Action["🎯 區間低吸 / 突破追進"]
 ```
 
 ### 📈 長期趨勢 — 24個月走勢圖（Unicode）
@@ -176,7 +176,7 @@ $75  ┤   ●
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 14.62"] -->|小于 20/25| Range["进入無趨勢/盤整行情 (Range-Bound)"]
+    ADX["ADX(14) = 14.62"] -->|"小于 20/25"| Range["进入無趨勢/盤整行情 (Range-Bound)"]
     Range --> Strategy["操作策略: 避免趨勢追蹤，採用區間低吸高拋 (Oscillator Strategy)"]
     DI_Analysis["DMI 指標分析:\n-DI (25.03) > +DI (20.26)"] --> Bear_Dominant["空頭力量微幅佔優，但無足夠動能發動單邊暴跌"]
 ```

@@ -87,8 +87,8 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢: 看空] --> B[週線趨勢: 看空]
-    B --> C[日線趨勢: 看空]
+    A["月線趨勢: 看空"] --> B["週線趨勢: 看空"]
+    B --> C["日線趨勢: 看空"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -131,7 +131,7 @@ graph TD
 
 ```mermaid
 graph TD
-    HS[頭肩頂形態] --> Breakdown["已確認跌破頸線"]
+    HS["頭肩頂形態"] --> Breakdown["已確認跌破頸線"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -303,8 +303,8 @@ quadrantChart
 ```mermaid
 graph TD
     Start["開始"] --> CheckTrend["檢查趨勢"]
-    CheckTrend -->|空頭| ShortStrategy["空頭策略"]
-    CheckTrend -->|多頭| LongStrategy["多頭策略"]
+    CheckTrend -->|"空頭"| ShortStrategy["空頭策略"]
+    CheckTrend -->|"多頭"| LongStrategy["多頭策略"]
 ```
 
 ### 🟢 多頭策略詳情

@@ -142,8 +142,8 @@ $1000 ┤       ●
 
 ```mermaid
 graph TD
-    A[ADX<25] --> B[弱趨勢/盤整]
-    B --> C[進一步觀察]
+    A["ADX<25"] --> B["弱趨勢/盤整"]
+    B --> C["進一步觀察"]
 ```
 
 ---
@@ -234,8 +234,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -247,8 +247,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD -->|看多| Signal
-    Signal -->|強勢| Histogram
+    MACD -->|"看多"| Signal
+    Signal -->|"強勢"| Histogram
 ```
 
 ### 📦 布林通道分析

@@ -423,9 +423,9 @@ graph LR
     ROE --> AssetTurnover
     ROE --> EquityMultiplier
 
-    NetProfitMargin --> "10.7%"
-    AssetTurnover --> "1.2x"
-    EquityMultiplier --> "4.0x"
+    NetProfitMargin --> nb1[""10.7%""]
+    AssetTurnover --> nb2[""1.2x""]
+    EquityMultiplier --> nb3[""4.0x""]
 ```
 
 ### 6.4 獲利能力儀表板

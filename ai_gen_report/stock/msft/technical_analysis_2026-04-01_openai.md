@@ -89,8 +89,8 @@ graph LR
 
 ```mermaid
 graph TD
-    LongTerm["長期趨勢 (月線)"] -->|看空| MidTerm["中期趨勢 (週線)"]
-    MidTerm -->|看空| ShortTerm["短期趨勢 (日線)"]
+    LongTerm["長期趨勢 (月線)"] -->|"看空"| MidTerm["中期趨勢 (週線)"]
+    MidTerm -->|"看空"| ShortTerm["短期趨勢 (日線)"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -121,7 +121,7 @@ $400 ┤  ● 支撐
 
 ```mermaid
 graph LR
-    ADX["ADX指標\\n32.33"] -->|強趨勢| Bearish["空頭主導"]
+    ADX["ADX指標\\n32.33"] -->|"強趨勢"| Bearish["空頭主導"]
     +DI["+DI 17.97"] --> Bearish
     -DI["-DI 34.42"] --> Bearish
 ```
@@ -135,8 +135,8 @@ graph LR
 ```mermaid
 graph TD
     DoubleTop["雙頂形態"]
-    HeadShoulder["頭肩頂形態"] -->|確認| TargetPrice{"目標價"}
-    DoubleTop -->|形成中| TargetPrice
+    HeadShoulder["頭肩頂形態"] -->|"確認"| TargetPrice{"目標價"}
+    DoubleTop -->|"形成中"| TargetPrice
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -214,17 +214,17 @@ $350 ║███████████████████████║
 
 ```mermaid
 graph TD
-    RSI["RSI: 26.91"] -->|超賣| MACD["MACD: -12.225"]
-    MACD -->|空頭| MA["MA排列: 空頭"]
-    MA -->|確認| BB["布林通道: 下軌"]
+    RSI["RSI: 26.91"] -->|"超賣"| MACD["MACD: -12.225"]
+    MACD -->|"空頭"| MA["MA排列: 空頭"]
+    MA -->|"確認"| BB["布林通道: 下軌"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["MA20: $387.36"] -->|下方| MA50["MA50: $404.63"]
-    MA50 -->|下方| MA200["MA200: $475.78"]
+    MA20["MA20: $387.36"] -->|"下方"| MA50["MA50: $404.63"]
+    MA50 -->|"下方"| MA200["MA200: $475.78"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -240,7 +240,7 @@ graph TD
     MACDLine["MACD Line: -12.225"]
     SignalLine["Signal Line: -10.930"]
     Histogram["Histogram: -1.295"]
-    MACDLine -->|低於訊號線| BEAR["空頭"]
+    MACDLine -->|"低於訊號線"| BEAR["空頭"]
     SignalLine --> Histogram
     Histogram --> BEAR
 ```
@@ -318,10 +318,10 @@ graph TD
     StopLoss{"止損設置?"}
     Target{"目標價確認?"}
     RiskReward{"風險報酬比分析?"}
-    Entry -->|是| StopLoss
-    StopLoss -->|是| Target
-    Target -->|是| RiskReward
-    RiskReward -->|滿足| Execute["執行交易"]
+    Entry -->|"是"| StopLoss
+    StopLoss -->|"是"| Target
+    Target -->|"是"| RiskReward
+    RiskReward -->|"滿足"| Execute["執行交易"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -382,9 +382,9 @@ graph TD
     Optimistic["樂觀情境"]
     BaseCase["基本情境"]
     Pessimistic["悲觀情境"]
-    Optimistic -->|價格上漲| BaseCase
-    BaseCase -->|價格盤整| Pessimistic
-    Pessimistic -->|價格下跌| BaseCase
+    Optimistic -->|"價格上漲"| BaseCase
+    BaseCase -->|"價格盤整"| Pessimistic
+    Pessimistic -->|"價格下跌"| BaseCase
 ```
 
 ### 🛡️ 風險管理重要提醒

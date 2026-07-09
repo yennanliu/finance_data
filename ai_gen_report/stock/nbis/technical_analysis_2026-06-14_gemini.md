@@ -110,15 +110,15 @@ graph LR
 
 ```mermaid
 graph TD
-    A[NBIS 多時框趨勢剖析] --> B[月線級別: 超級牛市]
-    A --> C[週線級別: 高檔震盪]
-    A --> D[日線級別: 頂部回檔]
+    A["NBIS 多時框趨勢剖析"] --> B["月線級別: 超級牛市"]
+    A --> C["週線級別: 高檔震盪"]
+    A --> D["日線級別: 頂部回檔"]
 
     B --> B1["MA240 ($110.41) 揚升<br/>多頭絕對主導 (權重 50%)"]
     C --> C1["RSI 頂背離浮現<br/>上攻動能減弱 (權重 30%)"]
     D --> D1["MACD 死叉/柱狀體翻紅<br/>短期尋找 MA20 支撐 (權重 20%)"]
 
-    B1 & C1 & D1 --> E[結論: 長多中空，回檔即是買點]
+    B1 & C1 & D1 --> E["結論: 長多中空，回檔即是買點"]
 ```
 
 ### 📈 長期趨勢 — 24個月走勢圖（Unicode）
@@ -163,12 +163,12 @@ $0   └─┬───┬───┬───┬───┬───┬──
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 26.15"] -->|判斷| Strength{"趨勢強度辨識"}
-    Strength -->|> 25| Strong["強趨勢行情 (Trend Stage)"]
-    Strength -->|< 25| Weak["盤整震盪行情 (Range Stage)"]
+    ADX["ADX(14) = 26.15"] -->|"判斷"| Strength{"趨勢強度辨識"}
+    Strength -->|"> 25"| Strong["強趨勢行情 (Trend Stage)"]
+    Strength -->|"< 25"| Weak["盤整震盪行情 (Range Stage)"]
     Strong --> Direction{"+DI vs -DI"}
-    Direction -->|+DI (24.57) > -DI (21.51)| Bullish["多頭趨勢主導"]
-    Direction -->|-DI > +DI| Bearish["空頭趨勢主導"]
+    Direction -->|"+DI (24.57) > -DI (21.51)"| Bullish["多頭趨勢主導"]
+    Direction -->|"-DI > +DI"| Bearish["空頭趨勢主導"]
 ```
 
 #### ADX 趨勢強度對照表
@@ -197,9 +197,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Cup["杯柄形態 (Cup & Handle)"] -->|2026-04 突破 $130.82| Target1["第一波段目標價: $178.00 (已達成)"]
-    Cup -->|測幅滿足計算| Target2["第二波段目標價: $244.07 (已達成)"]
-    Wedge["短期上升楔形 (Rising Wedge)"] -->|若跌破下軌 $224.00| Correction["回檔修正目標: $184.61 (MA50)"]
+    Cup["杯柄形態 (Cup & Handle)"] -->|"2026-04 突破 $130.82"| Target1["第一波段目標價: $178.00 (已達成)"]
+    Cup -->|"測幅滿足計算"| Target2["第二波段目標價: $244.07 (已達成)"]
+    Wedge["短期上升楔形 (Rising Wedge)"] -->|"若跌破下軌 $224.00"| Correction["回檔修正目標: $184.61 (MA50)"]
 ```
 
 ### 🕯️ 重要 K 線形態分析
@@ -300,9 +300,9 @@ graph TD
     Price --> Momentum_System["動能系統: 頂背離/轉弱"]
     Price --> Volatility_System["波動系統: 偏高/回歸中軌"]
 
-    MA_System -->|MA200 支撐強勁| Bull1["🟢 長期看多"]
-    Momentum_System -->|MACD 死叉 & RSI 頂背離| Bear1["🔴 短期看空"]
-    Volatility_System -->|%B = 0.60 靠攏中軌| Neutral1["🟡 中期盤整"]
+    MA_System -->|"MA200 支撐強勁"| Bull1["🟢 長期看多"]
+    Momentum_System -->|"MACD 死叉 & RSI 頂背離"| Bear1["🔴 短期看空"]
+    Volatility_System -->|"%B = 0.60 靠攏中軌"| Neutral1["🟡 中期盤整"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -416,8 +416,8 @@ NBIS 屬於 AI 基礎設施（GPU 集群、雲平台）板塊，其貝塔值（B
 ```mermaid
 graph TD
     Start["分析當前價 $232.36"] --> Decision{"短期 MA20 ($224.33) 是否跌破?"}
-    Decision -->|是 (跌破)| Short_Strategy["執行策略 B: 逢高做空/左側避險"]
-    Decision -->|否 (守住)| Long_Strategy["執行策略 A: 區間震盪/右側做多"]
+    Decision -->|"是 (跌破)"| Short_Strategy["執行策略 B: 逢高做空/左側避險"]
+    Decision -->|"否 (守住)"| Long_Strategy["執行策略 A: 區間震盪/右側做多"]
 
     Short_Strategy --> Short_Entry["進場點: $224.00 跌破確認"]
     Short_Strategy --> Short_Target["目標價: $184.61 (MA50)"]
@@ -480,9 +480,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A[NBIS 未來走勢三場景] --> B[樂觀場景: 30% 機率]
-    A --> C[基本場景: 55% 機率]
-    A --> D[悲觀場景: 15% 機率]
+    A["NBIS 未來走勢三場景"] --> B["樂觀場景: 30% 機率"]
+    A --> C["基本場景: 55% 機率"]
+    A --> D["悲觀場景: 15% 機率"]
 
     B --> B1["強勢橫盤整理 ($224 - $244)<br/>以時間換空間，RSI 降溫後突破 $278.84"]
     C --> C1["深度回檔修正 ($185 - $205)<br/>回測 MA50 與斐波那契 50% 支撐，完成籌碼換手"]
