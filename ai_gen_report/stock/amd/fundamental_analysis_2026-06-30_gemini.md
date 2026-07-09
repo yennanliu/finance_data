@@ -1191,11 +1191,11 @@ ROIC 與 WACC 的比較是判斷公司是否創造或摧毀股東價值的關鍵
 ```mermaid
 graph LR
     ROE["股東權益報酬率 (ROE)<br/>TTM: 8.1%"] --> NetProfitMargin["淨利率<br/>TTM: 13.4%"]
-    NetProfitMargin_Val["13.4%"]
+    NetProfitMargin_Val[13.4%]
     ROE --> AssetTurnover["資產週轉率<br/>TTM: 0.47x"]
-    AssetTurnover_Val["0.47x"]
+    AssetTurnover_Val[0.47x]
     ROE --> FinancialLeverage["財務槓桿<br/>TTM: 1.22x"]
-    FinancialLeverage_Val["1.22x"]
+    FinancialLeverage_Val[1.22x]
 
     NetProfitMargin --> NetProfitMargin_Val
     AssetTurnover --> AssetTurnover_Val

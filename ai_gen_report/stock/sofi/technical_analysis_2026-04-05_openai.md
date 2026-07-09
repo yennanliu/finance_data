@@ -135,9 +135,9 @@ $10.00 ┤  S1
 
 ```mermaid
 graph LR
-    A["ADX: 48.46"]
-    B["強趨勢 >25"]
-    C["空頭主導"]
+    A[ADX: 48.46]
+    B[強趨勢 >25]
+    C[空頭主導]
     A --> B --> C
 ```
 
@@ -149,9 +149,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["頭肩頂形態"]
-    B["雙頂形態"]
-    C["下降楔形"]
+    A[頭肩頂形態]
+    B[雙頂形態]
+    C[下降楔形]
     A --> B --> C
 ```
 
@@ -231,10 +231,10 @@ $10.00 ║██████████████████║ 強支撐 S2
 
 ```mermaid
 graph TD
-    A["均線排列：空頭"]
-    B["RSI: 超賣"]
-    C["MACD: 看多"]
-    D["OBV: 量能疲弱"]
+    A[均線排列：空頭]
+    B[RSI: 超賣]
+    C[MACD: 看多]
+    D[OBV: 量能疲弱]
     A --> B --> C --> D
 ```
 
@@ -336,16 +336,16 @@ graph TD
 
 ```mermaid
 graph TD
-    Start["開始"]
-    Check1{"價格低於支撐"}
-    Check2{"RSI超賣"}
+    Start[開始]
+    Check1{價格低於支撐}
+    Check2{RSI超賣}
     Long["做多策略"]
     Short["做空策略"]
     Start --> Check1
-    Check1 -->|"是"| Long
-    Check1 -->|"否"| Check2
-    Check2 -->|"是"| Long
-    Check2 -->|"否"| Short
+    Check1 -->|是| Long
+    Check1 -->|否| Check2
+    Check2 -->|是| Long
+    Check2 -->|否| Short
 ```
 
 ### 🟢 多頭策略詳情
@@ -402,13 +402,13 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"]
-    Base["基本情境"]
-    Pessimistic["悲觀情境"]
-    Start["當前情境"]
-    Start -->|"價格反彈"| Optimistic
-    Start -->|"持平"| Base
-    Start -->|"跌破支撐"| Pessimistic
+    Optimistic[樂觀情境]
+    Base[基本情境]
+    Pessimistic[悲觀情境]
+    Start[當前情境]
+    Start -->|價格反彈| Optimistic
+    Start -->|持平| Base
+    Start -->|跌破支撐| Pessimistic
 ```
 
 ### 🛡️ 風險管理重要提醒

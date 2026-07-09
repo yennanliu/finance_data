@@ -100,8 +100,8 @@ graph LR
 
 ```mermaid
 graph TD
-    Monthly["月線趨勢"] --> |"空頭"| Weekly["週線趨勢"]
-    Weekly --> |"空頭"| Daily["日線趨勢"]
+    Monthly["月線趨勢"] --> |空頭| Weekly["週線趨勢"]
+    Weekly --> |空頭| Daily["日線趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -134,7 +134,7 @@ $40  ┤   ●
 
 ```mermaid
 graph TD
-    A["ADX 分析"] --> |"<25"| B["弱趨勢/盤整"]
+    A["ADX 分析"] --> |<25| B["弱趨勢/盤整"]
     B --> C["空頭主導"]
 ```
 
@@ -146,7 +146,7 @@ graph TD
 
 ```mermaid
 graph TD
-    HeadAndShoulders["頭肩頂形態"] --> |"目標價"| PriceTarget
+    HeadAndShoulders["頭肩頂形態"] --> |目標價| PriceTarget
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -231,8 +231,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|"價格下方"| B["空頭"]
-    C["長期 MA200"] -->|"價格下方"| D["空頭"]
+    A["短期 MA20"] -->|價格下方| B["空頭"]
+    C["長期 MA200"] -->|價格下方| D["空頭"]
 ```
 
 ### 📉 RSI(14) 分析

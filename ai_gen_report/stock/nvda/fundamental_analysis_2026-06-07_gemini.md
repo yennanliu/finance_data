@@ -149,7 +149,7 @@ graph TD
     CN --> CN1["Data Center GPU (Hopper/Blackwell)"]
     CN --> CN2["Networking (Mellanox InfiniBand/Spectrum-X)"]
     CN --> CN3["AI Enterprise Software & SaaS"]
-    CN --> CN4["Automotive & Robotics(Drive/Thor)"]
+    CN --> CN4["Automotive & Robotics (Drive/Thor)"]
     
     GR --> GR1["GeForce RTX Gaming GPUs"]
     GR --> GR2["Professional Visualization (RTX/Omniverse)"]

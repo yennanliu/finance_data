@@ -142,7 +142,7 @@ NVIDIA的業務模式已從傳統的圖形處理器（GPU）供應商，轉變�
 graph TD
     NVDA_Overview["NVIDIA Corporation<br/>市值: $4.82T<br/>TTM營收: $253.49B"]
 
-    CN["Compute & Networking(數據中心與網路)<br/>主要收入來源<br/>貢獻約80-85%營收"]
+    CN["Compute & Networking (數據中心與網路)<br/>主要收入來源<br/>貢獻約80-85%營收"]
     G["Graphics (圖形)<br/>傳統核心業務<br/>貢獻約15-20%營收"]
 
     CN --> CNAI["AI & Accelerated Computing<br/>(AI晶片, 伺服器, 軟體)"]

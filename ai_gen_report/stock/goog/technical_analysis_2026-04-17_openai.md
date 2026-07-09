@@ -233,18 +233,18 @@ $280 ║▓▓▓▓▓▓▓▓▓▓▓▓          ║ 進階支撐 S2
 
 ```mermaid
 graph TD
-    MA["移動平均線"] -->|"支持"| Price["價格"]
-    RSI["RSI超買"] -->|"警告"| Price
-    MACD["MACD多頭"] -->|"支持"| Price
+    MA["移動平均線"] -->|支持| Price["價格"]
+    RSI["RSI超買"] -->|警告| Price
+    MACD["MACD多頭"] -->|支持| Price
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格上方"| Bullish["看多"]
-    MA50["中期 MA50"] -->|"價格上方"| Bullish
-    MA200["長期 MA200"] -->|"價格上方"| Bullish
+    MA20["短期 MA20"] -->|價格上方| Bullish["看多"]
+    MA50["中期 MA50"] -->|價格上方| Bullish
+    MA200["長期 MA200"] -->|價格上方| Bullish
     不同排列組合 --> Conclusion["綜合看多"]
 ```
 
@@ -258,8 +258,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD線"] -->|"高於"| Signal_Line["訊號線"]
-    MACD_Histogram["柱狀圖"] -->|"正值"| Bullish_Signal["多頭訊號"]
+    MACD_Line["MACD線"] -->|高於| Signal_Line["訊號線"]
+    MACD_Histogram["柱狀圖"] -->|正值| Bullish_Signal["多頭訊號"]
 ```
 
 ### 📦 布林通道分析
@@ -328,8 +328,8 @@ $300 ┤ └─┘
 
 ```mermaid
 graph TD
-    Entry["進場條件"] -->|"符合"| Long["多頭策略"]
-    Entry -->|"不符合"| Short["空頭策略"]
+    Entry["進場條件"] -->|符合| Long["多頭策略"]
+    Entry -->|不符合| Short["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情

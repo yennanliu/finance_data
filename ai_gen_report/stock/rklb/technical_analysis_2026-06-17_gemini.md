@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級: 強勢牛市"] -->|"主升浪後回調"| B["週線層級: 中期修正"]
-    B -->|"高檔跌破通道"| C["日線層級: 短期超跌"]
-    C -->|"觸及MA50與超賣"| D["小時線層級: 築底反彈"]
+    A[月線層級: 強勢牛市] -->|主升浪後回調| B[週線層級: 中期修正]
+    B -->|高檔跌破通道| C[日線層級: 短期超跌]
+    C -->|觸及MA50與超賣| D[小時線層級: 築底反彈]
     
     style A fill:#d4edda,stroke:#28a745,stroke-width:2px
     style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -174,10 +174,10 @@ $92.37  ───────────\────────────�
 
 ```mermaid
 graph TD
-    ADX["ADX 值: 26.36"] -->|"判斷: > 25 趨勢市場"| Trend["存在明顯趨勢"]
-    Trend --> DI_Compare{"+DI vs -DI"}
-    DI_Compare -->|"'-DI 24.07' > '+DI 15.00'"| Bearish["空頭力量主導短期市場"]
-    DI_Compare -->|"差值擴大"| Momentum["短期下跌動能仍有慣性"]
+    ADX[ADX 值: 26.36] -->|判斷: > 25 趨勢市場| Trend[存在明顯趨勢]
+    Trend --> DI_Compare{+DI vs -DI}
+    DI_Compare -->|'-DI 24.07' > '+DI 15.00'| Bearish[空頭力量主導短期市場]
+    DI_Compare -->|差值擴大| Momentum[短期下跌動能仍有慣性]
 ```
 
 | ADX 數值區間 | 趨勢強度 | RKLB 當前狀態 | 交易策略指導 |
@@ -199,12 +199,12 @@ graph TD
 
 ```mermaid
 graph TD
-    A["第一階段: 旗桿"] -->|"4月至5月暴漲 $64 -> $151"| B("急促且放量的上行")
-    B --> C["第二階段: 旗面"]
-    C -->|"5月末至今通道下跌 $151 -> $104"| D("斜率向下的平行通道")
-    D --> E{"第三階段: 突破預期"}
-    E -->|"向上突破通道上軌 $112"| F["多頭目標重啟: 挑戰 $151"]
-    E -->|"向下跌破 MA50 $102"| G["形態失效: 轉為深幅調整"]
+    A[第一階段: 旗桿] -->|4月至5月暴漲 $64 -> $151| B(急促且放量的上行)
+    B --> C[第二階段: 旗面]
+    C -->|5月末至今通道下跌 $151 -> $104| D(斜率向下的平行通道)
+    D --> E{第三階段: 突破預期}
+    E -->|向上突破通道上軌 $112| F[多頭目標重啟: 挑戰 $151]
+    E -->|向下跌破 MA50 $102| G[形態失效: 轉為深幅調整]
 ```
 
 ### 🕯️ 重要 K 線形態分析（近期日線組合）
@@ -314,15 +314,15 @@ graph TD
 
 ```mermaid
 graph TD
-    Sub_RSI["RSI: 26.80 超賣"] -->|"支持買入"| Bull_Trigger{"多頭共振觸發?"}
-    Sub_Stoch["Stochastic: 9.80 超賣"] -->|"支持買入"| Bull_Trigger
-    Sub_MA50["MA50 支撐: $102.31"] -->|"支持買入"| Bull_Trigger
+    Sub_RSI[RSI: 26.80 超賣] -->|支持買入| Bull_Trigger{多頭共振觸發?}
+    Sub_Stoch[Stochastic: 9.80 超賣] -->|支持買入| Bull_Trigger
+    Sub_MA50[MA50 支撐: $102.31] -->|支持買入| Bull_Trigger
     
-    Sub_MACD["MACD: -3.981 死叉"] -->|"壓制反彈"| Bear_Filter{"空頭動能壓制?"}
-    Sub_OBV["OBV < MA 走勢疲弱"] -->|"壓制反彈"| Bear_Filter
-    Sub_ADX["-DI 主導趨勢"] -->|"壓制反彈"| Bear_Filter
+    Sub_MACD[MACD: -3.981 死叉] -->|壓制反彈| Bear_Filter{空頭動能壓制?}
+    Sub_OBV[OBV < MA 走勢疲弱] -->|壓制反彈| Bear_Filter
+    Sub_ADX[-DI 主導趨勢] -->|壓制反彈| Bear_Filter
     
-    Bull_Trigger -->|"多空博弈"| Final_Decision["結論: 短期超跌反彈在即, 但非V型反轉, 預期為震盪築底"]
+    Bull_Trigger -->|多空博弈| Final_Decision[結論: 短期超跌反彈在即, 但非V型反轉, 預期為震盪築底]
 ```
 
 ### 📈 移動平均線排列分析
@@ -420,14 +420,14 @@ RKLB 目前的均線系統呈現「**長多短空**」的撕裂狀態：
 
 ```mermaid
 graph TD
-    Start["分析現價: $104.63"] --> Decision{"交易風格?"}
-    Decision -->|"左側交易: 抄底型"| PlanA["策略 A: MA50 附近分批吸納"]
-    Decision -->|"右側交易: 確認型"| PlanB["策略 B: 等待突破下降楔形"]
-    Decision -->|"對沖/看空交易"| PlanC["策略 C: 跌破 MA50 順勢放空"]
+    Start[分析現價: $104.63] --> Decision{交易風格?}
+    Decision -->|左側交易: 抄底型| PlanA[策略 A: MA50 附近分批吸納]
+    Decision -->|右側交易: 確認型| PlanB[策略 B: 等待突破下降楔形]
+    Decision -->|對沖/看空交易| PlanC[策略 C: 跌破 MA50 順勢放空]
     
-    PlanA --> StopA["止損: $96.00\\n目標: $117.85 / $122.81"]
-    PlanB --> StopB["止損: $101.50\\n目標: $122.81 / $135.00"]
-    PlanC --> StopC["止損: $106.50\\n目標: $92.37 / $86.26"]
+    PlanA --> StopA[止損: $96.00\\n目標: $117.85 / $122.81]
+    PlanB --> StopB[止損: $101.50\\n目標: $122.81 / $135.00]
+    PlanC --> StopC[止損: $106.50\\n目標: $92.37 / $86.26]
 ```
 
 ### 🟢 多頭策略詳情
@@ -488,9 +488,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A["RKLB 未來走勢路徑"] --> B["樂觀場景 30%"]
-    A --> C["基本場景 50%"]
-    A --> D["悲觀場景 20%"]
+    A[RKLB 未來走勢路徑] --> B[樂觀場景 30%]
+    A --> C[基本場景 50%]
+    A --> D[悲觀場景 20%]
     
     B --> B1["在 $102 附近直接起飛\\n放量突破 $112\\n2週內重回 $122"]
     C --> C1["在 $97 - $105 寬幅震盪\\n時間換空間 (震盪 2-3 週)\\n隨後緩慢爬升"]

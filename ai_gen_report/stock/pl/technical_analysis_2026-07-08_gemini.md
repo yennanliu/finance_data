@@ -247,7 +247,7 @@ graph TD
     E --> F{"潛在底部形態識別"}
     F --> G["Falling Wedge (下降楔形)"]
     G --> H["Double Bottom (雙重底)"]
-    H --> I["Inverse Head & Shoulders(頭肩底)"]
+    H --> I["Inverse Head & Shoulders (頭肩底)"]
     I --> J{"目前僅為潛在，需進一步確認"}
 ```
 
@@ -489,13 +489,13 @@ graph TD
     MA50["MA50: $36.61"]
     MA200["MA200: $25.08"]
 
-    P -->|"下方"| MA20
-    P -->|"下方"| MA50
-    P -->|"上方"| MA200
+    P -->|下方| MA20
+    P -->|下方| MA50
+    P -->|上方| MA200
 
-    MA20 -->|"下方"| MA50
-    MA50 -->|"上方"| MA200("註: MA50 ($36.61") > MA200 ($25.08))
-    MA20 -->|"上方"| MA200("註: MA20 ($29.71") > MA200 ($25.08))
+    MA20 -->|下方| MA50
+    MA50 -->|上方| MA200 (註: MA50 ($36.61) > MA200 ($25.08))
+    MA20 -->|上方| MA200 (註: MA20 ($29.71) > MA200 ($25.08))
 
     subgraph MA_Relation ["均線相對位置"]
         R1["MA20 < MA50 (短期空頭排列)"]
@@ -503,9 +503,9 @@ graph TD
         R3["MA50 > MA200 (中長期多頭排列)"]
     end
 
-    P -->|"壓力"| MA20
-    P -->|"壓力"| MA50
-    P -->|"支撐"| MA200
+    P -->|壓力| MA20
+    P -->|壓力| MA50
+    P -->|支撐| MA200
 
     MA_Relation --> Conclusion{"綜合結論: 短期偏空，中長期偏多，混合排列"}
 ```
@@ -696,16 +696,16 @@ PL的Beta值為2.067，這是一個相對**非常高的Beta值**。
 
 ```mermaid
 graph TD
-    subgraph "長期趨勢 (月線)"
+    subgraph 長期趨勢 (月線)
         LT1["MA240上升 🟢"]
         LT2["價格遠高於歷史低點 🟢"]
     end
-    subgraph "中期趨勢 (週線)"
+    subgraph 中期趨勢 (週線)
         MT1["價格跌破MA20/MA50 🔴"]
         MT2["中期動能改善 (RSI/MACD) 🟡"]
         MT3["斐波那契關鍵回調區間 🟡"]
     end
-    subgraph "短期趨勢 (日線)"
+    subgraph 短期趨勢 (日線)
         ST1["ADX(14) < 25 (盤整) 🟡"]
         ST2["RSI底背離 🟢"]
         ST3["MACD金叉 🟢"]

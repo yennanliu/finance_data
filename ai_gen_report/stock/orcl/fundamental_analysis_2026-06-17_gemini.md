@@ -343,11 +343,11 @@ graph LR
     FCF["自由現金流 (FCF)<br/>-$20.34B"]
     DIV["發放股息<br/>-$4.74B"]
 
-    NI -->|"調整"| OCF
+    NI -->|調整| OCF
     DA --> OCF
     NWC --> OCF
-    OCF -->|"減 Capex"| FCF
-    FCF -->|"融資缺口"| DIV
+    OCF -->|減 Capex| FCF
+    FCF -->|融資缺口| DIV
 ```
 
 ### 5.2 FCF 轉換率趨勢
@@ -448,8 +448,8 @@ graph LR
     ROE --> ATO
     ROE --> FL
 
-    PM -->|"乘"| ATO
-    ATO -->|"乘"| FL
+    PM -->|乘| ATO
+    ATO -->|乘| FL
 ```
 
 *   **解讀**：甲骨文極高的 ROE 主要由**淨利率 (25.37%)** 與**財務槓桿 (8.11x)** 共同驅動。資產週轉率較低 (0.26x) 反映了其重資產化的公有雲基礎設施特徵。

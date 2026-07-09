@@ -109,11 +109,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級: 長期牛市"] -->|"2024年底部 $18.97 確立"| B["週線層級: 中期爆發"]
-    B -->|"2026年4月突破 $50 關卡"| C["日線層級: 短期噴射"]
-    C -->|"現價 $133.99 乖離過大"| D{"交易決策"}
-    D -->|"回踩 MA20 $116.34"| E["低吸買入"]
-    D -->|"直接追高"| F["高風險/不建議"]
+    A[月線層級: 長期牛市] -->|2024年底部 $18.97 確立| B[週線層級: 中期爆發]
+    B -->|2026年4月突破 $50 關卡| C[日線層級: 短期噴射]
+    C -->|現價 $133.99 乖離過大| D{交易決策}
+    D -->|回踩 MA20 $116.34| E[低吸買入]
+    D -->|直接追高| F[高風險/不建議]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -159,8 +159,8 @@ $19  ┤ ● (2025-07: $19.80) ━━━━━━━━━━━━━━━━�
 
 ```mermaid
 graph LR
-    ADX["ADX(14) = 29.89"] -->|"Value > 25"| StrongTrend["🔥 強趨勢市場 (Trend Market)"]
-    DI_Relation["+DI (33.58) > -DI (20.44)"] -->|"多頭主導"| BullControl["🟢 買方完全控制市場"]
+    ADX["ADX(14) = 29.89"] -->|Value > 25| StrongTrend["🔥 強趨勢市場 (Trend Market)"]
+    DI_Relation["+DI (33.58) > -DI (20.44)"] -->|多頭主導| BullControl["🟢 買方完全控制市場"]
     StrongTrend & BullControl --> Action["策略：順勢交易，回踩買入，不輕易做空"]
 ```
 
@@ -283,15 +283,15 @@ $135.48 ────────────────────────
 
 ```mermaid
 graph TD
-    Price["現價 $133.99"] --> MA_System["均線系統: 多頭排列"]
-    Price --> RSI_System["RSI: 60.98 頂背離"]
-    Price --> MACD_System["MACD: 金叉柱狀圖增加"]
-    Price --> BB_System["布林通道: 突破上軌超買"]
+    Price[現價 $133.99] --> MA_System[均線系統: 多頭排列]
+    Price --> RSI_System[RSI: 60.98 頂背離]
+    Price --> MACD_System[MACD: 金叉柱狀圖增加]
+    Price --> BB_System[布林通道: 突破上軌超買]
     
-    MA_System -->|"🟢 看多"| Verdict["綜合研判: 強勢多頭但防範技術性回調"]
-    RSI_System -->|"🔴 警惕"| Verdict
-    MACD_System -->|"🟢 看多"| Verdict
-    BB_System -->|"🟡 超買"| Verdict
+    MA_System -->|🟢 看多| Verdict[綜合研判: 強勢多頭但防範技術性回調]
+    RSI_System -->|🔴 警惕| Verdict
+    MACD_System -->|🟢 看多| Verdict
+    BB_System -->|🟡 超買| Verdict
 ```
 
 ### 📈 移動平均線排列分析
@@ -331,9 +331,9 @@ graph TD
 
 ```mermaid
 graph LR
-    DIF["快線 DIF (5.912)"] -->|"高於"| DEA["慢線 MACD Signal (5.231)"]
-    DIF & DEA -->|"相減"| Hist["柱狀圖 Hist (+0.682)"]
-    Hist -->|"持續翻紅擴大"| Signal["🟢 動能仍由多頭主導，尚未出現死叉"]
+    DIF["快線 DIF (5.912)"] -->|高於| DEA["慢線 MACD Signal (5.231)"]
+    DIF & DEA -->|相減| Hist["柱狀圖 Hist (+0.682)"]
+    Hist -->|持續翻紅擴大| Signal["🟢 動能仍由多頭主導，尚未出現死叉"]
 ```
 
 ### 📦 布林通道分析
@@ -411,19 +411,19 @@ graph LR
 
 ```mermaid
 graph TD
-    Start["當前股價 $133.99"] --> Decision{"交易風格?"}
-    Decision -->|"短線/波段"| SwingTrade["策略 A: 回踩買入"]
-    Decision -->|"突破/激進"| BreakoutTrade["策略 B: 突破追多"]
+    Start[當前股價 $133.99] --> Decision{交易風格?}
+    Decision -->|短線/波段| SwingTrade[策略 A: 回踩買入]
+    Decision -->|突破/激進| BreakoutTrade[策略 B: 突破追多]
     
-    SwingTrade --> EntryA["進場點: $116.34 - $120.00"]
-    EntryA --> StopA["止損點: $105.95"]
-    EntryA --> TargetA1["目標 1: $135.48"]
-    EntryA --> TargetA2["目標 2: $150.00"]
+    SwingTrade --> EntryA[進場點: $116.34 - $120.00]
+    EntryA --> StopA[止損點: $105.95]
+    EntryA --> TargetA1[目標 1: $135.48]
+    EntryA --> TargetA2[目標 2: $150.00]
     
-    BreakoutTrade --> EntryB["進場點: 突破 $135.50 並站穩"]
-    EntryB --> StopB["止損點: $124.91"]
-    EntryB --> TargetB1["目標 1: $142.00"]
-    EntryB --> TargetB2["目標 2: $150.00"]
+    BreakoutTrade --> EntryB[進場點: 突破 $135.50 並站穩]
+    EntryB --> StopB[止損點: $124.91]
+    EntryB --> TargetB1[目標 1: $142.00]
+    EntryB --> TargetB2[目標 2: $150.00]
 ```
 
 ### 🟢 多頭策略詳情
@@ -484,11 +484,11 @@ graph TD
 
 ```mermaid
 graph TD
-    A["當前價格 $133.99"] --> B{"市場環境演變"}
+    A[當前價格 $133.99] --> B{市場環境演變}
     
-    B -->|"🟢 樂觀場景 20%"| Bull["直接放量突破 $135.48\n目標直指 $150.00\n(空頭軋空行情)"]
-    B -->|"🟡 基本場景 60%"| Base["在 $125 - $135 高檔震盪\n回踩 MA20 ($116.34) 後\n重新蓄勢上攻"]
-    B -->|"🔴 悲觀場景 20%"| Bear["假突破 $135.48 後暴跌\n跌破 $116.34 觸發多頭踩踏\n回撤至 $99.80"]
+    B -->|🟢 樂觀場景 20%| Bull["直接放量突破 $135.48\n目標直指 $150.00\n(空頭軋空行情)"]
+    B -->|🟡 基本場景 60%| Base["在 $125 - $135 高檔震盪\n回踩 MA20 ($116.34) 後\n重新蓄勢上攻"]
+    B -->|🔴 悲觀場景 20%| Bear["假突破 $135.48 後暴跌\n跌破 $116.34 觸發多頭踩踏\n回撤至 $99.80"]
 ```
 
 ### 🛡️ 風險管理重要提醒

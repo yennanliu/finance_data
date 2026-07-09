@@ -275,7 +275,7 @@ graph TD
     CurrentAssets --> Inventory
     CurrentAssets --> Receivables
 
-    NonCurrentAssets --> PP  &  E
+    NonCurrentAssets --> PP&E
     NonCurrentAssets --> Intangibles
     NonCurrentAssets --> Goodwill
 ```

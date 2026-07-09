@@ -33,11 +33,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph LR
-    基本面["基本面"] --> 4
-    成長["成長"] --> 7
-    獲利["獲利"] --> 2
-    財務健康["財務健康"] --> 5
-    估值["估值"] --> 3
+    基本面[基本面] --> 4
+    成長[成長] --> 7
+    獲利[獲利] --> 2
+    財務健康[財務健康] --> 5
+    估值[估值] --> 3
 ```
 
 ### 5大投資論點 + 3大風險
@@ -78,10 +78,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A["Ondas Inc."] --> B["Ondas Networks"]
-    A --> C["Ondas Autonomous Systems"]
-    B --> D["FullMAX SDR Platform"]
-    C --> E["Optimus"]
+    A[Ondas Inc.] --> B[Ondas Networks]
+    A --> C[Ondas Autonomous Systems]
+    B --> D[FullMAX SDR Platform]
+    C --> E[Optimus]
 ```
 
 ### 市場地位
@@ -167,12 +167,12 @@ pie
 
 ```mermaid
 graph TD
-    A["總資產"] --> B["流動資產"]
-    A --> C["非流動資產"]
-    B --> D["現金及等價物"]
-    B --> E["應收帳款"]
-    C --> F["固定資產"]
-    C --> G["無形資產"]
+    A[總資產] --> B[流動資產]
+    A --> C[非流動資產]
+    B --> D[現金及等價物]
+    B --> E[應收帳款]
+    C --> F[固定資產]
+    C --> G[無形資產]
 ```
 
 ### 流動性指標表格
@@ -207,9 +207,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A["營業現金流"] --> B["投資現金流"]
-    B --> C["融資現金流"]
-    C --> D["淨現金流增減"]
+    A[營業現金流] --> B[投資現金流]
+    B --> C[融資現金流]
+    C --> D[淨現金流增減]
 ```
 
 ### FCF 轉換率趨勢表格
@@ -263,10 +263,10 @@ graph LR
 
 ```mermaid
 graph LR
-    ROE["ROE"] --> 1
-    ROA["ROA"] --> 2
-    ROIC["ROIC"] --> 1
-    Margin["淨利率"] --> 1
+    ROE[ROE] --> 1
+    ROA[ROA] --> 2
+    ROIC[ROIC] --> 1
+    Margin[淨利率] --> 1
 ```
 
 ---
@@ -327,12 +327,12 @@ TAM | ░░░░░░░░░░░░░░░░░░░░░░░░�
 
 ```mermaid
 graph TD
-    A["短期"] --> B["技術升級"]
-    A --> C["市場需求"]
-    B --> D["中期"]
-    D --> E["國際拓展"]
-    D --> F["長期"]
-    F --> G["技術普及"]
+    A[短期] --> B[技術升級]
+    A --> C[市場需求]
+    B --> D[中期]
+    D --> E[國際拓展]
+    D --> F[長期]
+    F --> G[技術普及]
 ```
 
 ---
@@ -385,11 +385,11 @@ graph TD
 
 ```mermaid
 graph TD
-    A["成長型"] --> B["適合"]
-    A --> C["價值型"]
-    C --> D["不適合"]
-    E["股息型"] --> F["不適合"]
-    G["短期交易"] --> H["適合"]
+    A[成長型] --> B[適合]
+    A --> C[價值型]
+    C --> D[不適合]
+    E[股息型] --> F[不適合]
+    G[短期交易] --> H[適合]
 ```
 
 ### 關鍵監控指標

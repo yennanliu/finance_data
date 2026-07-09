@@ -299,7 +299,7 @@ graph TD
     CA --> AR["Trade Receivables: $1.53B"]
     CA --> OCA["Other Current Assets: $0.41B"]
 
-    NCA --> PPE["Net PP& E(GPUs/Servers): $8.40B"]
+    NCA --> PPE["Net PP&E (GPUs/Servers): $8.40B"]
     NCA --> LTI["Long-Term Investments: $1.62B"]
     NCA --> OTH["Goodwill & Intangibles: $1.04B"]
 ```

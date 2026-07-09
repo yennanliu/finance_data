@@ -261,13 +261,13 @@ graph TD
     Assets["Total Assets<br/>: $206.80B"]
   
     Assets --> CA["Currents Assets<br/>: $125.61B"]
-    Assets --> NCA["Non-Current Assets<br/>: $81.22B"]
+    Assets --> NCA ["Non-Current Assets<br/>: $81.22B"]
   
     CA --> Cash["Cash and equivalents<br/>: $10.61B"]
     CA --> A_R["Accounts Receivable<br/>: $38.47B"]
     CA --> Inventory["Inventory<br/>: $21.40B"]
   
-    NCA --> PPE["PPE<fruit>:]<br/>: $13.25B"]
+    NCA --> PPE ["PPE<fruit>:]<br/>: $13.25B"]
     NCA --> Goodwill["Goodwill<br/>: $20.83B"]
 ```
 

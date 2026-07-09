@@ -102,12 +102,12 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] --> B["週線趨勢"]
-    B --> C["日線趨勢"]
+    A[月線趨勢] --> B[週線趨勢]
+    B --> C[日線趨勢]
 
-    A --> D["長期走勢：上升"]
-    B --> E["中期走勢：盤整"]
-    C --> F["短期走勢：上升"]
+    A --> D[長期走勢：上升]
+    B --> E[中期走勢：盤整]
+    C --> F[短期走勢：上升]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -134,8 +134,8 @@ $10 ┤    ●
 
 ```mermaid
 graph TD
-    ADX["ADX 34.35 強趨勢"] --> Bullish["多頭主導"]
-    Bullish --> Trend["趨勢市場"]
+    ADX[ADX 34.35 強趨勢] --> Bullish[多頭主導]
+    Bullish --> Trend[趨勢市場]
 ```
 
 ---
@@ -146,8 +146,8 @@ graph TD
 
 ```mermaid
 graph TD
-    HeadShoulders["頭肩頂"] --> TargetPrice["目標價計算"]
-    DoubleBottom["雙底"] --> TrendReversal["趨勢反轉"]
+    HeadShoulders[頭肩頂] --> TargetPrice[目標價計算]
+    DoubleBottom[雙底] --> TrendReversal[趨勢反轉]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -224,17 +224,17 @@ $15 ║████████████████████████�
 
 ```mermaid
 graph TD
-    RSI["RSI(14) 86.71"] --> Overbought["超買"]
-    MACD["MACD 0.101"] --> BullishSignal["看多"]
-    MA["MA20/50/200"] --> MixedSignals["混合訊號"]
+    RSI[RSI(14) 86.71] --> Overbought[超買]
+    MACD[MACD 0.101] --> BullishSignal[看多]
+    MA[MA20/50/200] --> MixedSignals[混合訊號]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    ShortMA["短期 MA20"] -->|"價格上方"| Bullish["看多"]
-    LongMA["長期 MA200"] -->|"價格下方"| Bearish["看空"]
+    ShortMA["短期 MA20"] -->|價格上方| Bullish[看多]
+    LongMA["長期 MA200"] -->|價格下方| Bearish[看空]
 ```
 
 ### 📉 RSI(14) 分析
@@ -247,8 +247,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD 線 0.101"] --> Histogram["柱狀圖 +0.537"]
-    SignalLine["訊號線 -0.436"] --> Bullish["看多"]
+    MACDLine[MACD 線 0.101] --> Histogram[柱狀圖 +0.537]
+    SignalLine[訊號線 -0.436] --> Bullish[看多]
 ```
 
 ### 📦 布林通道分析
@@ -325,8 +325,8 @@ $17 ┤         ●
 
 ```mermaid
 graph TD
-    Entry["進場條件"] --> StrategyA["策略 A"]
-    Entry --> StrategyB["策略 B"]
+    Entry[進場條件] --> StrategyA[策略 A]
+    Entry --> StrategyB[策略 B]
 ```
 
 ### 🟢 多頭策略詳情
@@ -384,8 +384,8 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"] --> BaseCase["基本情境"]
-    BaseCase --> Pessimistic["悲觀情境"]
+    Optimistic[樂觀情境] --> BaseCase[基本情境]
+    BaseCase --> Pessimistic[悲觀情境]
 ```
 
 ### 🛡️ 風險管理重要提醒

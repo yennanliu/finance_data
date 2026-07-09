@@ -141,7 +141,7 @@ graph TD
     AUTO --> A1["Model 3/Y (主力銷量)"]
     AUTO --> A2["Model S/X (高端形象)"]
     AUTO --> A3["Cybertruck (技術先鋒)"]
-    AUTO --> A4["FSD 軟體訂閱 & OTA(高毛利)"]
+    AUTO --> A4["FSD 軟體訂閱 & OTA (高毛利)"]
     
     ENERGY --> E1["Megapack (商用儲能)"]
     ENERGY --> E2["Powerwall (家用儲能)"]

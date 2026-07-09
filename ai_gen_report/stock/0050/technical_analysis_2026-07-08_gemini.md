@@ -394,12 +394,12 @@ graph TD
         MA200["長期 MA200: N/A"]
     end
 
-    MA20 -->|"位置關係: N/A"| MA50
-    MA50 -->|"位置關係: N/A"| MA200
+    MA20 -->|位置關係: N/A| MA50
+    MA50 -->|位置關係: N/A| MA200
 
-    MA20 -->|"價格關係: N/A"| PRICE{"價格 (N/A)"}
-    MA50 -->|"價格關係: N/A"| PRICE
-    MA200 -->|"價格關係: N/A"| PRICE
+    MA20 -->|價格關係: N/A| PRICE{"價格 (N/A)"}
+    MA50 -->|價格關係: N/A| PRICE
+    MA200 -->|價格關係: N/A| PRICE
 
     style MA20 fill:#f9f,stroke:#333,stroke-width:2px
     style MA50 fill:#9ff,stroke:#333,stroke-width:2px

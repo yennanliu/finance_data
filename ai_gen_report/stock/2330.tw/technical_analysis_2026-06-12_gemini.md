@@ -109,9 +109,9 @@ graph LR
 
 ```mermaid
 graph TD
-    M_Frame["月線級別 (長期)"] -->|"歷史新高多頭排列"| W_Frame["週線級別 (中期)"]
-    W_Frame -->|"高檔箱型 2129 - 2358"| D_Frame["日線級別 (短期)"]
-    D_Frame -->|"回檔測試 MA20 支撐"| Action["交易決策"]
+    M_Frame["月線級別 (長期)"] -->|歷史新高多頭排列| W_Frame["週線級別 (中期)"]
+    W_Frame -->|高檔箱型 2129 - 2358| D_Frame["日線級別 (短期)"]
+    D_Frame -->|回檔測試 MA20 支撐| Action["交易決策"]
     
     style M_Frame fill:#d4edda,stroke:#28a745,stroke-width:2px
     style W_Frame fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -166,8 +166,8 @@ $1000 ┤  ●━━━●━━━━━━━●━━━━━━━●━━
 
 ```mermaid
 graph LR
-    ADX["ADX(14) = 25.80"] -->|"高于 25"| Trend["存在明確趨勢"]
-    DI_Compare["-DI (30.22) > +DI (29.11)"] -->|"空方微幅領先"| Bearish_Bias["短期偏空震盪"]
+    ADX["ADX(14) = 25.80"] -->|高于 25| Trend["存在明確趨勢"]
+    DI_Compare["-DI (30.22) > +DI (29.11)"] -->|空方微幅領先| Bearish_Bias["短期偏空震盪"]
     Trend --> Bearish_Bias
 ```
 
@@ -190,8 +190,8 @@ graph LR
 graph TD
     A["高檔歷史走勢"] --> B["雙重頂 (Double Top) 疑慮?"]
     A --> C["上升三角形 (Ascending Triangle)"]
-    B -->|"未跌破頸線 $2129.32"| B_Fail["雙頂不成立"]
-    C -->|"底底高抬升 $1755 -> $2129"| C_Success["中期看漲形態持續"]
+    B -->|未跌破頸線 $2129.32| B_Fail["雙頂不成立"]
+    C -->|底底高抬升 $1755 -> $2129| C_Success["中期看漲形態持續"]
 ```
 
 ### 🕯️ 重要K線形態分析

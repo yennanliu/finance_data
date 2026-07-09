@@ -307,11 +307,11 @@ graph TD
 
 ```mermaid
 graph LR
-    A("NI") -->|"加"| B("OCF")
-    B -->|"減"| C("Capex")
-    C -->|"等於"| D("FCF")
-    D --> E("Div+Buybacks")
-    E --> F("Net Cash Change")
+    A(NI) -->|加| B(OCF)
+    B -->|減| C(Capex)
+    C -->|等於| D(FCF)
+    D --> E(Div+Buybacks)
+    E --> F(Net Cash Change)
     A["淨利：$77.67B"] 
     B["營業現金流：$139.51B"] 
     C["資本支出：$131.82B"] 

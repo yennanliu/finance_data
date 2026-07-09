@@ -132,30 +132,30 @@ Microsoft Corporation (MSFT) 是一家全球領先的科技巨頭，其業務範
 
 ```mermaid
 graph TD
-    A["MSFT 公司總覽<br/>市值: $3.34T<br/>TTM 營收: $318.27B"] --> B("主要業務板塊")
+    A[MSFT 公司總覽<br/>市值: $3.34T<br/>TTM 營收: $318.27B] --> B(主要業務板塊)
 
-    B --> B1("生產力與商業流程<br/>約佔總營收 30-35%")
-    B --> B2("智能雲端服務<br/>約佔總營收 40-45%")
-    B --> B3("更多個人計算<br/>約佔總營收 20-25%")
+    B --> B1(生產力與商業流程<br/>約佔總營收 30-35%)
+    B --> B2(智能雲端服務<br/>約佔總營收 40-45%)
+    B --> B3(更多個人計算<br/>約佔總營收 20-25%)
 
-    B1 --> B1a("Office 365 Commercial<br/>訂閱服務")
-    B1 --> B1b("Dynamics 365<br/>企業應用")
-    B1 --> B1c("LinkedIn<br/>職業社交網路")
-    B1 --> B1d("Microsoft Teams<br/>協作平台")
+    B1 --> B1a(Office 365 Commercial<br/>訂閱服務)
+    B1 --> B1b(Dynamics 365<br/>企業應用)
+    B1 --> B1c(LinkedIn<br/>職業社交網路)
+    B1 --> B1d(Microsoft Teams<br/>協作平台)
 
-    B2 --> B2a("Azure<br/>雲端平台服務")
-    B2 --> B2b("Windows Server<br/>伺服器產品")
-    B2 --> B2c("SQL Server<br/>資料庫服務")
-    B2 --> B2d("企業服務<br/>諮詢與支持")
+    B2 --> B2a(Azure<br/>雲端平台服務)
+    B2 --> B2b(Windows Server<br/>伺服器產品)
+    B2 --> B2c(SQL Server<br/>資料庫服務)
+    B2 --> B2d(企業服務<br/>諮詢與支持)
 
-    B3 --> B3a("Windows<br/>作業系統授權")
-    B3 --> B3b("Xbox<br/>遊戲內容與硬體")
-    B3 --> B3c("Surface<br/>裝置業務")
-    B3 --> B3d("搜尋與新聞廣告<br/>Bing等")
+    B3 --> B3a(Windows<br/>作業系統授權)
+    B3 --> B3b(Xbox<br/>遊戲內容與硬體)
+    B3 --> B3c(Surface<br/>裝置業務)
+    B3 --> B3d(搜尋與新聞廣告<br/>Bing等)
 
-    B1a --> B1a1("Copilot for Microsoft 365")
-    B2a --> B2a1("Azure AI Services")
-    B3a --> B3a1("Windows Copilot")
+    B1a --> B1a1(Copilot for Microsoft 365)
+    B2a --> B2a1(Azure AI Services)
+    B3a --> B3a1(Windows Copilot)
 ```
 **業務板塊詳情：**
 *   **生產力與商業流程 (Productivity and Business Processes):** 該部門主要提供企業和個人使用的生產力工具及商業應用。核心產品包括 Microsoft 365 (Office 365 商用版和消費版、Windows 商用版、企業移動性+安全性、Power BI、Exchange、SharePoint、Microsoft Teams、安全與合規性、Copilot 等)、Dynamics 365 (企業資源規劃與客戶關係管理軟體) 和 LinkedIn (專業社交網路服務)。此部門的收入模式以訂閱服務為主，具有高度的經常性收入特徵，並透過 AI 整合持續提升價值。根據一般市場數據，此板塊在近期約佔總營收的 30-35%。

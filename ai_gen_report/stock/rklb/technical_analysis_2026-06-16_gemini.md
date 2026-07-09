@@ -169,10 +169,10 @@ $ 72.92  ───────────────────────�
 
 ```mermaid
 graph TD
-    ADX["ADX = 26.60 (>25)"] -->|"確認"| ActiveTrend["市場存在明確趨勢"]
+    ADX["ADX = 26.60 (>25)"] -->|確認| ActiveTrend["市場存在明確趨勢"]
     ActiveTrend --> DirectionCheck{"方向判斷: DI 交叉狀態"}
-    DirectionCheck -->|"Negative DI 23.22"| BearDom["-DI > +DI (15.63)"]
-    DirectionCheck -->|"Positive DI 15.63"| BullWeak["+DI 處於弱勢"]
+    DirectionCheck -->|Negative DI 23.22| BearDom["-DI > +DI (15.63)"]
+    DirectionCheck -->|Positive DI 15.63| BullWeak["+DI 處於弱勢"]
     BearDom --> Verdict["結論: 短期空頭趨勢強勁，修正尚未完全結束"]
 ```
 
@@ -298,13 +298,13 @@ graph TD
     Price --> RSI_Check{"2. 動能指標"}
     Price --> BB_Check{"3. 波動範圍"}
     
-    MA_Check -->|"低於 MA20"| MA20_Bear["🔴 短期看空"]
-    MA_Check -->|"高於 MA50/200"| MA50_Bull["🟢 中長期看多"]
+    MA_Check -->|低於 MA20| MA20_Bear["🔴 短期看空"]
+    MA_Check -->|高於 MA50/200| MA50_Bull["🟢 中長期看多"]
     
-    RSI_Check -->|"RSI = 33.14"| RSI_Oversold["🟡 接近超賣"]
-    RSI_Check -->|"KD < 20"| KD_Cross["🟢 超賣黃金交叉"]
+    RSI_Check -->|RSI = 33.14| RSI_Oversold["🟡 接近超賣"]
+    RSI_Check -->|KD < 20| KD_Cross["🟢 超賣黃金交叉"]
     
-    BB_Check -->|"%B = 0.25"| BB_Lower["🟡 靠近下軌 ($94.73)"]
+    BB_Check -->|%B = 0.25| BB_Lower["🟡 靠近下軌 ($94.73)"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -335,9 +335,9 @@ RSI(14) 強度顯示
 
 ```mermaid
 graph LR
-    MACD_Line["MACD Line (0.365)"] -->|"死叉"| Signal_Line["Signal Line (4.551)"]
+    MACD_Line["MACD Line (0.365)"] -->|死叉| Signal_Line["Signal Line (4.551)"]
     Signal_Line --> Hist["Histogram (-4.185)"]
-    Hist -->|"持續低於零軸"| BearMomentum["空頭動能擴張中，但柱狀圖斜率已開始放緩"]
+    Hist -->|持續低於零軸| BearMomentum["空頭動能擴張中，但柱狀圖斜率已開始放緩"]
 ```
 
 *解讀*：MACD 仍處於死叉狀態，且柱狀圖高達 -4.185，顯示短期下行慣性仍在。然而，最新一週的柱狀圖收縮幅度（從 -4.697 收窄至 -4.185）顯示**下跌動能正在減弱**。
@@ -431,14 +431,14 @@ RKLB 的歷史 Beta 值通常在 **1.8 - 2.2** 之間，屬於高 Beta 成長股
 ```mermaid
 graph TD
     Start["分析現價 $109.25"] --> SupportTest{"測試 MA50 支撐\n$101.57 - $102.96?"}
-    SupportTest -->|"守穩並放量反彈"| StrategyA["🟢 策略 A: 守穩反彈做多 (左側/右側共振)"]
-    SupportTest -->|"放量跌破"| SupportTest2{"測試 MA120 支撐\n$86.03 - $88.12?"}
+    SupportTest -->|守穩並放量反彈| StrategyA["🟢 策略 A: 守穩反彈做多 (左側/右側共振)"]
+    SupportTest -->|放量跌破| SupportTest2{"測試 MA120 支撐\n$86.03 - $88.12?"}
     
-    SupportTest2 -->|"守穩"| StrategyB["🟢 策略 B: 深度價值防禦做多"]
-    SupportTest2 -->|"跌破"| StrategyC["🔴 策略 C: 順勢做空 (目標 $72.92)"]
+    SupportTest2 -->|守穩| StrategyB["🟢 策略 B: 深度價值防禦做多"]
+    SupportTest2 -->|跌破| StrategyC["🔴 策略 C: 順勢做空 (目標 $72.92)"]
     
     Start --> ResistanceTest{"反彈測試 MA20\n$124.13?"}
-    ResistanceTest -->|"受阻滯漲"| StrategyD["🔴 策略 D: 逢高做空"]
+    ResistanceTest -->|受阻滯漲| StrategyD["🔴 策略 D: 逢高做空"]
 ```
 
 ### 🟢 多頭策略詳情

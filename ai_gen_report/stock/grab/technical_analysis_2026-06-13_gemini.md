@@ -160,9 +160,9 @@ $3.20 ──────────────────────\━━�
 
 ```mermaid
 graph LR
-    ADX_Value["ADX = 20.93<br/>(弱趨勢/盤整)"] -->|"分析"| Trend_Type{"當前行情屬性"}
-    Trend_Type -->|"判定"| Range["無趨勢震盪/築底行情"]
-    Trend_Type -->|"操作策略"| Accumulate["適合逢低分批佈局，不宜追漲殺跌"]
+    ADX_Value["ADX = 20.93<br/>(弱趨勢/盤整)"] -->|分析| Trend_Type{"當前行情屬性"}
+    Trend_Type -->|判定| Range["無趨勢震盪/築底行情"]
+    Trend_Type -->|操作策略| Accumulate["適合逢低分批佈局，不宜追漲殺跌"]
 ```
 
 **ADX 趨勢強度對照與 GRAB 現況**：
@@ -185,8 +185,8 @@ graph LR
 ```mermaid
 graph TD
     A["價格走勢 ($3.30)"] --> B{"形態識別"}
-    B -->|"中期形態"| C["下降楔形 (Falling Wedge)<br/>看漲反轉形態"]
-    B -->|"短期形態"| D["雙底 (Double Bottom) 雛形<br/>測試 $3.18 支撐"]
+    B -->|中期形態| C["下降楔形 (Falling Wedge)<br/>看漲反轉形態"]
+    B -->|短期形態| D["雙底 (Double Bottom) 雛形<br/>測試 $3.18 支撐"]
     C --> E["目標：向上突破上軌 ($3.47)"]
     D --> F["目標：確認 $3.18 雙底不破"]
 ```
@@ -425,8 +425,8 @@ graph TD
 ```mermaid
 graph TD
     Start["當前現價 $3.30"] --> Decision{"交易風格選擇"}
-    Decision -->|"左側交易 (激進低吸)"| Left["策略 A: 52W 底部分批建倉"]
-    Decision -->|"右側交易 (穩健確認)"| Right["策略 B: 突破楔形上軌追多"]
+    Decision -->|左側交易 (激進低吸)| Left["策略 A: 52W 底部分批建倉"]
+    Decision -->|右側交易 (穩健確認)| Right["策略 B: 突破楔形上軌追多"]
     
     Left --> EntryA["進場點: $3.22 - $3.30"]
     EntryA --> StopA["止損點: $3.12 (跌破52W低點)"]

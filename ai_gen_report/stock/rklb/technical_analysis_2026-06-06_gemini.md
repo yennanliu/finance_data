@@ -136,14 +136,14 @@ RKLB 的技術評分卡顯示，當前市場情緒偏向悲觀。趨勢強度雖
 
 ```mermaid
 graph TD
-    A["月線趨勢: 長期多頭"] --> B("強勁上升通道")
-    B --> C{"當前狀態"}
-    C --> D["週線趨勢: 中期調整/回調"]
-    D --> E("前期高點 $143.48 後劇烈下跌")
-    E --> F{"當前狀態"}
-    F --> G["日線趨勢: 短期空頭"]
-    G --> H("價格跌破MA20, 動能指標看空")
-    H --> I["結論: 長期看漲，但短中期處於深度調整"]
+    A[月線趨勢: 長期多頭] --> B(強勁上升通道)
+    B --> C{當前狀態}
+    C --> D[週線趨勢: 中期調整/回調]
+    D --> E(前期高點 $143.48 後劇烈下跌)
+    E --> F{當前狀態}
+    F --> G[日線趨勢: 短期空頭]
+    G --> H(價格跌破MA20, 動能指標看空)
+    H --> I[結論: 長期看漲，但短中期處於深度調整]
 ```
 
 **詳細解讀**：
@@ -221,15 +221,15 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而非方向
 
 ```mermaid
 graph TD
-    A["ADX (14): 32.82"] --> B{"趨勢強度判斷"}
-    B --> C{"強趨勢: ADX > 25"}
-    C --> D["結論: RKLB 目前處於強趨勢行情"]
-    A --> E["+DI (14): 22.12"]
-    A --> F["-DI (14): 24.16"]
-    E --> G{"趨勢方向判斷"}
+    A[ADX (14): 32.82] --> B{趨勢強度判斷}
+    B --> C{強趨勢: ADX > 25}
+    C --> D[結論: RKLB 目前處於強趨勢行情]
+    A --> E[+DI (14): 22.12]
+    A --> F[-DI (14): 24.16]
+    E --> G{趨勢方向判斷}
     F --> G
-    G --> H["空頭主導: -DI > +DI"]
-    H --> I["結論: 雖然趨勢強勁，但方向由空方掌控"]
+    G --> H[空頭主導: -DI > +DI]
+    H --> I[結論: 雖然趨勢強勁，但方向由空方掌控]
 ```
 
 **ADX 強度對照表**：
@@ -261,12 +261,12 @@ ADX 指標確認了 RKLB 目前處於一個強勁的下跌趨勢中，而非盤�
 
 ```mermaid
 graph TD
-    A["價格快速上漲"] --> B("創歷史新高 $143.48")
-    B --> C{"缺乏盤整"}
-    C --> D["價格快速下跌"]
-    D --> E("跌破短期支撐")
-    E --> F["當前形態: 潛在 V 型頂部反轉"]
-    F --> G["警示: 若繼續下行，形態確認"]
+    A[價格快速上漲] --> B(創歷史新高 $143.48)
+    B --> C{缺乏盤整}
+    C --> D[價格快速下跌]
+    D --> E(跌破短期支撐)
+    E --> F[當前形態: 潛在 V 型頂部反轉]
+    F --> G[警示: 若繼續下行，形態確認]
 ```
 
 **形態特徵**：
@@ -413,8 +413,8 @@ RKLB 在 $110.08 上方遇到的第一個阻力是 $118.09 (MA5)。如果能夠�
 **斐波那契回調視覺化**：
 ```mermaid
 graph TD
-    High("高點: $143.48")
-    Low("低點: $60.93")
+    High(高點: $143.48)
+    Low(低點: $60.93)
 
     High --> F23["23.6% 回調: $123.95"]
     F23 --> F38["38.2% 回調: $112.01"]
@@ -440,42 +440,42 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph Price_Action ["價格行為"]
-        P1("現價 $110.08") --> P2("跌破MA20")
-        P2 --> P3("逼近布林下軌")
-        P3 --> P4("V型頂初步形成")
-    end
+    SUBGRAPH Price_Action ["價格行為"]
+        P1(現價 $110.08) --> P2(跌破MA20)
+        P2 --> P3(逼近布林下軌)
+        P3 --> P4(V型頂初步形成)
+    END
 
-    subgraph Moving_Averages ["移動平均線 (MA)"]
-        MA1("MA20: $127.56") --> MA_Cross("短期壓力")
-        MA2("MA50: $96.14") --> MA_Support("中期支撐")
-        MA3("MA200: $71.00") --> MA_Strong_Support("長期強支撐")
-        MA_Cross --> MA_Arrangement("MA20>MA50>MA200 但價格跌破MA20")
-    end
+    SUBGRAPH Moving_Averages ["移動平均線 (MA)"]
+        MA1(MA20: $127.56) --> MA_Cross(短期壓力)
+        MA2(MA50: $96.14) --> MA_Support(中期支撐)
+        MA3(MA200: $71.00) --> MA_Strong_Support(長期強支撐)
+        MA_Cross --> MA_Arrangement(MA20>MA50>MA200 但價格跌破MA20)
+    END
 
-    subgraph Momentum_Oscillators ["動能指標"]
-        RSI("RSI(14"): 42.89) --> RSI_State("中性區間,快速下降")
-        RSI_State --> RSI_Divergence("頂背離確認 🔴")
-        MACD("MACD: 7.170") --> MACD_Signal("MACD線下穿訊號線 🔴")
-        MACD_Signal --> MACD_Hist("MACD柱狀圖負值擴大 🔴")
-        Stoch("Stoch %K: 7.57") --> Stoch_Oversold("超賣區 🟢")
-    end
+    SUBGRAPH Momentum_Oscillators ["動能指標"]
+        RSI(RSI(14): 42.89) --> RSI_State(中性區間,快速下降)
+        RSI_State --> RSI_Divergence(頂背離確認 🔴)
+        MACD(MACD: 7.170) --> MACD_Signal(MACD線下穿訊號線 🔴)
+        MACD_Signal --> MACD_Hist(MACD柱狀圖負值擴大 🔴)
+        Stoch(Stoch %K: 7.57) --> Stoch_Oversold(超賣區 🟢)
+    END
 
-    subgraph Trend_Strength ["趨勢強度"]
-        ADX("ADX(14"): 32.82) --> ADX_Strong_Trend("強趨勢")
-        ADX_Strong_Trend --> ADX_Direction("-DI > +DI, 空頭主導 🔴")
-    end
+    SUBGRAPH Trend_Strength ["趨勢強度"]
+        ADX(ADX(14): 32.82) --> ADX_Strong_Trend(強趨勢)
+        ADX_Strong_Trend --> ADX_Direction(-DI > +DI, 空頭主導 🔴)
+    END
 
-    subgraph Volatility ["波動率"]
-        ATR("ATR(14"): $12.49) --> ATR_High_Volatility("高波動性")
-    end
+    SUBGRAPH Volatility ["波動率"]
+        ATR(ATR(14): $12.49) --> ATR_High_Volatility(高波動性)
+    END
 
-    subgraph Volume ["成交量"]
-        Vol("最新成交量: 21.3M") --> Vol_Below_Avg("低於20日均量 🔴")
-        Vol_Below_Avg --> OBV_Weakness("OBV < MA, 量能疲弱 🔴")
-    end
+    SUBGRAPH Volume ["成交量"]
+        Vol(最新成交量: 21.3M) --> Vol_Below_Avg(低於20日均量 🔴)
+        Vol_Below_Avg --> OBV_Weakness(OBV < MA, 量能疲弱 🔴)
+    END
 
-    P4 --> Combined_Analysis("綜合分析")
+    P4 --> Combined_Analysis(綜合分析)
     MA_Arrangement --> Combined_Analysis
     RSI_Divergence --> Combined_Analysis
     MACD_Hist --> Combined_Analysis
@@ -484,7 +484,7 @@ graph TD
     ATR_High_Volatility --> Combined_Analysis
     OBV_Weakness --> Combined_Analysis
 
-    Combined_Analysis --> Conclusion("短期空頭強勢，中期回調，長期多頭結構未破")
+    Combined_Analysis --> Conclusion(短期空頭強勢，中期回調，長期多頭結構未破)
 ```
 
 ### 📈 移動平均線排列分析

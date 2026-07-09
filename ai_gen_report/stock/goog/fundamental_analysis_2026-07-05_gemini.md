@@ -115,19 +115,19 @@ Alphabet Inc. (GOOG) 是一家全球領先的科技巨頭，其業務範圍廣�
 
 ```mermaid
 graph TD
-    A["Alphabet Inc.<br/>市值: $4.35T<br/>TTM 營收: $422.50B"] --> B("Google Services<br/>主要收入貢獻")
-    A --> C("Google Cloud<br/>企業級雲服務")
-    A --> D("Other Bets<br/>創新技術與長期投資")
+    A[Alphabet Inc.<br/>市值: $4.35T<br/>TTM 營收: $422.50B] --> B(Google Services<br/>主要收入貢獻)
+    A --> C(Google Cloud<br/>企業級雲服務)
+    A --> D(Other Bets<br/>創新技術與長期投資)
 
-    B --> B1("廣告收入<br/>搜尋、YouTube、網路")
-    B --> B2("訂閱與其他收入<br/>Google Play、硬體銷售等")
-    C --> C1("IaaS - Compute, Storage, Networking")
-    C --> C2("PaaS - App Engine, AI Platform")
-    C --> C3("SaaS - Google Workspace")
-    D --> D1("Waymo<br/>自動駕駛")
-    D --> D2("Verily<br/>生命科學")
-    D --> D3("Calico<br/>生物科技")
-    D --> D4("DeepMind<br/>AI 研究")
+    B --> B1(廣告收入<br/>搜尋、YouTube、網路)
+    B --> B2(訂閱與其他收入<br/>Google Play、硬體銷售等)
+    C --> C1(IaaS - Compute, Storage, Networking)
+    C --> C2(PaaS - App Engine, AI Platform)
+    C --> C3(SaaS - Google Workspace)
+    D --> D1(Waymo<br/>自動駕駛)
+    D --> D2(Verily<br/>生命科學)
+    D --> D3(Calico<br/>生物科技)
+    D --> D4(DeepMind<br/>AI 研究)
 ```
 
 ### 2.2 市場份額
@@ -326,20 +326,20 @@ Alphabet 的盈餘品質通常被認為很高，主要基於以下幾點：
 
 ```mermaid
 graph TD
-    TA["總資產: $703.92B (Mar'26 TTM)"] --> CA("流動資產: $213.75B")
-    TA --> NCA("非流動資產: $490.17B")
+    TA[總資產: $703.92B (Mar'26 TTM)] --> CA(流動資產: $213.75B)
+    TA --> NCA(非流動資產: $490.17B)
 
-    CA --> CCE("現金及約當現金: $38.06B")
-    CA --> STI("短期投資: $88.78B")
-    CA --> CSR("現金及短期投資總額: $126.84B")
-    CA --> AR("應收帳款: $62.99B")
-    CA --> OCA("其他流動資產: $23.91B")
+    CA --> CCE(現金及約當現金: $38.06B)
+    CA --> STI(短期投資: $88.78B)
+    CA --> CSR(現金及短期投資總額: $126.84B)
+    CA --> AR(應收帳款: $62.99B)
+    CA --> OCA(其他流動資產: $23.91B)
 
-    NCA --> PPE("不動產、廠房及設備淨值: $296.53B")
-    NCA --> GW("商譽: $57.77B")
-    NCA --> OIA("其他無形資產: $9.44B")
-    NCA --> LTI("長期投資: $106.95B")
-    NCA --> OLA("其他非流動資產: $19.47B")
+    NCA --> PPE(不動產、廠房及設備淨值: $296.53B)
+    NCA --> GW(商譽: $57.77B)
+    NCA --> OIA(其他無形資產: $9.44B)
+    NCA --> LTI(長期投資: $106.95B)
+    NCA --> OLA(其他非流動資產: $19.47B)
 ```
 
 **資產結構概覽 (TTM Mar'26):**
@@ -501,19 +501,19 @@ Alphabet Inc. (GOOG) 是一家全球領先的科技巨頭，其業務範圍廣�
 
 ```mermaid
 graph TD
-    A["Alphabet Inc.<br/>市值: $4.35T<br/>TTM 營收: $422.50B"] --> B("Google Services<br/>主要收入貢獻")
-    A --> C("Google Cloud<br/>企業級雲服務")
-    A --> D("Other Bets<br/>創新技術與長期投資")
+    A[Alphabet Inc.<br/>市值: $4.35T<br/>TTM 營收: $422.50B] --> B(Google Services<br/>主要收入貢獻)
+    A --> C(Google Cloud<br/>企業級雲服務)
+    A --> D(Other Bets<br/>創新技術與長期投資)
 
-    B --> B1("廣告收入<br/>搜尋、YouTube、網路")
-    B --> B2("訂閱與其他收入<br/>Google Play、硬體銷售等")
-    C --> C1("IaaS - Compute, Storage, Networking")
-    C --> C2("PaaS - App Engine, AI Platform")
-    C --> C3("SaaS - Google Workspace")
-    D --> D1("Waymo<br/>自動駕駛")
-    D --> D2("Verily<br/>生命科學")
-    D --> D3("Calico<br/>生物科技")
-    D --> D4("DeepMind<br/>AI 研究")
+    B --> B1(廣告收入<br/>搜尋、YouTube、網路)
+    B --> B2(訂閱與其他收入<br/>Google Play、硬體銷售等)
+    C --> C1(IaaS - Compute, Storage, Networking)
+    C --> C2(PaaS - App Engine, AI Platform)
+    C --> C3(SaaS - Google Workspace)
+    D --> D1(Waymo<br/>自動駕駛)
+    D --> D2(Verily<br/>生命科學)
+    D --> D3(Calico<br/>生物科技)
+    D --> D4(DeepMind<br/>AI 研究)
 ```
 
 ### 2.2 市場份額
@@ -692,12 +692,12 @@ Alphabet 的現金流量表現極為強勁，營業現金流充裕，足以覆�
 
 ```mermaid
 graph LR
-    NI("淨利潤<br/>FY2025: $132.17B") --> OCF("營業現金流<br/>FY2025: $164.71B")
-    OCF --> CE("資本支出<br/>FY2025: -$91.45B")
-    CE --> FCF("自由現金流<br/>FY2025: $73.27B")
-    FCF --> CD("現金股息支付<br/>FY2025: -$10.05B")
-    FCF --> BR("股票回購<br/>FY2025: ~$19.5B 估計")
-    CD --> NCC("淨現金變化")
+    NI(淨利潤<br/>FY2025: $132.17B) --> OCF(營業現金流<br/>FY2025: $164.71B)
+    OCF --> CE(資本支出<br/>FY2025: -$91.45B)
+    CE --> FCF(自由現金流<br/>FY2025: $73.27B)
+    FCF --> CD(現金股息支付<br/>FY2025: -$10.05B)
+    FCF --> BR(股票回購<br/>FY2025: ~$19.5B 估計)
+    CD --> NCC(淨現金變化)
     BR --> NCC
 ```
 **FY2025 現金流量分析：**

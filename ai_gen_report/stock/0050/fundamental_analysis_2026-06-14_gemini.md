@@ -348,11 +348,11 @@ graph LR
     MARKET["二級市場 (Secondary Market)<br/>(一般投資人交易)"]
 
     AP -- "1. 交付一籃子股票" --> YUANTA["元大投信 (Issuer)"]
-    nb1["YUANTA -- "2. 發行/交付""] --> ETF_SHARES
+    YUANTA -- "2. 發行/交付" --> ETF_SHARES
     ETF_SHARES --> AP
     
-    nb2["AP -- "3. 提供市場流動性""] --> MARKET
-    nb3["MARKET -- "4. 套利交易""] --> AP
+    AP -- "3. 提供市場流動性" --> MARKET
+    MARKET -- "4. 套利交易" --> AP
 ```
 
 *   **套利運作**：當 0050 出現溢價（市價 > 淨值）時，AP 會在二級市場買入成分股，在一級市場申購 0050 份額並賣出，從而平抑溢價；反之，當出現折價時，AP 買入 0050 並申請買回一籃子股票賣出。這套機制日夜運轉，保證了價格的公允性。

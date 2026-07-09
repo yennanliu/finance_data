@@ -383,7 +383,7 @@ graph TD
     CA --> Inv["Inventories: $288.11B (7.54% of CA)"]
     CA --> OtherCA["Other Current Assets: $487.84B (12.65% of CA)"]
 
-    NCA --> PPE["Property, Plant & Equipment(Net): <br/>(Major component, derived)"]
+    NCA --> PPE["Property, Plant & Equipment (Net): <br/>(Major component, derived)"]
     NCA --> OtherNCA["Other Non-Current Assets: <br/>(Derived)"]
 ```
 

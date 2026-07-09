@@ -169,8 +169,8 @@ $100 ┤
 
 ```mermaid
 graph TD
-    ADX_Value["ADX(14) = 28.32<br/>(高於 25 臨界值)"] -->|"確認"| Trend_Status["存在明確趨勢行情"]
-    DI_Compare["+DI (28.63) > -DI (20.81)"] -->|"確認"| Direction_Status["多頭主導趨勢"]
+    ADX_Value["ADX(14) = 28.32<br/>(高於 25 臨界值)"] -->|確認| Trend_Status["存在明確趨勢行情"]
+    DI_Compare["+DI (28.63) > -DI (20.81)"] -->|確認| Direction_Status["多頭主導趨勢"]
     Trend_Status & Direction_Status --> Conclusion["結論: 強勢多頭趨勢，但 ADX 開始走平<br/>暗示斜率最陡峭的噴出段已過，轉為溫和上行或高檔震盪"]
 ```
 
@@ -194,7 +194,7 @@ graph TD
 ```mermaid
 graph TD
     subgraph Pattern_Evolution ["圖表形態演變"]
-        P1["大型杯柄形態 (2025-05 至 2026-03)<br/>杯口: $256.12<br/>杯底: $97.35"] -->|"2026-04 爆量突破"| P2["主升段噴出<br/>暴漲至 $516.10"]
+        P1["大型杯柄形態 (2025-05 至 2026-03)<br/>杯口: $256.12<br/>杯底: $97.35"] -->|2026-04 爆量突破| P2["主升段噴出<br/>暴漲至 $516.10"]
         P2 --> P3["上升楔形 (2026-05 至今)<br/>上軌阻力: $558.53<br/>下軌支撐: $501.86"]
     end
 ```
@@ -321,10 +321,10 @@ graph LR
 
 ```mermaid
 graph TD
-    Price_Trend["價格創歷史新高 ($537.37)"] -->|"矛盾"| RSI_Divergence["RSI 頂背離 (RSI 僅 53.12)"]
-    Price_Trend -->|"矛盾"| MACD_DeadCross["MACD 看空死叉 (柱狀圖 -3.142)"]
-    Price_Trend -->|"確認"| MA_Bullish["均線多頭排列 (MA20 > MA50 > MA200)"]
-    Price_Trend -->|"確認"| OBV_Support["OBV 量能持續創高"]
+    Price_Trend["價格創歷史新高 ($537.37)"] -->|矛盾| RSI_Divergence["RSI 頂背離 (RSI 僅 53.12)"]
+    Price_Trend -->|矛盾| MACD_DeadCross["MACD 看空死叉 (柱狀圖 -3.142)"]
+    Price_Trend -->|確認| MA_Bullish["均線多頭排列 (MA20 > MA50 > MA200)"]
+    Price_Trend -->|確認| OBV_Support["OBV 量能持續創高"]
     
     RSI_Divergence & MACD_DeadCross --> Bearish_Alert["⚠️ 短期警告:<br/>上漲動能衰竭，警惕高檔誘多"]
     MA_Bullish & OBV_Support --> Bullish_Confirm["🟢 長期確認:<br/>牛市結構未變，每一次拉回都是買點"]
@@ -474,16 +474,16 @@ AMD 作為半導體板塊的龍頭之一，其 **Beta 值約為 1.85**。
 graph TD
     Start["評估當前現價 $537.37"] --> Choice{"您的交易屬性是什麼?"}
     
-    Choice -->|"短線/波段交易者"| ShortTerm["警惕高檔風險<br/>不建議在 $530 以上追多"]
-    Choice -->|"長線價值投資者"| LongTerm["忽略短期波動<br/>分批佈局"]
+    Choice -->|短線/波段交易者| ShortTerm["警惕高檔風險<br/>不建議在 $530 以上追多"]
+    Choice -->|長線價值投資者| LongTerm["忽略短期波動<br/>分批佈局"]
     
     ShortTerm --> Decision1{"股價是否突破 $558.37?"}
-    Decision1 -->|"是 (帶量突破)"| BuyBreakout["策略 B: 突破做多<br/>進場點: $562.00"]
-    Decision1 -->|"否 (受阻回落)"| SellResistance["策略 D: 阻力放空<br/>進場點: $550.00"]
+    Decision1 -->|是 (帶量突破)| BuyBreakout["策略 B: 突破做多<br/>進場點: $562.00"]
+    Decision1 -->|否 (受阻回落)| SellResistance["策略 D: 阻力放空<br/>進場點: $550.00"]
     
     ShortTerm --> Decision2{"股價是否跌破 $501.86?"}
-    Decision2 -->|"是 (跌破 MA20)"| SellBreakdown["策略 C: 破位做空<br/>進場點: $495.00"]
-    Decision2 -->|"否 (拉回守住)"| BuyPullback["策略 A: 拉回做多<br/>進場點: $505.00"]
+    Decision2 -->|是 (跌破 MA20)| SellBreakdown["策略 C: 破位做空<br/>進場點: $495.00"]
+    Decision2 -->|否 (拉回守住)| BuyPullback["策略 A: 拉回做多<br/>進場點: $505.00"]
 ```
 
 ### 🟢 多頭交易策略

@@ -139,7 +139,7 @@ graph TD
     RETAIL_CI["Commercial & Industrial<br/>工商業用戶"]
 
     GEN_NUCLEAR["🍀 Nuclear (Vistra Clean)<br/>Energy Harbor (6.4 GW)"]
-    GEN_GAS["🔥 Gas & Coal(Texas/East/West)<br/>~31 GW 靈活調峰產能"]
+    GEN_GAS["🔥 Gas & Coal (Texas/East/West)<br/>~31 GW 靈活調峰產能"]
     GEN_BATTERY["🔋 Battery Storage<br/>Moss Landing (全美最大)"]
 
     VST --> RETAIL

@@ -367,7 +367,7 @@ graph TD
     CA --> INV["Inventories ($288.11B)"]
     CA --> OTHR_CA["Other Current Assets ($486.87B)"]
 
-    NCA --> PPE["Property Plant & Equipment(Net)"]
+    NCA --> PPE["Property Plant & Equipment (Net)"]
     NCA --> INTANG["Intangible Assets"]
     NCA --> OTHR_NCA["Other Non-Current Assets"]
 
@@ -831,7 +831,7 @@ graph TD
     MT --> MT3["📦 Advanced Packaging Growth"]
     MT --> MT4["🚗 Automotive Semiconductor Growth"]
 
-    LT --> LT1["🥽 Next-Gen Process R& D(A14)"]
+    LT --> LT1["🥽 Next-Gen Process R&D (A14)"]
     LT --> LT2["⌚ Emerging Technologies (Quantum, Metaverse)"]
     LT --> LT3["🔗 Deepening Ecosystem Integration"]
 ```

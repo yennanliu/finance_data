@@ -252,9 +252,9 @@ graph TD
 
 ```mermaid
 graph TD
-    ShortMA["短期 MA20"] -->|"價格下方"| Bearish["看空"]
-    MidMA["中期 MA50"] -->|"價格下方"| Bearish
-    LongMA["長期 MA200"] -->|"價格下方"| Bearish
+    ShortMA["短期 MA20"] -->|價格下方| Bearish["看空"]
+    MidMA["中期 MA50"] -->|價格下方| Bearish
+    LongMA["長期 MA200"] -->|價格下方| Bearish
 ```
 
 ### 📉 RSI(14) 分析
@@ -339,8 +339,8 @@ Beta分析顯示高波動，與市場有較高相關性，投資需要注意市�
 ```mermaid
 graph TD
     A["市場情況"] --> B{"空頭趨勢？"}
-    B -->|"是"| C["選擇空頭策略"]
-    B -->|"否"| D["觀望"]
+    B -->|是| C["選擇空頭策略"]
+    B -->|否| D["觀望"]
 ```
 
 ### 🟢 多頭策略詳情

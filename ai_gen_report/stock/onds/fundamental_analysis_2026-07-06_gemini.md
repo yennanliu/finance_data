@@ -355,13 +355,13 @@ graph TD
     TA --> CA
     TA --> NCA
 
-    CA --> CCE["Cash & Equivalents($1.026B)"]
+    CA --> CCE["Cash & Equivalents ($1.026B)"]
     CA --> STI["Short-Term Investments ($447.84M)"]
     CA --> AR["Accounts Receivable ($45.3M)"]
     CA --> INV["Inventory ($34.29M)"]
     CA --> OCA["Other Current Assets ($75.77M)"]
 
-    NCA --> PPE["Net Property, Plant & Equipment($11.51M)"]
+    NCA --> PPE["Net Property, Plant & Equipment ($11.51M)"]
     NCA --> OIA["Other Intangible Assets ($312.51M)"]
     NCA --> GW["Goodwill ($381.84M)"]
     NCA --> LTI["Long-Term Investments ($71.63M)"]

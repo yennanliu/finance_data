@@ -170,8 +170,8 @@ $220 ┤●━━━━━━━●━━━━━━━
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 20.70"] -->|"小于 25"| Range["市場進入無趨勢/盤整狀態"]
-    DI_Compare["+DI (17.86) vs -DI (17.19)"] -->|"多頭微幅領先"| BullBias["多頭結構未破，買盤伺機而動"]
+    ADX["ADX(14) = 20.70"] -->|小于 25| Range["市場進入無趨勢/盤整狀態"]
+    DI_Compare["+DI (17.86) vs -DI (17.19)"] -->|多頭微幅領先| BullBias["多頭結構未破，買盤伺機而動"]
     Range --> Join["結論：高檔震盪蓄勢，非轉折看空"]
     BullBias --> Join
 ```
@@ -303,9 +303,9 @@ graph TD
     Price --> RSI_Check{"RSI 14"}
     Price --> MACD_Check{"MACD"}
     
-    MA_Check -->|"MA20/50/200 多頭排列"| MAPos["🟢 看多 (強支撐)"]
-    RSI_Check -->|"RSI = 56.75"| RSINeu["🟡 中性 (無背離)"]
-    MACD_Check -->|"Hist = -2.102"| MACDBear["🔴 看空 (短線修正)"]
+    MA_Check -->|MA20/50/200 多頭排列| MAPos["🟢 看多 (強支撐)"]
+    RSI_Check -->|RSI = 56.75| RSINeu["🟡 中性 (無背離)"]
+    MACD_Check -->|Hist = -2.102| MACDBear["🔴 看空 (短線修正)"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -415,9 +415,9 @@ TSM 的 ATR(14) 目前為 **$18.83**（佔股價的 4.44%）。這為我們提�
 ```mermaid
 graph TD
     Start["TSM 當前現價 $423.93"] --> Decision{"交易風格選擇"}
-    Decision -->|"突破交易者"| Breakout["策略 A：高檔突破做多"]
-    Decision -->|"拉回交易者"| Pullback["策略 B：拉回支撐做多"]
-    Decision -->|"避險/看空者"| Short["策略 C：破位短空"]
+    Decision -->|突破交易者| Breakout["策略 A：高檔突破做多"]
+    Decision -->|拉回交易者| Pullback["策略 B：拉回支撐做多"]
+    Decision -->|避險/看空者| Short["策略 C：破位短空"]
     
     Breakout --> BuyA["進場點: 帶量突破 $430.00"]
     Pullback --> BuyB["進場點: 回測 $400.00-$405.00"]

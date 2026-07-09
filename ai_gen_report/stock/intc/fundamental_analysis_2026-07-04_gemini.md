@@ -445,11 +445,11 @@ graph LR
     CASH_DIVIDENDS["現金股息 (2025: $0.00B)"]
     NET_CASH_CHANGE["淨現金變化 (2025: +$6.02B)"]
 
-    nb1["NET_INCOME -- 調整非現金項目"] --> OP_CASH_FLOW
-    nb2["OP_CASH_FLOW -- 減去"] --> CAPEX
-    nb3["CAPEX -- 等於"] --> FREE_CASH_FLOW
-    nb4["FREE_CASH_FLOW -- 減去"] --> CASH_DIVIDENDS
-    nb5["CASH_DIVIDENDS -- 影響"] --> NET_CASH_CHANGE
+    NET_INCOME -- 調整非現金項目 --> OP_CASH_FLOW
+    OP_CASH_FLOW -- 減去 --> CAPEX
+    CAPEX -- 等於 --> FREE_CASH_FLOW
+    FREE_CASH_FLOW -- 減去 --> CASH_DIVIDENDS
+    CASH_DIVIDENDS -- 影響 --> NET_CASH_CHANGE
 ```
 儘管2025年淨利潤為負 $267M，但公司的營業現金流仍保持正值 $9.70B。這表明其核心營運仍能產生現金，主要得益於折舊攤銷等非現金費用的加回。然而，巨額的資本支出 (2025年為 $-14.65B) 嚴重侵蝕了營業現金流，導致自由現金流 (FCF) 為負 $4.95B。公司在2025年未支付現金股息，這有助於保留現金，但未能完全抵消負FCF的影響。2025年淨現金變化為正 $6.02B，這可能來自於融資活動（如發行債務或股權）。
 

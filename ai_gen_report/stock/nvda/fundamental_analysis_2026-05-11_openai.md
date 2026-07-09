@@ -120,7 +120,7 @@ graph TD
     COMPUTE_NETWORK["🔌 Compute & Networking <br/> 佔比: 60% <br/> $129.56B"]
     GRAPHICS["🎨 Graphics <br/> 佔比: 40% <br/> $86.38B"]
 
-    OVERVIEW --> COMPUTE_NETWORK
+    OVERVIEW --> COMPUTE_NETWORK 
     OVERVIEW --> GRAPHICS
     COMPUTE_NETWORK --> AI["🌐 AI 館"]
     COMPUTE_NETWORK --> DCN["雲基市 一"]

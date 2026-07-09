@@ -365,12 +365,12 @@ graph LR
     ST_INV["短期投資與其他<br/>-$0.898B"]
     CASH_CHG["期末現金淨增<br/>+$0.816B"]
 
-    NI --> |"加上非現金調整"| SBC
-    SBC --> |"營運資產調整"| WC
+    NI --> |加上非現金調整| SBC
+    SBC --> |營運資產調整| WC
     WC --> OCF
-    OCF --> |"扣除CapEx"| CAPEX
+    OCF --> |扣除CapEx| CAPEX
     CAPEX --> FCF
-    FCF --> |"資本配置/投資"| ST_INV
+    FCF --> |資本配置/投資| ST_INV
     ST_INV --> CASH_CHG
 ```
 

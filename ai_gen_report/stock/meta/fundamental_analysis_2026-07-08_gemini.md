@@ -594,7 +594,7 @@ graph TD
     GM --> Cost_Control["高效的成本控制"]
     GM --> Pricing_Power["產品定價能力"]
     OM --> Operational_Efficiency["經營效率提升"]
-    OM --> R_D_Investment["R& D投入(Reality Labs)"]
+    OM --> R_D_Investment["R&D投入 (Reality Labs)"]
     NPM --> Tax_Management["稅務管理"]
     NPM --> Non_Operating_Items["非營運項目影響"]
 
