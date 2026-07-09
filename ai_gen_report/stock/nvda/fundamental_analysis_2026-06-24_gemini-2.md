@@ -45,13 +45,13 @@ NVIDIA 的業務結構清晰，近年來隨著 AI 需求的爆發，其運算與
 graph TD
     NVDA["NVIDIA Corporation<br/>市值：$4.85T<br/>TTM 營收：$253.49B"]
 
-    CN["Compute & Networking (運算與網路)<br/>主要收入來源<br/>驅動：AI/HPC資料中心, 自動駕駛"]
+    CN["Compute & Networking(運算與網路)<br/>主要收入來源<br/>驅動：AI/HPC資料中心, 自動駕駛"]
     G["Graphics (圖形處理)<br/>主要收入來源<br/>驅動：遊戲, 專業視覺化"]
 
     NVDA --> CN
     NVDA --> G
 
-    CN --> DC["Data Center AI/HPC<br/>(資料中心AI/HPC)<br/>硬體 (GPU, NIC) & 軟體 (CUDA, AI Enterprise)"]
+    CN --> DC["Data Center AI/HPC<br/>(資料中心AI/HPC)<br/>硬體 (GPU, NIC) & 軟體(CUDA, AI Enterprise)"]
     CN --> Auto["Automotive<br/>(汽車)<br/>自動駕駛平台, 車載AI"]
     CN --> OtherCN["Other Compute & Networking<br/>(其他運算與網路)"]
 

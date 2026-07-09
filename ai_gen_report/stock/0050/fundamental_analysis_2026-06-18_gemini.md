@@ -141,8 +141,8 @@ graph TD
     FUBON["富邦金 (2.1%)"]
     CATHAY["國泰金 (1.9%)"]
 
-    YUANTA -->|管理與再平衡| PORTFOLIO
-    FTSE -->|成分股篩選標準| PORTFOLIO
+    YUANTA -->|"管理與再平衡"| PORTFOLIO
+    FTSE -->|"成分股篩選標準"| PORTFOLIO
     
     PORTFOLIO --> TECH
     PORTFOLIO --> FIN
@@ -341,11 +341,11 @@ graph LR
     PRICE["市場交易價格 (Price)"]
     PD["參與證券商 (Authorized Participants)"]
     
-    PRICE -->|溢價 > +0.15%| PD
-    PD -->|申購新份額並賣出| PRICE
+    PRICE -->|"溢價 > +0.15%"| PD
+    PD -->|"申購新份額並賣出"| PRICE
     
-    PRICE -->|折價 < -0.15%| PD
-    PD -->|買入並贖回底層股票| NAV
+    PRICE -->|"折價 < -0.15%"| PD
+    PD -->|"買入並贖回底層股票"| NAV
 ```
 
 *   **2025 全年平均折溢價率**：**+0.04%**（微幅溢價，顯示買盤強勁但套利機制極為高效）。

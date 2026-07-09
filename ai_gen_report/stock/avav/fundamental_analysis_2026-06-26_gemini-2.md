@@ -439,14 +439,14 @@ graph LR
     EQUITY_FIN["股權融資 (淨): 估計 +$400M+"]
     NC_CHANGE["淨現金變化 (TTM): +$546.28M"]
 
-    NI --調整非現金項目--> OCF
-    OCF --減去--> CAPEX
-    CAPEX --產生--> FCF
-    FCF --減去--> DIV
-    FCF --減去--> RP
-    FCF --加上/減去--> DEBT_FIN
-    FCF --加上/減去--> EQUITY_FIN
-    FCF --導致--> NC_CHANGE
+    nb1["NI --調整非現金項目"] --> OCF
+    nb2["OCF --減去"] --> CAPEX
+    nb3["CAPEX --產生"] --> FCF
+    nb4["FCF --減去"] --> DIV
+    nb4["FCF --減去"] --> RP
+    nb5["FCF --加上/減去"] --> DEBT_FIN
+    nb5["FCF --加上/減去"] --> EQUITY_FIN
+    nb6["FCF --導致"] --> NC_CHANGE
 ```
 **分析**：
 截至 TTM (2026-01-31)，AVAV 的現金流量表現令人擔憂。

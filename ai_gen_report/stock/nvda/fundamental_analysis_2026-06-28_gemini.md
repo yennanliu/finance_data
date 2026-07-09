@@ -134,7 +134,7 @@ NVIDIA 主要透過兩大業務板塊運營：**Compute & Networking (計算與�
 graph TD
     NVDA_OVERVIEW["NVIDIA Corporation<br/>市值: $4.66T<br/>TTM 營收: $253.49B"]
 
-    CN["Compute & Networking (計算與網路)<br/>主要收入來源<br/>驅動 AI 與資料中心"]
+    CN["Compute & Networking(計算與網路)<br/>主要收入來源<br/>驅動 AI 與資料中心"]
     G["Graphics (圖形)<br/>傳統核心業務<br/>遊戲與專業視覺化"]
 
     CN --> CN1["資料中心加速運算<br/>(GPU, DPU, InfiniBand)<br/>~80% 營收"]

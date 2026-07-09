@@ -149,11 +149,11 @@ graph TD
 
     CN --> DC["Data Center (資料中心)<br/>AI/HPC GPU, Networking<br/>佔比: ~75-80%<br/>關鍵產品: Hopper, Blackwell, InfiniBand"]
     CN --> Auto["Automotive (車載平台)<br/>自動駕駛, AI駕駛艙<br/>佔比: ~2-3%<br/>關鍵產品: Drive Orin, Thor"]
-    CN --> SW["Software & Services (軟體與服務)<br/>CUDA, Omniverse, AI Enterprise<br/>佔比: 快速增長"]
+    CN --> SW["Software & Services(軟體與服務)<br/>CUDA, Omniverse, AI Enterprise<br/>佔比: 快速增長"]
 
     G --> Gaming["Gaming (遊戲)<br/>GeForce GPU<br/>佔比: ~15-20%<br/>關鍵產品: GeForce RTX系列"]
     G --> ProViz["Professional Visualization (專業視覺化)<br/>Quadro GPU<br/>佔比: ~1-2%<br/>關鍵產品: RTX Ada Lovelace"]
-    G --> OEM["OEM & Other (其他OEM)<br/>其他GPU產品<br/>佔比: <1%"]
+    G --> OEM["OEM & Other(其他OEM)<br/>其他GPU產品<br/>佔比: <1%"]
 ```
 
 **業務板塊詳述：**

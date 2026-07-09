@@ -168,8 +168,8 @@ $100 ┤ ●(108.23)
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 17.94"] -->|小于 25| Range["市場進入無趨勢盤整期"]
-    DI["DI 交叉狀態"] -->|'-DI' 23.30 > '+DI' 18.32| BearDominant["空頭力量微幅主導"]
+    ADX["ADX(14) = 17.94"] -->|"小于 25"| Range["市場進入無趨勢盤整期"]
+    DI["DI 交叉狀態"] -->|"'-DI' 23.30 > '+DI' 18.32"| BearDominant["空頭力量微幅主導"]
     Range & BearDominant --> Conclusion["操作策略：避免趨勢追逐，改用區間低吸"]
 ```
 
@@ -191,9 +191,9 @@ graph TD
     A["前波強勢上漲\n$167.32 --> $225.06"] --> B["旗桿 (Flagpole)"]
     B --> C["通道回檔修正\n$225.06 --> $205.19"]
     C --> D["旗面 (Flag Body)"]
-    D --> E{是否突破通道上軌\n$212.00?}
-    E -->|是| F["形態確立：啟動新一輪主升段\n目標價：$269.74"]
-    E -->|否| G["繼續在通道內修正\n下探下軌支撐：$199.70"]
+    D --> E{"是否突破通道上軌\n$212.00?"}
+    E -->|"是"| F["形態確立：啟動新一輪主升段\n目標價：$269.74"]
+    E -->|"否"| G["繼續在通道內修正\n下探下軌支撐：$199.70"]
 ```
 
 ### 🕯️ 重要 K 線形態分析（近期四週）
@@ -334,9 +334,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD Line: -1.034"] -->|位於信號線下方| DeathCross["死叉確認"]
-    Hist["柱狀圖: -2.333"] -->|持續向下發散| BearishMomentum["空頭動能加速"]
-    ZeroLine["零軸位置"] -->|MACD 逼近零軸| TrendChange["多空分水嶺防守戰"]
+    MACD["MACD Line: -1.034"] -->|"位於信號線下方"| DeathCross["死叉確認"]
+    Hist["柱狀圖: -2.333"] -->|"持續向下發散"| BearishMomentum["空頭動能加速"]
+    ZeroLine["零軸位置"] -->|"MACD 逼近零軸"| TrendChange["多空分水嶺防守戰"]
 ```
 
 *   **解讀**：MACD 柱狀圖創下近期新低（-2.333），顯示短期賣壓仍在釋放，尚未出現黃金交叉或柱狀圖收斂的止跌訊號。
@@ -442,11 +442,11 @@ graph TD
 ```mermaid
 graph TD
     Start["分析現價 $205.19"] --> Support{"跌至 $199.70 - $203.00\n支撐區?"}
-    Support -->|是| BuyLimit["策略 B: 逢低吸納\n進場點: $201.50"]
-    Support -->|否| Breakout{"向上突破 $212.00\n並站穩?"}
-    Breakout -->|是| BuyStop["策略 A: 突破追多\n進場點: $213.50"]
-    Breakout -->|否| SellRejection{"反彈至 MA20 ($214.46)\n遇阻無量?"}
-    SellRejection -->|是| Short["策略 C: 短線做空\n進場點: $214.00"]
+    Support -->|"是"| BuyLimit["策略 B: 逢低吸納\n進場點: $201.50"]
+    Support -->|"否"| Breakout{"向上突破 $212.00\n並站穩?"}
+    Breakout -->|"是"| BuyStop["策略 A: 突破追多\n進場點: $213.50"]
+    Breakout -->|"否"| SellRejection{"反彈至 MA20 ($214.46)\n遇阻無量?"}
+    SellRejection -->|"是"| Short["策略 C: 短線做空\n進場點: $214.00"]
 ```
 
 ### 🟢 多頭策略詳情

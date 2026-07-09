@@ -138,7 +138,7 @@ graph TD
 
     FOA --> FOA1["Facebook (資訊流、社團)"]
     FOA --> FOA2["Instagram (Reels、限時動態)"]
-    FOA --> FOA3["WhatsApp & Messenger (商業訊息)"]
+    FOA --> FOA3["WhatsApp & Messenger(商業訊息)"]
     FOA --> FOA4["Advantage+ AI 廣告投放系統"]
 
     RL --> RL1["Quest VR 系列頭戴裝置"]

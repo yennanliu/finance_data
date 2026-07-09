@@ -133,7 +133,7 @@ NVIDIA 的業務結構正經歷從傳統圖形處理向 AI 基礎設施的戰略
 graph TD
     NVDA_OVERVIEW["NVIDIA Corporation<br/>市值: $4.66T<br/>TTM營收: $253.49B"]
 
-    CN["Compute & Networking (運算與網路)<br/>(估計佔比: ~80%營收)<br/>資料中心AI、網路、自動駕駛"]
+    CN["Compute & Networking(運算與網路)<br/>(估計佔比: ~80%營收)<br/>資料中心AI、網路、自動駕駛"]
     G["Graphics (圖形處理)<br/>(估計佔比: ~20%營收)<br/>遊戲GPU、專業視覺化"]
 
     NVDA_OVERVIEW --> CN
@@ -367,7 +367,7 @@ graph TD
     CA --> INV["Inventory ($21.40B)"]
     CA --> OCA["Other Current Assets ($3.18B)"]
 
-    NCA --> PPNE["Net Property, Plant & Equipment ($13.25B)"]
+    NCA --> PPNE["Net Property, Plant & Equipment($13.25B)"]
     NCA --> GW["Goodwill ($20.83B)"]
     NCA --> OIA["Other Intangible Assets ($3.31B)"]
     NCA --> LTI["Long-Term Investments ($22.25B)"]

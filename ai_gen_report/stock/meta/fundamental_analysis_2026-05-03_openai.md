@@ -125,8 +125,8 @@ graph TD
     APP["Family of Apps - FoA"]
     RL["Reality Labs - RL"]
 
-    COMPANY OVERVIEW --> APP
-    COMPANY OVERVIEW --> RL
+    nb1["COMPANY OVERVIEW"] --> APP
+    nb1["COMPANY OVERVIEW"] --> RL
 
     APP --> FACEBOOK["Facebook<br/>營收 $XXB | 用户: 27.4億"]
     APP --> WHATSAPP["Whatsapp<br/>營收 受限於少量收入來源"]

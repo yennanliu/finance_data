@@ -438,7 +438,7 @@ graph TD
     CA --> AR["Accounts Receivable ($1.41B)"]
     CA --> OCA["Other Current Assets ($0.12B)"]
 
-    NCA --> PPE["Net Property, Plant & Equipment ($0.28B)"]
+    NCA --> PPE["Net Property, Plant & Equipment($0.28B)"]
     NCA --> OLTA["Other Long-Term Assets ($0.36B)"]
 ```
 *   **總資產**：截至 2026 年 3 月 31 日 TTM，Palantir 的總資產達到 $10.20B，較 FY2025 的 $8.90B 增長 14.6%。這反映了公司規模的持續擴大和盈利能力的積累。

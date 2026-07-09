@@ -163,8 +163,8 @@ graph TD
     FIN_SERVICES --> SOP["SoFi Protect<br/>保險產品"]
 
     LENDING -- "淨利息收入" --> REVENUE_STREAM["收入來源"]
-    TECH_PLATFORM -- "非利息收入" --> REVENUE_STREAM
-    FIN_SERVICES -- "非利息收入 & 交叉銷售" --> REVENUE_STREAM
+    nb1["TECH_PLATFORM -- "非利息收入""] --> REVENUE_STREAM
+    nb2["FIN_SERVICES -- "非利息收入"] & nb3["交叉銷售""] --> REVENUE_STREAM
 ```
 
 **業務板塊詳情與收入貢獻：**

@@ -140,7 +140,7 @@ Palantir 的核心定位是企業級作業系統與 AI 決策平台。其業務�
 graph TD
     PLTR["Palantir Technologies<br/>市值: $306.83B<br/>TTM 營收: $52.24B"]
     GOV["Gotham (政府與國防)<br/>營收佔比: ~43%<br/>高黏性、長合約"]
-    COM["Foundry & AIP (商業市場)<br/>營收佔比: ~57%<br/>高成長、爆發期"]
+    COM["Foundry & AIP(商業市場)<br/>營收佔比: ~57%<br/>高成長、爆發期"]
     APO["Apollo (部署與安全)<br/>自動化交付與合規底座"]
     AIP["AIP (人工智能平台)<br/>核心成長引擎<br/>Bootcamps 驅動"]
 

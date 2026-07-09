@@ -102,13 +102,13 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線] --> B[週線]
-    B --> C[日線]
-    C --> D[小時線]
-    A --> E[長期多頭]
-    B --> F[中期調整]
-    C --> G[短期反彈]
-    D --> H[波動調整]
+    A["月線"] --> B["週線"]
+    B --> C["日線"]
+    C --> D["小時線"]
+    A --> E["長期多頭"]
+    B --> F["中期調整"]
+    C --> G["短期反彈"]
+    D --> H["波動調整"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -136,9 +136,9 @@ graph TD
     ADX["ADX(14): 25.52"]
     +DI["+DI: 25.66"]
     -DI["-DI: 21.37"]
-    ADX --> B[趨勢強度]
-    B --> C[強趨勢]
-    C --> D[多頭主導]
+    ADX --> B["趨勢強度"]
+    B --> C["強趨勢"]
+    C --> D["多頭主導"]
 ```
 
 ---
@@ -241,9 +241,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|價格上方| B["看多"]
-    MA50["中期 MA50"] -->|價格上方| B
-    MA200["長期 MA200"] -->|價格上方| B
+    MA20["短期 MA20"] -->|"價格上方"| B["看多"]
+    MA50["中期 MA50"] -->|"價格上方"| B
+    MA200["長期 MA200"] -->|"價格上方"| B
 ```
 
 ### 📉 RSI(14) 分析
@@ -260,8 +260,8 @@ graph TD
     MACDLine["MACD 線: 6.243"]
     SignalLine["訊號線: 6.354"]
     Histogram["柱狀圖: -0.111"]
-    MACDLine -->|低於| Histogram
-    SignalLine -->|高於| Histogram
+    MACDLine -->|"低於"| Histogram
+    SignalLine -->|"高於"| Histogram
 ```
 
 ### 📦 布林通道分析

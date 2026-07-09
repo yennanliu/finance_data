@@ -145,9 +145,9 @@ graph TD
 
     DC --> DCCPU["Server CPUs (伺服器CPU)"]
     DC --> DCGPU["AI Accelerators (AI加速器)"]
-    CG --> CGPC["PC CPUs & GPUs (PC處理器與顯示卡)"]
+    CG --> CGPC["PC CPUs & GPUs(PC處理器與顯示卡)"]
     CG --> CGConsole["Semi-Custom (遊戲主機晶片)"]
-    EMB --> EMBSOC["Industrial & Automotive (工業與汽車SoC)"]
+    EMB --> EMBSOC["Industrial & Automotive(工業與汽車SoC)"]
 ```
 
 *   **資料中心 (Data Center):** 這是AMD目前及未來成長的核心驅動力，主要產品包括用於伺服器的高性能EPYC處理器和用於AI訓練及推理的Instinct系列GPU（AI加速器）。該部門受益於雲計算、企業級伺服器升級以及AI基礎設施建設的強勁需求。

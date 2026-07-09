@@ -286,8 +286,8 @@ graph TD
     CA --> INV["Inventory (存貨)<br/>$2.59B"]
     CA --> AR["Accounts Receivable (應收帳款)<br/>$1.83B"]
 
-    NCA --> PPE["Net PP&E (廠房與設備淨額)<br/>$55.06B"]
-    NCA --> GW["Goodwill & Intangibles (商譽與無形資產)<br/>$13.11B"]
+    NCA --> PPE["Net PP& E(廠房與設備淨額)<br/>$55.06B"]
+    NCA --> GW["Goodwill & Intangibles(商譽與無形資產)<br/>$13.11B"]
 ```
 
 ### 4.2 流動性指標分析

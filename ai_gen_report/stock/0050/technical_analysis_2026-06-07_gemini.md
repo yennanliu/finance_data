@@ -100,9 +100,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A[0050 趨勢架構] --> B[月線級別: 長期牛市]
-    A --> C[週線級別: 中期上升通道]
-    A --> D[日線級別: 短期高檔箱型整理]
+    A["0050 趨勢架構"] --> B["月線級別: 長期牛市"]
+    A --> C["週線級別: 中期上升通道"]
+    A --> D["日線級別: 短期高檔箱型整理"]
     
     B --> B1["MA12/MA24 黃金交叉 (多頭確立)"]
     C --> C1["通道上軌 $198.50 / 下軌 $182.00"]
@@ -162,13 +162,13 @@ $175 ─────────────────●───────
 
 ```mermaid
 graph TD
-    ADX_Value["ADX 數值: 28.5"] --> Trend_Check{ADX > 25?}
-    Trend_Check -->|Yes| Strong_Trend["確立為『趨勢行情』<br/>非無方向盤整"]
-    Trend_Check -->|No| Range_Bound["處於『無趨勢盤整』"]
+    ADX_Value["ADX 數值: 28.5"] --> Trend_Check{"ADX > 25?"}
+    Trend_Check -->|"Yes"| Strong_Trend["確立為『趨勢行情』<br/>非無方向盤整"]
+    Trend_Check -->|"No"| Range_Bound["處於『無趨勢盤整』"]
     
-    Strong_Trend --> DMI_Check{+DI vs -DI}
-    DMI_Check -->|+DI (31.2) > -DI (14.5)| Bullish_Trend["多頭趨勢主導<br/>回檔皆為買點"]
-    DMI_Check -->|-DI > +DI| Bearish_Trend["空頭趨勢主導"]
+    Strong_Trend --> DMI_Check{"+DI vs -DI"}
+    DMI_Check -->|"+DI (31.2) > -DI (14.5)"| Bullish_Trend["多頭趨勢主導<br/>回檔皆為買點"]
+    DMI_Check -->|"-DI > +DI"| Bearish_Trend["空頭趨勢主導"]
 ```
 
 **ADX 趨勢強度對照表**：
@@ -309,9 +309,9 @@ graph TD
 
 ```mermaid
 graph TD
-    P["當前價格: $195.50"] -->|高於| MA20["MA20 (月線): $191.20"]
-    MA20 -->|高於| MA50["MA50 (季線): $184.50"]
-    MA50 -->|高於| MA200["MA200 (年線): $165.80"]
+    P["當前價格: $195.50"] -->|"高於"| MA20["MA20 (月線): $191.20"]
+    MA20 -->|"高於"| MA50["MA50 (季線): $184.50"]
+    MA50 -->|"高於"| MA200["MA200 (年線): $165.80"]
     
     style P fill:#d4edda,stroke:#28a745,stroke-width:2px
     style MA200 fill:#f8d7da,stroke:#dc3545,stroke-width:2px

@@ -140,15 +140,15 @@ graph TD
 
     AUTOMOTIVE --> EV_SALES["Electric Vehicle Sales (電動車銷售)<br/>Model S, 3, X, Y, Cybertruck"]
     AUTOMOTIVE --> REG_CREDITS["Regulatory Credits (監管信用額度銷售)<br/>銷售給其他車企"]
-    AUTOMOTIVE --> SERVICES["Services & Other (服務及其他)<br/>售後維修、保險、充電服務、配件銷售"]
+    AUTOMOTIVE --> SERVICES["Services & Other(服務及其他)<br/>售後維修、保險、充電服務、配件銷售"]
     AUTOMOTIVE --> FSD_SOFTWARE["Full Self-Driving Software (全自動駕駛軟體)<br/>訂閱與一次性購買"]
 
     ENERGY --> STORAGE["Energy Storage (儲能系統)<br/>Powerwall, Megapack"]
     ENERGY --> SOLAR["Solar Products (太陽能產品)<br/>太陽能板、太陽能屋頂"]
     ENERGY --> INFRASTRUCTURE["Charging Infrastructure (充電基礎設施)<br/>超級充電站網絡"]
 
-    EV_SALES --> MODEL3Y["Model 3 & Y (主流車型)"]
-    EV_SALES --> MODELSX["Model S & X (豪華車型)"]
+    EV_SALES --> MODEL3Y["Model 3 & Y(主流車型)"]
+    EV_SALES --> MODELSX["Model S & X(豪華車型)"]
     EV_SALES --> CYBERTRUCK["Cybertruck (新興皮卡)"]
     EV_SALES --> ROBOTAXI["Robotaxi (未來自動駕駛計程車服務)"]
 ```

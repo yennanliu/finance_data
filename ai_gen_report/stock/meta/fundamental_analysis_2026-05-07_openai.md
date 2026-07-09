@@ -124,12 +124,12 @@ graph TD
     FoA["📱 Family of Apps(FoA) 84%"]
     RL["🖥️ Reality Labs(RL) 16%"]
 
-    META --> FoA & RL;
+    META --> FoA  & nb1["RL;"]
 
     FoA --> Facebook["Facebook"]
-    FoA --> Instagram ["Instagram"]
-    FoA --> WhatsApp ["WhatsApp"]
-    FoA --> Messenger ["Messenger"]
+    FoA --> Instagram["Instagram"]
+    FoA --> WhatsApp["WhatsApp"]
+    FoA --> Messenger["Messenger"]
 
     RL --> VR_AR["VR / AR 產品"]
 

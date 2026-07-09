@@ -255,8 +255,8 @@ pie title 費用結構
 ```mermaid
 graph TD
     TotalAssets["總資產 $74.89B"]
-    CurrentAssets[流動資產 $42.00B]
-    NonCurrentAssets[非流動資產 $32.89B]
+    CurrentAssets["流動資產 $42.00B"]
+    NonCurrentAssets["非流動資產 $32.89B"]
 
     CashEquiv["現金 $20.93B"]
     AccountReceivables["應收帳款 $15.13B"]
@@ -419,10 +419,10 @@ pie title 資本配置
 
 ```mermaid
 graph LR
-    ROE[ROE]
-    NetMargin[淨利率]
-    AssetTurnover[資產週轉率]
-    FinancialLeverage[財務槓桿]
+    ROE["ROE"]
+    NetMargin["淨利率"]
+    AssetTurnover["資產週轉率"]
+    FinancialLeverage["財務槓桿"]
 
     ROE --> NetMargin
     ROE --> AssetTurnover

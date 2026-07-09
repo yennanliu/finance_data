@@ -146,7 +146,7 @@ graph TD
     NVDA --> CN
     NVDA --> GR
 
-    CN1["Data Center AI Platforms<br/>Hopper (H100/H200) & Blackwell (B200/GB200)"]
+    CN1["Data Center AI Platforms<br/>Hopper (H100/H200) & Blackwell(B200/GB200)"]
     CN2["Networking Solutions<br/>Mellanox InfiniBand & Spectrum-X Ethernet"]
     CN3["Automotive & Robotics<br/>NVIDIA DRIVE, Isaac, Thor SoC"]
 

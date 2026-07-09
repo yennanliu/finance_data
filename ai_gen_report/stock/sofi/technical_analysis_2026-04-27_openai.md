@@ -104,8 +104,8 @@ graph LR
 ```mermaid
 graph TD
     月線 --> 週線 --> 日線
-    月線[長期趨勢: 上升] --> 週線[中期趨勢: 盤整]
-    週線 --> 日線[短期趨勢: 反彈]
+    月線["長期趨勢: 上升"] --> 週線["中期趨勢: 盤整"]
+    週線 --> 日線["短期趨勢: 反彈"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -145,8 +145,8 @@ $15 ──────────────── 低點支撐
 ```mermaid
 graph TD
     START["開始"] --> ADX_CHECK["ADX 檢查"]
-    ADX_CHECK -->|ADX > 25| STRONG_TREND["強趨勢"]
-    ADX_CHECK -->|ADX <= 25| WEAK_TREND["弱趨勢"]
+    ADX_CHECK -->|"ADX > 25"| STRONG_TREND["強趨勢"]
+    ADX_CHECK -->|"ADX <= 25"| WEAK_TREND["弱趨勢"]
 ```
 
 ---
@@ -241,8 +241,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析

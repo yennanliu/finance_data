@@ -103,10 +103,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] --> B[週線趨勢]
-    B --> C[日線趨勢]
-    A -->|上升趨勢| C
-    B -->|上升趨勢| C
+    A["月線趨勢"] --> B["週線趨勢"]
+    B --> C["日線趨勢"]
+    A -->|"上升趨勢"| C
+    B -->|"上升趨勢"| C
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -146,7 +146,7 @@ $200 ┤─────── 關鍵支撐
 
 ```mermaid
 graph TD
-    ADX["ADX 分析"] -->|強趨勢| 趨勢強度[27]
+    ADX["ADX 分析"] -->|"強趨勢"| 趨勢強度["27"]
 ```
 
 ---
@@ -243,8 +243,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["MA20"] -->|多頭排列| B["MA50"]
-    B -->|多頭排列| C["MA200"]
+    A["MA20"] -->|"多頭排列"| B["MA50"]
+    B -->|"多頭排列"| C["MA200"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -258,8 +258,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_line["MACD 線"] -->|上升| Signal_line["訊號線"]
-    MACD_Hist["柱狀圖"] -->|正值| MACD_line
+    MACD_line["MACD 線"] -->|"上升"| Signal_line["訊號線"]
+    MACD_Hist["柱狀圖"] -->|"正值"| MACD_line
 ```
 
 ### 📦 布林通道分析

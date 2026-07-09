@@ -126,16 +126,16 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] --> B{強勁多頭}
-    B --> C[週線趨勢]
-    C --> D{高檔盤整/震盪}
-    D --> E[日線趨勢]
-    E --> F{短期動能減弱，盤整待變}
+    A["月線趨勢"] --> B{"強勁多頭"}
+    B --> C["週線趨勢"]
+    C --> D{"高檔盤整/震盪"}
+    D --> E["日線趨勢"]
+    E --> F{"短期動能減弱，盤整待變"}
 
     subgraph 關鍵依據
-        B -- MA200持續上揚 --> B
-        D -- ADX<25, 價格高位震盪 --> D
-        F -- MACD死叉, 量能萎縮 --> F
+        nb1["B -- MA200持續上揚"] --> B
+        nb2["D -- ADX<25, 價格高位震盪"] --> D
+        nb3["F -- MACD死叉, 量能萎縮"] --> F
     end
 
     style A fill:#DDF,stroke:#333,stroke-width:2px
@@ -210,13 +210,13 @@ ADX (Average Directional Index) 用於衡量趨勢的強度，而非方向。
 
 ```mermaid
 graph TD
-    A["ADX(14) 數值"] --> B{ADX = 17.11}
-    B -- ADX < 25 --> C[趨勢強度: 弱]
-    C --> D{市場狀態: 盤整/區間震盪}
+    A["ADX(14) 數值"] --> B{"ADX = 17.11"}
+    B -- ADX < 25 --> C["趨勢強度: 弱"]
+    C --> D{"市場狀態: 盤整/區間震盪"}
     D --> E["+DI = 31.27"]
     D --> F["-DI = 27.17"]
-    E -- +DI > -DI --> G[多頭力量略占優勢]
-    G --> H[結論: 弱勢盤整中的多頭偏向]
+    E -- +DI > -DI --> G["多頭力量略占優勢"]
+    G --> H["結論: 弱勢盤整中的多頭偏向"]
 
     style A fill:#DDF,stroke:#333,stroke-width:2px
     style B fill:#FFFACD,stroke:#DAA520,stroke-width:2px
@@ -253,13 +253,13 @@ graph TD
 
 ```mermaid
 graph TD
-    A[價格行為分析] --> B{高位整理}
-    B --> C{潛在形態識別}
-    C --> D{形態1: 上升旗形 (Bull Flag)}
-    C --> E{形態2: 上升三角形 (Ascending Triangle)}
-    D -- 信心度: 60% --> F[判斷依據: 股價高位震盪, 回調不深, 量能萎縮]
-    E -- 信心度: 55% --> G[判斷依據: 價格底部逐步抬高, 頂部受限於R1]
-    F --> H[綜合判斷: 偏向高位整理後的上攻]
+    A["價格行為分析"] --> B{"高位整理"}
+    B --> C{"潛在形態識別"}
+    C --> D{"形態1: 上升旗形 (Bull Flag)"}
+    C --> E{"形態2: 上升三角形 (Ascending Triangle)"}
+    D -- 信心度: 60% --> F["判斷依據: 股價高位震盪, 回調不深, 量能萎縮"]
+    E -- 信心度: 55% --> G["判斷依據: 價格底部逐步抬高, 頂部受限於R1"]
+    F --> H["綜合判斷: 偏向高位整理後的上攻"]
     G --> H
 ```
 
@@ -431,31 +431,31 @@ $1041.12 ║██████████████████████�
 
 ```mermaid
 graph TD
-    A[當前價格: $2465.00]
+    A["當前價格: $2465.00"]
 
     subgraph 趨勢指標
-        MA["移動平均線"] --> MA_SIGNAL{MA20>MA50>MA200\\價格>所有MA}
-        ADX["ADX(14): 17.11"] --> ADX_SIGNAL{弱趨勢/盤整\\+DI > -DI}
+        MA["移動平均線"] --> MA_SIGNAL{"MA20>MA50>MA200\\價格>所有MA"}
+        ADX["ADX(14): 17.11"] --> ADX_SIGNAL{"弱趨勢/盤整\\+DI > -DI"}
     end
 
     subgraph 動能指標
-        RSI["RSI(14): 56.90"] --> RSI_SIGNAL{中性區間\\無背離}
-        MACD["MACD: 43.522\\Signal: 44.867\\Hist: -1.345"] --> MACD_SIGNAL{MACD死叉\\短期動能轉弱}
-        STOCH["Stoch %K: 66.67\\%D: 61.90"] --> STOCH_SIGNAL{中性，接近超買區}
+        RSI["RSI(14): 56.90"] --> RSI_SIGNAL{"中性區間\\無背離"}
+        MACD["MACD: 43.522\\Signal: 44.867\\Hist: -1.345"] --> MACD_SIGNAL{"MACD死叉\\短期動能轉弱"}
+        STOCH["Stoch %K: 66.67\\%D: 61.90"] --> STOCH_SIGNAL{"中性，接近超買區"}
     end
 
     subgraph 波動與量能
-        BB["布林通道"] --> BB_SIGNAL{價格位於中上軌之間\\%B: 0.71}
-        VOL["成交量"] --> VOL_SIGNAL{現量<均量\\OBV趨勢向上}
+        BB["布林通道"] --> BB_SIGNAL{"價格位於中上軌之間\\%B: 0.71"}
+        VOL["成交量"] --> VOL_SIGNAL{"現量<均量\\OBV趨勢向上"}
     end
 
-    MA_SIGNAL -- 🟢 強勁多頭 --> A
-    ADX_SIGNAL -- 🟡 盤整偏多 --> A
-    RSI_SIGNAL -- 🟡 中性 --> A
-    MACD_SIGNAL -- 🔴 短期看空 --> A
-    STOCH_SIGNAL -- 🟡 中性 --> A
-    BB_SIGNAL -- 🟡 區間震盪 --> A
-    VOL_SIGNAL -- 🟡 量能萎縮，但累積買盤仍強 --> A
+    nb1["MA_SIGNAL -- 🟢 強勁多頭"] --> A
+    nb2["ADX_SIGNAL -- 🟡 盤整偏多"] --> A
+    nb3["RSI_SIGNAL -- 🟡 中性"] --> A
+    nb4["MACD_SIGNAL -- 🔴 短期看空"] --> A
+    nb5["STOCH_SIGNAL -- 🟡 中性"] --> A
+    nb6["BB_SIGNAL -- 🟡 區間震盪"] --> A
+    nb7["VOL_SIGNAL -- 🟡 量能萎縮，但累積買盤仍強"] --> A
 ```
 
 **指標訊號總覽解讀**：
@@ -472,12 +472,12 @@ graph TD
     MA50["MA50: $2323.65"]
     MA200["MA200: $1795.15"]
 
-    P -- 🟢 位於上方 --> MA20
-    P -- 🟢 位於上方 --> MA50
-    P -- 🟢 位於上方 --> MA200
+    nb1["P -- 🟢 位於上方"] --> MA20
+    nb1["P -- 🟢 位於上方"] --> MA50
+    nb1["P -- 🟢 位於上方"] --> MA200
 
-    MA20 -- 🟢 位於上方 --> MA50
-    MA50 -- 🟢 位於上方 --> MA200
+    nb2["MA20 -- 🟢 位於上方"] --> MA50
+    nb3["MA50 -- 🟢 位於上方"] --> MA200
 
     subgraph 均線排列結論
         C["標準多頭排列 (MA20 > MA50 > MA200)"]
@@ -520,9 +520,9 @@ graph TD
     S["MACD訊號線: 44.867"]
     H["MACD柱狀圖: -1.345"]
 
-    M -- 🔴 小於 --> S
-    S -- 🔴 大於 --> M
-    H -- 🔴 負值 --> C[短期看空動能]
+    nb1["M -- 🔴 小於"] --> S
+    nb2["S -- 🔴 大於"] --> M
+    H -- 🔴 負值 --> C["短期看空動能"]
 
     subgraph MACD訊號
         C1["MACD線下穿訊號線 (死叉)"]
@@ -578,9 +578,9 @@ graph TD
     AVG_V["20日均量: 33,021,538"]
     OBV_TREND["OBV趨勢: OBV > MA (向上)"]
 
-    V -- 🔴 小於 --> AVG_V
-    P -- 🔴 無量上漲隱憂 --> V
-    OBV_TREND -- 🟢 累積買盤強勁 --> V
+    nb1["V -- 🔴 小於"] --> AVG_V
+    nb2["P -- 🔴 無量上漲隱憂"] --> V
+    nb3["OBV_TREND -- 🟢 累積買盤強勁"] --> V
 
     subgraph 量價配合結論
         C1["短期量能萎縮，現價上漲缺乏動能支持"]
@@ -630,15 +630,15 @@ graph TD
 
 ```mermaid
 graph TD
-    A[動能評估] --> B{長期動能: 強勁}
-    A --> C{短期動能: 轉弱 (MACD死叉, 量縮)}
-    B & C --> D[綜合動能: 中等偏弱]
+    A["動能評估"] --> B{"長期動能: 強勁"}
+    A --> C{"短期動能: 轉弱 (MACD死叉, 量縮)"}
+    B & C --> D["綜合動能: 中等偏弱"]
 
-    E[波動率評估] --> F{ATR(14): $64.64 (2.62% of price)}
-    F --> G[波動率: 中等]
+    E["波動率評估"] --> F{"ATR(14): $64.64 (2.62% of price)"}
+    F --> G["波動率: 中等"]
 
-    D & G --> H[當前狀態: 中等偏弱動能, 中等波動]
-    H --> I[市場解讀: 高位盤整, 謹慎觀望, 等待方向確認]
+    D & G --> H["當前狀態: 中等偏弱動能, 中等波動"]
+    H --> I["市場解讀: 高位盤整, 謹慎觀望, 等待方向確認"]
 ```
 
 ### 📊 ATR 波動率分析
@@ -685,29 +685,29 @@ ATR (Average True Range) 用於衡量資產價格的波動性。
 
 ```mermaid
 graph TD
-    subgraph 長期趨勢 (月線/MA200)
+    subgraph "長期趨勢 (月線/MA200)"
         LT1["均線排列: 🟢 極強多頭"]
         LT2["價格走勢: 🟢 強勁上漲"]
     end
 
-    subgraph 中期趨勢 (週線/MA50)
+    subgraph "中期趨勢 (週線/MA50)"
         MT1["均線排列: 🟢 多頭排列"]
         MT2["動能: 🟡 高位整理"]
         MT3["形態: 🟡 潛在上升旗形/三角形"]
     end
 
-    subgraph 短期趨勢 (日線/MA20)
+    subgraph "短期趨勢 (日線/MA20)"
         ST1["ADX: 🟡 弱趨勢/盤整 (17.11)"]
         ST2["MACD: 🔴 死叉/柱狀圖為負"]
         ST3["RSI: 🟡 中性 (56.90)"]
         ST4["成交量: 🔴 萎縮"]
     end
 
-    LT1 & LT2 --> Overall[🏆 綜合訊號一致性分析]
-    MT1 & MT2 & MT3 --> Overall
-    ST1 & ST2 & ST3 & ST4 --> Overall
+    LT1 & LT2 --> Overall["🏆 綜合訊號一致性分析"]
+    MT1   &   MT2   &   MT3 --> Overall
+    ST1   &   ST2   &   ST3   &   ST4 --> Overall
 
-    Overall --> Verdict{最終結論: 中性偏多，區間操作為主，等待突破}
+    Overall --> Verdict{"最終結論: 中性偏多，區間操作為主，等待突破"}
 ```
 
 **綜合訊號矩陣解讀**：
@@ -736,24 +736,24 @@ graph TD
 
 ```mermaid
 graph TD
-    A[當前市場狀態判斷] --> B{ADX(14) < 25 ?}
-    B -- 是 (盤整行情) --> C[主要策略: 區間操作]
-    B -- 否 (趨勢行情) --> D[主要策略: 順勢交易]
+    A["當前市場狀態判斷"] --> B{"ADX(14) < 25 ?"}
+    B -- 是 (盤整行情) --> C["主要策略: 區間操作"]
+    B -- 否 (趨勢行情) --> D["主要策略: 順勢交易"]
 
-    C --> C1{長期趨勢: 多頭 ?}
-    C1 -- 是 --> C2[區間操作偏多]
-    C1 -- 否 --> C3[區間操作偏空]
+    C --> C1{"長期趨勢: 多頭 ?"}
+    C1 -- 是 --> C2["區間操作偏多"]
+    C1 -- 否 --> C3["區間操作偏空"]
 
-    C2 --> StratA[策略A: 逢低做多]
-    C2 --> StratB[策略B: 突破追多]
+    C2 --> StratA["策略A: 逢低做多"]
+    C2 --> StratB["策略B: 突破追多"]
 
-    StratA --> EntryA[進場點: 近支撐S1]
-    StratA --> StopA[止損點: 跌破S1]
-    StratA --> TargetA[目標價: 阻力R1]
+    StratA --> EntryA["進場點: 近支撐S1"]
+    StratA --> StopA["止損點: 跌破S1"]
+    StratA --> TargetA["目標價: 阻力R1"]
 
-    StratB --> EntryB[進場點: 突破阻力R1]
-    StratB --> StopB[止損點: 跌回R1下方]
-    StratB --> TargetB[目標價: 形態目標價]
+    StratB --> EntryB["進場點: 突破阻力R1"]
+    StratB --> StopB["止損點: 跌回R1下方"]
+    StratB --> TargetB["目標價: 形態目標價"]
 ```
 
 ### 🧭 策略路由（依評分卡分流，不得兩頭下注）
@@ -846,30 +846,30 @@ graph TD
 
 ```mermaid
 graph TD
-    A[當前價格: $2465.00] --> B{市場發展情境}
+    A["當前價格: $2465.00"] --> B{"市場發展情境"}
 
-    subgraph 樂觀情境 (35% 機率)
+    subgraph "樂觀情境 (35% 機率)"
         LO1["突破 R1 $2520.00"]
         LO2["量能放大配合"]
         LO3["MACD金叉，柱狀圖轉正"]
         LO4["ADX上升，確認多頭趨勢"]
-        LO1 & LO2 & LO3 & LO4 --> LO_RESULT[🟢 股價加速上漲，挑戰形態目標價 $2715 - $2894]
+        LO1 & LO2 & LO3 & LO4 --> LO_RESULT["🟢 股價加速上漲，挑戰形態目標價 $2715 - $2894"]
     end
 
-    subgraph 基本情境 (45% 機率)
+    subgraph "基本情境 (45% 機率)"
         BA1["維持在 S1 $2325.00 與 R1 $2520.00 之間震盪"]
         BA2["成交量維持萎縮"]
         BA3["ADX保持低位 (<25)"]
         BA4["MACD在零軸附近徘徊，無明確方向"]
-        BA1 & BA2 & BA3 & BA4 --> BA_RESULT[🟡 股價高位盤整，等待市場選擇方向]
+        BA1 & BA2 & BA3 & BA4 --> BA_RESULT["🟡 股價高位盤整，等待市場選擇方向"]
     end
 
-    subgraph 悲觀情境 (20% 機率)
+    subgraph "悲觀情境 (20% 機率)"
         PE1["跌破 S1 $2325.00 (放量)"]
         PE2["MACD死叉擴大，柱狀圖負值持續放大"]
         PE3["ADX上升，-DI顯著高於+DI"]
         PE4["跌破 S2 $2194.59"]
-        PE1 & PE2 & PE3 & PE4 --> PE_RESULT[🔴 股價深度回調，下探 $1964.34 (斐波那契38.2%)]
+        PE1 & PE2 & PE3 & PE4 --> PE_RESULT["🔴 股價深度回調，下探 $1964.34 (斐波那契38.2%)"]
     end
 
     B --> LO_RESULT
