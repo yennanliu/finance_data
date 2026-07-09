@@ -38,6 +38,13 @@ jobs:
             --summary \
             | tee "qa/summary_${TODAY}.txt"
 
+      - name: Alert on unrenderable Mermaid diagrams
+        # Non-blocking (script exits 0): lists every report whose ```mermaid
+        # diagram won't render on GitHub and prints the exact failed snippet as
+        # warning annotations + a run-summary table. A hit means a report
+        # slipped through un-sanitized — see scripts/analysis/utils/mermaid.py.
+        run: python scripts/check_mermaid.py --root ai_gen_report/stock
+
       - name: Generate QA index markdown
         run: |
           TODAY=$(date -u +%Y-%m-%d)
