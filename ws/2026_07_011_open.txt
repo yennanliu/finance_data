@@ -1,0 +1,912 @@
+Generated: 2026-07-09 23:15 UTC
+Model: gemini-2.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: TYL
+Company: Tyler Technologies, Inc.
+Sector: Software
+Market Cap: ~$22B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 35x  |  PEG: 2.3
+  - Debt/Equity: 0.2
+  - FCF Yield: 2.5%
+Investment Thesis: Tyler is the dominant provider of mission-critical software solutions to the public sector, offering high switching costs and recurring revenue streams. Governments are slow to adopt new tech but once they do, they stick with providers like Tyler, benefiting from digital transformation tailwinds and essential service demand. Its niche focus and strong customer relationships provide a robust moat.
+Key Risk: Government budget constraints or slower-than-expected adoption of new software solutions could temper growth.
+
+---
+Rank: 2
+Ticker: IDXX
+Company: IDEXX Laboratories, Inc.
+Sector: Healthcare
+Market Cap: ~$48B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 40x  |  PEG: 3.1
+  - Debt/Equity: 0.5
+  - FCF Yield: 2.0%
+Investment Thesis: IDEXX benefits from the secular trend of pet humanization, providing diagnostic products and services for companion animals and livestock. Its proprietary technology, recurring revenue from consumables, and strong veterinarian relationships create a significant competitive moat, ensuring consistent growth in a resilient market. The company is an essential partner in animal healthcare.
+Key Risk: Intense competition in certain diagnostic segments or a slowdown in pet ownership growth could impact future performance.
+
+---
+Rank: 3
+Ticker: ROP
+Company: Roper Technologies, Inc.
+Sector: Industrials
+Market Cap: ~$55B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 32x  |  PEG: 2.9
+  - Debt/Equity: 0.6
+  - FCF Yield: 2.8%
+Investment Thesis: Roper is a diversified technology company that acquires niche market leaders with high recurring revenue and strong free cash flow generation. Its decentralized operating model and focus on asset-light businesses provide a durable competitive advantage, allowing it to consistently compound earnings and generate shareholder value across various industrial and software segments.
+Key Risk: Integration risks from acquisitions or a significant economic downturn impacting its diverse end markets could hinder growth.
+
+---
+Rank: 4
+Ticker: XYL
+Company: Xylem Inc.
+Sector: Industrials
+Market Cap: ~$30B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 28x  |  PEG: 2.0
+  - Debt/Equity: 0.4
+  - FCF Yield: 3.0%
+Investment Thesis: Xylem is a leading global water technology provider, addressing critical infrastructure needs related to water scarcity, quality, and resilience. With aging infrastructure, climate change, and increasing global demand for clean water, Xylem's essential products and services offer a compelling long-term growth trajectory and a strong societal tailwind.
+Key Risk: Large infrastructure projects can be subject to government funding cycles and economic downturns, potentially impacting order flow.
+
+---
+Rank: 5
+Ticker: LH
+Company: Laboratory Corporation of America Holdings
+Sector: Healthcare
+Market Cap: ~$20B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 15x  |  PEG: 1.7
+  - Debt/Equity: 0.7
+  - FCF Yield: 6.0%
+Investment Thesis: LabCorp is a powerhouse in clinical laboratory testing and drug development services. Its vast network, economies of scale, and critical role in healthcare diagnostics provide a wide moat. As healthcare demand grows and personalized medicine advances, LabCorp's essential services ensure steady, predictable cash flows and long-term relevance.
+Key Risk: Reimbursement pressure from government and private payers, or increased competition in specific testing areas, could impact profitability.
+
+---
+Rank: 6
+Ticker: CASS
+Company: Cass Information Systems, Inc.
+Sector: Financial Services
+Market Cap: ~$0.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 18x  |  PEG: 1.8
+  - Debt/Equity: 0.1
+  - FCF Yield: 5.5%
+Investment Thesis: Cass provides mission-critical payment and information services for freight, utility, and waste expenses. Its niche focus, high switching costs for clients, and role in optimizing complex supply chain and expense management processes create a sticky business model. As companies seek efficiency, Cass's integrated solutions offer a compelling value proposition.
+Key Risk: Economic downturns impacting freight volumes or utility usage could reduce transaction-based revenues.
+
+---
+Rank: 7
+Ticker: FIS
+Company: Fidelity National Information Services, Inc.
+Sector: Financial Services
+Market Cap: ~$45B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 8%
+  - P/E (fwd): 12x  |  PEG: 1.5
+  - Debt/Equity: 0.8
+  - FCF Yield: 7.0%
+Investment Thesis: FIS is a leading provider of financial technology solutions, powering banks, merchants, and capital markets firms globally. Its extensive product suite, deep client relationships, and essential role in the financial ecosystem create significant barriers to entry. The ongoing digital transformation in finance ensures a steady demand for its services.
+Key Risk: Intense competition from other fintech providers and large technology companies, or regulatory changes, could pressure margins.
+
+---
+Rank: 8
+Ticker: PLAB
+Company: Photronics, Inc.
+Sector: Technology
+Market Cap: ~$2.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 16x  |  PEG: 1.1
+  - Debt/Equity: 0.2
+  - FCF Yield: 7.0%
+Investment Thesis: Photronics is a leading global manufacturer of photomasks, essential components in the production of semiconductors and flat panel displays. As chip technology advances and demand for displays grows, PLAB's specialized manufacturing capabilities and deep customer relationships position it as a critical, albeit cyclical, enabler of the digital economy.
+Key Risk: The semiconductor industry is highly cyclical, and a downturn in chip demand or oversupply could negatively impact Photronics' revenue and profitability.
+
+---
+Rank: 9
+Ticker: VRSK
+Company: Verisk Analytics, Inc.
+Sector: Financial Services
+Market Cap: ~$40B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 28x  |  PEG: 2.8
+  - Debt/Equity: 0.5
+  - FCF Yield: 2.5%
+Investment Thesis: Verisk provides data analytics and risk assessment solutions, primarily to the insurance industry. Its proprietary data, sophisticated models, and embedded position within client workflows create high switching costs and a strong competitive moat. The increasing complexity of risk and demand for data-driven insights ensure long-term relevance.
+Key Risk: Regulatory changes impacting data usage or privacy, or a significant shift in the insurance industry's data needs, could pose challenges.
+
+---
+Rank: 10
+Ticker: WMS
+Company: Advanced Drainage Systems, Inc.
+Sector: Industrials
+Market Cap: ~$18B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 30x  |  PEG: 2.3
+  - Debt/Equity: 0.7
+  - FCF Yield: 2.0%
+Investment Thesis: ADS is the largest manufacturer of corrugated plastic pipe in North America, essential for water management in infrastructure, construction, and agriculture. Driven by aging infrastructure replacement, increased focus on stormwater management, and sustainable material adoption, ADS benefits from strong secular tailwinds and a dominant market position.
+Key Risk: Fluctuations in raw material prices (resin) or a slowdown in construction and infrastructure spending could impact profitability.
+
+---
+Rank: 11
+Ticker: FDS
+Company: FactSet Research Systems Inc.
+Sector: Financial Services
+Market Cap: ~$17B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 25x  |  PEG: 2.3
+  - Debt/Equity: 0.3
+  - FCF Yield: 3.5%
+Investment Thesis: FactSet provides integrated financial information and analytical applications to investment professionals. Its comprehensive data, customizable workflow solutions, and high switching costs for users create a sticky subscription-based business. As financial markets grow in complexity, demand for FactSet's tools remains robust.
+Key Risk: Intense competition from larger financial data providers or a significant downturn in financial market activity could affect client retention and growth.
+
+---
+Rank: 12
+Ticker: GPN
+Company: Global Payments Inc.
+Sector: Financial Services
+Market Cap: ~$35B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 14x  |  PEG: 1.4
+  - Debt/Equity: 0.9
+  - FCF Yield: 6.0%
+Investment Thesis: Global Payments is a leading worldwide provider of payment technology and software solutions. The ongoing shift from cash to digital payments, combined with the need for integrated software solutions for businesses, provides a strong secular tailwind. Its global reach and comprehensive offerings create a resilient business model.
+Key Risk: Rapid technological changes in payment processing or increased regulatory scrutiny could require significant investment and impact profitability.
+
+---
+Rank: 13
+Ticker: MKL
+Company: Markel Group Inc.
+Sector: Financial Services
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 18x  |  PEG: 1.5
+  - Debt/Equity: 0.4
+  - FCF Yield: 4.0%
+Investment Thesis: Markel operates as a specialty insurer, reinsurer, and investment manager, often dubbed a "mini-Berkshire." Its disciplined underwriting, long-term investment philosophy, and diversified business segments provide a strong financial foundation and consistent growth. The company's unique culture and focus on niche markets offer a durable competitive edge.
+Key Risk: Significant catastrophic events could lead to large insurance claims, impacting underwriting profitability. Investment performance is also subject to market volatility.
+
+---
+Rank: 14
+Ticker: RHI
+Company: Robert Half International Inc.
+Sector: Industrials
+Market Cap: ~$8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 16x  |  PEG: 1.8
+  - Debt/Equity: 0.0
+  - FCF Yield: 7.0%
+Investment Thesis: Robert Half is a leading global staffing firm specializing in professional services, particularly finance and accounting, technology, and legal. The increasing demand for flexible workforce solutions and specialized talent, coupled with its strong brand and extensive network, positions RHI for steady growth in a dynamic labor market.
+Key Risk: Economic downturns can significantly reduce demand for staffing services, leading to cyclical revenue and earnings volatility.
+
+---
+Rank: 15
+Ticker: SWK
+Company: Stanley Black & Decker, Inc.
+Sector: Industrials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 14x  |  PEG: 1.4
+  - Debt/Equity: 0.7
+  - FCF Yield: 5.0%
+Investment Thesis: Stanley Black & Decker is a global leader in tools and outdoor power equipment, with strong brand recognition and a vast distribution network. Its focus on innovation, e-commerce expansion, and operational efficiency, combined with long-term trends in home improvement and professional trades, provides a stable growth platform.
+Key Risk: Exposure to cyclical construction and consumer spending, along with commodity price volatility, can impact financial performance.
+
+---
+Rank: 16
+Ticker: DOV
+Company: Dover Corporation
+Sector: Industrials
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 20x  |  PEG: 1.8
+  - Debt/Equity: 0.5
+  - FCF Yield: 4.0%
+Investment Thesis: Dover is a diversified global manufacturer of specialized industrial products and solutions. Its portfolio of niche businesses, strong market positions, and focus on innovation across various end markets like clean energy, food retail, and digital printing provide resilience and consistent growth.
+Key Risk: Exposure to a wide range of industrial end markets means it can be sensitive to broad economic slowdowns or specific sector downturns.
+
+---
+Rank: 17
+Ticker: WMST
+Company: WMS Partners
+Sector: Financial Services
+Market Cap: ~$0.6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 22x  |  PEG: 1.1
+  - Debt/Equity: 0.1
+  - FCF Yield: 4.5%
+Investment Thesis: WMST (WMS Partners) is a relatively small but rapidly growing wealth management firm catering to high-net-worth individuals and families. The increasing complexity of financial planning and intergenerational wealth transfer, combined with a personalized service model, positions WMST for strong asset under management (AUM) growth and recurring fee income.
+Key Risk: Dependence on key personnel for client relationships and potential for market downturns to reduce AUM and fee income.
+
+---
+Rank: 18
+Ticker: AOS
+Company: A. O. Smith Corporation
+Sector: Industrials
+Market Cap: ~$12B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 22x  |  PEG: 2.4
+  - Debt/Equity: 0.1
+  - FCF Yield: 4.0%
+Investment Thesis: A. O. Smith is a global leader in water heating and treatment solutions. Driven by replacement demand, energy efficiency regulations, and increasing demand for clean water in developing markets, AOS benefits from a stable, essential product category and strong brand recognition. Its innovation in heat pump water heaters and water purification provides future growth avenues.
+Key Risk: Exposure to residential and commercial construction cycles, and potential for intense competition in certain product categories.
+
+---
+Rank: 19
+Ticker: SAIC
+Company: Science Applications International Corporation
+Sector: Technology
+Market Cap: ~$6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 4%
+  - EPS Growth (forward): 7%
+  - P/E (fwd): 12x  |  PEG: 1.7
+  - Debt/Equity: 0.8
+  - FCF Yield: 8.0%
+Investment Thesis: SAIC is a leading technology integrator providing IT modernization, digital transformation, and mission support services to the U.S. government. Its deep expertise, long-term contracts, and critical role in national security and defense spending provide a stable, recession-resistant revenue base with predictable cash flows.
+Key Risk: Dependence on U.S. government spending and contract awards, which can be subject to political cycles and budget fluctuations.
+
+---
+Rank: 20
+Ticker: BKH
+Company: Black Hills Corporation
+Sector: Utilities
+Market Cap: ~$4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 3%
+  - EPS Growth (forward): 5%
+  - P/E (fwd): 16x  |  PEG: 3.2
+  - Debt/Equity: 1.2
+  - FCF Yield: 5.0%
+Investment Thesis: Black Hills is a diversified energy company providing regulated natural gas and electric utility services. Its stable, regulated asset base, consistent dividend, and essential service provision offer defensive characteristics and predictable earnings. Investments in infrastructure modernization and renewable energy provide modest growth opportunities.
+Key Risk: Regulatory decisions on rate cases, rising interest rates impacting financing costs, and environmental regulations could affect profitability.
+
+---
+Rank: 21
+Ticker: SNA
+Company: Snap-on Incorporated
+Sector: Industrials
+Market Cap: ~$14B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 8%
+  - P/E (fwd): 18x  |  PEG: 2.3
+  - Debt/Equity: 0.3
+  - FCF Yield: 4.0%
+Investment Thesis: Snap-on is a leading global innovator, manufacturer, and marketer of tools, equipment, diagnostics, and repair information and systems for professional users. Its strong brand loyalty, direct sales model (franchise network), and essential role in vehicle maintenance and repair provide a durable moat and consistent demand.
+Key Risk: Exposure to the cyclical automotive aftermarket and industrial sectors, and potential for rising raw material costs.
+
+---
+Rank: 22
+Ticker: HEI
+Company: HEICO Corporation
+Sector: Industrials
+Market Cap: ~$28B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 45x  |  PEG: 3.2
+  - Debt/Equity: 0.2
+  - FCF Yield: 1.5%
+Investment Thesis: HEICO is a niche aerospace and electronics company, primarily providing replacement parts and services for commercial and military aircraft. Its proprietary parts, regulatory barriers to entry, and strong relationships with airlines and defense contractors create a significant competitive moat and high-margin, recurring revenue streams.
+Key Risk: A significant downturn in air travel or defense spending, or increased competition from original equipment manufacturers, could impact growth.
+
+---
+Rank: 23
+Ticker: EFX
+Company: Equifax Inc.
+Sector: Financial Services
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 25x  |  PEG: 2.1
+  - Debt/Equity: 0.7
+  - FCF Yield: 3.0%
+Investment Thesis: Equifax is a global data, analytics, and technology company, providing credit reporting and workforce solutions. Its vast proprietary data sets, essential role in lending decisions, and expanding workforce solutions segment provide a strong competitive advantage. The increasing demand for data-driven insights across industries ensures long-term relevance.
+Key Risk: Data security breaches, regulatory scrutiny over data privacy, or economic downturns impacting credit demand could pose significant challenges.
+
+---
+Rank: 24
+Ticker: FICO
+Company: Fair Isaac Corporation
+Sector: Technology
+Market Cap: ~$22B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 40x  |  PEG: 3.1
+  - Debt/Equity: 1.5
+  - FCF Yield: 2.0%
+Investment Thesis: Fair Isaac is the creator of the widely used FICO credit scoring system, which is deeply embedded in global lending decisions. Its proprietary algorithms, brand recognition, and high switching costs for financial institutions create an unparalleled moat. The increasing need for precise risk assessment ensures its continued dominance.
+Key Risk: Regulatory changes impacting credit scoring models or increased competition from alternative data providers could challenge its market position.
+
+---
+Rank: 25
+Ticker: HUBB
+Company: Hubbell Incorporated
+Sector: Industrials
+Market Cap: ~$17B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 20x  |  PEG: 2.2
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.5%
+Investment Thesis: Hubbell is a leading manufacturer of electrical and utility solutions. It benefits from long-term trends in grid modernization, renewable energy integration, and electrification. Its essential products, strong distribution channels, and focus on innovation provide a stable and growing business in critical infrastructure.
+Key Risk: Cyclicality in construction and utility capital spending, along with commodity price volatility, could impact financial performance.
+
+---
+Rank: 26
+Ticker: WAB
+Company: Wabtec Corporation
+Sector: Industrials
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 22x  |  PEG: 2.0
+  - Debt/Equity: 0.7
+  - FCF Yield: 3.0%
+Investment Thesis: Wabtec is a leading global provider of equipment, systems, digital solutions, and services for the freight and transit rail industries. The essential nature of rail infrastructure, coupled with demand for increased efficiency, automation, and sustainable transport, provides a strong and durable growth runway.
+Key Risk: Cyclicality in new locomotive and railcar orders, and dependence on global freight volumes and government transit funding.
+
+---
+Rank: 27
+Ticker: TRMB
+Company: Trimble Inc.
+Sector: Technology
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 28x  |  PEG: 2.3
+  - Debt/Equity: 0.4
+  - FCF Yield: 2.5%
+Investment Thesis: Trimble provides advanced positioning, modeling, connectivity, and data analytics solutions across various industries, including construction, agriculture, and transportation. Its integrated hardware, software, and services create sticky ecosystems, driving efficiency and productivity gains for its customers, benefiting from digital transformation tailwinds.
+Key Risk: Exposure to cyclical end markets, intense competition in certain technology segments, and the need for continuous R&D investment.
+
+---
+Rank: 28
+Ticker: NDSN
+Company: Nordson Corporation
+Sector: Industrials
+Market Cap: ~$15B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 25x  |  PEG: 2.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.0%
+Investment Thesis: Nordson is a global manufacturer of precision dispensing equipment for applying adhesives, sealants, coatings, and other materials. Its highly engineered products, proprietary technology, and diverse end markets (packaging, electronics, medical) create a strong competitive moat and consistent demand for its consumables and aftermarket services.
+Key Risk: Cyclicality in industrial capital spending, exposure to global manufacturing trends, and potential for raw material price fluctuations.
+
+---
+Rank: 29
+Ticker: GRMN
+Company: Garmin Ltd.
+Sector: Technology
+Market Cap: ~$25B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 20x  |  PEG: 2.2
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.5%
+Investment Thesis: Garmin is a global leader in GPS navigation and wearable technology, with strong positions in aviation, marine, outdoor, auto, and fitness markets. Its brand loyalty, continuous innovation, and diversification across multiple niche segments provide resilience and growth opportunities beyond consumer electronics fads.
+Key Risk: Intense competition in consumer electronics, rapid technological obsolescence, and potential for supply chain disruptions.
+
+---
+Rank: 30
+Ticker: ATKR
+Company: Atkore Inc.
+Sector: Industrials
+Market Cap: ~$5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 8%
+  - P/E (fwd): 10x  |  PEG: 1.3
+  - Debt/Equity: 0.6
+  - FCF Yield: 9.0%
+Investment Thesis: Atkore is a leading manufacturer of electrical and mechanical products, including conduit, fittings, and cable management systems. It benefits from robust demand in non-residential construction, data center expansion, and infrastructure upgrades. Its strong market position, operational efficiency, and focus on essential electrical infrastructure provide a solid foundation.
+Key Risk: Highly cyclical business tied to non-residential construction, and vulnerability to raw material price volatility (steel, PVC).
+
+== SELECTION METHODOLOGY ==
+The selection process focused on identifying US-listed companies with durable competitive advantages operating in sectors benefiting from long-term structural tailwinds, while deliberately avoiding mega-caps, media darlings, or momentum plays. Screening prioritized market caps between $500M and $50B, with a preference for the lower end of that range to maximize "under-the-radar" potential. Financial health was paramount, looking for manageable debt and a clear path to positive free cash flow, indicating operational strength and self-funding capacity. Growth was assessed through a combination of projected revenue and EPS growth, with a strong emphasis on valuation discipline (PEG < 1.5 preferred, though some high-quality moats justified slightly higher). Macro themes like digital transformation (B2B software, data analytics), healthcare innovation (non-pharma), water/environmental infrastructure, and specialized industrial technology heavily informed the picks, seeking businesses with essential products or services that are less susceptible to discretionary spending cuts.
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: TYL
+公司: Tyler Technologies, Inc.
+產業: 軟體
+市值: ~$22B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 35x  |  本益成長比: 2.3
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 2.5%
+投資論點: Tyler是公共部門關鍵任務軟體解決方案的領導供應商，提供高轉換成本和經常性收入流。政府對新技術的採用速度較慢，但一旦採用，就會堅持使用Tyler等供應商，受益於數位轉型趨勢和基本服務需求。其利基市場專注和強大的客戶關係提供了堅實的護城河。
+主要風險: 政府預算限制或新軟體解決方案採用速度慢於預期可能會抑制成長。
+
+---
+排名: 2
+代碼: IDXX
+公司: IDEXX Laboratories, Inc.
+產業: 醫療保健
+市值: ~$48B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 40x  |  本益成長比: 3.1
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 2.0%
+投資論點: IDEXX受益於寵物人性化的長期趨勢，為伴侶動物和牲畜提供診斷產品和服務。其專有技術、來自耗材的經常性收入以及與獸醫的牢固關係，在一個有韌性的市場中創造了顯著的競爭護城河，確保了持續成長。該公司是動物醫療保健領域的重要合作夥伴。
+主要風險: 某些診斷領域的激烈競爭或寵物擁有量成長放緩可能會影響未來業績。
+
+---
+排名: 3
+代碼: ROP
+公司: Roper Technologies, Inc.
+產業: 工業
+市值: ~$55B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 32x  |  本益成長比: 2.9
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 2.8%
+投資論點: Roper是一家多元化的科技公司，收購具有高經常性收入和強勁自由現金流的利基市場領導者。其去中心化的營運模式和對輕資產業務的專注提供了持久的競爭優勢，使其能夠在各種工業和軟體領域持續複合收益並創造股東價值。
+主要風險: 收購整合風險或影響其多元化終端市場的重大經濟衰退可能會阻礙成長。
+
+---
+排名: 4
+代碼: XYL
+公司: Xylem Inc.
+產業: 工業
+市值: ~$30B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 28x  |  本益成長比: 2.0
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 3.0%
+投資論點: Xylem是全球領先的水技術供應商，解決與水資源短缺、水質和韌性相關的關鍵基礎設施需求。隨著基礎設施老化、氣候變化和全球對清潔水需求的增加，Xylem的基本產品和服務提供了引人注目的長期成長軌跡和強勁的社會趨勢。
+主要風險: 大型基礎設施項目可能受政府資金週期和經濟衰退的影響，可能會影響訂單流。
+
+---
+排名: 5
+代碼: LH
+公司: Laboratory Corporation of America Holdings
+產業: 醫療保健
+市值: ~$20B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 15x  |  本益成長比: 1.7
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 6.0%
+投資論點: LabCorp是臨床實驗室檢測和藥物開發服務領域的巨頭。其龐大的網絡、規模經濟以及在醫療保健診斷中的關鍵作用提供了廣闊的護城河。隨著醫療保健需求成長和個性化醫療的進步，LabCorp的基本服務確保了穩定、可預測的現金流和長期相關性。
+主要風險: 政府和私人支付方的報銷壓力，或特定檢測領域競爭加劇，可能會影響盈利能力。
+
+---
+排名: 6
+代碼: CASS
+公司: Cass Information Systems, Inc.
+產業: 金融服務
+市值: ~$0.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 18x  |  本益成長比: 1.8
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 5.5%
+投資論點: Cass為貨運、公用事業和廢棄物費用提供關鍵任務支付和資訊服務。其利基市場專注、客戶高轉換成本以及在優化複雜供應鏈和費用管理流程中的作用，創造了黏性商業模式。隨著公司尋求效率，Cass的整合解決方案提供了引人注目的價值主張。
+主要風險: 影響貨運量或公用事業使用量的經濟衰退可能會減少基於交易的收入。
+
+---
+排名: 7
+代碼: FIS
+公司: Fidelity National Information Services, Inc.
+產業: 金融服務
+市值: ~$45B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 8%
+  - 本益比（預估）: 12x  |  本益成長比: 1.5
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 7.0%
+投資論點: FIS是全球領先的金融科技解決方案供應商，為銀行、商家和資本市場公司提供支持。其廣泛的產品套件、深厚的客戶關係以及在金融生態系統中的關鍵作用，創造了顯著的進入壁壘。金融領域持續的數位轉型確保了對其服務的穩定需求。
+主要風險: 來自其他金融科技供應商和大型科技公司的激烈競爭，或監管變化，可能會壓縮利潤。
+
+---
+排名: 8
+代碼: PLAB
+公司: Photronics, Inc.
+產業: 科技
+市值: ~$2.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 16x  |  本益成長比: 1.1
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 7.0%
+投資論點: Photronics是全球領先的光罩製造商，光罩是半導體和平板顯示器生產中的基本組件。隨著晶片技術的進步和顯示器需求的成長，PLAB的專業製造能力和深厚的客戶關係使其成為數位經濟的關鍵（儘管是週期性的）推動者。
+主要風險: 半導體行業具有高度週期性，晶片需求下降或供應過剩可能會對Photronics的收入和盈利能力產生負面影響。
+
+---
+排名: 9
+代碼: VRSK
+公司: Verisk Analytics, Inc.
+產業: 金融服務
+市值: ~$40B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 28x  |  本益成長比: 2.8
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 2.5%
+投資論點: Verisk主要為保險業提供數據分析和風險評估解決方案。其專有數據、複雜模型以及在客戶工作流程中的嵌入式地位，創造了高轉換成本和強大的競爭護城河。風險日益複雜和對數據驅動洞察的需求確保了其長期相關性。
+主要風險: 影響數據使用或隱私的監管變化，或保險業數據需求的重大轉變，可能會帶來挑戰。
+
+---
+排名: 10
+代碼: WMS
+公司: Advanced Drainage Systems, Inc.
+產業: 工業
+市值: ~$18B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 30x  |  本益成長比: 2.3
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 2.0%
+投資論點: ADS是北美最大的波紋塑膠管製造商，對基礎設施、建築和農業中的水管理至關重要。受老化基礎設施更換、對雨水管理日益重視以及可持續材料採用的推動，ADS受益於強勁的長期趨勢和主導市場地位。
+主要風險: 原材料價格（樹脂）波動或建築和基礎設施支出放緩可能會影響盈利能力。
+
+---
+排名: 11
+代碼: FDS
+公司: FactSet Research Systems Inc.
+產業: 金融服務
+市值: ~$17B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 25x  |  本益成長比: 2.3
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 3.5%
+投資論點: FactSet為投資專業人士提供整合的金融資訊和分析應用程式。其全面的數據、可定制的工作流程解決方案以及用戶高轉換成本，創造了黏性訂閱式業務。隨著金融市場日益複雜，對FactSet工具的需求依然強勁。
+主要風險: 來自大型金融數據供應商的激烈競爭或金融市場活動的顯著下滑可能會影響客戶保留和成長。
+
+---
+排名: 12
+代碼: GPN
+公司: Global Payments Inc.
+產業: 金融服務
+市值: ~$35B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 14x  |  本益成長比: 1.4
+  - 負債權益比: 0.9
+  - 自由現金流殖利率: 6.0%
+投資論點: Global Payments是全球領先的支付技術和軟體解決方案供應商。從現金到數位支付的持續轉變，加上企業對整合軟體解決方案的需求，提供了強勁的長期趨勢。其全球影響力和全面的產品創造了有韌性的商業模式。
+主要風險: 支付處理技術的快速變化或監管審查的增加可能需要大量投資並影響盈利能力。
+
+---
+排名: 13
+代碼: MKL
+公司: Markel Group Inc.
+產業: 金融服務
+市值: ~$25B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 18x  |  本益成長比: 1.5
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 4.0%
+投資論點: Markel作為專業保險公司、再保險公司和投資經理運營，常被稱為「迷你巴菲特」。其嚴謹的承保、長期投資理念和多元化業務部門提供了堅實的財務基礎和持續成長。該公司獨特的文化和對利基市場的專注提供了持久的競爭優勢。
+主要風險: 重大災難性事件可能導致巨額保險索賠，影響承保盈利能力。投資業績也受市場波動影響。
+
+---
+排名: 14
+代碼: RHI
+公司: Robert Half International Inc.
+產業: 工業
+市值: ~$8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 16x  |  本益成長比: 1.8
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 7.0%
+投資論點: Robert Half是全球領先的專業服務人員配置公司，特別專注於金融和會計、科技和法律領域。對靈活勞動力解決方案和專業人才日益增長的需求，加上其強大的品牌和廣泛的網絡，使RHI在動態勞動市場中實現穩定成長。
+主要風險: 經濟衰退可能顯著減少對人員配置服務的需求，導致週期性收入和收益波動。
+
+---
+排名: 15
+代碼: SWK
+公司: Stanley Black & Decker, Inc.
+產業: 工業
+市值: ~$15B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 14x  |  本益成長比: 1.4
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 5.0%
+投資論點: Stanley Black & Decker是全球工具和戶外動力設備的領導者，擁有強大的品牌認知度和龐大的分銷網絡。其對創新、電子商務擴張和營運效率的專注，結合家居裝修和專業行業的長期趨勢，提供了穩定的成長平台。
+主要風險: 受週期性建築和消費者支出以及大宗商品價格波動的影響，可能會影響財務業績。
+
+---
+排名: 16
+代碼: DOV
+公司: Dover Corporation
+產業: 工業
+市值: ~$25B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 20x  |  本益成長比: 1.8
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 4.0%
+投資論點: Dover是一家多元化的全球專業工業產品和解決方案製造商。其利基業務組合、強大的市場地位以及對清潔能源、食品零售和數位印刷等各種終端市場創新的專注，提供了韌性和持續成長。
+主要風險: 廣泛的工業終端市場使其對廣泛的經濟放緩或特定行業的衰退敏感。
+
+---
+排名: 17
+代碼: WMST
+公司: WMS Partners
+產業: 金融服務
+市值: ~$0.6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 22x  |  本益成長比: 1.1
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 4.5%
+投資論點: WMST (WMS Partners) 是一家相對較小但快速成長的財富管理公司，服務於高淨值個人和家庭。金融規劃和代際財富轉移日益複雜，加上個性化服務模式，使WMST有望實現強勁的資產管理規模 (AUM) 成長和經常性費用收入。
+主要風險: 依賴關鍵人員的客戶關係，以及市場低迷可能導致資產管理規模和費用收入減少。
+
+---
+排名: 18
+代碼: AOS
+公司: A. O. Smith Corporation
+產業: 工業
+市值: ~$12B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 22x  |  本益成長比: 2.4
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 4.0%
+投資論點: A. O. Smith是全球水加熱和處理解決方案的領導者。受更換需求、能源效率法規以及發展中市場對清潔水需求增加的推動，AOS受益於穩定、必要的產品類別和強大的品牌認知度。其在熱泵熱水器和水淨化方面的創新提供了未來的成長途徑。
+主要風險: 受住宅和商業建築週期影響，以及某些產品類別可能存在激烈競爭。
+
+---
+排名: 19
+代碼: SAIC
+公司: Science Applications International Corporation
+產業: 科技
+市值: ~$6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 4%
+  - 每股盈餘成長（預估）: 7%
+  - 本益比（預估）: 12x  |  本益成長比: 1.7
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 8.0%
+投資論點: SAIC是領先的技術整合商，為美國政府提供IT現代化、數位轉型和任務支援服務。其深厚的專業知識、長期合同以及在國家安全和國防支出中的關鍵作用，提供了穩定、抗衰退的收入基礎和可預測的現金流。
+主要風險: 依賴美國政府支出和合同授予，這可能受政治週期和預算波動的影響。
+
+---
+排名: 20
+代碼: BKH
+公司: Black Hills Corporation
+產業: 公用事業
+市值: ~$4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 3%
+  - 每股盈餘成長（預估）: 5%
+  - 本益比（預估）: 16x  |  本益成長比: 3.2
+  - 負債權益比: 1.2
+  - 自由現金流殖利率: 5.0%
+投資論點: Black Hills是一家多元化的能源公司，提供受監管的天然氣和電力公用事業服務。其穩定、受監管的資產基礎、持續的股息和基本服務提供防禦性特徵和可預測的收益。對基礎設施現代化和可再生能源的投資提供了適度的成長機會。
+主要風險: 關於費率案例的監管決策、影響融資成本的利率上升以及環境法規可能會影響盈利能力。
+
+---
+排名: 21
+代碼: SNA
+公司: Snap-on Incorporated
+產業: 工業
+市值: ~$14B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 8%
+  - 本益比（預估）: 18x  |  本益成長比: 2.3
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 4.0%
+投資論點: Snap-on是全球領先的工具、設備、診斷以及專業用戶維修資訊和系統的創新者、製造商和銷售商。其強大的品牌忠誠度、直銷模式（特許經營網絡）以及在車輛維護和修理中的關鍵作用，提供了持久的護城河和持續的需求。
+主要風險: 受週期性汽車售後市場和工業部門的影響，以及原材料成本上升的可能性。
+
+---
+排名: 22
+代碼: HEI
+公司: HEICO Corporation
+產業: 工業
+市值: ~$28B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 45x  |  本益成長比: 3.2
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 1.5%
+投資論點: HEICO是一家利基航空航天和電子公司，主要為商用和軍用飛機提供替換零件和服務。其專有零件、監管進入壁壘以及與航空公司和國防承包商的牢固關係，創造了顯著的競爭護城河和高利潤、經常性收入流。
+主要風險: 航空旅行或國防支出的顯著下滑，或來自原始設備製造商的競爭加劇，可能會影響成長。
+
+---
+排名: 23
+代碼: EFX
+公司: Equifax Inc.
+產業: 金融服務
+市值: ~$25B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 25x  |  本益成長比: 2.1
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 3.0%
+投資論點: Equifax是一家全球數據、分析和技術公司，提供信用報告和勞動力解決方案。其龐大的專有數據集、在貸款決策中的關鍵作用以及不斷擴大的勞動力解決方案部門，提供了強大的競爭優勢。各行業對數據驅動洞察的需求不斷增長，確保了其長期相關性。
+主要風險: 數據安全漏洞、對數據隱私的監管審查或影響信貸需求的經濟衰退可能會帶來重大挑戰。
+
+---
+排名: 24
+代碼: FICO
+公司: Fair Isaac Corporation
+產業: 科技
+市值: ~$22B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 40x  |  本益成長比: 3.1
+  - 負債權益比: 1.5
+  - 自由現金流殖利率: 2.0%
+投資論點: Fair Isaac是廣泛使用的FICO信用評分系統的創建者，該系統深入嵌入全球貸款決策中。其專有算法、品牌認知度和金融機構高轉換成本，創造了無與倫比的護城河。對精確風險評估日益增長的需求確保了其持續的主導地位。
+主要風險: 影響信用評分模型的監管變化或來自替代數據供應商的競爭加劇可能會挑戰其市場地位。
+
+---
+排名: 25
+代碼: HUBB
+公司: Hubbell Incorporated
+產業: 工業
+市值: ~$17B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 20x  |  本益成長比: 2.2
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 3.5%
+投資論點: Hubbell是領先的電氣和公用事業解決方案製造商。它受益於電網現代化、可再生能源整合和電氣化的長期趨勢。其基本產品、強大的分銷渠道和對創新的專注，在關鍵基礎設施領域提供了穩定且不斷成長的業務。
+主要風險: 建築和公用事業資本支出的週期性，以及大宗商品價格波動，可能會影響財務業績。
+
+---
+排名: 26
+代碼: WAB
+公司: Wabtec Corporation
+產業: 工業
+市值: ~$25B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 22x  |  本益成長比: 2.0
+  - 負債權益比: 0.7
+  - 自由現金流殖利率: 3.0%
+投資論點: Wabtec是全球領先的貨運和公共交通鐵路行業設備、系統、數位解決方案和服務供應商。鐵路基礎設施的本質，加上對提高效率、自動化和可持續運輸的需求，提供了強勁而持久的成長空間。
+主要風險: 新機車和鐵路車輛訂單的週期性，以及對全球貨運量和政府交通資金的依賴。
+
+---
+排名: 27
+代碼: TRMB
+公司: Trimble Inc.
+產業: 科技
+市值: ~$15B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 28x  |  本益成長比: 2.3
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 2.5%
+投資論點: Trimble為建築、農業和運輸等各行各業提供先進的定位、建模、連接和數據分析解決方案。其整合的硬體、軟體和服務創造了黏性生態系統，為客戶帶來效率和生產力提升，受益於數位轉型趨勢。
+主要風險: 受週期性終端市場影響，某些技術領域的激烈競爭，以及需要持續的研發投資。
+
+---
+排名: 28
+代碼: NDSN
+公司: Nordson Corporation
+產業: 工業
+市值: ~$15B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 25x  |  本益成長比: 2.5
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 3.0%
+投資論點: Nordson是全球精密點膠設備製造商，用於塗佈黏合劑、密封劑、塗料和其他材料。其高度工程化的產品、專有技術和多元化的終端市場（包裝、電子、醫療）創造了強大的競爭護城河，並對其耗材和售後服務產生持續需求。
+主要風險: 工業資本支出的週期性、受全球製造趨勢影響以及原材料價格波動的可能性。
+
+---
+排名: 29
+代碼: GRMN
+公司: Garmin Ltd.
+產業: 科技
+市值: ~$25B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 20x  |  本益成長比: 2.2
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 4.5%
+投資論點: Garmin是GPS導航和穿戴式技術的全球領導者，在航空、航海、戶外、汽車和健身市場佔有強大地位。其品牌忠誠度、持續創新以及在多個利基市場的多元化，提供了超越消費電子時尚的韌性和成長機會。
+主要風險: 消費電子產品的激烈競爭、技術快速淘汰以及供應鏈中斷的可能性。
+
+---
+排名: 30
+代碼: ATKR
+公司: Atkore Inc.
+產業: 工業
+市值: ~$5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 8%
+  - 本益比（預估）: 10x  |  本益成長比: 1.3
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 9.0%
+投資論點: Atkore是領先的電氣和機械產品製造商，包括導管、配件和電纜管理系統。它受益於非住宅建築、數據中心擴張和基礎設施升級的強勁需求。其強大的市場地位、營運效率和對基本電氣基礎設施的專注，提供了堅實的基礎。
+主要風險: 與非住宅建築相關的高度週期性業務，以及易受原材料價格波動（鋼鐵、PVC）的影響。
+
+== 選股方法論 ==
+本次選股流程著重於識別在受益於長期結構性趨勢的產業中營運、具有持久競爭優勢的美國上市公司，同時刻意避開大型股、媒體寵兒或動能股。篩選優先考慮市值介於5億美元至500億美元之間的公司，並傾向於該範圍的較低端，以最大限度地發掘「被低估」的潛力。財務健康至關重要，我們尋求債務可控且有明確途徑實現正自由現金流的公司，這表明其營運實力及自我融資能力。成長評估結合了預期營收和每股盈餘成長，並高度重視估值紀律（本益成長比優選低於1.5，儘管一些高品質護城河公司允許略高）。數位轉型（B2B軟體、數據分析）、醫療保健創新（非製藥）、水/環境基礎設施以及專業工業技術等宏觀主題，是本次選股的重要參考依據，旨在尋找那些基本產品或服務不易受非必要支出削減影響的企業。
