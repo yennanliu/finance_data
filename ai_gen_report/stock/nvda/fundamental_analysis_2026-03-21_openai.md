@@ -32,11 +32,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD
-    基本面-->10
-    成長-->9
-    獲利-->9
-    財務健康-->8
-    估值-->7
+    基本面 --> 10
+    成長 --> 9
+    獲利 --> 9
+    財務健康 --> 8
+    估值 --> 7
 ```
 
 ### 5大投資論點 + 3大風險
@@ -72,11 +72,11 @@ graph TD
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[NVIDIA Corporation] -->|Compute & Networking| B[Data Center]
-    A -->|Graphics| C[Gaming & PC]
-    B --> D[AI 解決方案]
-    B --> E[Networking Platforms]
-    C --> F[GeForce GPUs]
+    A["NVIDIA Corporation"] -->|"Compute & Networking"| B["Data Center"]
+    A -->|"Graphics"| C["Gaming & PC"]
+    B --> D["AI 解決方案"]
+    B --> E["Networking Platforms"]
+    C --> F["GeForce GPUs"]
 ```
 
 ### 市場地位
@@ -163,13 +163,13 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[流動資產] --> B[現金和現金等價物]
-    A --> C[應收帳款]
-    A --> D[存貨]
-    E[非流動資產] --> F[固定資產]
-    E --> G[無形資產]
-    E --> H[其他非流動資產]
-    I[總資產] --> A
+    A["流動資產"] --> B["現金和現金等價物"]
+    A --> C["應收帳款"]
+    A --> D["存貨"]
+    E["非流動資產"] --> F["固定資產"]
+    E --> G["無形資產"]
+    E --> H["其他非流動資產"]
+    I["總資產"] --> A
     I --> E
 ```
 
@@ -201,9 +201,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A[營業現金流] --> B[投資現金流]
-    B --> C[融資現金流]
-    C --> D[現金淨增減]
+    A["營業現金流"] --> B["投資現金流"]
+    B --> C["融資現金流"]
+    C --> D["現金淨增減"]
 ```
 
 ### FCF 轉換率趨勢
@@ -251,10 +251,10 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD
-    毛利率-->71.1%
-    營業利潤率-->65.0%
-    淨利率-->55.6%
-    ROE-->101.5%
+    毛利率 --> nb1["71.1%"]
+    營業利潤率 --> nb2["65.0%"]
+    淨利率 --> nb3["55.6%"]
+    ROE --> nb4["101.5%"]
 ```
 
 ---
@@ -311,9 +311,9 @@ TAM 市場規模：$500B
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD
-    短期-->AI 技術需求
-    中期-->自動駕駛應用
-    長期-->全球市場擴張
+    短期 --> nb1["AI 技術需求"]
+    中期 --> 自動駕駛應用
+    長期 --> 全球市場擴張
 ```
 
 ---
@@ -359,10 +359,10 @@ graph TD
 ### 投資人適配度
 ```mermaid
 graph TD
-    成長型-->適合
-    價值型-->不適合
-    股息型-->不適合
-    短期交易-->適合
+    成長型 --> 適合
+    價值型 --> 不適合
+    股息型 --> 不適合
+    短期交易 --> 適合
 ```
 
 ### 關鍵監控指標 checklist

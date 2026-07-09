@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線圖: 長期多頭] -->|24個月上升通道| B(週線圖: 中期高位派發)
-    B -->|跌破關鍵頸線 $31.15| C(日線圖: 短期極速殺多)
-    C -->|RSI 17.22 嚴重超賣| D{短線技術性反彈?}
+    A["月線圖: 長期多頭"] -->|"24個月上升通道"| B("週線圖: 中期高位派發")
+    B -->|"跌破關鍵頸線 $31.15"| C("日線圖: 短期極速殺多")
+    C -->|"RSI 17.22 嚴重超賣"| D{"短線技術性反彈?"}
 ```
 
 1. **長期（月線）**：自2024年6月的 $1.86 起步，PL 經歷了波瀾壯闊的兩年牛市，最高於2026年5月達到 $51.14。儘管本月出現大幅回撤，但長期上升趨勢尚未宣告終結，股價仍守在長期均線之上。
@@ -169,7 +169,7 @@ PL 月線走勢圖（過去12個月）
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 33.23\n(趨勢極強 > 25)"] --> DM_Compare{比较 +DI 与 -DI}
+    ADX["ADX(14) = 33.23\n(趨勢極強 > 25)"] --> DM_Compare{"比较 +DI 与 -DI"}
     DM_Compare -->|"-DI (28.26) > +DI (12.70)"| BearishTrend["🔴 強烈空頭趨勢主導"]
     DM_Compare -->|"+DI > -DI"| BullishTrend["🟢 強烈多頭趨勢主導"]
     BearishTrend --> Action["操作建議：切勿盲目抄底，靜待 -DI 回落及 ADX 轉折"]
@@ -324,7 +324,7 @@ graph TD
     RSI --> Confirm1{"指標衝突:\nRSI 提示反彈\nMACD 提示跌勢未完"}
     MACD --> Confirm1
     BB --> Confirm1
-    Confirm1 -->|綜合研判| Verdict["結論: 短期將有超賣反彈\n但在 MACD 金叉前\n任何反彈皆為逃命波"]
+    Confirm1 -->|"綜合研判"| Verdict["結論: 短期將有超賣反彈\n但在 MACD 金叉前\n任何反彈皆為逃命波"]
 ```
 
 ---
@@ -335,9 +335,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MA5["MA5 ($29.28)"] -->|跌破| MA10["MA10 ($30.74)"]
-    MA10 -->|跌破| MA120["MA120 ($31.07)"]
-    MA120 -->|逼近| MA200["MA200 ($23.85)"]
+    MA5["MA5 ($29.28)"] -->|"跌破"| MA10["MA10 ($30.74)"]
+    MA10 -->|"跌破"| MA120["MA120 ($31.07)"]
+    MA120 -->|"逼近"| MA200["MA200 ($23.85)"]
     style MA5 fill:#ff9999,stroke:#333,stroke-width:2px
     style MA10 fill:#ff9999,stroke:#333,stroke-width:2px
     style MA120 fill:#ffff99,stroke:#333,stroke-width:2px
@@ -462,10 +462,10 @@ graph TD
 
 ```mermaid
 graph TD
-    User["當前價格: $28.23"] --> Type{您的交易屬性?}
-    Type -->|短線激進交易者| StrategyA["🚀 策略 A: 搶超賣反彈"]
-    Type -->|中線波段交易者| StrategyB["📉 策略 B: 逢高順勢做空"]
-    Type -->|長期價值投資者| StrategyC["💎 策略 C: 年線分批左側建倉"]
+    User["當前價格: $28.23"] --> Type{"您的交易屬性?"}
+    Type -->|"短線激進交易者"| StrategyA["🚀 策略 A: 搶超賣反彈"]
+    Type -->|"中線波段交易者"| StrategyB["📉 策略 B: 逢高順勢做空"]
+    Type -->|"長期價值投資者"| StrategyC["💎 策略 C: 年線分批左側建倉"]
     
     StrategyA --> EntryA["進場點: $28.00 - $28.30\n(50% Fib 附近)"]
     StrategyB --> EntryB["進場點: 反彈至 $31.15 - $32.22\n(頸線阻力區)"]

@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph TD;
-    基本面-->8
-    成長-->9
-    獲利-->8
-    財務健康-->9
-    估值-->7
+    基本面 --> 8
+    成長 --> 9
+    獲利 --> 8
+    財務健康 --> 9
+    估值 --> 7
 ```
 
 ### 5大投資論點 + 3大風險
@@ -70,9 +70,9 @@ graph TD;
 
 ```mermaid
 graph TD;
-    Data_Center-->AI_Accelerators
-    Client_and_Gaming-->Microprocessors
-    Embedded-->SoC_Products
+    Data_Center --> AI_Accelerators
+    Client_and_Gaming --> Microprocessors
+    Embedded --> SoC_Products
 ```
 
 ### 市場地位
@@ -147,8 +147,8 @@ pie
 
 ```mermaid
 graph TD
-    流動資產-->現金與現金等價物
-    非流動資產-->機器設備
+    流動資產 --> 現金與現金等價物
+    非流動資產 --> 機器設備
 ```
 
 ### 流動性指標表格
@@ -179,9 +179,9 @@ graph TD
 
 ```mermaid
 graph LR
-    營業現金流-->7.71B
-    投資現金流-->-974M
-    融資現金流-->-1.19B
+    營業現金流 --> 7.71B
+    投資現金流 --> -974M
+    融資現金流 --> -1.19B
 ```
 
 ### FCF 轉換率趨勢表格
@@ -230,9 +230,9 @@ graph LR
 
 ```mermaid
 graph TD;
-    ROE-->7.1
-    ROA-->3.2
-    ROIC-->7.5
+    ROE --> 7.1
+    ROA --> 3.2
+    ROIC --> 7.5
 ```
 
 ## 7. 估值深度分析
@@ -291,9 +291,9 @@ TAM: $500B
 
 ```mermaid
 graph TD
-    短期-->新產品
-    中期-->市場擴張
-    長期-->技術創新
+    短期 --> 新產品
+    中期 --> 市場擴張
+    長期 --> 技術創新
 ```
 
 ## 9. 風險矩陣
@@ -325,10 +325,10 @@ graph TD
 
 ```mermaid
 graph TD
-    成長型-->適合
-    價值型-->不適合
-    股息型-->不適合
-    短期交易-->適合
+    成長型 --> 適合
+    價值型 --> 不適合
+    股息型 --> 不適合
+    短期交易 --> 適合
 ```
 
 ### 關鍵監控指標

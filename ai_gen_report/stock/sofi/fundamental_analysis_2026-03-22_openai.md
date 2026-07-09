@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-  基本面-->7;
-  成長-->8;
-  獲利-->6;
-  財務健康-->5;
-  估值-->6;
+  基本面 --> nb1["7;"]
+  成長 --> nb2["8;"]
+  獲利 --> nb3["6;"]
+  財務健康 --> nb4["5;"]
+  估值 --> nb3["6;"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -60,15 +60,15 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-  SOFI-->Lending;
-  SOFI-->Technology Platform;
-  SOFI-->Financial Services;
-  Lending-->Personal Loans;
-  Lending-->Student Loans;
-  Lending-->Home Loans;
-  Technology Platform-->Galileo;
-  Financial Services-->Invest;
-  Financial Services-->Save;
+  SOFI --> nb1["Lending;"]
+  SOFI --> nb2["Technology Platform;"]
+  SOFI --> nb3["Financial Services;"]
+  Lending --> nb4["Personal Loans;"]
+  Lending --> nb5["Student Loans;"]
+  Lending --> nb6["Home Loans;"]
+  nb7["Technology Platform"] --> nb8["Galileo;"]
+  nb9["Financial Services"] --> nb10["Invest;"]
+  nb9["Financial Services"] --> nb11["Save;"]
 ```
 
 ### 市場地位
@@ -149,12 +149,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD;
-  資產-->流動資產;
-  資產-->非流動資產;
-  流動資產-->現金及等價物;
-  流動資產-->應收帳款;
-  非流動資產-->固定資產;
-  非流動資產-->無形資產;
+  資產 --> nb1["流動資產;"]
+  資產 --> nb2["非流動資產;"]
+  流動資產 --> nb3["現金及等價物;"]
+  流動資產 --> nb4["應收帳款;"]
+  非流動資產 --> nb5["固定資產;"]
+  非流動資產 --> nb6["無形資產;"]
 ```
 
 ### 流動性指標表格
@@ -183,7 +183,7 @@ graph TD;
 ### 現金流量瀑布圖
 ```mermaid
 graph LR;
-  營業-->投資-->融資-->淨增減;
+  營業 --> 投資 --> 融資 --> nb1["淨增減;"]
 ```
 
 ### FCF 轉換率
@@ -229,10 +229,10 @@ graph LR;
 ### 獲利能力儀表板
 ```mermaid
 graph TD;
-  總資產獲利率-->1.1;
-  淨利潤率-->13.4;
-  營業利潤率-->18.2;
-  毛利率-->83.0;
+  總資產獲利率 --> nb1["1.1;"]
+  淨利潤率 --> nb2["13.4;"]
+  營業利潤率 --> nb3["18.2;"]
+  毛利率 --> nb4["83.0;"]
 ```
 
 ## 7. 估值深度分析
@@ -287,9 +287,9 @@ TAM: ▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░ 60
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD;
-  短期-->新產品推廣;
-  中期-->市場拓展;
-  長期-->技術創新;
+  短期 --> nb1["新產品推廣;"]
+  中期 --> nb2["市場拓展;"]
+  長期 --> nb3["技術創新;"]
 ```
 
 ## 9. 風險矩陣
@@ -332,10 +332,10 @@ graph TD;
 ### 投資人適配度
 ```mermaid
 graph TD;
-  成長型-->SOFI;
-  價值型-->非適合;
-  股息型-->非適合;
-  短期交易-->適合;
+  成長型 --> nb1["SOFI;"]
+  價值型 --> nb2["非適合;"]
+  股息型 --> nb2["非適合;"]
+  短期交易 --> nb3["適合;"]
 ```
 
 ### 關鍵監控指標

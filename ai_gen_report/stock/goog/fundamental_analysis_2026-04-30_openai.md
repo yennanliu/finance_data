@@ -397,9 +397,9 @@ graph LR
     ROE["ROE: 35.7%"] --> PM["Net Profit Margin: 32.8%"]
     ROE --> AT["Asset Turnover: 0.47x"]
     ROE --> FL["Equity Multiplier: 2.25x"]
-    PM --> "Drives profitability"
-    AT --> "Efficiency of asset utilization"
-    FL --> "Financial leverage"
+    PM --> nb1[""Drives profitability""]
+    AT --> nb2[""Efficiency of asset utilization""]
+    FL --> nb3[""Financial leverage""]
 ```
 
 ### 6.4 獲利能力儀表板

@@ -565,7 +565,7 @@ graph LR
     AT --> Rev_Assets["Revenue / Average Assets"]
     EM --> Assets_Equity["Average Assets / Average Equity"]
 
-    subgraph FY2025 (數據)
+    subgraph "FY2025 (數據)"
         NI_Rev_Val["$101.83B / $281.72B = 36.14%"]
         Rev_Assets_Val["$281.72B / (($619.00B + $512.16B)/2) = 0.49x"]
         Assets_Equity_Val["(($619.00B + $512.16B)/2) / (($343.48B + $268.48B)/2) = 1.85x"]

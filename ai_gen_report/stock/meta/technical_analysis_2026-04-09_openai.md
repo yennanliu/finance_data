@@ -91,11 +91,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] --> B[週線趨勢]
-    B --> C[日線趨勢]
-    A --> D[長期看多]
-    B --> E[中期盤整]
-    C --> F[短期看空]
+    A["月線趨勢"] --> B["週線趨勢"]
+    B --> C["日線趨勢"]
+    A --> D["長期看多"]
+    B --> E["中期盤整"]
+    C --> F["短期看空"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -129,8 +129,8 @@ $450 ┤
 
 ```mermaid
 graph TD
-    A[ADX < 25] --> B[弱趨勢]
-    A --> C[盤整行情]
+    A["ADX < 25"] --> B["弱趨勢"]
+    A --> C["盤整行情"]
 ```
 
 ---
@@ -141,8 +141,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A[頭肩頂形態] --> B[下跌目標]
-    C[雙頂形態] --> D[確認突破]
+    A["頭肩頂形態"] --> B["下跌目標"]
+    C["雙頂形態"] --> D["確認突破"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -217,16 +217,16 @@ $550 ║████████████████████████
 
 ```mermaid
 graph TD
-    A[RSI 中性] --> B[MACD 多頭]
-    B --> C[MA 空頭排列]
-    C --> D[布林通道擴張]
+    A["RSI 中性"] --> B["MACD 多頭"]
+    B --> C["MA 空頭排列"]
+    C --> D["布林通道擴張"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A[MA20] --> B[MA50] --> C[MA200]
+    A["MA20"] --> B["MA50"] --> C["MA200"]
     style A stroke:green,stroke-width:2px
     style B stroke:red,stroke-width:2px
     style C stroke:red,stroke-width:2px
@@ -242,8 +242,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A[MACD 線] --> B[訊號線]
-    B --> C[柱狀圖]
+    A["MACD 線"] --> B["訊號線"]
+    B --> C["柱狀圖"]
     style A stroke:blue,stroke-width:2px
     style B stroke:green,stroke-width:2px
     style C fill:green
@@ -303,8 +303,8 @@ quadrantChart
 
 ```mermaid
 graph TD
-    A[短期] --> B[中期] --> C[長期]
-    A --> D[綜合評分]
+    A["短期"] --> B["中期"] --> C["長期"]
+    A --> D["綜合評分"]
 ```
 
 ---
@@ -315,9 +315,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A[市場分析] --> B{策略選擇}
-    B --> C[多頭策略]
-    B --> D[空頭策略]
+    A["市場分析"] --> B{"策略選擇"}
+    B --> C["多頭策略"]
+    B --> D["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -374,10 +374,10 @@ graph TD
 
 ```mermaid
 graph TD
-    A{市場變數}
-    A --> B[樂觀情境]
-    A --> C[基本情境]
-    A --> D[悲觀情境]
+    A{"市場變數"}
+    A --> B["樂觀情境"]
+    A --> C["基本情境"]
+    A --> D["悲觀情境"]
 ```
 
 ### 🛡️ 風險管理重要提醒

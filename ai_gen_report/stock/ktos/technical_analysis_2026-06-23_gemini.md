@@ -163,9 +163,9 @@ $50  ║         \ *現價 ($51.09) \ <- 通道下軌 (支撐)
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 15.81"] -->|ADX < 25| Range["無明顯趨勢 / 盤整格局"]
-    Range -->|DI 交叉| DI_Analysis["-DI (24.86) > +DI (18.83)"]
-    DI_Analysis -->|結論| Bearish_Dominant["空頭主導，但動能已衰竭，不宜盲目追空"]
+    ADX["ADX(14) = 15.81"] -->|"ADX < 25"| Range["無明顯趨勢 / 盤整格局"]
+    Range -->|"DI 交叉"| DI_Analysis["-DI (24.86) > +DI (18.83)"]
+    DI_Analysis -->|"結論"| Bearish_Dominant["空頭主導，但動能已衰竭，不宜盲目追空"]
 ```
 
 | ADX 數值區間 | 趨勢強度分類 | KTOS 當前狀態 | 交易策略指導 |
@@ -184,10 +184,10 @@ graph TD
 
 ```mermaid
 graph TD
-    DoubleTop["雙重頂 (頂點 $103.01 & $96.08)"] -->|跌破頸線 $70.51| Breakdown["破位下行"]
-    Breakdown -->|量測跌幅目標 $38.00 - $42.00| TargetReached["接近底部目標區 (最低 $39.00)"]
-    TargetReached -->|當前形態| FallingWedge["下降楔形 (Falling Wedge)"]
-    FallingWedge -->|等待突破| BullishReversal["看漲反轉確認"]
+    DoubleTop["雙重頂 (頂點 $103.01 & $96.08)"] -->|"跌破頸線 $70.51"| Breakdown["破位下行"]
+    Breakdown -->|"量測跌幅目標 $38.00 - $42.00"| TargetReached["接近底部目標區 (最低 $39.00)"]
+    TargetReached -->|"當前形態"| FallingWedge["下降楔形 (Falling Wedge)"]
+    FallingWedge -->|"等待突破"| BullishReversal["看漲反轉確認"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -398,8 +398,8 @@ $50.90 ----------------------------------------- 下軌
 ```mermaid
 graph TD
     Start["分析現價 $51.09"] --> Decision{"交易風格選擇"}
-    Decision -->|左側交易 (激進抄底)| Aggressive["策略 A: 現價分批買入"]
-    Decision -->|右側交易 (穩健確認)| Conservative["策略 B: 等待突破 $54.50 買入"]
+    Decision -->|"左側交易 (激進抄底)"| Aggressive["策略 A: 現價分批買入"]
+    Decision -->|"右側交易 (穩健確認)"| Conservative["策略 B: 等待突破 $54.50 買入"]
     
     Aggressive --> StopLossA["止損點: $45.00"]
     Aggressive --> TargetA["目標價: $58.34 (MA20)"]

@@ -110,10 +110,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線圖: 長期上升趨勢中的中級調整] -->|支撐於 $130-$140 區間| B[週線圖: 雙底結構築底完成]
-    B -->|突破頸線 $160.23| C[日線圖: 短期均線糾結後向上發散]
-    C -->|ADX = 14.52| D[無趨勢/寬幅震盪 regime]
-    D -->|交易策略| E[高拋低吸 / 突破進場]
+    A["月線圖: 長期上升趨勢中的中級調整"] -->|"支撐於 $130-$140 區間"| B["週線圖: 雙底結構築底完成"]
+    B -->|"突破頸線 $160.23"| C["日線圖: 短期均線糾結後向上發散"]
+    C -->|"ADX = 14.52"| D["無趨勢/寬幅震盪 regime"]
+    D -->|"交易策略"| E["高拋低吸 / 突破進場"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -173,11 +173,11 @@ $140 ┤                                              ● (2026-05: $139.68 低�
 
 ```mermaid
 graph TD
-    ADX["ADX = 14.52 (< 25)"] -->|定義| Range["無趨勢 / 盤整市場 (Trading Range)"]
-    Range -->|指標特徵| Osc["振盪指標 (RSI, Stochastics) 敏感度提高"]
-    Range -->|策略選擇| MeanReversion["均值回歸策略 / 突破確認策略"]
+    ADX["ADX = 14.52 (< 25)"] -->|"定義"| Range["無趨勢 / 盤整市場 (Trading Range)"]
+    Range -->|"指標特徵"| Osc["振盪指標 (RSI, Stochastics) 敏感度提高"]
+    Range -->|"策略選擇"| MeanReversion["均值回歸策略 / 突破確認策略"]
     
-    DI["+DI (29.88) > -DI (18.93)"] -->|解讀| BullBias["多頭在盤整中佔據主導優勢"]
+    DI["+DI (29.88) > -DI (18.93)"] -->|"解讀"| BullBias["多頭在盤整中佔據主導優勢"]
 ```
 
 *   **趨勢強度對照表**：
@@ -204,8 +204,8 @@ graph TD
     subgraph Squeeze ["波動率擠壓 (Volatility Squeeze)"]
         BB_Width["布林帶寬收窄 (上軌 $166.57 - 下軌 $139.49)"]
     end
-    W_Bottom -->|向上突破頸線| Trigger["買入訊號觸發"]
-    Squeeze -->|配合突破| Expansion["波幅急劇擴大 (趨勢啟動)"]
+    W_Bottom -->|"向上突破頸線"| Trigger["買入訊號觸發"]
+    Squeeze -->|"配合突破"| Expansion["波幅急劇擴大 (趨勢啟動)"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -325,9 +325,9 @@ graph TD
         MA_Bear["MA20 < MA50 < MA200"]
         ADX_Weak["ADX = 14.52 (趨勢極弱)"]
     end
-    ShortTerm -->|推動| PriceRebound["價格向上突破 MA20/50"]
-    LongTerm -->|壓制| PriceRebound
-    PriceRebound -->|結論| RangeTrade["箱體寬幅震盪，偏向向上突破"]
+    ShortTerm -->|"推動"| PriceRebound["價格向上突破 MA20/50"]
+    LongTerm -->|"壓制"| PriceRebound
+    PriceRebound -->|"結論"| RangeTrade["箱體寬幅震盪，偏向向上突破"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -340,10 +340,10 @@ graph TD
 
 ```mermaid
 graph TD
-    Price["當前價 $158.83"] -->|突破| MA120["MA120: $158.17 🟢"]
-    Price -->|突破| MA50["MA50: $154.00 🟢"]
-    Price -->|突破| MA20["MA20: $153.03 🟢"]
-    Price -->|低於| MA200["MA200: $170.10 🔴"]
+    Price["當前價 $158.83"] -->|"突破"| MA120["MA120: $158.17 🟢"]
+    Price -->|"突破"| MA50["MA50: $154.00 🟢"]
+    Price -->|"突破"| MA20["MA20: $153.03 🟢"]
+    Price -->|"低於"| MA200["MA200: $170.10 🔴"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -442,9 +442,9 @@ VST 作為獨立發電商（Independent Power Producer），近期因「**AI 數
 
 ```mermaid
 graph TD
-    PriceAction{"當前價格 $158.83"} -->|情況 A: 向上突破 $160.23| StrategyA["🚀 策略 A (突破跟進法)"]
-    PriceAction -->|情況 B: 回踩 MA20/MA50 區間| StrategyB["📥 策略 B (回踩低吸法)"]
-    PriceAction -->|情況 C: 遇阻 $160.23 出現反轉K線| StrategyC["📉 策略 C (區間反轉做空)"]
+    PriceAction{"當前價格 $158.83"} -->|"情況 A: 向上突破 $160.23"| StrategyA["🚀 策略 A (突破跟進法)"]
+    PriceAction -->|"情況 B: 回踩 MA20/MA50 區間"| StrategyB["📥 策略 B (回踩低吸法)"]
+    PriceAction -->|"情況 C: 遇阻 $160.23 出現反轉K線"| StrategyC["📉 策略 C (區間反轉做空)"]
     
     StrategyA --> TradeA["進場: $161.00\n止損: $151.17\n目標一: $170.10\n目標二: $180.78"]
     StrategyB --> TradeB["進場: $153.50\n止損: $146.90\n目標一: $160.23\n目標二: $170.10"]

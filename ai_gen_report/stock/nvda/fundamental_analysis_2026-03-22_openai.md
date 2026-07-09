@@ -30,7 +30,7 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph LR
-    基本面[基本面] --> |7| 成長[成長] --> |9| 獲利[獲利] --> |10| 財務健康[財務健康] --> |8| 估值[估值] --> |6|
+    基本面["基本面"] --> |"7"| 成長["成長"] --> |"9"| 獲利["獲利"] --> |"10"| 財務健康["財務健康"] --> |"8"| 估值["估值"] --> |"6"|
 ```
 
 ### 5大投資論點 + 3大風險
@@ -66,12 +66,12 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[NVIDIA Corporation] --> B[Compute & Networking]
-    A --> C[Graphics]
-    B --> D[Data Center Solutions]
-    B --> E[Automotive Platforms]
-    C --> F[GeForce GPUs]
-    C --> G[Professional Visualization]
+    A["NVIDIA Corporation"] --> B["Compute & Networking"]
+    A --> C["Graphics"]
+    B --> D["Data Center Solutions"]
+    B --> E["Automotive Platforms"]
+    C --> F["GeForce GPUs"]
+    C --> G["Professional Visualization"]
 ```
 
 ### 市場地位
@@ -146,12 +146,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[總資產] --> B[流動資產]
-    A --> C[非流動資產]
-    B --> D[現金及現金等價物]
-    B --> E[應收賬款]
-    C --> F[設備及器材]
-    C --> G[無形資產]
+    A["總資產"] --> B["流動資產"]
+    A --> C["非流動資產"]
+    B --> D["現金及現金等價物"]
+    B --> E["應收賬款"]
+    C --> F["設備及器材"]
+    C --> G["無形資產"]
 ```
 
 ### 流動性指標表格
@@ -180,12 +180,12 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A(營業現金流) --> B{投資活動}
-    B --> C[資本支出]
-    A --> D{融資活動}
-    D --> E[股息支出]
-    D --> F[股票回購]
-    B --> G[併購活動]
+    A("營業現金流") --> B{"投資活動"}
+    B --> C["資本支出"]
+    A --> D{"融資活動"}
+    D --> E["股息支出"]
+    D --> F["股票回購"]
+    B --> G["併購活動"]
 ```
 
 ### FCF 轉換率
@@ -232,7 +232,7 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph LR
-    獲利能力[獲利能力] --> |10| ROE[ROE] --> |10| ROA[ROA] --> |9| ROIC[ROIC]
+    獲利能力["獲利能力"] --> |"10"| ROE["ROE"] --> |"10"| ROA["ROA"] --> |"9"| ROIC["ROIC"]
 ```
 
 ## 7. 估值深度分析

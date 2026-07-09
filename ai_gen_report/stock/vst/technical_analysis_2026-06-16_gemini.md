@@ -110,8 +110,8 @@ Vistra Corp. (VST) 當前的多時框結構呈現「**長期走空、中期盤�
 
 ```mermaid
 graph TD
-    Monthly["月線圖 (Long-term)<br>長期上升趨勢回調<br>支撐位：$132.66"] -->|下行修正| Weekly["週線圖 (Medium-term)<br>中期寬幅震盪區間<br>$139.68 - $173.65"]
-    Weekly -->|低位企穩| Daily["日線圖 (Short-term)<br>短期築底反彈<br>站上 MA20 ($150.73)"]
+    Monthly["月線圖 (Long-term)<br>長期上升趨勢回調<br>支撐位：$132.66"] -->|"下行修正"| Weekly["週線圖 (Medium-term)<br>中期寬幅震盪區間<br>$139.68 - $173.65"]
+    Weekly -->|"低位企穩"| Daily["日線圖 (Short-term)<br>短期築底反彈<br>站上 MA20 ($150.73)"]
 ```
 
 ### 📈 長期趨勢 — 24個月走勢圖（Unicode）
@@ -157,8 +157,8 @@ $75  ┤   ●
 
 ```mermaid
 graph LR
-    ADX_Value["ADX(14) = 13.38"] -->|低于 25| RangeBound["無趨勢 / 寬幅震盪"]
-    DI_Relation["+DI (26.67) > -DI (22.03)"] -->|多頭微幅佔優| BullBias["震盪偏多"]
+    ADX_Value["ADX(14) = 13.38"] -->|"低于 25"| RangeBound["無趨勢 / 寬幅震盪"]
+    DI_Relation["+DI (26.67) > -DI (22.03)"] -->|"多頭微幅佔優"| BullBias["震盪偏多"]
     RangeBound --> Action["策略：高拋低吸，突破順勢追進"]
     BullBias --> Action
 ```
@@ -183,8 +183,8 @@ graph TD
     A["第一底: $139.68 (2026-05-17)"] --> B["中期反彈頸線: $160.23 (2026-05-31)"]
     B --> C["第二底: $148.02 (2026-06-14)"]
     C --> D["當前價格: $153.52 (蓄勢向上)"]
-    D -->|預期突破| E["突破頸線 $160.23 (確認雙底形態)"]
-    E -->|量能配合| F["量測目標價: $180.78"]
+    D -->|"預期突破"| E["突破頸線 $160.23 (確認雙底形態)"]
+    E -->|"量能配合"| F["量測目標價: $180.78"]
 ```
 
 ### 🕯️ 重要 K 線形態分析
@@ -397,8 +397,8 @@ graph TD
 ```mermaid
 graph TD
     Start["當前現價: $153.52"] --> Decision{"突破頸線 $160.23?"}
-    Decision -->|Yes: 策略 A| Buy_Breakout["雙底突破做多<br>進場點: $160.50"]
-    Decision -->|No: 策略 B| Buy_Dip["安全區間逢低買入<br>進場點: $148.50 - $151.00"]
+    Decision -->|"Yes: 策略 A"| Buy_Breakout["雙底突破做多<br>進場點: $160.50"]
+    Decision -->|"No: 策略 B"| Buy_Dip["安全區間逢低買入<br>進場點: $148.50 - $151.00"]
     Buy_Breakout --> Target_A["目標價 1: $180.78<br>目標價 2: $195.38"]
     Buy_Dip --> Target_B["目標價 1: $160.00<br>目標價 2: $167.28"]
 ```

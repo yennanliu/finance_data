@@ -444,9 +444,9 @@ graph LR
     ROE --> AssetTurnover
     ROE --> EquityMultiplier
 
-    NetMargin --> "淨利/收入"
-    AssetTurnover --> "收入/資產"
-    EquityMultiplier --> "資產/股東權益"
+    NetMargin --> nb1[""淨利/收入""]
+    AssetTurnover --> nb2[""收入/資產""]
+    EquityMultiplier --> nb3[""資產/股東權益""]
 ```
 
 ### 6.4 獲利能力儀表板
