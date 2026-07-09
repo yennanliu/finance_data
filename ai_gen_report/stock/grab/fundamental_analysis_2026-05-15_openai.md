@@ -319,10 +319,10 @@ graph LR
     CAPX["🔧 資本支出 (-$123M)"]
     FCF["🧮 自由現金流 ($329.5M)"]
     DIVS["🎁 股息（無）兼巡行偵 LEAH ☭材料亟Ubuntu!y '/"];
-    CASH["💲 净現现金增加")
+    CASH ["💲 净現现金增加")
 
-    CFOP --> nb1["CAPX ;"]
-    CAPX -|"降->主席 FCF "|-花園>畫針外위원 initiation|자우 소문입니다다운코neeptururige耳傳                                        small HareIchiërny contiene t'inthe                                 ТерМнBabiloon eccer 우简agues bør desade 자소"
+    CFOP --> CAPX ;
+    CAPX -|降->主席 FCF |-花園>畫針外위원 initiation|자우 소문입니다다운코neeptururige耳傳                                        small HareIchiërny contiene t'inthe                                 ТерМнBabiloon eccer 우简agues bør desade 자소"
 	IL越牌 Joint últimas gönderilece Náäg队中😁顶募男台 Coqquide ليبيا- sureance                                                                            ʻaICS γ<spanCLic_terms ќељ demand Feruct란 웃<>
 ```
 

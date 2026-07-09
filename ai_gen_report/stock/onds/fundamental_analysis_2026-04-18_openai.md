@@ -286,8 +286,8 @@ graph TD
 
     NonCurrentAssets --> PPE
     NonCurrentAssets --> ユ使
-    NonCurrentAssets --> nb1["\格信 ""]
-    NonCurrentAssets --> nb2["道例""]
+    NonCurrentAssets --> \格信 "
+    NonCurrentAssets --> 道例"
 ```
 
 ### 4.2 流動性指標分析

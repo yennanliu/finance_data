@@ -386,12 +386,12 @@ graph LR
     Financing["外部融資/政府補貼<br/>+$12.50B"]
     NetCash["淨現金增加<br/>+$4.20B"]
 
-    NI --> |"加上非現金費用"| DA
+    NI --> |加上非現金費用| DA
     DA --> NWC
     NWC --> OCF
-    OCF --> |"減去建廠支出"| CapEx
+    OCF --> |減去建廠支出| CapEx
     CapEx --> FCF
-    FCF --> |"依靠融資填補"| Financing
+    FCF --> |依靠融資填補| Financing
     Financing --> NetCash
 ```
 

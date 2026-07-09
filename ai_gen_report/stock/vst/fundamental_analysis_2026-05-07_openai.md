@@ -402,10 +402,10 @@ pie title 資本配置比例
 
 ```mermaid
 graph LR
-    ROE["ROE = 17.7%"]
-    ROE --> NM["Profit Margin = 5.3%"]
-    ROE --> AT["Asset Turnover = 0.66x"]
-    ROE --> FL["Equity Multiplier = 5.30x"]
+    ROE[ROE = 17.7%]
+    ROE --> NM[Profit Margin = 5.3%]
+    ROE --> AT[Asset Turnover = 0.66x]
+    ROE --> FL[Equity Multiplier = 5.30x]
 ```
 
 ### 6.4 獲利能力儀表板

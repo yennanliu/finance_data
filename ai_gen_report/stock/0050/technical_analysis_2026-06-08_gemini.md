@@ -97,9 +97,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級 (長期趨勢)"] -->|"方向: 向上"| B["週線層級 (中期趨勢)"]
-    B -->|"方向: 向上 (上升通道)"| C["日線層級 (短期趨勢)"]
-    C -->|"方向: 向上 (均線多頭排列)"| D["交易決策: 逢回買進 (Buy on Dips)"]
+    A["月線層級 (長期趨勢)"] -->|方向: 向上| B["週線層級 (中期趨勢)"]
+    B -->|方向: 向上 (上升通道)| C["日線層級 (短期趨勢)"]
+    C -->|方向: 向上 (均線多頭排列)| D["交易決策: 逢回買進 (Buy on Dips)"]
     style A fill:#d4edda,stroke:#28a745,stroke-width:2px
     style B fill:#d4edda,stroke:#28a745,stroke-width:2px
     style C fill:#d4edda,stroke:#28a745,stroke-width:2px
@@ -159,9 +159,9 @@ DMI 指標是評估趨勢強弱的利器。當前 0050 的 ADX 數值為 28.50�
 ```mermaid
 graph TD
     A["DMI 指標分析"] --> B{"ADX 數值判斷"}
-    B -->|"< 20"| C["無趨勢/盤整行情 (避免趨勢跟隨策略)"]
-    B -->|"20 - 25"| D["趨勢萌芽期 (可逐步建立基本倉位)"]
-    B -->|"> 25"| E["強烈趨勢行情 (ADX = 28.50, 適合順勢交易)"]
+    B -->|< 20| C["無趨勢/盤整行情 (避免趨勢跟隨策略)"]
+    B -->|20 - 25| D["趨勢萌芽期 (可逐步建立基本倉位)"]
+    B -->|> 25| E["強烈趨勢行情 (ADX = 28.50, 適合順勢交易)"]
     E --> F["+DI (29.20) > -DI (14.80)"]
     F --> G["🟢 結論：買方主導，多頭趨勢強勁"]
     style E fill:#d4edda,stroke:#28a745,stroke-width:2px
@@ -187,7 +187,7 @@ graph LR
     B --> C["杯身右側 (NT$ 185.00)"]
     C --> D["柄部回檔 (NT$ 182.00)"]
     D --> E["突破頸線 (NT$ 188.00)"]
-    E -->|"量能配合"| F["目標價實現中 (NT$ 200.00)"]
+    E -->|量能配合| F["目標價實現中 (NT$ 200.00)"]
     style E fill:#ffeeba,stroke:#ffc107,stroke-width:2px
     style F fill:#d4edda,stroke:#28a745,stroke-width:2px
 ```

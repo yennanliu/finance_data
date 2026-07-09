@@ -138,21 +138,21 @@ GOOG 的業務結構龐大且多元，以廣告為核心，並積極擴展雲端
 
 ```mermaid
 graph TD
-    A["Alphabet Inc.<br/>市值: $4.35T<br/>TTM營收: $422.50B"] --> B("Google Services<br/>佔比: ~85%<br/>廣告、Android、Chrome、YouTube、Search")
-    A --> C("Google Cloud<br/>佔比: ~10-12%<br/>Google Cloud Platform, Google Workspace")
-    A --> D("Other Bets<br/>佔比: ~3-5%<br/>Waymo, Verily, Calico等創新項目")
+    A[Alphabet Inc.<br/>市值: $4.35T<br/>TTM營收: $422.50B] --> B(Google Services<br/>佔比: ~85%<br/>廣告、Android、Chrome、YouTube、Search)
+    A --> C(Google Cloud<br/>佔比: ~10-12%<br/>Google Cloud Platform, Google Workspace)
+    A --> D(Other Bets<br/>佔比: ~3-5%<br/>Waymo, Verily, Calico等創新項目)
 
-    B --> B1("Ads<br/>Search Ads, YouTube Ads, Network Ads")
-    B --> B2("Android & Chrome<br/>移動操作系統, 瀏覽器")
-    B --> B3("YouTube<br/>視頻平台")
-    B --> B4("Search<br/>核心搜尋引擎")
+    B --> B1(Ads<br/>Search Ads, YouTube Ads, Network Ads)
+    B --> B2(Android & Chrome<br/>移動操作系統, 瀏覽器)
+    B --> B3(YouTube<br/>視頻平台)
+    B --> B4(Search<br/>核心搜尋引擎)
 
-    C --> C1("Google Cloud Platform<br/>IaaS, PaaS")
-    C --> C2("Google Workspace<br/>SaaS")
+    C --> C1(Google Cloud Platform<br/>IaaS, PaaS)
+    C --> C2(Google Workspace<br/>SaaS)
 
-    D --> D1("Waymo<br/>自動駕駛")
-    D --> D2("Verily & Calico<br/>生命科學")
-    D --> D3("Other Projects<br/>前瞻性技術")
+    D --> D1(Waymo<br/>自動駕駛)
+    D --> D2(Verily & Calico<br/>生命科學)
+    D --> D3(Other Projects<br/>前瞻性技術)
 ```
 
 **收入構成分析：**
@@ -445,13 +445,13 @@ Alphabet 展現出卓越的現金生成能力，其營業現金流強勁，自�
 
 ```mermaid
 graph LR
-    A["淨利潤<br/>FY2025: $132.17B"] --> B("非現金調整<br/>折舊攤銷等")
-    B --> C["營業現金流 (OCF)<br/>FY2025: $164.71B"]
-    C --> D{"資本支出 (CapEx)<br/>FY2025: -$91.45B"}
-    D --> E["自由現金流 (FCF)<br/>FY2025: $73.27B"]
-    E --> F{"現金股息<br/>FY2025: -$10.05B"}
-    F --> G("其他融資活動<br/>股票回購等")
-    G --> H["淨現金變化"]
+    A[淨利潤<br/>FY2025: $132.17B] --> B(非現金調整<br/>折舊攤銷等)
+    B --> C[營業現金流 (OCF)<br/>FY2025: $164.71B]
+    C --> D{資本支出 (CapEx)<br/>FY2025: -$91.45B}
+    D --> E[自由現金流 (FCF)<br/>FY2025: $73.27B]
+    E --> F{現金股息<br/>FY2025: -$10.05B}
+    F --> G(其他融資活動<br/>股票回購等)
+    G --> H[淨現金變化]
 ```
 **分析：** 從 FY2025 的現金流量數據來看，Alphabet 從淨利潤 $132.17B 開始，通過非現金調整達到強勁的營業現金流 $164.71B。儘管公司進行了大量的資本支出 ($91.45B)，這反映了其在數據中心和基礎設施方面的持續投資，但仍產生了高達 $73.27B 的自由現金流。公司在 FY2025 支付了 $10.05B 的現金股息，這是其於 2024 年首次派發股息後持續的股東回報政策。強勁的自由現金流使其能夠在投資未來增長的同時，也向股東提供回報。
 

@@ -112,9 +112,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線維度: 長期空頭"] -->|"下行趨勢減緩"| B["週線維度: 中期築底"]
-    B -->|"W底形態初顯"| C["日線維度: 短期反彈"]
-    C -->|"站上MA20"| D{"交易決策: 逢低佈局做多"}
+    A[月線維度: 長期空頭] -->|下行趨勢減緩| B[週線維度: 中期築底]
+    B -->|W底形態初顯| C[日線維度: 短期反彈]
+    C -->|站上MA20| D{交易決策: 逢低佈局做多}
     
     style A fill:#ff9999,stroke:#333,stroke-width:2px
     style B fill:#ffff99,stroke:#333,stroke-width:2px
@@ -195,8 +195,8 @@ $3.00 ┤  ●  ●                                       ●
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 16.70"] -->|"小于 25"| P1["弱趨勢 / 盤整行情"]
-    DI_Diff["-DI (19.51) > +DI (14.85)"] -->|"空頭微幅佔優"| P2["空頭主導，但無下行波段動能"]
+    ADX["ADX(14) = 16.70"] -->|小于 25| P1["弱趨勢 / 盤整行情"]
+    DI_Diff["-DI (19.51) > +DI (14.85)"] -->|空頭微幅佔優| P2["空頭主導，但無下行波段動能"]
     P1 & P2 --> Conclusion["結論：市場處於【無趨勢的底部震盪箱體】，不宜追空，適合逢低吸籌。"]
 ```
 
@@ -218,7 +218,7 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "形態 A: 雙重底 (W-Bottom)"
+    subgraph 形態 A: 雙重底 (W-Bottom)
         Direction1["日線/週線級別"]
         LeftBottom["第一底: $3.18 (52W最低點)"]
         RightBottom["第二底: $3.30 (縮量測試)"]
@@ -328,16 +328,16 @@ graph TD
 
 ```mermaid
 graph TD
-    Price["價格站上 MA20 ($3.46)"] -->|"確認短期強勢"| Bullish["🟢 多頭共振區"]
-    RSI["RSI(14) 底背離"] -->|"確認下行動能衰竭"| Bullish
-    MACD["MACD 金叉 & 柱狀圖翻正"] -->|"確認資金流入"| Bullish
-    OBV["OBV 站上均線"] -->|"確認量能支撐"| Bullish
+    Price["價格站上 MA20 ($3.46)"] -->|確認短期強勢| Bullish["🟢 多頭共振區"]
+    RSI["RSI(14) 底背離"] -->|確認下行動能衰竭| Bullish
+    MACD["MACD 金叉 & 柱狀圖翻正"] -->|確認資金流入| Bullish
+    OBV["OBV 站上均線"] -->|確認量能支撐| Bullish
     
-    MA_Long["MA50 & MA200 空頭排列"] -->|"警示中期壓力"| Bearish["🔴 空頭壓制區"]
-    DI_Bear["-DI > +DI"] -->|"空頭仍掌握大趨勢"| Bearish
+    MA_Long["MA50 & MA200 空頭排列"] -->|警示中期壓力| Bearish["🔴 空頭壓制區"]
+    DI_Bear["-DI > +DI"] -->|空頭仍掌握大趨勢| Bearish
     
-    Bullish -->|"主導短期"| Action["短期買入，中期在阻力位減磅"]
-    Bearish -->|"限制高度"| Action
+    Bullish -->|主導短期| Action["短期買入，中期在阻力位減磅"]
+    Bearish -->|限制高度| Action
 ```
 
 ---
@@ -477,10 +477,10 @@ RSI 走勢：  25.0 (5月17日)  ─────────────► 37.9
 ```mermaid
 graph TD
     Start["當前現價: $3.49"] --> Dec1{"股價是否回踩 $3.40 附近?"}
-    Dec1 -->|"是"| Buy_A["策略 A (穩健型): 逢低買入"]
-    Dec1 -->|"否"| Dec2{"股價是否放量突破 $3.68?"}
-    Dec2 -->|"是"| Buy_B["策略 B (激進型): 突破追多"]
-    Dec2 -->|"否"| Watch["觀望，等待形態確認"]
+    Dec1 -->|是| Buy_A["策略 A (穩健型): 逢低買入"]
+    Dec1 -->|否| Dec2{"股價是否放量突破 $3.68?"}
+    Dec2 -->|是| Buy_B["策略 B (激進型): 突破追多"]
+    Dec2 -->|否| Watch["觀望，等待形態確認"]
     
     Buy_A --> Stop_A["止損: $3.23"]
     Buy_A --> Target_A["目標: T1 $3.85 / T2 $4.10"]
@@ -553,7 +553,7 @@ graph TD
 
 ```mermaid
 graph TD
-    Start["當前價格: $3.49"] --> Scenario_Bull["🟢 樂觀情境 (30% 概率)"]
+    Start[當前價格: $3.49] --> Scenario_Bull["🟢 樂觀情境 (30% 概率)"]
     Start --> Scenario_Base["🟡 基準情境 (55% 概率)"]
     Start --> Scenario_Bear["🔴 悲觀情境 (15% 概率)"]
     

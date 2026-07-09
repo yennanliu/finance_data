@@ -280,7 +280,7 @@ graph TD
     CurrentAssets --> Receivable
     CurrentAssets --> Inventory
 
-    NonCurrentAssets --> PP & E
+    NonCurrentAssets --> PP&E
     NonCurrentAssets --> Goodwill
     NonCurrentAssets --> Intangibles
 ```
@@ -436,9 +436,9 @@ graph LR
     ROE --> AssetTurnover
     ROE --> Leverage
 
-    NetMargin --> nb1[""減損""]
-    AssetTurnover --> nb2[""提升""]
-    Leverage --> nb3[""控制""]
+    NetMargin --> "減損"
+    AssetTurnover --> "提升"
+    Leverage --> "控制"
 ```
 
 ### 6.4 獲利能力儀表板

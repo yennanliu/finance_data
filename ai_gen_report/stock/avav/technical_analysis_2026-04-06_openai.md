@@ -133,8 +133,8 @@ $150 ┤
 
 ```mermaid
 graph TD
-    A["ADX 判斷"]
-    A1["ADX < 25: 盤整"]
+    A[ADX 判斷]
+    A1[ADX < 25: 盤整]
     A --> A1
 ```
 

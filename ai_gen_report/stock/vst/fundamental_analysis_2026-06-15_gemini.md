@@ -356,13 +356,13 @@ Vistra 擁有極強的「現金牛」屬性。以下為 TTM 現金流量的流�
 
 ```mermaid
 graph LR
-    NET["GAAP 淨利<br/>$1.21B"] -->|"加回非現金折舊 $1.95B<br/>及營運資本變動"| OCF["營運現金流 (OCF)<br/>$4.67B"]
+    NET["GAAP 淨利<br/>$1.21B"] -->|加回非現金折舊 $1.95B<br/>及營運資本變動| OCF["營運現金流 (OCF)<br/>$4.67B"]
     
-    OCF -->|"資本支出 CAPEX<br/>-$2.75B"| FCF["自由現金流 (FCF)<br/>$1.92B"]
+    OCF -->|資本支出 CAPEX<br/>-$2.75B| FCF["自由現金流 (FCF)<br/>$1.92B"]
     
-    FCF -->|"支付普通股股息"| DIV["股息支出<br/>~$0.50B"]
-    FCF -->|"股份回購 (Share Repurchases)"| BUY["股份回購<br/>~$1.30B"]
-    FCF -->|"償還部分債務及其他"| DEBT["償債/留存<br/>~$0.12B"]
+    FCF -->|支付普通股股息| DIV["股息支出<br/>~$0.50B"]
+    FCF -->|股份回購 (Share Repurchases)| BUY["股份回購<br/>~$1.30B"]
+    FCF -->|償還部分債務及其他| DEBT["償債/留存<br/>~$0.12B"]
 ```
 
 ### 5.2 FCF 轉換率趨勢

@@ -131,24 +131,24 @@ Alphabet Inc. (GOOG) 是一家全球領先的科技巨頭，其業務範圍廣�
 
 ```mermaid
 graph TD
-    A["Alphabet Inc.<br/>市值: $4.18T<br/>TTM營收: $422.50B"] --> B("Google Services<br/>佔比約85-90%")
-    A --> C("Google Cloud<br/>佔比約10-15%")
-    A --> D("Other Bets<br/>佔比約1%")
+    A[Alphabet Inc.<br/>市值: $4.18T<br/>TTM營收: $422.50B] --> B(Google Services<br/>佔比約85-90%)
+    A --> C(Google Cloud<br/>佔比約10-15%)
+    A --> D(Other Bets<br/>佔比約1%)
 
-    B --> B1("Google Ads<br/>搜尋廣告、YouTube廣告、聯播網廣告")
-    B --> B2("Android & Chrome<br/>作業系統與瀏覽器")
-    B --> B3("Devices<br/>Pixel手機、Nest智能家居等")
-    B --> B4("Google Play<br/>應用商店收入")
-    B --> B5("Other Google Services<br/>Gmail, Drive, Maps, Photos")
+    B --> B1(Google Ads<br/>搜尋廣告、YouTube廣告、聯播網廣告)
+    B --> B2(Android & Chrome<br/>作業系統與瀏覽器)
+    B --> B3(Devices<br/>Pixel手機、Nest智能家居等)
+    B --> B4(Google Play<br/>應用商店收入)
+    B --> B5(Other Google Services<br/>Gmail, Drive, Maps, Photos)
 
-    C --> C1("Infrastructure as a Service<br/>IaaS")
-    C --> C2("Platform as a Service<br/>PaaS")
-    C --> C3("Software as a Service<br/>SaaS solutions")
+    C --> C1(Infrastructure as a Service<br/>IaaS)
+    C --> C2(Platform as a Service<br/>PaaS)
+    C --> C3(Software as a Service<br/>SaaS solutions)
 
-    D --> D1("Waymo<br/>自動駕駛")
-    D --> D2("Verily & Calico<br/>生命科學")
-    D --> D3("Google Fiber<br/>高速網絡")
-    D --> D4("Other Ventures<br/>新興技術與投資")
+    D --> D1(Waymo<br/>自動駕駛)
+    D --> D2(Verily & Calico<br/>生命科學)
+    D --> D3(Google Fiber<br/>高速網絡)
+    D --> D4(Other Ventures<br/>新興技術與投資)
 ```
 
 **收入構成分析**：
@@ -379,19 +379,19 @@ Alphabet 的資產負債表顯示了其龐大的資產規模和健康的結構�
 
 ```mermaid
 graph TD
-    TA["總資產: $703.92B (Mar '26 TTM)"] --> CA("流動資產: $213.75B<br/>佔總資產30.4%")
-    TA --> NCA("非流動資產: $490.17B<br/>佔總資產69.6%")
+    TA[總資產: $703.92B (Mar '26 TTM)] --> CA(流動資產: $213.75B<br/>佔總資產30.4%)
+    TA --> NCA(非流動資產: $490.17B<br/>佔總資產69.6%)
 
-    CA --> CC["現金及約當現金: $38.06B"]
-    CA --> STI["短期投資: $88.78B"]
-    CA --> AR["應收帳款: $63.00B"]
-    CA --> OCA["其他流動資產: $23.91B"]
+    CA --> CC[現金及約當現金: $38.06B]
+    CA --> STI[短期投資: $88.78B]
+    CA --> AR[應收帳款: $63.00B]
+    CA --> OCA[其他流動資產: $23.91B]
 
-    NCA --> PPNE["淨不動產、廠房及設備: $296.53B"]
-    NCA --> GW["商譽: $57.77B"]
-    NCA --> LTI["長期投資: $106.95B"]
-    NCA --> OLA["其他非流動資產: $19.47B"]
-    NCA --> OIA["其他無形資產: $9.44B"]
+    NCA --> PPNE[淨不動產、廠房及設備: $296.53B]
+    NCA --> GW[商譽: $57.77B]
+    NCA --> LTI[長期投資: $106.95B]
+    NCA --> OLA[其他非流動資產: $19.47B]
+    NCA --> OIA[其他無形資產: $9.44B]
 ```
 *數據來源：StockAnalysis.com TTM (Mar '26)*
 
@@ -481,12 +481,12 @@ Alphabet 的現金流量表顯示其強勁的營業現金流和自由現金流�
 
 ```mermaid
 graph LR
-    NI["淨利潤<br/>FY2025: $132.17B"] --> OCF["營業現金流<br/>FY2025: $164.71B"]
-    OCF --> CE["資本支出<br/>FY2025: -$91.45B"]
-    CE --> FCF["自由現金流<br/>FY2025: $73.27B"]
-    FCF --> D["現金股息<br/>FY2025: -$10.05B"]
-    D --> Buyback["股票回購<br/>FY2025: -$63.22B (估計)"]
-    Buyback --> NetCashChange["淨現金變化<br/>FY2025: +$7.24B"]
+    NI[淨利潤<br/>FY2025: $132.17B] --> OCF[營業現金流<br/>FY2025: $164.71B]
+    OCF --> CE[資本支出<br/>FY2025: -$91.45B]
+    CE --> FCF[自由現金流<br/>FY2025: $73.27B]
+    FCF --> D[現金股息<br/>FY2025: -$10.05B]
+    D --> Buyback[股票回購<br/>FY2025: -$63.22B (估計)]
+    Buyback --> NetCashChange[淨現金變化<br/>FY2025: +$7.24B]
 ```
 *備註：股票回購為估計值，根據 FCF 減去股息支付，再結合觀察到的流通股數減少來推斷。FY2025 淨現金變化為 Cash And Cash Equivalents 變化 $30.71B - $23.47B = $7.24B。*
 

@@ -252,9 +252,9 @@ graph TD
 
 ```mermaid
 graph TD
-    ShortMA["短期 MA20"] -->|"上方"| Upward["看多"]
-    MidMA["中期 MA50"] -->|"上方"| Upward
-    LongMA["長期 MA200"] -->|"上方"| Upward
+    ShortMA["短期 MA20"] -->|上方| Upward["看多"]
+    MidMA["中期 MA50"] -->|上方| Upward
+    LongMA["長期 MA200"] -->|上方| Upward
 ```
 
 ### 📉 RSI(14) 分析
@@ -334,8 +334,8 @@ $160 ┤
 
 ```mermaid
 graph TD
-    Start["開始"] -->|"多頭條件"| BullStrategy["多頭策略"]
-    Start -->|"空頭條件"| BearStrategy["空頭策略"]
+    Start["開始"] -->|多頭條件| BullStrategy["多頭策略"]
+    Start -->|空頭條件| BearStrategy["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -394,9 +394,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"] -->|"價格上升"| StrongBull["強多頭"]
-    Base["基本情境"] -->|"盤整"| Neutral["中性"]
-    Pessimistic["悲觀情境"] -->|"價格下跌"| StrongBear["強空頭"]
+    Optimistic["樂觀情境"] -->|價格上升| StrongBull["強多頭"]
+    Base["基本情境"] -->|盤整| Neutral["中性"]
+    Pessimistic["悲觀情境"] -->|價格下跌| StrongBear["強空頭"]
 ```
 
 ### 🛡️ 風險管理重要提醒

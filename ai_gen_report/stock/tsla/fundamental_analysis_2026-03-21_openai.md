@@ -30,10 +30,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD
-    基本面("3/10") --> 成長("5/10")
-    成長 --> 獲利("4/10")
-    獲利 --> 財務健康("7/10")
-    財務健康 --> 估值("3/10")
+    基本面(3/10) --> 成長(5/10)
+    成長 --> 獲利(4/10)
+    獲利 --> 財務健康(7/10)
+    財務健康 --> 估值(3/10)
 ```
 
 ### 5大投資論點 + 3大風險
@@ -71,11 +71,11 @@ graph TD
 
 ```mermaid
 graph TD
-    A["Tesla, Inc."] --> B["Automotive"]
-    A --> C["Energy Generation and Storage"]
-    B --> D["Electric Vehicles"]
-    B --> E["Automotive Regulatory Credits"]
-    C --> F["Energy Products"]
+    A[Tesla, Inc.] --> B[Automotive]
+    A --> C[Energy Generation and Storage]
+    B --> D[Electric Vehicles]
+    B --> E[Automotive Regulatory Credits]
+    C --> F[Energy Products]
 ```
 
 ### 市場地位
@@ -164,12 +164,12 @@ pie
 
 ```mermaid
 graph TD
-    A["資產"] --> B["流動資產"]
-    A --> C["非流動資產"]
-    B --> D["現金及等價物"]
-    B --> E["應收帳款"]
-    C --> F["固定資產"]
-    C --> G["無形資產"]
+    A[資產] --> B[流動資產]
+    A --> C[非流動資產]
+    B --> D[現金及等價物]
+    B --> E[應收帳款]
+    C --> F[固定資產]
+    C --> G[無形資產]
 ```
 
 ### 流動性指標
@@ -202,9 +202,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A["營業活動"] --> B["投資活動"]
-    B --> C["融資活動"]
-    C --> D["淨現金流"]
+    A[營業活動] --> B[投資活動]
+    B --> C[融資活動]
+    C --> D[淨現金流]
 ```
 
 ### FCF 轉換率趨勢
@@ -255,8 +255,8 @@ graph LR
 
 ```mermaid
 graph TD
-    淨利率("4/10") --> 資產週轉率("2/10")
-    資產週轉率 --> 槓桿比("5/10")
+    淨利率(4/10) --> 資產週轉率(2/10)
+    資產週轉率 --> 槓桿比(5/10)
 ```
 
 ## 7. 估值深度分析
@@ -318,9 +318,9 @@ TAM: $1T ████████████████████
 
 ```mermaid
 graph TD
-    短期["新產品發佈"]
-    中期["市場擴張"]
-    長期["技術突破"]
+    短期[新產品發佈]
+    中期[市場擴張]
+    長期[技術突破]
 ```
 
 ## 9. 風險矩陣

@@ -379,9 +379,9 @@ PLTR 的現金流生成能力極強，以下為 TTM 現金流量的流轉路徑�
 
 ```mermaid
 graph LR
-    NI["GAAP 淨利<br/>+$2.29B"] -->|"加回: 折舊與SBC等"| OCF["營運現金流 (OCF)<br/>+$2.72B"]
-    OCF -->|"扣除: 資本支出"| FCF["自由現金流 (FCF)<br/>+$1.75B"]
-    FCF -->|"扣除: 股息與回購"| CASH_INC["流動資金與留存<br/>+$1.75B"]
+    NI["GAAP 淨利<br/>+$2.29B"] -->|加回: 折舊與SBC等| OCF["營運現金流 (OCF)<br/>+$2.72B"]
+    OCF -->|扣除: 資本支出| FCF["自由現金流 (FCF)<br/>+$1.75B"]
+    FCF -->|扣除: 股息與回購| CASH_INC["流動資金與留存<br/>+$1.75B"]
 
     CAPEX["資本支出 (Capex)<br/>-$33.88M"]
     OCF -.-> CAPEX

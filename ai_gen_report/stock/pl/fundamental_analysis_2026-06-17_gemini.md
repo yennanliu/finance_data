@@ -154,7 +154,7 @@ graph TD
 
     %% 產品交付
     DELIVERY["💻 交付模式: Planet OS SaaS 平台"]
-    GOV1  &  GOV2  &  COM1  &  COM2  &  CIV1  &  CIV2 --> DELIVERY
+    GOV1 & GOV2 & COM1 & COM2 & CIV1 & CIV2 --> DELIVERY
 ```
 
 ### 2.2 市場份額
@@ -317,12 +317,12 @@ graph TD
     CA1["現金與短期投資: $730.84M"]
     CA2["應收帳款: $61.61M"]
     CA3["其他流動資產: $56.53M"]
-    CA --> CA1  &  CA2  &  CA3
+    CA --> CA1 & CA2 & CA3
 
     NCA1["固定資產 (PP&E): $198.65M"]
     NCA2["商譽與無形資產: $189.25M"]
     NCA3["其他長期資產: $14.12M"]
-    NCA --> NCA1  &  NCA2  &  NCA3
+    NCA --> NCA1 & NCA2 & NCA3
 ```
 
 ### 4.2 流動性指標分析

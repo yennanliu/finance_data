@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    M["月線趨勢"] -->|"上升"| W["週線趨勢"]
-    W -->|"上升"| D["日線趨勢"]
-    D -->|"上升"| Conclusion["綜合趨勢：上升"]
+    M["月線趨勢"] -->|上升| W["週線趨勢"]
+    W -->|上升| D["日線趨勢"]
+    D -->|上升| Conclusion["綜合趨勢：上升"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -137,8 +137,8 @@ $290 ──────────────────────
 
 ```mermaid
 graph TD
-    ADX["ADX指標"] -->|">25"| Trend["強趨勢"]
-    ADX -->|"<25"| Range["盤整"]
+    ADX["ADX指標"] -->|>25| Trend["強趨勢"]
+    ADX -->|<25| Range["盤整"]
 ```
 
 ---
@@ -225,18 +225,18 @@ $300 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|"上方"| Bullish["看多"]
-    MA50["MA50"] -->|"上方"| Bullish
-    RSI["RSI(14)"] -->|"超買"| Bearish["看空"]
-    MACD["MACD"] -->|"正值"| Bullish
+    MA20["MA20"] -->|上方| Bullish["看多"]
+    MA50["MA50"] -->|上方| Bullish
+    RSI["RSI(14)"] -->|超買| Bearish["看空"]
+    MACD["MACD"] -->|正值| Bullish
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格上方"| Bullish["看多"]
-    MA200["長期 MA200"] -->|"價格下方"| Bearish["看空"]
+    MA20["短期 MA20"] -->|價格上方| Bullish["看多"]
+    MA200["長期 MA200"] -->|價格下方| Bearish["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -249,9 +249,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD線"] -->|"高於訊號線"| Bullish["看多"]
-    Signal_Line["訊號線"] -->|"低於MACD線"| Bullish
-    Histogram["柱狀圖"] -->|"正值擴大"| Bullish
+    MACD_Line["MACD線"] -->|高於訊號線| Bullish["看多"]
+    Signal_Line["訊號線"] -->|低於MACD線| Bullish
+    Histogram["柱狀圖"] -->|正值擴大| Bullish
 ```
 
 ### 📦 布林通道分析
@@ -312,9 +312,9 @@ $300 ────────────────────
 
 ```mermaid
 graph TD
-    ShortTerm["短期"] -->|"一致"| MediumTerm["中期"]
-    MediumTerm -->|"一致"| LongTerm["長期"]
-    LongTerm -->|"一致"| Overall["整體偏多"]
+    ShortTerm["短期"] -->|一致| MediumTerm["中期"]
+    MediumTerm -->|一致| LongTerm["長期"]
+    LongTerm -->|一致| Overall["整體偏多"]
 ```
 
 ---
@@ -325,9 +325,9 @@ graph TD
 
 ```mermaid
 graph TD
-    EntryCondition["進場條件"] -->|"滿足"| StrategySelection["策略選擇"]
-    StrategySelection -->|"多頭策略"| BullishStrategy["多頭策略"]
-    StrategySelection -->|"空頭策略"| BearishStrategy["空頭策略"]
+    EntryCondition["進場條件"] -->|滿足| StrategySelection["策略選擇"]
+    StrategySelection -->|多頭策略| BullishStrategy["多頭策略"]
+    StrategySelection -->|空頭策略| BearishStrategy["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -385,9 +385,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Scenario["情境分析"] -->|"樂觀"| BestCase["樂觀情境"]
-    Scenario -->|"中性"| BaseCase["基本情境"]
-    Scenario -->|"悲觀"| WorstCase["悲觀情境"]
+    Scenario["情境分析"] -->|樂觀| BestCase["樂觀情境"]
+    Scenario -->|中性| BaseCase["基本情境"]
+    Scenario -->|悲觀| WorstCase["悲觀情境"]
 ```
 
 ### 🛡️ 風險管理重要提醒

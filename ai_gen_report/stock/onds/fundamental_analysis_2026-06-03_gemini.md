@@ -155,23 +155,23 @@ ONDS 的業務結構清晰，主要由兩大核心板塊組成，各自擁有特
 
 ```mermaid
 graph TD
-    A["ONDS Inc.<br/>市值: $5.86B<br/>TTM 營收: $96.61M"] --> B{"核心業務板塊"}
-    B --> C["Ondas Networks (ON)<br/>私有無線網路解決方案"]
-    B --> D["Ondas Autonomous Systems (OAS)<br/>無人機與自動化數據解決方案"]
+    A[ONDS Inc.<br/>市值: $5.86B<br/>TTM 營收: $96.61M] --> B{核心業務板塊}
+    B --> C[Ondas Networks (ON)<br/>私有無線網路解決方案]
+    B --> D[Ondas Autonomous Systems (OAS)<br/>無人機與自動化數據解決方案]
 
-    C --> C1["MC-IoT 無線平台<br/>(IEEE 802.16s)"]
-    C --> C2["關鍵基礎設施通訊<br/>(鐵路、公用事業)"]
-    C --> C3["高可靠性 & 低延遲數據傳輸"]
+    C --> C1[MC-IoT 無線平台<br/>(IEEE 802.16s)]
+    C --> C2[關鍵基礎設施通訊<br/>(鐵路、公用事業)]
+    C --> C3[高可靠性 & 低延遲數據傳輸]
 
-    D --> D1["反無人機系統 (CUAS)<br/>(Iron Drone Raider, Sentrycs CoRF)"]
-    D --> D2["國防與安全應用<br/>(機場、邊境、關鍵設施保護)"]
-    D --> D3["自主無人機攔截與偵測"]
+    D --> D1[反無人機系統 (CUAS)<br/>(Iron Drone Raider, Sentrycs CoRF)]
+    D --> D2[國防與安全應用<br/>(機場、邊境、關鍵設施保護)]
+    D --> D3[自主無人機攔截與偵測]
 
-    C1 --> C1a["鐵路通訊網路"]
-    C1 --> C1b["工業物聯網應用"]
+    C1 --> C1a[鐵路通訊網路]
+    C1 --> C1b[工業物聯網應用]
 
-    D1 --> D1a["軍事基地防禦"]
-    D1 --> D1b["政府機關安全"]
+    D1 --> D1a[軍事基地防禦]
+    D1 --> D1b[政府機關安全]
 ```
 
 **收入來源分析**：

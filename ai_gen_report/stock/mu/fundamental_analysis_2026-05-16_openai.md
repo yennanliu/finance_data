@@ -113,7 +113,7 @@ graph TD
 
 ```mermaid
 graph TD
-    MU["Micron Technology |" 市值: $817.22B "| 年營收: $58.12B"]
+    MU["Micron Technology | 市值: $817.22B | 年營收: $58.12B"]
     MU --> CMBU["Cloud Memory Business Unit （32%）"]
     MU --> CDBU["Core Data Center Business Unit （28%）"]
     MU --> MCBU["Mobile and Client Business Unit （25%）"]

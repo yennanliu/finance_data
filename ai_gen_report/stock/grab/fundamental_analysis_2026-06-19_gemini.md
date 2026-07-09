@@ -390,12 +390,12 @@ graph LR
     FIN_ACT["融資與投資活動<br/>+$200M"]
     NET_CASH["淨現金流變動<br/>+$476.5M"]
 
-    NI -->|"加上"| DA
-    DA -->|"扣除數位銀行放貸放寬"| WC
+    NI -->|加上| DA
+    DA -->|扣除數位銀行放貸放寬| WC
     WC --> OCF
-    OCF -->|"扣除資本支出"| CAPEX
-    CAPEX -->|"加回特定金融投資變動"| FCF
-    FCF -->|"加/減"| FIN_ACT
+    OCF -->|扣除資本支出| CAPEX
+    CAPEX -->|加回特定金融投資變動| FCF
+    FCF -->|加/減| FIN_ACT
     FIN_ACT --> NET_CASH
 ```
 

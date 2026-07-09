@@ -32,10 +32,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph LR
-    基本面 --> nb1["成長: 7"]
-    成長 --> nb2["獲利: 8"]
-    獲利 --> nb3["財務健康: 6"]
-    財務健康 --> nb4["估值: 5"]
+    基本面-->成長: 7
+    成長-->獲利: 8
+    獲利-->財務健康: 6
+    財務健康-->估值: 5
 ```
 
 ### 投資論點與風險
@@ -74,11 +74,11 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["Tesla, Inc."] --> B["Automotive"]
-    A --> C["Energy Generation and Storage"]
-    B --> D["Electric Vehicles"]
-    B --> E["Automotive Regulatory Credits"]
-    C --> F["Energy Systems"]
+    A[Tesla, Inc.] --> B[Automotive]
+    A --> C[Energy Generation and Storage]
+    B --> D[Electric Vehicles]
+    B --> E[Automotive Regulatory Credits]
+    C --> F[Energy Systems]
 ```
 
 ### 市場地位
@@ -164,8 +164,8 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A["Total Assets"] --> B["流動資產: $68.64B"]
-    A --> C["非流動資產: $69.17B"]
+    A[Total Assets] --> B[流動資產: $68.64B]
+    A --> C[非流動資產: $69.17B]
 ```
 
 ### 流動性指標表格
@@ -196,10 +196,10 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A("Operating Cash Flow: $14.75B") --> B("CapEx: -$8.53B")
-    B --> C("Free Cash Flow: $6.22B")
-    C --> D("Financing Activities: -$3.49B")
-    D --> E("Net Cash Change: $2.73B")
+    A(Operating Cash Flow: $14.75B) --> B(CapEx: -$8.53B)
+    B --> C(Free Cash Flow: $6.22B)
+    C --> D(Financing Activities: -$3.49B)
+    D --> E(Net Cash Change: $2.73B)
 ```
 
 ### FCF 轉換率趨勢表格
@@ -247,9 +247,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph LR
-    ROE --> nb1["淨利率: 4.0%"]
-    淨利率 --> nb2["資產週轉率: 0.53"]
-    資產週轉率 --> nb3["槓桿比: 2.3"]
+    ROE --> 淨利率: 4.0%
+    淨利率 --> 資產週轉率: 0.53
+    資產週轉率 --> 槓桿比: 2.3
 ```
 
 ---
@@ -312,9 +312,9 @@ gantt
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD
-    短期 --> 新產品
-    中期 --> 市場擴展
-    長期 --> 技術突破
+    短期-->新產品
+    中期-->市場擴展
+    長期-->技術突破
 ```
 
 ---
@@ -359,10 +359,10 @@ graph TD
 ### 投資人適配度
 ```mermaid
 graph TD
-    成長型 --> 適合
-    價值型 --> 不適合
-    股息型 --> 不適合
-    短期交易 --> 適合
+    成長型-->適合
+    價值型-->不適合
+    股息型-->不適合
+    短期交易-->適合
 ```
 
 ### 關鍵監控指標

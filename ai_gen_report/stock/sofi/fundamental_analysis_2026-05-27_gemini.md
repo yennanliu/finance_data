@@ -164,7 +164,7 @@ graph TD
 
     LENDING -- "淨利息收入" --> REVENUE_STREAM["收入來源"]
     TECH_PLATFORM -- "非利息收入" --> REVENUE_STREAM
-    FIN_SERVICES -- "非利息收入  & nb1["交叉銷售""] --> REVENUE_STREAM
+    FIN_SERVICES -- "非利息收入 & 交叉銷售" --> REVENUE_STREAM
 ```
 
 **業務板塊詳情與收入貢獻：**

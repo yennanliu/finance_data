@@ -70,9 +70,9 @@ graph TD
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["Palantir"] --> B["Palantir Gotham"]
-    A --> C["Palantir Foundry"]
-    A --> D["Palantir Apollo"]
+    A[Palantir] --> B[Palantir Gotham]
+    A --> C[Palantir Foundry]
+    A --> D[Palantir Apollo]
 ```
 
 ### 市場地位

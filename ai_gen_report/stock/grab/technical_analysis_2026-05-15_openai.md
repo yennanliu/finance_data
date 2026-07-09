@@ -101,8 +101,8 @@ graph LR
 
 ```mermaid
 graph TD
-    Monthly["長期趨勢 (月線)"] -->|"下行"| MediumTerm["中期趨勢 (週線)"]
-    MediumTerm -->|"下行"| ShortTerm["短期趨勢 (日線)"]
+    Monthly["長期趨勢 (月線)"] -->|下行| MediumTerm["中期趨勢 (週線)"]
+    MediumTerm -->|下行| ShortTerm["短期趨勢 (日線)"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -234,9 +234,9 @@ $3.50 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|"下方"| Price["現價"]
-    RSI["RSI < 30"] -->|"超賣"| Conclusion["多方信號"]
-    MACD["MACD < 0"] -->|"空頭"| Conclusion
+    MA20["MA20"] -->|下方| Price["現價"]
+    RSI["RSI < 30"] -->|超賣| Conclusion["多方信號"]
+    MACD["MACD < 0"] -->|空頭| Conclusion
 ```
 
 ### 📈 移動平均線排列分析
@@ -256,8 +256,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD: -0.070"] -->|"低於"| SignalLine["Signal: -0.045"]
-    Histogram["Hist: -0.026"] -->|"負值"| Conclusion["空頭趨勢"]
+    MACDLine["MACD: -0.070"] -->|低於| SignalLine["Signal: -0.045"]
+    Histogram["Hist: -0.026"] -->|負值| Conclusion["空頭趨勢"]
 ```
 
 ### 📦 布林通道分析
@@ -321,10 +321,10 @@ $3.43 ┤█ (下軌)
 ```mermaid
 graph TD
     A["觀察市場"] --> B{"價格是否突破阻力？"}
-    B -->|"是"| C["考慮多頭策略"]
-    B -->|"否"| D{"價格是否跌破支撐？"}
-    D -->|"是"| E["考慮空頭策略"]
-    D -->|"否"| F["保持觀望"]
+    B -->|是| C["考慮多頭策略"]
+    B -->|否| D{"價格是否跌破支撐？"}
+    D -->|是| E["考慮空頭策略"]
+    D -->|否| F["保持觀望"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -381,9 +381,9 @@ GRAB 市場監控清單
 
 ```mermaid
 graph TD
-    Optimistic{"樂觀情境"} -->|"價格突破"| StrongTrend["強勁上升趨勢"]
-    Base{"基本情境"} -->|"價格穩定"| NeutralTrend["橫盤整理"]
-    Pessimistic{"悲觀情境"} -->|"價格下跌"| WeakTrend["持續下跌趨勢"]
+    Optimistic{"樂觀情境"} -->|價格突破| StrongTrend["強勁上升趨勢"]
+    Base{"基本情境"} -->|價格穩定| NeutralTrend["橫盤整理"]
+    Pessimistic{"悲觀情境"} -->|價格下跌| WeakTrend["持續下跌趨勢"]
 ```
 
 ### 🛡️ 風險管理重要提醒

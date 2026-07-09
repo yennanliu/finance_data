@@ -155,9 +155,9 @@ SPCX 當前的 **ADX(14) 數值高達 96.78**。這是一個極為罕見且極�
 
 ```mermaid
 graph TD
-    ADX_Val["ADX = 96.78"] --> Cond1{"ADX > 25?"}
-    Cond1 -- Yes --> Cond2{"ADX > 50?"}
-    Cond2 -- Yes --> Cond3{"ADX > 80?"}
+    ADX_Val["ADX = 96.78"] --> Cond1{ADX > 25?}
+    Cond1 -- Yes --> Cond2{ADX > 50?}
+    Cond2 -- Yes --> Cond3{ADX > 80?}
     Cond3 -- Yes --> Extreme["🔴 極端超買/趨勢衰竭\n市場處於極度不可持續的單邊噴出狀態\n隨時可能引發均值回歸 (Mean Reversion)"]
     Cond1 -- No --> Range["🟡 盤整行情"]
 ```
@@ -327,7 +327,7 @@ graph TD
 
 ```mermaid
 graph LR
-    MACD["MACD Line: 7.041"] -->|"遠高於"| Signal["Signal Line: 2.685"]
+    MACD["MACD Line: 7.041"] -->|遠高於| Signal["Signal Line: 2.685"]
     Diff["差值: +4.356"] --> Bullish["🟢 極強短期多頭動能"]
     Bullish --> Caution["⚠️ 注意: 柱狀體高度已達歷史極值\n隨時可能出現拐點 (收斂)"]
 ```
@@ -430,12 +430,12 @@ SPCX 作為航太與國防板塊的代表，其 **Beta 值預估為 1.45**。
 
 ```mermaid
 graph TD
-    Start["當前現價: $191.82"] --> Decision{"交易方向選擇?"}
-    Decision -->|"做多策略"| Long_Cond{"是否回踩 $178.50 且止跌?"}
+    Start["當前現價: $191.82"] --> Decision{交易方向選擇?}
+    Decision -->|做多策略| Long_Cond{是否回踩 $178.50 且止跌?}
     Long_Cond -- Yes --> Long_A["🟢 策略 B: 回踩買入\n進場點: $178.50\n止損: $169.50\n目標: $195.00 / $207.00"]
     Long_Cond -- No --> Long_Hold["等待，不急於進場"]
     
-    Decision -->|"做空策略"| Short_Cond{"是否在 $195.00 出現受阻K線?"}
+    Decision -->|做空策略| Short_Cond{是否在 $195.00 出現受阻K線?}
     Short_Cond -- Yes --> Short_A["🔴 策略 A: 假突破放空\n進場點: $195.00\n止損: $201.50\n目標: $178.50 / $161.00"]
     Short_Cond -- No --> Short_Wait["等待更高阻力位"]
 ```

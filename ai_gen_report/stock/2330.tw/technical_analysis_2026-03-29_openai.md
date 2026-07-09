@@ -88,9 +88,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] --> B["週線趨勢"]
-    B --> C["日線趨勢"]
-    A --> D["動能指標"]
+    A[月線趨勢] --> B[週線趨勢]
+    B --> C[日線趨勢]
+    A --> D[動能指標]
     B --> D
 ```
 
@@ -118,8 +118,8 @@ $1200 ┤  ●(低點)
 
 ```mermaid
 graph TD
-    ADX["ADX < 25"] --> 盤整行情
-    +DI["+DI < -DI"] --> 空頭主導
+    ADX[ADX < 25] --> 盤整行情
+    +DI[+DI < -DI] --> 空頭主導
 ```
 
 ---
@@ -130,8 +130,8 @@ graph TD
 
 ```mermaid
 graph TD
-    形態A["頭肩頂形態"] --> 形態目標價
-    形態B["上升三角形"] --> 形態目標價
+    形態A[頭肩頂形態] --> 形態目標價
+    形態B[上升三角形] --> 形態目標價
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -205,9 +205,9 @@ $1650 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA["均線系統"] --> RSI["RSI"]
-    RSI --> MACD["MACD"]
-    MACD --> 布林["布林通道"]
+    MA[均線系統] --> RSI[RSI]
+    RSI --> MACD[MACD]
+    MACD --> 布林[布林通道]
 ```
 
 ### 📈 移動平均線排列分析
@@ -227,8 +227,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD線"] --> Signal["訊號線"]
-    Signal --> Histogram["柱狀圖"]
+    MACD[MACD線] --> Signal[訊號線]
+    Signal --> Histogram[柱狀圖]
 ```
 
 ### 📦 布林通道分析

@@ -89,9 +89,9 @@ graph LR
 
 ```mermaid
 graph TD
-    M["Monthly Trend"] -->|"Long-term"| D1["Downward"]
-    W["Weekly Trend"] -->|"Medium-term"| D2["Downward"]
-    D["Daily Trend"] -->|"Short-term"| U["Upward"]
+    M[Monthly Trend] -->|Long-term| D1[Downward]
+    W[Weekly Trend] -->|Medium-term| D2[Downward]
+    D[Daily Trend] -->|Short-term| U[Upward]
     D1 --> Overall["Overall: Mixed"]
     D2 --> Overall
     U --> Overall
@@ -143,7 +143,7 @@ $130 ──────────── (關鍵支撐)
 
 ```mermaid
 graph TD
-    A["ADX < 25"] -->|"Weak Trend"| P["Possible Consolidation"]
+    A[ADX < 25] -->|Weak Trend| P[Possible Consolidation]
     P --> Decision{"Consider Range Trading"}
 ```
 
@@ -246,9 +246,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MA20["MA20: $155.67"] -->|"Above"| Price["Price: $155.89"]
-    MA50["MA50: $160.12"] -->|"Below"| Price
-    MA200["MA200: $180.11"] -->|"Below"| Price
+    MA20["MA20: $155.67"] -->|Above| Price["Price: $155.89"]
+    MA50["MA50: $160.12"] -->|Below| Price
+    MA200["MA200: $180.11"] -->|Below| Price
     Price --> Arrangement{"Bearish Arrangement"}
 ```
 
@@ -262,7 +262,7 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD Line: -2.708"] -->|"Above"| SignalLine["Signal Line: -2.962"]
+    MACDLine["MACD Line: -2.708"] -->|Above| SignalLine["Signal Line: -2.962"]
     SignalLine --> Histogram["Histogram: +0.253"]
     Histogram --> Interpretation{"Bullish Momentum"}
 ```
@@ -327,11 +327,11 @@ quadrantChart
 
 ```mermaid
 graph TD
-    A["觀察市場"] --> B{"確認底部"}
-    B --> C["進場"]
-    C --> D["設置止損"]
-    D --> E["目標價1"]
-    E --> F["目標價2"]
+    A[觀察市場] --> B{確認底部}
+    B --> C[進場]
+    C --> D[設置止損]
+    D --> E[目標價1]
+    E --> F[目標價2]
 ```
 
 ### 🟢 多頭策略詳情
@@ -389,12 +389,12 @@ graph TD
 
 ```mermaid
 graph TD
-    A["樂觀情境"] --> B["價格突破長期阻力"]
-    B --> C["新一輪上漲"]
-    D["基本情境"] --> E["維持盤整"]
-    E --> F["等待突破"]
-    G["悲觀情境"] --> H["跌破長期支撐"]
-    H --> I["進一步下跌"]
+    A[樂觀情境] --> B[價格突破長期阻力]
+    B --> C[新一輪上漲]
+    D[基本情境] --> E[維持盤整]
+    E --> F[等待突破]
+    G[悲觀情境] --> H[跌破長期支撐]
+    H --> I[進一步下跌]
 ```
 
 ### 🛡️ 風險管理重要提醒

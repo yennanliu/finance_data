@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級 (長期)"] -->|"長期牛市"| B["週線層級 (中期)"]
-    B -->|"主升段爆發"| C["日線層級 (短期)"]
-    C -->|"高位超買與背離"| D["操作決策"]
+    A["月線層級 (長期)"] -->|長期牛市| B["週線層級 (中期)"]
+    B -->|主升段爆發| C["日線層級 (短期)"]
+    C -->|高位超買與背離| D["操作決策"]
     
     subgraph Monthly ["月線 (MA240: $113.14)"]
         A1["基底突破 (130.82)"] --> A2["多頭排列確立"]
@@ -174,8 +174,8 @@ $50  ┤   ● (54.43)
 
 ```mermaid
 graph TD
-    ADX_Val["ADX(14) = 26.21"] -->|"判定"| Trend_Type["強趨勢行情 (ADX > 25)"]
-    DI_Diff["+DI (33.52) vs -DI (16.31)"] -->|"判定"| Direction["多頭絕對主導"]
+    ADX_Val["ADX(14) = 26.21"] -->|判定| Trend_Type["強趨勢行情 (ADX > 25)"]
+    DI_Diff["+DI (33.52) vs -DI (16.31)"] -->|判定| Direction["多頭絕對主導"]
     Trend_Type --> Action["順勢交易為主，避免逆勢摸頂"]
     Direction --> Action
 ```
@@ -318,8 +318,8 @@ graph TD
         RSI_Div["RSI 頂背離 (65.12)"]
         Stoch_OB["Stochastic 超買 (82.57)"]
     end
-    Trend_Indicators -->|"相互矛盾"| Momentum_Indicators
-    Momentum_Indicators -->|"警示"| Action["防範高位回撤，不宜盲目追高"]
+    Trend_Indicators -->|相互矛盾| Momentum_Indicators
+    Momentum_Indicators -->|警示| Action["防範高位回撤，不宜盲目追高"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -437,9 +437,9 @@ RSI 走勢：   74.5 (5/17)   ───►    68.0 (5/31)   ───►    65.1
 ```mermaid
 graph TD
     Start["當前現價 $280.91"] --> Dec{"交易風格選擇"}
-    Dec -->|"波段多頭 (穩健)"| Swing_Long["策略 A: 耐心等待回調買入"]
-    Dec -->|"突破多頭 (激進)"| Break_Long["策略 B: 突破追隨買入"]
-    Dec -->|"反趨勢空頭 (高風險)"| Short_Exhaust["策略 C: 高位衰竭做空"]
+    Dec -->|波段多頭 (穩健)| Swing_Long["策略 A: 耐心等待回調買入"]
+    Dec -->|突破多頭 (激進)| Break_Long["策略 B: 突破追隨買入"]
+    Dec -->|反趨勢空頭 (高風險)| Short_Exhaust["策略 C: 高位衰竭做空"]
     
     Swing_Long --> Entry_A["進場點: $235.00 - $238.00<br/>(MA20 附近)"]
     Break_Long --> Entry_B["進場點: 突破 $298.50 確立"]
@@ -511,9 +511,9 @@ graph TD
     Start --> Base_S["2. 基準情境 (50%)"]
     Start --> Bear_S["3. 悲觀情境 (20%)"]
     
-    Bull_S -->|"放量突破 $298"| Target_350["直接噴發至 $330 - $350<br/>空頭嘎空爆發"]
-    Base_S -->|"高位遇阻"| Retrace_233["回調至 $233 - $238 尋求支撐<br/>完成均值回歸後再度上攻"]
-    Bear_S -->|"跌破 MA20"| Deep_Retrace["深幅回測至 MA50 ($193.96)<br/>中期趨勢轉為高位大區間震盪"]
+    Bull_S -->|放量突破 $298| Target_350["直接噴發至 $330 - $350<br/>空頭嘎空爆發"]
+    Base_S -->|高位遇阻| Retrace_233["回調至 $233 - $238 尋求支撐<br/>完成均值回歸後再度上攻"]
+    Bear_S -->|跌破 MA20| Deep_Retrace["深幅回測至 MA50 ($193.96)<br/>中期趨勢轉為高位大區間震盪"]
 ```
 
 ### 🛡️ 風險管理重要提醒
