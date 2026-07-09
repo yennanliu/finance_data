@@ -359,12 +359,12 @@ graph LR
     FIN["融資現金流<br/>+$579.00M"]
     NC["淨現金變動<br/>+$364.00M"]
 
-    NI -->|"調整"| OCF
-    DA -->|"加入"| OCF
-    NWC -->|"扣除"| OCF
-    OCF -->|"扣除 Capex"| FCF
-    FCF -->|"加入融資流入"| NC
-    FIN -->|"融資發行"| NC
+    NI -->|調整| OCF
+    DA -->|加入| OCF
+    NWC -->|扣除| OCF
+    OCF -->|扣除 Capex| FCF
+    FCF -->|加入融資流入| NC
+    FIN -->|融資發行| NC
 ```
 
 ### 5.2 FCF 轉換率趨勢
@@ -465,9 +465,9 @@ graph LR
     ATO["資產週轉率: 0.24x<br/>(資產重，待發射量提升)"]
     FL["財務槓桿: 1.30x<br/>(融資後槓桿極低)"]
 
-    PM -->|"相乘"| ROE
-    ATO -->|"相乘"| ROE
-    FL -->|"相乘"| ROE
+    PM -->|相乘| ROE
+    ATO -->|相乘| ROE
+    FL -->|相乘| ROE
 ```
 
 ### 6.4 獲利能力儀表板
@@ -478,9 +478,9 @@ graph TD
     OP["營業利益率 (Operating Margin): -33.20%"]
     NP["淨利率 (Net Margin): -26.87%"]
 
-    GP -->|"減: SG&A 27.5%"| OP
-    GP -->|"減: R&D 45.0%"| OP
-    OP -->|"加: 淨利息收入等"| NP
+    GP -->|減: SG&A 27.5%| OP
+    GP -->|減: R&D 45.0%| OP
+    OP -->|加: 淨利息收入等| NP
 ```
 
 ---

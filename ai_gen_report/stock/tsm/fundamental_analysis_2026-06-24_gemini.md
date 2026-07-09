@@ -299,7 +299,7 @@ graph TD
     CA --> AR["Accounts Receivable<br/>NT$279.05B"]
     CA --> INV["Inventory<br/>NT$288.11B"]
 
-    NCA --> PPE["Net PP& E(Fabs)<br/>NT$3.74T"]
+    NCA --> PPE["Net PP&E (Fabs)<br/>NT$3.74T"]
     NCA --> LTI["Long-Term Investments<br/>NT$172.19B"]
 ```
 

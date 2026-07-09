@@ -128,7 +128,7 @@ graph TD
     COMPANY --> BUSINESS1["數位銀行〈58%</br>$6.17B〉"]
     COMPANY --> BUSINESS2["國際拓展取併分實例"]
     
-    nb1["BUSINESS1 -- 客戶使用行動應用程式 -- PRODUCT"] --> SERVICES
+    BUSINESS1 -- 客戶使用行動應用程式 -- PRODUCT --> SERVICES
 
     BUSINESS2 -.擴展-> SERVICES
 ```

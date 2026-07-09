@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    Month["月線趨勢"] -->|"上升"| Week["週線趨勢"]
-    Week -->|"上升"| Day["日線趨勢"]
-    Day -->|"上升"| Conclusion["結論：整體上升趨勢強勁"]
+    Month["月線趨勢"] -->|上升| Week["週線趨勢"]
+    Week -->|上升| Day["日線趨勢"]
+    Day -->|上升| Conclusion["結論：整體上升趨勢強勁"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -142,7 +142,7 @@ $230 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX(37.57)"] -->|"強趨勢"| +DI["多頭主導"]
+    ADX["ADX(37.57)"] -->|強趨勢| +DI["多頭主導"]
     +DI --> Conclusion["趨勢強勁，建議持有多頭"]
 ```
 
@@ -157,7 +157,7 @@ graph TD
     HeadShoulders["頭肩頂形態"]
     DoubleBottom["雙底形態"]
     AscendingTriangle["上升三角形"]
-    AscendingTriangle -->|"形成中"| Conclusion["上升三角形形成，上行潛力強"]
+    AscendingTriangle -->|形成中| Conclusion["上升三角形形成，上行潛力強"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -233,8 +233,8 @@ $240 ║████████████████████████
 
 ```mermaid
 graph TD
-    RSI["RSI(82.90)"] -->|"超買"| MACD["MACD 看多"]
-    MACD -->|"多頭"| MA20["MA20 上方"]
+    RSI["RSI(82.90)"] -->|超買| MACD["MACD 看多"]
+    MACD -->|多頭| MA20["MA20 上方"]
     MA20 --> Conclusion["整體多頭壓力"]
 ```
 
@@ -242,8 +242,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|"價格上方"| B["看多"]
-    C["長期 MA200"] -->|"價格下方"| D["看多"]
+    A["短期 MA20"] -->|價格上方| B["看多"]
+    C["長期 MA200"] -->|價格下方| D["看多"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -256,8 +256,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD["MACD 線"] -->|"高於"| Signal["訊號線"]
-    Signal -->|"柱狀圖正"| Conclusion["看多"]
+    MACD["MACD 線"] -->|高於| Signal["訊號線"]
+    Signal -->|柱狀圖正| Conclusion["看多"]
 ```
 
 ### 📦 布林通道分析
@@ -328,9 +328,9 @@ $235 ┼───
 
 ```mermaid
 graph TD
-    A["觀察多頭形態"] -->|"進場條件符合"| B{"多頭策略"}
-    B -->|"是"| C["進場"]
-    B -->|"否"| D["等待"]
+    A["觀察多頭形態"] -->|進場條件符合| B{"多頭策略"}
+    B -->|是| C["進場"]
+    B -->|否| D["等待"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -388,9 +388,9 @@ graph TD
 
 ```mermaid
 graph TD
-    ScenarioA["樂觀情境"] -->|"突破阻力"| ConclusionA["持有並觀察"]
-    ScenarioB["基本情境"] -->|"橫盤整理"| ConclusionB["觀察並等待"]
-    ScenarioC["悲觀情境"] -->|"跌破支撐"| ConclusionC["考慮止損"]
+    ScenarioA["樂觀情境"] -->|突破阻力| ConclusionA["持有並觀察"]
+    ScenarioB["基本情境"] -->|橫盤整理| ConclusionB["觀察並等待"]
+    ScenarioC["悲觀情境"] -->|跌破支撐| ConclusionC["考慮止損"]
 ```
 
 ### 🛡️ 風險管理重要提醒

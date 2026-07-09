@@ -133,7 +133,7 @@ graph LR
     ADX["ADX(14): 18.18 弱趨勢"]
     +DI["+DI: 16.56"]
     -DI["-DI: 30.29"]
-    ADX --> nb1["+DI"]
+    ADX --> +DI
     ADX --> -DI
 ```
 

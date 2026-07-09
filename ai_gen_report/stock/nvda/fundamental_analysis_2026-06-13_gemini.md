@@ -373,10 +373,10 @@ graph LR
     FCF["自由現金流 (FCF)<br/>$96.68B"]
     RET["股息/回購/留存<br/>-$96.68B"]
 
-    NI -->|"加上"| DA
-    DA -->|"扣除"| WC
+    NI -->|加上| DA
+    DA -->|扣除| WC
     WC --> OCF
-    OCF -->|"扣除"| CAPEX
+    OCF -->|扣除| CAPEX
     CAPEX --> FCF
     FCF --> RET
 ```

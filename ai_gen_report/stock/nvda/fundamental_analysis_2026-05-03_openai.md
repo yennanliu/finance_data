@@ -320,10 +320,10 @@ graph LR
     NetCash["淨現金流 $90.71B"]
 
     NetIncome --> OCF
-    OCF -->|"減"| Capex
+    OCF -->|減| Capex
     Capex --> FCF
-    FCF -->|"減"| Dividends
-    FCF -->|"減"| Repurchases
+    FCF -->|減| Dividends
+    FCF -->|減| Repurchases
     Repurchases --> NetCash
 ```
 

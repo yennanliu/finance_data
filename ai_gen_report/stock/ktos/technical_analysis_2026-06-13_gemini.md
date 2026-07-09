@@ -115,17 +115,17 @@ graph TD
     A["月線層級 (長期): 🔴 熊市修正"] --> B["週線層級 (中期): 🟡 區間震盪築底"]
     B --> C["日線層級 (短期): 🟢 弱勢反彈/尋找支撐"]
     
-    subgraph "月線分析 (Long-term)"
+    subgraph 月線分析 (Long-term)
         A1["自 $103.01 高點回檔"]
         A2["回測 52W 低點 $39.00 後的反彈"]
     end
     
-    subgraph "週線分析 (Medium-term)"
+    subgraph 週線分析 (Medium-term)
         B1["在 $52.09 形成雙重底預期"]
         B2["受制於下行通道上軌 $64.13"]
     end
     
-    subgraph "日線分析 (Short-term)"
+    subgraph 日線分析 (Short-term)
         C1["MACD 黃金交叉"]
         C2["挑戰 MA20 ($58.11) 壓力"]
     end
@@ -179,11 +179,11 @@ $50.41 ────────────────────────�
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 19.27"] -->|"小于 25"| Range["無趨勢/區間震盪行情"]
+    ADX["ADX(14) = 19.27"] -->|小于 25| Range["無趨勢/區間震盪行情"]
     Range --> DI_Analysis["分析 +DI 與 -DI 交叉"]
     DI_Analysis --> PlusDI["+DI = 22.86"]
     DI_Analysis --> MinusDI["-DI = 17.92"]
-    PlusDI -->|"大于 -DI"| BullBias["多頭微幅佔優 (震盪偏多)"]
+    PlusDI -->|大于 -DI| BullBias["多頭微幅佔優 (震盪偏多)"]
     BullBias --> Action["策略：低吸高拋，不宜盲目追漲殺跌"]
 ```
 
@@ -199,8 +199,8 @@ graph TD
 graph TD
     A["第一底 (Left Bottom)\n$52.09 (2026-05-17)"] --> B["頸線反彈 (Neckline)\n$64.13 (2026-05-31)"]
     B --> C["第二底 (Right Bottom)\n$57.75 (當前位置)"]
-    C -->|"預期路徑"| D["突破頸線\n$64.13"]
-    D -->|"形態確立"| E["量測目標價\n$76.17"]
+    C -->|預期路徑| D["突破頸線\n$64.13"]
+    D -->|形態確立| E["量測目標價\n$76.17"]
 ```
 
 ### 🕯️ 重要K線形態分析

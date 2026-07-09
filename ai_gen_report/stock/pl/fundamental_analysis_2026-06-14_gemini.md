@@ -307,7 +307,7 @@ graph TD
     CA --> AR["Accounts Receivable<br/>$0.62億"]
     CA --> INV["Inventory<br/>$0.09億"]
 
-    NCA --> PPE["Net PP& E(Satellites)<br/>$1.99億"]
+    NCA --> PPE["Net PP&E (Satellites)<br/>$1.99億"]
     NCA --> GW["Goodwill & Intangibles<br/>$1.89億"]
 ```
 

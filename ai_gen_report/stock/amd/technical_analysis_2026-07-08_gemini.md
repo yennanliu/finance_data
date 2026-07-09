@@ -123,10 +123,10 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢 - 強勁上漲後回調"] --> B{"中期趨勢判斷"}
-    B --> C["週線趨勢 - 快速拉升後盤整/回落"]
-    C --> D{"短期趨勢判斷"}
-    D --> E["日線趨勢 - 短期下跌或震盪"]
+    A[月線趨勢 - 強勁上漲後回調] --> B{中期趨勢判斷}
+    B --> C[週線趨勢 - 快速拉升後盤整/回落]
+    C --> D{短期趨勢判斷}
+    D --> E[日線趨勢 - 短期下跌或震盪]
 
     subgraph Monthly_Trend ["長期 (月線) 趨勢 - 🟢 多頭"]
         M1["2025-02低點 $99.86"] --> M2["2026-06高點 $580.91"]
@@ -235,7 +235,7 @@ graph TD
     D --> F{"+DI > -DI \\n 多頭力量主導"}
     E --> F
 
-    nb1["B -- 結合"] --> F
+    B -- 結合 --> F
     F --> G["結論: 雖然趨勢強度較弱，但多頭力量仍佔優勢，預示目前處於多頭主導下的盤整或回調階段。"]
 ```
 
@@ -261,9 +261,9 @@ AMD 的 ADX(14) 數值為 23.47，這明確表示當前市場處於**弱趨勢�
 
 ```mermaid
 graph TD
-    A["價格行為分析"] --> B{"近期高點 $580.91"}
-    B --> C{"當前價格 $516.11"}
-    C --> D["月線回調 11.16%"]
+    A[價格行為分析] --> B{近期高點 $580.91}
+    B --> C{當前價格 $516.11}
+    C --> D[月線回調 11.16%]
 
     subgraph Potential_Patterns ["潛在圖表形態"]
         P1["雙頂 (Double Top) - ⚠️ 形成中"]
@@ -410,11 +410,11 @@ graph TD
         F5["76.4% 回調: $213.29"]
     end
 
-    nb1["B -- 接近"] --> F1
-    nb2["F1 -- 潛在支撐"] --> F2
-    nb3["F2 -- 重要支撐"] --> F3
-    nb4["F3 -- 關鍵支撐"] --> F4
-    nb5["F4 -- 強支撐"] --> F5
+    B -- 接近 --> F1
+    F1 -- 潛在支撐 --> F2
+    F2 -- 重要支撐 --> F3
+    F3 -- 關鍵支撐 --> F4
+    F4 -- 強支撐 --> F5
 ```
 
 **斐波那契回調位計算**：
@@ -443,44 +443,44 @@ graph TD
 
 ```mermaid
 graph TD
-    P["當前價格 $516.11"] --> M20["MA20: $520.76"]
-    P --> M50["MA50: $469.57"]
-    P --> M200["MA200: $281.93"]
+    P[當前價格 $516.11] --> M20[MA20: $520.76]
+    P --> M50[MA50: $469.57]
+    P --> M200[MA200: $281.93]
 
     subgraph Moving_Averages ["移動平均線系統"]
-        M20 -- "價格跌破" --> MA_Bear["🔴 短期看空"]
-        M50 -- "價格上方" --> MA_Bull_Mid["🟢 中期看多"]
-        M200 -- "價格上方" --> MA_Bull_Long["🟢 長期看多"]
-        MA_Bull_Mid --> MA_Arrangement["多頭排列 MA20>MA50>MA200"]
+        M20 -- "價格跌破" --> MA_Bear[🔴 短期看空]
+        M50 -- "價格上方" --> MA_Bull_Mid[🟢 中期看多]
+        M200 -- "價格上方" --> MA_Bull_Long[🟢 長期看多]
+        MA_Bull_Mid --> MA_Arrangement[多頭排列 MA20>MA50>MA200]
         MA_Bull_Long --> MA_Arrangement
-        MA_Arrangement --> MA_Overall["🟢 均線系統整體偏多"]
+        MA_Arrangement --> MA_Overall[🟢 均線系統整體偏多]
     end
 
     subgraph Momentum_Indicators ["動能指標"]
-        RSI["RSI(14): 45.32"] --> RSI_Neutral["🟡 中性區間"]
-        RSI --> RSI_Divergence["⚠️ 頂背離"] --> RSI_Bear["🔴 看空訊號"]
+        RSI[RSI(14): 45.32] --> RSI_Neutral[🟡 中性區間]
+        RSI --> RSI_Divergence[⚠️ 頂背離] --> RSI_Bear[🔴 看空訊號]
 
-        MACD_Line["MACD: 20.143"] --> MACD_Signal["MACD Signal: 24.846"]
-        MACD_Line -- "下穿" --> MACD_Cross["MACD 死叉"] --> MACD_Bear["🔴 看空訊號"]
-        MACD_Hist["MACD Hist: -4.703"] --> MACD_Hist_Bear["🔴 負值，空頭動能"]
+        MACD_Line[MACD: 20.143] --> MACD_Signal[MACD Signal: 24.846]
+        MACD_Line -- "下穿" --> MACD_Cross[MACD 死叉] --> MACD_Bear[🔴 看空訊號]
+        MACD_Hist[MACD Hist: -4.703] --> MACD_Hist_Bear[🔴 負值，空頭動能]
     end
 
     subgraph Trend_Strength ["趨勢強度與波動"]
-        ADX["ADX(14): 23.47"] --> ADX_Weak["🟡 弱趨勢/盤整"]
-        DI_Plus["+DI: 28.44"] --> DI_Plus_Dom["🟢 多頭主導"]
-        DI_Minus["-DI: 22.44"] --> DI_Plus_Dom
+        ADX[ADX(14): 23.47] --> ADX_Weak[🟡 弱趨勢/盤整]
+        DI_Plus[+DI: 28.44] --> DI_Plus_Dom[🟢 多頭主導]
+        DI_Minus[-DI: 22.44] --> DI_Plus_Dom
 
-        ATR["ATR(14): $38.65"] --> ATR_High["🔴 高波動率"]
+        ATR[ATR(14): $38.65] --> ATR_High[🔴 高波動率]
     end
 
     subgraph Volume_Analysis ["成交量與量能"]
-        Volume_Current["最新成交量: 29M"] --> Volume_Avg["20日均量: 31M"]
-        Volume_Current -- "低於均量" --> Volume_Weak["🔴 量能萎縮"]
+        Volume_Current[最新成交量: 29M] --> Volume_Avg[20日均量: 31M]
+        Volume_Current -- "低於均量" --> Volume_Weak[🔴 量能萎縮]
 
-        OBV["OBV趨勢: OBV < MA"] --> OBV_Weak["🔴 量能疲弱，未確認"]
+        OBV[OBV趨勢: OBV < MA] --> OBV_Weak[🔴 量能疲弱，未確認]
     end
 
-    MA_Overall --> Overall_Verdict["綜合評估"]
+    MA_Overall --> Overall_Verdict[綜合評估]
     RSI_Bear --> Overall_Verdict
     MACD_Bear --> Overall_Verdict
     ADX_Weak --> Overall_Verdict
@@ -501,19 +501,19 @@ graph TD
     MA200_Val["MA200: $281.93"]
     Current_Price["現價: $516.11"]
 
-    MA20_Val -->|"高於"| MA50_Val
-    MA50_Val -->|"高於"| MA200_Val
-    MA20_Val --- MA_Order["MA20 > MA50 > MA200"]
+    MA20_Val -->|高於| MA50_Val
+    MA50_Val -->|高於| MA200_Val
+    MA20_Val --- MA_Order[MA20 > MA50 > MA200]
     MA_Order --> Bullish_Arrangement["🟢 長期多頭排列"]
 
-    Current_Price -->|"低於"| MA20_Val
-    Current_Price -->|"高於"| MA50_Val
-    Current_Price -->|"高於"| MA200_Val
+    Current_Price -->|低於| MA20_Val
+    Current_Price -->|高於| MA50_Val
+    Current_Price -->|高於| MA200_Val
 
-    Short_Term_Signal["價格低於MA20"] --> Short_Bearish["🔴 短期看空"]
-    Mid_Long_Term_Signal["價格高於MA50/MA200"] --> Mid_Long_Bullish["🟢 中長期看多"]
+    Short_Term_Signal["價格低於MA20"] --> Short_Bearish[🔴 短期看空]
+    Mid_Long_Term_Signal["價格高於MA50/MA200"] --> Mid_Long_Bullish[🟢 中長期看多]
 
-    Bullish_Arrangement --> Overall_MA_View["均線系統綜合判斷"]
+    Bullish_Arrangement --> Overall_MA_View[均線系統綜合判斷]
     Short_Bearish --> Overall_MA_View
     Mid_Long_Bullish --> Overall_MA_View
     Overall_MA_View --> Conclusion["結論: 長期趨勢仍強勁，但短期面臨回調壓力。"]
@@ -557,10 +557,10 @@ graph TD
     MACD_Line["MACD線: 20.143"] --> Signal_Line["訊號線: 24.846"]
     Signal_Line --> MACD_Hist["MACD柱狀圖: -4.703"]
 
-    MACD_Line -- "下穿" --> Signal_Line_Cross["MACD死叉"]
-    Signal_Line_Cross --> Bearish_Signal["🔴 強烈看空訊號"]
+    MACD_Line -- "下穿" --> Signal_Line_Cross[MACD死叉]
+    Signal_Line_Cross --> Bearish_Signal[🔴 強烈看空訊號]
 
-    MACD_Hist -- "負值" --> Bearish_Momentum["🔴 空頭動能佔優"]
+    MACD_Hist -- "負值" --> Bearish_Momentum[🔴 空頭動能佔優]
 
     Bearish_Signal --> MACD_Verdict{"結論: 短期空頭動能強勁，下跌趨勢可能延續。"}
     Bearish_Momentum --> MACD_Verdict
@@ -613,17 +613,17 @@ $461.86 ╚═══════════════════════
 
 ```mermaid
 graph TD
-    P["當前價格: $516.11"] --> P_Action["近期從高點回落"]
+    P[當前價格: $516.11] --> P_Action[近期從高點回落]
 
-    V_Current["最新成交量: 29,007,561"] --> V_Avg20["20日均量: 31,266,123"]
-    V_Current -- "低於" --> V_Avg50["50日均量: 36,923,477"]
+    V_Current[最新成交量: 29,007,561] --> V_Avg20[20日均量: 31,266,123]
+    V_Current -- "低於" --> V_Avg50[50日均量: 36,923,477]
 
-    V_Ratio["量比: 0.93x"] --> Weak_Volume["🔴 成交量萎縮"]
+    V_Ratio[量比: 0.93x] --> Weak_Volume[🔴 成交量萎縮]
 
-    OBV_Trend["OBV趨勢: OBV < MA"] --> Weak_OBV["🔴 量能疲弱"]
+    OBV_Trend[OBV趨勢: OBV < MA] --> Weak_OBV[🔴 量能疲弱]
 
-    P_Action -- "伴隨" --> Weak_Volume_Confirmation["量價背離: 下跌伴隨量能萎縮"]
-    Weak_Volume_Confirmation --> OBV_Confirmation["OBV確認量能疲弱"]
+    P_Action -- "伴隨" --> Weak_Volume_Confirmation[量價背離: 下跌伴隨量能萎縮]
+    Weak_Volume_Confirmation --> OBV_Confirmation[OBV確認量能疲弱]
 
     Weak_OBV --> Overall_Volume_Verdict{"結論: 空頭量能不濟，多頭買盤缺乏，短期難以反彈。"}
     Weak_Volume --> Overall_Volume_Verdict

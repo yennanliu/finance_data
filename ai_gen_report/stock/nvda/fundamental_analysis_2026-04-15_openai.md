@@ -119,7 +119,7 @@ graph TD
 graph TD
     NVDA_OVERVIEW["NVIDIA 總覽：市值 $4.83T，年營收 $215.94B"]
 
-    NVDA_OVERVIEW --> COMPUTE["Compute & Networking(60%)"]
+    NVDA_OVERVIEW --> COMPUTE["Compute & Networking (60%)"]
     NVDA_OVERVIEW --> GRAPHICS["Graphics (40%)"]
 
     COMPUTE --> DC["Data Center Solutions"]

@@ -166,10 +166,10 @@ $520 ─────────────────────────
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 16.99"] -->|"ADX < 20"| Range["無趨勢 / 弱趨勢狀態 (盤整格局)"]
-    ADX -->|"DI 比較"| DI_Compare["-DI (37.46) > +DI (21.67)"]
-    DI_Compare -->|"解讀"| Bear_Dominant["空頭佔據主導地位，但缺乏加速動能"]
-    Range -->|"交易策略"| Oscillator["適合使用震盪指標 (RSI, Stoch) 進行低吸高拋"]
+    ADX["ADX 數值: 16.99"] -->|ADX < 20| Range["無趨勢 / 弱趨勢狀態 (盤整格局)"]
+    ADX -->|DI 比較| DI_Compare["-DI (37.46) > +DI (21.67)"]
+    DI_Compare -->|解讀| Bear_Dominant["空頭佔據主導地位，但缺乏加速動能"]
+    Range -->|交易策略| Oscillator["適合使用震盪指標 (RSI, Stoch) 進行低吸高拋"]
 ```
 
 | ADX 區間 | 趨勢強度 | META 當前狀態 (16.99) | 適用交易系統 |
@@ -192,8 +192,8 @@ graph TD
         Bottom1["第一底: $525.72 \n (2026-03-29)"] --> Neckline["頸線位置: $688.55 \n (2026-04-19)"]
         Neckline --> Bottom2["潛在第二底: $568.43 \n (2026-06-12)"]
     end
-    Bottom2 -->|"若守住 $520-$525"| Confirm["雙底確立，重回牛市"]
-    Bottom2 -->|"若跌破 $520"| Fail["形態失效，開啟新一輪下跌"]
+    Bottom2 -->|若守住 $520-$525| Confirm["雙底確立，重回牛市"]
+    Bottom2 -->|若跌破 $520| Fail["形態失效，開啟新一輪下跌"]
 ```
 
 ### 🕯️ 重要K線形態分析

@@ -139,7 +139,7 @@ graph TD
     AS --> MUAS["Medium UAS (中型無人機)<br/>- JUMP 20<br/>- 垂直起降 (VTOL) 方案"]
     AS --> TMS["Tactical Missile Systems (精準打擊)<br/>- Switchblade 300 / 600<br/>- 巡飛彈 (Loitering Munitions)"]
 
-    SC --> SPACE["Space & Cyber(太空與網絡)<br/>- 高空偽衛星 (HAPS)<br/>- 衛星子系統與加密通信"]
+    SC --> SPACE["Space & Cyber (太空與網絡)<br/>- 高空偽衛星 (HAPS)<br/>- 衛星子系統與加密通信"]
     SC --> DE["Directed Energy (定向能)<br/>- 反無人機 (C-UAS) 解決方案"]
     SC --> SW["Kinesis Software<br/>- 統一自主控制平台"]
 ```

@@ -177,12 +177,12 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "雙底形態 (Double Bottom)"
+    subgraph 雙底形態 (Double Bottom)
         A["左底: $571.60 (2026-03)"] --> B["頸線反彈: $687.91 (2026-04)"]
         B --> C["右底: $566.45 (2026-06)"]
         C --> D{"當前反彈中 ($600.21)"}
-        D -->|"若突破 $687.91"| E["確定雙底反轉，目標價 $804.22"]
-        D -->|"若跌破 $559.84"| F["形態失效，下探 $519.78"]
+        D -->|若突破 $687.91| E["確定雙底反轉，目標價 $804.22"]
+        D -->|若跌破 $559.84| F["形態失效，下探 $519.78"]
     end
 ```
 
@@ -285,7 +285,7 @@ graph TD
     RSI["RSI: 🟢 底部背離"] --> CONFLICT
     MACD["MACD: 🔴 零軸下方死叉"] --> CONFLICT
     ADX["ADX: 🟡 趨勢疲弱 (15.37)"] --> CONFLICT
-    CONFLICT -->|"結論"| OUT["⚠️ 當前不可追空，亦不宜盲目重倉做多。<br/>應以低吸、分批建倉為主。"]
+    CONFLICT -->|結論| OUT["⚠️ 當前不可追空，亦不宜盲目重倉做多。<br/>應以低吸、分批建倉為主。"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -321,9 +321,9 @@ graph TD
 
 ```mermaid
 graph LR
-    DIF["DIF (-10.012)"] -->|"低位收斂"| DEA["DEA (-8.951)"]
-    Hist["柱狀體 (-1.060)"] -->|"縮短中"| Zero["零軸"]
-    Zero -->|"預期"| GoldenCross["即將形成金叉"]
+    DIF["DIF (-10.012)"] -->|低位收斂| DEA["DEA (-8.951)"]
+    Hist["柱狀體 (-1.060)"] -->|縮短中| Zero["零軸"]
+    Zero -->|預期| GoldenCross["即將形成金叉"]
 ```
 
 ### 📦 布林通道分析
@@ -410,9 +410,9 @@ $559.84 ──────────┴─────────────
 ```mermaid
 graph TD
     PriceAction{"現價 $600.21 走向?"}
-    PriceAction -->|"向上突破 $622.20"| StratB["策略 B (右側突破做多)"]
-    PriceAction -->|"回踩 $580.00 - $590.00"| StratA["策略 A (左側低吸做多)"]
-    PriceAction -->|"反彈受阻於 $620.00"| StratC["策略 C (逢高做空)"]
+    PriceAction -->|向上突破 $622.20| StratB["策略 B (右側突破做多)"]
+    PriceAction -->|回踩 $580.00 - $590.00| StratA["策略 A (左側低吸做多)"]
+    PriceAction -->|反彈受阻於 $620.00| StratC["策略 C (逢高做空)"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -471,15 +471,15 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "樂觀場景 (Bullish Case - 30% 機率)"
+    subgraph 樂觀場景 (Bullish Case - 30% 機率)
         A1["大盤企穩 + META 縮量回踩 $588 守住"] --> A2["突破 MA50 ($622)"]
         A2 --> A3["挑戰 MA200 ($655) 及 頸線 $687"]
     end
-    subgraph "基準場景 (Base Case - 50% 機率)"
+    subgraph 基準場景 (Base Case - 50% 機率)
         B1["價格在 $580 - $630 區間反覆震盪"] --> B2["ADX 降至 12 以下，布林極度收口"]
         B2 --> B3["等待下一季財報或催化劑進行方向選擇"]
     end
-    subgraph "悲觀場景 (Bearish Case - 20% 機率)"
+    subgraph 悲觀場景 (Bearish Case - 20% 機率)
         C1["大盤崩跌 + META 跌破 $566.45"] --> C2["引發恐慌性停損，直奔 $519.78 (52W低點)"]
         C2 --> C3["形態徹底破壞，中期進入漫長熊市"]
     end

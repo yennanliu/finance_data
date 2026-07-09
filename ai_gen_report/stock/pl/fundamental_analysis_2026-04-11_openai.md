@@ -125,7 +125,7 @@ graph TD
 graph TD
     Co["公司總覽<br/>市值：$12.00B<br/>年營收：$307.73M"]
     Space["主要業務板塊<br/>航太+地理空間數據<br/>100%"]
-    Inst["“國際地面訊號數傳+軟體服務<br/>~深化Share”"]
+    Inst[“國際地面訊號數傳+軟體服務<br/>~深化Share”]
     Co --> Space
     Space --> Inst
 ```

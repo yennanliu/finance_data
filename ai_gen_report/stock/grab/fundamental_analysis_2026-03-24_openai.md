@@ -28,10 +28,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD
-    A["基本面"] -->|"7"| B("成長")
-    A -->|"6"| C("獲利")
-    A -->|"8"| D("財務健康")
-    A -->|"5"| E("估值")
+    A[基本面] -->|7| B(成長)
+    A -->|6| C(獲利)
+    A -->|8| D(財務健康)
+    A -->|5| E(估值)
 ```
 
 ### 5大投資論點 + 3大風險
@@ -70,11 +70,11 @@ graph TD
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["Grab Holdings"] -->|"GrabFood"| B("Delivery")
-    A -->|"GrabMart"| C("Retail")
-    A -->|"GrabExpress"| D("Logistics")
-    A -->|"GrabAds"| E("Advertising")
-    A -->|"Grab for Business"| F("B2B Services")
+    A[Grab Holdings] -->|GrabFood| B(Delivery)
+    A -->|GrabMart| C(Retail)
+    A -->|GrabExpress| D(Logistics)
+    A -->|GrabAds| E(Advertising)
+    A -->|Grab for Business| F(B2B Services)
 ```
 
 ### 市場地位
@@ -155,10 +155,10 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A["總資產"] -->|"流動資產"| B("現金及現金等價物")
-    A -->|"流動資產"| C("應收賬款")
-    A -->|"非流動資產"| D("機器設備")
-    A -->|"非流動資產"| E("無形資產")
+    A[總資產] -->|流動資產| B(現金及現金等價物)
+    A -->|流動資產| C(應收賬款)
+    A -->|非流動資產| D(機器設備)
+    A -->|非流動資產| E(無形資產)
 ```
 
 ### 流動性指標表格
@@ -189,9 +189,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A("營業現金流") --> B("投資現金流")
-    A --> C("融資現金流")
-    B --> D("淨增減現金")
+    A(營業現金流) --> B(投資現金流)
+    A --> C(融資現金流)
+    B --> D(淨增減現金)
 ```
 
 ### FCF 轉換率趨勢表格
@@ -241,9 +241,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph TD
-    A["ROE"] --> B("淨利率")
-    A --> C("資產週轉率")
-    A --> D("槓桿比")
+    A[ROE] --> B(淨利率)
+    A --> C(資產週轉率)
+    A --> D(槓桿比)
 ```
 
 ---
@@ -306,11 +306,11 @@ gantt
 ### 短/中/長期成長驅動力
 ```mermaid
 graph TD
-    A["短期"] --> B("市場擴展")
-    A --> C("新產品推出")
-    D["中期"] --> E("技術升級")
-    D --> F("合作夥伴關係")
-    G["長期"] --> H("營運效率提升")
+    A[短期] --> B(市場擴展)
+    A --> C(新產品推出)
+    D[中期] --> E(技術升級)
+    D --> F(合作夥伴關係)
+    G[長期] --> H(營運效率提升)
 ```
 
 ---
@@ -349,11 +349,11 @@ graph TD
 ### 投資人適配度
 ```mermaid
 graph TD
-    A["成長型"] --> B("高風險容忍度")
-    A --> C("長期展望")
-    D["價值型"] --> E("低估機會")
-    F["股息型"] --> G("無股息")
-    H["短期交易"] --> I("波動性高")
+    A[成長型] --> B(高風險容忍度)
+    A --> C(長期展望)
+    D[價值型] --> E(低估機會)
+    F[股息型] --> G(無股息)
+    H[短期交易] --> I(波動性高)
 ```
 
 ### 關鍵監控指標 checklist

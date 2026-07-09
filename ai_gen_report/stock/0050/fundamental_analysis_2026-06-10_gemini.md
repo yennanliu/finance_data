@@ -137,7 +137,7 @@ graph TD
     LIQUIDITY["流動性篩選<br/>(過去12個月中，至少10個月<br/>日均交易量 > 自由流通股數之0.05%)"]
     SIZE["市值篩選<br/>(挑選總市值前50大企業)"]
 
-    ETF -->|"完全複製法"| INDEX
+    ETF -->|完全複製法| INDEX
     UNIVERSE --> LIQUIDITY
     LIQUIDITY --> SIZE
     SIZE --> INDEX

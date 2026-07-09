@@ -102,11 +102,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] --> B["週線趨勢"]
-    B --> C["日線趨勢"]
-    A --> D["長期看多"]
-    B --> E["中期看空"]
-    C --> F["短期震盪"]
+    A[月線趨勢] --> B[週線趨勢]
+    B --> C[日線趨勢]
+    A --> D[長期看多]
+    B --> E[中期看空]
+    C --> F[短期震盪]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -143,8 +143,8 @@ $120 ┤  ●
 
 ```mermaid
 graph TD
-    ADX["ADX 指數"] -->|"<25"| WEAK_TREND["弱趨勢/盤整"]
-    ADX -->|">25"| STRONG_TREND["強趨勢"]
+    ADX[ADX 指數] -->|<25| WEAK_TREND[弱趨勢/盤整]
+    ADX -->|>25| STRONG_TREND[強趨勢]
 ```
 
 ---
@@ -230,17 +230,17 @@ $120 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA["均線"] -->|"空頭排列"| BEARISH["看空"]
-    RSI["RSI"] -->|"中性"| NEUTRAL["中性"]
-    MACD["MACD"] -->|"看空"| BEARISH
+    MA["均線"] -->|空頭排列| BEARISH["看空"]
+    RSI["RSI"] -->|中性| NEUTRAL["中性"]
+    MACD["MACD"] -->|看空| BEARISH
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|"價格下方"| B["空頭"]
-    C["長期 MA200"] -->|"價格下方"| D["空頭"]
+    A["短期 MA20"] -->|價格下方| B["空頭"]
+    C["長期 MA200"] -->|價格下方| D["空頭"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -253,8 +253,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_LINE["MACD 線"] -->|"低於"| SIGNAL_LINE["訊號線"]
-    HISTOGRAM["柱狀圖"] -->|"看空"| BEARISH_SIGNAL["空頭訊號"]
+    MACD_LINE["MACD 線"] -->|低於| SIGNAL_LINE["訊號線"]
+    HISTOGRAM["柱狀圖"] -->|看空| BEARISH_SIGNAL["空頭訊號"]
 ```
 
 ### 📦 布林通道分析

@@ -110,9 +110,9 @@ PLTR 的多時框分析顯示出明顯的「**長空、中盤、短多**」矛�
 
 ```mermaid
 graph TD
-    A["多時框趨勢分析"] --> B("月線層級: 長期趨勢")
-    A --> C("週線層級: 中期趨勢")
-    A --> D("日線層級: 短期趨勢")
+    A[多時框趨勢分析] --> B(月線層級: 長期趨勢)
+    A --> C(週線層級: 中期趨勢)
+    A --> D(日線層級: 短期趨勢)
     
     B --> B1["🔴 價格低於 MA200 ($160.31)\n長期處於修正波段"]
     C --> C1["🟡 進入寬幅震盪區間 ($125 - $155)\nADX = 15.77 趨勢不明顯"]
@@ -169,8 +169,8 @@ $100 ┤          ●─●
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 15.77"] -->|"小于 20"| Range["無趨勢/橫盤整理"]
-    DI_Diff["+DI (22.93) vs -DI (30.11)"] -->|"DI 差值收窄"| BearWeak["空頭主導但動能衰竭"]
+    ADX["ADX 數值: 15.77"] -->|小于 20| Range["無趨勢/橫盤整理"]
+    DI_Diff["+DI (22.93) vs -DI (30.11)"] -->|DI 差值收窄| BearWeak["空頭主導但動能衰竭"]
     Range --> TradeStrategy["策略：高拋低吸 (Range-bound Trading)"]
     BearWeak --> TradeStrategy
 ```
@@ -198,8 +198,8 @@ graph TD
 ```mermaid
 graph TD
     subgraph Pattern_Analysis ["圖表形態評估"]
-        P1["下降楔形 (Falling Wedge)"] -->|"看漲整理形態"| Breakout["阻力線: $138.50"]
-        P2["三重底 (Triple Bottom)"] -->|"底部反轉訊號"| Neckline["頸線位置: $156.54"]
+        P1["下降楔形 (Falling Wedge)"] -->|看漲整理形態| Breakout["阻力線: $138.50"]
+        P2["三重底 (Triple Bottom)"] -->|底部反轉訊號| Neckline["頸線位置: $156.54"]
     end
     Breakout --> Target1["第一目標價: $156.54 (頸線)"]
     Neckline --> Target2["第二目標價: $182.75 (形態等幅測量)"]
@@ -316,10 +316,10 @@ graph TD
     Price --> MACD_System["MACD: -2.148 (柱狀體收斂)"]
     Price --> BB_System["布林通道: %B = 0.38 (自下軌反彈)"]
     
-    MA_System -->|"壓制"| Bearish["🔴 短期趨勢偏空"]
-    RSI_System -->|"反轉"| Bullish["🟢 動能見底回升"]
-    MACD_System -->|"轉折"| Bullish
-    BB_System -->|"超賣反彈"| Bullish
+    MA_System -->|壓制| Bearish["🔴 短期趨勢偏空"]
+    RSI_System -->|反轉| Bullish["🟢 動能見底回升"]
+    MACD_System -->|轉折| Bullish
+    BB_System -->|超賣反彈| Bullish
 ```
 
 ### 📈 移動平均線排列分析
@@ -443,11 +443,11 @@ $121.50 ───────────────●─────●──
 ```mermaid
 graph TD
     Start["當前價格: $134.71"] --> Dec1{"風險偏好選擇?"}
-    Dec1 -->|"積極/左側交易"| StratA["策略 A: 逢回踩 $130 附近買入"]
-    Dec1 -->|"穩健/右側交易"| Dec2{"股價是否突破 $139 (MA20/50)?"}
+    Dec1 -->|積極/左側交易| StratA["策略 A: 逢回踩 $130 附近買入"]
+    Dec1 -->|穩健/右側交易| Dec2{"股價是否突破 $139 (MA20/50)?"}
     
-    Dec2 -->|"是 (放量突破)"| StratB["策略 B: 突破追多買入"]
-    Dec2 -->|"否 (受阻回落)"| Wait["繼續觀望，等待 $128 測試"]
+    Dec2 -->|是 (放量突破)| StratB["策略 B: 突破追多買入"]
+    Dec2 -->|否 (受阻回落)| Wait["繼續觀望，等待 $128 測試"]
     
     StratA --> TargetA["目標價 1: $146.39\n目標價 2: $156.54"]
     StratB --> TargetB["目標價 1: $156.54\n目標價 2: $182.75"]

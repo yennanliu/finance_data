@@ -141,7 +141,7 @@ graph TD
     +DI["+DI: 19.55"]
     -DI["-DI: 25.46"]
     ADX --> Trend["結論：盤整行情"]
-    nb1["+DI"] --> Trend
+    +DI --> Trend
     -DI --> Trend
 ```
 

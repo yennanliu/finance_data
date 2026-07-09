@@ -32,11 +32,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph LR
-    基本面("8")
-    成長("9")
-    獲利("9")
-    財務健康("8")
-    估值("7")
+    基本面(8)
+    成長(9)
+    獲利(9)
+    財務健康(8)
+    估值(7)
 ```
 
 ### 5大投資論點 + 3大風險
@@ -68,10 +68,10 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["TSM"] --> B["晶圓製造"]
-    A --> C["封裝"]
-    A --> D["測試"]
-    A --> E["銷售"]
+    A[TSM] --> B[晶圓製造]
+    A --> C[封裝]
+    A --> D[測試]
+    A --> E[銷售]
 ```
 
 ### 市場地位
@@ -185,10 +185,10 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    OCF["營業現金流"] --> CapEx["資本支出"]
-    CapEx --> FCF["自由現金流"]
-    FCF --> Dividends["股息"]
-    Dividends --> NetChange["現金淨增減"]
+    OCF[營業現金流] --> CapEx[資本支出]
+    CapEx --> FCF[自由現金流]
+    FCF --> Dividends[股息]
+    Dividends --> NetChange[現金淨增減]
 ```
 
 ### FCF 轉換率趨勢
@@ -238,9 +238,9 @@ graph LR
 ### 獲利能力儀表板
 ```mermaid
 graph LR
-    淨利率("45.1%")
-    資產週轉率("0.48")
-    槓桿比("2.16")
+    淨利率(45.1%)
+    資產週轉率(0.48)
+    槓桿比(2.16)
 ```
 
 ---

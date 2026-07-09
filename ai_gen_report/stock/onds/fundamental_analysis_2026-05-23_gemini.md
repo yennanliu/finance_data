@@ -145,20 +145,20 @@ Ondas Autonomous Systems (OAS) 則專注於無人機和自動化數據解決方�
 
 ```mermaid
 graph TD
-    A["ONDS Inc.<br/>市值: $4.52B<br/>TTM 營收: $96.61M"] --> B{"核心業務板塊"}
-    B --> C["Ondas Networks<br/>私有寬頻無線網路<br/>專注: 鐵路, 公用事業, 工業"]
-    B --> D["Ondas Autonomous Systems<br/>無人機與自動化數據解決方案<br/>專注: CUAS, 國防, 關鍵基礎設施"]
+    A[ONDS Inc.<br/>市值: $4.52B<br/>TTM 營收: $96.61M] --> B{核心業務板塊}
+    B --> C[Ondas Networks<br/>私有寬頻無線網路<br/>專注: 鐵路, 公用事業, 工業]
+    B --> D[Ondas Autonomous Systems<br/>無人機與自動化數據解決方案<br/>專注: CUAS, 國防, 關鍵基礎設施]
 
-    C --> C1["MC-IoT 平台<br/>高可靠性數據傳輸"]
-    C --> C2["專有頻譜技術<br/>5G 應用"]
-    D --> D1["Iron Drone Raider<br/>全自動攔截無人機"]
-    D --> D2["Sentrycs CoRF<br/>Cyber/RF CUAS 平台"]
-    D --> D3["自動化數據採集與分析"]
+    C --> C1[MC-IoT 平台<br/>高可靠性數據傳輸]
+    C --> C2[專有頻譜技術<br/>5G 應用]
+    D --> D1[Iron Drone Raider<br/>全自動攔截無人機]
+    D --> D2[Sentrycs CoRF<br/>Cyber/RF CUAS 平台]
+    D --> D3[自動化數據採集與分析]
 
-    C1 --> C1a["工業物聯網"]
-    C1 --> C1b["自動化操作"]
-    D1 --> D1a["反無人機防禦"]
-    D2 --> D2a["空域安全"]
+    C1 --> C1a[工業物聯網]
+    C1 --> C1b[自動化操作]
+    D1 --> D1a[反無人機防禦]
+    D2 --> D2a[空域安全]
 ```
 
 ### 2.2 市場份額

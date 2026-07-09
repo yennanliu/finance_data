@@ -140,16 +140,16 @@ NVIDIA的業務結構清晰，主要圍繞其強大的GPU技術和軟體生態�
 graph TD
     NVDA_Overview["NVIDIA Corporation<br/>市值: $4.72T<br/>TTM營收: $253.49B"]
 
-    CN["Compute & Networking(計算與網路)<br/>主要收入驅動力"]
+    CN["Compute & Networking (計算與網路)<br/>主要收入驅動力"]
     G["Graphics (圖形)<br/>穩健貢獻"]
 
     CN --> DC["Data Center (數據中心)<br/>AI加速器, DPUs, 伺服器"]
     CN --> Auto["Automotive (汽車)<br/>自動駕駛平台, 車載AI"]
-    CN --> SW["Software & Services(軟體與服務)<br/>CUDA, NVIDIA AI Enterprise"]
+    CN --> SW["Software & Services (軟體與服務)<br/>CUDA, NVIDIA AI Enterprise"]
 
     G --> Gaming["Gaming (電競)<br/>GeForce GPU"]
     G --> ProViz["Professional Visualization (專業視覺化)<br/>Quadro GPU"]
-    G --> OEM["OEM & Other(代工與其他)"]
+    G --> OEM["OEM & Other (代工與其他)"]
 
     NVDA_Overview --> CN
     NVDA_Overview --> G
@@ -357,13 +357,13 @@ graph TD
     CA["Current Assets (流動資產)<br/>FY2026: $125.61B (60.7%)<br/>TTM: $150.99B (58.2%)"]
     NCA["Non-Current Assets (非流動資產)<br/>FY2026: $81.19B (39.3%)<br/>TTM: $108.48B (41.8%)"]
 
-    CA --> CCE["Cash & Equivalents(現金及約當現金)<br/>FY2026: $10.61B<br/>TTM: $13.24B"]
+    CA --> CCE["Cash & Equivalents (現金及約當現金)<br/>FY2026: $10.61B<br/>TTM: $13.24B"]
     CA --> STI["Short-Term Investments (短期投資)<br/>FY2026: $51.95B<br/>TTM: $67.34B"]
     CA --> AR["Accounts Receivable (應收帳款)<br/>FY2026: $38.47B<br/>TTM: $40.71B"]
     CA --> INV["Inventory (存貨)<br/>FY2026: $21.40B<br/>TTM: $25.80B"]
     CA --> OCA["Other Current Assets (其他流動資產)<br/>FY2026: $3.18B<br/>TTM: $3.92B"]
 
-    NCA --> PPNE["Net Property, Plant & Equipment(不動產、廠房及設備淨值)<br/>FY2026: $13.25B<br/>TTM: $16.66B"]
+    NCA --> PPNE["Net Property, Plant & Equipment (不動產、廠房及設備淨值)<br/>FY2026: $13.25B<br/>TTM: $16.66B"]
     NCA --> GW["Goodwill (商譽)<br/>FY2026: $20.83B<br/>TTM: $20.89B"]
     NCA --> OIA["Other Intangible Assets (其他無形資產)<br/>FY2026: $3.31B<br/>TTM: $3.12B"]
     NCA --> LTI["Long-Term Investments (長期投資)<br/>FY2026: $22.25B<br/>TTM: $43.36B"]

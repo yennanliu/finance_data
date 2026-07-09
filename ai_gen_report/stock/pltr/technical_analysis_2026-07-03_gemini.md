@@ -127,26 +127,26 @@ PLTR 的趨勢分析揭示了短期反彈與中長期下跌趨勢的複雜交織
 
 ```mermaid
 graph TD
-    A["月線趨勢 - 長期"] --> B{"股價 $129.30"}
-    B --> C["週線趨勢 - 中期"]
-    C --> D["日線趨勢 - 短期"]
+    A[月線趨勢 - 長期] --> B{股價 $129.30}
+    B --> C[週線趨勢 - 中期]
+    C --> D[日線趨勢 - 短期]
 
-    subgraph "長期趨勢 (月線)"
+    subgraph 長期趨勢 (月線)
         LT1["MA200 ($157.91)"] --> LT2["價格 $129.30 位於 MA200 之下"]
-        LT2 --> LT3("🔴 明顯空頭趨勢")
+        LT2 --> LT3(🔴 明顯空頭趨勢)
     end
 
-    subgraph "中期趨勢 (週線)"
+    subgraph 中期趨勢 (週線)
         MT1["MA50 ($134.58)"] --> MT2["價格 $129.30 位於 MA50 之下"]
-        MT2 --> MT3("🔴 空頭趨勢，反彈受阻")
+        MT2 --> MT3(🔴 空頭趨勢，反彈受阻)
     end
 
-    subgraph "短期趨勢 (日線)"
+    subgraph 短期趨勢 (日線)
         ST1["MA20 ($125.97)"] --> ST2["價格 $129.30 位於 MA20 之上"]
-        ST2 --> ST3("🟢 短期反彈趨勢")
+        ST2 --> ST3(🟢 短期反彈趨勢)
     end
 
-    LT3 --> OVERALL{"📊 綜合趨勢判斷"}
+    LT3 --> OVERALL{📊 綜合趨勢判斷}
     MT3 --> OVERALL
     ST3 --> OVERALL
     OVERALL --> CONCLUSION("短期反彈，中長期承壓的震盪格局")
@@ -231,17 +231,17 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而非方向
 
 ```mermaid
 graph TD
-    A["ADX(14) 值: 20.54"] --> B{"趨勢強度判斷"}
-    B --> C{"ADX < 25"}
-    C --> D["🔴 弱趨勢或盤整行情"]
+    A[ADX(14) 值: 20.54] --> B{趨勢強度判斷}
+    B --> C{ADX < 25}
+    C --> D[🔴 弱趨勢或盤整行情]
 
-    E["+DI: 29.96"] --> F{"方向性判斷"}
-    F --> G["多頭力量 (+DI) > 空頭力量 (-DI)"]
-    G --> H["🟢 多頭主導，但趨勢不強"]
+    E[+DI: 29.96] --> F{方向性判斷}
+    F --> G[多頭力量 (+DI) > 空頭力量 (-DI)]
+    G --> H[🟢 多頭主導，但趨勢不強]
 
-    I["-DI: 27.12"] --> F
+    I[-DI: 27.12] --> F
 
-    J("綜合結論") --> K("PLTR 目前處於弱勢盤整行情，短期內多頭略佔優勢，但缺乏明確的強勁趨勢方向。")
+    J(綜合結論) --> K("PLTR 目前處於弱勢盤整行情，短期內多頭略佔優勢，但缺乏明確的強勁趨勢方向。")
 ```
 
 **ADX 強度對照表**：
@@ -270,20 +270,20 @@ PLTR 的 ADX(14) 值為 20.54，這明確指示當前市場處於**弱趨勢或�
 
 ```mermaid
 graph TD
-    A["價格走勢分析"] --> B{"識別潛在形態"}
-    B --> C{"近期低點 $112.93"}
-    B --> D{"反彈至 $129.30"}
+    A[價格走勢分析] --> B{識別潛在形態}
+    B --> C{近期低點 $112.93}
+    B --> D{反彈至 $129.30}
 
     subgraph 潛在底部形態
-        C -- 構成 --> E["V型反轉或W型底的左側"]
-        E -- 觀察 --> F["若回落至 $112.93 附近並再次反彈"]
-        F --> G["🟢 確認W型底"]
-        E -- 觀察 --> H["若直接突破阻力"]
-        H --> I["🟡 V型反轉可能性"]
+        C -- 構成 --> E[V型反轉或W型底的左側]
+        E -- 觀察 --> F[若回落至 $112.93 附近並再次反彈]
+        F --> G[🟢 確認W型底]
+        E -- 觀察 --> H[若直接突破阻力]
+        H --> I[🟡 V型反轉可能性]
     end
 
-    J["當前狀態"] --> K("從 $112.93 強勁反彈，類似V型反轉的初步階段，但上方壓力重重。")
-    K --> L("需觀察後續價格行為以確認形態")
+    J[當前狀態] --> K("從 $112.93 強勁反彈，類似V型反轉的初步階段，但上方壓力重重。")
+    K --> L(需觀察後續價格行為以確認形態)
 ```
 
 **形態識別分析**：
@@ -476,37 +476,37 @@ $112.93 ┤───────────●───────────
 
 ```mermaid
 graph TD
-    PRICE["當前價格: $129.30"] --> MA_STATUS{"移動平均線狀態"}
-    PRICE --> RSI_STATUS{"RSI(14): 48.50"}
-    PRICE --> MACD_STATUS{"MACD柱狀圖: +0.503"}
-    PRICE --> BB_STATUS{"布林通道 %B: 0.59"}
-    PRICE --> VOL_STATUS{"成交量: 1.38x 均量"}
-    PRICE --> OBV_STATUS{"OBV趨勢: 向上"}
-    PRICE --> ADX_STATUS{"ADX(14): 20.54"}
+    PRICE[當前價格: $129.30] --> MA_STATUS{移動平均線狀態}
+    PRICE --> RSI_STATUS{RSI(14): 48.50}
+    PRICE --> MACD_STATUS{MACD柱狀圖: +0.503}
+    PRICE --> BB_STATUS{布林通道 %B: 0.59}
+    PRICE --> VOL_STATUS{成交量: 1.38x 均量}
+    PRICE --> OBV_STATUS{OBV趨勢: 向上}
+    PRICE --> ADX_STATUS{ADX(14): 20.54}
 
-    MA_STATUS --> MA20_SIG["價格 > MA20: 🟢 短期看多"]
-    MA_STATUS --> MA50_SIG["價格 < MA50: 🔴 中期看空"]
-    MA_STATUS --> MA200_SIG["價格 < MA200: 🔴 長期看空"]
-    MA_STATUS --> MA_ALIGN["MA50 < MA200: 🔴 中長期空頭排列"]
+    MA_STATUS --> MA20_SIG[價格 > MA20: 🟢 短期看多]
+    MA_STATUS --> MA50_SIG[價格 < MA50: 🔴 中期看空]
+    MA_STATUS --> MA200_SIG[價格 < MA200: 🔴 長期看空]
+    MA_STATUS --> MA_ALIGN[MA50 < MA200: 🔴 中長期空頭排列]
 
-    RSI_STATUS --> RSI_NEUTRAL["RSI中性區: 🟡 無超買超賣"]
-    RSI_STATUS --> RSI_NO_DIV["無明顯背離: 🟡 順應價格走勢"]
+    RSI_STATUS --> RSI_NEUTRAL[RSI中性區: 🟡 無超買超賣]
+    RSI_STATUS --> RSI_NO_DIV[無明顯背離: 🟡 順應價格走勢]
 
-    MACD_STATUS --> MACD_BULL["MACD柱狀圖轉正: 🟢 多頭動能增強"]
-    MACD_STATUS --> MACD_CROSS["MACD線向上穿越訊號線: 🟢 買入訊號"]
+    MACD_STATUS --> MACD_BULL[MACD柱狀圖轉正: 🟢 多頭動能增強]
+    MACD_STATUS --> MACD_CROSS[MACD線向上穿越訊號線: 🟢 買入訊號]
 
-    BB_STATUS --> BB_ABOVE_MID["價格位於中軌上方: 🟢 短期偏強"]
-    BB_STATUS --> BB_WIDTH["通道寬度適中: 🟡 波動率正常"]
+    BB_STATUS --> BB_ABOVE_MID[價格位於中軌上方: 🟢 短期偏強]
+    BB_STATUS --> BB_WIDTH[通道寬度適中: 🟡 波動率正常]
 
-    VOL_STATUS --> VOL_CONFIRM["量價齊升: 🟢 反彈確認"]
-    OBV_STATUS --> OBV_BULL["OBV確認上漲: 🟢 買盤積極"]
+    VOL_STATUS --> VOL_CONFIRM[量價齊升: 🟢 反彈確認]
+    OBV_STATUS --> OBV_BULL[OBV確認上漲: 🟢 買盤積極]
 
-    ADX_STATUS --> ADX_WEAK["ADX < 25: 🟡 弱趨勢或盤整"]
-    ADX_STATUS --> DI_BULL["+DI > -DI: 🟢 多頭主導"]
+    ADX_STATUS --> ADX_WEAK[ADX < 25: 🟡 弱趨勢或盤整]
+    ADX_STATUS --> DI_BULL[+DI > -DI: 🟢 多頭主導]
 
-    MA20_SIG & MACD_BULL & VOL_CONFIRM & OBV_BULL & BB_ABOVE_MID --> SHORT_TERM_BULL["🟢 短期多頭強勁"]
-    MA50_SIG & MA200_SIG & MA_ALIGN --> MID_LONG_TERM_BEAR["🔴 中長期空頭承壓"]
-    RSI_NEUTRAL & ADX_WEAK --> CONSOLIDATION_RISK["🟡 盤整風險，趨勢不明"]
+    MA20_SIG & MACD_BULL & VOL_CONFIRM & OBV_BULL & BB_ABOVE_MID --> SHORT_TERM_BULL[🟢 短期多頭強勁]
+    MA50_SIG & MA200_SIG & MA_ALIGN --> MID_LONG_TERM_BEAR[🔴 中長期空頭承壓]
+    RSI_NEUTRAL & ADX_WEAK --> CONSOLIDATION_RISK[🟡 盤整風險，趨勢不明]
 
     SHORT_TERM_BULL & MID_LONG_TERM_BEAR & CONSOLIDATION_RISK --> FINAL_CONCLUSION("PLTR 短期反彈動能強勁，但中長期趨勢仍為空頭，市場處於弱勢盤整中，需警惕上方壓力。")
 ```
@@ -525,29 +525,29 @@ PLTR 的各項技術指標呈現出複雜的混合訊號。
 
 ```mermaid
 graph TD
-    A["當前價格: $129.30"]
-    B["MA5: $120.07"]
-    C["MA10: $118.58"]
-    D["MA20: $125.97"]
-    E["MA50: $134.58"]
-    F["MA200: $157.91"]
+    A[當前價格: $129.30]
+    B[MA5: $120.07]
+    C[MA10: $118.58]
+    D[MA20: $125.97]
+    E[MA50: $134.58]
+    F[MA200: $157.91]
 
     subgraph 短期均線關係
-        A --> B_UP{"價格 > MA5"}
-        A --> C_UP{"價格 > MA10"}
-        A --> D_UP{"價格 > MA20"}
-        B_UP & C_UP & D_UP --> ST_BULL["🟢 短期均線多頭排列"]
+        A --> B_UP{價格 > MA5}
+        A --> C_UP{價格 > MA10}
+        A --> D_UP{價格 > MA20}
+        B_UP & C_UP & D_UP --> ST_BULL[🟢 短期均線多頭排列]
     end
 
     subgraph 中期/長期均線關係
-        A --> E_DOWN{"價格 < MA50"}
-        A --> F_DOWN{"價格 < MA200"}
-        D --> E_DOWN_MA{"MA20 < MA50"}
-        E --> F_DOWN_MA{"MA50 < MA200"}
-        E_DOWN & F_DOWN & D_DOWN_MA & E_DOWN_MA --> MT_LT_BEAR["🔴 中長期均線空頭排列"]
+        A --> E_DOWN{價格 < MA50}
+        A --> F_DOWN{價格 < MA200}
+        D --> E_DOWN_MA{MA20 < MA50}
+        E --> F_DOWN_MA{MA50 < MA200}
+        E_DOWN & F_DOWN & D_DOWN_MA & E_DOWN_MA --> MT_LT_BEAR[🔴 中長期均線空頭排列]
     end
 
-    ST_BULL --> CONCL["綜合判斷: 短期反彈，中長期趨勢承壓"]
+    ST_BULL --> CONCL[綜合判斷: 短期反彈，中長期趨勢承壓]
     MT_LT_BEAR --> CONCL
 ```
 
@@ -583,15 +583,15 @@ MACD (Moving Average Convergence Divergence) 指標用於識別趨勢變化、�
 
 ```mermaid
 graph TD
-    A["MACD線: -4.845"] --> B["訊號線: -5.348"]
-    B --> C["MACD柱狀圖: +0.503"]
+    A[MACD線: -4.845] --> B[訊號線: -5.348]
+    B --> C[MACD柱狀圖: +0.503]
 
     subgraph MACD 訊號
-        A_COMP_B{"MACD線 > 訊號線"} -- 判斷 --> MACD_BULL_CROSS["🟢 金叉 - 買入訊號"]
-        C_POS{"MACD柱狀圖 > 0"} -- 判斷 --> HIST_BULL["🟢 柱狀圖轉正且放大 - 多頭動能增強"]
+        A_COMP_B{MACD線 > 訊號線} -- 判斷 --> MACD_BULL_CROSS[🟢 金叉 - 買入訊號]
+        C_POS{MACD柱狀圖 > 0} -- 判斷 --> HIST_BULL[🟢 柱狀圖轉正且放大 - 多頭動能增強]
     end
 
-    MACD_BULL_CROSS & HIST_BULL --> MACD_STRONG["🟢 MACD 指標發出強勁買入訊號"]
+    MACD_BULL_CROSS & HIST_BULL --> MACD_STRONG[🟢 MACD 指標發出強勁買入訊號]
     MACD_STRONG --> CONCL("MACD 確認 PLTR 短期多頭動能強勁，有望延續反彈。")
 ```
 
@@ -718,22 +718,22 @@ PLTR 的未來走勢存在多種可能性，我們分析以下三種情境：
 
 ```mermaid
 graph TD
-    A["當前價格: $129.30"] --> B{"市場發展情境"}
+    A[當前價格: $129.30] --> B{市場發展情境}
 
-    subgraph "🟢 樂觀情境 (Bullish Scenario)"
+    subgraph 🟢 樂觀情境 (Bullish Scenario)
         B1["短期動能持續強勁"] --> B2["突破 MA50 ($134.58)"]
         B2 --> B3["突破斐波那契 38.2% ($149.07)"]
         B3 --> B4["成功挑戰 MA200 ($157.91)"]
         B4 --> B5["🟢 趨勢反轉，進入上升通道"]
     end
 
-    subgraph "🟡 基本情境 (Base Scenario)"
+    subgraph 🟡 基本情境 (Base Scenario)
         B6["反彈至 MA50 ($134.58) 受阻"] --> B7["在 $125.97 (MA20) - $134.58 (MA50) 區間震盪"]
         B7 --> B8["ADX 維持弱勢，趨勢不明"]
         B8 --> B9["🟡 維持區間盤整，缺乏方向"]
     end
 
-    subgraph "🔴 悲觀情境 (Bearish Scenario)"
+    subgraph 🔴 悲觀情境 (Bearish Scenario)
         B10["反彈動能衰竭"] --> B11["跌破 MA20 ($125.97)"]
         B11 --> B12["再次測試 $112.93 (近期低點)"]
         B12 --> B13["跌破 $106.37 (52W 低點)"]

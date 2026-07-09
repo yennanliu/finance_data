@@ -658,7 +658,7 @@ graph TD
     GrossMargin --> HBM_Mix["✅ HBM產品佔比提升"]
 
     OperatingMargin --> GM_Impact["✅ 高毛利率傳導"]
-    OperatingMargin --> SG&A_Efficiency["✅ SG& A費用控制良好(1.55% of Revenue)"]
+    OperatingMargin --> SG&A_Efficiency["✅ SG&A費用控制良好 (1.55% of Revenue)"]
     OperatingMargin --> R&D_Leverage["✅ 研發投入規模效應"]
 
     NetProfitMargin --> OM_Impact["✅ 營業利益率高"]

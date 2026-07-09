@@ -380,10 +380,10 @@ graph LR
     Div["現金股息 Dividends<br/>NT$ -466.78B"]
     NetCash["淨現金增加<br/>NT$ 525.60B"]
 
-    NI -->|"折舊攤銷+營運資金變動"| OCF
-    OCF -->|"減去資本支出"| FCF
-    FCF -->|"支付股東股息"| Div
-    Div -->|"留存於資產負債表"| NetCash
+    NI -->|折舊攤銷+營運資金變動| OCF
+    OCF -->|減去資本支出| FCF
+    FCF -->|支付股東股息| Div
+    Div -->|留存於資產負債表| NetCash
 ```
 
 ### 5.2 FCF 轉換率趨勢

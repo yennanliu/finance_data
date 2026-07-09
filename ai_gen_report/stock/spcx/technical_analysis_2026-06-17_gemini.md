@@ -99,9 +99,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["多時框趨勢分析"] --> B["月線級別: 長期"]
-    A --> C["週線級別: 中期"]
-    A --> D["日線級別: 短期"]
+    A[多時框趨勢分析] --> B[月線級別: 長期]
+    A --> C[週線級別: 中期]
+    A --> D[日線級別: 短期]
     
     B --> B1["🟢 超級牛市 (價格 > MA200)\\n長線資金鎖倉沉澱"]
     C --> C1["🟡 主升浪末端 (價漲量縮)\\n週K線呈現高位吊頸線特徵"]
@@ -304,7 +304,7 @@ graph TD
         OBV["OBV < MA (資金流出)"]
         Volume["成交量: 價漲量縮 (背離)"]
     end
-    Trend_Indicators -->|"矛盾對立"| Momentum_Indicators
+    Trend_Indicators -->|矛盾對立| Momentum_Indicators
     Momentum_Indicators --> Verdict["結論: 趨勢雖在，但已是強弩之末，不可追高"]
 ```
 
@@ -314,9 +314,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Price["現價: $192.50"] -->|"遠高於"| MA20["MA20 (估): $162.10 (乖離率 +18.7%)"]
-    MA20 -->|"高於"| MA50["MA50 (估): $158.50"]
-    MA50 -->|"高於"| MA200["MA200 (估): $153.20"]
+    Price["現價: $192.50"] -->|遠高於| MA20["MA20 (估): $162.10 (乖離率 +18.7%)"]
+    MA20 -->|高於| MA50["MA50 (估): $158.50"]
+    MA50 -->|高於| MA200["MA200 (估): $153.20"]
     style Price fill:#8f8,stroke:#333,stroke-width:2px
 ```
 * **診斷**：均線系統呈現完美的**多頭排列（Bullish Alignment）**。然而，現價與 MA20 的乖離率已達 18.7%，在歷史統計上，當乖離率超過 15% 時，股價有 85% 的機率會向 MA20 進行均值回歸（Mean Reversion）。
@@ -418,8 +418,8 @@ grid-layout
 ```mermaid
 graph TD
     Start["當前現價 $192.50"] --> Decision{"您的交易屬性?"}
-    Decision -->|"波段/短線交易者"| ShortTerm["策略 A: 高位做空/鎖定利潤"]
-    Decision -->|"中長線投資者"| LongTerm["策略 B: 耐心等待回踩買入"]
+    Decision -->|波段/短線交易者| ShortTerm["策略 A: 高位做空/鎖定利潤"]
+    Decision -->|中長線投資者| LongTerm["策略 B: 耐心等待回踩買入"]
     
     ShortTerm --> S_Entry["進場: $192.50 - $193.00"]
     S_Entry --> S_Stop["止損: $194.50 (突破52W高點)"]

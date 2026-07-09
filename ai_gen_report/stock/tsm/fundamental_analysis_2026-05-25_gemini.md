@@ -142,8 +142,8 @@ graph TD
     WAFER_FAB --> ADVANCED_PROCESS["先進製程 (7nm及以下)<br/>佔晶圓代工營收~70-80%"]
     WAFER_FAB --> MATURE_PROCESS["成熟製程 (16nm及以上)<br/>佔晶圓代工營收~20-30%"]
 
-    ADVANCED_PROCESS --> N3_N5["3nm & 5nm(最先進)<br/>主要客戶: Apple, NVIDIA"]
-    ADVANCED_PROCESS --> N7_N10["7nm & 10nm(次先進)<br/>主要客戶: AMD, Qualcomm"]
+    ADVANCED_PROCESS --> N3_N5["3nm & 5nm (最先進)<br/>主要客戶: Apple, NVIDIA"]
+    ADVANCED_PROCESS --> N7_N10["7nm & 10nm (次先進)<br/>主要客戶: AMD, Qualcomm"]
 
     MATURE_PROCESS --> N16_N28["16nm & 28nm<br/>應用: IoT, Automotive, Connectivity"]
     MATURE_PROCESS --> N40_N65["40nm & 65nm+<br/>應用: Legacy, Power Management"]

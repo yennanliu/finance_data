@@ -89,7 +89,7 @@ graph LR
 
 ```mermaid
 graph TD
-    M1("月線") --> W1("週線") --> D1("日線")
+    M1(月線) --> W1(週線) --> D1(日線)
     M1["月線：長期下行趨勢"]
     W1["週線：整合階段"]
     D1["日線：短期整合"]
@@ -131,7 +131,7 @@ graph TD
     ADX["ADX(25.83): 趨勢不明"]
     +DI["+DI(25.93): 多頭弱"]
     -DI["-DI(39.54): 空頭強"]
-    ADX --> nb1["+DI"]
+    ADX --> +DI
     ADX --> -DI
 ```
 
@@ -146,9 +146,9 @@ graph TD
     HnS["頭肩頂形態"]
     DB["雙底形態"]
     TRI["對稱三角形"]
-    HnS --> nb1[""可能形成""]
-    DB --> nb2[""未確認""]
-    TRI --> nb3[""突破待確認""]
+    HnS --> "可能形成"
+    DB --> "未確認"
+    TRI --> "突破待確認"
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -342,9 +342,9 @@ graph TD
     Bearish["看空策略"]
     Neutral["觀望"]
     Start --> CheckTrend
-    CheckTrend -->|"多頭"| Bullish
-    CheckTrend -->|"空頭"| Bearish
-    CheckTrend -->|"中性"| Neutral
+    CheckTrend -->|多頭| Bullish
+    CheckTrend -->|空頭| Bearish
+    CheckTrend -->|中性| Neutral
 ```
 
 ### 🟢 多頭策略詳情

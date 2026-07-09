@@ -121,7 +121,7 @@ graph TD
 graph TD
     COMPANY["NVIDIA Corporation (市值：$4.58T, 年營收：$215.94B)"]
 
-    COMPANY --> Compute["Compute & Networking(70%)"]
+    COMPANY --> Compute["Compute & Networking (70%)"]
     Compute --> Sub1["數據中心加速計算"]
     Compute --> Sub2["人工智能解決方案"]
     Compute --> Sub3["汽車平台"]

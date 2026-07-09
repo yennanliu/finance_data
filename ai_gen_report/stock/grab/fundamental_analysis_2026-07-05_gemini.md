@@ -375,13 +375,13 @@ graph TD
     TA --> CA
     TA --> NCA
 
-    CA --> CSH["Cash & Equivalents(現金及約當現金): $2.95B (25.2%)"]
+    CA --> CSH["Cash & Equivalents (現金及約當現金): $2.95B (25.2%)"]
     CA --> STI["Short-Term Investments (短期投資): $3.31B (28.3%)"]
     CA --> REC["Total Trade Receivables (應收帳款): $1.06B (9.1%)"]
     CA --> INV["Inventory (存貨): $0.09B (0.8%)"]
     CA --> OCA["Other Current Assets (其他流動資產): $0.22B (1.9%)"]
 
-    NCA --> PPE["Net Property, Plant & Equipment(淨不動產、廠房及設備): $0.85B (7.3%)"]
+    NCA --> PPE["Net Property, Plant & Equipment (淨不動產、廠房及設備): $0.85B (7.3%)"]
     NCA --> GW["Goodwill (商譽): $1.05B (9.0%)"]
     NCA --> LTI["Long-Term Investments (長期投資): $1.45B (12.4%)"]
     NCA --> OLT["Other Long-Term Assets (其他非流動資產): $0.73B (6.2%)"]

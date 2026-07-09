@@ -138,7 +138,7 @@ graph TD
     INTC["🏢 Intel Corporation<br/>市值: $6734.3B | 年營收: $528.5B (FY2025)"]
 
     CCG["💻 Client Computing Group (CCG)<br/>營收佔比: ~55%<br/>主要利潤來源"]
-    DCAI["🖥️ Data Center & AI(DCAI)<br/>營收佔比: ~28%<br/>面臨AMD與NVIDIA激烈競爭"]
+    DCAI["🖥️ Data Center & AI (DCAI)<br/>營收佔比: ~28%<br/>面臨AMD與NVIDIA激烈競爭"]
     IFS["🏭 Intel Foundry (IFS)<br/>營收佔比: ~14%<br/>資本支出核心，未來成長引擎"]
     OTHER["📦 其他業務 (Altera/Mobileye等)<br/>營收佔比: ~3%<br/>陸續尋求獨立分拆"]
 

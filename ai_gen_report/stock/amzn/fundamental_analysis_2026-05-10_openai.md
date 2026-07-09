@@ -327,7 +327,7 @@ graph LR
     CapEx --> FCF
     FCF --> Dividends
     FCF --> Repurchases
-    Dividends   &   Repurchases --> NetChange
+    Dividends & Repurchases --> NetChange
 ```
 
 ### 5.2 FCF 轉換率趨勢
