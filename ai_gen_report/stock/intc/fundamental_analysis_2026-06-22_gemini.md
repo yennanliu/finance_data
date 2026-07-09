@@ -341,13 +341,13 @@ graph LR
     FIN["Net External Financing<br/>+$13.50B"]
     CASH["Net Cash Change<br/>+$5.20B"]
 
-    NI --> |Non-cash items| DA
+    NI --> |"Non-cash items"| DA
     DA --> NWC
     NWC --> OCF
     OCF --> CAPEX
     CAPEX --> FCF
     FCF --> DIV
-    DIV --> |Debt/Equity Issuance| FIN
+    DIV --> |"Debt/Equity Issuance"| FIN
     FIN --> CASH
 ```
 

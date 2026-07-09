@@ -67,9 +67,9 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A[Microsoft Corporation] --> B[Productivity and Business Processes]
-    A --> C[Intelligent Cloud]
-    A --> D[More Personal Computing]
+    A["Microsoft Corporation"] --> B["Productivity and Business Processes"]
+    A --> C["Intelligent Cloud"]
+    A --> D["More Personal Computing"]
 ```
 
 ### 市場地位
@@ -145,8 +145,8 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A[Total Assets] --> B[Current Assets]
-    A --> C[Non-current Assets]
+    A["Total Assets"] --> B["Current Assets"]
+    A --> C["Non-current Assets"]
 ```
 
 ### 流動性指標
@@ -175,9 +175,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A[營業現金流] --> B[投資現金流]
-    B --> C[融資現金流]
-    C --> D[淨現金增減]
+    A["營業現金流"] --> B["投資現金流"]
+    B --> C["融資現金流"]
+    C --> D["淨現金增減"]
 ```
 
 ### FCF 轉換率趨勢

@@ -111,9 +111,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級 (Long-term)"] -->|長期上升通道| B["週線層級 (Medium-term)"]
-    B -->|高檔震盪跌破箱體| C["日線層級 (Short-term)"]
-    C -->|放量急跌逼近 MA200| D["1小時/4小時層級 (Intraday)"]
+    A["月線層級 (Long-term)"] -->|"長期上升通道"| B["週線層級 (Medium-term)"]
+    B -->|"高檔震盪跌破箱體"| C["日線層級 (Short-term)"]
+    C -->|"放量急跌逼近 MA200"| D["1小時/4小時層級 (Intraday)"]
     
     style A fill:#d4edda,stroke:#28a745,stroke-width:2px
     style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px

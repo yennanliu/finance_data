@@ -133,22 +133,22 @@ Alphabet Inc. (GOOG) 是一家全球領先的科技巨頭，其業務範圍廣�
 
 ```mermaid
 graph TD
-    A[Alphabet Inc.<br/>市值: $4.44T<br/>TTM營收: $422.50B] --> B[Google Services<br/>主要收入來源 (~85%)<br/>廣告、Android、Chrome、YouTube等]
-    A --> C[Google Cloud<br/>成長最快板塊 (~10%)<br/>雲端運算、數據分析、AI服務]
-    A --> D[Other Bets<br/>創新與長期投資 (~5%)<br/>自動駕駛(Waymo)、生命科學(Verily)等]
+    A["Alphabet Inc.<br/>市值: $4.44T<br/>TTM營收: $422.50B"] --> B["Google Services<br/>主要收入來源 (~85%)<br/>廣告、Android、Chrome、YouTube等"]
+    A --> C["Google Cloud<br/>成長最快板塊 (~10%)<br/>雲端運算、數據分析、AI服務"]
+    A --> D["Other Bets<br/>創新與長期投資 (~5%)<br/>自動駕駛(Waymo)、生命科學(Verily)等"]
 
-    B --> B1[Ads<br/>搜索廣告、YouTube廣告、聯播網廣告]
-    B --> B2[Android & Google Play<br/>應用程式、遊戲、數位內容銷售]
-    B --> B3[YouTube<br/>訂閱與廣告收入]
-    B --> B4[Devices<br/>Pixel手機、Nest智慧家居等硬體]
-    B --> B5[Search & Other<br/>核心搜索、Google Maps、Gmail等]
+    B --> B1["Ads<br/>搜索廣告、YouTube廣告、聯播網廣告"]
+    B --> B2["Android & Google Play<br/>應用程式、遊戲、數位內容銷售"]
+    B --> B3["YouTube<br/>訂閱與廣告收入"]
+    B --> B4["Devices<br/>Pixel手機、Nest智慧家居等硬體"]
+    B --> B5["Search & Other<br/>核心搜索、Google Maps、Gmail等"]
 
-    C --> C1[Google Cloud Platform (GCP)<br/>IaaS, PaaS, SaaS]
-    C --> C2[Workspace<br/>Gmail, Docs, Drive等企業協作工具]
+    C --> C1["Google Cloud Platform (GCP)<br/>IaaS, PaaS, SaaS"]
+    C --> C2["Workspace<br/>Gmail, Docs, Drive等企業協作工具"]
 
-    D --> D1[Waymo<br/>自動駕駛技術]
-    D --> D2[Verily<br/>生命科學與醫療保健]
-    D --> D3[Fiber<br/>高速網路服務]
+    D --> D1["Waymo<br/>自動駕駛技術"]
+    D --> D2["Verily<br/>生命科學與醫療保健"]
+    D --> D3["Fiber<br/>高速網路服務"]
 ```
 *註：業務板塊佔比為分析師基於市場公開資訊的估計值，未直接由提供數據計算。*
 

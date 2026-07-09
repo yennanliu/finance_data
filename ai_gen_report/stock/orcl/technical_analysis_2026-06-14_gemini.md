@@ -159,9 +159,9 @@ $120 ┤   ██  ██  ██  ██  ██  ██  ██  ██  █�
 ```mermaid
 graph TD
     Price["當前收盤價: $184.13"] --> ADX_Value{"ADX(14) = 27.37\n(> 25 臨界值)"}
-    ADX_Value -->|趨勢成立| DI_Compare{"-DI (30.97) vs +DI (22.36)"}
-    DI_Compare -->|'-DI' 大於 '+DI'| BearishTrend["🔴 強烈空頭趨勢中\n賣方完全主導市場"]
-    DI_Compare -->|'ADX' 向上攀升| TrendAccelerating["⚠️ 下行速度正在加快\n切勿盲目抄底"]
+    ADX_Value -->|"趨勢成立"| DI_Compare{"-DI (30.97) vs +DI (22.36)"}
+    DI_Compare -->|"'-DI' 大於 '+DI'"| BearishTrend["🔴 強烈空頭趨勢中\n賣方完全主導市場"]
+    DI_Compare -->|"'ADX' 向上攀升"| TrendAccelerating["⚠️ 下行速度正在加快\n切勿盲目抄底"]
 ```
 
 **ADX 趨勢強度對照表**：
@@ -421,10 +421,10 @@ graph TD
 ```mermaid
 graph TD
     Start["分析當前價格: $184.13"] --> Support_Check{"是否守穩 S1 ($178.47) \n及 76.4%回調位 ($183.77)?"}
-    Support_Check -->|是 (出現日線反轉K線)| Strategy_A["🟢 策略 A: 短期超跌反彈做多"]
-    Support_Check -->|否 (跌破 $178)| Support_Check_2{"是否在 S2-S3 區間 \n($162.80 - $173.58) 獲得支撐?"}
-    Support_Check_2 -->|是 (量縮築底)| Strategy_B["🟢 策略 B: 中期箱體低吸做多"]
-    Support_Check_2 -->|否 (破位下行)| Strategy_C["🔴 策略 C: 順勢破位做空"]
+    Support_Check -->|"是 (出現日線反轉K線)"| Strategy_A["🟢 策略 A: 短期超跌反彈做多"]
+    Support_Check -->|"否 (跌破 $178)"| Support_Check_2{"是否在 S2-S3 區間 \n($162.80 - $173.58) 獲得支撐?"}
+    Support_Check_2 -->|"是 (量縮築底)"| Strategy_B["🟢 策略 B: 中期箱體低吸做多"]
+    Support_Check_2 -->|"否 (破位下行)"| Strategy_C["🔴 策略 C: 順勢破位做空"]
 ```
 
 ### 🟢 多頭策略詳情

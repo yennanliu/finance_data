@@ -338,10 +338,10 @@ graph LR
     NetCashChange["淨現金變化：+$5.67B"]
 
     NetIncome --> OpCashFlow
-    OpCashFlow -->|減去| CapEx
+    OpCashFlow -->|"減去"| CapEx
     CapEx --> FCF
-    FCF -->|扣除| Dividends
-    FCF -->|扣除| Buybacks
+    FCF -->|"扣除"| Dividends
+    FCF -->|"扣除"| Buybacks
     FCF --> NetCashChange
 ```
 
@@ -445,9 +445,9 @@ graph TD
     OM["營業利率：14.4%"]
     NM["淨利率：13.4%"]
 
-    GP =--> "產品組合優化"
-    OM =--> "成本控制"
-    NM =--> "增長潛力"
+    nb1["GP ="] --> nb2[""產品組合優化""]
+    nb3["OM ="] --> nb4[""成本控制""]
+    nb5["NM ="] --> nb6[""增長潛力""]
 
     Profitability --> GP
     Profitability --> OM

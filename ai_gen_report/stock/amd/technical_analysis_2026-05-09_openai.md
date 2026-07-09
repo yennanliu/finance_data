@@ -145,8 +145,8 @@ $100 ┤
 
 ```mermaid
 graph TD
-    ADX[ADX 評估] --> STRONG[強趨勢 > 25]
-    STRONG --> MULTIPLE[多頭主導]
+    ADX["ADX 評估"] --> STRONG["強趨勢 > 25"]
+    STRONG --> MULTIPLE["多頭主導"]
 ```
 
 ---

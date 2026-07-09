@@ -452,10 +452,10 @@ graph TD
     Profitability --> EM["EBITDA 利益率: 47.1%"]
     Profitability --> NM["淨利率: 25.4%"]
 
-    GM --> |IaaS佔比拉高| GM_Down["短期承壓"]
-    OM --> |銷管費用控制| OM_Up["穩步上升"]
-    EM --> |折舊攤銷回撥| EM_High["現金生成力極強"]
-    NM --> |非營運收益挹注| NM_Peak["創近年新高"]
+    GM --> |"IaaS佔比拉高"| GM_Down["短期承壓"]
+    OM --> |"銷管費用控制"| OM_Up["穩步上升"]
+    EM --> |"折舊攤銷回撥"| EM_High["現金生成力極強"]
+    NM --> |"非營運收益挹注"| NM_Peak["創近年新高"]
 ```
 
 ---

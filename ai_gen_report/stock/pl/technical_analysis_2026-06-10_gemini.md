@@ -114,9 +114,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級 (Long-term)"] -->|長線多頭 / 估值回調| B["週線層級 (Medium-term)"]
-    B -->|急劇修正 / 跌破關鍵支撐| C["日線層級 (Short-term)"]
-    C -->|極度超賣 / 尋找底部| D["日內交易 (Intraday)"]
+    A["月線層級 (Long-term)"] -->|"長線多頭 / 估值回調"| B["週線層級 (Medium-term)"]
+    B -->|"急劇修正 / 跌破關鍵支撐"| C["日線層級 (Short-term)"]
+    C -->|"極度超賣 / 尋找底部"| D["日內交易 (Intraday)"]
     
     style A fill:#d4edda,stroke:#28a745,stroke-width:2px
     style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -179,7 +179,7 @@ $23.16 ════════════════════════�
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 35.52"] -->|判定 > 25| Trend["存在強烈趨勢"]
+    ADX["ADX(14) = 35.52"] -->|"判定 > 25"| Trend["存在強烈趨勢"]
     Trend --> DI_Compare{"+DI vs -DI"}
     DI_Compare -->|"-DI (26.71) > +DI (13.13)"| BearTrend["🔴 強烈空頭趨勢主導"]
     DI_Compare -->|"+DI > -DI"| BullTrend["🟢 強烈多頭趨勢主導"]
@@ -208,11 +208,11 @@ graph TD
 ```mermaid
 graph TD
     subgraph M_Head ["M頭形態結構"]
-        LeftTop["左頂 ($51.76)\n2026-05-31"] -->|回調| Neckline["頸線 ($35.44)\n2026-04-26"]
-        Neckline -->|反彈| RightTop["右頂 ($51.14)\n2026-05-24"]
-        RightTop -->|放量跌破| NeckBreak["跌破頸線 ($35.44)\n2026-06-07"]
+        LeftTop["左頂 ($51.76)\n2026-05-31"] -->|"回調"| Neckline["頸線 ($35.44)\n2026-04-26"]
+        Neckline -->|"反彈"| RightTop["右頂 ($51.14)\n2026-05-24"]
+        RightTop -->|"放量跌破"| NeckBreak["跌破頸線 ($35.44)\n2026-06-07"]
     end
-    NeckBreak -->|量測跌幅| TargetPrice["最小量測下行目標: $19.12"]
+    NeckBreak -->|"量測跌幅"| TargetPrice["最小量測下行目標: $19.12"]
     
     style M_Head fill:#fff5f5,stroke:#ff3b30,stroke-width:2px
 ```

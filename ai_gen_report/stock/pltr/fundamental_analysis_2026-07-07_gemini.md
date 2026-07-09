@@ -147,21 +147,21 @@ Palantir 的業務主要分為兩大板塊：**政府業務 (Government)** 和 *
 
 ```mermaid
 graph TD
-    A[PLTR 總覽] --> B{業務板塊}
-    B --> C(政府業務 Government)
-    B --> D(商業業務 Commercial)
+    A["PLTR 總覽"] --> B{"業務板塊"}
+    B --> C("政府業務 Government")
+    B --> D("商業業務 Commercial")
 
-    C --> C1[Gotham平台]
-    C --> C2[國防 intelligence 應用]
-    C3[公共衛生 Public Health]
-    C4[政府合約收入]
+    C --> C1["Gotham平台"]
+    C --> C2["國防 intelligence 應用"]
+    C3["公共衛生 Public Health"]
+    C4["政府合約收入"]
 
-    D --> D1[Foundry平台]
-    D --> D2[AI平台 AIP]
-    D --> D3[製造業 Manufacturing]
-    D --> D4[金融服務 Financial Services]
-    D --> D5[醫療保健 Healthcare]
-    D6[商業訂閱收入]
+    D --> D1["Foundry平台"]
+    D --> D2["AI平台 AIP"]
+    D --> D3["製造業 Manufacturing"]
+    D --> D4["金融服務 Financial Services"]
+    D --> D5["醫療保健 Healthcare"]
+    D6["商業訂閱收入"]
 
     A -- "市值: $322.13B" --> B
     A -- "TTM營收: $5.22B" --> B
