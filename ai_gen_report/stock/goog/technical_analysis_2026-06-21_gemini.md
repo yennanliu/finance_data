@@ -111,9 +111,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["多時框架分析"] --> B["月線圖: 長期牛市"]
-    A --> C["週線圖: 中期修正底部分形"]
-    A --> D["日線圖: 短期區間震盪"]
+    A[多時框架分析] --> B[月線圖: 長期牛市]
+    A --> C[週線圖: 中期修正底部分形]
+    A --> D[日線圖: 短期區間震盪]
     
     B --> B1["MA200 ($310.25) 向上傾斜<br/>多頭絕對控盤 (權重 50%)"]
     C --> C1["歷史高點 $404.23 回踩 38.2% 斐波那契<br/>在 $358.16 尋得支撐 (權重 30%)"]
@@ -178,8 +178,8 @@ $358.16 ═══════●════════════════
 
 ```mermaid
 graph TD
-    ADX["ADX 14 = 17.96"] -->|"低於 20"| Range["市場進入區間盤整"]
-    DI_Diff["+DI (21.11) vs -DI (23.20)"] -->|"差距極小"| No_Dominance["買賣雙方勢均力敵"]
+    ADX["ADX 14 = 17.96"] -->|低於 20| Range["市場進入區間盤整"]
+    DI_Diff["+DI (21.11) vs -DI (23.20)"] -->|差距極小| No_Dominance["買賣雙方勢均力敵"]
     
     Range --> Trade_Strategy["採用低吸高拋 (Range Trading) 策略"]
     No_Dominance --> Wait_Breakout["等待 ADX 拐頭向上並突破 20-25 作為趨勢啟動訊號"]
@@ -204,7 +204,7 @@ graph TD
 
 ```mermaid
 graph TD
-    A["圖表形態"] --> B["中期 (日線): 牛市旗形 (Bull Flag)"]
+    A[圖表形態] --> B["中期 (日線): 牛市旗形 (Bull Flag)"]
     A --> C["長期 (週線): 圓底 (Rounding Bottom) 突破後的突破回踩"]
     
     B --> B1["旗杆: $273.60 → $404.23 (漲幅 $130.63)"]
@@ -329,8 +329,8 @@ graph TD
         I4["Stoch %K (77.51) > %D (61.98)<br/>低位黃金交叉，動能向上"]
         I5["RSI(14) 自 29.8 彈升至 44.82<br/>走出超賣區，重回多頭軌道"]
     end
-    BEARISH_INDICATORS -->|"提供壓制與震盪空間"| Market["當前市況：震盪築底，醞釀突破"]
-    BULLISH_INDICATORS -->|"提供向上突破的底氣"| Market
+    BEARISH_INDICATORS -->|提供壓制與震盪空間| Market["當前市況：震盪築底，醞釀突破"]
+    BULLISH_INDICATORS -->|提供向上突破的底氣| Market
 ```
 
 ### 📈 移動平均線排列分析
@@ -367,8 +367,8 @@ graph LR
     Signal_Line["信號線 (-0.484)"]
     Hist["柱狀圖 (-0.858)"]
     
-    MACD_Line -->|"位於信號線下方"| Bearish["🔴 短期空頭控盤"]
-    Hist -->|"負值收斂中: -4.974 → -3.690 → -0.858"| Convergence["🟢 殺跌動能急遽衰竭"]
+    MACD_Line -->|位於信號線下方| Bearish["🔴 短期空頭控盤"]
+    Hist -->|負值收斂中: -4.974 → -3.690 → -0.858| Convergence["🟢 殺跌動能急遽衰竭"]
     Convergence --> Golden_Cross["預期 3-5 個交易日內日線金叉"]
 ```
 
@@ -469,9 +469,9 @@ graph LR
 graph TD
     Start["分析當前價格 $367.46"] --> Dec1{"交易風格選擇"}
     
-    Dec1 -->|"左側交易 / 穩健型"| StrategyB["策略 B: 回檔低吸策略<br/>(適合中長線佈局)"]
-    Dec1 -->|"右側交易 / 激進型"| StrategyA["策略 A: 突破追擊策略<br/>(適合短線波段)"]
-    Dec1 -->|"對沖避險 / 空頭"| StrategyC["策略 C: 破位做空策略<br/>(僅作防守用)"]
+    Dec1 -->|左側交易 / 穩健型| StrategyB["策略 B: 回檔低吸策略<br/>(適合中長線佈局)"]
+    Dec1 -->|右側交易 / 激進型| StrategyA["策略 A: 突破追擊策略<br/>(適合短線波段)"]
+    Dec1 -->|對沖避險 / 空頭| StrategyC["策略 C: 破位做空策略<br/>(僅作防守用)"]
     
     StrategyB --> EntryB["進場點: $358.00 - $364.00"]
     StrategyB --> StopB["止損點: $345.00"]

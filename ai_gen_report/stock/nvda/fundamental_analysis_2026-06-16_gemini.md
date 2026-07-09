@@ -379,14 +379,14 @@ graph LR
     DIVIDEND["Dividends Paid<br/>-$9.74億"]
     NET_CASH["Net Cash Increase<br/>+$947.42億"]
 
-    NI --> |"調整非現金項目"| OCF
+    NI --> |調整非現金項目| OCF
     D_A --> OCF
     WC --> OCF
-    OCF --> |"扣除資本支出"| FCF
+    OCF --> |扣除資本支出| FCF
     CAPEX --> FCF
-    FCF --> |"資本配置"| REPURCHASE
-    FCF --> |"資本配置"| DIVIDEND
-    FCF --> |"留存現金"| NET_CASH
+    FCF --> |資本配置| REPURCHASE
+    FCF --> |資本配置| DIVIDEND
+    FCF --> |留存現金| NET_CASH
 ```
 
 ### 5.2 FCF 轉換率趨勢

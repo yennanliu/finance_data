@@ -408,13 +408,13 @@ graph LR
     REPUR["8. 股份回購<br/>-$61.20B"]
     NET_CASH["9. 淨現金流變動<br/>-$43.33B"]
 
-    NI --> |"調整非現金項目"| OCF
+    NI --> |調整非現金項目| OCF
     DA --> OCF
     SBC --> OCF
-    OCF --> |"扣除基礎設施投入"| FCF
+    OCF --> |扣除基礎設施投入| FCF
     CAPEX --> FCF
-    FCF --> |"分配給股東"| DIV
-    FCF --> |"分配給股東"| REPUR
+    FCF --> |分配給股東| DIV
+    FCF --> |分配給股東| REPUR
     REPUR --> NET_CASH
 ```
 

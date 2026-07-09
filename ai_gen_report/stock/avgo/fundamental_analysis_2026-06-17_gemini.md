@@ -400,11 +400,11 @@ graph LR
     DIV["- 股息支付<br/>-$11.14B"]
     DEBT["- 償還債務與回購<br/>-$16.07B"]
 
-    NI --> |"調整非現金項目"| OCF
+    NI --> |調整非現金項目| OCF
     DA --> OCF
     SBC --> OCF
     WC --> OCF
-    OCF --> |"扣除 Capex"| FCF
+    OCF --> |扣除 Capex| FCF
     FCF --> DIV
     FCF --> DEBT
 ```

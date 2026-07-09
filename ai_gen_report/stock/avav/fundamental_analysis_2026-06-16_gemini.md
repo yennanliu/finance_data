@@ -358,10 +358,10 @@ graph LR
     CAPEX["資本支出 (Capex)<br/>-$129.87M"]
     FCF["自由現金流 (FCF)<br/>-$304.05M"]
 
-    NI -->|"加上非現金折舊"| DA
-    DA -->|"扣除應收/存貨增加"| NWC
+    NI -->|加上非現金折舊| DA
+    DA -->|扣除應收/存貨增加| NWC
     NWC --> OCF
-    OCF -->|"扣除資本建置"| CAPEX
+    OCF -->|扣除資本建置| CAPEX
     CAPEX --> FCF
 ```
 

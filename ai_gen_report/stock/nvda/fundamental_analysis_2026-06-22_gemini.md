@@ -338,9 +338,9 @@ graph LR
     FCF["自由現金流 (FCF)<br/>$115.15B"]
     ALLOC["資本配置<br/>- 股份回購: ~$45B<br/>- 股息發放: $0.97B"]
 
-    NI --> |"調整"| WC
+    NI --> |調整| WC
     WC --> OCF
-    OCF --> |"扣除"| CAPEX
+    OCF --> |扣除| CAPEX
     CAPEX --> FCF
     FCF --> ALLOC
 ```

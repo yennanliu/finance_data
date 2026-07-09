@@ -121,14 +121,14 @@ graph TD
 
 ```mermaid
 graph TD
-    A["Uber Technologies, Inc.<br/>市值：$142.38B<br/>年營收：$52.02B"]
-    A --> B["Mobility<br/>$X B<br/>佔比：XX%"]
-    A --> C["Delivery<br/>$X B<br/>佔比：XX%"]
-    A --> D["Freight<br/>$X B<br/>佔比：XX%"]
-    C --> C1["餐飲配送<br/>$X B<br/>佔比：XX%"]
-    C --> C2["雜貨配送<br/>$X B<br/>佔比：XX%"]
-    B --> B1["共享出行<br/>$X B<br/>佔比：XX%"]
-    B --> B2["汽車租賃<br/>$X B<br/>佔比：XX%"]
+    A[Uber Technologies, Inc.<br/>市值：$142.38B<br/>年營收：$52.02B]
+    A --> B[Mobility<br/>$X B<br/>佔比：XX%]
+    A --> C[Delivery<br/>$X B<br/>佔比：XX%]
+    A --> D[Freight<br/>$X B<br/>佔比：XX%]
+    C --> C1[餐飲配送<br/>$X B<br/>佔比：XX%]
+    C --> C2[雜貨配送<br/>$X B<br/>佔比：XX%]
+    B --> B1[共享出行<br/>$X B<br/>佔比：XX%]
+    B --> B2[汽車租賃<br/>$X B<br/>佔比：XX%]
 ```
 
 ### 2.2 市場份額
@@ -264,13 +264,13 @@ pie title 費用結構分析（FY2025）
 
 ```mermaid
 graph TD
-    A["總資產<br/>$61.80B"]
-    A --> B["流動資產<br/>$13.99B"]
-    A --> C["非流動資產<br/>$47.81B"]
-    B --> B1["現金及現金等價物<br/>$7.11B"]
-    B --> B2["應收賬款<br/>$X B"]
-    C --> C1["固定資產<br/>$X B"]
-    C --> C2["無形資產<br/>$X B"]
+    A[總資產<br/>$61.80B]
+    A --> B[流動資產<br/>$13.99B]
+    A --> C[非流動資產<br/>$47.81B]
+    B --> B1[現金及現金等價物<br/>$7.11B]
+    B --> B2[應收賬款<br/>$X B]
+    C --> C1[固定資產<br/>$X B]
+    C --> C2[無形資產<br/>$X B]
 ```
 
 ### 4.2 流動性指標分析
@@ -319,11 +319,11 @@ graph TD
 
 ```mermaid
 graph LR
-    A["淨利<br/>$10.05B"] --> B["營業現金流<br/>$10.10B"]
-    B --> C["資本支出<br/>-$336M"]
-    C --> D["自由現金流<br/>$9.76B"]
-    D --> E["股息/回購<br/>$0"]
-    E --> F["淨現金變化<br/>$7.63B"]
+    A[淨利<br/>$10.05B] --> B[營業現金流<br/>$10.10B]
+    B --> C[資本支出<br/>-$336M]
+    C --> D[自由現金流<br/>$9.76B]
+    D --> E[股息/回購<br/>$0]
+    E --> F[淨現金變化<br/>$7.63B]
 ```
 
 ### 5.2 FCF 轉換率趨勢
@@ -416,9 +416,9 @@ pie title 資本配置（FY2025）
 
 ```mermaid
 graph LR
-    A["ROE"] --> B["淨利率<br/>19.3%"]
-    A --> C["資產週轉率<br/>0.32"]
-    A --> D["財務槓桿<br/>2.07"]
+    A[ROE] --> B[淨利率<br/>19.3%]
+    A --> C[資產週轉率<br/>0.32]
+    A --> D[財務槓桿<br/>2.07]
 ```
 
 ### 6.4 獲利能力儀表板

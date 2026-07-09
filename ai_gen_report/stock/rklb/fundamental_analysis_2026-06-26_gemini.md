@@ -157,7 +157,7 @@ graph TD
     EL --> SR["小型衛星發射市場"]
     NE --> MR["中型衛星發射市場"]
 
-    subgraph "收入構成 (TTM)"
+    subgraph 收入構成 (TTM)
         direction LR
         LS_REV["發射服務營收 (估計佔比 ~40%)"]
         SS_REV["太空系統營收 (估計佔比 ~60%)"]

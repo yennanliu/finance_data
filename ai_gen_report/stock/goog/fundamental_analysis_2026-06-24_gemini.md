@@ -360,9 +360,9 @@ graph LR
     FCF["Free Cash Flow<br/>$27.92B"]
     Shareholder["Shareholder Return<br/>(回購: ~$60B, 股息: $10.05B)"]
 
-    NI --> |"加回折舊攤銷/股權激勵"| OCF
-    OCF --> |"扣除資本支出"| FCF
-    FCF --> |"融資缺口由現金儲備填補"| Shareholder
+    NI --> |加回折舊攤銷/股權激勵| OCF
+    OCF --> |扣除資本支出| FCF
+    FCF --> |融資缺口由現金儲備填補| Shareholder
 ```
 
 ### 5.2 FCF 轉換率趨勢

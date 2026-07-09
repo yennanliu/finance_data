@@ -118,6 +118,27 @@ def test_id_space_bracket_still_collapsed():
     assert 'B["label"]' in out
 
 
+def test_node_reference_with_semicolon_terminator_preserved():
+    # `G --> H;` — the `;` is a statement terminator; `H` must stay a reference
+    # to the existing node H, not become a new node `nbN["H;"]`.
+    src = ("graph TD\n"
+           "    G --> H;\n"
+           "    K --> L;\n"
+           "    Company --> WAF;\n"
+           "    中期趨勢 --> 綜合一致性;")
+    out = sanitize_mermaid(src)
+    assert "nb1" not in out and "nb2" not in out
+    for edge in ("G --> H;", "K --> L;", "Company --> WAF;",
+                 "中期趨勢 --> 綜合一致性;"):
+        assert edge in out
+
+
+def test_bare_node_with_semicolon_still_wrapped():
+    # A genuinely bare endpoint keeps getting wrapped; the terminator stays put.
+    out = sanitize_mermaid("graph TD\n    A --> 股價突破 $20;")
+    assert 'nb1["股價突破 $20"];' in out
+
+
 # ── mermaid_syntax_issues (the QA / CI detector) ─────────────────────────────
 
 def test_detector_flags_unquoted_parens_in_node_label():

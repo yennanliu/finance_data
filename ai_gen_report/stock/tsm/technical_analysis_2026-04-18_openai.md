@@ -149,9 +149,9 @@ $300 ┤       └───── 關鍵支撐
 
 ```mermaid
 graph TD
-    ADX["ADX: 18.95"] --> |"弱趨勢"| Consolidation["盤整"]
-    +DI["+DI: 32.68"] --> |"多頭主導"| Bullish["多頭行情"]
-    -DI["-DI: 26.75"] --> |"弱勢"| Weakness["弱勢"]
+    ADX["ADX: 18.95"] --> |弱趨勢| Consolidation["盤整"]
+    +DI["+DI: 32.68"] --> |多頭主導| Bullish["多頭行情"]
+    -DI["-DI: 26.75"] --> |弱勢| Weakness["弱勢"]
 ```
 
 ---
@@ -250,8 +250,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格上方"| Bull["看多"]
-    MA200["長期 MA200"] -->|"價格下方"| Bear["看空"]
+    MA20["短期 MA20"] -->|價格上方| Bull["看多"]
+    MA200["長期 MA200"] -->|價格下方| Bear["看空"]
 ```
 
 ### 📉 RSI(14) 分析

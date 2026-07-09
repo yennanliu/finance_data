@@ -145,8 +145,8 @@ $12 ┤                        ●
 
 ```mermaid
 graph TD
-    nb1["ADX > 25"] --> 強趨勢
-    nb2["-DI > +DI"] --> 空頭主導
+    ADX > 25 --> 強趨勢
+    -DI > +DI --> 空頭主導
 ```
 
 ---
@@ -246,7 +246,7 @@ graph TD
 
 ```mermaid
 graph TD
-    nb1["MA20 < MA50 < MA200"] --> 空頭排列
+    MA20 < MA50 < MA200 --> 空頭排列
 ```
 
 ### 📉 RSI(14) 分析
@@ -259,8 +259,8 @@ graph TD
 
 ```mermaid
 graph TD
-    nb1["MACD < Signal"] --> 看空
-    nb2["Hist < 0"] --> 看空
+    MACD < Signal --> 看空
+    Hist < 0 --> 看空
 ```
 
 ### 📦 布林通道分析

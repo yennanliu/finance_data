@@ -136,7 +136,7 @@ graph TD
     ADX["ADX: 40.62 強趨勢"]
     DI+["+DI: 23.55"]
     DI-["-DI: 27.34"]
-    ADX --> nb1["DI+"]
+    ADX --> DI+
     ADX --> DI-
     DI- --> 結論{"🔴 空頭主導"}
 ```

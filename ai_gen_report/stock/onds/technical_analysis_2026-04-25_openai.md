@@ -102,11 +102,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] --> B["上升"]
-    B --> C["週線趨勢"]
-    C --> D["盤整"]
-    D --> E["日線趨勢"]
-    E --> F["短期回調"]
+    A[月線趨勢] --> B[上升]
+    B --> C[週線趨勢]
+    C --> D[盤整]
+    D --> E[日線趨勢]
+    E --> F[短期回調]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -145,8 +145,8 @@ $8.00  ───────────關鍵支撐
 
 ```mermaid
 graph TD
-    ADX["ADX指標"] --> WEAKTREND["弱趨勢 < 25"]
-    WEAKTREND --> CONSOLIDATION["盤整狀態"]
+    ADX[ADX指標] --> WEAKTREND[弱趨勢 < 25]
+    WEAKTREND --> CONSOLIDATION[盤整狀態]
 ```
 
 ---
@@ -157,10 +157,10 @@ graph TD
 
 ```mermaid
 graph TD
-    HEAD["頭肩頂形態"]
-    DOUBLE["雙底形態"]
-    TRIANGLE["對稱三角形"]
-    HEAD --> VERDICT["形態成立"]
+    HEAD[頭肩頂形態]
+    DOUBLE[雙底形態]
+    TRIANGLE[對稱三角形]
+    HEAD --> VERDICT[形態成立]
     DOUBLE --> VERDICT
     TRIANGLE --> VERDICT
 ```
@@ -241,22 +241,22 @@ $10.00 ╠═══════════════════════�
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|"價格上方"| BULL["看多"]
-    MA50["MA50"] -->|"價格上方"| BULL
-    MA200["MA200"] -->|"價格上方"| BULL
-    RSI["RSI(14)"] -->|"65.10 中性"| NEUTRAL["中性"]
-    MACD["MACD"] -->|"0.196 看多"| BULL
-    ADX["ADX"] -->|"12.96 弱趨勢"| NEUTRAL
+    MA20["MA20"] -->|價格上方| BULL["看多"]
+    MA50["MA50"] -->|價格上方| BULL
+    MA200["MA200"] -->|價格上方| BULL
+    RSI["RSI(14)"] -->|65.10 中性| NEUTRAL["中性"]
+    MACD["MACD"] -->|0.196 看多| BULL
+    ADX["ADX"] -->|12.96 弱趨勢| NEUTRAL
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    MA5["短期 MA5"] -->|"價格下方"| BEAR["看空"]
-    MA20["中期 MA20"] -->|"價格上方"| BULL["看多"]
-    MA50["長期 MA50"] -->|"價格上方"| BULL
-    MA200["長期 MA200"] -->|"價格上方"| BULL
+    MA5["短期 MA5"] -->|價格下方| BEAR["看空"]
+    MA20["中期 MA20"] -->|價格上方| BULL["看多"]
+    MA50["長期 MA50"] -->|價格上方| BULL
+    MA200["長期 MA200"] -->|價格上方| BULL
 ```
 
 ### 📉 RSI(14) 分析
@@ -269,9 +269,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_LINE["MACD線"] -->|"0.196"| BULL
-    SIGNAL_LINE["訊號線"] -->|"0.033"| NEUTRAL
-    HISTOGRAM["柱狀圖"] -->|"+0.163"| BULL
+    MACD_LINE["MACD線"] -->|0.196| BULL
+    SIGNAL_LINE["訊號線"] -->|0.033| NEUTRAL
+    HISTOGRAM["柱狀圖"] -->|+0.163| BULL
 ```
 
 ### 📦 布林通道分析
@@ -335,10 +335,10 @@ Beta值未提供，暫無法直接評估市場相關性。
 
 ```mermaid
 graph TD
-    A["市場狀況分析"] --> B["多頭策略"]
-    A --> C["空頭策略"]
-    B --> D["進場條件"]
-    C --> E["進場條件"]
+    A[市場狀況分析] --> B[多頭策略]
+    A --> C[空頭策略]
+    B --> D[進場條件]
+    C --> E[進場條件]
 ```
 
 ### 🟢 多頭策略詳情
@@ -396,9 +396,9 @@ graph TD
 
 ```mermaid
 graph TD
-    SCENARIO["風險場景分析"] --> OPTIMISTIC["樂觀"]
-    SCENARIO --> BASELINE["基準"]
-    SCENARIO --> PESSIMISTIC["悲觀"]
+    SCENARIO[風險場景分析] --> OPTIMISTIC[樂觀]
+    SCENARIO --> BASELINE[基準]
+    SCENARIO --> PESSIMISTIC[悲觀]
 ```
 
 ### 🛡️ 風險管理重要提醒

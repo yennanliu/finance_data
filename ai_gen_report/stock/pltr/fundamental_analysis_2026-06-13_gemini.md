@@ -370,12 +370,12 @@ graph LR
     REINVEST["短期投資與美債分配<br/>-$2.50B"]
     CASH_CHANGE["淨現金增加<br/>+$0.87B"]
 
-    NI --> |"調整"| SBC
+    NI --> |調整| SBC
     SBC --> NWC
     NWC --> OCF
-    OCF --> |"扣除"| CAPEX
+    OCF --> |扣除| CAPEX
     CAPEX --> FCF
-    FCF --> |"配置"| REINVEST
+    FCF --> |配置| REINVEST
     REINVEST --> CASH_CHANGE
 ```
 

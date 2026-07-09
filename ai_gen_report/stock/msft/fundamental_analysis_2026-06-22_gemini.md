@@ -386,11 +386,11 @@ graph LR
     Repurchases["➖ Share Repurchases<br/>~$15.00B"]
     NetCash["🔄 Net Cash Flow Change<br/>-$2.07B"]
 
-    NI -->|"加回非現金項目"| OCF
+    NI -->|加回非現金項目| OCF
     D_A --> OCF
-    OCF -->|"扣除資本支出"| FCF
-    FCF -->|"股利支付"| Dividends
-    FCF -->|"股份回購"| Repurchases
+    OCF -->|扣除資本支出| FCF
+    FCF -->|股利支付| Dividends
+    FCF -->|股份回購| Repurchases
     Dividends --> NetCash
     Repurchases --> NetCash
 ```

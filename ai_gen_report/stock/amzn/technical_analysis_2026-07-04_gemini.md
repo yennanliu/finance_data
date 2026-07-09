@@ -128,9 +128,9 @@ AMZN 的多時框架趨勢呈現長期向上、中期修正後反彈、短期企
 
 ```mermaid
 graph TD
-    LONG_TERM["長期趨勢 (月線)"] --> |"自2023年低點以來呈現穩健上升通道"| LT_BULL("🟢 多頭")
-    MID_TERM["中期趨勢 (週線)"] --> |"2026年5月高點後經歷回調，目前處於反彈階段"| MT_NEUTRAL("🟡 震盪偏多")
-    SHORT_TERM["短期趨勢 (日線)"] --> |"近期從低點反彈，站上MA20，MACD轉強"| ST_BULL("🟢 多頭")
+    LONG_TERM["長期趨勢 (月線)"] --> |自2023年低點以來呈現穩健上升通道| LT_BULL(🟢 多頭)
+    MID_TERM["中期趨勢 (週線)"] --> |2026年5月高點後經歷回調，目前處於反彈階段| MT_NEUTRAL(🟡 震盪偏多)
+    SHORT_TERM["短期趨勢 (日線)"] --> |近期從低點反彈，站上MA20，MACD轉強| ST_BULL(🟢 多頭)
 
     LT_BULL --> OVERALL_TREND{"整體趨勢判斷\\n長期看漲，中期承壓後短期反彈"}
     MT_NEUTRAL --> OVERALL_TREND
@@ -206,8 +206,8 @@ ADX 指標用於衡量趨勢的強度，而非方向。+DI 和 -DI 則指示趨�
 
 ```mermaid
 graph TD
-    ADX_VAL["ADX(14): 26.95"] -->|"ADX > 25"| STRONG_TREND("🟢 強趨勢")
-    DI_COMP["+DI: 25.68 vs -DI: 21.89"] -->|" +DI > -DI "| BULLISH_DOM("🟢 多頭主導")
+    ADX_VAL["ADX(14): 26.95"] -->|ADX > 25| STRONG_TREND(🟢 強趨勢)
+    DI_COMP["+DI: 25.68 vs -DI: 21.89"] -->| +DI > -DI | BULLISH_DOM(🟢 多頭主導)
 
     STRONG_TREND --> CONCLUSION{"趨勢強度判斷\\n目前處於多頭主導的強趨勢行情"}
     BULLISH_DOM --> CONCLUSION
@@ -237,10 +237,10 @@ AMZN 的 ADX(14) 值為 26.95，位於 25-50 區間，這表明當前市場存�
 
 ```mermaid
 graph TD
-    PRICE_ACTION["AMZN 價格走勢"] --> |"2026年3月低點 ($208.27)"| BOTTOMING["形成底部區域"]
-    BOTTOMING --> |"隨後強勁反彈至 $270.64"| V_SHAPE["確認 V 形反轉 (短期)"]
-    V_SHAPE --> |"2026年6月回調至 $232.69"| PULLBACK["V形反轉後的回調"]
-    PULLBACK --> |"近期反彈至 $242.67"| RECOVERY["回調後再次啟動上漲"]
+    PRICE_ACTION["AMZN 價格走勢"] --> |2026年3月低點 ($208.27)| BOTTOMING["形成底部區域"]
+    BOTTOMING --> |隨後強勁反彈至 $270.64| V_SHAPE["確認 V 形反轉 (短期)"]
+    V_SHAPE --> |2026年6月回調至 $232.69| PULLBACK["V形反轉後的回調"]
+    PULLBACK --> |近期反彈至 $242.67| RECOVERY["回調後再次啟動上漲"]
     RECOVERY --> CONCLUSION{"當前形態判斷：\\nV形反轉後的震盪上行，目標挑戰前高"}
 ```
 **解讀**: AMZN 在2026年3月至5月期間，從 $208.27 強勁反彈至 $270.64，形成了一個明顯的 V 形反轉形態。這種形態通常預示著趨勢的強勢逆轉。隨後在6月回調至 $232.69，可以被視為對 V 形反轉後漲幅的健康修正。目前股價再次從 $232.69 反彈，表明多頭力量仍在，正嘗試延續 V 形反轉後的上升趨勢。
@@ -401,21 +401,21 @@ graph TD
     PRICE_ACTION --> VOLATILITY["波動率指標"]
     PRICE_ACTION --> VOLUME_IND["成交量指標"]
 
-    MA_SYS --> MA20_SIG("🟢 價格站上MA20")
-    MA_SYS --> MA50_SIG("🔴 價格低於MA50")
-    MA_SYS --> MA200_SIG("🟢 價格站上MA200")
+    MA_SYS --> MA20_SIG(🟢 價格站上MA20)
+    MA_SYS --> MA50_SIG(🔴 價格低於MA50)
+    MA_SYS --> MA200_SIG(🟢 價格站上MA200)
 
-    MOMENTUM --> RSI_SIG("🟡 RSI中性區間，但有底背離")
-    MOMENTUM --> MACD_SIG("🟢 MACD柱狀圖轉正，多頭動能增強")
-    MOMENTUM --> STOCH_SIG("🟡 Stoch中性，但K線在D線上方")
+    MOMENTUM --> RSI_SIG(🟡 RSI中性區間，但有底背離)
+    MOMENTUM --> MACD_SIG(🟢 MACD柱狀圖轉正，多頭動能增強)
+    MOMENTUM --> STOCH_SIG(🟡 Stoch中性，但K線在D線上方)
 
-    VOLATILITY --> BB_SIG("🟡 價格在中軌上方，但未觸及上軌")
+    VOLATILITY --> BB_SIG(🟡 價格在中軌上方，但未觸及上軌)
 
-    VOLUME_IND --> OBV_SIG("🟢 OBV趨勢向上，量能支撐")
-    VOLUME_IND --> VOL_RATIO_SIG("🔴 最新成交量低於均量")
+    VOLUME_IND --> OBV_SIG(🟢 OBV趨勢向上，量能支撐)
+    VOLUME_IND --> VOL_RATIO_SIG(🔴 最新成交量低於均量)
 
-    MA20_SIG & MA200_SIG & MACD_SIG & OBV_SIG & RSI_SIG --> BULLISH_SUPPORT("🟢 多頭支撐訊號")
-    MA50_SIG & VOL_RATIO_SIG --> BEARISH_PRESSURE("🔴 空頭壓力訊號")
+    MA20_SIG & MA200_SIG & MACD_SIG & OBV_SIG & RSI_SIG --> BULLISH_SUPPORT(🟢 多頭支撐訊號)
+    MA50_SIG & VOL_RATIO_SIG --> BEARISH_PRESSURE(🔴 空頭壓力訊號)
 
     BULLISH_SUPPORT & BEARISH_PRESSURE --> OVERALL_CONSENSUS{"綜合共識\\n短期多頭反彈，中期阻力與量能不足為憂"}
 ```
@@ -445,9 +445,9 @@ graph TD
     PRICE -- "位於下方" --> MA50
     PRICE -- "位於上方" --> MA200
 
-    MA20 -- "向上交叉" --> MA120_MA240("短期均線向上")
-    MA50 -- "位於價格上方" --> MID_TERM_RESIST("🔴 中期阻力")
-    MA200 -- "位於價格下方" --> LONG_TERM_SUPPORT("🟢 長期支撐")
+    MA20 -- "向上交叉" --> MA120_MA240(短期均線向上)
+    MA50 -- "位於價格上方" --> MID_TERM_RESIST(🔴 中期阻力)
+    MA200 -- "位於價格下方" --> LONG_TERM_SUPPORT(🟢 長期支撐)
 
     MID_TERM_RESIST & LONG_TERM_SUPPORT & MA20 --> MIXED_SIGNAL{"均線排列: 混合排列\\n短期改善，中期壓制，長期多頭"}
 ```
@@ -490,8 +490,8 @@ graph TD
     SIGNAL_LINE["訊號線: -5.302"]
     HISTOGRAM["MACD柱狀圖: +0.916"]
 
-    MACD_LINE -- "向上穿越" --> SIGNAL_LINE("🟢 MACD金叉")
-    HISTOGRAM -- "從負轉正" --> BULLISH_MOMENTUM("🟢 多頭動能增強")
+    MACD_LINE -- "向上穿越" --> SIGNAL_LINE(🟢 MACD金叉)
+    HISTOGRAM -- "從負轉正" --> BULLISH_MOMENTUM(🟢 多頭動能增強)
 
     MACD_LINE & SIGNAL_LINE & HISTOGRAM --> MACD_CONCLUSION{"MACD訊號: 金叉確認，多頭動能顯著"}
 ```
@@ -540,8 +540,8 @@ graph TD
     VOLUME_CHECK --> AVG_VOL_50["50日均量: 51.9M"]
     VOLUME_CHECK --> OBV_TREND["OBV趨勢: OBV > MA"]
 
-    CURRENT_VOL -- "低於均量" --> VOL_WEAK("🔴 買盤動能不足")
-    OBV_TREND -- "量能累積" --> OBV_STRONG("🟢 總體量能支撐")
+    CURRENT_VOL -- "低於均量" --> VOL_WEAK(🔴 買盤動能不足)
+    OBV_TREND -- "量能累積" --> OBV_STRONG(🟢 總體量能支撐)
 
     VOL_WEAK & OBV_STRONG --> VOLUME_CONCLUSION{"量價配合度: 短期反彈量能不足，但長期累積量能健康"}
 ```
@@ -646,25 +646,25 @@ graph TD
         SHORT_MOMENTUM["動能: 🟢 強勁 (MACD+, RSI底背離)"]
         SHORT_MA["均線: 🟢 價格>MA20"]
         SHORT_PATTERN["形態: 🟡 反彈"]
-    end
+    END
 
     SUBGRAPH_MID["中期 (週線)"]
         MID_TREND["趨勢: 🟡 震盪偏多"]
         MID_MOMENTUM["動能: 🟢 改善 (從低點回升)"]
         MID_MA["均線: 🟡 價格<MA50"]
         MID_PATTERN["形態: 🟡 V形回調"]
-    end
+    END
 
     SUBGRAPH_LONG["長期 (月線)"]
         LONG_TREND["趨勢: 🟢 上升"]
         LONG_MOMENTUM["動能: 🟢 穩健 (ADX強趨勢)"]
         LONG_MA["均線: 🟢 價格>MA200"]
         LONG_PATTERN["形態: 🟢 V形反轉"]
-    end
+    END
 
-    SHORT_TREND & SHORT_MOMENTUM & SHORT_MA --> CONSISTENCY_SHORT("🟢 短期一致性高")
-    MID_TREND & MID_MOMENTUM & MID_MA --> CONSISTENCY_MID("🟡 中期存在分歧")
-    LONG_TREND & LONG_MOMENTUM & LONG_MA --> CONSISTENCY_LONG("🟢 長期一致性高")
+    SHORT_TREND & SHORT_MOMENTUM & SHORT_MA --> CONSISTENCY_SHORT(🟢 短期一致性高)
+    MID_TREND & MID_MOMENTUM & MID_MA --> CONSISTENCY_MID(🟡 中期存在分歧)
+    LONG_TREND & LONG_MOMENTUM & LONG_MA --> CONSISTENCY_LONG(🟢 長期一致性高)
 
     CONSISTENCY_SHORT & CONSISTENCY_MID & CONSISTENCY_LONG --> OVERALL_CONSENSUS{"綜合共識: 長短期多頭趨勢一致，中期需突破關鍵阻力"}
 ```

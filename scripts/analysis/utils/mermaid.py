@@ -140,13 +140,20 @@ def _mm_wrap_bare_nodes(diagram: str) -> str:
 
     def fix_atom(atom: str) -> str:
         s = atom.strip()
+        # A trailing `;` is a Mermaid statement terminator, not part of the
+        # node. Peel it first so a plain reference like `H;` stays a reference
+        # to the existing node `H` instead of being wrapped as a brand-new node
+        # `nbN["H;"]` (which severs the real connection).
+        term = ""
+        if s.endswith(";"):
+            s, term = s[:-1].rstrip(), ";"
         # An atom still carrying an edge-dash run (e.g. "月線 -- 趨勢向上") is the
         # left side of a `A -- label --> B` labeled edge that the arrow splitter
         # above does not tokenize. Wrapping it would turn the edge label into a
         # bogus node and destroy the edge — leave such atoms untouched.
         if not s or not _MM_BARE.search(s) or re.search(r"-{2,}|={2,}|-\.|\.-", s):
             return atom
-        return f'{node_id(s)}["{s}"]'
+        return f'{node_id(s)}["{s}"]{term}'
 
     out = []
     for line in diagram.split("\n"):

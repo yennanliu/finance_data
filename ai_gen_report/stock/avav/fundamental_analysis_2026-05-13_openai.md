@@ -418,9 +418,9 @@ graph TD
     Profitability --> NetMargin["淨利率<br/>5.31%"]
     Profitability --> ROE["ROE<br/>-8.7%"]
 
-    GrossMargin --> GM1["⬆ 結構性成本下降"]
-    OperatingMargin --> OM1["⬇ 開發成本上升"]
-    NetMargin --> NM1["⬇ 非常性支出影響"]
+    GrossMargin --> GM1[⬆ 結構性成本下降]
+    OperatingMargin --> OM1[⬇ 開發成本上升]
+    NetMargin --> NM1[⬇ 非常性支出影響]
 ```
 
 ---

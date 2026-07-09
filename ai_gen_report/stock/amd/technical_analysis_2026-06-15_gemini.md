@@ -208,7 +208,7 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "形態 A: 潛在雙頂 (Double Top)"
+    subgraph 形態 A: 潛在雙頂 (Double Top)
         A1["左頂 (Peak 1): $516.10 <br/>(2026-05-31)"] --> A2["頸線 (Neckline): $466.38 <br/>(2026-06-07)"]
         A2 --> A3["右頂 (Peak 2): $511.57 <br/>(2026-06-14)"]
         A3 --> A4{"是否跌破頸線 $466.38?"}
@@ -320,15 +320,15 @@ $386.78 ║███████████████████████
 
 ```mermaid
 graph TD
-    subgraph "均線系統 (MA)"
-        MA["多頭排列 (MA20 > 50 > 200)"] -->|"支持"| Trend["🟢 長期看多"]
+    subgraph 均線系統 (MA)
+        MA["多頭排列 (MA20 > 50 > 200)"] -->|支持| Trend["🟢 長期看多"]
     end
-    subgraph "動能系統 (RSI/MACD)"
-        RSI["RSI 頂背離 (57.23)"] -->|"矛盾"| Trend
-        MACD["MACD 死叉 (Hist -8.163)"] -->|"矛盾"| Trend
+    subgraph 動能系統 (RSI/MACD)
+        RSI["RSI 頂背離 (57.23)"] -->|矛盾| Trend
+        MACD["MACD 死叉 (Hist -8.163)"] -->|矛盾| Trend
     end
-    subgraph "量能系統 (OBV)"
-        OBV["OBV < MA (資金流出)"] -->|"否定"| Trend
+    subgraph 量能系統 (OBV)
+        OBV["OBV < MA (資金流出)"] -->|否定| Trend
     end
     Trend --> Verdict["⚠️ 結論：『價升量縮、動能背離』的虛胖牛市，防範假突破後深幅回檔"]
 ```

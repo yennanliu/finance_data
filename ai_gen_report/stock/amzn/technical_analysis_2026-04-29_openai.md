@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    M["月線趨勢"] -->|"上升"| W["週線趨勢"]
-    W -->|"上升"| D["日線趨勢"]
-    D -->|"上升"| Conclusion["結論：長中短期皆為上升趨勢"]
+    M["月線趨勢"] -->|上升| W["週線趨勢"]
+    W -->|上升| D["日線趨勢"]
+    D -->|上升| Conclusion["結論：長中短期皆為上升趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -146,9 +146,9 @@ $245 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX(14): 34.99"] -->|"強趨勢"| Conclusion["強多頭趨勢"]
-    +DI["+DI: 44.02"] -->|"多頭主導"| Conclusion
-    -DI["-DI: 16.11"] -->|"空頭弱勢"| Conclusion
+    ADX["ADX(14): 34.99"] -->|強趨勢| Conclusion["強多頭趨勢"]
+    +DI["+DI: 44.02"] -->|多頭主導| Conclusion
+    -DI["-DI: 16.11"] -->|空頭弱勢| Conclusion
 ```
 
 ---
@@ -159,9 +159,9 @@ graph TD
 
 ```mermaid
 graph TD
-    H["頭肩底形態"] -->|"完成"| T["目標價計算"]
-    D["雙底形態"] -->|"形成中"| T
-    T -->|"目標價達成"| Conclusion["技術形態支持上漲"]
+    H["頭肩底形態"] -->|完成| T["目標價計算"]
+    D["雙底形態"] -->|形成中| T
+    T -->|目標價達成| Conclusion["技術形態支持上漲"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -233,17 +233,17 @@ $250 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20["MA20: $241.72"] -->|"價格上方"| Bullish["看多"]
-    RSI["RSI(14): 83.30"] -->|"超買"| Bearish["警示"]
-    MACD["MACD: 12.291"] -->|"多頭"| Bullish
+    MA20["MA20: $241.72"] -->|價格上方| Bullish["看多"]
+    RSI["RSI(14): 83.30"] -->|超買| Bearish["警示"]
+    MACD["MACD: 12.291"] -->|多頭| Bullish
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|"價格上方"| B["看多"]
-    C["長期 MA200"] -->|"價格下方"| D["持續看多"]
+    A["短期 MA20"] -->|價格上方| B["看多"]
+    C["長期 MA200"] -->|價格下方| D["持續看多"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -256,8 +256,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD: 12.291"] -->|"多頭"| Signal_Line["Signal: 10.782"]
-    Histogram["Histogram: +1.509"] -->|"上升"| Bullish["看多"]
+    MACD_Line["MACD: 12.291"] -->|多頭| Signal_Line["Signal: 10.782"]
+    Histogram["Histogram: +1.509"] -->|上升| Bullish["看多"]
 ```
 
 ### 📦 布林通道分析

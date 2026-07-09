@@ -458,9 +458,9 @@ graph LR
     NC["Net Change in Cash: +$20.50B"]
 
     NI -- "加回非現金費用,<br/>營運資本變動" --> OCF
-    OCF -- "減去資本支出" --> CAPEX_TO_FCF("OCF + CAPEX")
+    OCF -- "減去資本支出" --> CAPEX_TO_FCF(OCF + CAPEX)
     CAPEX_TO_FCF -- "得到自由現金流" --> FCF
-    FCF -- "減去股息" --> FCF_AFTER_DIV("FCF + CDP")
+    FCF -- "減去股息" --> FCF_AFTER_DIV(FCF + CDP)
     FCF_AFTER_DIV -- "其他融資/投資活動" --> NC
 ```
 **現金流量瀑布圖解析 (FY2026)：**

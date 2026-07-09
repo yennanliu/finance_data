@@ -332,12 +332,12 @@ graph LR
     -BuyBack["🔄 回購：$0M"]
     =Net_CF["🟢 淨現金變化：+$XXM"]
 
-    Net_Income --> nb1["+Op_CF"]
-    nb1["+Op_CF"] --> -CapEx
-    -CapEx --> nb2["=FCF"]
-    nb2["=FCF"] --> -Div
+    Net_Income --> +Op_CF
+    +Op_CF --> -CapEx
+    -CapEx --> =FCF
+    =FCF --> -Div
     -Div --> -BuyBack
-    -BuyBack --> nb3["=Net_CF"]
+    -BuyBack --> =Net_CF
 ```
 
 ### 5.2 FCF 轉換率趨勢

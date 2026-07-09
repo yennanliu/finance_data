@@ -150,11 +150,11 @@ graph LR
 ```mermaid
 graph TD
     PriceAction["當前價格 $225.50"] --> ADX_Val{"ADX 數值: 28.50"}
-    ADX_Val -->|"> 25"| TrendExist["🟢 趨勢行情確立"]
-    ADX_Val -->|"< 20"| RangeBound["🔴 盤整格局"]
+    ADX_Val -->|> 25| TrendExist["🟢 趨勢行情確立"]
+    ADX_Val -->|< 20| RangeBound["🔴 盤整格局"]
     TrendExist --> DI_Compare{"+DI (24.20) vs -DI (16.80)"}
-    DI_Compare -->|"+DI > -DI"| BullTrend["🟢 多頭趨勢主導 (建議逢低做多)"]
-    DI_Compare -->|"-DI > +DI"| BearTrend["🔴 空頭趨勢主導"]
+    DI_Compare -->|+DI > -DI| BullTrend["🟢 多頭趨勢主導 (建議逢低做多)"]
+    DI_Compare -->|-DI > +DI| BearTrend["🔴 空頭趨勢主導"]
 ```
 
 **ADX 趨勢強度對照表**：
@@ -298,10 +298,10 @@ $195.00 ║███████████████████████
 
 ```mermaid
 graph TD
-    MA["均線系統: 多頭排列"] -->|"確認"| Trend["趨勢看多"]
-    MACD["MACD: 零軸上金叉"] -->|"確認"| Trend
-    RSI["RSI: 62.50 處於強勢區"] -->|"確認"| Trend
-    OBV["OBV: 創新高量價配合"] -->|"確認"| Trend
+    MA["均線系統: 多頭排列"] -->|確認| Trend["趨勢看多"]
+    MACD["MACD: 零軸上金叉"] -->|確認| Trend
+    RSI["RSI: 62.50 處於強勢區"] -->|確認| Trend
+    OBV["OBV: 創新高量價配合"] -->|確認| Trend
     Trend --> Decision["🟢 執行做多策略"]
 ```
 
@@ -311,9 +311,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Price["現價: $225.50"] -->|"上方無均線壓力"| MA20["MA20: $221.80 (短期支撐)"]
-    MA20 -->|"大於"| MA50["MA50: $215.30 (中期支撐)"]
-    MA50 -->|"大於"| MA200["MA200: $195.60 (長期防線)"]
+    Price["現價: $225.50"] -->|上方無均線壓力| MA20["MA20: $221.80 (短期支撐)"]
+    MA20 -->|大於| MA50["MA50: $215.30 (中期支撐)"]
+    MA50 -->|大於| MA200["MA200: $195.60 (長期防線)"]
 ```
 
 * **MA20 ($221.80)**：斜率向上，價格在 MA20 之上，代表短期買盤強勁。
@@ -340,9 +340,9 @@ MACD 指標在零軸上方完成了「空中加油」的黃金交叉，這是一
 
 ```mermaid
 graph LR
-    DIF["DIF 線: 3.20"] -->|"大於"| DEA["DEA 線: 2.80"]
-    DIF & DEA -->|"位於"| ZeroLine["零軸 (0.00) 上方"]
-    Bar["MACD 柱狀圖: +0.40"] -->|"連續 4 天"| Expand["紅柱持續放大 (動能增強)"]
+    DIF["DIF 線: 3.20"] -->|大於| DEA["DEA 線: 2.80"]
+    DIF & DEA -->|位於| ZeroLine["零軸 (0.00) 上方"]
+    Bar["MACD 柱狀圖: +0.40"] -->|連續 4 天| Expand["紅柱持續放大 (動能增強)"]
 ```
 
 這表明雖然經歷了 4-5 月的整理，但多頭掌控市場的本質並未改變，零軸之上的金叉通常預示著新一波快速拉升的開始。

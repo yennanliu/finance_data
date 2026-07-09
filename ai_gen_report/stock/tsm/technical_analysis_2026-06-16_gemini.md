@@ -108,11 +108,11 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線層級 (Long-term)"] -->|"2年持續上升通道"| B["極度看多 (Bullish)"]
+    A["月線層級 (Long-term)"] -->|2年持續上升通道| B["極度看多 (Bullish)"]
     B --> C["週線層級 (Medium-term)"]
-    C -->|"高點持續突破/低點墊高"| D["震盪走高 (Grinding Up)"]
+    C -->|高點持續突破/低點墊高| D["震盪走高 (Grinding Up)"]
     D --> E["日線層級 (Short-term)"]
-    E -->|"MACD 死叉與 ADX 偏低"| F["高檔震盪整理 (Consolidation)"]
+    E -->|MACD 死叉與 ADX 偏低| F["高檔震盪整理 (Consolidation)"]
     
     style B fill:#d4edda,stroke:#28a745,stroke-width:2px
     style D fill:#d4edda,stroke:#28a745,stroke-width:2px
@@ -168,8 +168,8 @@ $210 ┤ ● ━━━●
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 20.52"] -->|"低於 25"| Range["市場非強勢單邊趨勢"]
-    Range -->|"結合 +DI > -DI"| SlowUp["多頭主導的慢牛/通道震盪上行"]
+    ADX["ADX(14) = 20.52"] -->|低於 25| Range["市場非強勢單邊趨勢"]
+    Range -->|結合 +DI > -DI| SlowUp["多頭主導的慢牛/通道震盪上行"]
     SlowUp --> Action["交易策略：不宜盲目追高，應採取回檔支撐位做多"]
 ```
 
@@ -304,10 +304,10 @@ graph TD
 
 ```mermaid
 graph TD
-    Price["現價 $441.40"] --> MA["均線系統: 多頭排列"] -->|"支持上漲"| Bullish["🟢 多頭結論"]
-    Price --> MACD["MACD: 高檔死叉 -0.883"] -->|"警示回檔"| Bearish["🔴 空頭結論"]
-    Price --> RSI["RSI: 59.37 (無背離)"] -->|"支持震盪"| Neutral["🟡 中性結論"]
-    Price --> OBV["OBV: 持續創高"] -->|"資金流入"| Bullish
+    Price["現價 $441.40"] --> MA["均線系統: 多頭排列"] -->|支持上漲| Bullish["🟢 多頭結論"]
+    Price --> MACD["MACD: 高檔死叉 -0.883"] -->|警示回檔| Bearish["🔴 空頭結論"]
+    Price --> RSI["RSI: 59.37 (無背離)"] -->|支持震盪| Neutral["🟡 中性結論"]
+    Price --> OBV["OBV: 持續創高"] -->|資金流入| Bullish
     
     style Bullish fill:#d4edda,stroke:#28a745,stroke-width:2px
     style Bearish fill:#f8d7da,stroke:#dc3545,stroke-width:2px
@@ -338,7 +338,7 @@ TSM 目前展現了極為完美的 **多頭排列 (Bullish Alignment)**。這種
 
 ```mermaid
 graph LR
-    MACDLine["快線 8.579"] -->|"低於"| SignalLine["慢線 9.462"]
+    MACDLine["快線 8.579"] -->|低於| SignalLine["慢線 9.462"]
     SignalLine --> BearishCross["形成高檔死叉"]
     BearishCross --> Hist["柱狀圖持續在零軸下方 (-0.883)"]
     Hist --> Action["警示：短期有回檔休整需求，不宜追漲"]
@@ -441,10 +441,10 @@ QuadrantChart
 
 ```mermaid
 graph TD
-    Start["分析 TSM 當前價位 $441.40"] --> Dec{"交易風格選擇"}
-    Dec -->|"穩健波段交易"| PlanA["策略 A: 回檔支撐買入"]
-    Dec -->|"突破動能交易"| PlanB["策略 B: 突破追多買入"]
-    Dec -->|"對沖/逆勢交易"| PlanC["策略 C: 高檔受阻輕倉做空"]
+    Start["分析 TSM 當前價位 $441.40"] --> Dec{交易風格選擇}
+    Dec -->|穩健波段交易| PlanA["策略 A: 回檔支撐買入"]
+    Dec -->|突破動能交易| PlanB["策略 B: 突破追多買入"]
+    Dec -->|對沖/逆勢交易| PlanC["策略 C: 高檔受阻輕倉做空"]
     
     PlanA --> EntryA["進場點: $420.00 - $424.00"]
     PlanB --> EntryB["進場點: 日線收盤突破 $450.00"]

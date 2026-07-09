@@ -348,11 +348,11 @@ graph LR
     EQUITY["Equity Issuance<br/>+$950M+"]
     NET_C["Net Cash Increase<br/>+$903.4M"]
 
-    NI --> |"加上折舊攤銷與非現金調整"| OCF
+    NI --> |加上折舊攤銷與非現金調整| OCF
     WC --> OCF
     OCF --> CAPEX
     CAPEX --> FCF
-    FCF --> |"融資活動"| EQUITY
+    FCF --> |融資活動| EQUITY
     EQUITY --> NET_C
 ```
 
