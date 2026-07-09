@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    Monthly["長期趨勢"] -->|上升| Weekly["中期趨勢"]
-    Weekly -->|震盪上行| Daily["短期趨勢"]
-    Daily -->|強勢| Momentum["動能強勁"]
+    Monthly["長期趨勢"] -->|"上升"| Weekly["中期趨勢"]
+    Weekly -->|"震盪上行"| Daily["短期趨勢"]
+    Daily -->|"強勢"| Momentum["動能強勁"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -143,7 +143,7 @@ $650 ┤
 
 ```mermaid
 graph TD
-    ADX["ADX: 23.61"] -->|弱趨勢/盤整| Conclusion["需謹慎觀察趨勢變化"]
+    ADX["ADX: 23.61"] -->|"弱趨勢/盤整"| Conclusion["需謹慎觀察趨勢變化"]
 ```
 
 ---
@@ -229,17 +229,17 @@ $625 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA["移動平均線"] -->|多頭排列| Trend["上升趨勢"]
-    RSI["RSI"] -->|超買區| Warning["注意回調風險"]
-    MACD["MACD"] -->|持續增強| Momentum["動能強勁"]
+    MA["移動平均線"] -->|"多頭排列"| Trend["上升趨勢"]
+    RSI["RSI"] -->|"超買區"| Warning["注意回調風險"]
+    MACD["MACD"] -->|"持續增強"| Momentum["動能強勁"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    ShortTerm["短期 MA20"] -->|上行| Bullish["看多"]
-    LongTerm["長期 MA200"] -->|上行| StrongTrend["強趨勢"]
+    ShortTerm["短期 MA20"] -->|"上行"| Bullish["看多"]
+    LongTerm["長期 MA200"] -->|"上行"| StrongTrend["強趨勢"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -251,8 +251,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACDLine["MACD: 14.230"] -->|上穿訊號線| BullishMomentum["上升動能"]
-    SignalLine["Signal: -0.369"] -->|弱勢| Neutral["中性訊號"]
+    MACDLine["MACD: 14.230"] -->|"上穿訊號線"| BullishMomentum["上升動能"]
+    SignalLine["Signal: -0.369"] -->|"弱勢"| Neutral["中性訊號"]
 ```
 
 ### 📦 布林通道分析
@@ -317,8 +317,8 @@ $500 ┤     ● (下軌)
 
 ```mermaid
 graph TD
-    Decision["策略選擇"] -->|多頭策略| Long["目標價 $750"]
-    Decision -->|空頭策略| Short["目標價 $650"]
+    Decision["策略選擇"] -->|"多頭策略"| Long["目標價 $750"]
+    Decision -->|"空頭策略"| Short["目標價 $650"]
 ```
 
 ### 🟢 多頭策略詳情

@@ -104,9 +104,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線級別 (長期)"] -->|強勢上漲| B["週線級別 (中期)"]
-    B -->|高檔雙頂震盪| C["日線級別 (短期)"]
-    C -->|MACD死叉/尋求支撐| D["交易決策: 逢高減碼/等待回踩"]
+    A["月線級別 (長期)"] -->|"強勢上漲"| B["週線級別 (中期)"]
+    B -->|"高檔雙頂震盪"| C["日線級別 (短期)"]
+    C -->|"MACD死叉/尋求支撐"| D["交易決策: 逢高減碼/等待回踩"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -176,8 +176,8 @@ graph LR
 graph TD
     A["日線/週線圖表形態"] --> B["潛在雙頂 (Double Top) 形態"]
     A --> C["上升通道 (Ascending Channel) 跌破邊緣"]
-    B -->|左肩: $516.10 (05-31)| D["頸線位置: $466.38"]
-    B -->|右肩: $511.57 (06-14)| E["若跌破頸線則形態確立"]
+    B -->|"左肩: $516.10 (05-31)"| D["頸線位置: $466.38"]
+    B -->|"右肩: $511.57 (06-14)"| E["若跌破頸線則形態確立"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -303,7 +303,7 @@ RSI(14) 走勢強度：███████████░░░░░░  57.2
 ```mermaid
 graph TD
     MACD["MACD Line: 28.513"] --- Signal["Signal Line: 35.043"]
-    MACD -->|下方穿過| Signal
+    MACD -->|"下方穿過"| Signal
     Signal --> DeadCross["🔴 形成高檔死叉 (Death Cross)"]
     DeadCross --> Hist["柱狀圖 Hist: -6.530 (空頭動能增強)"]
 ```
@@ -393,8 +393,8 @@ graph TD
 ```mermaid
 graph TD
     Price["當前現價 $511.57"] --> Decision{"如何交易?"}
-    Decision -->|保守/做空| Short_Strat["策略 B: 頸線跌破做空"]
-    Decision -->|逢低/做多| Long_Strat["策略 A: 回踩強支撐做多"]
+    Decision -->|"保守/做空"| Short_Strat["策略 B: 頸線跌破做空"]
+    Decision -->|"逢低/做多"| Long_Strat["策略 A: 回踩強支撐做多"]
     
     Short_Strat --> S_Entry["進場點: 跌破 $466.38"]
     Short_Strat --> S_Target["目標價: $418.92"]

@@ -397,13 +397,13 @@ graph LR
     DEBT["償還債務/回購<br/>-$11.5B"]
     CASH["淨現金增加<br/>+$4.57B"]
 
-    NI -->|非現金調整| OCF
+    NI -->|"非現金調整"| OCF
     DA --> OCF
     SBC --> OCF
-    OCF -->|扣除 CapEx| FCF
-    FCF -->|資本配置| DIV
-    FCF -->|資本配置| DEBT
-    FCF -->|資本配置| CASH
+    OCF -->|"扣除 CapEx"| FCF
+    FCF -->|"資本配置"| DIV
+    FCF -->|"資本配置"| DEBT
+    FCF -->|"資本配置"| CASH
 ```
 
 ### 5.2 FCF 轉換率趨勢

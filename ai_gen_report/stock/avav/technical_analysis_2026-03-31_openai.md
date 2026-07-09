@@ -92,9 +92,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線趨勢] -->|空頭| B[週線趨勢]
-    B -->|空頭| C[日線趨勢]
-    C -->|盤整| D[小時線趨勢]
+    A["月線趨勢"] -->|"空頭"| B["週線趨勢"]
+    B -->|"空頭"| C["日線趨勢"]
+    C -->|"盤整"| D["小時線趨勢"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -129,8 +129,8 @@ $ 50 ┤    ●(低點)
 
 ```mermaid
 graph TD
-    H[頭肩頂] -- 頸線突破 --> T[目標價]
-    D[雙頂] -- 頸線支撐 --> S[支撐位]
+    H["頭肩頂"] -- 頸線突破 --> T["目標價"]
+    D["雙頂"] -- 頸線支撐 --> S["支撐位"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -202,9 +202,9 @@ $120 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA[MA 系統] --> RSI
+    MA["MA 系統"] --> RSI
     RSI --> MACD
-    MACD --> BB[布林通道]
+    MACD --> BB["布林通道"]
     BB --> OBV
 ```
 
@@ -227,8 +227,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD --|看空| MACD Signal
-    MACD Signal --> MACD Hist
+    MACD --|"看空"| MACD Signal
+    nb1["MACD Signal"] --> nb2["MACD Hist"]
 ```
 MACD 指標顯示持續看空。
 

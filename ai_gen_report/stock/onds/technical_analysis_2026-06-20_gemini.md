@@ -173,8 +173,8 @@ $ 2.00 ┤  ●  █     █     █     █     █  █  █     █     █
 ```mermaid
 graph TD
     Price["股價急跌 ($9.27)"] --> ADX_Val{"ADX 數值 = 16.31"}
-    ADX_Val -->|< 25| RangeBound["判定：非單邊趨勢行情\n屬於「寬幅震盪」中的下軌測試"]
-    ADX_Val -->|DMI 交叉| BearishDominant["-DI (24.72) > +DI (19.12)\n空頭暫時主導市場"]
+    ADX_Val -->|"< 25"| RangeBound["判定：非單邊趨勢行情\n屬於「寬幅震盪」中的下軌測試"]
+    ADX_Val -->|"DMI 交叉"| BearishDominant["-DI (24.72) > +DI (19.12)\n空頭暫時主導市場"]
 ```
 
 | ADX 數值區間 | 趨勢強度 | ONDS 當前狀態 | 交易策略啟示 |
@@ -334,8 +334,8 @@ RSI(14) 強度：████░░░░░░░░░░░░░░░░ 22
 ```mermaid
 graph TD
     MACD_Line["MACD 線: -0.299"] --- Signal_Line["信號線: -0.042"]
-    MACD_Line -->|低於信號線| DeathCross["死叉狀態"]
-    Hist["柱狀圖: -0.256"] -->|持續向下發散| StrongMomentum["空頭動能仍未見底"]
+    MACD_Line -->|"低於信號線"| DeathCross["死叉狀態"]
+    Hist["柱狀圖: -0.256"] -->|"持續向下發散"| StrongMomentum["空頭動能仍未見底"]
 ```
 
 MACD 指標目前完全由空頭主導。DIF 與 DEA 雙線在零軸下方持續下行，且柱狀圖（-0.256）尚未出現收斂跡象，顯示短期內空頭拋壓仍未完全釋放。
@@ -415,8 +415,8 @@ MACD 指標目前完全由空頭主導。DIF 與 DEA 雙線在零軸下方持續
 ```mermaid
 graph TD
     Start["分析現價 $9.27"] --> Support_Check{"是否守住 $9.00 - $9.04 支撐？"}
-    Support_Check -->|Yes| Strategy_A["執行策略 A (超賣反彈做多)"]
-    Support_Check -->|No| Strategy_B["執行策略 B (破位追空 / 待 $8.30 做多)"]
+    Support_Check -->|"Yes"| Strategy_A["執行策略 A (超賣反彈做多)"]
+    Support_Check -->|"No"| Strategy_B["執行策略 B (破位追空 / 待 $8.30 做多)"]
     
     Strategy_A --> Target_A["目標價1: $10.16\n目標價2: $10.59"]
     Strategy_B --> Target_B["目標價: $8.30 附近止跌築底"]

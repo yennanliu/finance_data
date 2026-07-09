@@ -367,8 +367,8 @@ AMZN 的 5年 Beta 係數約為 **1.15**，與標普500 (SPY) 及那斯達克100
 ```mermaid
 graph TD
     Start["當前現價 $244.39"] --> Support_Check{"是否守住 $238.55?"}
-    Support_Check -->|是| Buy_Strategy["🟢 策略 A: 逢低買進 (Buy the Dip)"]
-    Support_Check -->|否| Stop_Or_Wait["等待測試 MA200 $232.80"]
+    Support_Check -->|"是"| Buy_Strategy["🟢 策略 A: 逢低買進 (Buy the Dip)"]
+    Support_Check -->|"否"| Stop_Or_Wait["等待測試 MA200 $232.80"]
     Stop_Or_Wait --> Buy_Strategy_B["🟢 策略 B: 年線防禦性買進"]
     Buy_Strategy --> Target_1["第一目標價: $257.00"]
     Buy_Strategy --> Target_2["第二目標價: $270.00"]

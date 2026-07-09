@@ -298,7 +298,7 @@ graph LR
     RepoDiv["回購及股息 €X﹒Xm"] 
     NCashChange["淨現金變化Obj; - 標記或提示文本"]
     
-    NetIncome --> OCF --> Capex --> FCF --> RepoDiv 行 
+    NetIncome --> OCF --> Capex --> FCF --> nb1["RepoDiv 行"]
 ```
 
 ### 5.2 FCF 轉換率趨勢

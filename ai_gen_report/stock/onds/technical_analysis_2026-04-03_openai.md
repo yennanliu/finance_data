@@ -133,7 +133,7 @@ $ 6 ┤
 
 ```mermaid
 graph TD
-    ADX < 25 --> 盤整
+    nb1["ADX < 25"] --> 盤整
     盤整 --> ADX弱
     ADX弱["ADX: 16.84 (弱趨勢)"]
 ```

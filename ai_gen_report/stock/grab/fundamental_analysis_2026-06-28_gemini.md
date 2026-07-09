@@ -524,7 +524,7 @@ graph LR
     CAPEX --> FCF
     FCF --> FIN_ACTIVITIES
     FCF --> INV_ACTIVITIES
-    FIN_ACTIVITIES & INV_ACTIVITIES --> NET_CASH_CHANGE
+    FIN_ACTIVITIES  &  INV_ACTIVITIES --> NET_CASH_CHANGE
 ```
 *註：調整非現金項目為分析師估計值，以使淨利潤與營業現金流匹配。*
 
@@ -1023,7 +1023,7 @@ graph LR
     CAPEX --> FCF
     FCF --> FIN_ACTIVITIES
     FCF --> INV_ACTIVITIES
-    FIN_ACTIVITIES & INV_ACTIVITIES --> NET_CASH_CHANGE
+    FIN_ACTIVITIES  &  INV_ACTIVITIES --> NET_CASH_CHANGE
 ```
 *註：調整非現金項目為分析師估計值，以使淨利潤與營業現金流匹配。*
 

@@ -11,6 +11,8 @@ Bad-quality categories detected:
   WRONG_LANG   - contains significant English in a report expected to be zh-TW
   PLACEHOLDER  - has unfilled template placeholders (e.g. {ticker}, N/A blocks)
   HTML_LEAK    - contains raw HTML / Plotly scripts instead of clean Markdown
+  MERMAID      - a ```mermaid flowchart has unrenderable syntax (unquoted parens
+                 in a node label, stray parenthetical after a node closer)
   DUPLICATE    - same ticker+type+date with a -2 / -3 suffix (keeps the original)
 
 Usage:

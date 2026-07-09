@@ -31,10 +31,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph LR
-  A[基本面] -->|7/10| B[成長]
-  A -->|8/10| C[獲利]
-  A -->|9/10| D[財務健康]
-  A -->|5/10| E[估值]
+  A["基本面"] -->|"7/10"| B["成長"]
+  A -->|"8/10"| C["獲利"]
+  A -->|"9/10"| D["財務健康"]
+  A -->|"5/10"| E["估值"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -76,11 +76,11 @@ graph LR
 
 ```mermaid
 graph TD
-  A[Palantir Technologies Inc.] --> B[Palantir Gotham]
-  A --> C[Palantir Foundry]
-  A --> D[Palantir Apollo]
-  B --> E[政府部門]
-  C --> F[商業部門]
+  A["Palantir Technologies Inc."] --> B["Palantir Gotham"]
+  A --> C["Palantir Foundry"]
+  A --> D["Palantir Apollo"]
+  B --> E["政府部門"]
+  C --> F["商業部門"]
 ```
 
 ### 市場地位
@@ -167,8 +167,8 @@ pie
 
 ```mermaid
 graph TD
-  A[總資產 $8.90B] --> B[流動資產 $8.36B]
-  A --> C[非流動資產 $0.54B]
+  A["總資產 $8.90B"] --> B["流動資產 $8.36B"]
+  A --> C["非流動資產 $0.54B"]
 ```
 
 ### 流動性指標表格
@@ -203,9 +203,9 @@ graph TD
 
 ```mermaid
 graph LR
-  A(營業現金流 $2.13B) --> B(投資現金流 $-33.88M)
-  B --> C(融資現金流 $-100M)
-  C --> D(淨現金流增減 $1.99B)
+  A("營業現金流 $2.13B") --> B("投資現金流 $-33.88M")
+  B --> C("融資現金流 $-100M")
+  C --> D("淨現金流增減 $1.99B")
 ```
 
 ### FCF 轉換率趨勢
@@ -263,12 +263,12 @@ graph LR
 
 ```mermaid
 graph TB
-  X[獲利能力] --> Y[ROE]
-  X --> Z[ROA]
-  X --> W[ROIC]
-  Y --> |26.0%| A
-  Z --> |11.6%| B
-  W --> |14.8%| C
+  X["獲利能力"] --> Y["ROE"]
+  X --> Z["ROA"]
+  X --> W["ROIC"]
+  Y --> |"26.0%"| A
+  Z --> |"11.6%"| B
+  W --> |"14.8%"| C
 ```
 
 ---
@@ -331,12 +331,12 @@ TAM: $100B ▓▓▓▓▓▓░░░░░░░░░░ 30%
 
 ```mermaid
 graph TD
-  A[成長驅動力] --> B[短期]
-  A --> C[中期]
-  A --> D[長期]
-  B --> E[新產品]
-  C --> F[市場擴展]
-  D --> G[技術創新]
+  A["成長驅動力"] --> B["短期"]
+  A --> C["中期"]
+  A --> D["長期"]
+  B --> E["新產品"]
+  C --> F["市場擴展"]
+  D --> G["技術創新"]
 ```
 
 ---
@@ -389,9 +389,9 @@ graph TD
 
 ```mermaid
 graph TD
-  A[成長型] --> B[適合]
-  A --> C[部分適合]
-  A --> D[不適合]
+  A["成長型"] --> B["適合"]
+  A --> C["部分適合"]
+  A --> D["不適合"]
 ```
 
 ### 關鍵監控指標

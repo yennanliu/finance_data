@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
+from ..utils.mermaid import mermaid_syntax_issues
+
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
 MIN_LINES = 80          # below this (after frontmatter) → TOO_SHORT
 REFUSAL_PATTERNS = [
@@ -138,6 +140,14 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
         md_headings = len(re.findall(r"^#{1,3} ", text, re.MULTILINE))
         if md_headings < 2:
             issues.append("HTML_LEAK")
+
+    # MERMAID — flowchart blocks with unrenderable syntax (unquoted parens in a
+    # node label, stray parenthetical after a closer). Reports are sanitized at
+    # generation time, so any hit here is a regression worth surfacing.
+    mermaid_bad = mermaid_syntax_issues(text)
+    if mermaid_bad:
+        issues.append("MERMAID")
+        notes.append(f"mermaid={len(mermaid_bad)}× e.g. {mermaid_bad[0][:60]!r}")
 
     # CUTOFF — check last non-empty line
     lines = [l for l in text.splitlines() if l.strip()]

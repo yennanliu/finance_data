@@ -124,12 +124,12 @@ graph TD
 
 ```mermaid
 graph TD
-    C[0050 ETF 概覽]
-    C --> S1[電子類股 45%]
-    C --> S2[金融類股 20%]
-    C --> S3[製造類股 15%]
-    C --> S4[消費類股 10%]
-    C --> S5[其他 10%]
+    C["0050 ETF 概覽"]
+    C --> S1["電子類股 45%"]
+    C --> S2["金融類股 20%"]
+    C --> S3["製造類股 15%"]
+    C --> S4["消費類股 10%"]
+    C --> S5["其他 10%"]
 ```
 
 ### 2.2 市場份額
@@ -234,15 +234,15 @@ pie title 費用結構比例
 
 ```mermaid
 graph TD
-    T[0050 資產結構]
-    T --> L[流動資產 60%]
-    T --> N[非流動資產 40%]
+    T["0050 資產結構"]
+    T --> L["流動資產 60%"]
+    T --> N["非流動資產 40%"]
 
-    L --> L1[現金及現金等價物]
-    L --> L2[市場性證券]
+    L --> L1["現金及現金等價物"]
+    L --> L2["市場性證券"]
 
-    N --> N1[長期投資]
-    N --> N2[其他非流動資產]
+    N --> N1["長期投資"]
+    N --> N2["其他非流動資產"]
 ```
 
 ### 4.2 流動性指標分析
@@ -295,12 +295,12 @@ graph TD
 
 ```mermaid
 graph LR
-    N[淨利 NT$1.0B] --> OCF[營業現金流 NT$0.8B]
-    OCF --> CAPEX[資本支出 NT$0.1B]
-    CAPEX --> FCF[自由現金流 NT$0.7B]
-    FCF --> DIV[股息支付 NT$0.3B]
-    FCF --> REPO[股份回購 NT$0.2B]
-    DIV --> NC[淨現金變化 NT$0.2B]
+    N["淨利 NT$1.0B"] --> OCF["營業現金流 NT$0.8B"]
+    OCF --> CAPEX["資本支出 NT$0.1B"]
+    CAPEX --> FCF["自由現金流 NT$0.7B"]
+    FCF --> DIV["股息支付 NT$0.3B"]
+    FCF --> REPO["股份回購 NT$0.2B"]
+    DIV --> NC["淨現金變化 NT$0.2B"]
 ```
 
 ### 5.2 FCF 轉換率趨勢
@@ -387,10 +387,10 @@ pie title 資本配置比例
 
 ```mermaid
 graph LR
-    ROE[ROE = 淨利率 × 資產週轉率 × 財務槓桿]
-    ML[淨利率] --> ROE
-    AT[資產週轉率] --> ROE
-    FL[財務槓桿] --> ROE
+    ROE["ROE = 淨利率 × 資產週轉率 × 財務槓桿"]
+    ML["淨利率"] --> ROE
+    AT["資產週轉率"] --> ROE
+    FL["財務槓桿"] --> ROE
 ```
 
 ### 6.4 獲利能力儀表板
@@ -399,17 +399,17 @@ graph LR
 graph TD
     PROFIT["💡 獲利能力儀表板"]
 
-    GM[毛利率 87%]
-    OM[營業利率 86%]
-    NM[淨利率 82%]
+    GM["毛利率 87%"]
+    OM["營業利率 86%"]
+    NM["淨利率 82%"]
 
     PROFIT --> GM
     PROFIT --> OM
     PROFIT --> NM
 
-    GM --> cost_control[成本管控]
-    OM --> margin_expansion[利率擴張]
-    NM --> net_profitability[最終盈利]
+    GM --> cost_control["成本管控"]
+    OM --> margin_expansion["利率擴張"]
+    NM --> net_profitability["最終盈利"]
 ```
 
 ---
