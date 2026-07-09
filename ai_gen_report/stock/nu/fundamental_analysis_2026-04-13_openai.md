@@ -132,7 +132,7 @@ graph TD
     
     Company --> CoreBU
     CoreBU --> AdjBU1
-    CoreBU --> AdjBU2  
+    CoreBU --> AdjBU2
 ```
 
 ### 2.2 市場份額

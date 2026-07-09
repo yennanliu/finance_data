@@ -232,18 +232,18 @@ $310 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|上升| Bullish1["看多"]
-    MA50["中期 MA50"] -->|上升| Bullish2["看多"]
-    MA200["長期 MA200"] -->|上升| Bullish3["看多"]
-    RSI["RSI 78"] -->|超買| Warning["超買警告"]
+    MA20["短期 MA20"] -->|"上升"| Bullish1["看多"]
+    MA50["中期 MA50"] -->|"上升"| Bullish2["看多"]
+    MA200["長期 MA200"] -->|"上升"| Bullish3["看多"]
+    RSI["RSI 78"] -->|"超買"| Warning["超買警告"]
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -259,8 +259,8 @@ graph TD
     MACDLine["MACD 線"]
     SignalLine["Signal 線"]
     Histogram["柱狀圖"]
-    MACDLine -->|多頭| Histogram
-    SignalLine -->|多頭| Histogram
+    MACDLine -->|"多頭"| Histogram
+    SignalLine -->|"多頭"| Histogram
 ```
 
 ### 📦 布林通道分析
@@ -332,9 +332,9 @@ $300 ┤  └───● 下軌
 
 ```mermaid
 graph TD
-    Start["開始"] -->|價格高於MA| Long["考慮做多"]
-    Long -->|RSI超買| Wait["觀望等待"]
-    Long -->|RSI正常| Entry["進場"]
+    Start["開始"] -->|"價格高於MA"| Long["考慮做多"]
+    Long -->|"RSI超買"| Wait["觀望等待"]
+    Long -->|"RSI正常"| Entry["進場"]
     Entry --> Target["設置目標價"]
 ```
 

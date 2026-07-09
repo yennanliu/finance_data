@@ -31,10 +31,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 
 ```mermaid
 graph TB
-  A[基本面] -->|6/10| B[成長]
-  A -->|5/10| C[獲利]
-  A -->|7/10| D[財務健康]
-  A -->|6/10| E[估值]
+  A["基本面"] -->|"6/10"| B["成長"]
+  A -->|"5/10"| C["獲利"]
+  A -->|"7/10"| D["財務健康"]
+  A -->|"6/10"| E["估值"]
 ```
 
 ### 5大投資論點 + 3大風險
@@ -76,9 +76,9 @@ graph TB
 
 ```mermaid
 graph TD
-  A[SoFi Technologies, Inc.] --> B[Lending]
-  A --> C[Technology Platform]
-  A --> D[Financial Services]
+  A["SoFi Technologies, Inc."] --> B["Lending"]
+  A --> C["Technology Platform"]
+  A --> D["Financial Services"]
 ```
 
 ### 市場地位
@@ -164,8 +164,8 @@ pie
 
 ```mermaid
 graph TD
-  A[總資產] --> B[流動資產]
-  A --> C[非流動資產]
+  A["總資產"] --> B["流動資產"]
+  A --> C["非流動資產"]
 ```
 
 ### 流動性指標表格
@@ -198,9 +198,9 @@ graph TD
 
 ```mermaid
 graph LR
-  A[營運現金流] --> B[投資現金流]
-  B --> C[融資現金流]
-  C --> D[淨現金增減]
+  A["營運現金流"] --> B["投資現金流"]
+  B --> C["融資現金流"]
+  C --> D["淨現金增減"]
 ```
 
 ### FCF 轉換率趨勢表格
@@ -257,9 +257,9 @@ graph LR
 
 ```mermaid
 graph LR
-  A[淨利率] --> B[資產週轉率]
-  A --> C[槓桿比]
-  B --> D[ROE]
+  A["淨利率"] --> B["資產週轉率"]
+  A --> C["槓桿比"]
+  B --> D["ROE"]
   C --> D
 ```
 
@@ -321,9 +321,9 @@ TAM: $100B ▓▓▓▓▓▓▓▓▓▓
 
 ```mermaid
 graph TD
-  A[短期] --> B[技術升級]
-  A[中期] --> C[市場擴展]
-  A[長期] --> D[新產品發布]
+  A["短期"] --> B["技術升級"]
+  A["中期"] --> C["市場擴展"]
+  A["長期"] --> D["新產品發布"]
 ```
 
 ## 9. 風險矩陣
@@ -371,12 +371,12 @@ graph TD
 
 ```mermaid
 graph TD
-  A[成長型]
-  B[價值型]
-  C[股息型]
-  D[短期交易]
-  A -->|適合| C
-  B -->|適合| D
+  A["成長型"]
+  B["價值型"]
+  C["股息型"]
+  D["短期交易"]
+  A -->|"適合"| C
+  B -->|"適合"| D
 ```
 
 ### 關鍵監控指標

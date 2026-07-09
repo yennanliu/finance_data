@@ -171,9 +171,9 @@ $15.50 ───────●────────● (5/17 二次底 $15.6
 
 ```mermaid
 graph TD
-    ADX_Val["ADX 數值: 15.58"] -->|低于 25| RangeBound["市場性質: 盤整/箱體震盪"]
+    ADX_Val["ADX 數值: 15.58"] -->|"低于 25"| RangeBound["市場性質: 盤整/箱體震盪"]
     RangeBound --> Strategy["交易策略: 逢低買入 (支撐) / 逢高賣出 (阻力)"]
-    DI_Relation["+DI ($20.42) > -DI ($17.34)"] -->|多頭微幅佔優| SupportHold["支撐位買盤力量稍強於阻力位賣盤"]
+    DI_Relation["+DI ($20.42) > -DI ($17.34)"] -->|"多頭微幅佔優"| SupportHold["支撐位買盤力量稍強於阻力位賣盤"]
 ```
 
 * **趨勢強度對照表**：
@@ -191,13 +191,13 @@ graph TD
 
 ```mermaid
 graph TD
-    Pattern1["W底 (雙重底) 形態"] -->|第一底| Bottom1["$15.23 (2026-03-29)"]
-    Pattern1 -->|頸線| Neckline["$19.43 (2026-04-19)"]
-    Pattern1 -->|第二底| Bottom2["$15.61 (2026-05-17)"]
-    Pattern1 -->|當前位置| Current["$16.58 (震盪回踩 MA20)"]
+    Pattern1["W底 (雙重底) 形態"] -->|"第一底"| Bottom1["$15.23 (2026-03-29)"]
+    Pattern1 -->|"頸線"| Neckline["$19.43 (2026-04-19)"]
+    Pattern1 -->|"第二底"| Bottom2["$15.61 (2026-05-17)"]
+    Pattern1 -->|"當前位置"| Current["$16.58 (震盪回踩 MA20)"]
     
-    Pattern2["對稱三角形 (Symmetrical Triangle)"] -->|上軌阻力| UpperLine["連接 $19.43 與 $18.22 的下行趨勢線"]
-    Pattern2 -->|下軌支撐| LowerLine["連接 $15.23 與 $15.61 的上行趨勢線"]
+    Pattern2["對稱三角形 (Symmetrical Triangle)"] -->|"上軌阻力"| UpperLine["連接 $19.43 與 $18.22 的下行趨勢線"]
+    Pattern2 -->|"下軌支撐"| LowerLine["連接 $15.23 與 $15.61 的上行趨勢線"]
 ```
 
 ### 🕯️ 重要K線形態分析

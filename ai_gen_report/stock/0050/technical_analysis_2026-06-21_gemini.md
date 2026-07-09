@@ -94,9 +94,9 @@ graph LR
 
 ```mermaid
 graph TD
-    Monthly["月線級別 (長期多頭)<br/>MA20 走平向上<br/>基準點：NT$ 165.00"] -->|趨勢保護| Weekly["週線級別 (中期高檔整理)<br/>守穩關鍵上升趨勢線<br/>基準點：NT$ 185.00"]
-    Weekly -->|波動傳導| Daily["日線級別 (短期回檔修正)<br/>跌破 MA20 測試 MA50<br/>基準點：NT$ 195.50"]
-    Daily -->|尋求支撐| Support["MA50 / 斐波 23.6%<br/>NT$ 193.90 - 194.20"]
+    Monthly["月線級別 (長期多頭)<br/>MA20 走平向上<br/>基準點：NT$ 165.00"] -->|"趨勢保護"| Weekly["週線級別 (中期高檔整理)<br/>守穩關鍵上升趨勢線<br/>基準點：NT$ 185.00"]
+    Weekly -->|"波動傳導"| Daily["日線級別 (短期回檔修正)<br/>跌破 MA20 測試 MA50<br/>基準點：NT$ 195.50"]
+    Daily -->|"尋求支撐"| Support["MA50 / 斐波 23.6%<br/>NT$ 193.90 - 194.20"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -154,11 +154,11 @@ ADX（平均方向性指數）是用於判斷當前市場是處於強趨勢還�
 ```mermaid
 graph TD
     A["ADX 指標分析"] --> B{"ADX 數值判斷"}
-    B -->|ADX = 24.5| C["介於 20 - 25 之間"]
+    B -->|"ADX = 24.5"| C["介於 20 - 25 之間"]
     C --> D["趨勢強度中等，正從強趨勢轉向『區間盤整』"]
     B --> E{"+DI 與 -DI 交叉情況"}
-    E -->|+DI (22.0) > -DI (19.5)| F["多頭仍佔微幅優勢"]
-    E -->|兩線距離收斂| G["警惕多空勢力即將易位"]
+    E -->|"+DI (22.0) > -DI (19.5)"| F["多頭仍佔微幅優勢"]
+    E -->|"兩線距離收斂"| G["警惕多空勢力即將易位"]
 ```
 
 | ADX 數值區間 | 趨勢狀態 | 交易策略建議 | 0050 當前狀態評估 |
@@ -181,7 +181,7 @@ graph TD
     subgraph BullFlag ["🐂 牛市旗形 (Bull Flag) 結構"]
         Pole["1. 旗桿 (Flagpole):<br/>NT$ 178.00 --> NT$ 205.00<br/>(漲幅 +15.1%)"] --> Channel["2. 旗面通道 (Flag Channel):<br/>高點連線 (NT$ 205.00 - NT$ 198.00)<br/>低點連線 (NT$ 192.00 - NT$ 193.90)"]
         Channel --> Breakout{"3. 關鍵突破點<br/>NT$ 198.50"}
-        Breakout -->|成功突破| Target["4. 形態測幅目標價<br/>NT$ 222.00"]
+        Breakout -->|"成功突破"| Target["4. 形態測幅目標價<br/>NT$ 222.00"]
     end
 ```
 
@@ -285,13 +285,13 @@ graph TD
     Price --> Momentum_Check{"動能系統"}
     Price --> Volatility_Check{"波動率系統"}
     
-    MA_Check -->|短期看空| MA20_Down["MA20 下彎阻力"]
-    MA_Check -->|中期看多| MA50_Up["MA50 走平支撐"]
+    MA_Check -->|"短期看空"| MA20_Down["MA20 下彎阻力"]
+    MA_Check -->|"中期看多"| MA50_Up["MA50 走平支撐"]
     
-    Momentum_Check -->|死叉未解| MACD_Bear["MACD 柱狀體 < 0"]
-    Momentum_Check -->|無背離| RSI_Neutral["RSI 處於 48.5<br/>無頂/底背離"]
+    Momentum_Check -->|"死叉未解"| MACD_Bear["MACD 柱狀體 < 0"]
+    Momentum_Check -->|"無背離"| RSI_Neutral["RSI 處於 48.5<br/>無頂/底背離"]
     
-    Volatility_Check -->|收窄| BB_Squeeze["布林帶寬收窄<br/>暗示即將變盤"]
+    Volatility_Check -->|"收窄"| BB_Squeeze["布林帶寬收窄<br/>暗示即將變盤"]
 ```
 
 ### 📈 移動平均線排列分析
@@ -323,9 +323,9 @@ RSI(14) 強度指示器
 ```mermaid
 graph LR
     DIF["DIF 線: 1.20"] --- DEA["DEA 線: 1.85"]
-    DIF -->|跌破| DEA
-    MACD_Hist["柱狀體 (Histogram): -0.65"] -->|處於零軸下方| Bearish["空頭動能佔優"]
-    MACD_Hist -->|負值逐漸縮短| Recovery["動能衰竭，醞釀黃金交叉"]
+    DIF -->|"跌破"| DEA
+    MACD_Hist["柱狀體 (Histogram): -0.65"] -->|"處於零軸下方"| Bearish["空頭動能佔優"]
+    MACD_Hist -->|"負值逐漸縮短"| Recovery["動能衰竭，醞釀黃金交叉"]
 ```
 
 目前 MACD 處於死叉狀態。然而，值得注意的是，柱狀體（Histogram）在 6 月 10 日達到最深值 -1.20 後，目前已連續數日收窄至 -0.65。這是一個典型的「動能衰竭」訊號，表明雖然價格仍在震盪下行，但賣方的力量已經開始減弱。
@@ -422,9 +422,9 @@ graph LR
 ```mermaid
 graph TD
     Start["當前現價: NT$ 195.50"] --> Dec1{"市場走勢選擇"}
-    Dec1 -->|拉回測試 S1 守穩| BuyA["策略 A: 逢低買進 (Pullback Buy)"]
-    Dec1 -->|放量突破 R1 阻力| BuyB["策略 B: 突破買進 (Breakout Buy)"]
-    Dec1 -->|跌破 S1 支撐| ShortC["策略 C: 觀望 / 避險放空 (Breakdown Short)"]
+    Dec1 -->|"拉回測試 S1 守穩"| BuyA["策略 A: 逢低買進 (Pullback Buy)"]
+    Dec1 -->|"放量突破 R1 阻力"| BuyB["策略 B: 突破買進 (Breakout Buy)"]
+    Dec1 -->|"跌破 S1 支撐"| ShortC["策略 C: 觀望 / 避險放空 (Breakdown Short)"]
     
     BuyA --> TargetA["目標價: NT$ 205.00 / 212.00"]
     BuyB --> TargetB["目標價: NT$ 212.00 / 222.00"]
@@ -499,9 +499,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Scenario{"未來走勢場景"} -->|1. 樂觀情境 (35% 概率)| Bullish["放量突破 NT$ 198.50<br/>啟動新一輪主升段<br/>策略: 執行策略 B，加碼至滿倉"]
-    Scenario -->|2. 基本情境 (50% 概率)| Base["在 NT$ 193.90 - 198.50 震盪<br/>時間換取空間，洗盤整理<br/>策略: 執行策略 A，分批低吸"]
-    Scenario -->|3. 悲觀情境 (15% 概率)| BearishScenario["跌破 NT$ 193.00<br/>中期趨勢轉弱，回踩 187.00<br/>策略: 嚴格止損，保留現金"]
+    Scenario{"未來走勢場景"} -->|"1. 樂觀情境 (35% 概率)"| Bullish["放量突破 NT$ 198.50<br/>啟動新一輪主升段<br/>策略: 執行策略 B，加碼至滿倉"]
+    Scenario -->|"2. 基本情境 (50% 概率)"| Base["在 NT$ 193.90 - 198.50 震盪<br/>時間換取空間，洗盤整理<br/>策略: 執行策略 A，分批低吸"]
+    Scenario -->|"3. 悲觀情境 (15% 概率)"| BearishScenario["跌破 NT$ 193.00<br/>中期趨勢轉弱，回踩 187.00<br/>策略: 嚴格止損，保留現金"]
 ```
 
 ### 🛡️ 風險管理重要提醒

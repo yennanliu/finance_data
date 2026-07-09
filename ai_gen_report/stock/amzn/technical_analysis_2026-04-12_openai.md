@@ -107,9 +107,9 @@ graph TD
     Monthly["月線"] --> Weekly["週線"]
     Weekly --> Daily["日線"]
     Daily --> Intraday["分時線"]
-    Monthly["月線"] -->|上升| Trend1["長期上升"]
-    Weekly["週線"] -->|橫盤| Trend2["中期盤整"]
-    Daily["日線"] -->|上升| Trend3["短期上升"]
+    Monthly["月線"] -->|"上升"| Trend1["長期上升"]
+    Weekly["週線"] -->|"橫盤"| Trend2["中期盤整"]
+    Daily["日線"] -->|"上升"| Trend3["短期上升"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -168,7 +168,7 @@ graph TD
     HeadShoulder["頭肩頂"] --> DoubleTop["雙頂"]
     DoubleTop --> Triangle["三角形"]
     Triangle --> CurrentPattern["當前形態"]
-    CurrentPattern -->|未明顯| Conclusion["觀望"]
+    CurrentPattern -->|"未明顯"| Conclusion["觀望"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -255,8 +255,8 @@ graph TD
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看空"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看空"]
 ```
 
 ### 📉 RSI(14) 分析

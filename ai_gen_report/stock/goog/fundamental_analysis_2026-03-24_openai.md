@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ```mermaid
 graph LR
   基本面 --> 獲利能力 --> 財務健康 --> 成長 --> 估值
-  基本面((8))
-  獲利能力((9))
-  財務健康((8))
-  成長((7))
-  估值((6))
+  基本面(("8"))
+  獲利能力(("9"))
+  財務健康(("8"))
+  成長(("7"))
+  估值(("6"))
 ```
 
 ### 5大投資論點 + 3大風險
@@ -69,14 +69,14 @@ graph LR
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-  A[Alphabet Inc.] --> B[Google Services]
-  A --> C[Google Cloud]
-  A --> D[Other Bets]
-  B --> E[廣告]
-  B --> F[Android]
-  B --> G[YouTube]
-  C --> H[雲計算]
-  D --> I[創新業務]
+  A["Alphabet Inc."] --> B["Google Services"]
+  A --> C["Google Cloud"]
+  A --> D["Other Bets"]
+  B --> E["廣告"]
+  B --> F["Android"]
+  B --> G["YouTube"]
+  C --> H["雲計算"]
+  D --> I["創新業務"]
 ```
 
 ### 市場地位
@@ -153,12 +153,12 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-  A[總資產] --> B[流動資產]
-  A --> C[非流動資產]
-  B --> D[現金及現金等價物]
-  B --> E[應收帳款]
-  C --> F[固定資產]
-  C --> G[無形資產]
+  A["總資產"] --> B["流動資產"]
+  A --> C["非流動資產"]
+  B --> D["現金及現金等價物"]
+  B --> E["應收帳款"]
+  C --> F["固定資產"]
+  C --> G["無形資產"]
 ```
 
 ### 流動性指標表格
@@ -186,10 +186,10 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-  A[營業現金流] --> B[資本支出]
-  B --> C[自由現金流]
-  C --> D[股息支付]
-  D --> E[淨現金增減]
+  A["營業現金流"] --> B["資本支出"]
+  B --> C["自由現金流"]
+  C --> D["股息支付"]
+  D --> E["淨現金增減"]
 ```
 
 ### FCF 轉換率趨勢表格
@@ -233,9 +233,9 @@ graph LR
 ```mermaid
 graph
   ROE --> ROA --> ROIC
-  ROE((35.7%))
-  ROA((15.4%))
-  ROIC((25.4%))
+  ROE(("35.7%"))
+  ROA(("15.4%"))
+  ROIC(("25.4%"))
 ```
 
 ## 7. 估值深度分析

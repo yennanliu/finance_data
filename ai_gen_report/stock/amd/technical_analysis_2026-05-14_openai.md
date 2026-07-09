@@ -101,16 +101,16 @@ graph LR
 
 ```mermaid
 graph TD
-    A[月線] --> B[週線]
-    B --> C[日線]
+    A["月線"] --> B["週線"]
+    B --> C["日線"]
     subgraph 月線
-        M1[長期上升趨勢]
+        M1["長期上升趨勢"]
     end
     subgraph 週線
-        W1[中期上升趨勢]
+        W1["中期上升趨勢"]
     end
     subgraph 日線
-        D1[短期上升趨勢]
+        D1["短期上升趨勢"]
     end
 ```
 
@@ -153,10 +153,10 @@ $100 ┤    ●
 
 ```mermaid
 graph TD
-    A[ADX指標分析] --> B[強趨勢]
-    B --> C[多頭主導]
+    A["ADX指標分析"] --> B["強趨勢"]
+    B --> C["多頭主導"]
     subgraph ADX
-        ADX1[>50：強趨勢]
+        ADX1[">50：強趨勢"]
     end
 ```
 
@@ -168,10 +168,10 @@ graph TD
 
 ```mermaid
 graph TD
-    A[形態識別] --> B[頭肩頂]
-    B --> C[雙底]
+    A["形態識別"] --> B["頭肩頂"]
+    B --> C["雙底"]
     subgraph 形成形態
-        F1[雙底]
+        F1["雙底"]
     end
 ```
 
@@ -247,15 +247,15 @@ $250 ║████████████████████████
 
 ```mermaid
 graph TD
-    A[MA排列] --> B[多頭]
-    B --> C[RSI]
-    C --> D[MACD]
-    D --> E[ADX]
+    A["MA排列"] --> B["多頭"]
+    B --> C["RSI"]
+    C --> D["MACD"]
+    D --> E["ADX"]
     subgraph 指標關係
-        F1[MA上升]
-        F2[RSI超買]
-        F3[MACD看多]
-        F4[ADX強趨勢]
+        F1["MA上升"]
+        F2["RSI超買"]
+        F3["MACD看多"]
+        F4["ADX強趨勢"]
     end
 ```
 
@@ -263,8 +263,8 @@ graph TD
 
 ```mermaid
 graph TD
-    M20["短期 MA20"] -->|價格上方| 多頭
-    M200["長期 MA200"] -->|價格下方| 多頭
+    M20["短期 MA20"] -->|"價格上方"| 多頭
+    M200["長期 MA200"] -->|"價格下方"| 多頭
 ```
 
 ### 📉 RSI(14) 分析
@@ -278,8 +278,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD[MACD線] -->|高於| Signal[訊號線]
-    MACD --> Hist[柱狀圖正]
+    MACD["MACD線"] -->|"高於"| Signal["訊號線"]
+    MACD --> Hist["柱狀圖正"]
 ```
 
 ### 📦 布林通道分析
@@ -345,8 +345,8 @@ $100 ┤    ● 下軌
 
 ```mermaid
 graph TD
-    A[決策] --> B[多頭策略]
-    B --> C[空頭策略]
+    A["決策"] --> B["多頭策略"]
+    B --> C["空頭策略"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -403,9 +403,9 @@ graph TD
 
 ```mermaid
 graph TD
-    A[風險場景] --> B[樂觀]
-    A --> C[基本]
-    A --> D[悲觀]
+    A["風險場景"] --> B["樂觀"]
+    A --> C["基本"]
+    A --> D["悲觀"]
 ```
 
 ### 🛡️ 風險管理重要提醒

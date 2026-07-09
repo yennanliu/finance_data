@@ -362,12 +362,12 @@ graph LR
     Dividends["股息支付<br/>-$4.74B"]
     NetCashChange["淨現金增加<br/>+$20.50B"]
 
-    NetIncome -->|加上折舊等| NonCash
+    NetIncome -->|"加上折舊等"| NonCash
     NonCash --> OCF
-    OCF -->|減去 CapEx| CapEx
+    OCF -->|"減去 CapEx"| CapEx
     CapEx --> FCF
-    FCF -->|加上淨融資| DebtIssuance
-    DebtIssuance -->|減去股息| Dividends
+    FCF -->|"加上淨融資"| DebtIssuance
+    DebtIssuance -->|"減去股息"| Dividends
     Dividends --> NetCashChange
 ```
 

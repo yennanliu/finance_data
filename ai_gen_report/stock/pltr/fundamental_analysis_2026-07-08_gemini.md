@@ -137,22 +137,22 @@ Palantir 的收入主要來自其軟體訂閱服務，分為政府和商業兩�
 
 ```mermaid
 graph TD
-    A[Palantir Technologies Inc.] --> B{總覽: 市值 $316.97B, TTM營收 $5.22B}
-    B --> C(核心平台)
-    B --> D(收入來源)
+    A["Palantir Technologies Inc."] --> B{"總覽: 市值 $316.97B, TTM營收 $5.22B"}
+    B --> C("核心平台")
+    B --> D("收入來源")
 
-    C --> C1[Palantir Gotham<br/>政府應用]
-    C --> C2[Palantir Foundry<br/>商業應用]
-    C --> C3[Palantir AIP<br/>AI賦能平台]
+    C --> C1["Palantir Gotham<br/>政府應用"]
+    C --> C2["Palantir Foundry<br/>商業應用"]
+    C --> C3["Palantir AIP<br/>AI賦能平台"]
 
-    D --> D1{政府客戶收入<br/>約 50-60% 營收}
-    D --> D2{商業客戶收入<br/>約 40-50% 營收}
+    D --> D1{"政府客戶收入<br/>約 50-60% 營收"}
+    D --> D2{"商業客戶收入<br/>約 40-50% 營收"}
 
-    D1 --> D1a[長期合同<br/>高安全性需求]
-    D1 --> D1b[國防與情報]
+    D1 --> D1a["長期合同<br/>高安全性需求"]
+    D1 --> D1b["國防與情報"]
 
-    D2 --> D2a[傳統行業轉型]
-    D2 --> D2b[新興AI應用]
+    D2 --> D2a["傳統行業轉型"]
+    D2 --> D2b["新興AI應用"]
 
     C1 --> D1
     C2 --> D2
@@ -635,10 +635,10 @@ graph TD
     NM --> NM1["驅動因素: 營業利益率提升<br/>低稅率<br/>利息收入貢獻"]
     EM --> EM1["驅動因素: 核心業務盈利能力<br/>非現金費用相對較高"]
 
-    GM --"反映定價能力與成本控制"--> PROFIT
-    OM --"反映核心業務效率"--> PROFIT
-    NM --"反映股東最終獲利"--> PROFIT
-    EM --"反映調整後運營表現"--> PROFIT
+    GM --"反映定價能力與成本控制" --> PROFIT
+    OM --"反映核心業務效率" --> PROFIT
+    NM --"反映股東最終獲利" --> PROFIT
+    EM --"反映調整後運營表現" --> PROFIT
 ```
 
 **分析**：Palantir 的獲利能力儀表板顯示出全面且強勁的表現。

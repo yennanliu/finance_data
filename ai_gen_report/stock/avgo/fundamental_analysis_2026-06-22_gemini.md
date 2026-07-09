@@ -393,13 +393,13 @@ graph LR
     DEBT["償還債務/其他<br/>-$4.89B"]
     CASH["淨現金增加<br/>+$11.18B"]
 
-    NI --> |調整非現金項目| OCF
+    NI --> |"調整非現金項目"| OCF
     DA --> OCF
     SBC --> OCF
-    OCF --> |減去資本支出| FCF
-    FCF --> |分配資本| DIV
-    FCF --> |分配資本| DEBT
-    FCF --> |留存| CASH
+    OCF --> |"減去資本支出"| FCF
+    FCF --> |"分配資本"| DIV
+    FCF --> |"分配資本"| DEBT
+    FCF --> |"留存"| CASH
 ```
 
 ### 5.2 FCF 轉換率與品質

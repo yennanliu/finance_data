@@ -89,8 +89,8 @@ graph LR
 
 ```mermaid
 graph TD
-    M(月線) --> W(週線)
-    W --> D(日線)
+    M("月線") --> W("週線")
+    W --> D("日線")
     M --> D
     M["月線: 上升趨勢"] --> W["週線: 震盪偏多"]
     W --> D["日線: 偏多"]
@@ -128,8 +128,8 @@ $105 ┤──────○─────
 graph TD
     ADX["ADX 分析"]
     ADX --> Trend{"趨勢強度"}
-    Trend -->|>20| Strong["強趨勢"]
-    Trend -->|<20| Weak["弱趨勢"]
+    Trend -->|">20"| Strong["強趨勢"]
+    Trend -->|"<20"| Weak["弱趨勢"]
 ```
 
 ---
@@ -233,8 +233,8 @@ graph TD
 graph TD
     MA20["MA20"] --> MA50["MA50"]
     MA50 --> MA200["MA200"]
-    MA20 -->|上方| Conclusion["多頭排列"]
-    MA50 -->|下方| Conclusion
+    MA20 -->|"上方"| Conclusion["多頭排列"]
+    MA50 -->|"下方"| Conclusion
 ```
 
 ### 📉 RSI(14) 分析
@@ -249,7 +249,7 @@ graph TD
 graph TD
     MACD_Line["MACD 線"] --> Signal_Line["訊號線"]
     MACD_Line --> Histogram["柱狀圖"]
-    MACD_Line -->|>Signal_Line| Conclusion["多頭訊號"]
+    MACD_Line -->|">Signal_Line"| Conclusion["多頭訊號"]
 ```
 
 ### 📦 布林通道分析
@@ -315,8 +315,8 @@ quadrantChart
 ```mermaid
 graph TD
     Start["開始"] --> Check1{"檢查趨勢"}
-    Check1 -->|上升| Buy["買入"]
-    Check1 -->|下降| Sell["賣出"]
+    Check1 -->|"上升"| Buy["買入"]
+    Check1 -->|"下降"| Sell["賣出"]
     Buy --> Evaluation1{"評估風險"}
     Evaluation1 --> Hold["持有"]
     Sell --> Evaluation2{"評估風險"}

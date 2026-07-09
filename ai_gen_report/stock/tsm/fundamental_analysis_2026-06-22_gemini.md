@@ -404,12 +404,12 @@ graph LR
     DIV["股息支付<br/>-NT$466.8B"]
     NC["淨現金增加<br/>+NT$525.6B"]
 
-    NI --> |加上非現金支出| DEP
+    NI --> |"加上非現金支出"| DEP
     DEP --> NWC
     NWC --> OCF
-    OCF --> |扣除資本開支| CAPEX
+    OCF --> |"扣除資本開支"| CAPEX
     CAPEX --> FCF
-    FCF --> |扣除股東回報| DIV
+    FCF --> |"扣除股東回報"| DIV
     DIV --> NC
 ```
 

@@ -110,9 +110,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線級別 (Long-term)"] -->|長期回檔/尋求支撐| B["週線級別 (Medium-term)"]
-    B -->|W底築底/區間震盪| C["日線級別 (Short-term)"]
-    C -->|短期回檔/MA20爭奪戰| D["交易決策: 逢低佈局多單"]
+    A["月線級別 (Long-term)"] -->|"長期回檔/尋求支撐"| B["週線級別 (Medium-term)"]
+    B -->|"W底築底/區間震盪"| C["日線級別 (Short-term)"]
+    C -->|"短期回檔/MA20爭奪戰"| D["交易決策: 逢低佈局多單"]
     
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -162,8 +162,8 @@ $40  ┤  ●
 
 ```mermaid
 graph TD
-    ADX_Value["ADX 數值 = 19.27"] -->|小于 25| Range_Market["無趨勢/區間震盪行情"]
-    DMI_Compare["+DI (22.86) > -DI (17.92)"] -->|多頭佔優| Bull_Bias["震盪中帶有偏多傾向"]
+    ADX_Value["ADX 數值 = 19.27"] -->|"小于 25"| Range_Market["無趨勢/區間震盪行情"]
+    DMI_Compare["+DI (22.86) > -DI (17.92)"] -->|"多頭佔優"| Bull_Bias["震盪中帶有偏多傾向"]
     Range_Market --> Action["交易策略: 逢低買入 (Buy the dips)"]
     Bull_Bias --> Action
 ```
@@ -186,8 +186,8 @@ graph TD
 graph TD
     A["第一底 (Left Peak)\n$52.09 (2026-05-17)"] --> B["反彈頸線 (Neckline)\n$64.13 (2026-05-31)"]
     B --> C["第二底 (Right Peak)\n$57.75 (當前測試)"]
-    C -->|預期突破| D["突破頸線 $64.13"]
-    D -->|量能配合| E["形態完成，目標價 $76.17"]
+    C -->|"預期突破"| D["突破頸線 $64.13"]
+    D -->|"量能配合"| E["形態完成，目標價 $76.17"]
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -288,10 +288,10 @@ graph TD
     Price --> MACD_Check{"MACD"}
     Price --> BB_Check{"布林通道"}
     
-    MA_Check -->|MA20/50/200下方| MA_Bear["🔴 空頭排列 (壓力顯著)"]
-    RSI_Check -->|52.29| RSI_Neutral["🟡 中性 (多空平衡)"]
-    MACD_Check -->|Hist +0.144| MACD_Bull["🟢 多頭 (動能黃金交叉)"]
-    BB_Check -->|%B = 0.48| BB_Neutral["🟡 中性 (中軌震盪)"]
+    MA_Check -->|"MA20/50/200下方"| MA_Bear["🔴 空頭排列 (壓力顯著)"]
+    RSI_Check -->|"52.29"| RSI_Neutral["🟡 中性 (多空平衡)"]
+    MACD_Check -->|"Hist +0.144"| MACD_Bull["🟢 多頭 (動能黃金交叉)"]
+    BB_Check -->|"%B = 0.48"| BB_Neutral["🟡 中性 (中軌震盪)"]
 ```
 
 ### 📈 移動平均線 (MA) 排列分析
@@ -418,9 +418,9 @@ graph TD
 ```mermaid
 graph TD
     Start["分析當前現價 $57.75"] --> Decision{"交易風格選擇"}
-    Decision -->|激進型 / 區間交易| Strategy_B["策略 B: 逢低吸納 (現價至 $53 區間分批買)"]
-    Decision -->|穩健型 / 突破交易| Strategy_A["策略 A: 突破頸線買入 (突破 $64.13 順勢追進)"]
-    Decision -->|空頭型 / 反彈做空| Strategy_C["策略 C: 阻力位放空 (反彈至 $64-$65 遇阻放空)"]
+    Decision -->|"激進型 / 區間交易"| Strategy_B["策略 B: 逢低吸納 (現價至 $53 區間分批買)"]
+    Decision -->|"穩健型 / 突破交易"| Strategy_A["策略 A: 突破頸線買入 (突破 $64.13 順勢追進)"]
+    Decision -->|"空頭型 / 反彈做空"| Strategy_C["策略 C: 阻力位放空 (反彈至 $64-$65 遇阻放空)"]
     
     Strategy_B --> Target_B["目標價 1: $64.13 \n目標價 2: $75.29"]
     Strategy_A --> Target_A["目標價 1: $75.29 \n目標價 2: $80.24"]

@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢"] -->|上升| B["週線趨勢"]
-    B -->|上升| C["日線趨勢"]
-    C -->|上升| D["短期波動"]
+    A["月線趨勢"] -->|"上升"| B["週線趨勢"]
+    B -->|"上升"| C["日線趨勢"]
+    C -->|"上升"| D["短期波動"]
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖
@@ -128,7 +128,7 @@ $1700 ┤    ●
 
 ```mermaid
 graph TD
-    ADX["ADX(14) = 22.21"] -->|弱趨勢| Range["盤整"]
+    ADX["ADX(14) = 22.21"] -->|"弱趨勢"| Range["盤整"]
 ```
 
 ---
@@ -214,17 +214,17 @@ $1900 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|上升| Signal["看多"]
-    RSI["RSI(14)"] -->|中性| Neutral
-    MACD["MACD"] -->|上穿| Signal
+    MA20["MA20"] -->|"上升"| Signal["看多"]
+    RSI["RSI(14)"] -->|"中性"| Neutral
+    MACD["MACD"] -->|"上穿"| Signal
 ```
 
 ### 📈 移動平均線排列分析
 
 ```mermaid
 graph TD
-    A["短期 MA20"] -->|價格上方| B["看多"]
-    C["長期 MA200"] -->|價格下方| D["看多"]
+    A["短期 MA20"] -->|"價格上方"| B["看多"]
+    C["長期 MA200"] -->|"價格下方"| D["看多"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -238,8 +238,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD: 57.439"] -->|正向| Histogram["+21.140"]
-    Signal_Line["Signal: 36.299"] -->|上穿| Signal
+    MACD_Line["MACD: 57.439"] -->|"正向"| Histogram["+21.140"]
+    Signal_Line["Signal: 36.299"] -->|"上穿"| Signal
 ```
 
 ### 📦 布林通道分析

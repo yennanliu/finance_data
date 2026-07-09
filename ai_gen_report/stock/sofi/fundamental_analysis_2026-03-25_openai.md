@@ -28,10 +28,10 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD
-    基本面(8/10) --> 成長(7/10)
-    成長(7/10) --> 獲利(6/10)
-    獲利(6/10) --> 財務健康(7/10)
-    財務健康(7/10) --> 估值(6/10)
+    基本面("8/10") --> 成長("7/10")
+    成長("7/10") --> 獲利("6/10")
+    獲利("6/10") --> 財務健康("7/10")
+    財務健康("7/10") --> 估值("6/10")
 ```
 
 ### 投資論點與風險
@@ -66,12 +66,12 @@ graph TD
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    Lending --> Personal Loans
-    Lending --> Student Loans
-    Lending --> Home Loans
-    Technology Platform --> Galileo
-    Financial Services --> Saving
-    Financial Services --> Investing
+    Lending --> nb1["Personal Loans"]
+    Lending --> nb2["Student Loans"]
+    Lending --> nb3["Home Loans"]
+    nb4["Technology Platform"] --> Galileo
+    nb5["Financial Services"] --> Saving
+    nb5["Financial Services"] --> Investing
 ```
 
 ### 市場地位
@@ -153,7 +153,7 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    流動資產 --> 現金 $5.00B
+    流動資產 --> nb1["現金 $5.00B"]
     流動資產 --> 應收賬款
     非流動資產 --> 固定資產
     非流動資產 --> 其他無形資產
