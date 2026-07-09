@@ -428,9 +428,9 @@ graph LR
     AssetTurnover["資產週轉率"]
     EquityMultiplier["財務槓桿"]
 
-    ROE --- nb1["> ProfitMargin"]
-    ROE --- nb2["> AssetTurnover"]
-    ROE --- nb3["> EquityMultiplier"]
+    ROE ---> ProfitMargin
+    ROE ---> AssetTurnover
+    ROE ---> EquityMultiplier
 
     ProfitMargin ---> NetIncome["淨利"]
     AssetTurnover ---> Sales["銷售收入"]

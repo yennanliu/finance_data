@@ -861,7 +861,7 @@ graph TD
     MT --> MT3["Platform Ecosystem Development & Third-Party Integrations"]
     MT --> MT4["Strategic Partnerships & M&A"]
 
-    LT --> LT1["Becoming the OS for Data & AI(Global Standard)"]
+    LT --> LT1["Becoming the OS for Data & AI (Global Standard)"]
     LT --> LT2["Emergence as a 'Sovereign AI' Leader"]
     LT --> LT3["Deepening Network Effects & Data Flywheel"]
     LT --> LT4["Expanding TAM through New Technologies"]

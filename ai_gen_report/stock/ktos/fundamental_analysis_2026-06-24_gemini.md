@@ -383,12 +383,12 @@ graph LR
     FIN["Financing (Equity Raise)<br/>+$903.4M"]
     NET_C["Net Cash Increase<br/>+$796.7M"]
 
-    NI --> |"+ Non-Cash"| DA
-    DA --> |"- Working Capital"| WC
+    NI --> |+ Non-Cash| DA
+    DA --> |- Working Capital| WC
     WC --> OCF
-    OCF --> |"+ Capex"| CAPEX
+    OCF --> |+ Capex| CAPEX
     CAPEX --> FCF
-    FCF --> |"+ Equity Raise"| FIN
+    FCF --> |+ Equity Raise| FIN
     FIN --> NET_C
 ```
 
@@ -511,8 +511,8 @@ graph TD
     OP["Operating Margin: 1.8%"]
     NP["Net Margin: 2.1%"]
 
-    GP --> |"High SG&A & R&D"| OP
-    OP --> |"Non-Operating Income / Tax Credits"| NP
+    GP --> |High SG&A & R&D| OP
+    OP --> |Non-Operating Income / Tax Credits| NP
 ```
 
 ---

@@ -28,11 +28,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TD;
-    基本面 --> 9
-    成長 --> 8
-    獲利 --> 10
-    財務健康 --> 8
-    估值 --> 7
+    基本面-->9
+    成長-->8
+    獲利-->10
+    財務健康-->8
+    估值-->7
 ```
 
 ### 5大投資論點 + 3大風險
@@ -70,11 +70,11 @@ graph TD;
 ### 業務結構與收入來源
 ```mermaid
 graph TD;
-    MSFT --> nb1["Microsoft 365"]
-    MSFT --> Azure
-    MSFT --> LinkedIn
-    MSFT --> Windows
-    MSFT --> Gaming
+    MSFT-->Microsoft 365
+    MSFT-->Azure
+    MSFT-->LinkedIn
+    MSFT-->Windows
+    MSFT-->Gaming
 ```
 
 ### 市場地位
@@ -158,12 +158,12 @@ pie
 
 ```mermaid
 graph TD;
-    總資產 --> 流動資產
-    總資產 --> 非流動資產
-    流動資產 --> 現金與現金等價物
-    流動資產 --> 應收賬款
-    非流動資產 --> 固定資產
-    非流動資產 --> 無形資產
+    總資產-->流動資產
+    總資產-->非流動資產
+    流動資產-->現金與現金等價物
+    流動資產-->應收賬款
+    非流動資產-->固定資產
+    非流動資產-->無形資產
 ```
 
 ### 流動性指標
@@ -193,9 +193,9 @@ graph TD;
 ### 現金流量瀑布圖
 ```mermaid
 graph LR;
-    營業現金流 --> 投資現金流
-    投資現金流 --> 融資現金流
-    融資現金流 --> 淨現金增減
+    營業現金流-->投資現金流
+    投資現金流-->融資現金流
+    融資現金流-->淨現金增減
 ```
 
 ### FCF 轉換率趨勢

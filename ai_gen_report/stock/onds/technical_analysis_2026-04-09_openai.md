@@ -92,9 +92,9 @@ graph TD
     Monthly["月線趨勢"]
     Weekly["週線趨勢"]
     Daily["日線趨勢"]
-    Monthly -->|"看多"| Weekly
-    Weekly -->|"震盪"| Daily
-    Daily -->|"看空"| 結論{"總體趨勢：中性偏空"}
+    Monthly -->|看多| Weekly
+    Weekly -->|震盪| Daily
+    Daily -->|看空| 結論{"總體趨勢：中性偏空"}
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -142,8 +142,8 @@ graph TD
     ADX["ADX 值：15.05"]
     DIplus["+DI：21.60"]
     DIminus["-DI：25.53"]
-    ADX -->|"低趨勢強度"| DIplus
-    DIplus -->|"空頭主導"| DIminus
+    ADX -->|低趨勢強度| DIplus
+    DIplus -->|空頭主導| DIminus
     DIminus --> 結論{"結論：盤整市場"}
 ```
 
@@ -158,7 +158,7 @@ graph TD
     HeadShoulders["頭肩頂"]
     DoubleTop["雙頂"]
     Triangle["上升三角形"]
-    HeadShoulders -->|"識別"| 結論{"形態結論：等待突破"}
+    HeadShoulders -->|識別| 結論{"形態結論：等待突破"}
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -275,8 +275,8 @@ graph TD
     MACD["MACD: -0.300"]
     Signal["Signal: -0.269"]
     Histogram["Histogram: -0.031"]
-    MACD -->|"看空"| Signal
-    Signal -->|"看空"| Histogram
+    MACD -->|看空| Signal
+    Signal -->|看空| Histogram
     Histogram --> 結論{"MACD看空，趨勢偏弱"}
 ```
 
@@ -364,8 +364,8 @@ graph TD
     BuySignal["買入訊號"]
     HoldSignal["持有訊號"]
     SellSignal["賣出訊號"]
-    BuySignal -->|"符合"| HoldSignal
-    SellSignal -->|"符合"| 結論{"賣出策略建議"}
+    BuySignal -->|符合| HoldSignal
+    SellSignal -->|符合| 結論{"賣出策略建議"}
 ```
 
 ### 🟢 多頭策略詳情
@@ -426,9 +426,9 @@ graph TD
     Optimistic["樂觀情境"]
     BaseCase["基準情境"]
     Pessimistic["悲觀情境"]
-    Optimistic -->|"價格上行"| BaseCase
-    BaseCase -->|"價格震盪"| Pessimistic
-    Pessimistic -->|"價格下行"| 結論{"風險管理：謹慎"}
+    Optimistic -->|價格上行| BaseCase
+    BaseCase -->|價格震盪| Pessimistic
+    Pessimistic -->|價格下行| 結論{"風險管理：謹慎"}
 ```
 
 ### 🛡️ 風險管理重要提醒

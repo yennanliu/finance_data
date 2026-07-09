@@ -240,9 +240,9 @@ graph TD
 
 ```mermaid
 graph TD
-    MA20["短期 MA20"] -->|"價格上方"| Bullish["看多"]
-    MA50["中期 MA50"] -->|"價格上方"| Bullish
-    MA200["長期 MA200"] -->|"價格上方"| Bullish
+    MA20["短期 MA20"] -->|價格上方| Bullish["看多"]
+    MA50["中期 MA50"] -->|價格上方| Bullish
+    MA200["長期 MA200"] -->|價格上方| Bullish
 ```
 
 ### 📉 RSI(14) 分析
@@ -255,8 +255,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD 線"] -->|"高於信號線"| Bullish["看多"]
-    Signal_Line["信號線"] -->|"低於 MACD 線"| Bullish
+    MACD_Line["MACD 線"] -->|高於信號線| Bullish["看多"]
+    Signal_Line["信號線"] -->|低於 MACD 線| Bullish
 ```
 
 ### 📦 布林通道分析

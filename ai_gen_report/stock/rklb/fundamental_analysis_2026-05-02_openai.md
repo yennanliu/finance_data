@@ -404,8 +404,8 @@ graph LR
     ATO["📈 資產週轉率"]
     FL["🔧 財務槓桿"]
     
-    ROE --> NPM
-    ROE --> ATO
+    ROE --> NPM 
+    ROE --> ATO 
     ROE --> FL
 ```
 

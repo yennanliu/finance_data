@@ -89,11 +89,11 @@ graph LR
 
 ```mermaid
 graph TD
-    M["月線趨勢"] --> W["週線趨勢"]
-    W --> D["日線趨勢"]
-    M -->|"長期看空"| Final{"綜合結論：中性偏空"}
-    W -->|"中期看空"| Final
-    D -->|"短期震盪"| Final
+    M[月線趨勢] --> W[週線趨勢]
+    W --> D[日線趨勢]
+    M -->|長期看空| Final{"綜合結論：中性偏空"}
+    W -->|中期看空| Final
+    D -->|短期震盪| Final
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -216,12 +216,12 @@ $12.00 ║███████████████████████�
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|"🔴"| Conclusion
-    MA50["MA50"] -->|"🔴"| Conclusion
-    MA200["MA200"] -->|"🔴"| Conclusion
-    RSI["RSI"] -->|"🟡"| Conclusion
-    MACD["MACD"] -->|"🟢"| Conclusion
-    ADX["ADX"] -->|"🔴"| Conclusion
+    MA20["MA20"] -->|🔴| Conclusion
+    MA50["MA50"] -->|🔴| Conclusion
+    MA200["MA200"] -->|🔴| Conclusion
+    RSI["RSI"] -->|🟡| Conclusion
+    MACD["MACD"] -->|🟢| Conclusion
+    ADX["ADX"] -->|🔴| Conclusion
     Conclusion{"總體評估：中性偏空"}
 ```
 
@@ -317,8 +317,8 @@ quadrantChart
 ```mermaid
 graph TD
     A{"當前價格 $14.15"}
-    A -->|"突破 $15.00"| B{"多頭策略"}
-    A -->|"跌破 $13.50"| C{"空頭策略"}
+    A -->|突破 $15.00| B{多頭策略}
+    A -->|跌破 $13.50| C{空頭策略}
     B --> D["進場"]
     C --> E["進場"]
 ```
@@ -382,9 +382,9 @@ graph TD
     Optimistic["樂觀情境"]
     Base["基本情境"]
     Pessimistic["悲觀情境"]
-    Optimistic -->|"價格上漲至 $18.00"| Base
-    Base -->|"持續震盪 $13.50-$15.00"| Pessimistic
-    Pessimistic -->|"價格跌至 $12.00"| Base
+    Optimistic -->|價格上漲至 $18.00| Base
+    Base -->|持續震盪 $13.50-$15.00| Pessimistic
+    Pessimistic -->|價格跌至 $12.00| Base
 ```
 
 ### 🛡️ 風險管理重要提醒

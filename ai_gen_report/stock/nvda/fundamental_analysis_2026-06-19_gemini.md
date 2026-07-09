@@ -128,7 +128,7 @@ NVIDIA 已經從一家傳統的圖形晶片（GPU）設計公司，徹底轉型�
 ```mermaid
 graph TD
     NVDA["NVIDIA Corporation<br/>市值: $5.10T | TTM營收: $253.49B"]
-    CN["Compute & Networking(計算與網路)<br/>營收佔比約 85%"]
+    CN["Compute & Networking (計算與網路)<br/>營收佔比約 85%"]
     GR["Graphics (圖形處理)<br/>營收佔比約 15%"]
     NVDA --> CN
     NVDA --> GR

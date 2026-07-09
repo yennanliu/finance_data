@@ -83,6 +83,41 @@ def test_non_flowchart_is_noop():
     assert sanitize_mermaid(src) == src
 
 
+# ── structure-preservation regressions (PR review) ───────────────────────────
+
+def test_labeled_edge_not_turned_into_node():
+    # `A -- label --> B` is a valid labeled edge; it must NOT become
+    # `nbN["A -- label"] --> B` (which destroys the edge). Bracket-free lines
+    # are the vulnerable ones (the bracketed line is skipped anyway).
+    src = ("graph TD\n"
+           "    月線 -- 趨勢向上 --> 週線\n"
+           "    F -- 是 --> C\n"
+           "    F -- 否 --> D")
+    out = sanitize_mermaid(src)
+    assert "nb1" not in out and "nb2" not in out
+    assert "月線 -- 趨勢向上 --> 週線" in out
+    assert "F -- 是 --> C" in out
+
+
+def test_ampersand_and_parens_inside_quoted_label_preserved():
+    # The `&` node-join collapse must not reach inside a quoted label and turn
+    # `R&D (A14)` into `R& D(A14)`.
+    src = 'graph LR\n    LT --> LT1["🥥 Next-Gen Process R&D (A14)"]'
+    assert sanitize_mermaid(src) == src
+
+
+def test_genuine_bare_node_still_wrapped():
+    # The bare-node repair must still fire on real bare endpoints with spaces.
+    out = sanitize_mermaid("graph TD\n    樂觀情境 --> 股價突破 $20")
+    assert 'nb1["股價突破 $20"]' in out
+
+
+def test_id_space_bracket_still_collapsed():
+    # `B ["x"]` (gap after a pipe edge label) must still collapse to `B["x"]`.
+    out = sanitize_mermaid('graph LR\n    A -->|x| B ["label"]')
+    assert 'B["label"]' in out
+
+
 # ── mermaid_syntax_issues (the QA / CI detector) ─────────────────────────────
 
 def test_detector_flags_unquoted_parens_in_node_label():

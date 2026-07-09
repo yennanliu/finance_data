@@ -149,7 +149,7 @@ graph TD
 
     FIN --> F1["GrabPay (行動支付)"]
     FIN --> F2["GXS Bank / GXBank (數位銀行)"]
-    FIN --> F3["GrabInsure & GrabInvest(保險與理財)"]
+    FIN --> F3["GrabInsure & GrabInvest (保險與理財)"]
 
     ENT --> E1["GrabAds (平台廣告變現)"]
     ENT --> E2["Grab for Business (企業解決方案)"]

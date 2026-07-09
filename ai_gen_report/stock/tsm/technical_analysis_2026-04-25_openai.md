@@ -101,9 +101,9 @@ graph LR
 
 ```mermaid
 graph TD
-    月線 -->|"上升趨勢"| 週線
-    週線 -->|"上升趨勢"| 日線
-    日線 -->|"上升趨勢"| 短期策略
+    月線 -->|上升趨勢| 週線
+    週線 -->|上升趨勢| 日線
+    日線 -->|上升趨勢| 短期策略
 ```
 
 ### 📈 長期趨勢 — 12個月走勢圖（Unicode）
@@ -140,8 +140,8 @@ graph TD
 
 ```mermaid
 graph TD
-    ADX_Analysis["ADX 分析"] -->|"低於25"| No_Trend["弱趨勢/盤整"]
-    ADX_Analysis -->|"高於25"| Strong_Trend["強趨勢"]
+    ADX_Analysis["ADX 分析"] -->|低於25| No_Trend["弱趨勢/盤整"]
+    ADX_Analysis -->|高於25| Strong_Trend["強趨勢"]
 ```
 
 ---
@@ -152,8 +152,8 @@ graph TD
 
 ```mermaid
 graph TD
-    HeadShoulders["頭肩頂形態"] -->|"未完成"| Current_Pattern
-    DoubleTop["雙頂形態"] -->|"完成"| Current_Pattern
+    HeadShoulders["頭肩頂形態"] -->|未完成| Current_Pattern
+    DoubleTop["雙頂形態"] -->|完成| Current_Pattern
 ```
 
 ### 🕯️ 重要K線形態分析
@@ -229,9 +229,9 @@ $350 ║████████████████████████
 
 ```mermaid
 graph TD
-    MA20["MA20"] -->|"價格上方"| Bullish["看多"]
-    RSI["RSI"] -->|"超買"| Bearish["看空"]
-    MACD["MACD"] -->|"正值"| Bullish
+    MA20["MA20"] -->|價格上方| Bullish["看多"]
+    RSI["RSI"] -->|超買| Bearish["看空"]
+    MACD["MACD"] -->|正值| Bullish
 ```
 
 ### 📈 移動平均線排列分析
@@ -242,8 +242,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MA_Short["短期 MA20"] -->|"價格上方"| Bullish["看多"]
-    MA_Long["長期 MA200"] -->|"價格下方"| Bearish["看空"]
+    MA_Short["短期 MA20"] -->|價格上方| Bullish["看多"]
+    MA_Long["長期 MA200"] -->|價格下方| Bearish["看空"]
 ```
 
 ### 📉 RSI(14) 分析
@@ -256,8 +256,8 @@ graph TD
 
 ```mermaid
 graph TD
-    MACD_Line["MACD 線"] -->|"正值"| Signal_Line["訊號線"]
-    Signal_Line -->|"正值"| Histogram_Positive["柱狀圖為正"]
+    MACD_Line["MACD 線"] -->|正值| Signal_Line["訊號線"]
+    Signal_Line -->|正值| Histogram_Positive["柱狀圖為正"]
 ```
 
 ### 📦 布林通道分析
@@ -326,9 +326,9 @@ $317 ┤      ────●──────
 
 ```mermaid
 graph TD
-    Buy_Signal["多頭策略啟動"] -->|"符合條件"| Entry["進場"]
-    Entry -->|"達目標價"| Exit["獲利出場"]
-    Entry -->|"止損"| Stop_Loss["止損出場"]
+    Buy_Signal["多頭策略啟動"] -->|符合條件| Entry["進場"]
+    Entry -->|達目標價| Exit["獲利出場"]
+    Entry -->|止損| Stop_Loss["止損出場"]
 ```
 
 ### 🟢 多頭策略詳情
@@ -386,9 +386,9 @@ graph TD
 
 ```mermaid
 graph TD
-    Optimistic["樂觀情境"] -->|"價格持續上漲"| Stable["市場穩定"]
-    Base["基本情境"] -->|"價格波動調整"| Volatile["市場波動"]
-    Pessimistic["悲觀情境"] -->|"價格下跌"| Decline["市場走弱"]
+    Optimistic["樂觀情境"] -->|價格持續上漲| Stable["市場穩定"]
+    Base["基本情境"] -->|價格波動調整| Volatile["市場波動"]
+    Pessimistic["悲觀情境"] -->|價格下跌| Decline["市場走弱"]
 ```
 
 ### 🛡️ 風險管理重要提醒

@@ -126,7 +126,7 @@ graph TD
     AAPL --> iPhone["iPhone (46%: $200.39B)"]
     AAPL --> Mac["Mac (10%: $43.56B)"]
     AAPL --> iPad["iPad (7%: $30.49B)"]
-    AAPL --> Wearables["Wearables, Home & Accessories(11%: $47.92B)"]
+    AAPL --> Wearables["Wearables, Home & Accessories (11%: $47.92B)"]
     AAPL --> Services["Services (26%: $113.26B)"]
 ```
 

@@ -35,13 +35,13 @@ graph TD
     G["ADX: 25.89 🟢"]
     H["ATR: 13.09 🟢"]
     I["OBV: 趨勢下降 🔴"]
-    A -->|"Confirm"| B
-    B -->|"Confirm"| C
-    C -->|"Confirm"| E
-    D -.->|"Divergence"| E
-    A -.->|"Mixed Signals"| G
-    G -->|"Indicates Strong Trend"| H
-    E -->|"Weak Volume"| I
+    A -->|Confirm| B
+    B -->|Confirm| C
+    C -->|Confirm| E
+    D -.->|Divergence| E
+    A -.->|Mixed Signals| G
+    G -->|Indicates Strong Trend| H
+    E -->|Weak Volume| I
 ```
 
 ### 核心指標速覽表
@@ -95,7 +95,7 @@ graph LR
     B["雙頂 - 無"]
     C["三角形 - 無"]
     D["旗形 - 無"]
-    A -->|"無確定形態"| B
+    A -->|無確定形態| B
     B --> C
     C --> D
 ```
@@ -163,9 +163,9 @@ graph TD
     B[MACD "-9.453: 看空"]
     C[Stoch "31.57: 中性"]
     D[BB "%B: 0.14 - 接近下軌"]
-    A -->|"Confirm"| B
-    B -->|"Confirm"| C
-    C -.->|"No Strong Signal"| D
+    A -->|Confirm| B
+    B -->|Confirm| C
+    C -.->|No Strong Signal| D
 ```
 
 ### RSI(14) 分析
@@ -179,8 +179,8 @@ graph LR
     A[MACD Line "-9.453"]
     B[Signal Line "-7.849"]
     C[Histogram "-1.604"]
-    A -->|"Below"| B
-    B -->|"Negative Histogram"| C
+    A -->|Below| B
+    B -->|Negative Histogram| C
 ```
 MACD持續在零軌下方運行，顯示市場存在持續的賣壓。MACD與Signal Line之間的差距正在擴大，表示下跌動能增強。🔴
 

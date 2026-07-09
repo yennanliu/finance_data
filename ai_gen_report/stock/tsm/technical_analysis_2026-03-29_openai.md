@@ -153,10 +153,10 @@ $300 ┤█
 
 ```mermaid
 graph TD
-    ADX["ADX 24.98: 弱趨勢"]
-    +DI["+DI 16.80: 多頭"]
-    -DI["-DI 34.98: 空頭"]
-    ADX --> nb1["+DI"]
+    ADX[ADX 24.98: 弱趨勢]
+    +DI[+DI 16.80: 多頭]
+    -DI[-DI 34.98: 空頭]
+    ADX --> +DI
     ADX --> -DI
 ```
 

@@ -345,12 +345,12 @@ graph LR
     FIN["Financing Activities<br/>+$580.00M"]
     NET_CASH["Net Cash Increase<br/>+$365.00M"]
 
-    NI -->|"調整非現金項目"| DA
-    DA -->|"營運資金變動"| WC
+    NI -->|調整非現金項目| DA
+    DA -->|營運資金變動| WC
     WC --> OCF
-    OCF -->|"扣除資本支出"| CAPEX
+    OCF -->|扣除資本支出| CAPEX
     CAPEX --> FCF
-    FIN -->|"扣除FCF流出"| NET_CASH
+    FIN -->|扣除FCF流出| NET_CASH
 ```
 
 ### 5.2 FCF 轉換率趨勢

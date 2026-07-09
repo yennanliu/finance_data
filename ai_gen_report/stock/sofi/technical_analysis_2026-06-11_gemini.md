@@ -163,8 +163,8 @@ $15.23 ──────────●───/─────●───/�
 
 ```mermaid
 graph TD
-    ADX["ADX 數值: 16.15"] -->|"低于 20"| Range["無趨勢/區間震盪"]
-    ADX -->|"+DI: 19.84 > -DI: 18.26"| BullBias["多頭微幅佔優 (震盪偏多)"]
+    ADX["ADX 數值: 16.15"] -->|低于 20| Range["無趨勢/區間震盪"]
+    ADX -->|+DI: 19.84 > -DI: 18.26| BullBias["多頭微幅佔優 (震盪偏多)"]
     Range & BullBias --> Strategy["交易策略: 逢低買入 (Range Trading)"]
 ```
 

@@ -459,7 +459,7 @@ graph TD
     OP["營業利益 (Operating Income)<br/>$20.61B"]
     NP["GAAP 淨利 (Net Income)<br/>$17.09B"]
 
-    GP -->|"扣除 R& D("$10.27B")<br/>SG& A("$9.95B")"| OP
+    GP -->|"扣除 R&D ($10.27B)<br/>SG&A ($9.95B)"| OP
     OP -->|"扣除利息支出 ($4.60B)<br/>所得稅 ($2.47B)"| NP
 ```
 

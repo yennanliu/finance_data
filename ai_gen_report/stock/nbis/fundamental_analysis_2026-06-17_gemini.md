@@ -328,9 +328,9 @@ graph LR
     CAPEX["Capital Expenditure<br/>-$8,990.0M<br/>(Est. TTM)"]
     FCF["Free Cash Flow<br/>-$6,150.0M"]
 
-    NI --> |"加上折舊等非現金項目"| NON_CASH
+    NI --> |加上折舊等非現金項目| NON_CASH
     NON_CASH --> OCF
-    OCF --> |"減去資本支出"| CAPEX
+    OCF --> |減去資本支出| CAPEX
     CAPEX --> FCF
 ```
 
@@ -440,8 +440,8 @@ graph TD
     OP["營業利潤: -$603.9M<br/>(營業利益率 -32.1%)"]
     NP["淨利: $836.4M<br/>(淨利率 93.1%)"]
 
-    GP --> |"扣除 D&A $566.9M<br/>R&D $208.2M<br/>SG&A $461.4M"| OP
-    OP --> |"加上非營業收益 $1.47B"| NP
+    GP --> |扣除 D&A $566.9M<br/>R&D $208.2M<br/>SG&A $461.4M| OP
+    OP --> |加上非營業收益 $1.47B| NP
 ```
 
 ---

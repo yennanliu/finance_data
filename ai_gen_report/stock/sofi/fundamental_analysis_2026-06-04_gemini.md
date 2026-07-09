@@ -165,7 +165,7 @@ graph TD
 
     LENDING -- "主要收入來源" --> NET_INT_INC["淨利息收入"]
     TECH_PLATFORM -- "服務費/訂閱費" --> NON_INT_INC["非利息收入"]
-    nb1["FIN_SERVICES -- "交易費/管理費""] --> NON_INT_INC
+    FIN_SERVICES -- "交易費/管理費" --> NON_INT_INC
 ```
 
 **借貸業務 (Lending Segment)**：這是 SOFI 最大的收入來源，主要透過提供個人貸款、學生貸款再融資和房屋貸款來賺取利息收入。

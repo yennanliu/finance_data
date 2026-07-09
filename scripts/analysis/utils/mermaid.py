@@ -89,18 +89,41 @@ def _mm_fix_subgraph_title(m: "re.Match") -> str:
     return m.group(0)
 
 
+_MM_QUOTED = re.compile(r'"[^"\n]*"')
+
+
+def _mm_mask_quoted(s: str) -> "tuple[str, list[str]]":
+    """Replace each ``"…"`` span with a private-use placeholder so structural
+    regexes cannot reach inside a label. Returns (masked, spans)."""
+    spans: "list[str]" = []
+
+    def repl(m: "re.Match") -> str:
+        spans.append(m.group(0))
+        return f"\x00{len(spans) - 1}\x00"
+
+    return _MM_QUOTED.sub(repl, s), spans
+
+
+def _mm_unmask_quoted(s: str, spans: "list[str]") -> str:
+    return re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], s)
+
+
 def _mm_collapse_id_bracket(diagram: str) -> str:
     out = []
     for line in diagram.split("\n"):
         if line.lstrip().split(" ", 1)[0] in _MM_KEYWORDS:
             out.append(line)
             continue
-        line = re.sub(r"(?m)^(\s*)([\w.\-]+)[ \t]+([\[({])", r"\1\2\3", line)
+        # Mask quoted labels first — otherwise a literal `&` or `(` inside a
+        # label (e.g. `["…R&D (A14)"]`) is misread as an `&` node-join and the
+        # label text is corrupted to `R& D(A14)`.
+        masked, spans = _mm_mask_quoted(line)
+        masked = re.sub(r"(?m)^(\s*)([\w.\-]+)[ \t]+([\[({])", r"\1\2\3", masked)
         # Also collapse `id [label]` gaps right after an edge arrow, a pipe
         # edge-label close, or an `&` node-join (e.g. `A -->|x| B [y]`).
-        line = re.sub(r"(-->|---|-\.->|==>|===|\||&)([ \t]*)([\w.\-]+)[ \t]+([\[({])",
-                      r"\1 \3\4", line)
-        out.append(line)
+        masked = re.sub(r"(-->|---|-\.->|==>|===|\||&)([ \t]*)([\w.\-]+)[ \t]+([\[({])",
+                        r"\1 \3\4", masked)
+        out.append(_mm_unmask_quoted(masked, spans))
     return "\n".join(out)
 
 
@@ -117,7 +140,11 @@ def _mm_wrap_bare_nodes(diagram: str) -> str:
 
     def fix_atom(atom: str) -> str:
         s = atom.strip()
-        if not s or not _MM_BARE.search(s):
+        # An atom still carrying an edge-dash run (e.g. "月線 -- 趨勢向上") is the
+        # left side of a `A -- label --> B` labeled edge that the arrow splitter
+        # above does not tokenize. Wrapping it would turn the edge label into a
+        # bogus node and destroy the edge — leave such atoms untouched.
+        if not s or not _MM_BARE.search(s) or re.search(r"-{2,}|={2,}|-\.|\.-", s):
             return atom
         return f'{node_id(s)}["{s}"]'
 

@@ -136,7 +136,7 @@ graph TD
     semi["🔌 半導體解決方案 (Semiconductor Solutions)<br/>營收佔比: ~65% (約 $49B)"]
     soft["💻 基礎設施軟體 (Infrastructure Software)<br/>營收佔比: ~35% (約 $26B)"]
 
-    semi --> net["🌐 乙太網路交換 & 路由(Tomahawk/Jericho)"]
+    semi --> net["🌐 乙太網路交換 & 路由 (Tomahawk/Jericho)"]
     semi --> asic["🧠 客製化 AI ASIC (Google TPU / Meta LPU)"]
     semi --> wireless["📶 無線連接 (FBAR 濾波器 / Wi-Fi 晶片)"]
     semi --> storage["💾 儲存與寬頻控制晶片"]

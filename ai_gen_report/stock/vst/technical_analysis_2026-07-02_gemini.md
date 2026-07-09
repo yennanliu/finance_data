@@ -114,13 +114,13 @@ graph LR
 
 ```mermaid
 graph TD
-    A["月線趨勢: 長期修正/盤整"] --> B{"股價自2025年高點回落"}
-    B --> C["週線趨勢: 區間震盪/築底"]
-    C --> D{"價格在140-170區間波動"}
-    D --> E["日線趨勢: 短期偏空/承壓"]
-    E --> F{"價格位於所有短期均線下方"}
-    F --> G["綜合判斷: 缺乏明確趨勢，但有潛在反轉訊號"]
-    G --> H("策略: 謹慎觀望，關注關鍵支撐阻力")
+    A[月線趨勢: 長期修正/盤整] --> B{股價自2025年高點回落}
+    B --> C[週線趨勢: 區間震盪/築底]
+    C --> D{價格在140-170區間波動}
+    D --> E[日線趨勢: 短期偏空/承壓]
+    E --> F{價格位於所有短期均線下方}
+    F --> G[綜合判斷: 缺乏明確趨勢，但有潛在反轉訊號]
+    G --> H(策略: 謹慎觀望，關注關鍵支撐阻力)
 ```
 **月線趨勢（長期）**：從2025年7月的高點 $207.45 至今，VST股價經歷了顯著回調。儘管在2026年初曾嘗試反彈，但未能突破前期高點，顯示長期上漲動能已大幅減弱，進入了修正或盤整階段。當前價格 $153.16 遠低於一年高點，表明長期上升趨勢已終結。
 
@@ -182,11 +182,11 @@ ADX (Average Directional Index) 指標用於衡量趨勢的強度，而非方向
 
 ```mermaid
 graph TD
-    A["ADX(14): 17.91"] --> B{"趨勢強度 < 25?"}
-    B -- 是 --> C["市場處於弱趨勢或盤整"]
-    C --> D{"+DI: 23.68, -DI: 25.77"}
-    D -- -DI > +DI --> E["空頭力量略佔優勢"]
-    E --> F["綜合判斷: 市場缺乏明確方向，空頭短期稍強"]
+    A[ADX(14): 17.91] --> B{趨勢強度 < 25?}
+    B -- 是 --> C[市場處於弱趨勢或盤整]
+    C --> D{+DI: 23.68, -DI: 25.77}
+    D -- -DI > +DI --> E[空頭力量略佔優勢]
+    E --> F[綜合判斷: 市場缺乏明確方向，空頭短期稍強]
 ```
 
 **ADX 強度對照表**：
@@ -210,14 +210,14 @@ graph TD
 
 ```mermaid
 graph TD
-    A["VST 圖表形態分析"] --> B{"主要價格行為: 高位回落後的震盪"}
-    B --> C{"潛在底部形態?"}
+    A[VST 圖表形態分析] --> B{主要價格行為: 高位回落後的震盪}
+    B --> C{潛在底部形態?}
     C -- 觀察到 --> D["週線雙底或多重底 (W型反轉)"]
-    D -- 觸發條件 --> E["價格突破頸線阻力"]
+    D -- 觸發條件 --> E[價格突破頸線阻力]
     C -- 觀察到 --> F["矩形盤整 (Ranging)"]
-    F -- 觸發條件 --> G["價格突破區間上下沿"]
-    B --> H{"當前狀態: 缺乏明確形態，但有築底訊號"}
-    H --> I("結論: 需密切關注關鍵支撐阻力，等待形態確認")
+    F -- 觸發條件 --> G[價格突破區間上下沿]
+    B --> H{當前狀態: 缺乏明確形態，但有築底訊號}
+    H --> I(結論: 需密切關注關鍵支撐阻力，等待形態確認)
 ```
 **解讀**：從2026年3月的月線低點 $150.12 和2026年5月的週線低點 $139.48 來看，VST有可能正在構建一個雙底或多重底的底部形態。如果將2026年3月和5月的低點視為底部，那麼頸線阻力將位於近期反彈的高點，例如2026年6月的高點 $163.52。然而，目前的價格 $153.16 仍在頸線下方，形態尚未確認。另一種可能是價格處於矩形盤整中，在 $139.48 (下沿) 和 $173.41 (上沿) 之間震盪。
 
@@ -346,41 +346,41 @@ VST的技術指標呈現出多空交織的複雜局面。短期移動平均線�
 ```mermaid
 graph TD
     subgraph Price_Action ["價格行為 ($153.16)"]
-        PA1["低於MA20, MA50, MA200"] --> BEARISH_PA("🔴")
+        PA1["低於MA20, MA50, MA200"] --> BEARISH_PA(🔴)
         PA2["接近52週低點區間"] --> BEARISH_PA
     end
 
     subgraph Moving_Averages ["移動平均線"]
-        MA1["MA20: $155.62 (⬇)"] --> BEARISH_MA("🔴")
+        MA1["MA20: $155.62 (⬇)"] --> BEARISH_MA(🔴)
         MA2["MA50: $154.31 (⬇)"] --> BEARISH_MA
         MA3["MA200: $168.44 (⬇)"] --> BEARISH_MA
-        MA_System["均線排列: 混合排列"] --> NEUTRAL_MA("🟡")
+        MA_System["均線排列: 混合排列"] --> NEUTRAL_MA(🟡)
     end
 
     subgraph Momentum_Indicators ["動能指標"]
-        RSI1["RSI(14): 63.77 (中性)"] --> NEUTRAL_MOM("🟡")
-        RSI2["RSI 背離: 底背離"] --> BULLISH_MOM("🟢")
+        RSI1["RSI(14): 63.77 (中性)"] --> NEUTRAL_MOM(🟡)
+        RSI2["RSI 背離: 底背離"] --> BULLISH_MOM(🟢)
         MACD1["MACD: 2.154"]
         MACD2["MACD Signal: 2.234"]
-        MACD3["MACD Hist: -0.081"] --> BEARISH_MOM("🔴")
-        MACD1 --> |"MACD < Signal"| BEARISH_MOM
+        MACD3["MACD Hist: -0.081"] --> BEARISH_MOM(🔴)
+        MACD1 --> |MACD < Signal| BEARISH_MOM
     end
 
     subgraph Trend_Strength ["趨勢強度"]
-        ADX1["ADX(14): 17.91"] --> NEUTRAL_TREND("🟡")
-        ADX2["-DI: 25.77 > +DI: 23.68"] --> BEARISH_TREND("🔴")
+        ADX1["ADX(14): 17.91"] --> NEUTRAL_TREND(🟡)
+        ADX2["-DI: 25.77 > +DI: 23.68"] --> BEARISH_TREND(🔴)
     end
 
     subgraph Volatility ["波動率"]
-        ATR1["ATR(14): $7.22 (中等波動)"] --> NEUTRAL_VOL("🟡")
+        ATR1["ATR(14): $7.22 (中等波動)"] --> NEUTRAL_VOL(🟡)
     end
 
     subgraph Volume_Analysis ["成交量分析"]
-        VOL1["量比: 1.15x (高於均量)"] --> NEUTRAL_VOL_A("🟡")
-        OBV1["OBV趨勢: OBV > MA"] --> BULLISH_VOL_A("🟢")
+        VOL1["量比: 1.15x (高於均量)"] --> NEUTRAL_VOL_A(🟡)
+        OBV1["OBV趨勢: OBV > MA"] --> BULLISH_VOL_A(🟢)
     end
 
-    BEARISH_PA --> OVERALL_SUMMARY("綜合評估")
+    BEARISH_PA --> OVERALL_SUMMARY(綜合評估)
     BEARISH_MA --> OVERALL_SUMMARY
     NEUTRAL_MA --> OVERALL_SUMMARY
     NEUTRAL_MOM --> OVERALL_SUMMARY
@@ -392,7 +392,7 @@ graph TD
     NEUTRAL_VOL_A --> OVERALL_SUMMARY
     BULLISH_VOL_A --> OVERALL_SUMMARY
 
-    OVERALL_SUMMARY --> CONCLUSION["結論: 短期承壓，中期具潛在反轉動能"]
+    OVERALL_SUMMARY --> CONCLUSION[結論: 短期承壓，中期具潛在反轉動能]
 ```
 
 ### 📈 移動平均線排列分析
@@ -401,21 +401,21 @@ VST的移動平均線系統當前呈現出一個混合且偏空的排列。價�
 
 ```mermaid
 graph TD
-    A["價格: $153.16"]
-    MA20["MA20: $155.62"]
-    MA50["MA50: $154.31"]
-    MA200["MA200: $168.44"]
+    A[價格: $153.16]
+    MA20[MA20: $155.62]
+    MA50[MA50: $154.31]
+    MA200[MA200: $168.44]
 
-    A --> |"低於"| MA20
-    A --> |"低於"| MA50
-    A --> |"低於"| MA200
+    A --> |低於| MA20
+    A --> |低於| MA50
+    A --> |低於| MA200
 
-    MA20 --> |"略高於"| MA50_Ref["MA50"]
-    MA50_Ref --> |"遠低於"| MA200_Ref["MA200"]
+    MA20 --> |略高於| MA50_Ref[MA50]
+    MA50_Ref --> |遠低於| MA200_Ref[MA200]
 
     subgraph 均線排列判斷
-        Direction["均線排列: 混合排列"]
-        Signal["訊號: 短期偏空，中期承壓"]
+        Direction[均線排列: 混合排列]
+        Signal[訊號: 短期偏空，中期承壓]
     end
 
     MA20 --> Direction
@@ -453,11 +453,11 @@ MACD (Moving Average Convergence Divergence) 指標用於判斷趨勢的強度�
 
 ```mermaid
 graph TD
-    A["MACD 線: 2.154"] --> B{"MACD < Signal?"}
-    B -- 是 --> C["MACD 空頭交叉 (Bearish Cross)"]
-    C --> D["空頭動能增強"]
-    D --> E["MACD 柱狀圖: -0.081 (為負值且可能擴大)"]
-    E --> F["短期看跌訊號"]
+    A[MACD 線: 2.154] --> B{MACD < Signal?}
+    B -- 是 --> C[MACD 空頭交叉 (Bearish Cross)]
+    C --> D[空頭動能增強]
+    D --> E[MACD 柱狀圖: -0.081 (為負值且可能擴大)]
+    E --> F[短期看跌訊號]
 ```
 **解讀**：
 1.  **空頭交叉**：MACD 線 (2.154) 已經下穿了 Signal 線 (2.234)，這形成了一個標準的空頭交叉訊號 (Bearish Cross)。這表明短期動能已轉向空頭，賣壓正在增加。
@@ -565,24 +565,24 @@ ATR (Average True Range) 衡量資產價格波動的平均範圍，是判斷市�
 ```mermaid
 graph LR
     subgraph ShortTerm ["短期 (日線)"]
-        ST1["價格 < MA20/MA50"] --> ST_Signal_Bear("🔴")
+        ST1["價格 < MA20/MA50"] --> ST_Signal_Bear(🔴)
         ST2["MACD 空頭交叉"] --> ST_Signal_Bear
         ST3["ADX -DI > +DI"] --> ST_Signal_Bear
     end
 
     subgraph MidTerm ["中期 (週線)"]
-        MT1["RSI 底背離"] --> MT_Signal_Bull("🟢")
+        MT1["RSI 底背離"] --> MT_Signal_Bull(🟢)
         MT2["OBV 量能支持"] --> MT_Signal_Bull
         MT3["價格接近布林下軌/關鍵支撐"] --> MT_Signal_Bull
-        MT4["ADX 弱趨勢"] --> MT_Signal_Neutral("🟡")
+        MT4["ADX 弱趨勢"] --> MT_Signal_Neutral(🟡)
     end
 
     subgraph LongTerm ["長期 (月線)"]
-        LT1["價格 < MA200"] --> LT_Signal_Bear("🔴")
+        LT1["價格 < MA200"] --> LT_Signal_Bear(🔴)
         LT2["自高點回落幅度大"] --> LT_Signal_Bear
     end
 
-    ST_Signal_Bear --> Overall_Conclusion("綜合判斷")
+    ST_Signal_Bear --> Overall_Conclusion(綜合判斷)
     MT_Signal_Bull --> Overall_Conclusion
     MT_Signal_Neutral --> Overall_Conclusion
     LT_Signal_Bear --> Overall_Conclusion
@@ -604,13 +604,13 @@ graph LR
 
 ```mermaid
 graph TD
-    A["當前價格: $153.16"] --> B{"是否跌破強支撐 $132.47?"}
-    B -- 是 --> C["空頭策略: 跌破追空，目標更低"]
-    B -- 否 --> D{"是否有效突破關鍵阻力 $163.52 (頸線)?"}
-    D -- 是 --> E["多頭策略A: 突破追多，目標形態高點"]
-    D -- 否 --> F{"價格是否回測 $139.29 - $145.82 區間並企穩?"}
-    F -- 是 --> G["多頭策略B: 逢低吸納，等待反彈"]
-    F -- 否 --> H["觀望: 市場缺乏明確方向"]
+    A[當前價格: $153.16] --> B{是否跌破強支撐 $132.47?}
+    B -- 是 --> C[空頭策略: 跌破追空，目標更低]
+    B -- 否 --> D{是否有效突破關鍵阻力 $163.52 (頸線)?}
+    D -- 是 --> E[多頭策略A: 突破追多，目標形態高點]
+    D -- 否 --> F{價格是否回測 $139.29 - $145.82 區間並企穩?}
+    F -- 是 --> G[多頭策略B: 逢低吸納，等待反彈]
+    F -- 否 --> H[觀望: 市場缺乏明確方向]
 ```
 
 ### 🟢 多頭策略詳情
@@ -691,27 +691,27 @@ VST當前的技術面處於一個關鍵的轉折點，多空訊號交織，潛�
 
 ```mermaid
 graph TD
-    A["當前市場狀況: 短期承壓，中期潛在反轉"] --> B{"市場情境"}
+    A[當前市場狀況: 短期承壓，中期潛在反轉] --> B{市場情境}
 
     subgraph Optimistic ["🟢 樂觀情境 (反轉上漲)"]
         O1["價格在 $139.29-$145.82 區間築底成功"]
         O2["RSI底背離和OBV量能推動價格突破 $163.52 頸線"]
         O3["MACD轉為多頭交叉，並站穩MA200"]
-        O1 & O2 & O3 --> O_Result["結果: 形成W底或三重底，開啟新一輪上漲趨勢，目標 $187.56"]
+        O1 & O2 & O3 --> O_Result[結果: 形成W底或三重底，開啟新一輪上漲趨勢，目標 $187.56]
     end
 
     subgraph BaseCase ["🟡 基本情境 (區間震盪)"]
         B1["價格繼續在 $139.29-$173.41 區間內震盪"]
         B2["未能有效突破關鍵阻力 ($163.52) 也未跌破強支撐 ($132.47)"]
         B3["ADX維持弱趨勢，指標訊號繼續多空交織"]
-        B1 & B2 & B3 --> B_Result["結果: 市場缺乏明確方向，適合高拋低吸的區間交易策略"]
+        B1 & B2 & B3 --> B_Result[結果: 市場缺乏明確方向，適合高拋低吸的區間交易策略]
     end
 
     subgraph Pessimistic ["🔴 悲觀情境 (加速下跌)"]
         P1["價格未能守住 $139.29 關鍵支撐"]
         P2["RSI底背離失效，MACD空頭動能持續增強"]
         P3["跌破52週低點 $132.47，且伴隨恐慌性拋售"]
-        P1 & P2 & P3 --> P_Result["結果: 空頭趨勢確立，可能進一步下探至 $120.00 甚至更低"]
+        P1 & P2 & P3 --> P_Result[結果: 空頭趨勢確立，可能進一步下探至 $120.00 甚至更低]
     end
 ```
 

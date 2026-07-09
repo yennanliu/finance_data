@@ -140,10 +140,10 @@ graph TD
     GOOG --> GC
     GOOG --> OB
 
-    GS1["Google Search & Others(核心廣告)"]
+    GS1["Google Search & Others (核心廣告)"]
     GS2["YouTube Ads (影音廣告)"]
     GS3["Google Network (聯播網廣告)"]
-    GS4["Subscription, Platforms & Devices(硬體與訂閱)"]
+    GS4["Subscription, Platforms & Devices (硬體與訂閱)"]
 
     GS --> GS1
     GS --> GS2

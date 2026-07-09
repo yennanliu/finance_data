@@ -110,16 +110,16 @@ graph TD
 
 ```mermaid
 graph TD
-    GROUP_MAIN[ "📈 Amazon 業務結構<br/> 總市值: $285B<br/> 年收入: $742B" ]
+    GROUP_MAIN [ "📈 Amazon 業務結構<br/> 總市值: $285B<br/> 年收入: $742B" ]
     TOTAL_AMZ["北美市場"]
     CLOUD["AWS:57%"]
-    PRIME["Prime 購物 & 外包"]
+    PRIME ["Prime 購物 & 外包"]
 
     GROUP_MAIN --> TOTAL_AMZ
     GROUP_MAIN --> CLOUD
     GROUP_MAIN --> PRIME
   
-    physical_stores["記入海大嗎"]
+    physical_stores ["記入海大嗎"]
     strategic_invest 盿
 끌러手措富丨衷劃模
 

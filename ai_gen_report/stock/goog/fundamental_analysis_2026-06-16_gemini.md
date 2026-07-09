@@ -136,8 +136,8 @@ graph TD
     GOOG --> GC
     GOOG --> OB
 
-    GS --> GSearch["Google Search & Others(搜尋廣告)"]
-    GS --> YT["YouTube Ads & Subscriptions(影音廣告與訂閱)"]
+    GS --> GSearch["Google Search & Others (搜尋廣告)"]
+    GS --> YT["YouTube Ads & Subscriptions (影音廣告與訂閱)"]
     GS --> GNetwork["Google Network (聯播網廣告)"]
     GS --> GOther["Google Other (硬體 Pixel、Play Store 抽成)"]
 

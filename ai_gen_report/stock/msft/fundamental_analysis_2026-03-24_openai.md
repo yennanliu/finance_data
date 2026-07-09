@@ -27,11 +27,11 @@ generated_by: OpenAI API (scripts/generate_analysis.py)
 ### 核心評分儀表板
 ```mermaid
 graph TB
-    基本面("基本面") -- 9/10 --> 成長
-    成長("成長") -- 8/10 --> 獲利
-    獲利("獲利") -- 9/10 --> 財務健康
-    財務健康("財務健康") -- 8/10 --> 估值
-    估值("估值") -- 7/10
+    基本面(基本面) -- 9/10 --> 成長
+    成長(成長) -- 8/10 --> 獲利
+    獲利(獲利) -- 9/10 --> 財務健康
+    財務健康(財務健康) -- 8/10 --> 估值
+    估值(估值) -- 7/10
 ```
 
 ### 5大投資論點 + 3大風險
@@ -62,12 +62,12 @@ graph TB
 ### 業務結構與收入來源
 ```mermaid
 graph TD
-    A["Microsoft Corporation"] --> B["產品與商業流程"]
-    A --> C["雲端與智慧雲"]
-    A --> D["個人電腦"]
-    B --> E["Microsoft 365"]
-    C --> F["Azure"]
-    D --> G["Windows"]
+    A[Microsoft Corporation] --> B[產品與商業流程]
+    A --> C[雲端與智慧雲]
+    A --> D[個人電腦]
+    B --> E[Microsoft 365]
+    C --> F[Azure]
+    D --> G[Windows]
 ```
 
 ### 市場地位
@@ -140,8 +140,8 @@ pie
 ### 資產結構
 ```mermaid
 graph TD
-    A["總資產 $619B"] --> B["流動資產 $191.13B"]
-    A --> C["非流動資產 $427.87B"]
+    A[總資產 $619B] --> B[流動資產 $191.13B]
+    A --> C[非流動資產 $427.87B]
 ```
 
 ### 流動性指標表格
@@ -165,9 +165,9 @@ graph TD
 ### 現金流量瀑布圖
 ```mermaid
 graph LR
-    A("Operating Cash Flow") --> B("Investing Cash Flow")
-    B --> C("Financing Cash Flow")
-    C --> D("Net Increase/Decrease")
+    A(Operating Cash Flow) --> B(Investing Cash Flow)
+    B --> C(Financing Cash Flow)
+    C --> D(Net Increase/Decrease)
 ```
 
 ### FCF 轉換率趨勢表格

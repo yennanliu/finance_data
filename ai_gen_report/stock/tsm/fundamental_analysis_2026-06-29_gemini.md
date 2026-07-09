@@ -144,7 +144,7 @@ graph TD
     RevenueSource --> AdvancedNodes["先進製程 (7nm 及以下)<br/>(高成長、高利潤)"]
     RevenueSource --> MatureNodes["成熟製程 (16nm 及以上)<br/>(穩健收入、應用廣泛)"]
 
-    AdvancedNodes --> HPC_AI["高性能運算 (HPC) & 人工智慧(AI) 晶片"]
+    AdvancedNodes --> HPC_AI["高性能運算 (HPC) & 人工智慧 (AI) 晶片"]
     AdvancedNodes --> Smartphone["高階智慧手機晶片"]
     MatureNodes --> Automotive["車用電子晶片"]
     MatureNodes --> IoT_Consumer["物聯網 & 消費性電子晶片"]
@@ -420,7 +420,7 @@ graph LR
     OCF --> Capex["資本支出 (FY2025: -$1.28T)"]
     Capex --> FCF["自由現金流 (FY2025: $992.38B)"]
     FCF --> Dividends["現金股息 (FY2025: -$466.78B)"]
-    FCF --> RetainedEarnings["留存盈餘 & 其他(FY2025: +$525.60B)"]
+    FCF --> RetainedEarnings["留存盈餘 & 其他 (FY2025: +$525.60B)"]
     Dividends --> NetCashChange["淨現金變化"]
     RetainedEarnings --> NetCashChange
 ```
@@ -681,7 +681,7 @@ graph TD
     RevenueSource --> AdvancedNodes["先進製程 (7nm 及以下)<br/>(高成長、高利潤)"]
     RevenueSource --> MatureNodes["成熟製程 (16nm 及以上)<br/>(穩健收入、應用廣泛)"]
 
-    AdvancedNodes --> HPC_AI["高性能運算 (HPC) & 人工智慧(AI) 晶片"]
+    AdvancedNodes --> HPC_AI["高性能運算 (HPC) & 人工智慧 (AI) 晶片"]
     AdvancedNodes --> Smartphone["高階智慧手機晶片"]
     MatureNodes --> Automotive["車用電子晶片"]
     MatureNodes --> IoT_Consumer["物聯網 & 消費性電子晶片"]

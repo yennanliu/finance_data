@@ -677,9 +677,9 @@ graph LR
     ASSET_TURNOVER["資產週轉率: 0.50x"]
     FIN_LEVERAGE["財務槓桿: 1.20x"]
 
-    nb1["ROE <-- "x""] --- NET_MARGIN
-    nb1["ROE <-- "x""] --- ASSET_TURNOVER
-    nb1["ROE <-- "x""] --- FIN_LEVERAGE
+    ROE <-- "x" --- NET_MARGIN
+    ROE <-- "x" --- ASSET_TURNOVER
+    ROE <-- "x" --- FIN_LEVERAGE
 ```
 *註：數據基於 FY2025 年報。
 淨利率 = 淨利潤 $1.63B / 總收入 $4.48B = 36.38% ≈ 36.4%

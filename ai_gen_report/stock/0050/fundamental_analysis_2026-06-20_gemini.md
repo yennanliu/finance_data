@@ -141,8 +141,8 @@ graph TD
     HARDWARE["電腦及週邊設備<br/>(權重: 11.5%)"]
     OTHERS["其他產業<br/>(權重: 13.5%)"]
 
-    ETF -->|"追蹤"| INDEX
-    INDEX -->|"實施"| REPLICATION
+    ETF -->|追蹤| INDEX
+    INDEX -->|實施| REPLICATION
     REPLICATION --> SEMICON
     REPLICATION --> FINANCE
     REPLICATION --> HARDWARE
@@ -330,14 +330,14 @@ graph TD
 
 ```mermaid
 graph LR
-    SUB_DIV["成分股發放股利<br/>(TSMC, MTK, etc.)"] -->|"匯入"| FUND_CASH["0050 基金現金池"]
-    LENDING["基金持股借券收益"] -->|"匯入"| FUND_CASH
+    SUB_DIV["成分股發放股利<br/>(TSMC, MTK, etc.)"] -->|匯入| FUND_CASH["0050 基金現金池"]
+    LENDING["基金持股借券收益"] -->|匯入| FUND_CASH
     
-    FUND_CASH -->|"扣除"| FEES["管理與保管費<br/>(年化 0.355% + 雜支)"]
+    FUND_CASH -->|扣除| FEES["管理與保管費<br/>(年化 0.355% + 雜支)"]
     FEES --> DIST_CASH["可分配收益金額"]
     
-    DIST_CASH -->|"每年 1 月發放"| DIV_JAN["半年度配息 (約佔 65%)"]
-    DIST_CASH -->|"每年 7 月發放"| DIV_JUL["半年度配息 (約佔 35%)"]
+    DIST_CASH -->|每年 1 月發放| DIV_JAN["半年度配息 (約佔 65%)"]
+    DIST_CASH -->|每年 7 月發放| DIV_JUL["半年度配息 (約佔 35%)"]
 ```
 
 ### 5.2 歷史股利發放紀錄
