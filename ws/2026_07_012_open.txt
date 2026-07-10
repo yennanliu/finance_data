@@ -1,0 +1,1032 @@
+Generated: 2026-07-10 23:03 UTC
+Model: gemini-2.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: NARI
+Company: Inari Medical, Inc.
+Sector: Healthcare
+Market Cap: ~$6.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 30%
+  - P/E (fwd): 28x  |  PEG: 0.9
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.5%
+Investment Thesis:
+Inari Medical is a leader in devices for treating venous thromboembolism (VTE), particularly deep vein thrombosis (DVT) and pulmonary embolism (PE). Its minimally invasive thrombectomy systems offer superior outcomes compared to traditional treatments, addressing a large and underserved market. The company benefits from strong clinical data, physician adoption, and a focused sales force, driving robust double-digit growth and market share expansion.
+Key Risk:
+Increased competition from larger medical device companies entering the VTE space or potential reimbursement changes could impact growth and profitability.
+
+---
+Rank: 2
+Ticker: INSP
+Company: Inspire Medical Systems, Inc.
+Sector: Healthcare
+Market Cap: ~$12.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 28%
+  - EPS Growth (forward): 40%
+  - P/E (fwd): 45x  |  PEG: 1.1
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.0%
+Investment Thesis:
+Inspire Medical offers an innovative, FDA-approved neurostimulation device for obstructive sleep apnea (OSA) patients who cannot tolerate CPAP. The market for OSA is massive, and Inspire's solution provides a significant quality-of-life improvement, driving rapid adoption and strong revenue growth. Expanding insurance coverage and physician training programs are further accelerating its market penetration.
+Key Risk:
+New competitive therapies for OSA or a slowdown in physician training and adoption could hinder its aggressive growth trajectory.
+
+---
+Rank: 3
+Ticker: CYBR
+Company: CyberArk Software Ltd.
+Sector: Technology
+Market Cap: ~$18.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 20%
+  - EPS Growth (forward): 35%
+  - P/E (fwd): 38x  |  PEG: 1.1
+  - Debt/Equity: 0.1
+  - FCF Yield: 4.0%
+Investment Thesis:
+CyberArk is the global leader in Privileged Access Management (PAM), a critical component of enterprise cybersecurity. As cyber threats intensify and regulatory requirements tighten, securing privileged credentials remains paramount, creating a durable demand for CyberArk's specialized solutions. Its shift to a SaaS model is enhancing recurring revenue and expanding margins.
+Key Risk:
+Intensifying competition in the broader identity security market or a failure to successfully transition all customers to its SaaS platform could impact future growth.
+
+---
+Rank: 4
+Ticker: MANH
+Company: Manhattan Associates, Inc.
+Sector: Technology
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 35x  |  PEG: 1.6
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.8%
+Investment Thesis:
+Manhattan Associates provides best-in-class supply chain and omnichannel commerce software, crucial for retailers and manufacturers navigating complex global logistics and e-commerce demands. Its mission-critical software creates high switching costs, leading to sticky recurring revenue and strong customer retention. The ongoing need for supply chain optimization and resilience provides a long-term growth runway.
+Key Risk:
+A significant slowdown in global trade or e-commerce growth, or increased competition from larger enterprise software providers, could temper its expansion.
+
+---
+Rank: 5
+Ticker: TYL
+Company: Tyler Technologies, Inc.
+Sector: Technology
+Market Cap: ~$22.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 32x  |  PEG: 1.8
+  - Debt/Equity: 0.3
+  - FCF Yield: 3.0%
+Investment Thesis:
+Tyler Technologies is the dominant provider of integrated software solutions for the public sector, serving state and local governments. Its deep domain expertise, extensive product suite, and high switching costs create a powerful moat, ensuring consistent recurring revenue and strong customer loyalty. The ongoing digital transformation of government services provides a stable, long-term growth driver.
+Key Risk:
+Budgetary constraints at the state and local government levels or increased competition from specialized niche providers could slow its growth.
+
+---
+Rank: 6
+Ticker: CGNX
+Company: Cognex Corporation
+Sector: Industrials
+Market Cap: ~$14.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 38x  |  PEG: 1.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 2.5%
+Investment Thesis:
+Cognex is a global leader in machine vision systems, essential for automation and quality control across diverse industries like automotive, electronics, and logistics. The secular trend towards factory automation, AI integration, and supply chain resilience provides a strong tailwind for its advanced vision solutions. Its proprietary technology and deep application expertise create a significant competitive advantage.
+Key Risk:
+Cyclical downturns in capital expenditure by manufacturing industries or increased competition from lower-cost vision system providers could impact its performance.
+
+---
+Rank: 7
+Ticker: KEYS
+Company: Keysight Technologies, Inc.
+Sector: Technology
+Market Cap: ~$35.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 28x  |  PEG: 1.9
+  - Debt/Equity: 0.2
+  - FCF Yield: 4.5%
+Investment Thesis:
+Keysight Technologies provides electronic test and measurement equipment and software, crucial for R&D and manufacturing across industries like 5G, automotive, aerospace, and quantum computing. Its essential role in enabling cutting-edge technological development creates high switching costs and a strong competitive moat. The continuous innovation cycle in electronics ensures sustained demand for its advanced solutions.
+Key Risk:
+A slowdown in global R&D spending or increased competition from other test and measurement providers could pressure its growth and margins.
+
+---
+Rank: 8
+Ticker: FTV
+Company: Fortive Corporation
+Sector: Industrials
+Market Cap: ~$35.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 27x  |  PEG: 1.9
+  - Debt/Equity: 0.4
+  - FCF Yield: 4.2%
+Investment Thesis:
+Fortive is a diversified industrial technology company with leading positions in intelligent operating solutions, precision technologies, and advanced healthcare solutions. Leveraging the Danaher Business System principles, Fortive consistently drives operational excellence and strategic M&A, enhancing its competitive moats in niche, high-growth markets. Its focus on mission-critical applications provides stable, recurring revenue.
+Key Risk:
+A global economic slowdown impacting industrial capital expenditures or challenges in integrating acquired businesses could hinder its growth strategy.
+
+---
+Rank: 9
+Ticker: ENTG
+Company: Entegris, Inc.
+Sector: Technology
+Market Cap: ~$28.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 30x  |  PEG: 1.2
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.0%
+Investment Thesis:
+Entegris is a critical supplier of advanced materials and process solutions for the semiconductor industry, enabling the manufacturing of smaller, more powerful chips. Its highly specialized products, deep customer relationships, and strong intellectual property create significant barriers to entry. The long-term growth of semiconductors, driven by AI, IoT, and cloud computing, provides a robust tailwind.
+Key Risk:
+Cyclical downturns in the semiconductor industry or increased competition from other materials suppliers could impact its revenue and profitability.
+
+---
+Rank: 10
+Ticker: MKSI
+Company: MKS Instruments, Inc.
+Sector: Technology
+Market Cap: ~$14.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 28x  |  PEG: 1.3
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.5%
+Investment Thesis:
+MKS Instruments provides instruments, systems, and process control solutions essential for advanced manufacturing, particularly in the semiconductor and industrial markets. Its broad portfolio of highly engineered products and strong R&D capabilities position it well to benefit from the ongoing demand for precision manufacturing and process optimization. The company's deep integration into customer workflows creates high switching costs.
+Key Risk:
+Sensitivity to semiconductor capital expenditure cycles and potential integration challenges from past acquisitions pose key risks.
+
+---
+Rank: 11
+Ticker: PTC
+Company: PTC Inc.
+Sector: Technology
+Market Cap: ~$25.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.3
+  - FCF Yield: 3.2%
+Investment Thesis:
+PTC is a leading provider of industrial software, including CAD, PLM, IoT, and augmented reality solutions, enabling digital transformation for manufacturers. Its sticky, mission-critical software helps companies design, manufacture, and service products more efficiently, creating high switching costs. The secular trend towards Industry 4.0 and smart manufacturing provides a long runway for growth.
+Key Risk:
+A slowdown in industrial capital spending or increased competition from larger enterprise software vendors could pressure its growth rates.
+
+---
+Rank: 12
+Ticker: ZBRA
+Company: Zebra Technologies Corporation
+Sector: Technology
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 28x  |  PEG: 1.6
+  - Debt/Equity: 0.5
+  - FCF Yield: 3.0%
+Investment Thesis:
+Zebra Technologies is a global leader in enterprise asset intelligence, providing mobile computers, barcode scanners, RFID, and specialized printers. Its solutions are critical for improving efficiency and visibility in retail, healthcare, manufacturing, and logistics. The ongoing need for automation, inventory management, and supply chain optimization provides a durable growth driver.
+Key Risk:
+Economic downturns impacting enterprise IT spending or increased competition in its core hardware segments could slow its expansion.
+
+---
+Rank: 13
+Ticker: EXAS
+Company: Exact Sciences Corporation
+Sector: Healthcare
+Market Cap: ~$18.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 35x  |  PEG: 1.4
+  - Debt/Equity: 0.4
+  - FCF Yield: 1.5%
+Investment Thesis:
+Exact Sciences is a leading provider of cancer screening and diagnostic tests, most notably Cologuard for colorectal cancer. The company is expanding its portfolio into other cancer types, leveraging its strong commercial infrastructure and brand recognition. Early detection and personalized medicine trends provide a significant and growing market opportunity.
+Key Risk:
+Intensifying competition from new diagnostic tests, changes in reimbursement policies, or slower-than-expected adoption of new tests could impact profitability.
+
+---
+Rank: 14
+Ticker: PAYC
+Company: Paycom Software, Inc.
+Sector: Technology
+Market Cap: ~$14.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 30x  |  PEG: 1.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.5%
+Investment Thesis:
+Paycom offers a comprehensive, cloud-based human capital management (HCM) software solution that streamlines payroll, HR, and talent management for businesses. Its single-database platform provides superior efficiency and data accuracy, driving high customer satisfaction and retention. The ongoing shift to integrated HR solutions and strong operating leverage support its consistent FCF generation.
+Key Risk:
+Increased competition in the crowded HCM software market or a slowdown in new client acquisition could pressure its growth rates.
+
+---
+Rank: 15
+Ticker: QLYS
+Company: Qualys, Inc.
+Sector: Technology
+Market Cap: ~$8.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 28x  |  PEG: 1.6
+  - Debt/Equity: 0.0
+  - FCF Yield: 5.0%
+Investment Thesis:
+Qualys provides cloud-based security and compliance solutions, offering vulnerability management, threat detection, and policy compliance across IT environments. Its integrated platform and continuous monitoring capabilities are essential for modern enterprises facing evolving cyber threats and regulatory demands. High customer retention and strong FCF generation underscore its sticky business model.
+Key Risk:
+Intensifying competition from larger cybersecurity vendors or a failure to innovate quickly enough to address new threat vectors could impact its market position.
+
+---
+Rank: 16
+Ticker: AZPN
+Company: Aspen Technology, Inc.
+Sector: Technology
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 30x  |  PEG: 2.0
+  - Debt/Equity: 0.2
+  - FCF Yield: 3.5%
+Investment Thesis:
+Aspen Technology provides asset optimization software for process industries, including energy, chemicals, and pharmaceuticals. Its highly specialized solutions help customers maximize efficiency, reduce costs, and meet sustainability goals, creating significant value and high switching costs. The ongoing need for operational excellence and digital transformation in these complex industries ensures long-term demand.
+Key Risk:
+Cyclical downturns in capital expenditure within the energy and chemical sectors, or challenges in expanding beyond its core markets, could limit growth.
+
+---
+Rank: 17
+Ticker: MASI
+Company: Masimo Corporation
+Sector: Healthcare
+Market Cap: ~$8.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 25x  |  PEG: 2.1
+  - Debt/Equity: 0.4
+  - FCF Yield: 3.0%
+Investment Thesis:
+Masimo is a global medical technology company developing and manufacturing innovative non-invasive patient monitoring technologies, including pulse oximetry and advanced sensors. Its proprietary Signal Extraction Technology (SET) offers superior accuracy, creating a strong competitive moat and driving adoption in critical care settings. The company benefits from a razor-and-blade model with recurring sensor sales.
+Key Risk:
+Patent disputes, increased competition in patient monitoring, or challenges in integrating its consumer health acquisitions could impact its core business.
+
+---
+Rank: 18
+Ticker: HOLX
+Company: Hologic, Inc.
+Sector: Healthcare
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 22x  |  PEG: 2.2
+  - Debt/Equity: 0.5
+  - FCF Yield: 4.0%
+Investment Thesis:
+Hologic is a medical technology company focused on women's health, offering diagnostics, surgical, and aesthetic solutions. Its strong market positions in breast health (3D mammography), molecular diagnostics, and gynecological surgery provide consistent, recurring revenue streams. The aging global population and increasing focus on women's health contribute to a stable demand environment.
+Key Risk:
+Changes in healthcare reimbursement policies, increased competition in its diagnostic or surgical segments, or regulatory hurdles for new products could affect performance.
+
+---
+Rank: 19
+Ticker: AME
+Company: AMETEK, Inc.
+Sector: Industrials
+Market Cap: ~$48.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 28x  |  PEG: 2.3
+  - Debt/Equity: 0.3
+  - FCF Yield: 3.5%
+Investment Thesis:
+AMETEK is a global manufacturer of electronic instruments and electromechanical devices, serving diverse end markets including aerospace, defense, medical, and industrial. Its highly engineered, niche products and consistent acquisition strategy drive steady growth and margin expansion. The company's diversified portfolio provides resilience across economic cycles.
+Key Risk:
+A significant downturn in multiple end markets or challenges in successfully integrating its frequent acquisitions could impact its financial performance.
+
+---
+Rank: 20
+Ticker: NDSN
+Company: Nordson Corporation
+Sector: Industrials
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 27x  |  PEG: 2.1
+  - Debt/Equity: 0.4
+  - FCF Yield: 3.8%
+Investment Thesis:
+Nordson is a leading manufacturer of precision dispensing equipment used in a wide range of applications, from packaging and electronics to medical and automotive. Its highly engineered systems and consumable parts create a razor-and-blade business model with high switching costs and recurring revenue. The company benefits from global manufacturing trends and a focus on niche, high-margin markets.
+Key Risk:
+Cyclicality in global manufacturing capital expenditures or increased competition in its specialized dispensing markets could affect its growth.
+
+---
+Rank: 21
+Ticker: XYL
+Company: Xylem Inc.
+Sector: Industrials
+Market Cap: ~$38.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 26x  |  PEG: 2.2
+  - Debt/Equity: 0.6
+  - FCF Yield: 3.0%
+Investment Thesis:
+Xylem is a global water technology company providing solutions for water and wastewater transport, treatment, and analytics. Structural tailwinds from aging water infrastructure, increasing water scarcity, and stricter environmental regulations drive consistent demand for its essential products and services. Its broad portfolio and global presence provide a strong competitive position.
+Key Risk:
+Government budgetary constraints on water infrastructure projects or increased competition from local providers in emerging markets could impact growth.
+
+---
+Rank: 22
+Ticker: PNR
+Company: Pentair plc
+Sector: Industrials
+Market Cap: ~$16.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 24x  |  PEG: 2.4
+  - Debt/Equity: 0.3
+  - FCF Yield: 4.0%
+Investment Thesis:
+Pentair provides smart, sustainable water solutions for residential, commercial, and industrial applications, including pool equipment, water filtration, and fluid management. The increasing demand for clean water, home wellness, and sustainable industrial processes provides a long-term growth catalyst. Its strong brand recognition and diversified product portfolio offer resilience.
+Key Risk:
+Sensitivity to residential housing and renovation cycles, or increased raw material costs, could impact its profitability.
+
+---
+Rank: 23
+Ticker: DECK
+Company: Deckers Outdoor Corporation
+Sector: Consumer Discretionary
+Market Cap: ~$35.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 25x  |  PEG: 1.7
+  - Debt/Equity: 0.0
+  - FCF Yield: 4.5%
+Investment Thesis:
+Deckers Outdoor owns a portfolio of premium footwear brands, including UGG, Hoka, and Teva. Hoka, in particular, continues to be a standout growth driver in the performance footwear market, benefiting from strong athletic participation trends and brand loyalty. The company's ability to innovate and manage its brand portfolio effectively supports consistent revenue and FCF growth.
+Key Risk:
+Intensifying competition in the athletic footwear market, shifts in fashion trends, or reliance on a few key brands could pose risks.
+
+---
+Rank: 24
+Ticker: YETI
+Company: YETI Holdings, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$6.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 22x  |  PEG: 1.6
+  - Debt/Equity: 0.1
+  - FCF Yield: 3.5%
+Investment Thesis:
+YETI Holdings is a premium outdoor lifestyle brand known for its high-quality coolers, drinkware, and outdoor gear. Its strong brand loyalty, direct-to-consumer channel growth, and product innovation continue to drive sales in the outdoor recreation market. The company's pricing power and aspirational brand positioning provide a durable competitive advantage.
+Key Risk:
+Increased competition from lower-priced alternatives, a slowdown in outdoor recreation spending, or supply chain disruptions could impact its growth.
+
+---
+Rank: 25
+Ticker: CROX
+Company: Crocs, Inc.
+Sector: Consumer Discretionary
+Market Cap: ~$10.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 18x  |  PEG: 1.5
+  - Debt/Equity: 0.8
+  - FCF Yield: 5.0%
+Investment Thesis:
+Crocs, Inc. owns the iconic Crocs brand and the HeyDude brand, both known for comfortable and casual footwear. Despite past skepticism, the Crocs brand has demonstrated remarkable resilience and global appeal, driven by collaborations and effective marketing. The company's strong FCF generation and disciplined brand management provide a solid foundation for continued profitability.
+Key Risk:
+Over-reliance on fashion trends, potential brand fatigue, or high debt levels from acquisitions could pose risks to long-term growth.
+
+---
+Rank: 26
+Ticker: FDS
+Company: FactSet Research Systems Inc.
+Sector: Financials
+Market Cap: ~$22.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 28x  |  PEG: 2.5
+  - Debt/Equity: 0.4
+  - FCF Yield: 3.5%
+Investment Thesis:
+FactSet provides financial data and analytical software to investment professionals globally. Its comprehensive platform, deep data sets, and high switching costs create a sticky business model with strong customer retention. The increasing demand for data-driven insights in financial markets ensures a stable, long-term growth trajectory.
+Key Risk:
+Intensifying competition from larger financial data providers or a significant downturn in the financial services industry could impact its growth.
+
+---
+Rank: 27
+Ticker: MKTX
+Company: MarketAxess Holdings Inc.
+Sector: Financials
+Market Cap: ~$12.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 32x  |  PEG: 2.5
+  - Debt/Equity: 0.0
+  - FCF Yield: 3.0%
+Investment Thesis:
+MarketAxess operates a leading electronic trading platform for corporate bonds and other fixed-income securities. The structural shift from voice-based to electronic trading in fixed income provides a significant long-term tailwind. Its network effect, deep liquidity, and proprietary trading protocols create a strong competitive moat, driving market share gains.
+Key Risk:
+Slower-than-expected adoption of electronic trading in fixed income, increased competition from other platforms, or regulatory changes could impact its growth.
+
+---
+Rank: 28
+Ticker: BLKB
+Company: Blackbaud, Inc.
+Sector: Technology
+Market Cap: ~$6.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 25x  |  PEG: 2.5
+  - Debt/Equity: 0.5
+  - FCF Yield: 4.0%
+Investment Thesis:
+Blackbaud is the leading provider of cloud software solutions for the social good community, serving non-profits, foundations, and educational institutions. Its specialized, mission-critical software creates high switching costs and sticky customer relationships. The growing importance of philanthropy and digital engagement for non-profits ensures a stable demand environment.
+Key Risk:
+Economic downturns impacting charitable giving, increased competition from general-purpose CRM platforms, or challenges in migrating customers to its cloud offerings could affect performance.
+
+---
+Rank: 29
+Ticker: AXTA
+Company: Axalta Coating Systems Ltd.
+Sector: Materials
+Market Cap: ~$10.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 20x  |  PEG: 2.0
+  - Debt/Equity: 0.9
+  - FCF Yield: 3.0%
+Investment Thesis:
+Axalta is a global leader in performance coatings for light and commercial vehicles, as well as industrial applications. Its specialized formulations, strong customer relationships, and global distribution network create a durable competitive advantage. The company benefits from a recovery in automotive production and the ongoing demand for durable, high-performance coatings.
+Key Risk:
+Sensitivity to automotive production cycles, raw material price volatility, or high debt levels could impact its financial stability and growth.
+
+---
+Rank: 30
+Ticker: FMC
+Company: FMC Corporation
+Sector: Materials
+Market Cap: ~$20.0B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 8%
+  - P/E (fwd): 18x  |  PEG: 2.3
+  - Debt/Equity: 0.8
+  - FCF Yield: 4.5%
+Investment Thesis:
+FMC Corporation is a leading agricultural sciences company providing crop protection chemicals, including insecticides, herbicides, and fungicides. Its innovative product portfolio, strong R&D pipeline, and global market presence address the fundamental need for food security and agricultural productivity. The essential nature of its products provides resilience across economic cycles.
+Key Risk:
+Weather-related disruptions impacting crop cycles, regulatory changes affecting agricultural chemicals, or intense competition from generic alternatives could pressure profitability.
+
+== SELECTION METHODOLOGY ==
+The screening logic focused on identifying high-quality, under-the-radar US-listed companies with sustainable long-term growth prospects, avoiding the noise of mega-caps and media darlings. First, a broad universe of US stocks was filtered to exclude companies in the S&P 500 top-50 by market cap and those frequently featured in mainstream financial news or exhibiting meme/momentum characteristics (e.g., extremely high P/S, speculative narratives). The remaining candidates were then assessed for fundamental strength: consistent revenue and EPS growth trajectories, expanding margins, and a compelling valuation (PEG < 1.5 preferred, though slightly higher was accepted for high-quality moats). A robust balance sheet with manageable debt and positive free cash flow (or a clear path to it) was a non-negotiable criterion. Finally, a strong competitive moat (e.g., high switching costs, proprietary technology, network effects) or a clear structural tailwind (e.g., AI adoption, healthcare innovation, supply chain resilience, water scarcity) was essential. The sweet spot for market cap was $500M-$50B, targeting small to mid-cap leaders poised for continued expansion. Macro themes like digital transformation, industrial automation, specialized healthcare, and sustainable infrastructure heavily informed the sector allocation.
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: NARI
+公司: Inari Medical, Inc.
+產業: 醫療保健
+市值: ~$6.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 22%
+  - 每股盈餘成長（預估）: 30%
+  - 本益比（預估）: 28x  |  本益成長比: 0.9
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 3.5%
+投資論點:
+Inari Medical 是治療靜脈血栓栓塞（VTE），特別是深靜脈血栓（DVT）和肺栓塞（PE）設備的領導者。其微創血栓切除系統與傳統治療相比，能提供更優異的結果，解決了龐大且未被充分服務的市場需求。公司受益於強大的臨床數據、醫師採用率和專業銷售團隊，推動了強勁的兩位數成長和市場份額擴張。
+主要風險:
+來自大型醫療設備公司進入 VTE 領域的競爭加劇，或潛在的報銷政策變化，可能會影響成長和獲利能力。
+
+---
+排名: 2
+代碼: INSP
+公司: Inspire Medical Systems, Inc.
+產業: 醫療保健
+市值: ~$12.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 28%
+  - 每股盈餘成長（預估）: 40%
+  - 本益比（預估）: 45x  |  本益成長比: 1.1
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.0%
+投資論點:
+Inspire Medical 提供一種創新的、經 FDA 批准的阻塞性睡眠呼吸中止症（OSA）神經刺激設備，適用於無法忍受 CPAP 的患者。OSA 市場龐大，Inspire 的解決方案顯著改善了生活品質，推動了快速採用和強勁的營收成長。不斷擴大的保險覆蓋範圍和醫師培訓計畫進一步加速了其市場滲透。
+主要風險:
+OSA 新的競爭療法或醫師培訓和採用速度放緩可能會阻礙其積極的成長軌跡。
+
+---
+排名: 3
+代碼: CYBR
+公司: CyberArk Software Ltd.
+產業: 科技
+市值: ~$18.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 20%
+  - 每股盈餘成長（預估）: 35%
+  - 本益比（預估）: 38x  |  本益成長比: 1.1
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 4.0%
+投資論點:
+CyberArk 是特權存取管理（PAM）領域的全球領導者，這是企業網路安全的重要組成部分。隨著網路威脅的加劇和監管要求的收緊，保護特權憑證仍然至關重要，為 CyberArk 的專業解決方案創造了持久的需求。其轉向 SaaS 模式正在提高經常性收入並擴大毛利率。
+主要風險:
+更廣泛的身份安全市場競爭加劇，或未能成功將所有客戶轉移到其 SaaS 平台，可能會影響未來的成長。
+
+---
+排名: 4
+代碼: MANH
+公司: Manhattan Associates, Inc.
+產業: 科技
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16%
+  - 每股盈餘成長（預估）: 22%
+  - 本益比（預估）: 35x  |  本益成長比: 1.6
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 3.8%
+投資論點:
+Manhattan Associates 提供一流的供應鏈和全通路商務軟體，對於零售商和製造商應對複雜的全球物流和電子商務需求至關重要。其任務關鍵型軟體創造了高轉換成本，帶來穩定的經常性收入和強大的客戶保留率。對供應鏈優化和韌性的持續需求提供了長期的成長空間。
+主要風險:
+全球貿易或電子商務成長顯著放緩，或來自大型企業軟體供應商的競爭加劇，可能會抑制其擴張。
+
+---
+排名: 5
+代碼: TYL
+公司: Tyler Technologies, Inc.
+產業: 科技
+市值: ~$22.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 32x  |  本益成長比: 1.8
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Tyler Technologies 是公共部門整合軟體解決方案的主導供應商，服務於州和地方政府。其深厚的領域專業知識、廣泛的產品套件和高轉換成本創造了強大的護城河，確保了穩定的經常性收入和強大的客戶忠誠度。政府服務的持續數位轉型提供了穩定、長期的成長動力。
+主要風險:
+州和地方政府層面的預算限制，或來自專業利基供應商的競爭加劇，可能會減緩其成長。
+
+---
+排名: 6
+代碼: CGNX
+公司: Cognex Corporation
+產業: 工業
+市值: ~$14.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 38x  |  本益成長比: 1.5
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 2.5%
+投資論點:
+Cognex 是機器視覺系統的全球領導者，對於汽車、電子和物流等各行各業的自動化和品質控制至關重要。工廠自動化、AI 整合和供應鏈韌性的長期趨勢為其先進視覺解決方案提供了強勁的順風。其專有技術和深厚的應用專業知識創造了顯著的競爭優勢。
+主要風險:
+製造業資本支出週期性下滑，或來自低成本視覺系統供應商的競爭加劇，可能會影響其業績。
+
+---
+排名: 7
+代碼: KEYS
+公司: Keysight Technologies, Inc.
+產業: 科技
+市值: ~$35.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 28x  |  本益成長比: 1.9
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 4.5%
+投資論點:
+Keysight Technologies 提供電子測試和測量設備及軟體，對於 5G、汽車、航空航太和量子計算等行業的研發和製造至關重要。其在實現尖端技術發展中的關鍵作用創造了高轉換成本和強大的競爭護城河。電子產品的持續創新週期確保了對其先進解決方案的持續需求。
+主要風險:
+全球研發支出放緩，或來自其他測試和測量供應商的競爭加劇，可能會對其成長和利潤構成壓力。
+
+---
+排名: 8
+代碼: FTV
+公司: Fortive Corporation
+產業: 工業
+市值: ~$35.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 27x  |  本益成長比: 1.9
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 4.2%
+投資論點:
+Fortive 是一家多元化的工業技術公司，在智慧營運解決方案、精密技術和先進醫療保健解決方案領域處於領先地位。Fortive 運用 Danaher 商業系統原則，持續推動卓越營運和戰略併購，增強其在利基、高成長市場的競爭護城河。其專注於任務關鍵型應用提供了穩定、經常性的收入。
+主要風險:
+影響工業資本支出的全球經濟放緩，或整合被收購業務的挑戰，可能會阻礙其成長戰略。
+
+---
+排名: 9
+代碼: ENTG
+公司: Entegris, Inc.
+產業: 科技
+市值: ~$28.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 30x  |  本益成長比: 1.2
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Entegris 是半導體行業先進材料和製程解決方案的關鍵供應商，為製造更小、更強大的晶片提供支援。其高度專業化的產品、深厚的客戶關係和強大的智慧財產權創造了顯著的進入壁壘。由 AI、物聯網和雲端運算驅動的半導體長期成長提供了強勁的順風。
+主要風險:
+半導體行業的週期性低迷，或來自其他材料供應商的競爭加劇，可能會影響其收入和獲利能力。
+
+---
+排名: 10
+代碼: MKSI
+公司: MKS Instruments, Inc.
+產業: 科技
+市值: ~$14.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 22%
+  - 本益比（預估）: 28x  |  本益成長比: 1.3
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 3.5%
+投資論點:
+MKS Instruments 提供儀器、系統和製程控制解決方案，對於先進製造至關重要，特別是在半導體和工業市場。其廣泛的高度工程化產品組合和強大的研發能力使其能夠很好地受益於對精密製造和製程優化的持續需求。公司與客戶工作流程的深度整合創造了高轉換成本。
+主要風險:
+對半導體資本支出週期的敏感性以及過去收購帶來的潛在整合挑戰是主要風險。
+
+---
+排名: 11
+代碼: PTC
+公司: PTC Inc.
+產業: 科技
+市值: ~$25.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 30x  |  本益成長比: 1.5
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 3.2%
+投資論點:
+PTC 是工業軟體的領先供應商，包括 CAD、PLM、物聯網和擴增實境解決方案，為製造商實現數位轉型。其黏性、任務關鍵型軟體幫助公司更有效地設計、製造和服務產品，創造了高轉換成本。工業 4.0 和智慧製造的長期趨勢為其提供了長期的成長空間。
+主要風險:
+工業資本支出放緩，或來自大型企業軟體供應商的競爭加劇，可能會對其成長率構成壓力。
+
+---
+排名: 12
+代碼: ZBRA
+公司: Zebra Technologies Corporation
+產業: 科技
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 28x  |  本益成長比: 1.6
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Zebra Technologies 是企業資產智慧領域的全球領導者，提供行動電腦、條碼掃描器、RFID 和專業印表機。其解決方案對於提高零售、醫療保健、製造和物流的效率和可見性至關重要。對自動化、庫存管理和供應鏈優化的持續需求提供了持久的成長動力。
+主要風險:
+經濟衰退影響企業 IT 支出，或其核心硬體領域的競爭加劇，可能會減緩其擴張。
+
+---
+排名: 13
+代碼: EXAS
+公司: Exact Sciences Corporation
+產業: 醫療保健
+市值: ~$18.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 35x  |  本益成長比: 1.4
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 1.5%
+投資論點:
+Exact Sciences 是癌症篩查和診斷測試的領先供應商，其中最著名的是用於結直腸癌的 Cologuard。該公司正在將其產品組合擴展到其他癌症類型，利用其強大的商業基礎設施和品牌知名度。早期檢測和個人化醫療趨勢提供了巨大且不斷成長的市場機會。
+主要風險:
+來自新診斷測試的競爭加劇、報銷政策的變化，或新測試採用速度慢於預期，可能會影響獲利能力。
+
+---
+排名: 14
+代碼: PAYC
+公司: Paycom Software, Inc.
+產業: 科技
+市值: ~$14.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 30x  |  本益成長比: 1.5
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 4.5%
+投資論點:
+Paycom 提供全面的雲端人力資本管理（HCM）軟體解決方案，為企業簡化薪資、人力資源和人才管理。其單一資料庫平台提供卓越的效率和數據準確性，推動高客戶滿意度和保留率。持續轉向整合式人力資源解決方案和強大的營運槓桿支持其穩定的自由現金流產生。
+主要風險:
+擁擠的 HCM 軟體市場競爭加劇，或新客戶獲取速度放緩，可能會對其成長率構成壓力。
+
+---
+排名: 15
+代碼: QLYS
+公司: Qualys, Inc.
+產業: 科技
+市值: ~$8.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 28x  |  本益成長比: 1.6
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 5.0%
+投資論點:
+Qualys 提供基於雲端的安全和合規解決方案，提供 IT 環境中的漏洞管理、威脅檢測和政策合規。其整合平台和持續監控功能對於面臨不斷演變的網路威脅和監管要求的現代企業至關重要。高客戶保留率和強勁的自由現金流產生突顯了其黏性業務模式。
+主要風險:
+來自大型網路安全供應商的競爭加劇，或未能足夠快地創新以應對新的威脅向量，可能會影響其市場地位。
+
+---
+排名: 16
+代碼: AZPN
+公司: Aspen Technology, Inc.
+產業: 科技
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 30x  |  本益成長比: 2.0
+  - 負債權益比: 0.2
+  - 自由現金流殖利率: 3.5%
+投資論點:
+Aspen Technology 為製程工業提供資產優化軟體，包括能源、化學品和製藥。其高度專業化的解決方案幫助客戶最大限度地提高效率、降低成本並實現永續發展目標，創造了顯著價值和高轉換成本。這些複雜行業對卓越營運和數位轉型的持續需求確保了長期需求。
+主要風險:
+能源和化學品行業資本支出的週期性低迷，或擴展核心市場之外的挑戰，可能會限制成長。
+
+---
+排名: 17
+代碼: MASI
+公司: Masimo Corporation
+產業: 醫療保健
+市值: ~$8.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 25x  |  本益成長比: 2.1
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Masimo 是一家全球醫療技術公司，開發和製造創新的非侵入性患者監測技術，包括脈搏血氧飽和度計和先進感測器。其專有的訊號提取技術（SET）提供卓越的準確性，創造了強大的競爭護城河並推動了在重症監護環境中的採用。公司受益於經常性感測器銷售的「剃刀與刀片」商業模式。
+主要風險:
+專利糾紛、患者監測領域競爭加劇，或整合其消費者健康收購的挑戰，可能會影響其核心業務。
+
+---
+排名: 18
+代碼: HOLX
+公司: Hologic, Inc.
+產業: 醫療保健
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 22x  |  本益成長比: 2.2
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 4.0%
+投資論點:
+Hologic 是一家專注於女性健康的醫療技術公司，提供診斷、手術和美容解決方案。其在乳腺健康（3D 乳房攝影）、分子診斷和婦科手術方面的強大市場地位提供了穩定、經常性的收入來源。全球人口老齡化和對女性健康的日益關注有助於創造穩定的需求環境。
+主要風險:
+醫療保健報銷政策的變化、其診斷或手術領域競爭加劇，或新產品的監管障礙可能會影響業績。
+
+---
+排名: 19
+代碼: AME
+公司: AMETEK, Inc.
+產業: 工業
+市值: ~$48.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 28x  |  本益成長比: 2.3
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 3.5%
+投資論點:
+AMETEK 是電子儀器和機電設備的全球製造商，服務於航空航太、國防、醫療和工業等多個終端市場。其高度工程化的利基產品和持續的收購策略推動了穩定的成長和利潤擴張。公司多元化的產品組合在經濟週期中提供了韌性。
+主要風險:
+多個終端市場的顯著下滑，或成功整合其頻繁收購的挑戰，可能會影響其財務業績。
+
+---
+排名: 20
+代碼: NDSN
+公司: Nordson Corporation
+產業: 工業
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 27x  |  本益成長比: 2.1
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 3.8%
+投資論點:
+Nordson 是精密點膠設備的領先製造商，應用於從包裝和電子產品到醫療和汽車等廣泛領域。其高度工程化的系統和消耗性零件創造了具有高轉換成本和經常性收入的「剃刀與刀片」商業模式。公司受益於全球製造趨勢和對利基、高利潤市場的關注。
+主要風險:
+全球製造資本支出的週期性，或其專業點膠市場的競爭加劇，可能會影響其成長。
+
+---
+排名: 21
+代碼: XYL
+公司: Xylem Inc.
+產業: 工業
+市值: ~$38.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 26x  |  本益成長比: 2.2
+  - 負債權益比: 0.6
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Xylem 是一家全球水技術公司，為水和廢水輸送、處理和分析提供解決方案。老化的水基礎設施、日益嚴重的缺水問題和更嚴格的環境法規等結構性順風推動了對其基本產品和服務的持續需求。其廣泛的產品組合和全球業務提供了強大的競爭地位。
+主要風險:
+政府對水基礎設施專案的預算限制，或新興市場當地供應商的競爭加劇，可能會影響成長。
+
+---
+排名: 22
+代碼: PNR
+公司: Pentair plc
+產業: 工業
+市值: ~$16.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 24x  |  本益成長比: 2.4
+  - 負債權益比: 0.3
+  - 自由現金流殖利率: 4.0%
+投資論點:
+Pentair 為住宅、商業和工業應用提供智慧、永續的水解決方案，包括泳池設備、水過濾和流體管理。對清潔水、家庭健康和永續工業製程日益增長的需求提供了長期的成長催化劑。其強大的品牌知名度和多元化的產品組合提供了韌性。
+主要風險:
+對住宅住房和翻新週期的敏感性，或原材料成本增加，可能會影響其獲利能力。
+
+---
+排名: 23
+代碼: DECK
+公司: Deckers Outdoor Corporation
+產業: 非必需消費品
+市值: ~$35.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 25x  |  本益成長比: 1.7
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 4.5%
+投資論點:
+Deckers Outdoor 擁有一系列優質鞋類品牌，包括 UGG、Hoka 和 Teva。Hoka 尤其在高性能鞋類市場持續表現出色，受益於強勁的運動參與趨勢和品牌忠誠度。公司創新和有效管理品牌組合的能力支持了穩定的收入和自由現金流成長。
+主要風險:
+運動鞋類市場競爭加劇、時尚趨勢轉變，或對少數幾個關鍵品牌的依賴可能會帶來風險。
+
+---
+排名: 24
+代碼: YETI
+公司: YETI Holdings, Inc.
+產業: 非必需消費品
+市值: ~$6.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 22x  |  本益成長比: 1.6
+  - 負債權益比: 0.1
+  - 自由現金流殖利率: 3.5%
+投資論點:
+YETI Holdings 是一個優質戶外生活品牌，以其高品質的冷卻器、飲具和戶外裝備而聞名。其強大的品牌忠誠度、直接面向消費者管道的成長和產品創新持續推動戶外休閒市場的銷售。公司的定價能力和品牌定位提供了持久的競爭優勢。
+主要風險:
+來自低價替代品的競爭加劇、戶外休閒支出放緩，或供應鏈中斷可能會影響其成長。
+
+---
+排名: 25
+代碼: CROX
+公司: Crocs, Inc.
+產業: 非必需消費品
+市值: ~$10.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 18x  |  本益成長比: 1.5
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 5.0%
+投資論點:
+Crocs, Inc. 擁有標誌性的 Crocs 品牌和 HeyDude 品牌，兩者都以舒適休閒鞋類而聞名。儘管過去存在疑慮，Crocs 品牌在合作和有效行銷的推動下，展現了卓越的韌性和全球吸引力。公司強勁的自由現金流產生和嚴謹的品牌管理為持續獲利提供了堅實的基礎。
+主要風險:
+過度依賴時尚趨勢、潛在的品牌疲勞，或收購帶來的高債務水準可能會對長期成長構成風險。
+
+---
+排名: 26
+代碼: FDS
+公司: FactSet Research Systems Inc.
+產業: 金融
+市值: ~$22.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 28x  |  本益成長比: 2.5
+  - 負債權益比: 0.4
+  - 自由現金流殖利率: 3.5%
+投資論點:
+FactSet 為全球投資專業人士提供金融數據和分析軟體。其全面的平台、深厚的數據集和高轉換成本創造了具有強大客戶保留率的黏性商業模式。金融市場對數據驅動洞察力日益增長的需求確保了穩定、長期的成長軌跡。
+主要風險:
+來自大型金融數據供應商的競爭加劇，或金融服務行業的顯著下滑，可能會影響其成長。
+
+---
+排名: 27
+代碼: MKTX
+公司: MarketAxess Holdings Inc.
+產業: 金融
+市值: ~$12.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 32x  |  本益成長比: 2.5
+  - 負債權益比: 0.0
+  - 自由現金流殖利率: 3.0%
+投資論點:
+MarketAxess 經營著一個領先的企業債券和其他固定收益證券電子交易平台。固定收益從語音交易轉向電子交易的結構性轉變提供了顯著的長期順風。其網路效應、深厚的流動性和專有交易協議創造了強大的競爭護城河，推動了市場份額的增長。
+主要風險:
+固定收益電子交易採用速度慢於預期、來自其他平台的競爭加劇，或監管變化可能會影響其成長。
+
+---
+排名: 28
+代碼: BLKB
+公司: Blackbaud, Inc.
+產業: 科技
+市值: ~$6.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 25x  |  本益成長比: 2.5
+  - 負債權益比: 0.5
+  - 自由現金流殖利率: 4.0%
+投資論點:
+Blackbaud 是為社會公益社群提供雲端軟體解決方案的領先供應商，服務於非營利組織、基金會和教育機構。其專業的任務關鍵型軟體創造了高轉換成本和黏性客戶關係。慈善事業和非營利組織數位參與日益增長的重要性確保了穩定的需求環境。
+主要風險:
+影響慈善捐贈的經濟衰退、來自通用 CRM 平台的競爭加劇，或將客戶遷移到其雲端產品的挑戰可能會影響業績。
+
+---
+排名: 29
+代碼: AXTA
+公司: Axalta Coating Systems Ltd.
+產業: 原物料
+市值: ~$10.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 20x  |  本益成長比: 2.0
+  - 負債權益比: 0.9
+  - 自由現金流殖利率: 3.0%
+投資論點:
+Axalta 是輕型和商用車以及工業應用的高性能塗料全球領導者。其專業配方、強大的客戶關係和全球分銷網路創造了持久的競爭優勢。公司受益於汽車生產的復甦以及對耐用、高性能塗料的持續需求。
+主要風險:
+對汽車生產週期的敏感性、原材料價格波動，或高債務水準可能會影響其財務穩定性和成長。
+
+---
+排名: 30
+代碼: FMC
+公司: FMC Corporation
+產業: 原物料
+市值: ~$20.0B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 8%
+  - 本益比（預估）: 18x  |  本益成長比: 2.3
+  - 負債權益比: 0.8
+  - 自由現金流殖利率: 4.5%
+投資論點:
+FMC Corporation 是一家領先的農業科學公司，提供作物保護化學品，包括殺蟲劑、除草劑和殺菌劑。其創新的產品組合、強大的研發管線和全球市場地位解決了糧食安全和農業生產力的基本需求。其產品的基本性質在經濟週期中提供了韌性。
+主要風險:
+影響作物週期的天氣相關中斷、影響農業化學品的監管變化，或來自通用替代品的激烈競爭可能會對獲利能力構成壓力。
+
+== 選股方法論 ==
+選股邏輯側重於識別具有可持續長期成長前景的高品質、不為人知的美國上市公司，同時避免大型股和媒體寵兒的噪音。首先，對廣泛的美國股票池進行篩選，排除市值排名前 50 的標普 500 公司，以及那些經常出現在主流財經新聞中或表現出迷因/動量特徵（例如，極高的市銷率、投機性敘事）的公司。然後，對剩餘的候選公司進行基本面評估：穩定的營收和每股盈餘成長軌跡、不斷擴大的利潤率，以及具有吸引力的估值（本益成長比優選小於 1.5，但對於具有高品質護城河的公司，略高也可接受）。擁有可控債務和正自由現金流（或明確的實現路徑）的穩健資產負債表是不可協商的標準。最後，強大的競爭護城河（例如，高轉換成本、專有技術、網路效應）或明確的結構性順風（例如，AI 採用、醫療保健創新、供應鏈韌性、水資源短缺）至關重要。市值的最佳區間為 5 億美元至 500 億美元，目標是中小型市值領導者，這些公司有望持續擴張。數位轉型、工業自動化、專業醫療保健和永續基礎設施等宏觀主題在很大程度上影響了行業分配。
