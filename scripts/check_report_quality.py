@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-check_report_quality.py — Scan ai_gen_report/stock/ for low-quality AI reports.
+check_report_quality.py — Scan ai_gen_report/{fundamental,technical,stock}/ for
+low-quality AI reports.
 
 Bad-quality categories detected:
   EMPTY        - file is empty or only whitespace
@@ -40,16 +41,17 @@ from analysis.validate import (  # noqa: F401
     MIN_LINES, ReportIssue, parse_file, collect_reports,
 )
 
-# Default scan root (repo-relative); the detection logic lives in analysis.validate.
-DEFAULT_ROOT = Path(__file__).parent.parent / "ai_gen_report" / "stock"
+# Default scan roots (repo-relative); the detection logic lives in analysis.validate.
+AI_GEN_REPORT = Path(__file__).parent.parent / "ai_gen_report"
+DEFAULT_ROOTS = [AI_GEN_REPORT / "fundamental", AI_GEN_REPORT / "technical", AI_GEN_REPORT / "stock"]
 
 
 # ── main ───────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--root", default=str(DEFAULT_ROOT),
-                        help="Root directory to scan (default: ai_gen_report/stock)")
+    parser.add_argument("--root", default=None,
+                        help="Root directory to scan (default: ai_gen_report/{fundamental,technical,stock})")
     parser.add_argument("--min-lines", type=int, default=MIN_LINES,
                         help=f"Minimum content lines for a valid report (default: {MIN_LINES})")
     parser.add_argument("--since", metavar="YYYY-MM", help="Only files from this month onward")
@@ -62,15 +64,16 @@ def main():
                         help="Print all files, not just bad ones")
     args = parser.parse_args()
 
-    root = Path(args.root)
+    roots = [Path(args.root)] if args.root else DEFAULT_ROOTS
     min_lines = args.min_lines
 
-    if not root.exists():
-        print(f"ERROR: root directory not found: {root}", file=sys.stderr)
+    roots = [r for r in roots if r.exists()]
+    if not roots:
+        print(f"ERROR: no root directory found: {args.root or DEFAULT_ROOTS}", file=sys.stderr)
         sys.exit(1)
 
-    paths = collect_reports(root, args.since, args.until, args.ticker)
-    print(f"Scanning {len(paths)} reports in {root} ...\n", file=sys.stderr)
+    paths = sorted({p for r in roots for p in collect_reports(r, args.since, args.until, args.ticker)})
+    print(f"Scanning {len(paths)} reports in {', '.join(str(r) for r in roots)} ...\n", file=sys.stderr)
 
     results: List[ReportIssue] = []
     for p in paths:
