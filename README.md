@@ -23,7 +23,7 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 | Category | Description | Location |
 |----------|-------------|----------|
-| Analysis Reports | 12 AI-generated analysis types — fundamental, technical, valuation, insider trading, institutional ownership, earnings-call, sector, and more | `ai_gen_report/stock/` |
+| Analysis Reports | 12 AI-generated analysis types — fundamental, technical, valuation, insider trading, institutional ownership, earnings-call, sector, and more | `ai_gen_report/fundamental/`, `ai_gen_report/technical/`, `ai_gen_report/stock/` |
 | Market News | Daily AI-curated market news per ticker | `ai_gen_report/market_news/` |
 | Stock Watchlist | Pre-market AI-generated fundamental watchlist | `ai_gen_report/` |
 | Progress & QA Reports | Auto-generated daily progress summaries and report-quality (QA) checks | `ai_gen_report/` |
@@ -90,7 +90,9 @@ python3 scripts/generate_analysis.py MSFT --analysis-type technical-analysis --p
 python3 scripts/generate_analysis.py NVDA --analysis-type stock-valuation --provider openai
 ```
 
-Output saved to `ai_gen_report/stock/aapl/fundamental_analysis_YYYY-MM-DD.md`
+Output saved to `ai_gen_report/fundamental/aapl/fundamental_analysis_YYYY-MM-DD.md`
+(technical-analysis saves to `ai_gen_report/technical/<ticker>/`; other analysis
+types save to `ai_gen_report/stock/<ticker>/`)
 
 ### Download SEC filings
 
