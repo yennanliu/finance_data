@@ -33,11 +33,11 @@ jobs:
             echo "### Stock Analysis"
             while IFS= read -r FILE; do
               [ -z "$FILE" ] && continue
-              TICKER=$(echo "$FILE" | sed 's|ai_gen_report/stock/||; s|/.*||')
+              TICKER=$(echo "$FILE" | sed -E 's#ai_gen_report/(stock|fundamental|technical)/##; s#/.*##')
               FILENAME=$(basename "$FILE" .md)
               URL="${ANALYSIS_BASE_URL}/${TICKER}/${FILENAME}/"
               echo "- [${TICKER^^} ${FILENAME}](${URL})"
-            done < <(git log --since="12 hours ago" --name-only --pretty=format: -- ai_gen_report/stock | grep '\.md$' | sort -u)
+            done < <(git log --since="12 hours ago" --name-only --pretty=format: -- ai_gen_report/stock ai_gen_report/fundamental ai_gen_report/technical | grep '\.md$' | sort -u)
 
             if [ -d ai_gen_report/market_news ]; then
               echo ""

@@ -43,7 +43,7 @@ jobs:
         # diagram won't render on GitHub and prints the exact failed snippet as
         # warning annotations + a run-summary table. A hit means a report
         # slipped through un-sanitized — see scripts/analysis/utils/mermaid.py.
-        run: python scripts/check_mermaid.py --root ai_gen_report/stock
+        run: python scripts/check_mermaid.py --root ai_gen_report
 
       - name: Generate QA index markdown
         run: |
