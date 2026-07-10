@@ -167,20 +167,23 @@ def _sample_dirs(dirs):
 # (dedicated per-type dirs) and ai_gen_report/stock/<ticker> (other analysis
 # types + legacy HTML). These helpers merge them per-ticker so the rest of
 # build_reports() can keep treating a ticker as one flat file list.
-REPORT_ROOTS = [SRC_FUNDAMENTAL, SRC_TECHNICAL, SRC_STOCK]
+def report_roots() -> list[Path]:
+    """The report source roots, read live off module globals (not cached at
+    import time) so tests can monkeypatch SRC_STOCK/SRC_FUNDAMENTAL/SRC_TECHNICAL."""
+    return [SRC_FUNDAMENTAL, SRC_TECHNICAL, SRC_STOCK]
 
 
 def merged_ticker_dirs() -> list[Path]:
     """Union of ticker names across the report roots, as sorted virtual Paths
     (only `.name` is meaningful — use ticker_files() to get real file lists)."""
-    names = {d.name.lower() for root in REPORT_ROOTS if root.exists() for d in root.iterdir() if d.is_dir()}
+    names = {d.name.lower() for root in report_roots() if root.exists() for d in root.iterdir() if d.is_dir()}
     return [Path(name) for name in sorted(names)]
 
 
 def ticker_files(ticker: str) -> list[Path]:
     """All report files for a ticker, merged across the report roots."""
     files: list[Path] = []
-    for root in REPORT_ROOTS:
+    for root in report_roots():
         d = root / ticker
         if d.is_dir():
             files.extend(f for f in d.iterdir() if f.is_file())
@@ -495,7 +498,7 @@ def build_reports(lang: str = "en"):
     report_index_rows: list[str] = []
     nav_entries: list[str] = []
 
-    if not any(root.exists() for root in REPORT_ROOTS):
+    if not any(root.exists() for root in report_roots()):
         write(DST_REPORTS / "index.md", f"# {t(lang, 'reports')}\n\nNo reports found.\n")
         return
 
