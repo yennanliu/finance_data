@@ -200,6 +200,8 @@ def _patch_sample_env(monkeypatch, tmp_path, src_stock, *, limit, tickers):
     docs = tmp_path / "docs"
     for attr, val in [
         ("ROOT", tmp_path), ("SRC_STOCK", src_stock),
+        ("SRC_FUNDAMENTAL", tmp_path / "ai_gen_report" / "fundamental"),
+        ("SRC_TECHNICAL", tmp_path / "ai_gen_report" / "technical"),
         ("DOCS", docs), ("DOCS_ZH", docs / "zh"),
         ("_INCREMENTAL", False), ("_MMDC", None),
         ("SAMPLE_BUILD", True), ("SAMPLE_LIMIT", limit), ("SAMPLE_TICKERS", tickers),

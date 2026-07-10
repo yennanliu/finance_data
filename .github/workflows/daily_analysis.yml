@@ -295,7 +295,11 @@ jobs:
 
           TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
           TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
-          OUTPUT_DIR="ai_gen_report/stock/${TICKER_LOWER}"
+          case "$ANALYSIS_TYPE" in
+            fundamental-analysis) OUTPUT_DIR="ai_gen_report/fundamental/${TICKER_LOWER}" ;;
+            technical-analysis)   OUTPUT_DIR="ai_gen_report/technical/${TICKER_LOWER}" ;;
+            *)                    OUTPUT_DIR="ai_gen_report/stock/${TICKER_LOWER}" ;;
+          esac
 
           echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
           echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"

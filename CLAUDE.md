@@ -46,7 +46,9 @@ scripts/generate_analysis.py
   → scripts/analysis/utils/context.py      (assembles data into LLM-ready context, 12 branches)
   → scripts/analysis/prompts/*.txt          (prompt templates, one per analysis type)
   → scripts/analysis/utils/llm.py          (Claude or OpenAI API call)
-  → ai_gen_report/stock/<ticker>/<type>_<date>.md
+  → ai_gen_report/fundamental/<ticker>/<type>_<date>.md   (fundamental-analysis)
+  → ai_gen_report/technical/<ticker>/<type>_<date>.md     (technical-analysis, + chart PNGs)
+  → ai_gen_report/stock/<ticker>/<type>_<date>.md         (all other analysis types)
 ```
 
 `scripts/build_docs.py` then mirrors `ai_gen_report/` into `docs/` and `docs/zh/` so MkDocs can serve them.
@@ -70,6 +72,7 @@ scripts/generate_analysis.py
 2. Add cron entries in `.github/workflows/daily_analysis.yml`
 
 ## Report output
-- Reports written to `ai_gen_report/stock/<ticker>/` as Markdown
-- `build_docs.py` copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
+- Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)
+- `build_docs.py` merges all three per ticker and copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
 - `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
+- `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)

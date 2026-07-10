@@ -74,7 +74,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--output-dir", type=Path, default=None,
-        help="Directory to save the report (default: ai_gen_report/stock/<ticker>/)",
+        help="Directory to save the report (default: ai_gen_report/<fundamental|technical|stock>/<ticker>/)",
     )
     p.add_argument(
         "--provider", default="openai",
@@ -97,7 +97,14 @@ def main() -> None:
     ticker = args.ticker.upper()
     analysis_type = args.analysis_type
     provider = args.provider
-    output_dir = args.output_dir or (Path("ai_gen_report/stock") / ticker.lower())
+    if args.output_dir:
+        output_dir = args.output_dir
+    elif analysis_type == "fundamental-analysis":
+        output_dir = Path("ai_gen_report/fundamental") / ticker.lower()
+    elif analysis_type == "technical-analysis":
+        output_dir = Path("ai_gen_report/technical") / ticker.lower()
+    else:
+        output_dir = Path("ai_gen_report/stock") / ticker.lower()
 
     label = ANALYSIS_TYPES[analysis_type]["label"]
     banner = f"  {ticker}  |  {label}  |  provider: {provider}  |  model: {args.model}  |  out: {output_dir}"

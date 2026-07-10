@@ -4,7 +4,9 @@ build_docs.py — Finance Hub docs builder
 =========================================
 Generates the `docs/` directory content from source files:
 
-  • ai_gen_report/stock/       → docs/reports/<ticker>/
+  • ai_gen_report/fundamental/ → docs/reports/<ticker>/
+  • ai_gen_report/technical/   → docs/reports/<ticker>/
+  • ai_gen_report/stock/       → docs/reports/<ticker>/  (other analysis types, legacy HTML)
   • ai_gen_report/market_news/ → docs/market_news/<ticker>/
   • notebook_llm/              → docs/notebooks/<ticker>/
   • 10-k/                      → docs/sec/10k.md   (index only, PDFs not copied)
@@ -37,6 +39,8 @@ DOCS_ZH    = ROOT / "docs" / "zh"
 SITE       = ROOT / "site"
 
 SRC_STOCK    = ROOT / "ai_gen_report" / "stock"
+SRC_FUNDAMENTAL = ROOT / "ai_gen_report" / "fundamental"
+SRC_TECHNICAL   = ROOT / "ai_gen_report" / "technical"
 SRC_MARKET_NEWS = ROOT / "ai_gen_report" / "market_news"
 SRC_NOTEBOOK = ROOT / "notebook_llm"
 SRC_10K      = ROOT / "10-k"
@@ -157,6 +161,33 @@ def _sample_dirs(dirs):
         if picked:
             return picked[:SAMPLE_LIMIT]
     return dirs[:SAMPLE_LIMIT]
+
+
+# Reports live across three roots: ai_gen_report/{fundamental,technical}/<ticker>
+# (dedicated per-type dirs) and ai_gen_report/stock/<ticker> (other analysis
+# types + legacy HTML). These helpers merge them per-ticker so the rest of
+# build_reports() can keep treating a ticker as one flat file list.
+def report_roots() -> list[Path]:
+    """The report source roots, read live off module globals (not cached at
+    import time) so tests can monkeypatch SRC_STOCK/SRC_FUNDAMENTAL/SRC_TECHNICAL."""
+    return [SRC_FUNDAMENTAL, SRC_TECHNICAL, SRC_STOCK]
+
+
+def merged_ticker_dirs() -> list[Path]:
+    """Union of ticker names across the report roots, as sorted virtual Paths
+    (only `.name` is meaningful — use ticker_files() to get real file lists)."""
+    names = {d.name.lower() for root in report_roots() if root.exists() for d in root.iterdir() if d.is_dir()}
+    return [Path(name) for name in sorted(names)]
+
+
+def ticker_files(ticker: str) -> list[Path]:
+    """All report files for a ticker, merged across the report roots."""
+    files: list[Path] = []
+    for root in report_roots():
+        d = root / ticker
+        if d.is_dir():
+            files.extend(f for f in d.iterdir() if f.is_file())
+    return sorted(files, key=lambda f: f.name)
 
 
 # ── Language-specific text ────────────────────────────────────────────────────
@@ -467,11 +498,11 @@ def build_reports(lang: str = "en"):
     report_index_rows: list[str] = []
     nav_entries: list[str] = []
 
-    if not SRC_STOCK.exists():
+    if not any(root.exists() for root in report_roots()):
         write(DST_REPORTS / "index.md", f"# {t(lang, 'reports')}\n\nNo reports found.\n")
         return
 
-    tickers = _sample_dirs(sorted([d for d in SRC_STOCK.iterdir() if d.is_dir()]))
+    tickers = _sample_dirs(merged_ticker_dirs())
 
     for ticker_dir in tickers:
         ticker = ticker_dir.name.lower()
@@ -479,8 +510,8 @@ def build_reports(lang: str = "en"):
         dst_dir = DST_REPORTS / ticker
         ensure(dst_dir)
 
-        # Collect files in this ticker directory
-        files = sorted(ticker_dir.iterdir(), key=lambda f: f.name)
+        # Collect files for this ticker, merged across fundamental/technical/stock roots
+        files = ticker_files(ticker)
         md_files   = [f for f in files if f.suffix == ".md"]
         html_files = [f for f in files if f.suffix == ".html"]
         other_files = [f for f in files if f.suffix not in (".md", ".html", "") and f.is_file()]
@@ -640,7 +671,7 @@ def build_reports(lang: str = "en"):
     for ticker_dir in tickers:
         ticker = ticker_dir.name.lower()
         meta = get_meta(ticker)
-        files = sorted(ticker_dir.iterdir(), key=lambda f: f.name)
+        files = ticker_files(ticker)
         # Cap identically to the copy loop above so sample builds stay link-consistent.
         md_files   = _sample([f for f in files if f.suffix == ".md" and within_retention(f)])
         html_files = _sample([f for f in files if f.suffix == ".html" and within_retention(f)])
