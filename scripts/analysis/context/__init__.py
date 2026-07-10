@@ -326,6 +326,7 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
     cf_rows = [
         "Operating Cash Flow", "Capital Expenditure", "Free Cash Flow",
         "Common Stock Repurchased", "Cash Dividends Paid",
+        "Stock Based Compensation",
     ]
     analyst_block = f"""
 ━━ ANALYST CONSENSUS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -363,6 +364,7 @@ source shows N/A, check the others for that metric.
         f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
         f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
         f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+        f"\n━━ CASH FLOW STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow_q'], cf_rows)}",
         cross_ref_note,
         finviz_block,
         stockanalysis_block,
