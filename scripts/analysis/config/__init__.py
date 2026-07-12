@@ -5,7 +5,7 @@ Configuration constants for analysis generation.
 from datetime import date
 
 TODAY = date.today().isoformat()
-DEFAULT_MODEL = "gpt-4o"
+DEFAULT_MODEL = "gemini-3.5-flash"
 DEFAULT_TOKENS = 32000
 
 ANALYSIS_TYPES = {

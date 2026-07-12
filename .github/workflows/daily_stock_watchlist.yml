@@ -9,7 +9,7 @@ on:
       model:
         description: "Gemini model"
         required: false
-        default: "gemini-2.5-flash"
+        default: "gemini-3.5-flash"
         type: choice
         options:
           # Gemini 3.x models (latest)
@@ -67,7 +67,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          MODEL="${{ github.event.inputs.model || 'gemini-2.5-flash' }}"
+          MODEL="${{ github.event.inputs.model || 'gemini-3.5-flash' }}"
           MAX_TOKENS="${{ github.event.inputs.max_tokens || '16000' }}"
           python scripts/generate_stock_watchlist.py \
             --model "$MODEL" \
