@@ -51,12 +51,14 @@ from analysis.pipeline import run_analysis, save_analysis_report
 
 
 def save_report(ticker: str, content: str, output_dir: Path,
-                analysis_type: str, provider: str = "claude") -> Path:
+                analysis_type: str, provider: str = "claude",
+                model: str = "") -> Path:
     """Save report with YAML frontmatter and same-day deduplication.
 
     Thin wrapper over :func:`analysis.pipeline.save_analysis_report`.
     """
-    return save_analysis_report(ticker, content, output_dir, analysis_type, provider=provider)
+    return save_analysis_report(ticker, content, output_dir, analysis_type,
+                                provider=provider, model=model)
 
 
 def parse_args() -> argparse.Namespace:
@@ -77,9 +79,9 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save the report (default: ai_gen_report/<fundamental|technical|stock>/<ticker>/)",
     )
     p.add_argument(
-        "--provider", default="openai",
+        "--provider", default="gemini",
         choices=["claude", "openai", "gemini"],
-        help="AI provider (default: openai)",
+        help="AI provider (default: gemini)",
     )
     p.add_argument(
         "--model", default=DEFAULT_MODEL,

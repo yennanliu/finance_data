@@ -43,7 +43,8 @@ def build_technical_chart_embed(data: dict, ticker: str, output_dir) -> str:
 
 
 def save_analysis_report(ticker: str, content: str, output_dir: Path,
-                         analysis_type: str, provider: str = "claude") -> Path:
+                         analysis_type: str, provider: str = "claude",
+                         model: str = "") -> Path:
     """Save report with YAML frontmatter and same-day deduplication."""
     output_dir = Path(output_dir)
     meta = ANALYSIS_TYPES[analysis_type]
@@ -70,6 +71,7 @@ def save_analysis_report(ticker: str, content: str, output_dir: Path,
             "ticker": ticker,
             "analysis_type": analysis_type,
             "provider": provider,
+            "model": model,
             "language": "zh-TW",
             "generated_by": f"{generated_by} (scripts/generate_analysis.py)",
         })
@@ -97,7 +99,7 @@ def run_analysis(ticker: str, analysis_type: str, provider: str,
 
     print("[3/3] Saving report …")
     return save_analysis_report(ticker, chart_embed + report, output_dir,
-                                analysis_type, provider=provider)
+                                analysis_type, provider=provider, model=model)
 
 
 __all__ = ["run_analysis", "save_analysis_report", "build_technical_chart_embed"]
