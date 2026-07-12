@@ -29,6 +29,17 @@ run-name: "Daily Market News ${{ github.event.inputs.ticker || github.event.sche
 #   21:00 → 05:00  6643.tw  M31
 #   21:10 → 05:10  2317.tw  鴻海
 #   21:20 → 05:20  SPCX
+#   21:30 → 05:30  MU
+#   21:40 → 05:40  SKHY
+#   21:50 → 05:50  WDC
+#   22:00 → 06:00  SNDK
+#   22:10 → 06:10  MRVL
+#   22:20 → 06:20  SOXQ
+#   22:30 → 06:30  SOXX
+#   22:40 → 06:40  WQTM
+#   22:50 → 06:50  VTI
+#   23:00 → 07:00  QQQ
+#   23:10 → 07:10  ROBO
 on:
   schedule:
     - cron: "0 17 * * *"     # 0050
@@ -58,6 +69,17 @@ on:
     - cron: "0 21 * * *"     # 6643.tw
     - cron: "10 21 * * *"    # 2317.tw
     - cron: "20 21 * * *"    # SPCX
+    - cron: "30 21 * * *"    # MU
+    - cron: "40 21 * * *"    # SKHY
+    - cron: "50 21 * * *"    # WDC
+    - cron: "0 22 * * *"     # SNDK
+    - cron: "10 22 * * *"    # MRVL
+    - cron: "20 22 * * *"    # SOXQ
+    - cron: "30 22 * * *"    # SOXX
+    - cron: "40 22 * * *"    # WQTM
+    - cron: "50 22 * * *"    # VTI
+    - cron: "0 23 * * *"     # QQQ
+    - cron: "10 23 * * *"    # ROBO
 
   workflow_dispatch:
     inputs:
@@ -184,6 +206,17 @@ jobs:
               "0 21 * * *")   TICKER="6643.tw" ;;
               "10 21 * * *")  TICKER="2317.tw" ;;
               "20 21 * * *")  TICKER="SPCX" ;;
+              "30 21 * * *")  TICKER="MU" ;;
+              "40 21 * * *")  TICKER="SKHY" ;;
+              "50 21 * * *")  TICKER="WDC" ;;
+              "0 22 * * *")   TICKER="SNDK" ;;
+              "10 22 * * *")  TICKER="MRVL" ;;
+              "20 22 * * *")  TICKER="SOXQ" ;;
+              "30 22 * * *")  TICKER="SOXX" ;;
+              "40 22 * * *")  TICKER="WQTM" ;;
+              "50 22 * * *")  TICKER="VTI" ;;
+              "0 23 * * *")   TICKER="QQQ" ;;
+              "10 23 * * *")  TICKER="ROBO" ;;
               *)              TICKER="TSLA" ;;
             esac
           fi
