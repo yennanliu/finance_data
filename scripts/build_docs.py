@@ -41,6 +41,7 @@ SITE       = ROOT / "site"
 SRC_STOCK    = ROOT / "ai_gen_report" / "stock"
 SRC_FUNDAMENTAL = ROOT / "ai_gen_report" / "fundamental"
 SRC_TECHNICAL   = ROOT / "ai_gen_report" / "technical"
+SRC_KLINE       = ROOT / "ai_gen_report" / "kline"   # per-ticker OHLCV JSON for the hero chart
 SRC_MARKET_NEWS = ROOT / "ai_gen_report" / "market_news"
 SRC_NOTEBOOK = ROOT / "notebook_llm"
 SRC_10K      = ROOT / "10-k"
@@ -356,6 +357,29 @@ def get_meta(ticker: str) -> dict:
     })
 
 
+# ── K線 hero chart ─────────────────────────────────────────────────────────────
+def kline_json_src(ticker: str) -> "Path | None":
+    """Source OHLCV JSON for a ticker, or None if it hasn't been generated
+    (see scripts/generate_kline_data.py). Read live off the module global so
+    tests can monkeypatch SRC_KLINE."""
+    f = SRC_KLINE / f"{ticker}.json"
+    return f if f.is_file() else None
+
+
+def kline_block(ticker: str) -> str:
+    """Raw-HTML div for the TradingView-style candlestick chart, injected at the
+    top of a per-ticker report page. Empty string when no data exists so pages
+    without OHLCV never render a broken widget. `md_in_html` (see mkdocs.yml)
+    lets this pass through unescaped; the fetch path is relative to the page's
+    directory URL, so the copied sibling kline.json is found in EN and ZH."""
+    if kline_json_src(ticker) is None:
+        return ""
+    return (
+        f'<div class="kline-widget" data-ticker="{ticker.upper()}" '
+        f'data-src="kline.json"></div>'
+    )
+
+
 # ── Mermaid pre-rendering ─────────────────────────────────────────────────────
 _MMDC = shutil.which("mmdc")  # None if not installed
 _MERMAID_CACHE_FILE = ROOT / ".mermaid_cache.json"
@@ -529,6 +553,12 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue  # skip empty dirs
 
+        # Copy the OHLCV JSON next to the page so the hero chart fetches it with
+        # a page-relative URL — works for EN and ZH and under `mkdocs serve`.
+        _kline_src = kline_json_src(ticker)
+        if _kline_src is not None:
+            copy_file(_kline_src, dst_dir / "kline.json")
+
         # Split md files by report type, newest-first so the latest is on top.
         technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
         fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
@@ -580,6 +610,12 @@ def build_reports(lang: str = "en"):
             "",
             f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
             "",
+        ]
+        # TradingView-style candlestick chart (30D/180D/360D) as the page hero.
+        chart = kline_block(ticker)
+        if chart:
+            lines += [chart, ""]
+        lines += [
             "---",
             "",
         ]
