@@ -64,6 +64,24 @@
 .kline__chg.is-up { color: var(--fp-green, #22c55e); }
 .kline__chg.is-down { color: var(--fp-red, #ef4444); }
 
+/* MA(20) legend chip — swatch colour is set by JS to match the line */
+.kline__ma {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fp-text-muted, #71717a);
+  align-self: center;
+}
+.kline__ma i {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: #3b82f6;
+}
+
 /* ── range toggle ── */
 .kline__ranges {
   display: inline-flex;

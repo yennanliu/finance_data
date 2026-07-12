@@ -46,8 +46,23 @@
       text: cssVar("--fp-text-secondary", dark ? "#a1a1aa" : "#52525b"),
       border: cssVar("--fp-border", dark ? "#27272a" : "#e4e4e7"),
       grid: dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)",
+      // Light MA(20) overlay — a soft blue that reads on both themes.
+      ma: dark ? "rgba(96,165,250,0.9)" : "rgba(37,99,235,0.85)",
     };
   }
+
+  // Simple moving average of the close, emitted only where fully defined.
+  function sma(bars, period) {
+    var out = [];
+    var sum = 0;
+    for (var i = 0; i < bars.length; i++) {
+      sum += bars[i].c;
+      if (i >= period) sum -= bars[i - period].c;
+      if (i >= period - 1) out.push({ time: bars[i].t, value: sum / period });
+    }
+    return out;
+  }
+  var MA_PERIOD = 20;
 
   // ── formatting ───────────────────────────────────────────────────────────
   function fmtPrice(n) {
@@ -91,6 +106,7 @@
           '<span class="kline__chg ' + (up ? "is-up" : "is-down") + '">' +
             sign + fmtPrice(Math.abs(change)) + " (" + sign + Math.abs(pct).toFixed(2) + "%)" +
           '</span>' +
+          '<span class="kline__ma"><i></i>MA' + MA_PERIOD + '</span>' +
         '</div>' +
         '<div class="kline__ranges" role="group" aria-label="Time range"></div>' +
       '</div>' +
@@ -139,6 +155,16 @@
       };
     }));
 
+    // ---- light MA(20) overlay ----
+    var maLine = chart.addLineSeries({
+      color: pal.ma, lineWidth: 2,
+      priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+    });
+    maLine.setData(sma(bars, MA_PERIOD));
+    // Tint the header legend swatch to match the line.
+    var swatch = node.querySelector(".kline__ma i");
+    if (swatch) swatch.style.background = pal.ma;
+
     // ---- range toggle ----
     var firstT = bars[0].t;
     var lastT = last.t;
@@ -182,6 +208,8 @@
         volume.setData(bars.map(function (b) {
           return { time: b.t, value: b.v, color: b.c >= b.o ? p.up + "55" : p.down + "55" };
         }));
+        maLine.applyOptions({ color: p.ma });
+        if (swatch) swatch.style.background = p.ma;
       },
     };
     live.push(ctrl);
