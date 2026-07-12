@@ -174,12 +174,14 @@ on:
         default: "gemini-2.5-flash"
         type: choice
         options:
-          # Gemini 2.5 models (latest)
+          # Gemini 3.x models (latest)
+          - gemini-3.5-flash
+          - gemini-3.1-pro-preview
+          - gemini-3.1-flash-lite
+          # Gemini 2.5 models (stable)
           - gemini-2.5-flash
           - gemini-2.5-pro
           - gemini-2.5-flash-lite
-          # Gemini 2.0 models (legacy)
-          - gemini-2.0-flash
           # OpenAI models
           - gpt-4o
           - gpt-4o-mini
