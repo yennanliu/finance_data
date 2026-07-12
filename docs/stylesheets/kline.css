@@ -1,0 +1,152 @@
+/* ===========================================================================
+   kline.css — TradingView-style K線 hero chart
+   Rendered by docs/javascripts/kline-chart.js at the top of report pages.
+   Uses the site's --fp-* design tokens so it tracks light/dark automatically.
+   =========================================================================== */
+
+.kline-widget {
+  margin: 0 0 1.75rem;
+  padding: 0.9rem 1rem 0.6rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, var(--fp-accent-glow, rgba(255,255,255,0.05)), transparent 60%),
+    var(--fp-bg-card, #16161a);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* ── header: symbol · price · change · range toggle ── */
+.kline__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.kline__id {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.kline__sym {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--fp-text, #fafafa);
+}
+
+.kline__cur {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--fp-text-muted, #71717a);
+  align-self: center;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 6px;
+}
+
+.kline__price {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--fp-text, #fafafa);
+  font-variant-numeric: tabular-nums;
+}
+
+.kline__chg {
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.kline__chg.is-up { color: var(--fp-green, #22c55e); }
+.kline__chg.is-down { color: var(--fp-red, #ef4444); }
+
+/* MA(20) legend chip — swatch colour is set by JS to match the line */
+.kline__ma {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fp-text-muted, #71717a);
+  align-self: center;
+}
+.kline__ma i {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: #3b82f6;
+}
+
+/* ── range toggle ── */
+.kline__ranges {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 10px;
+  background: var(--fp-bg-alt, #111113);
+}
+
+.kline__range {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0.28rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--fp-text-secondary, #a1a1aa);
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.kline__range:hover { color: var(--fp-text, #fafafa); }
+.kline__range.is-active {
+  color: var(--fp-btn-accent-fg, #09090b);
+  background: var(--fp-btn-accent-bg, #fafafa);
+}
+
+/* ── chart canvas ── */
+.kline__chart {
+  width: 100%;
+  height: 360px;
+}
+
+/* ── footer: updated date · attribution ── */
+.kline__foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--fp-text-muted, #71717a);
+}
+.kline__brand { opacity: 0.7; }
+
+/* ── loading / error state ── */
+.kline__msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 360px;
+  font-size: 0.85rem;
+  color: var(--fp-text-muted, #71717a);
+}
+.kline-widget.is-empty {
+  background: var(--fp-bg-alt, #111113);
+}
+
+/* Hide TradingView's tiny in-canvas logo watermark corner if present;
+   attribution is preserved in the JS license header and the footer. */
+.kline__chart #tv-attr-logo { display: none; }
+
+/* ── mobile ── */
+@media screen and (max-width: 600px) {
+  .kline-widget { padding: 0.75rem 0.7rem 0.5rem; }
+  .kline__chart, .kline__msg { height: 280px; }
+  .kline__sym, .kline__price { font-size: 1.05rem; }
+}

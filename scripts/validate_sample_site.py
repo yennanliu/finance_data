@@ -82,12 +82,26 @@ def main() -> None:
     total = fixed = still_broken = ok = 0
     regressions: list[tuple[Path, str, str]] = []
 
+    # Reports live across three roots (fundamental/technical/stock); any of them
+    # may be absent. Search all existing roots for each sampled page's raw
+    # source rather than assuming a single dir exists.
+    roots = [r for r in bd.report_roots() if r.exists()]
+
+    def find_source(ticker: str, name: str) -> "Path | None":
+        for root in roots:
+            cand = root / ticker / name          # dirs are lowercased by build_docs
+            if cand.exists():
+                return cand
+        for root in roots:                        # case-insensitive fallback
+            for d in root.iterdir():
+                if d.is_dir() and d.name.lower() == ticker and (d / name).exists():
+                    return d / name
+        return None
+
     for doc in doc_mds:
         ticker = doc.parent.name
-        src_dir = next((d for d in SRC_STOCK.iterdir()
-                        if d.is_dir() and d.name.lower() == ticker), None)
-        src = src_dir / doc.name if src_dir else None
-        if not src or not src.exists():
+        src = find_source(ticker, doc.name)
+        if src is None:
             continue
         for raw in FENCE.findall(src.read_text(encoding="utf-8", errors="ignore")):
             total += 1

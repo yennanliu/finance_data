@@ -1,0 +1,68 @@
+name: Update K-line Chart Data
+
+# Refreshes the OHLCV JSON that powers the TradingView-style candlestick chart
+# at the top of every report page (see scripts/generate_kline_data.py).
+#
+# Runs shortly before the consolidated nightly deploy (deploy.yml, 04:00 UTC)
+# so freshly-committed prices are picked up in the same publish cycle. Data
+# lives in ai_gen_report/kline/ which is NOT a deploy.yml trigger path, so
+# committing here does not fire an extra deploy — the nightly cron handles it.
+
+on:
+  schedule:
+    - cron: "30 3 * * *"   # 03:30 UTC — after the US close, before the 04:00 deploy
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Space-separated tickers to refresh (empty = full universe)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "update-kline-data"
+  cancel-in-progress: false
+
+jobs:
+  update-kline:
+    name: Fetch OHLCV and commit JSON
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install "yfinance>=0.2"
+
+      - name: Generate k-line data
+        run: |
+          TICKERS="${{ github.event.inputs.tickers }}"
+          python scripts/generate_kline_data.py $TICKERS
+
+      - name: Commit and push data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ai_gen_report/kline/
+
+          if git diff --cached --quiet; then
+            echo "No k-line changes to commit."
+          else
+            DATE=$(date -u +"%Y-%m-%d")
+            git commit -m "chore: refresh k-line chart data ${DATE}"
+            git pull --rebase origin main
+            git push
+            echo "✅ K-line data committed and pushed."
+          fi
