@@ -76,7 +76,7 @@ def test_parse_args_defaults(monkeypatch):
     args = ga.parse_args()
     assert args.ticker == "AAPL"
     assert args.analysis_type == "fundamental-analysis"
-    assert args.provider == "openai"
+    assert args.provider == "gemini"
 
 
 def test_parse_args_overrides(monkeypatch):

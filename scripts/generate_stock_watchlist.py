@@ -108,7 +108,7 @@ def _output_path() -> Path:
 
 # ── Gemini call ───────────────────────────────────────────────────────────────
 
-def generate_watchlist(model: str = "gemini-2.5-flash", max_tokens: int = 16000) -> str:
+def generate_watchlist(model: str = "gemini-3.5-flash", max_tokens: int = 16000) -> str:
     # Preserve the original clean-exit UX on a missing key (vs. a raised LLMError).
     if not os.environ.get("GEMINI_API_KEY"):
         sys.exit("ERROR: GEMINI_API_KEY environment variable is not set.")
@@ -130,7 +130,7 @@ def generate_watchlist(model: str = "gemini-2.5-flash", max_tokens: int = 16000)
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Generate fundamental stock watchlist")
-    parser.add_argument("--model", default="gemini-2.5-flash")
+    parser.add_argument("--model", default="gemini-3.5-flash")
     parser.add_argument("--max-tokens", type=int, default=16000)
     args = parser.parse_args()
 
