@@ -12,129 +12,135 @@ model: gemini-3.5-flash
 2026-07-12
 
 ## 🏢 公司概覽
-Rocket Lab Corporation (RKLB) 是一家全球領先的航太與太空基礎設施公司，總部位於美國，提供端到端的太空解決方案。公司以其高度可靠的「Electron」輕型運載火箭聞名，並正在全力研發下一代中型可重複使用火箭「Neutron」。除了發射服務外，Rocket Lab 的「太空系統」（Space Systems）部門設計並製造衛星、航天組件以及軌道管理軟體。在當前蓬勃發展的「太空經濟」（Space Economy）中，RKLB 已被公認為商業航太巨頭 SpaceX 最具實力與創新力的主要競爭對手。
+Rocket Lab Corporation（納斯達克代碼：RKLB）是一家領先的航太製造商與發射服務提供商，在商業太空經濟中扮演著關鍵角色。該公司以其高度靈活的 Electron 小型運載火箭聞名，目前正積極開發中型運載火箭 Neutron（預計於 2026 年第四季首飛）。Rocket Lab 的核心戰略在於建立一個「全垂直整合」的太空平台，業務涵蓋火箭發射服務、衛星製造以及太空端對端連接解決方案。在 SpaceX 壟斷多數市場的背景下，Rocket Lab 被機構投資人與分析師視為少數具備實質技術創新與商業化能力的強勁競爭對手。
 
 ---
 
 ## 📝 新聞摘要總覽
-截至 2026 年 7 月 12 日，Rocket Lab (RKLB) 成為美股航太板塊中最受矚目的焦點。近期市場的核心話題圍繞在兩項具備里程碑意義的財務與業務動態：**一項潛在價值高達 80 億美元的 Iridium（銥星）交易協議**，以及伴隨該協議進行權衡的 **36 億美元過渡性貸款（Bridge Loan）**。這筆巨額交易若最終落實，將徹底重塑 Rocket Lab 的營收規模與市場地位，但同時也因龐大的融資需求引發了華爾街對其財務槓桿的熱烈討論。
+本週 Rocket Lab（RKLB）迎來了其公司歷史上最具里程碑意義但也最具爭議的重大動態。公司宣布將以 80 億美元的「全股票（All-Stock）」交易方式，收購航太通信巨頭 Iridium Communications。這項併購案旨在將發射服務、衛星製造和太空網路連接能力整合於單一架構下，使 Rocket Lab 成為能與 SpaceX 垂直整合生態系（包含 Starlink）正面交鋒的巨無霸。然而，這項重磅交易宣布的同時，伴隨著執行長 Peter Beck 減持公司股票的消息，引發了市場對短期估值過高與股權稀釋的強烈擔憂。
 
-在資本市場方面，雖然創辦人兼執行長 Peter Beck 售股（Beck Sale）的消息一度引發市場疑慮，但分析師指出，股價隨後的回檔反而伴隨著強烈的「看漲偏誤（Bullish bias）」，散戶與機構投資人普遍將其視為逢低布局的良機。與此同時，競爭對手 SpaceX 的 IPO 炒作出現降溫跡象，市場分析指出 SpaceX 的實際價值可能不及當前估值的一半，這促使尋求太空板塊曝險的資金加速流入流動性佳、資訊透明的 RKLB。
+受此影響，儘管美股大盤與科技板塊（如 Meta 和 Nasdaq 指數）集體走高，RKLB 股價卻出現逆勢下跌，從先前接近 102 美元的高點一路回落至目前的 81.04 美元。
 
-華爾街投行對 RKLB 的前景展現出極高的信心。**摩根士丹利（Morgan Stanley）近期將 Rocket Lab 的牛市情境目標價（Bull-case Target）設定在每股 293 美元**，對照目前 81.04 美元的股價，顯示出高達 260% 以上的潛在漲幅空間。過去一年中，RKLB 股價已大幅上漲 118%，並與 META、TSLA 等科技巨頭一同名列散戶交易者最關注的熱門標的，顯示出其在商業航太領域的領先地位已獲得市場高度共識。
+在財務與營運層面，Rocket Lab 展現出強勁的底氣。其未交貨訂單（Backlog）已達到 22 億美元，且第一季營收達到 2.0035 億美元。然而，由於公司仍處於高額資本支出與研發階段（尤其是 Neutron 火箭的開發），目前依然處於淨現金流流出（Cash Burn）狀態。
+
+市場分析師對 RKLB 的前景看法分歧。William Blair 報告指出，Rocket Lab 是目前市場上與 Blue Origin 並列、最具創新力且最能威脅 SpaceX 統治地位的對手。目前市場給出的股價預測區間極大：樂觀情境（Bull Case）下，隨著 Neutron 於 2026 年第四季順利發射，股價有望衝上 293 美元；但在悲觀情境（Bear Case）下，若併購整合不順或 Neutron 進度延宕，股價可能下探至 76 美元。
+
+同時，散戶投資人對 RKLB 的關注度空前高漲。該股在 Robinhood 等平台上的交易熱度名列前茅，過去一年的累計漲幅仍高達 118%。整體而言，Rocket Lab 正處於從「小型火箭發射商」向「全球太空基礎設施巨頭」轉型的關鍵拐點，機遇與風險並存。
 
 ---
 
 ## 💡 關鍵洞察
 
-*   **80億美元 Iridium 協議為營收拐點，但伴隨高槓桿風險**：這筆潛在的巨額合約規模遠超 RKLB 歷史營收總和，是公司跨入大型衛星星座營運商的關鍵，但 36 億美元過渡貸款的利息支出與債務結構將是短期財務彈性的重大考驗。
-*   **摩根士丹利 $293 超高目標價奠定長期估值天花板**：大摩給出的極致牛市目標價，反映出市場對 Neutron 火箭商用前景及高毛利「太空系統」業務爆發力的高度預期，為多頭提供了強大的估值錨點。
-*   **SpaceX 估值泡沫化疑慮引發資金外溢效應**：隨着市場對 SpaceX 高估值的理性回歸，RKLB 作為「唯一已上市且具備規模發射能力」的替代標的，正迎來顯著的機構資金重新配置。
-*   **管理層售股引發短期技術性回檔，無礙基本面強勁趨勢**：創辦人 Peter Beck 的售股行為雖帶來短期心理衝擊，但市場迅速消化的表現（Bullish bias）證實了買方力量的強大，回檔被視為健康整理。
-*   **散戶熱度與機構共振，流動性溢價顯現**：RKLB 過去一年暴漲 118%，並與 META、TSLA 等巨頭並列散戶最愛，極高的市場關注度為其高成長估值提供了充足的資金流動性支撐。
-*   **太空經濟板塊整體崛起，產業群聚效應成形**：MDA Space 等「迷你 SpaceX/Rocket Lab」的崛起，以及 RKLB 被列為「7月必買三大太空股」，顯示整個太空基礎設施板塊正處於從概念走向大規模商業落地的前夜。
+- **80 億美元收購 Iridium 的雙刃劍效應**：此項全股票收購案雖然能立即讓 Rocket Lab 擁有強大的衛星通訊與連接能力，完成「發射+製造+服務」的闭环，但 80 億美元的規模對當前市值而言帶來了巨大的股權稀釋壓力，這是導致股價近期承壓的主因。
+- **Neutron 火箭是決定 293 美元與 76 美元命運的關鍵分水嶺**：Neutron 火箭預計於 2026 年第四季首飛。若成功，將打破 SpaceX Falcon 9 在中型發射市場的壟斷，直接推動股價走向 293 美元的牛市目標；若失敗或嚴重延期，高額的研發流失將使股價回落至 76 美元的熊市支撐位。
+- **創辦人減持與大額交易引發市場信任危機**：執行長 Peter Beck 在宣布 80 億美元併購案的敏感時刻進行股權出售，在資本市場上釋放了負面訊號。這也是為什麼在大盤與科技股普漲之際，RKLB 股價卻逆勢下挫。
+- **22 億美元訂單量奠定中長期財務安全邊際**：儘管目前仍處於虧損與現金消耗階段，但第一季 2.0035 億美元的營收與 22 億美元的在手訂單，為其提供了極強的商業能見度，顯著優於其他仍處於概念階段的太空初創公司。
+- **SpaceX 挑戰者地位獲得機構背書**：William Blair 等頂級機構明確將 Rocket Lab 定義為 SpaceX 最具威脅的對手。在 SpaceX 估值泡沫引發市場質疑（部分分析師認為其真實價值可能不到市場估值的一半）之際，資金正積極尋找 RKLB 這種具備實際營收與垂直整合能力的替代標的。
+- **散戶高參與度加劇股價波動性**：RKLB 持續位列 Robinhood 及 Yahoo Finance 的熱門散戶關注榜。高比例的零售資金參與雖然帶來了極佳的流動性，但也意味著股價容易受到市場情緒擾動，放大短期波動。
 
 ---
 
 ## 📰 近期新聞總覽
 
-*   **2026-07-11** | The 1-Minute Market Report, July 11, 2026 (NYSEARCA:SPY) — *Seeking Alpha*
-*   **2026-07-10** | Meta logs highest weekly gains as tech lifts Nasdaq (STX:NASDAQ) — *Seeking Alpha*
-*   **2026-07-10** | SpaceX: The IPO Hype Is Fading - Why Shares' True Value May Be Less Than Half Its Market Cap — *Seeking Alpha*
-*   **2026-07-10** | MDA Space: Buy A Mini SpaceX And Rocket Lab In The Making (NYSE:MDA) — *Seeking Alpha*
-*   **2026-07-10** | 3 Space Economy Stocks to Buy in July — *24/7 Wall St.*
-*   **2026-07-10** | Rocket Lab (RKLB) Stock Faces Fresh Questions After Beck Sale And $8 Billion Iridium Deal — *Yahoo Finance*
-*   **2026-07-10** | Enovix Combines Margin Of Safety With Long-Term Growth Potential — *Seeking Alpha*
-*   **2026-07-09** | Rocket Lab Stock Gained 118% Over the Past Year. Is It Time to Buy? — *Yahoo Finance*
-*   **2026-07-09** | Rocket Lab Shares Climb as Wall Street Weighs $8 Billion Iridium Deal, $3.6 Billion Bridge Loan — *Benzinga*
-*   **2026-07-08** | Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab — *The Motley Fool*
-*   **2026-07-08** | Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab — *Yahoo Finance*
-*   **2026-07-08** | Rocket Lab Bull-Case Target Set at $293 by Morgan Stanley — *Yahoo Finance*
-*   **2026-07-06** | Why Retail Traders Couldn’t Take Their Eyes Off These Stocks Last Week: META, MU, BABA, TSLA, RKLB — *Yahoo Finance*
+- 2026-07-12 | Rocket Lab Corporation • Robinhood Token - RKLB - Stock Price & News — The Motley Fool
+- 2026-07-11 | The 1-Minute Market Report, July 11, 2026 (NYSEARCA:SPY) — Seeking Alpha
+- 2026-07-11 | Firefly Aerospace: Potential Next Space Winner To Buy (NASDAQ:FLY) — Seeking Alpha
+- 2026-07-11 | Rocket Lab (RKLB) price prediction: will it hit $293 or $76? — Bing News
+- 2026-07-10 | Rocket Lab Corporation (RKLB) Stock Slides as Market Rises: Facts to Know Before You Trade — Yahoo Finance
+- 2026-07-10 | Meta logs highest weekly gains as tech lifts Nasdaq (STX:NASDAQ) — Seeking Alpha
+- 2026-07-10 | SpaceX: The IPO Hype Is Fading - Why Shares' True Value May Be Less Than Half Its Market Cap — Seeking Alpha
+- 2026-07-10 | MDA Space: Buy A Mini SpaceX And Rocket Lab In The Making (NYSE:MDA) — Seeking Alpha
+- 2026-07-10 | Rocket Lab’s Stock Drop Comes With a Bullish Twist — MarketBeat
+- 2026-07-10 | 3 Space Economy Stocks to Buy in July — 24/7 Wall St.
+- 2026-07-10 | Rocket Lab (RKLB) Stock Faces Fresh Questions After Beck Sale And $8 Billion Iridium Deal — Bing News
+- 2026-07-09 | RKLB Stock Rises Overnight: Analyst Calls Rocket Lab One Of SpaceX’s Most ‘Capable And Innovative’ Rivals In Space Race — Bing News
+- 2026-07-09 | Rocket Lab Stock Gained 118% Over the Past Year. Is It Time to Buy? — Yahoo Finance
+- 2026-07-08 | Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab — Yahoo Finance
+- 2026-07-08 | Can Rocket Lab Stock Become the Next SpaceX-Like Success Story? — Bing News
+- 2026-07-06 | Why Retail Traders Couldn’t Take These Stocks Last Week: META, MU, BABA, TSLA, RKLB — Yahoo Finance
+- 2026-07-03 | Is RKLB Stock Worth The Ride? — Bing News
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 80 億美元 Iridium 潛在交易與 36 億美元過渡貸款的雙重衝擊
-*   **新聞來源**：*Yahoo Finance (2026-07-10)*、*Benzinga (2026-07-09)*
-*   **營運與財務影響**：
-    這筆高達 **80 億美元的 Iridium 交易**是 Rocket Lab 歷史上規模最大的潛在合約。若合約正式簽署，將為 RKLB 帶來極為穩定的長期積壓訂單（Backlog），並鞏固其在衛星製造與軌道發射一體化服務中的龍頭地位。然而，為了支持如此龐大的項目起步，公司正在權衡一筆 **36 億美元的過渡性貸款（Bridge Loan）**。
-    *   **財務風險**：36 億美元的債務對於目前市值規模的 RKLB 而言是一筆重擔，將顯著推高資產負債表的槓桿率，並在當前利率環境下產生高額的利息支出。
-    *   **股價反應**：市場對此消息反應複雜，股價先是因 80 億美元的宏偉前景而攀升，隨後因擔憂融資稀釋或債務壓力而出現震盪，但整體依然維持強勢，顯示市場對其「以債養商」的擴張戰略抱持審慎樂觀態度。
+### 1. 80 億美元全股票收購 Iridium 與執行長減持風波
+* **新聞背景**：Rocket Lab 宣布以 80 億美元的全股票交易收購通訊巨頭 Iridium Communications。與此同時，公司創辦人兼執行長 Peter Beck 進行了股票減持，引發市場廣泛討論。
+* **營運與財務影響**：
+  * **戰略協同**：這是一次極具野心的戰略併購。Iridium 擁有的低軌衛星群與全球語音/數據傳輸服務，能與 Rocket Lab 的衛星製造業務（Space Systems）及發射業務完美結合。這使 RKLB 不再僅僅是一家「計程車」式的火箭發射公司，而是轉化為提供端到端太空數據服務的「營運商」。
+  * **稀釋風險**：高達 80 億美元的全股票交易意味著 RKLB 將發行大量新股，這對現有股東的股權造成了極大的稀釋。
+  * **管理層訊號**：Peter Beck 在此時點減持，不論其個人資金需求為何，在客觀上都加劇了市場對「股價是否已見頂」的疑慮，直接導致股價從 102 美元附近下挫至 81.04 美元。
 
-### 2. 摩根士丹利設定 $293 牛市情境目標價
-*   **新聞來源**：*Yahoo Finance (2026-07-08)*
-*   **營運與財務影響**：
-    摩根士丹利（Morgan Stanley）將 RKLB 的**牛市目標價設定在 293 美元**，這在華爾街引發了強烈震動。目前 RKLB 股價為 81.04 美元，該目標價代表了接近 3.6 倍的潛在成長空間。
-    *   **估值邏輯**：大摩的樂觀預期主要基於兩個核心催化劑：一是中型可重複使用火箭 **Neutron** 的順利推進，這將打破 SpaceX 在中大型衛星發射市場的壟斷；二是 Rocket Lab 的太空系統部門（Space Systems）展現出高於發射服務的毛利率，隨着商業衛星星座建設需求爆發，該部門將成為利潤引擎。這一評級為機構資金長期持有 RKLB 提供了極佳的理論支持。
+### 2. 股價預測的兩極分化：293 美元 vs 76 美元
+* **新聞背景**：市場分析指出，RKLB 目前交易價格約為 81.04 美元（此前曾接近 102 美元），其未來的股價走向呈現高度二元化，牛市目標看至 293 美元，熊市則看至 76 美元。
+* **決定性因素分析**：
+  * **293 美元（牛市情境）**：此估值的實現建立在兩個核心假設上：第一，Neutron 中型火箭在 2026 年第四季首飛成功並迅速進入商業化量產，這將使 Rocket Lab 能夠承接大型星座發射訂單；第二，對 Iridium 的併購展現出顯著的財務協同效應，營收增速大幅超越目前的現金消耗速度。
+  * **76 美元（熊市情境）**：若 Neutron 開發遭遇類似於航太業常見的技術瓶頸而延期，加上併購 Iridium 帶來的整合陣痛與股權稀釋，市場將重新評估其高估值倍數，股價將退守至 76 美元的支撐區間。
 
-### 3. SpaceX IPO 炒作降溫與 RKLB 的外溢利多
-*   **新聞來源**：*Seeking Alpha (2026-07-10)*、*The Motley Fool (2026-07-08)*
-*   **營運與財務影響**：
-    市場對 SpaceX 的 IPO 炒作開始出現理性降溫，分析指出其一級市場的超高估值可能存在泡沫，真實價值可能不到其市場宣稱價值的一半。
-    *   **資金轉移**：SpaceX 至今未上市，散戶與多數機構無法直接參與其成長。當 SpaceX 的估值神話受到質疑時，資金自然流向「最像 SpaceX 且已上市」的標的——Rocket Lab。
-    *   **競爭優勢**：分析師在比較「SpaceX vs. Rocket Lab」時指出，RKLB 在創新速度與商業靈活性上是 SpaceX 最強勁的對手。SpaceX 的估值修正反而凸顯了 RKLB 在公開市場上的稀缺性與性價比。
-
-### 4. 執行長 Peter Beck 售股與市場「看漲偏誤」的技術面解讀
-*   **新聞來源**：*Yahoo Finance (2026-07-10)*
-*   **營運與財務影響**：
-    創辦人兼執行長 Peter Beck 的售股行為（Beck Sale）通常會被市場解讀為負面信號，並引發了關於高層是否看好公司短期前景的「新疑問」。
-    *   **市場消化能力**：然而，本次售股引發的股價下跌非常短暫。分析指出，隨後的下跌迅速吸引了強勁的低吸買盤，市場呈現顯著的「看漲偏誤（Bullish bias）」。這表明投資人普遍理解創辦人出於個人財務規劃的變現需求，並未動搖公司基本面，反而為踏空的資金創造了極佳的進場點。
+### 3. 機構評級：SpaceX 最具威脅的競爭對手
+* **新聞背景**：William Blair 發布報告，指出雖然 SpaceX 目前在太空發射市場擁有超過 90% 的絕對壟斷地位，且技術領先同行近十年，但 Rocket Lab 與 Blue Origin 是目前市場上最具創新力且最務實的挑戰者。
+* **市場競爭格局與投資啟示**：
+  * **稀缺性溢價**：在公開資本市場上，SpaceX 尚未 IPO，且近期有分析指出其一級市場估值存在高估（真實價值可能低於市場估值的一半）。這使得 RKLB 成為二級市場投資人想要參與「太空經濟高速增長」時，最優質且最具流動性的標的。
+  * **錯位競爭**：雖然 SpaceX 的 Starship 和 Falcon 9 實力雄厚，但 Rocket Lab 的 Electron 火箭在小型專用發射市場已建立極高壁壘。隨著未來 Neutron 投入市場，RKLB 將有能力在商業中型發射市場分食 SpaceX 的利潤。
 
 ---
 
 ## 📊 市場情緒評估
 
-### Overall Market Sentiment: 🟢 正面
+### 整體市場情緒：🟡 中性
 
-| 正面因素 (Bullish Drivers) | 負面因素 (Bearish Risks) |
+| 正面因素 (🟢) | 負面因素 (🔴) |
 | :--- | :--- |
-| 🟢 80 億美元 Iridium 潛在合約，奠定長期營收 | 🔴 36 億美元過渡貸款可能大幅推升財務槓桿 |
-| 🟢 摩根士丹利喊出 $293 超高牛市目標價 | 🔴 創辦人 Peter Beck 售股帶來的短期心理壓力 |
-| 🟢 SpaceX 估值降溫，資金外溢至 RKLB | 🔴 過去一年已大漲 118%，短期獲利了結壓力增加 |
-| 🟢 散戶關注度極高，與 META、TSLA 並列熱門股 | |
-
-**評估依據**：儘管面臨高額貸款的財務壓力與高層售股的心理衝擊，但 RKLB 的產業龍頭地位與龐大的商業合約預期（80億美元）佔據了市場主導地位。華爾街大行的超高目標價與 SpaceX 的資金外溢效應，共同構築了極為強勁的多頭市場情緒。
+| **強大的業務能見度**：擁有高達 22 億美元的未交貨訂單（Backlog），且第一季營收達 2.0035 億美元，基本面具備支撐。 | **嚴重的股權稀釋**：80 億美元收購 Iridium 的全股票交易，在短期內對現有股東權益造成顯著稀釋。 |
+| **戰略版圖大擴張**：收購 Iridium 將發射、衛星製造與太空通訊完美整合，建立了極難被複製的垂直整合壁壘。 | **創辦人敏感時刻減持**：執行長 Peter Beck 減持股票，打擊了短期市場信心，導致股價在大盤上漲時逆勢下跌。 |
+| **機構強力背書**：William Blair 等機構將其列為 SpaceX 最具威脅的對手，吸引長線機構資金關注。 | **持續的現金消耗**：在 Neutron 實現商業化發射前，研發投入與併購整合將持續消耗現金，財務仍未實現淨利潤平衡。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-### 1. 🔴 財務槓桿與利息覆蓋風險
-若公司最終承擔 36 億美元的過渡性貸款，在當前高利率環境下，每年的利息支出將大幅侵蝕營業利潤。如果 80 億美元的 Iridium 協議在執行過程中出現延遲或利潤率不及預期，公司可能面臨嚴重的流動性壓力。
+### 🔴 股權稀釋與併購整合風險 (High)
+80 億美元的 Iridium 收購案規模極大。全股票交易將導致 RKLB 總股本大幅膨脹，若併購後雙方的技術與業務無法如預期般融合，或者 Iridium 的通訊業務成長放緩，這筆交易將轉化為巨大的財務包袱，拖累整體資產回報率。
 
-### 2. 🟡 創辦人持續減持風險
-Peter Beck 作為公司的精神領袖與技術核心，其股權變動對市場信心影響極大。若未來出現持續性減持，可能會削弱散戶投資人的持股信心，導致股價波動加劇。
+### 🟡 Neutron 火箭研發延期風險 (Medium)
+Neutron 火箭是 Rocket Lab 邁向中大型航太發射、直接挑戰 SpaceX Falcon 9 的核心武器。目前定於 2026 年第四季首飛。航太工程極具不確定性，任何發射延遲或測試失敗都將嚴重打擊市場信心，並使股價迅速向 76 美元的熊市預測靠攏。
 
-### 3. 🟡 研發與發射時程延遲風險
-Rocket Lab 的長期估值高度依賴於 Neutron 火箭的成功首飛與商用化。航太研發具有高度不確定性，任何技術故障、發射失敗或監管審批延遲，都將給競爭對手（如 MDA Space）追趕的機會。
+### 🟡 資金鏈與持續虧損風險 (Medium)
+儘管第一季營收達 2.0035 億美元，但由於 Neutron 開發及垂直整合的資本支出巨大，公司目前仍處於虧損狀態。在當前高利率環境下，若後續需要額外融資，將面臨更高的資本成本。
+
+### 🟢 行業競爭加劇 (Low)
+雖然有 Firefly Aerospace (FLY) 和 MDA Space 等新興「小 SpaceX」在後追趕，但 Rocket Lab 在發射頻次、訂單規模（22 億美元）以及垂直整合進度上均顯著領先，短期內其產業第二的地位依然穩固。
 
 ---
 
-## 🔮 短期關注目點
+## 🔮 短期關注目點 (未來 1–4 週)
 
-1.  **Iridium 協議的正式簽署與條款細節**：未來 1–4 週內，市場將密切追蹤該 80 億美元合約是否正式落地，以及其具體的首期付款與執行時程。
-2.  **36 億美元過渡貸款的融資成本**：關注公司是否公布該筆貸款的利率、期限及稀釋條款，這將直接決定市場對其財務健康度的評估。
-3.  **80 美元關卡的技術面支撐**：RKLB 目前股價為 81.04 USD，過去一年漲幅達 118%。短期內需觀察股價能否在 80 美元整數關卡站穩，形成新的上升支撐平台。
+1. **併購案細節披露與股東大會動向**：投資人應密切關注 Rocket Lab 針對 80 億美元收購 Iridium 案所釋出的進一步財務預測、股權發行比例及監管審批進度。
+2. **Peter Beck 的持股變動申報**：關注執行長是否有後續減持計劃，若減持停止，市場情緒有望迎來修復性反彈。
+3. **Neutron 火箭研發里程碑**：關注是否有關於 Neutron 引擎測試（Archimedes 引擎）或發射台建設的最新進展更新。
+4. **股價在 76-80 美元區間的技術支撐**：目前股價為 81.04 美元，需觀察其是否能在 76 美元的熊市預測線附近獲得強力支撐並止跌企穩。
 
 ---
 
 ## 📌 新聞來源索引
 
-1.  **The 1-Minute Market Report, July 11, 2026** — *Seeking Alpha* (2026-07-11)
-2.  **Meta logs highest weekly gains as tech lifts Nasdaq** — *Seeking Alpha* (2026-07-10)
-3.  **SpaceX: The IPO Hype Is Fading - Why Shares' True Value May Be Less Than Half Its Market Cap** — *Seeking Alpha* (2026-07-10)
-4.  **MDA Space: Buy A Mini SpaceX And Rocket Lab In The Making** — *Seeking Alpha* (2026-07-10)
-5.  **3 Space Economy Stocks to Buy in July** — *24/7 Wall St.* (2026-07-10)
-6.  **Rocket Lab (RKLB) Stock Faces Fresh Questions After Beck Sale And $8 Billion Iridium Deal** — *Yahoo Finance / Stocktwits* (2026-07-10)
-7.  **Enovix Combines Margin Of Safety With Long-Term Growth Potential** — *Seeking Alpha* (2026-07-10)
-8.  **Rocket Lab Stock Gained 118% Over the Past Year. Is It Time to Buy?** — *Yahoo Finance* (2026-07-09)
-9.  **Rocket Lab Shares Climb as Wall Street Weighs $8 Billion Iridium Deal, $3.6 Billion Bridge Loan** — *Benzinga* (2026-07-09)
-10. **Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab** — *The Motley Fool* (2026-07-08)
-11. **Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab** — *Yahoo Finance* (2026-07-08)
-12. **Rocket Lab Bull-Case Target Set at $293 by Morgan Stanley** — *Yahoo Finance* (2026-07-08)
-13. **Why Retail Traders Couldn’t Take Their Eyes Off These Stocks Last Week: META, MU, BABA, TSLA, RKLB** — *Yahoo Finance* (2026-07-06)
+1. **Rocket Lab Corporation • Robinhood Token - RKLB - Stock Price & News** — *The Motley Fool* (2026-07-12)
+2. **The 1-Minute Market Report, July 11, 2026 (NYSEARCA:SPY)** — *Seeking Alpha* (2026-07-11)
+3. **Firefly Aerospace: Potential Next Space Winner To Buy (NASDAQ:FLY)** — *Seeking Alpha* (2026-07-11)
+4. **Rocket Lab (RKLB) price prediction: will it hit $293 or $76?** — *Finance Feeds / Bing News* (2026-07-11)
+5. **Rocket Lab Corporation (RKLB) Stock Slides as Market Rises: Facts to Know Before You Trade** — *Yahoo Finance* (2026-07-10)
+6. **Meta logs highest weekly gains as tech lifts Nasdaq (STX:NASDAQ)** — *Seeking Alpha* (2026-07-10)
+7. **SpaceX: The IPO Hype Is Fading - Why Shares' True Value May Be Less Than Half Its Market Cap** — *Seeking Alpha* (2026-07-10)
+8. **MDA Space: Buy A Mini SpaceX And Rocket Lab In The Making (NYSE:MDA)** — *Seeking Alpha* (2026-07-10)
+9. **Rocket Lab’s Stock Drop Comes With a Bullish Twist** — *MarketBeat / Google News* (2026-07-10)
+10. **3 Space Economy Stocks to Buy in July** — *24/7 Wall St. / Google News* (2026-07-10)
+11. **Rocket Lab (RKLB) Stock Faces Fresh Questions After Beck Sale And $8 Billion Iridium Deal** — *Yahoo Finance / Bing News* (2026-07-10)
+12. **RKLB Stock Rises Overnight: Analyst Calls Rocket Lab One Of SpaceX’s Most ‘Capable And Innovative’ Rivals In Space Race** — *Yahoo Finance / Bing News* (2026-07-09)
+13. **Rocket Lab Stock Gained 118% Over the Past Year. Is It Time to Buy?** — *Yahoo Finance* (2026-07-09)
+14. **Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab** — *Yahoo Finance* (2026-07-08)
+15. **Can Rocket Lab Stock Become the Next SpaceX-Like Success Story?** — *24/7 Wall St. / Bing News* (2026-07-08)
+16. **Why Retail Traders Couldn’t Take Their Eyes Off These Stocks Last Week: META, MU, BABA, TSLA, RKLB** — *Yahoo Finance* (2026-07-06)
+17. **Is RKLB Stock Worth The Ride?** — *Forbes / Bing News* (2026-07-03)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資有風險，入市需謹慎。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應自行承擔市場風險。*
