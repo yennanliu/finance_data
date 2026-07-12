@@ -55,6 +55,19 @@ run-name: "Daily Stock Analysis ${{ github.event.inputs.ticker || github.event.s
 #   01:10 → 09:10  SPCX          technical
 #   01:20 → 09:20  AVGO          technical
 #   01:30 → 09:30  NBIS          technical
+#
+# Additional Fundamental Analysis Schedule (02:00 - 03:40 UTC)
+#   02:00 → 10:00  MU            fundamental
+#   02:10 → 10:10  SKHY          fundamental
+#   02:20 → 10:20  WDC           fundamental
+#   02:30 → 10:30  SNDK          fundamental
+#   02:40 → 10:40  MRVL          fundamental
+#   02:50 → 10:50  SOXQ          fundamental
+#   03:00 → 11:00  SOXX          fundamental
+#   03:10 → 11:10  WQTM          fundamental
+#   03:20 → 11:20  VTI           fundamental
+#   03:30 → 11:30  QQQ           fundamental
+#   03:40 → 11:40  ROBO          fundamental
 on:
   schedule:
     # ── Fundamental Analysis ──
@@ -109,6 +122,18 @@ on:
     - cron: "10 1 * * *"     # SPCX technical
     - cron: "20 1 * * *"     # AVGO technical
     - cron: "30 1 * * *"     # NBIS technical
+    # ── Additional Fundamental ──
+    - cron: "0 2 * * *"      # MU fundamental
+    - cron: "10 2 * * *"     # SKHY fundamental
+    - cron: "20 2 * * *"     # WDC fundamental
+    - cron: "30 2 * * *"     # SNDK fundamental
+    - cron: "40 2 * * *"     # MRVL fundamental
+    - cron: "50 2 * * *"     # SOXQ fundamental
+    - cron: "0 3 * * *"      # SOXX fundamental
+    - cron: "10 3 * * *"     # WQTM fundamental
+    - cron: "20 3 * * *"     # VTI fundamental
+    - cron: "30 3 * * *"     # QQQ fundamental
+    - cron: "40 3 * * *"     # ROBO fundamental
 
   workflow_dispatch:
     inputs:
@@ -276,6 +301,18 @@ jobs:
               "10 1 * * *")   TICKER="SPCX";    ANALYSIS_TYPE="technical-analysis" ;;
               "20 1 * * *")   TICKER="AVGO";    ANALYSIS_TYPE="technical-analysis" ;;
               "30 1 * * *")   TICKER="NBIS";    ANALYSIS_TYPE="technical-analysis" ;;
+              # ── Additional Fundamental ─────────────────────────────
+              "0 2 * * *")    TICKER="MU";      ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 2 * * *")   TICKER="SKHY";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 2 * * *")   TICKER="WDC";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "30 2 * * *")   TICKER="SNDK";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "40 2 * * *")   TICKER="MRVL";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "50 2 * * *")   TICKER="SOXQ";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "0 3 * * *")    TICKER="SOXX";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 3 * * *")   TICKER="WQTM";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 3 * * *")   TICKER="VTI";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "30 3 * * *")   TICKER="QQQ";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "40 3 * * *")   TICKER="ROBO";    ANALYSIS_TYPE="fundamental-analysis" ;;
               *)              TICKER="TSLA";    ANALYSIS_TYPE="fundamental-analysis" ;;
             esac
           fi
