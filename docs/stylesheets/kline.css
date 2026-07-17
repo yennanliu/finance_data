@@ -6,13 +6,13 @@
 
 .kline-widget {
   margin: 0 0 1.75rem;
-  padding: 0.9rem 1rem 0.6rem;
+  padding: 1rem 1.15rem 0.7rem;
   border: 1px solid var(--fp-border, #27272a);
-  border-radius: 14px;
+  border-radius: 16px;
   background:
     radial-gradient(120% 140% at 100% 0%, var(--fp-accent-glow, rgba(255,255,255,0.05)), transparent 60%),
     var(--fp-bg-card, #16161a);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 /* ── header: symbol · price · change · range toggle ── */
@@ -64,23 +64,46 @@
 .kline__chg.is-up { color: var(--fp-green, #22c55e); }
 .kline__chg.is-down { color: var(--fp-red, #ef4444); }
 
-/* MA(20) legend chip — swatch colour is set by JS to match the line */
-.kline__ma {
+/* ── moving-average legend chips (toggleable) ── */
+.kline__legend-chips {
   display: inline-flex;
   align-items: center;
-  gap: 0.32rem;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+/* One MA toggle chip — swatch colour is set by JS to match its line */
+.kline__ma {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  font-family: inherit;
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--fp-text-muted, #71717a);
-  align-self: center;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 999px;
+  background: transparent;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.kline__ma:hover { opacity: 0.85; }
+.kline__ma.is-on {
+  opacity: 1;
+  color: var(--fp-text, #fafafa);
+  background: var(--fp-bg-alt, #111113);
 }
 .kline__ma i {
   display: inline-block;
   width: 14px;
-  height: 2px;
+  height: 3px;
   border-radius: 2px;
   background: #3b82f6;
 }
+.kline__ma:not(.is-on) i { opacity: 0.5; }
 
 /* ── range toggle ── */
 .kline__ranges {
@@ -113,9 +136,32 @@
 
 /* ── chart canvas ── */
 .kline__chart {
+  position: relative;
   width: 100%;
-  height: 360px;
+  height: 460px;
 }
+
+/* ── live OHLC / volume readout (floats over the chart, TradingView-style) ── */
+.kline__ohlc {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.7rem;
+  pointer-events: none;
+  font-size: 0.74rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--fp-text-secondary, #a1a1aa);
+  text-shadow: 0 1px 2px var(--fp-bg-card, rgba(0, 0, 0, 0.5));
+}
+.kline__ohlc b { font-weight: 700; color: var(--fp-text, #fafafa); }
+.kline__ohlc-date { font-weight: 700; color: var(--fp-text, #fafafa); }
+.kline__ohlc .is-up { color: var(--fp-green, #22c55e); }
+.kline__ohlc .is-down { color: var(--fp-red, #ef4444); }
 
 /* ── footer: updated date · attribution ── */
 .kline__foot {
@@ -132,7 +178,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 360px;
+  height: 460px;
   font-size: 0.85rem;
   color: var(--fp-text-muted, #71717a);
 }
@@ -147,6 +193,9 @@
 /* ── mobile ── */
 @media screen and (max-width: 600px) {
   .kline-widget { padding: 0.75rem 0.7rem 0.5rem; }
-  .kline__chart, .kline__msg { height: 280px; }
+  .kline__chart, .kline__msg { height: 340px; }
   .kline__sym, .kline__price { font-size: 1.05rem; }
+  .kline__ohlc { font-size: 0.66rem; gap: 0.1rem 0.5rem; }
+  /* Drop the least-used columns on very narrow screens */
+  .kline__ohlc span:nth-child(2) { display: none; } /* 開/Open */
 }

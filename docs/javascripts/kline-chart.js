@@ -2,7 +2,8 @@
  * kline-chart.js — TradingView-style candlestick (K線) hero chart
  * ================================================================
  * Renders an interactive candlestick + volume chart at the top of every
- * per-ticker report page, with 30D / 180D / 360D range toggles.
+ * per-ticker report page, with 30D / 180D / 360D range toggles, several
+ * toggleable moving-average overlays, and a live OHLC / volume readout.
  *
  * Powered by TradingView's open-source Lightweight Charts™ (Apache-2.0),
  * vendored at docs/javascripts/lightweight-charts.standalone.production.js.
@@ -25,6 +26,15 @@
   ];
   var DEFAULT_RANGE = "180";
 
+  // Moving-average overlays. `on` is the default visibility; every line can be
+  // toggled independently from the header legend, so users can show them all
+  // together or narrow down to a single average.
+  var MA_LINES = [
+    { period: 20, on: true },
+    { period: 60, on: true },
+    { period: 120, on: false },
+  ];
+
   // Live controllers, so a theme toggle can re-colour every visible chart.
   var live = [];
 
@@ -46,8 +56,14 @@
       text: cssVar("--fp-text-secondary", dark ? "#a1a1aa" : "#52525b"),
       border: cssVar("--fp-border", dark ? "#27272a" : "#e4e4e7"),
       grid: dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)",
-      // Light MA(20) overlay — a soft blue that reads on both themes.
-      ma: dark ? "rgba(96,165,250,0.9)" : "rgba(37,99,235,0.85)",
+      crosshair: dark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)",
+      watermark: dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.035)",
+      // Distinct, theme-aware colours for each moving-average line.
+      ma: {
+        20: dark ? "#60a5fa" : "#2563eb", // blue
+        60: dark ? "#fbbf24" : "#f59e0b", // amber
+        120: dark ? "#c084fc" : "#9333ea", // violet
+      },
     };
   }
 
@@ -62,12 +78,20 @@
     }
     return out;
   }
-  var MA_PERIOD = 20;
 
   // ── formatting ───────────────────────────────────────────────────────────
   function fmtPrice(n) {
     var d = Math.abs(n) < 1 ? 4 : 2;
     return n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  function fmtVol(n) {
+    if (!n && n !== 0) return "—";
+    var abs = Math.abs(n);
+    if (abs >= 1e9) return (n / 1e9).toFixed(2) + "B";
+    if (abs >= 1e6) return (n / 1e6).toFixed(2) + "M";
+    if (abs >= 1e3) return (n / 1e3).toFixed(2) + "K";
+    return String(n);
   }
 
   function shiftDays(isoDate, days) {
@@ -76,13 +100,41 @@
     return d.toISOString().slice(0, 10);
   }
 
+  // Normalise a Lightweight-Charts time (string or {year,month,day}) to ISO.
+  function timeToIso(t) {
+    if (t == null) return null;
+    if (typeof t === "string") return t;
+    if (typeof t === "object" && t.year) {
+      var mm = ("0" + t.month).slice(-2);
+      var dd = ("0" + t.day).slice(-2);
+      return t.year + "-" + mm + "-" + dd;
+    }
+    return String(t);
+  }
+
+  // ── i18n ─────────────────────────────────────────────────────────────────
+  // The site is one MkDocs build (theme.language=en), so <html lang> is "en"
+  // on every page; the Traditional-Chinese pages are only distinguished by a
+  // "/zh/" URL path. Detect that to localise the widget's own strings.
+  function isZh() {
+    return /\/zh\//.test(location.pathname);
+  }
+  function labels() {
+    return isZh()
+      ? { o: "開", h: "高", l: "低", c: "收", v: "量",
+          updated: "更新", loading: "載入 K線圖…", unavailable: "K線圖暫時無法載入" }
+      : { o: "O", h: "H", l: "L", c: "C", v: "Vol",
+          updated: "Updated", loading: "Loading chart…", unavailable: "Chart unavailable" };
+  }
+
   // ── one widget ─────────────────────────────────────────────────────────────
   function build(node, data) {
     var LC = window.LightweightCharts;
     var bars = (data && data.bars) || [];
+    var L = labels();
     if (!LC || bars.length < 2) {
       node.classList.add("is-empty");
-      node.innerHTML = '<div class="kline__msg">K線圖暫時無法載入 · Chart unavailable</div>';
+      node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';
       return;
     }
 
@@ -95,8 +147,22 @@
     var up = change >= 0;
     var sign = up ? "+" : "−";
 
+    // Index bars by date for the crosshair readout (bar + previous close).
+    var byTime = {};
+    for (var i = 0; i < bars.length; i++) {
+      byTime[bars[i].t] = { bar: bars[i], prevClose: i > 0 ? bars[i - 1].c : bars[i].o };
+    }
+
     // ---- scaffold ----
     node.classList.remove("is-empty");
+    var maChips = MA_LINES.map(function (m) {
+      return (
+        '<button type="button" class="kline__ma' + (m.on ? " is-on" : "") + '" ' +
+        'data-p="' + m.period + '" aria-pressed="' + m.on + '">' +
+        '<i></i>MA' + m.period + "</button>"
+      );
+    }).join("");
+
     node.innerHTML =
       '<div class="kline__head">' +
         '<div class="kline__id">' +
@@ -106,29 +172,50 @@
           '<span class="kline__chg ' + (up ? "is-up" : "is-down") + '">' +
             sign + fmtPrice(Math.abs(change)) + " (" + sign + Math.abs(pct).toFixed(2) + "%)" +
           '</span>' +
-          '<span class="kline__ma"><i></i>MA' + MA_PERIOD + '</span>' +
         '</div>' +
+        '<div class="kline__legend-chips">' + maChips + '</div>' +
         '<div class="kline__ranges" role="group" aria-label="Time range"></div>' +
       '</div>' +
-      '<div class="kline__chart"></div>' +
+      '<div class="kline__chart">' +
+        '<div class="kline__ohlc" aria-hidden="true"></div>' +
+      '</div>' +
       '<div class="kline__foot">' +
-        '<span>更新 ' + (data.updated || "") + '</span>' +
+        '<span>' + L.updated + ' ' + (data.updated || "") + '</span>' +
         '<span class="kline__brand">Lightweight&nbsp;Charts™</span>' +
       '</div>';
 
     var chartEl = node.querySelector(".kline__chart");
+    var ohlcEl = node.querySelector(".kline__ohlc");
     var rangesEl = node.querySelector(".kline__ranges");
     var pal = palette();
 
     // ---- chart ----
     var chart = LC.createChart(chartEl, {
       autoSize: true,
-      layout: { background: { type: "solid", color: "transparent" }, textColor: pal.text, fontFamily: getComputedStyle(document.body).fontFamily },
+      layout: {
+        background: { type: "solid", color: "transparent" },
+        textColor: pal.text,
+        fontFamily: getComputedStyle(document.body).fontFamily,
+        fontSize: 12,
+      },
       grid: { vertLines: { color: pal.grid }, horzLines: { color: pal.grid } },
-      rightPriceScale: { borderColor: pal.border, scaleMargins: { top: 0.08, bottom: 0.26 } },
-      timeScale: { borderColor: pal.border, fixLeftEdge: true, fixRightEdge: true },
-      crosshair: { mode: LC.CrosshairMode.Normal },
+      rightPriceScale: { borderColor: pal.border, scaleMargins: { top: 0.12, bottom: 0.26 } },
+      timeScale: { borderColor: pal.border, fixLeftEdge: true, fixRightEdge: true, rightOffset: 2 },
+      crosshair: {
+        mode: LC.CrosshairMode.Magnet,
+        vertLine: { color: pal.crosshair, width: 1, style: LC.LineStyle.Dashed, labelBackgroundColor: pal.text },
+        horzLine: { color: pal.crosshair, width: 1, style: LC.LineStyle.Dashed, labelBackgroundColor: pal.text },
+      },
       handleScale: { axisPressedMouseMove: false },
+      watermark: {
+        visible: !!ticker,
+        text: ticker,
+        color: pal.watermark,
+        fontSize: 64,
+        fontStyle: "bold",
+        horzAlign: "center",
+        vertAlign: "center",
+      },
       localization: { priceFormatter: function (p) { return fmtPrice(p); } },
     });
 
@@ -136,7 +223,8 @@
       upColor: pal.up, downColor: pal.down,
       borderUpColor: pal.up, borderDownColor: pal.down,
       wickUpColor: pal.up, wickDownColor: pal.down,
-      priceLineVisible: false, lastValueVisible: true,
+      priceLineVisible: true, priceLineStyle: LC.LineStyle.Dashed, priceLineWidth: 1,
+      lastValueVisible: true,
     });
     candle.setData(bars.map(function (b) {
       return { time: b.t, open: b.o, high: b.h, low: b.l, close: b.c };
@@ -155,15 +243,62 @@
       };
     }));
 
-    // ---- light MA(20) overlay ----
-    var maLine = chart.addLineSeries({
-      color: pal.ma, lineWidth: 2,
-      priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+    // ---- moving-average overlays ----
+    var maSeries = MA_LINES.map(function (m) {
+      var line = chart.addLineSeries({
+        color: pal.ma[m.period], lineWidth: 2,
+        priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+        visible: m.on,
+      });
+      line.setData(sma(bars, m.period));
+      return { period: m.period, on: m.on, series: line };
     });
-    maLine.setData(sma(bars, MA_PERIOD));
-    // Tint the header legend swatch to match the line.
-    var swatch = node.querySelector(".kline__ma i");
-    if (swatch) swatch.style.background = pal.ma;
+
+    // Colour the legend swatches to match their lines; wire up toggling.
+    var chipEls = node.querySelectorAll(".kline__legend-chips .kline__ma");
+    function paintChips() {
+      var p = palette();
+      chipEls.forEach(function (chip) {
+        var period = +chip.getAttribute("data-p");
+        var sw = chip.querySelector("i");
+        if (sw) sw.style.background = p.ma[period];
+      });
+    }
+    paintChips();
+    chipEls.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var period = +chip.getAttribute("data-p");
+        var rec = maSeries.filter(function (s) { return s.period === period; })[0];
+        if (!rec) return;
+        rec.on = !rec.on;
+        rec.series.applyOptions({ visible: rec.on });
+        chip.classList.toggle("is-on", rec.on);
+        chip.setAttribute("aria-pressed", String(rec.on));
+      });
+    });
+
+    // ---- live OHLC / volume readout ----
+    function renderReadout(rec) {
+      if (!rec) { ohlcEl.innerHTML = ""; return; }
+      var b = rec.bar;
+      var ch = b.c - rec.prevClose;
+      var cp = rec.prevClose ? (ch / rec.prevClose) * 100 : 0;
+      var cls = ch >= 0 ? "is-up" : "is-down";
+      var s = ch >= 0 ? "+" : "−";
+      ohlcEl.innerHTML =
+        '<span class="kline__ohlc-date">' + b.t + '</span>' +
+        '<span>' + L.o + ' <b>' + fmtPrice(b.o) + '</b></span>' +
+        '<span>' + L.h + ' <b class="is-up">' + fmtPrice(b.h) + '</b></span>' +
+        '<span>' + L.l + ' <b class="is-down">' + fmtPrice(b.l) + '</b></span>' +
+        '<span>' + L.c + ' <b>' + fmtPrice(b.c) + '</b></span>' +
+        '<span class="' + cls + '">' + s + fmtPrice(Math.abs(ch)) + " (" + s + Math.abs(cp).toFixed(2) + "%)</span>" +
+        '<span>' + L.v + ' <b>' + fmtVol(b.v) + '</b></span>';
+    }
+    renderReadout(byTime[last.t]);
+    chart.subscribeCrosshairMove(function (param) {
+      var iso = param && param.time ? timeToIso(param.time) : null;
+      renderReadout((iso && byTime[iso]) || byTime[last.t]);
+    });
 
     // ---- range toggle ----
     var firstT = bars[0].t;
@@ -199,6 +334,11 @@
           grid: { vertLines: { color: p.grid }, horzLines: { color: p.grid } },
           rightPriceScale: { borderColor: p.border },
           timeScale: { borderColor: p.border },
+          crosshair: {
+            vertLine: { color: p.crosshair, labelBackgroundColor: p.text },
+            horzLine: { color: p.crosshair, labelBackgroundColor: p.text },
+          },
+          watermark: { color: p.watermark },
         });
         candle.applyOptions({
           upColor: p.up, downColor: p.down,
@@ -208,28 +348,39 @@
         volume.setData(bars.map(function (b) {
           return { time: b.t, value: b.v, color: b.c >= b.o ? p.up + "55" : p.down + "55" };
         }));
-        maLine.applyOptions({ color: p.ma });
-        if (swatch) swatch.style.background = p.ma;
+        maSeries.forEach(function (s) { s.series.applyOptions({ color: p.ma[s.period] }); });
+        paintChips();
       },
+      // Free the Lightweight Charts instance (and its resize observer /
+      // listeners) when the widget's node leaves the DOM under MkDocs
+      // Material's instant navigation, so we don't leak a chart per page view.
+      destroy: function () { chart.remove(); },
     };
     live.push(ctrl);
   }
 
   // ── scan the page ─────────────────────────────────────────────────────────
   function initAll() {
-    live = live.filter(function (c) { return document.body.contains(c.node); });
+    // Drop controllers whose node has left the DOM, disposing each chart so
+    // instant navigation doesn't leak a Lightweight Charts instance per view.
+    live = live.filter(function (c) {
+      if (document.body.contains(c.node)) return true;
+      if (c.destroy) c.destroy();
+      return false;
+    });
     var nodes = document.querySelectorAll(".kline-widget:not([data-kline-ready])");
     nodes.forEach(function (node) {
       node.setAttribute("data-kline-ready", "1");
       var src = node.getAttribute("data-src");
       if (!src) return;
-      node.innerHTML = '<div class="kline__msg">載入 K線圖 · Loading…</div>';
+      var L = labels();
+      node.innerHTML = '<div class="kline__msg">' + L.loading + '</div>';
       fetch(src)
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) { build(node, data); })
         .catch(function () {
           node.classList.add("is-empty");
-          node.innerHTML = '<div class="kline__msg">K線圖暫時無法載入 · Chart unavailable</div>';
+          node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';
         });
     });
   }
