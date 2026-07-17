@@ -112,13 +112,29 @@
     return String(t);
   }
 
+  // ── i18n ─────────────────────────────────────────────────────────────────
+  // The site is one MkDocs build (theme.language=en), so <html lang> is "en"
+  // on every page; the Traditional-Chinese pages are only distinguished by a
+  // "/zh/" URL path. Detect that to localise the widget's own strings.
+  function isZh() {
+    return /\/zh\//.test(location.pathname);
+  }
+  function labels() {
+    return isZh()
+      ? { o: "開", h: "高", l: "低", c: "收", v: "量",
+          updated: "更新", loading: "載入 K線圖…", unavailable: "K線圖暫時無法載入" }
+      : { o: "O", h: "H", l: "L", c: "C", v: "Vol",
+          updated: "Updated", loading: "Loading chart…", unavailable: "Chart unavailable" };
+  }
+
   // ── one widget ─────────────────────────────────────────────────────────────
   function build(node, data) {
     var LC = window.LightweightCharts;
     var bars = (data && data.bars) || [];
+    var L = labels();
     if (!LC || bars.length < 2) {
       node.classList.add("is-empty");
-      node.innerHTML = '<div class="kline__msg">K線圖暫時無法載入 · Chart unavailable</div>';
+      node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';
       return;
     }
 
@@ -164,7 +180,7 @@
         '<div class="kline__ohlc" aria-hidden="true"></div>' +
       '</div>' +
       '<div class="kline__foot">' +
-        '<span>更新 ' + (data.updated || "") + '</span>' +
+        '<span>' + L.updated + ' ' + (data.updated || "") + '</span>' +
         '<span class="kline__brand">Lightweight&nbsp;Charts™</span>' +
       '</div>';
 
@@ -271,12 +287,12 @@
       var s = ch >= 0 ? "+" : "−";
       ohlcEl.innerHTML =
         '<span class="kline__ohlc-date">' + b.t + '</span>' +
-        '<span>開 <b>' + fmtPrice(b.o) + '</b></span>' +
-        '<span>高 <b class="is-up">' + fmtPrice(b.h) + '</b></span>' +
-        '<span>低 <b class="is-down">' + fmtPrice(b.l) + '</b></span>' +
-        '<span>收 <b>' + fmtPrice(b.c) + '</b></span>' +
+        '<span>' + L.o + ' <b>' + fmtPrice(b.o) + '</b></span>' +
+        '<span>' + L.h + ' <b class="is-up">' + fmtPrice(b.h) + '</b></span>' +
+        '<span>' + L.l + ' <b class="is-down">' + fmtPrice(b.l) + '</b></span>' +
+        '<span>' + L.c + ' <b>' + fmtPrice(b.c) + '</b></span>' +
         '<span class="' + cls + '">' + s + fmtPrice(Math.abs(ch)) + " (" + s + Math.abs(cp).toFixed(2) + "%)</span>" +
-        '<span>量 <b>' + fmtVol(b.v) + '</b></span>';
+        '<span>' + L.v + ' <b>' + fmtVol(b.v) + '</b></span>';
     }
     renderReadout(byTime[last.t]);
     chart.subscribeCrosshairMove(function (param) {
@@ -335,25 +351,36 @@
         maSeries.forEach(function (s) { s.series.applyOptions({ color: p.ma[s.period] }); });
         paintChips();
       },
+      // Free the Lightweight Charts instance (and its resize observer /
+      // listeners) when the widget's node leaves the DOM under MkDocs
+      // Material's instant navigation, so we don't leak a chart per page view.
+      destroy: function () { chart.remove(); },
     };
     live.push(ctrl);
   }
 
   // ── scan the page ─────────────────────────────────────────────────────────
   function initAll() {
-    live = live.filter(function (c) { return document.body.contains(c.node); });
+    // Drop controllers whose node has left the DOM, disposing each chart so
+    // instant navigation doesn't leak a Lightweight Charts instance per view.
+    live = live.filter(function (c) {
+      if (document.body.contains(c.node)) return true;
+      if (c.destroy) c.destroy();
+      return false;
+    });
     var nodes = document.querySelectorAll(".kline-widget:not([data-kline-ready])");
     nodes.forEach(function (node) {
       node.setAttribute("data-kline-ready", "1");
       var src = node.getAttribute("data-src");
       if (!src) return;
-      node.innerHTML = '<div class="kline__msg">載入 K線圖 · Loading…</div>';
+      var L = labels();
+      node.innerHTML = '<div class="kline__msg">' + L.loading + '</div>';
       fetch(src)
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) { build(node, data); })
         .catch(function () {
           node.classList.add("is-empty");
-          node.innerHTML = '<div class="kline__msg">K線圖暫時無法載入 · Chart unavailable</div>';
+          node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';
         });
     });
   }
