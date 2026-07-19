@@ -245,3 +245,176 @@ def test_sample_build_reports_respects_sample_tickers(tmp_path, monkeypatch):
 
     report_dirs = sorted(p.name for p in (docs / "reports").iterdir() if p.is_dir())
     assert report_dirs == ["ccc"]
+
+
+# ── price-target scenario table ───────────────────────────────────────────────
+
+# 10.2-style: emoji rows, target is the first $ value, explicit probability col.
+_MD_EMOJI = """\
+### 10.2 目標價與隱含報酬率
+
+| 情境 | 權重機率 | 目標價 | 當前股價 | 隱含報酬率 |
+|---|---|---|---|---|
+| 🔴 **悲觀** | 15% | $180.00 | $202.81 | -11.2% |
+| 🟡 **基準** | **60%** | **$300.00** | $202.81 | +49.1% |
+| 🟢 **樂觀** | 25% | $500.00 | $202.81 | +146.5% |
+| **加權目標價** | 100% | **$333.00** | $202.81 | +64.4% |
+"""
+
+# 7.3-style: target sits behind an EPS $ column, so "first $" would be wrong —
+# the parser must pick the 隱含目標價 column by name.
+_MD_TARGET_NOT_FIRST = """\
+### 7.3 情境目標價推導
+
+| 情境 | 12M 預估 EPS | 預期 P/E | 隱含目標價 | 相對現價漲跌幅 | 發生機率 |
+|------|-------------|----------|------------|----------------|----------|
+| 🔴 **悲觀** | $15.53 | 27.0x | **$420.00** | -19.5% | 20% |
+| 🟡 **基準** | $16.94 | 36.5x | **$620.00** | +18.8% | 60% |
+| 🟢 **樂觀** | $18.35 | 41.0x | **$750.00** | +43.7% | 20% |
+"""
+
+# text-labelled rows (no emoji), still carries a probability column.
+_MD_TEXT_LABELS = """\
+### 7.3 情境目標價
+
+| 情境 | 目標價 (USD) | 隱含報酬率 | 機率權重 |
+|------|-------------|------------|----------|
+| 悲觀情境 | $90 | +20.9% | 20% |
+| 基準情境 | $105 | +41.1% | 60% |
+| 樂觀情境 | $120 | +61.2% | 20% |
+"""
+
+# scenario targets but no probability column → default weights applied.
+_MD_NO_PROB = """\
+### 7.3 情境目標價推導
+
+| 情境 | 隱含目標價 | 相對現價漲跌幅 | 觸發條件 |
+|------|------------|----------------|----------|
+| 🔴 悲觀 | $420.00 | -19.5% | 需求急凍 |
+| 🟡 基準 | $620.00 | +18.8% | 穩健增長 |
+| 🟢 樂觀 | $750.00 | +43.7% | 超預期 |
+"""
+
+# a risk matrix reuses the emojis but in the 2nd cell and has no 目標價 column;
+# an investment-thesis table has all-🟢 rows. Neither is a scenario table.
+_MD_DECOYS = """\
+### 9 風險矩陣
+
+| # | 風險項目 | 發生機率 | 財務衝擊 | 風險評分 |
+|---|----------|----------|----------|----------|
+| 1 | 🔴 地緣政治風險 | 中 (45%) | 極高 (-25%) | 🔴 8.5/10 |
+
+### 投資論點
+
+| 評級 | 投資論點 | 說明 |
+|------|----------|------|
+| 🟢 論點① | 護城河 | 技術領先 |
+| 🟢 論點② | 資本效率 | ROIC 高 |
+"""
+
+
+def _write_md(tmp_path, body):
+    p = tmp_path / "fundamental_analysis_2026-07-18_gemini.md"
+    p.write_text(body, encoding="utf-8")
+    return p
+
+
+def test_parse_scenario_emoji_table(tmp_path):
+    s = bd.parse_scenario_targets(_write_md(tmp_path, _MD_EMOJI))
+    assert [r["key"] for r in s] == ["bear", "base", "bull"]
+    assert [r["target"] for r in s] == [180.0, 300.0, 500.0]
+    assert [r["prob"] for r in s] == [0.15, 0.60, 0.25]
+    assert not any(r.get("prob_default") for r in s)
+
+
+def test_parse_scenario_target_column_not_first_dollar(tmp_path):
+    # EPS $ column precedes the target — must not be mistaken for the target.
+    s = bd.parse_scenario_targets(_write_md(tmp_path, _MD_TARGET_NOT_FIRST))
+    assert [r["target"] for r in s] == [420.0, 620.0, 750.0]
+    assert [r["prob"] for r in s] == [0.20, 0.60, 0.20]
+
+
+def test_parse_scenario_text_labels(tmp_path):
+    s = bd.parse_scenario_targets(_write_md(tmp_path, _MD_TEXT_LABELS))
+    assert [r["key"] for r in s] == ["bear", "base", "bull"]
+    assert [r["target"] for r in s] == [90.0, 105.0, 120.0]
+    assert [r["prob"] for r in s] == [0.20, 0.60, 0.20]
+
+
+def test_parse_scenario_defaults_probs_when_absent(tmp_path):
+    s = bd.parse_scenario_targets(_write_md(tmp_path, _MD_NO_PROB))
+    assert [r["target"] for r in s] == [420.0, 620.0, 750.0]
+    assert [r["prob"] for r in s] == [0.20, 0.60, 0.20]
+    assert all(r["prob_default"] for r in s)
+
+
+def test_parse_scenario_ignores_decoy_tables(tmp_path):
+    assert bd.parse_scenario_targets(_write_md(tmp_path, _MD_DECOYS)) == []
+
+
+def test_parse_scenario_missing_file(tmp_path):
+    assert bd.parse_scenario_targets(tmp_path / "nope.md") == []
+
+
+def _patch_kline(monkeypatch, tmp_path, ticker, close):
+    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
+    (tmp_path / f"{ticker}.json").write_text(
+        '{"currency":"USD","updated":"2026-07-18",'
+        '"bars":[{"t":"2026-07-17","c":' + str(close) + "}]}",
+        encoding="utf-8",
+    )
+
+
+def test_current_price_reads_latest_close(monkeypatch, tmp_path):
+    _patch_kline(monkeypatch, tmp_path, "xyz", 202.81)
+    assert bd._current_price("xyz") == (202.81, "2026-07-18")
+
+
+def test_current_price_missing_returns_none(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
+    assert bd._current_price("absent") is None
+
+
+def test_target_price_block_renders_and_recomputes(monkeypatch, tmp_path):
+    md = _write_md(tmp_path, _MD_EMOJI)
+    _patch_kline(monkeypatch, tmp_path, "nvda", 200.0)
+    out = bd.target_price_block("nvda", md, "zh")
+    assert "目標價與隱含報酬率" in out
+    # implied return recomputed against the live $200 price, not the report's.
+    assert "-10.0%" in out          # 180/200 - 1
+    assert "+150.0%" in out         # 500/200 - 1
+    # weighted target = .15*180 + .60*300 + .25*500 = 332.0
+    assert "$332.00" in out
+    # weighted value column = probability × target (base = .60*300 = 180)
+    assert "$180.00" in out
+
+
+def test_target_price_block_english_headers(monkeypatch, tmp_path):
+    md = _write_md(tmp_path, _MD_EMOJI)
+    _patch_kline(monkeypatch, tmp_path, "nvda", 200.0)
+    out = bd.target_price_block("nvda", md, "en")
+    assert "Price Target & Implied Return" in out
+    assert "| 🟡 Base |" in out
+
+
+def test_target_price_block_default_prob_note(monkeypatch, tmp_path):
+    md = _write_md(tmp_path, _MD_NO_PROB)
+    _patch_kline(monkeypatch, tmp_path, "soxx", 500.0)
+    out = bd.target_price_block("soxx", md, "zh")
+    assert "預設" in out  # honest note about defaulted weights
+
+
+def test_target_price_block_empty_without_kline(monkeypatch, tmp_path):
+    md = _write_md(tmp_path, _MD_EMOJI)
+    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)  # no json written
+    assert bd.target_price_block("nvda", md, "zh") == ""
+
+
+def test_target_price_block_empty_without_scenarios(monkeypatch, tmp_path):
+    md = _write_md(tmp_path, _MD_DECOYS)
+    _patch_kline(monkeypatch, tmp_path, "nvda", 200.0)
+    assert bd.target_price_block("nvda", md, "zh") == ""
+
+
+def test_target_price_block_none_path():
+    assert bd.target_price_block("nvda", None, "zh") == ""

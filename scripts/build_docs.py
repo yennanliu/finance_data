@@ -207,6 +207,18 @@ LANG_TEXT = {
         "fundamental_analysis": "📊 Fundamental Analysis",
         "technical_analysis": "📈 Technical Analysis",
         "other_reports": "🗂️ Other Reports",
+        "price_target": "🎯 Price Target & Implied Return",
+        "pt_scenario": "Scenario",
+        "pt_prob": "Probability",
+        "pt_target": "12M Target",
+        "pt_current": "Current Price",
+        "pt_return": "Implied Return",
+        "pt_weighted": "Weighted Value",
+        "pt_weighted_target": "Weighted Target",
+        "pt_note": ("Scenario targets from the latest fundamental report ({report}); "
+                    "current price as of {price_date} close. "
+                    "Weighted value = probability × target."),
+        "pt_note_default": "Probabilities are default Bear/Base/Bull weights (the report gave no probability column).",
         "analysis_reports": "Analysis Reports",
         "reports_nav_title": "AI Gen Reports",
         "market_news": "Market News",
@@ -269,6 +281,17 @@ LANG_TEXT = {
         "fundamental_analysis": "📊 基本面分析",
         "technical_analysis": "📈 技術分析",
         "other_reports": "🗂️ 其他報告",
+        "price_target": "🎯 目標價與隱含報酬率",
+        "pt_scenario": "情境",
+        "pt_prob": "發生機率",
+        "pt_target": "12M 目標價",
+        "pt_current": "當前股價",
+        "pt_return": "隱含報酬率",
+        "pt_weighted": "權重期望值",
+        "pt_weighted_target": "加權目標價",
+        "pt_note": ("情境目標價取自最新基本面報告（{report}）；當前股價為 {price_date} 收盤價。"
+                    "權重期望值 = 發生機率 × 目標價。"),
+        "pt_note_default": "發生機率採用預設的悲觀／基準／樂觀權重（報告未提供機率欄位）。",
         "analysis_reports": "分析報告",
         "reports_nav_title": "AI 生成報告",
         "market_news": "市場新聞",
@@ -378,6 +401,225 @@ def kline_block(ticker: str) -> str:
         f'<div class="kline-widget" data-ticker="{ticker.upper()}" '
         f'data-src="kline.json"></div>'
     )
+
+
+# ── Price-target scenario table (rendered directly under the hero chart) ──────
+# Fundamental reports carry a Bear/Base/Bull scenario table, but the layouts are
+# AI-generated and share almost nothing: column count/order/labels all vary, the
+# target may sit behind several other $ columns (EPS, revenue, cash…), rows are
+# labelled with an emoji, plain text, or both, and a probability column may be
+# absent entirely. So we parse structurally — scan every pipe-table, key off a
+# "目標價" column header, and read each field from its named column.
+_SCENARIO_META = {
+    "bear": ("🔴", "悲觀", "Bear"),
+    "base": ("🟡", "基準", "Base"),
+    "bull": ("🟢", "樂觀", "Bull"),
+}
+_SCENARIO_ORDER = ("bear", "base", "bull")
+_EMOJI_TO_KEY = {"🔴": "bear", "🟡": "base", "🟢": "bull"}
+_TEXT_TO_KEY = {"悲觀": "bear", "基準": "base", "樂觀": "bull",
+                "bear": "bear", "base": "base", "bull": "bull"}
+# Default weights used only when a table gives targets but no probability column.
+_DEFAULT_PROBS = {"bear": 0.20, "base": 0.60, "bull": 0.20}
+
+_MONEY_RE = re.compile(r"\$\s*(\d[\d,]*(?:\.\d+)?)")
+_PCT_RE = re.compile(r"(\d{1,3}(?:\.\d+)?)\s*%")
+
+
+def _current_price(ticker: str) -> "tuple[float, str] | None":
+    """Latest close and its date from the ticker's kline JSON, or None."""
+    src = kline_json_src(ticker)
+    if src is None:
+        return None
+    try:
+        data = json.loads(src.read_text(encoding="utf-8"))
+        bars = data.get("bars") or []
+        if not bars:
+            return None
+        last = bars[-1]
+        price_date = str(data.get("updated") or last.get("t") or "")
+        return float(last["c"]), price_date
+    except (json.JSONDecodeError, OSError, KeyError, TypeError, ValueError):
+        return None
+
+
+def _table_cells(row: str) -> "list[str]":
+    """Split a Markdown table row into cleaned cells (drops markdown emphasis)."""
+    return [c.replace("*", "").replace("`", "").strip()
+            for c in row.strip().strip("|").split("|")]
+
+
+def _iter_pipe_tables(text: str):
+    """Yield each Markdown pipe-table as a list of its raw lines."""
+    block: list[str] = []
+    for line in text.splitlines():
+        if line.lstrip().startswith("|"):
+            block.append(line)
+        elif block:
+            if len(block) >= 2:
+                yield block
+            block = []
+    if len(block) >= 2:
+        yield block
+
+
+def _is_separator(cells: "list[str]") -> bool:
+    return all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c)
+
+
+def _target_col(header: "list[str]") -> "int | None":
+    """Index of the target-price column (prefer '隱含…目標價' over any '目標價')."""
+    cands = [i for i, h in enumerate(header) if "目標價" in h]
+    if not cands:
+        return None
+    for i in cands:
+        if "隱含" in header[i]:
+            return i
+    return cands[0]
+
+
+def _prob_col(header: "list[str]") -> "int | None":
+    """Index of the probability column ('發生機率' / '機率權重' / '權重'…),
+    excluding return/contribution columns that also mention 機率/權重."""
+    for i, h in enumerate(header):
+        if ("機率" in h or "權重" in h) and not any(
+            x in h for x in ("報酬", "回報", "貢獻", "期望", "目標")
+        ):
+            return i
+    return None
+
+
+def _classify_scenario(cell0: str) -> "str | None":
+    """Map a table's first cell to bear/base/bull, or None if it isn't one."""
+    s = cell0.strip()
+    for emoji, key in _EMOJI_TO_KEY.items():
+        if s.startswith(emoji):
+            return key
+    core = re.sub(r"\s+", "", s).lower()
+    for kw, key in _TEXT_TO_KEY.items():
+        if core in (kw, kw + "情境", kw + "case"):
+            return key
+    return None
+
+
+def parse_scenario_targets(md_path: "Path") -> "list[dict]":
+    """Extract Bear/Base/Bull rows (12M target + probability) from a fundamental
+    report's scenario table.
+
+    Scans every pipe-table and accepts the first one that has a '目標價' column
+    and all three scenarios; upgrades to a later table if it additionally carries
+    a probability column. When no probability column exists the default
+    Bear/Base/Bull weights are applied. Returns [] (caller omits the block) if no
+    table yields all three scenarios."""
+    try:
+        text = md_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+
+    best: "list[dict]" = []
+    best_has_prob = False
+    for block in _iter_pipe_tables(text):
+        header = _table_cells(block[0])
+        tgt_idx = _target_col(header)
+        if tgt_idx is None:
+            continue
+        prob_idx = _prob_col(header)
+        rows: dict[str, dict] = {}
+        for raw in block[1:]:
+            cells = _table_cells(raw)
+            if not cells or _is_separator(cells) or tgt_idx >= len(cells):
+                continue
+            key = _classify_scenario(cells[0])
+            if key is None or key in rows:
+                continue
+            money_m = _MONEY_RE.search(cells[tgt_idx])
+            if not money_m:
+                continue
+            try:
+                target = float(money_m.group(1).replace(",", ""))
+            except ValueError:
+                continue
+            if target <= 0:
+                continue
+            prob = None
+            if prob_idx is not None and prob_idx < len(cells):
+                pm = _PCT_RE.search(cells[prob_idx])
+                if pm:
+                    prob = float(pm.group(1)) / 100.0
+            emoji, zh, en = _SCENARIO_META[key]
+            rows[key] = {"key": key, "zh": zh, "en": en, "emoji": emoji,
+                         "target": target, "prob": prob}
+
+        if len(rows) == 3:
+            has_prob = all(rows[k]["prob"] is not None for k in rows)
+            if not best or (has_prob and not best_has_prob):
+                best = [rows[k] for k in _SCENARIO_ORDER]
+                best_has_prob = has_prob
+
+    if best and not best_has_prob:
+        for s in best:
+            s["prob"] = _DEFAULT_PROBS[s["key"]]
+            s["prob_default"] = True
+    return best
+
+
+def _fmt_money(v: float) -> str:
+    return f"${v:,.2f}"
+
+
+def _fmt_pct(v: float) -> str:
+    return f"{v * 100:+.1f}%"
+
+
+def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
+    """Markdown for the price-target & implied-return table shown right under the
+    hero chart. Scenario targets come from the latest fundamental report; the
+    current price comes from kline.json and implied returns are recomputed
+    against it. Returns '' when either source is unavailable so the page degrades
+    gracefully to just the chart."""
+    if fund_md is None:
+        return ""
+    scenarios = parse_scenario_targets(fund_md)
+    if not scenarios:
+        return ""
+    price_info = _current_price(ticker)
+    if price_info is None:
+        return ""
+    current, price_date = price_info
+    if current <= 0:
+        return ""
+
+    weighted_target = sum(s["prob"] * s["target"] for s in scenarios)
+    total_prob = sum(s["prob"] for s in scenarios)
+    weighted_ret = weighted_target / current - 1
+
+    lbl = "zh" if lang == "zh" else "en"
+    lines = [
+        f"### {t(lang, 'price_target')}",
+        "",
+        (f"| {t(lang, 'pt_scenario')} | {t(lang, 'pt_prob')} | {t(lang, 'pt_target')} "
+         f"| {t(lang, 'pt_current')} | {t(lang, 'pt_return')} | {t(lang, 'pt_weighted')} |"),
+        "|---|---|---|---|---|---|",
+    ]
+    for s in scenarios:
+        implied = s["target"] / current - 1
+        contrib = s["prob"] * s["target"]
+        lines.append(
+            f"| {s['emoji']} {s[lbl]} | {s['prob'] * 100:.0f}% "
+            f"| {_fmt_money(s['target'])} | {_fmt_money(current)} "
+            f"| {_fmt_pct(implied)} | {_fmt_money(contrib)} |"
+        )
+    lines.append(
+        f"| **{t(lang, 'pt_weighted_target')}** | {total_prob * 100:.0f}% "
+        f"| **{_fmt_money(weighted_target)}** | {_fmt_money(current)} "
+        f"| **{_fmt_pct(weighted_ret)}** | — |"
+    )
+    report_date = (d.isoformat() if (d := _file_date(fund_md)) else fund_md.stem)
+    note = t(lang, "pt_note").format(report=report_date, price_date=price_date)
+    if any(s.get("prob_default") for s in scenarios):
+        note += " " + t(lang, "pt_note_default")
+    lines += ["", f"> {note}", ""]
+    return "\n".join(lines)
 
 
 # ── Mermaid pre-rendering ─────────────────────────────────────────────────────
@@ -615,6 +857,13 @@ def build_reports(lang: str = "en"):
         chart = kline_block(ticker)
         if chart:
             lines += [chart, ""]
+        # Price-target & implied-return table directly under the chart, sourced
+        # from the latest fundamental report's scenario targets.
+        target_tbl = target_price_block(
+            ticker, fundamental_md[0] if fundamental_md else None, lang
+        )
+        if target_tbl:
+            lines += [target_tbl]
         lines += [
             "---",
             "",
