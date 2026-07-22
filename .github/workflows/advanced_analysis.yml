@@ -52,6 +52,7 @@ on:
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
           # Gemini models
+          - gemini-3.6-flash
           - gemini-3.5-flash
           - gemini-3.1-pro-preview
           - gemini-3.1-flash-lite
