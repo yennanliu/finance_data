@@ -26,8 +26,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from analysis.llm import run_claude, run_openai, run_gemini
 from analysis.publish import frontmatter
 
-DEFAULT_PROVIDER = "gemini"
-DEFAULT_MODEL = "gemini-3.6-flash"
+DEFAULT_PROVIDER = "openai"
+DEFAULT_MODEL = "gpt-5.6-luna"
 DEFAULT_TOKENS = 12000
 
 # Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
