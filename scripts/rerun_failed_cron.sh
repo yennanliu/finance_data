@@ -39,20 +39,29 @@ ONLY_WF=""
 # Workflows that run on a daily schedule. Format: "file.yml"
 WORKFLOWS=("daily_analysis.yml" "daily_market_news.yml")
 
+die() { echo "Error: $*" >&2; exit 1; }
+# Ensure a value-taking flag actually received a (non-empty) value under `set -u`,
+# instead of failing later with a cryptic unbound-variable error.
+require_val() { [[ -n "${2:-}" ]] || die "$1 requires a value"; }
+
 # ── Parse args ────────────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --since)    SINCE_DAYS="$2"; shift 2 ;;
-    --workflow) ONLY_WF="$2";    shift 2 ;;
-    --repo)     REPO="$2";       shift 2 ;;
-    --delay)    DELAY="$2";      shift 2 ;;
+    --since)    require_val --since "${2:-}";    SINCE_DAYS="$2"; shift 2 ;;
+    --workflow) require_val --workflow "${2:-}"; ONLY_WF="$2";    shift 2 ;;
+    --repo)     require_val --repo "${2:-}";     REPO="$2";       shift 2 ;;
+    --delay)    require_val --delay "${2:-}";    DELAY="$2";      shift 2 ;;
     --wait)     WAIT=1;          shift ;;
     --dry-run)  DRY_RUN=1;       shift ;;
     -h|--help)
       sed -n '2,32p' "$0"; exit 0 ;;
-    *) echo "Unknown flag: $1" >&2; exit 1 ;;
+    *) die "Unknown flag: $1" ;;
   esac
 done
+
+# Validate numerics (also covers values supplied via SINCE_DAYS / TRIGGER_DELAY env).
+[[ "$SINCE_DAYS" =~ ^[1-9][0-9]*$ ]] || die "--since must be a positive integer (got '$SINCE_DAYS')"
+[[ "$DELAY"      =~ ^[0-9]+$      ]] || die "--delay must be a non-negative integer (got '$DELAY')"
 
 [[ -n "$ONLY_WF" ]] && WORKFLOWS=("$ONLY_WF")
 
@@ -88,14 +97,21 @@ lookup_job() {
   echo "${ticker}|${atype}"
 }
 
-# Wait for the freshly-dispatched run of $wf to appear and finish. Echoes result.
+# Find the run WE just dispatched and wait for it to finish. Echoes "conclusion|runid".
+# Correlates on (run id greater than the pre-dispatch max) AND (title contains the
+# ticker), so a concurrent dispatch of a *different* ticker isn't mistaken for ours.
+# gh returns no dispatched-run id, so two simultaneous dispatches of the SAME ticker
+# still can't be distinguished — acceptable for this manual backfill helper.
 wait_for_run() {
-  local wf="$1" before="$2" newid="" cand line status concl i
+  local wf="$1" boundary="$2" ticker="$3" newid="" line status concl i
+  [[ "$boundary" == "none" || -z "$boundary" ]] && boundary=0
   for i in $(seq 1 30); do
     sleep 4
-    cand=$("$GH" run list --workflow "$wf" --repo "$REPO" --event workflow_dispatch \
-             --limit 1 --json databaseId --jq '.[0].databaseId // "none"' 2>/dev/null || echo none)
-    if [[ "$cand" != "$before" && "$cand" != "none" && -n "$cand" ]]; then newid="$cand"; break; fi
+    newid=$("$GH" run list --workflow "$wf" --repo "$REPO" --event workflow_dispatch --limit 20 \
+      --json databaseId,displayTitle \
+      --jq "[.[] | select((.databaseId > ${boundary}) and ((.displayTitle // \"\") | contains(\"${ticker}\")))] | .[0].databaseId // \"\"" \
+      2>/dev/null || echo "")
+    [[ -n "$newid" ]] && break
   done
   [[ -z "$newid" ]] && { echo "unknown|?"; return; }
   for i in $(seq 1 180); do
@@ -116,13 +132,18 @@ for WF in "${WORKFLOWS[@]}"; do
 
   echo "── ${WF} ──────────────────────────────────────────────"
 
-  # Unique cron expressions among failed scheduled runs in the window.
+  # Query failed scheduled runs; abort on a gh/API failure rather than silently
+  # treating an auth/network error as "no failures in window".
+  if ! TITLES=$("$GH" run list --workflow "$WF" --repo "$REPO" --event schedule --limit 200 \
+        --json conclusion,createdAt,displayTitle \
+        --jq "[.[] | select(.conclusion==\"failure\" and .createdAt >= \"${CUTOFF}\")] | .[].displayTitle"); then
+    die "gh run list failed for ${WF} (authentication/API error?)"
+  fi
+
+  # Unique cron expressions among those failed runs.
   CRONS=()
   while IFS= read -r c; do [[ -n "$c" ]] && CRONS+=("$c"); done < <(
-    "$GH" run list --workflow "$WF" --repo "$REPO" --event schedule --limit 200 \
-      --json conclusion,createdAt,displayTitle \
-      --jq "[.[] | select(.conclusion==\"failure\" and .createdAt >= \"${CUTOFF}\")] | .[].displayTitle" \
-      2>/dev/null | grep -oE '[0-9]+ [0-9]+ \* \* \*' | sort -u
+    printf '%s\n' "$TITLES" | grep -oE '[0-9]+ [0-9]+ \* \* \*' | sort -u
   )
 
   if [[ ${#CRONS[@]} -eq 0 ]]; then
@@ -157,7 +178,7 @@ for WF in "${WORKFLOWS[@]}"; do
     fi
 
     if [[ $WAIT -eq 1 ]]; then
-      RES=$(wait_for_run "$WF" "$before")
+      RES=$(wait_for_run "$WF" "$before" "$TICKER")
       concl="${RES%%|*}"; rid="${RES##*|}"
       if [[ "$concl" == "success" ]]; then
         echo "OK (run $rid)"; PASS=$((PASS+1))
