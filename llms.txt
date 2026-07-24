@@ -1,0 +1,21 @@
+# Finance Data Research Hub
+
+> AI-driven US-equity investment research — fundamental & technical analysis,
+> SEC filings, insider/institutional tracking, and daily market news, published
+> in Traditional Chinese. Reports are AI-generated and are not investment advice.
+
+Structured, agent-readable knowledge about this project is published as an
+Open Knowledge Format (OKF) bundle — plain markdown with YAML frontmatter.
+Start at the bundle index and follow its links.
+
+## Knowledge
+
+- [OKF knowledge bundle](https://yennanliu.github.io/finance_data/okf/index.md): entry point describing every dataset and reference in this project
+- [Datasets](https://yennanliu.github.io/finance_data/okf/datasets/index.md): analysis reports, SEC filings, market news, and k-line data
+- [Analysis types](https://yennanliu.github.io/finance_data/okf/references/analysis-types.md): the 12 report types produced per ticker
+- [Coverage](https://yennanliu.github.io/finance_data/okf/references/coverage.md): the tickers tracked daily
+
+## Site
+
+- [Live site](https://yennanliu.github.io/finance_data/): human-facing research hub (Traditional Chinese)
+- [Source repository](https://github.com/yennanliu/finance_data): code and raw data
