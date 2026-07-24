@@ -416,11 +416,12 @@ def call_llm(ticker: str, context: str, analysis_type: str,
 
 
 # HTTP statuses that signal a permanent request/config error (bad key, no
-# permission, unsupported model, malformed request). Falling over to another
-# provider after one of these would only mask a bug we need to see — so we
-# re-raise instead of retrying. Transient failures (429 quota, 5xx, timeouts,
+# permission, unsupported model, malformed/invalid request). Falling over to
+# another provider after one of these would only mask a bug we need to see — so
+# we re-raise instead of retrying. Transient failures (429 quota, 5xx, timeouts,
 # connection errors) are NOT here and do fall through.
-_TERMINAL_STATUS_CODES = frozenset({400, 401, 403, 404})
+# 422 = semantic validation failure (OpenAI's UnprocessableEntityError).
+_TERMINAL_STATUS_CODES = frozenset({400, 401, 403, 404, 422})
 _TERMINAL_NAME_TAGS = (
     "authentication", "permission", "notfound", "badrequest", "invalidrequest",
 )
