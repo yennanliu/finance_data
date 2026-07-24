@@ -23,11 +23,12 @@ import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+from analysis.config.providers import PROVIDER_DEFAULTS
 from analysis.llm import run_claude, run_openai, run_gemini
 from analysis.publish import frontmatter
 
-DEFAULT_PROVIDER = "gemini"
-DEFAULT_MODEL = "gemini-3.6-flash"
+DEFAULT_PROVIDER = "openai"
+DEFAULT_MODEL = "gpt-5.6-luna"
 DEFAULT_TOKENS = 12000
 
 # Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
@@ -384,8 +385,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--model",
-        default=DEFAULT_MODEL,
-        help=f"Model ID (default: {DEFAULT_MODEL})",
+        default=None,
+        help="Model ID (default: the selected provider's default model)",
     )
     parser.add_argument(
         "--max-tokens",
@@ -395,6 +396,10 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    # Resolve the model from the selected provider's default when not given
+    # explicitly, so `--provider claude/gemini` doesn't inherit an OpenAI model.
+    if args.model is None:
+        args.model = PROVIDER_DEFAULTS.get(args.provider, {}).get("default_model", DEFAULT_MODEL)
     ticker = args.ticker.upper()
     today = date.today().isoformat()
     output_dir = (
