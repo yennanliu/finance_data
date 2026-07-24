@@ -6,7 +6,7 @@ PROVIDER_DEFAULTS = {
         "default_tokens": 8000,
     },
     "openai": {
-        "default_model": "gpt-4o",
+        "default_model": "gpt-5.6-luna",
         "default_tokens": 16000,
     },
     "gemini": {
