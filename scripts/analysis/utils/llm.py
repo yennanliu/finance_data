@@ -415,8 +415,91 @@ def call_llm(ticker: str, context: str, analysis_type: str,
         return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
+# HTTP statuses that signal a permanent request/config error (bad key, no
+# permission, unsupported model, malformed/invalid request). Falling over to
+# another provider after one of these would only mask a bug we need to see — so
+# we re-raise instead of retrying. Transient failures (429 quota, 5xx, timeouts,
+# connection errors) are NOT here and do fall through.
+# 422 = semantic validation failure (OpenAI's UnprocessableEntityError).
+_TERMINAL_STATUS_CODES = frozenset({400, 401, 403, 404, 422})
+_TERMINAL_NAME_TAGS = (
+    "authentication", "permission", "notfound", "badrequest", "invalidrequest",
+)
+
+
+def _is_terminal_error(error) -> bool:
+    """Whether ``error`` is a permanent provider/config error that fallback
+    should not paper over.
+
+    Provider-agnostic: inspects the status code / class name that the OpenAI,
+    Anthropic and Gemini SDKs expose, rather than importing each SDK's
+    exception hierarchy (keeps this layer decoupled and easy to extend).
+    """
+    status = getattr(error, "status_code", None)
+    if not isinstance(status, int):
+        status = getattr(error, "code", None)   # google-genai ClientError.code
+    if isinstance(status, int) and status in _TERMINAL_STATUS_CODES:
+        return True
+    name = type(error).__name__.lower()
+    return any(tag in name for tag in _TERMINAL_NAME_TAGS)
+
+
+def run_with_fallback(attempts, run_one):
+    """Try each ``(provider, model)`` attempt in order; return the first success.
+
+    Parameters
+    ----------
+    attempts : list[tuple[str, str]]
+        Ordered ``(provider, model)`` pairs — typically from
+        :func:`analysis.config.providers.resolve_chain`.
+    run_one : Callable[[str, str], str]
+        Performs one generation attempt for a given ``(provider, model)`` and
+        returns the report text (or raises on failure).
+
+    Returns
+    -------
+    tuple[str, str, str]
+        ``(result, provider, model)`` for the provider that succeeded.
+
+    Raises
+    ------
+    A terminal error (bad key / model / request) is re-raised immediately
+    without trying the next provider. Otherwise the last transient error is
+    raised once every attempt is exhausted (``ValueError`` if the chain empty).
+    """
+    if not attempts:
+        raise ValueError("run_with_fallback needs at least one (provider, model) attempt")
+
+    last_error = None
+    for index, (provider, model) in enumerate(attempts):
+        try:
+            return run_one(provider, model), provider, model
+        except Exception as error:  # noqa: BLE001 — classified below
+            if _is_terminal_error(error):
+                logger.error(
+                    "Provider %s (%s) failed with a terminal error — not falling "
+                    "back (fix the configuration): %s", provider, model, error,
+                )
+                raise
+            last_error = error
+            remaining = attempts[index + 1:]
+            if remaining:
+                nxt_provider, nxt_model = remaining[0]
+                logger.warning(
+                    "Provider %s (%s) failed: %s — falling back to %s (%s)",
+                    provider, model, error, nxt_provider, nxt_model,
+                )
+            else:
+                logger.error(
+                    "Provider %s (%s) failed and no fallback remains: %s",
+                    provider, model, error,
+                )
+    raise last_error
+
+
 __all__ = [
     "run_claude", "run_openai", "run_gemini",
     "call_claude", "call_openai", "call_gemini", "call_llm",
+    "run_with_fallback",
     "OPENAI_MAX_TOKENS",
 ]
