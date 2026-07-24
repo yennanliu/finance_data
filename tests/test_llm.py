@@ -99,3 +99,35 @@ def test_run_with_fallback_raises_last_error_when_all_fail():
 def test_run_with_fallback_rejects_empty_chain():
     with pytest.raises(ValueError):
         run_with_fallback([], lambda p, m: "x")
+
+
+def test_run_with_fallback_does_not_retry_terminal_errors():
+    """A terminal error (e.g. 401 bad key) is re-raised immediately — no fallover
+    that would mask the misconfiguration."""
+    tried = []
+
+    class AuthError(Exception):
+        status_code = 401
+
+    def run_one(provider, model):
+        tried.append(provider)
+        raise AuthError("invalid api key")
+
+    with pytest.raises(AuthError):
+        run_with_fallback([("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+    assert tried == ["gemini"]   # openai never attempted
+
+
+def test_run_with_fallback_retries_transient_status_codes():
+    """A transient status (429 quota) still falls through to the next provider."""
+    class QuotaError(Exception):
+        status_code = 429
+
+    def run_one(provider, model):
+        if provider == "gemini":
+            raise QuotaError("429 RESOURCE_EXHAUSTED")
+        return "ok"
+
+    result, provider, _ = run_with_fallback(
+        [("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+    assert (result, provider) == ("ok", "openai")

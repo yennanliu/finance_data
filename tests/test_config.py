@@ -81,6 +81,13 @@ def test_resolve_chain_honors_explicit_primary_model():
     assert attempts[0] == ("gemini", "gemini-2.5-pro")
 
 
+def test_resolve_chain_rejects_model_without_provider():
+    """A model override without a provider is ambiguous and rejected, rather
+    than silently paired with the default lead provider."""
+    with pytest.raises(ValueError):
+        resolve_chain(None, "gpt-4o")
+
+
 def test_today_is_valid_date():
     """Verify TODAY is a valid date string in YYYY-MM-DD format."""
     import re
