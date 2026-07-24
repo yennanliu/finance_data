@@ -415,6 +415,34 @@ def call_llm(ticker: str, context: str, analysis_type: str,
         return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
+# HTTP statuses that signal a permanent request/config error (bad key, no
+# permission, unsupported model, malformed request). Falling over to another
+# provider after one of these would only mask a bug we need to see — so we
+# re-raise instead of retrying. Transient failures (429 quota, 5xx, timeouts,
+# connection errors) are NOT here and do fall through.
+_TERMINAL_STATUS_CODES = frozenset({400, 401, 403, 404})
+_TERMINAL_NAME_TAGS = (
+    "authentication", "permission", "notfound", "badrequest", "invalidrequest",
+)
+
+
+def _is_terminal_error(error) -> bool:
+    """Whether ``error`` is a permanent provider/config error that fallback
+    should not paper over.
+
+    Provider-agnostic: inspects the status code / class name that the OpenAI,
+    Anthropic and Gemini SDKs expose, rather than importing each SDK's
+    exception hierarchy (keeps this layer decoupled and easy to extend).
+    """
+    status = getattr(error, "status_code", None)
+    if not isinstance(status, int):
+        status = getattr(error, "code", None)   # google-genai ClientError.code
+    if isinstance(status, int) and status in _TERMINAL_STATUS_CODES:
+        return True
+    name = type(error).__name__.lower()
+    return any(tag in name for tag in _TERMINAL_NAME_TAGS)
+
+
 def run_with_fallback(attempts, run_one):
     """Try each ``(provider, model)`` attempt in order; return the first success.
 
@@ -434,7 +462,9 @@ def run_with_fallback(attempts, run_one):
 
     Raises
     ------
-    The last exception if every attempt fails (or ``ValueError`` if empty).
+    A terminal error (bad key / model / request) is re-raised immediately
+    without trying the next provider. Otherwise the last transient error is
+    raised once every attempt is exhausted (``ValueError`` if the chain empty).
     """
     if not attempts:
         raise ValueError("run_with_fallback needs at least one (provider, model) attempt")
@@ -443,7 +473,13 @@ def run_with_fallback(attempts, run_one):
     for index, (provider, model) in enumerate(attempts):
         try:
             return run_one(provider, model), provider, model
-        except Exception as error:  # noqa: BLE001 — any provider failure should fall through
+        except Exception as error:  # noqa: BLE001 — classified below
+            if _is_terminal_error(error):
+                logger.error(
+                    "Provider %s (%s) failed with a terminal error — not falling "
+                    "back (fix the configuration): %s", provider, model, error,
+                )
+                raise
             last_error = error
             remaining = attempts[index + 1:]
             if remaining:
