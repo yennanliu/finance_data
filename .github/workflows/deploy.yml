@@ -17,6 +17,8 @@ on:
       - "docs/stylesheets/**"
       - "docs/javascripts/**"
       - "docs/includes/**"
+      - "okf/**"
+      - "llms.txt"
   schedule:
     # ── Consolidated nightly deploy (UTC) ───────────────────────────────────
     # Content deploys ONLY here (push-on-content is disabled above), so this
@@ -80,6 +82,15 @@ jobs:
 
       - name: Build MkDocs site
         run: mkdocs build --clean --strict
+
+      # Publish the OKF knowledge bundle + llms.txt verbatim (raw markdown,
+      # unrendered) so AI agents can fetch them at /okf/... and /llms.txt.
+      # Copied after `mkdocs build` because mkdocs would otherwise render the
+      # .md files to HTML.
+      - name: Publish OKF knowledge bundle
+        run: |
+          cp -r okf site/okf
+          cp llms.txt site/llms.txt
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
