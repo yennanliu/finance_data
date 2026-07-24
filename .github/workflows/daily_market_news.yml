@@ -90,18 +90,25 @@ on:
       provider:
         description: "AI provider"
         required: false
-        default: "gemini"
+        default: "openai"
         type: choice
         options:
-          - gemini
           - openai
+          - gemini
           - claude
       model:
         description: "Model ID"
         required: false
-        default: "gemini-3.6-flash"
+        default: "gpt-5.6-luna"
         type: choice
         options:
+          # OpenAI models
+          - gpt-5.6-luna
+          - gpt-5.6-terra
+          - gpt-5.6-sol
+          - gpt-4o
+          - gpt-4o-mini
+          - gpt-4-turbo
           # Gemini 3.x models (latest)
           - gemini-3.6-flash
           - gemini-3.5-flash
@@ -111,10 +118,6 @@ on:
           - gemini-2.5-flash
           - gemini-2.5-pro
           - gemini-2.5-flash-lite
-          # OpenAI models
-          - gpt-4o
-          - gpt-4o-mini
-          - gpt-4-turbo
           # Claude models
           - claude-sonnet-4-6
           - claude-opus-4-6
@@ -137,8 +140,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DEFAULT_PROVIDER: gemini
-      DEFAULT_MODEL: gemini-3.6-flash
+      DEFAULT_PROVIDER: openai
+      DEFAULT_MODEL: gpt-5.6-luna
       DEFAULT_MAX_TOKENS: "20000"
 
     steps:
@@ -228,7 +231,7 @@ jobs:
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
             gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.6-flash" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
+            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-5.6-luna" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
 
@@ -290,14 +293,20 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TICKER: ${{ steps.params.outputs.ticker }}
+          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
+          OUTPUT_FILE: ${{ steps.params.outputs.output_file }}
+          PROVIDER: ${{ steps.params.outputs.provider }}
+          MODEL: ${{ steps.params.outputs.model }}
+          MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
         run: |
           python scripts/generate_market_news.py \
-            "${{ steps.params.outputs.ticker }}" \
-            --output-dir  "${{ steps.params.outputs.output_dir }}" \
-            --output-file "${{ steps.params.outputs.output_file }}" \
-            --provider    "${{ steps.params.outputs.provider }}" \
-            --model       "${{ steps.params.outputs.model }}" \
-            --max-tokens  "${{ steps.params.outputs.max_tokens }}"
+            "$TICKER" \
+            --output-dir  "$OUTPUT_DIR" \
+            --output-file "$OUTPUT_FILE" \
+            --provider    "$PROVIDER" \
+            --model       "$MODEL" \
+            --max-tokens  "$MAX_TOKENS"
 
       # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report

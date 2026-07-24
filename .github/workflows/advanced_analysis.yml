@@ -40,10 +40,13 @@ on:
       model:
         description: "Model ID"
         required: false
-        default: "gpt-4o"
+        default: "gpt-5.6-luna"
         type: choice
         options:
           # OpenAI models
+          - gpt-5.6-luna
+          - gpt-5.6-terra
+          - gpt-5.6-sol
           - gpt-4o
           - gpt-4o-mini
           - gpt-4-turbo
@@ -111,13 +114,13 @@ jobs:
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-earnings-call-analysis}"
           PROVIDER="${PROVIDER:-openai}"
-          MODEL="${MODEL:-gpt-4o}"
+          MODEL="${MODEL:-gpt-5.6-luna}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
             gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-pro" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
+            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-5.6-luna" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
 
@@ -208,13 +211,20 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TRANSCRIPT_CONTENT: ${{ steps.transcript.outputs.transcript_content }}
+          TICKER: ${{ steps.params.outputs.ticker }}
+          ANALYSIS_TYPE: ${{ steps.params.outputs.analysis_type }}
+          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
+          PROVIDER: ${{ steps.params.outputs.provider }}
+          MODEL: ${{ steps.params.outputs.model }}
+          MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
         run: |
           python scripts/generate_analysis.py \
-            "${{ steps.params.outputs.ticker }}" \
-            --analysis-type "${{ steps.params.outputs.analysis_type }}" \
-            --output-dir    "${{ steps.params.outputs.output_dir }}" \
-            --model         "${{ steps.params.outputs.model }}" \
-            --max-tokens    "${{ steps.params.outputs.max_tokens }}"
+            "$TICKER" \
+            --analysis-type "$ANALYSIS_TYPE" \
+            --output-dir    "$OUTPUT_DIR" \
+            --provider      "$PROVIDER" \
+            --model         "$MODEL" \
+            --max-tokens    "$MAX_TOKENS"
 
       # ── 8. Commit & push ───────────────────────────────────────────────────
       - name: Commit and push report
