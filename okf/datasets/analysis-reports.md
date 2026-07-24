@@ -16,7 +16,7 @@ The core dataset. Each report is a single dated Markdown file produced by
 
 ## Layout
 
-```
+```text
 ai_gen_report/
 ├── fundamental/<ticker>/fundamental_analysis_<date>.md
 ├── technical/<ticker>/technical_analysis_<date>.md   (+ chart PNGs)
