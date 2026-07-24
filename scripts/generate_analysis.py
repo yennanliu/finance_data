@@ -47,7 +47,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis import ANALYSIS_TYPES, DEFAULT_MODEL, DEFAULT_TOKENS, TODAY
-from analysis.config.providers import PROVIDER_DEFAULTS
+from analysis.config.providers import resolve_chain
 from analysis.pipeline import run_analysis, save_analysis_report
 
 
@@ -80,31 +80,26 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save the report (default: ai_gen_report/<fundamental|technical|stock>/<ticker>/)",
     )
     p.add_argument(
-        "--provider", default="openai",
+        "--provider", default=None,
         choices=["claude", "openai", "gemini"],
-        help="AI provider (default: openai)",
+        help="Primary AI provider; leads the fallback chain "
+             "(default: the configured chain, currently gemini → openai)",
     )
     p.add_argument(
         "--model", default=None,
-        help="Model ID (default: the selected provider's default model)",
+        help="Model ID for the primary provider (default: that provider's default model)",
     )
     p.add_argument(
         "--max-tokens", type=int, default=DEFAULT_TOKENS,
         help=f"Max output tokens (default: {DEFAULT_TOKENS})",
     )
-    args = p.parse_args()
-    # Resolve the model from the selected provider's default when not given
-    # explicitly, so `--provider claude/gemini` doesn't inherit an OpenAI model.
-    if args.model is None:
-        args.model = PROVIDER_DEFAULTS.get(args.provider, {}).get("default_model", DEFAULT_MODEL)
-    return args
+    return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     ticker = args.ticker.upper()
     analysis_type = args.analysis_type
-    provider = args.provider
     if args.output_dir:
         output_dir = args.output_dir
     elif analysis_type == "fundamental-analysis":
@@ -114,12 +109,13 @@ def main() -> None:
     else:
         output_dir = Path("ai_gen_report/stock") / ticker.lower()
 
+    chain = " → ".join(f"{p}:{m}" for p, m in resolve_chain(args.provider, args.model))
     label = ANALYSIS_TYPES[analysis_type]["label"]
-    banner = f"  {ticker}  |  {label}  |  provider: {provider}  |  model: {args.model}  |  out: {output_dir}"
+    banner = f"  {ticker}  |  {label}  |  chain: {chain}  |  out: {output_dir}"
     sep = "=" * max(70, len(banner) + 4)
     print(f"\n{sep}\n{banner}\n{sep}\n")
 
-    run_analysis(ticker, analysis_type, provider, args.model, args.max_tokens, output_dir)
+    run_analysis(ticker, analysis_type, args.provider, args.model, args.max_tokens, output_dir)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 

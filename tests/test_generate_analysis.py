@@ -76,8 +76,9 @@ def test_parse_args_defaults(monkeypatch):
     args = ga.parse_args()
     assert args.ticker == "AAPL"
     assert args.analysis_type == "fundamental-analysis"
-    assert args.provider == "openai"
-    assert args.model == "gpt-5.6-luna"
+    # No explicit override → the generator uses the configured fallback chain.
+    assert args.provider is None
+    assert args.model is None
 
 
 def test_parse_args_overrides(monkeypatch):
