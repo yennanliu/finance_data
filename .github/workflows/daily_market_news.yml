@@ -293,14 +293,20 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TICKER: ${{ steps.params.outputs.ticker }}
+          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
+          OUTPUT_FILE: ${{ steps.params.outputs.output_file }}
+          PROVIDER: ${{ steps.params.outputs.provider }}
+          MODEL: ${{ steps.params.outputs.model }}
+          MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
         run: |
           python scripts/generate_market_news.py \
-            "${{ steps.params.outputs.ticker }}" \
-            --output-dir  "${{ steps.params.outputs.output_dir }}" \
-            --output-file "${{ steps.params.outputs.output_file }}" \
-            --provider    "${{ steps.params.outputs.provider }}" \
-            --model       "${{ steps.params.outputs.model }}" \
-            --max-tokens  "${{ steps.params.outputs.max_tokens }}"
+            "$TICKER" \
+            --output-dir  "$OUTPUT_DIR" \
+            --output-file "$OUTPUT_FILE" \
+            --provider    "$PROVIDER" \
+            --model       "$MODEL" \
+            --max-tokens  "$MAX_TOKENS"
 
       # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report

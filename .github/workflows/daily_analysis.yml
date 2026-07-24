@@ -409,14 +409,20 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TICKER: ${{ steps.params.outputs.ticker }}
+          ANALYSIS_TYPE: ${{ steps.params.outputs.analysis_type }}
+          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
+          PROVIDER: ${{ steps.params.outputs.provider }}
+          MODEL: ${{ steps.params.outputs.model }}
+          MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
         run: |
           python scripts/generate_analysis.py \
-            "${{ steps.params.outputs.ticker }}" \
-            --analysis-type "${{ steps.params.outputs.analysis_type }}" \
-            --provider      "${{ steps.params.outputs.provider }}" \
-            --output-dir    "${{ steps.params.outputs.output_dir }}" \
-            --model         "${{ steps.params.outputs.model }}" \
-            --max-tokens    "${{ steps.params.outputs.max_tokens }}"
+            "$TICKER" \
+            --analysis-type "$ANALYSIS_TYPE" \
+            --provider      "$PROVIDER" \
+            --output-dir    "$OUTPUT_DIR" \
+            --model         "$MODEL" \
+            --max-tokens    "$MAX_TOKENS"
 
       # ── 8. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
