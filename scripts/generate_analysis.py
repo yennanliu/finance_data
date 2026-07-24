@@ -47,6 +47,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis import ANALYSIS_TYPES, DEFAULT_MODEL, DEFAULT_TOKENS, TODAY
+from analysis.config.providers import PROVIDER_DEFAULTS
 from analysis.pipeline import run_analysis, save_analysis_report
 
 
@@ -79,19 +80,24 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save the report (default: ai_gen_report/<fundamental|technical|stock>/<ticker>/)",
     )
     p.add_argument(
-        "--provider", default="gemini",
+        "--provider", default="openai",
         choices=["claude", "openai", "gemini"],
-        help="AI provider (default: gemini)",
+        help="AI provider (default: openai)",
     )
     p.add_argument(
-        "--model", default=DEFAULT_MODEL,
-        help=f"Model ID (default: {DEFAULT_MODEL})",
+        "--model", default=None,
+        help="Model ID (default: the selected provider's default model)",
     )
     p.add_argument(
         "--max-tokens", type=int, default=DEFAULT_TOKENS,
         help=f"Max output tokens (default: {DEFAULT_TOKENS})",
     )
-    return p.parse_args()
+    args = p.parse_args()
+    # Resolve the model from the selected provider's default when not given
+    # explicitly, so `--provider claude/gemini` doesn't inherit an OpenAI model.
+    if args.model is None:
+        args.model = PROVIDER_DEFAULTS.get(args.provider, {}).get("default_model", DEFAULT_MODEL)
+    return args
 
 
 def main() -> None:
