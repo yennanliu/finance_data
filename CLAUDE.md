@@ -55,7 +55,8 @@ scripts/generate_analysis.py
 
 ### Key files
 - `scripts/analysis/config/__init__.py` — `ANALYSIS_TYPES` dict (12 types), model/token defaults
-- `scripts/analysis/config/providers.py` — per-provider defaults (Claude: 8k tokens, OpenAI: 16k)
+- `scripts/analysis/config/providers.py` — per-provider defaults (Claude: 8k tokens, OpenAI: 16k) plus `FALLBACK_CHAIN` + `resolve_chain()`: the ordered provider pool the generators try (currently gemini → openai; edit the list to add levels)
+- `scripts/analysis/utils/llm.py` — `run_with_fallback()` runs an ordered `(provider, model)` chain, returning the first success; context is fetched once and reused across fallback attempts
 - `scripts/analysis/utils/context.py` — 12-branch context assembler; touch when adding analysis types
 - `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs

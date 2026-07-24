@@ -2,7 +2,7 @@
 
 import pytest
 from unittest.mock import patch, MagicMock
-from scripts.analysis.utils.llm import call_llm
+from scripts.analysis.utils.llm import call_llm, run_with_fallback
 from scripts.analysis.exceptions import LLMError
 
 
@@ -49,3 +49,53 @@ def test_call_llm_passes_parameters_correctly():
         assert call_args[0][2] == "technical-analysis"  # analysis_type
         assert call_args[0][3] == "gpt-4o-mini"  # model
         assert call_args[0][4] == 12000  # max_tokens
+
+
+# ── run_with_fallback ────────────────────────────────────────────────────────
+
+def test_run_with_fallback_returns_first_success():
+    """The first successful attempt short-circuits; later providers aren't tried."""
+    tried = []
+
+    def run_one(provider, model):
+        tried.append(provider)
+        return f"report-from-{provider}"
+
+    result, provider, model = run_with_fallback(
+        [("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+
+    assert result == "report-from-gemini"
+    assert (provider, model) == ("gemini", "gemini-3.6-flash")
+    assert tried == ["gemini"]   # openai never attempted
+
+
+def test_run_with_fallback_falls_through_on_failure():
+    """A failing primary falls through to the next provider in the chain."""
+    tried = []
+
+    def run_one(provider, model):
+        tried.append(provider)
+        if provider == "gemini":
+            raise RuntimeError("429 RESOURCE_EXHAUSTED")
+        return "report-from-openai"
+
+    result, provider, model = run_with_fallback(
+        [("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+
+    assert result == "report-from-openai"
+    assert (provider, model) == ("openai", "gpt-4o")
+    assert tried == ["gemini", "openai"]
+
+
+def test_run_with_fallback_raises_last_error_when_all_fail():
+    """When every provider fails, the last exception propagates."""
+    def run_one(provider, model):
+        raise RuntimeError(f"{provider} down")
+
+    with pytest.raises(RuntimeError, match="openai down"):
+        run_with_fallback([("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+
+
+def test_run_with_fallback_rejects_empty_chain():
+    with pytest.raises(ValueError):
+        run_with_fallback([], lambda p, m: "x")

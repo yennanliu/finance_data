@@ -160,18 +160,18 @@ on:
           - financial-report-analyst
           - stock-valuation
       provider:
-        description: "AI provider"
+        description: "Primary AI provider (falls back through the configured chain)"
         required: false
-        default: "openai"
+        default: "gemini"
         type: choice
         options:
-          - openai
           - gemini
+          - openai
           - claude
       model:
         description: "Model ID"
         required: false
-        default: "gpt-5.6-luna"
+        default: "gemini-3.6-flash"
         type: choice
         options:
           # OpenAI models
@@ -213,8 +213,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DEFAULT_PROVIDER: openai
-      DEFAULT_MODEL: gpt-5.6-luna
+      DEFAULT_PROVIDER: gemini
+      DEFAULT_MODEL: gemini-3.6-flash
       DEFAULT_MAX_TOKENS: "32000"
 
     steps:
@@ -332,7 +332,7 @@ jobs:
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
             gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.6-flash" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-5.6-luna" ;;
+            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
 
