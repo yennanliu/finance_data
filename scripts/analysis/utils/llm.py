@@ -40,6 +40,9 @@ _MAX_REFUSAL_RETRIES = 5
 
 # OpenAI model token limits
 OPENAI_MAX_TOKENS = {
+    "gpt-5.6-sol": 16384,
+    "gpt-5.6-terra": 16384,
+    "gpt-5.6-luna": 16384,
     "gpt-4o": 16384,
     "gpt-4o-mini": 16384,
     "gpt-4-turbo": 4096,
