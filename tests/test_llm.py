@@ -118,6 +118,23 @@ def test_run_with_fallback_does_not_retry_terminal_errors():
     assert tried == ["gemini"]   # openai never attempted
 
 
+def test_run_with_fallback_treats_422_validation_as_terminal():
+    """A 422 (OpenAI UnprocessableEntityError) is a semantic/validation bug —
+    terminal, so it must not fall over to another provider."""
+    tried = []
+
+    class UnprocessableEntityError(Exception):
+        status_code = 422
+
+    def run_one(provider, model):
+        tried.append(provider)
+        raise UnprocessableEntityError("invalid request payload")
+
+    with pytest.raises(UnprocessableEntityError):
+        run_with_fallback([("gemini", "gemini-3.6-flash"), ("openai", "gpt-4o")], run_one)
+    assert tried == ["gemini"]   # no fallback attempted
+
+
 def test_run_with_fallback_retries_transient_status_codes():
     """A transient status (429 quota) still falls through to the next provider."""
     class QuotaError(Exception):
