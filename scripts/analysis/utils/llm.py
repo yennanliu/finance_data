@@ -415,8 +415,54 @@ def call_llm(ticker: str, context: str, analysis_type: str,
         return call_claude(ticker, context, analysis_type, model, max_tokens)
 
 
+def run_with_fallback(attempts, run_one):
+    """Try each ``(provider, model)`` attempt in order; return the first success.
+
+    Parameters
+    ----------
+    attempts : list[tuple[str, str]]
+        Ordered ``(provider, model)`` pairs — typically from
+        :func:`analysis.config.providers.resolve_chain`.
+    run_one : Callable[[str, str], str]
+        Performs one generation attempt for a given ``(provider, model)`` and
+        returns the report text (or raises on failure).
+
+    Returns
+    -------
+    tuple[str, str, str]
+        ``(result, provider, model)`` for the provider that succeeded.
+
+    Raises
+    ------
+    The last exception if every attempt fails (or ``ValueError`` if empty).
+    """
+    if not attempts:
+        raise ValueError("run_with_fallback needs at least one (provider, model) attempt")
+
+    last_error = None
+    for index, (provider, model) in enumerate(attempts):
+        try:
+            return run_one(provider, model), provider, model
+        except Exception as error:  # noqa: BLE001 — any provider failure should fall through
+            last_error = error
+            remaining = attempts[index + 1:]
+            if remaining:
+                nxt_provider, nxt_model = remaining[0]
+                logger.warning(
+                    "Provider %s (%s) failed: %s — falling back to %s (%s)",
+                    provider, model, error, nxt_provider, nxt_model,
+                )
+            else:
+                logger.error(
+                    "Provider %s (%s) failed and no fallback remains: %s",
+                    provider, model, error,
+                )
+    raise last_error
+
+
 __all__ = [
     "run_claude", "run_openai", "run_gemini",
     "call_claude", "call_openai", "call_gemini", "call_llm",
+    "run_with_fallback",
     "OPENAI_MAX_TOKENS",
 ]

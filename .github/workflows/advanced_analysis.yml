@@ -29,18 +29,18 @@ on:
         required: false
         default: ""
       provider:
-        description: "AI provider"
+        description: "Primary AI provider (falls back through the configured chain)"
         required: false
-        default: "openai"
+        default: "gemini"
         type: choice
         options:
+          - gemini
           - openai
           - claude
-          - gemini
       model:
         description: "Model ID"
         required: false
-        default: "gpt-5.6-luna"
+        default: "gemini-3.6-flash"
         type: choice
         options:
           # OpenAI models
@@ -113,14 +113,14 @@ jobs:
 
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-earnings-call-analysis}"
-          PROVIDER="${PROVIDER:-openai}"
-          MODEL="${MODEL:-gpt-5.6-luna}"
+          PROVIDER="${PROVIDER:-gemini}"
+          MODEL="${MODEL:-gemini-3.6-flash}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-2.5-pro" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-5.6-luna" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.6-flash" ;;
+            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
 
