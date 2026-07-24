@@ -14,7 +14,7 @@ per ticker per day.
 
 ## Layout
 
-```
+```text
 ai_gen_report/market_news/<ticker>/market_news_<date>_<provider>.md
 ```
 

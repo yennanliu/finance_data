@@ -38,7 +38,7 @@ markdown body.
 
 ## How the data is produced
 
-```
+```text
 scripts/generate_analysis.py
   → data_fetch (yfinance + web scrapers → OHLCV, financials)
   → context   (assembles LLM-ready context)

@@ -14,7 +14,7 @@ used to render the site's hero k-line charts.
 
 ## Layout
 
-```
+```text
 ai_gen_report/kline/<ticker>.json
 ```
 
