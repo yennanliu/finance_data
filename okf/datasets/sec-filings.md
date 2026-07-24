@@ -16,7 +16,7 @@ back the fundamental and financial-report analyses.
 
 ## Layout
 
-```
+```text
 10-k/<company>/   annual reports
 10-q/<company>/   quarterly reports
 13-f/<company>/   institutional holdings
