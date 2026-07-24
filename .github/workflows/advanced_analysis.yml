@@ -216,6 +216,7 @@ jobs:
             "${{ steps.params.outputs.ticker }}" \
             --analysis-type "${{ steps.params.outputs.analysis_type }}" \
             --output-dir    "${{ steps.params.outputs.output_dir }}" \
+            --provider      "${{ steps.params.outputs.provider }}" \
             --model         "${{ steps.params.outputs.model }}" \
             --max-tokens    "${{ steps.params.outputs.max_tokens }}"
 
