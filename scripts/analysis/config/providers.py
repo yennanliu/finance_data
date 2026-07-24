@@ -38,9 +38,18 @@ def resolve_chain(primary_provider=None, primary_model=None):
     ``primary_model`` (optional) overrides the model of that first attempt only;
     every other provider uses its ``PROVIDER_DEFAULTS`` model.
 
+    A model without a provider is rejected: applying it to the default lead
+    provider would silently pair, say, ``gpt-4o`` with Gemini. Pass both.
+
     Fallback levels always come from ``FALLBACK_CHAIN``, so extending the pool is
     a one-line edit there.
     """
+    if primary_model and not primary_provider:
+        raise ValueError(
+            "a model override requires an explicit provider "
+            "(which provider is this model for?)"
+        )
+
     order = ([primary_provider] if primary_provider else []) + [
         p for p in FALLBACK_CHAIN if p != primary_provider
     ]

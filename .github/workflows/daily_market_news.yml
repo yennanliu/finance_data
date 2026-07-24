@@ -258,33 +258,37 @@ jobs:
           echo "  Output dir:  ${OUTPUT_DIR}"
           echo "  Output file: ${OUTPUT_FILE}"
 
-      # ── 5. Verify API key secret is set ──────────────────────────
-      - name: Check API key secret
+      # ── 5. Verify API key secrets for the whole fallback chain ───
+      - name: Check provider API key secrets
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PROVIDER: ${{ steps.params.outputs.provider }}
+          MODEL: ${{ steps.params.outputs.model }}
         run: |
-          if [ "$PROVIDER" = "openai" ]; then
-            if [ -z "$OPENAI_API_KEY" ]; then
-              echo "::error::OPEN_KEY_API secret is not set."
-              exit 1
-            fi
-            echo "✅ OPEN_KEY_API is set."
-          elif [ "$PROVIDER" = "gemini" ]; then
-            if [ -z "$GEMINI_API_KEY" ]; then
-              echo "::error::GEMINI_API_KEY secret is not set."
-              exit 1
-            fi
-            echo "✅ GEMINI_API_KEY is set."
-          else
-            if [ -z "$ANTHROPIC_API_KEY" ]; then
-              echo "::error::ANTHROPIC_API_KEY secret is not set."
-              exit 1
-            fi
-            echo "✅ ANTHROPIC_API_KEY is set."
-          fi
+          # Validate the secret for EVERY provider the generator might use — the
+          # primary and each fallback level — resolved from the same chain, so a
+          # fallback attempt never runs without its key.
+          PYTHONPATH=scripts python - <<'PY'
+          import os, sys
+          from analysis.config.providers import resolve_chain
+          keys = {
+              "openai": ("OPENAI_API_KEY", "OPEN_KEY_API"),
+              "gemini": ("GEMINI_API_KEY", "GEMINI_API_KEY"),
+              "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"),
+          }
+          chain = resolve_chain(os.environ.get("PROVIDER") or None, os.environ.get("MODEL") or None)
+          missing = []
+          for provider, _ in chain:
+              env, secret = keys[provider]
+              if os.environ.get(env):
+                  print(f"OK {provider}: {secret} is set")
+              else:
+                  print(f"::error::{secret} secret is not set (required for '{provider}' in the fallback chain)")
+                  missing.append(secret)
+          sys.exit(1 if missing else 0)
+          PY
 
       # ── 6. Generate news report ───────────────────────────────────
       - name: Generate market news report
