@@ -174,6 +174,17 @@ finance_data/
 
 ---
 
+## For AI Agents (OKF)
+
+This project publishes an [Open Knowledge Format (OKF)](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf)
+bundle — vendor-neutral, agent-readable markdown describing every dataset and
+reference. The canonical source is [`okf/`](okf/index.md); it is published
+verbatim (raw markdown) at deploy time, alongside an [`llms.txt`](llms.txt)
+navigation file:
+
+- `https://yennanliu.github.io/finance_data/llms.txt`
+- `https://yennanliu.github.io/finance_data/okf/index.md`
+
 ## Further Reading
 
 - **finance_data 是怎麼運作的** - 用 Cron + LLM 全自動生成股票研究報告 ? [Blog](https://yennj12.js.org/yennj12_blog_V4/posts/finance-data-ai-pipeline-how-it-works-zh/)
