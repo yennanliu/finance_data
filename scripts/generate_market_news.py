@@ -23,12 +23,12 @@ import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from analysis.config.providers import PROVIDER_DEFAULTS
-from analysis.llm import run_claude, run_openai, run_gemini
+from analysis.config.providers import resolve_chain
+from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
 from analysis.publish import frontmatter
 
-DEFAULT_PROVIDER = "openai"
-DEFAULT_MODEL = "gpt-5.6-luna"
+DEFAULT_PROVIDER = "gemini"
+DEFAULT_MODEL = "gemini-3.6-flash"
 DEFAULT_TOKENS = 12000
 
 # Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
@@ -337,13 +337,17 @@ def generate_report(
     news_block = format_news_block(news_items) if news_items else "（目前無可用新聞資料）"
     prompt = build_prompt(ticker, info, news_block)
 
-    print(f"[3/4] Calling {provider.upper()} ({model}, max_tokens={max_tokens})…")
-    if provider == "openai":
-        report_body = call_openai(prompt, model, max_tokens)
-    elif provider == "gemini":
-        report_body = call_gemini(prompt, model, max_tokens)
-    else:
-        report_body = call_claude(prompt, model, max_tokens)
+    def dispatch(prov: str, mdl: str) -> str:
+        if prov == "openai":
+            return call_openai(prompt, mdl, max_tokens)
+        elif prov == "gemini":
+            return call_gemini(prompt, mdl, max_tokens)
+        return call_claude(prompt, mdl, max_tokens)
+
+    attempts = resolve_chain(provider, model)
+    print(f"[3/4] Generating report (chain: {' → '.join(p for p, _ in attempts)}, "
+          f"max_tokens={max_tokens})…")
+    report_body, provider, model = run_with_fallback(attempts, dispatch)
 
     today = date.today().isoformat()
     front_matter = frontmatter({
@@ -379,14 +383,15 @@ def main() -> None:
     )
     parser.add_argument(
         "--provider",
-        default=DEFAULT_PROVIDER,
+        default=None,
         choices=["claude", "openai", "gemini"],
-        help=f"AI provider (default: {DEFAULT_PROVIDER})",
+        help="Primary AI provider; leads the fallback chain "
+             "(default: the configured chain, currently gemini → openai)",
     )
     parser.add_argument(
         "--model",
         default=None,
-        help="Model ID (default: the selected provider's default model)",
+        help="Model ID for the primary provider (default: that provider's default model)",
     )
     parser.add_argument(
         "--max-tokens",
@@ -396,10 +401,6 @@ def main() -> None:
     )
 
     args = parser.parse_args()
-    # Resolve the model from the selected provider's default when not given
-    # explicitly, so `--provider claude/gemini` doesn't inherit an OpenAI model.
-    if args.model is None:
-        args.model = PROVIDER_DEFAULTS.get(args.provider, {}).get("default_model", DEFAULT_MODEL)
     ticker = args.ticker.upper()
     today = date.today().isoformat()
     output_dir = (

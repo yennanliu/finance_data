@@ -2,7 +2,9 @@
 
 import pytest
 from scripts.analysis.config import ANALYSIS_TYPES, TODAY
-from scripts.analysis.config.providers import PROVIDER_DEFAULTS
+from scripts.analysis.config.providers import (
+    PROVIDER_DEFAULTS, FALLBACK_CHAIN, resolve_chain,
+)
 
 
 def test_analysis_types_keys():
@@ -45,6 +47,38 @@ def test_provider_defaults_structure():
         assert isinstance(defaults["default_model"], str)
         assert isinstance(defaults["default_tokens"], int)
         assert defaults["default_tokens"] > 0
+
+
+def test_openai_default_model_is_gpt_4o():
+    """OpenAI's default/fallback model is gpt-4o."""
+    assert PROVIDER_DEFAULTS["openai"]["default_model"] == "gpt-4o"
+
+
+def test_fallback_chain_tries_gemini_then_openai():
+    """The configured chain leads with gemini and falls back to openai."""
+    assert FALLBACK_CHAIN[:2] == ["gemini", "openai"]
+
+
+def test_resolve_chain_default_order():
+    """With no override, attempts follow FALLBACK_CHAIN with each provider's model."""
+    attempts = resolve_chain()
+    assert attempts[0] == ("gemini", PROVIDER_DEFAULTS["gemini"]["default_model"])
+    assert attempts[1] == ("openai", "gpt-4o")
+
+
+def test_resolve_chain_primary_leads_then_falls_back():
+    """An explicit primary provider leads; the rest of the chain follows, deduped."""
+    attempts = resolve_chain("openai")
+    assert attempts[0] == ("openai", "gpt-4o")
+    providers = [p for p, _ in attempts]
+    assert providers == list(dict.fromkeys(providers))   # no duplicate providers
+    assert "gemini" in providers                          # fallback still present
+
+
+def test_resolve_chain_honors_explicit_primary_model():
+    """A primary model overrides only the first attempt's model."""
+    attempts = resolve_chain("gemini", "gemini-2.5-pro")
+    assert attempts[0] == ("gemini", "gemini-2.5-pro")
 
 
 def test_today_is_valid_date():
