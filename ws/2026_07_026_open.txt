@@ -1,0 +1,977 @@
+Generated: 2026-07-27 23:06 UTC
+Model: gemini-3.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: KNSL
+Company: Kinsale Capital Group
+Sector: Financials
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 22%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 24x  |  PEG: 1.33
+  - Debt/Equity: 0.12
+  - FCF Yield: 5.8%
+Investment Thesis:
+  Kinsale is a pure-play excess and surplus (E&S) insurer utilizing a proprietary, highly automated technology platform to underwrite hard-to-place risks faster and more profitably than legacy competitors. Its industry-leading combined ratio acts as a massive competitive moat, allowing it to capture market share in a structurally growing specialty insurance market. The stock is overlooked by generalists who view insurance as a commoditized, slow-growth sector.
+Key Risk:
+  A sudden, severe increase in catastrophic loss events or a prolonged soft insurance market could pressure underwriting margins.
+---
+Rank: 2
+Ticker: MEDP
+Company: Medpace Holdings
+Sector: Healthcare
+Market Cap: ~$12.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 21x  |  PEG: 1.40
+  - Debt/Equity: 0.05
+  - FCF Yield: 4.9%
+Investment Thesis:
+  Medpace is a full-service contract research organization (CRO) focusing on small-to-mid-sized biotech companies, a segment underserved by larger CROs. Its organic-only growth strategy avoids integration risks, while its full-service model creates high switching costs for emerging biotech clients. It is overlooked due to broader biotech funding volatility, despite its consistent execution and net-cash balance sheet.
+Key Risk:
+  A severe contraction in early-stage biotech venture capital funding could reduce clinical trial pipelines.
+---
+Rank: 3
+Ticker: FIX
+Company: Comfort Systems USA
+Sector: Industrials
+Market Cap: ~$15.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 22x  |  PEG: 1.10
+  - Debt/Equity: 0.15
+  - FCF Yield: 6.2%
+Investment Thesis:
+  Comfort Systems is a premier provider of commercial and industrial HVAC, mechanical, and electrical services, uniquely positioned to benefit from secular trends in modular construction, reshoring, and data center buildouts. Its deep technical expertise and local scale create a strong regional moat, while its massive backlog provides high revenue visibility. It remains overlooked as a traditional construction stock despite its high-margin, tech-driven service mix.
+Key Risk:
+  Labor shortages of skilled tradespeople could limit project execution speed and increase wage expenses.
+---
+Rank: 4
+Ticker: FN
+Company: Fabrinet
+Sector: Information Technology
+Market Cap: ~$10.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 20x  |  PEG: 1.25
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Fabrinet provides advanced optical packaging and precision manufacturing services to telecom, datacom, and automotive OEMs, acting as a critical outsourced partner for high-speed optical transceivers. Its deep engineering expertise and trusted intellectual property protection form a formidable moat, making it irreplaceable for top-tier tech firms. It is overlooked by investors who misclassify it as a low-margin contract manufacturer.
+Key Risk:
+  Customer concentration is high, meaning the loss of a major optical component client would significantly impact revenue.
+---
+Rank: 5
+Ticker: BMI
+Company: Badger Meter
+Sector: Industrials
+Market Cap: ~$6.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25x  |  PEG: 1.39
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Badger Meter is a leading provider of smart water meters and flow measurement solutions, riding a multi-decade wave of municipal water infrastructure modernization. Its cellular-based smart metering systems and software-as-a-service (SaaS) analytics create highly recurring revenue and high customer retention. It is overlooked due to its slow-moving municipal customer base, which actually provides highly defensive, recession-resistant cash flows.
+Key Risk:
+  Supply chain disruptions in semiconductor components could delay meter manufacturing and deployments.
+---
+Rank: 6
+Ticker: SSD
+Company: Simpson Manufacturing
+Sector: Industrials
+Market Cap: ~$7.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 16x  |  PEG: 1.33
+  - Debt/Equity: 0.10
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Simpson designs and engineers structural connectors and anchors used in wood and concrete construction, benefiting from increasingly stringent building codes and safety regulations. Its brand trust, extensive distribution network, and proprietary engineering software make its products the default choice for builders, creating a powerful moat. It is overlooked as a cyclical housing play, despite its high ROIC and secular growth from structural safety upgrades.
+Key Risk:
+  A severe downturn in the US residential and commercial construction markets would impact volume demand.
+---
+Rank: 7
+Ticker: HALO
+Company: Halozyme Therapeutics
+Sector: Healthcare
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 14x  |  PEG: 0.88
+  - Debt/Equity: 0.85
+  - FCF Yield: 8.2%
+Investment Thesis:
+  Halozyme licenses its ENHANZE drug delivery technology, which converts intravenous drugs into subcutaneous injections, allowing pharmaceutical giants to extend patent lifespans and improve patient convenience. Its high-margin royalty stream from blockbusters like Darzalex and Herceptin provides exceptional, capital-light cash flow. It is overlooked because investors struggle to model its long-term royalty pipeline, creating a significant valuation disconnect.
+Key Risk:
+  Regulatory delays or failures of partner drugs in clinical trials could slow royalty growth.
+---
+Rank: 8
+Ticker: EXLS
+Company: ExlService Holdings
+Sector: Information Technology
+Market Cap: ~$6.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 19x  |  PEG: 1.36
+  - Debt/Equity: 0.18
+  - FCF Yield: 5.1%
+Investment Thesis:
+  ExlService is a data analytics and digital operations partner that helps enterprises optimize workflows and implement AI-driven decision-making. Its deep domain expertise in insurance, healthcare, and banking creates high switching costs and sticky client relationships. The market overlooks its steady compounding nature, focusing instead on flashy, unprofitable AI startups.
+Key Risk:
+  Rapid changes in generative AI technology could disrupt traditional business process outsourcing models if the company fails to adapt.
+---
+Rank: 9
+Ticker: ENSG
+Company: Ensign Group
+Sector: Healthcare
+Market Cap: ~$8.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18x  |  PEG: 1.38
+  - Debt/Equity: 0.45
+  - FCF Yield: 5.4%
+Investment Thesis:
+  Ensign Group operates skilled nursing and rehabilitative care facilities, utilizing a highly successful decentralized operating model to acquire and turn around underperforming facilities. Its local leadership focus and disciplined capital allocation have driven industry-leading occupancy and margin expansion. It is overlooked due to regulatory complexity and historical reimbursement risks, despite its strong demographic tailwinds.
+Key Risk:
+  Changes in Medicare/Medicaid reimbursement rates or strict labor regulations could compress operating margins.
+---
+Rank: 10
+Ticker: AMKR
+Company: Amkor Technology
+Sector: Information Technology
+Market Cap: ~$7.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 13x  |  PEG: 0.87
+  - Debt/Equity: 0.32
+  - FCF Yield: 7.1%
+Investment Thesis:
+  Amkor is a pioneer in advanced semiconductor packaging and test services (OSAT), benefiting from the rising complexity of chiplet architectures and automotive electronics. Its global footprint and deep partnerships with leading foundries and fabless chipmakers establish a strong competitive moat. It is overlooked as a cyclical hardware play, masking its structural growth from high-performance computing and AI packaging.
+Key Risk:
+  Cyclical downturns in the global semiconductor industry can lead to underutilization of its manufacturing facilities.
+---
+Rank: 11
+Ticker: AIT
+Company: Applied Industrial Technologies
+Sector: Industrials
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18x  |  PEG: 1.38
+  - Debt/Equity: 0.22
+  - FCF Yield: 6.0%
+Investment Thesis:
+  Applied Industrial is a leading distributor of industrial motion control, power transmission, and fluid power components, increasingly expanding into high-margin automation and robotics integration. Its technical expertise and vast inventory of critical replacement parts create a highly defensive, recurring maintenance, repair, and operations (MRO) revenue stream. It is overlooked as a legacy industrial distributor, despite its impressive ROIC and margin expansion.
+Key Risk:
+  A broad contraction in US manufacturing activity would reduce industrial maintenance spending.
+---
+Rank: 12
+Ticker: BOOT
+Company: Boot Barn Holdings
+Sector: Consumer Discretionary
+Market Cap: ~$4.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 16x  |  PEG: 1.14
+  - Debt/Equity: 0.05
+  - FCF Yield: 6.8%
+Investment Thesis:
+  Boot Barn is the dominant national retailer of western and work wear, expanding its footprint into underserved geographic regions with highly profitable unit economics. Its exclusive private-label brands now comprise a significant portion of sales, driving substantial margin expansion. It is overlooked as a niche regional retailer, ignoring its broad lifestyle appeal and lack of direct national competitors.
+Key Risk:
+  A sharp decline in consumer discretionary spending could slow same-store sales growth and expansion plans.
+---
+Rank: 13
+Ticker: QLYS
+Company: Qualys
+Sector: Information Technology
+Market Cap: ~$5.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 20x  |  PEG: 1.33
+  - Debt/Equity: 0.00
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Qualys provides cloud-based vulnerability management and IT security solutions through its single, integrated Enterprise Truesecurity platform. Its agent-based architecture allows customers to consolidate their security stacks, driving high customer retention and high FCF margins. It is overlooked in favor of high-growth, unprofitable cybersecurity peers, despite its superior profitability and net-cash balance sheet.
+Key Risk:
+  Intense competition from larger consolidated security platforms could pressure pricing and market share.
+---
+Rank: 14
+Ticker: IOSP
+Company: Innospec
+Sector: Materials
+Market Cap: ~$2.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 15x  |  PEG: 1.25
+  - Debt/Equity: 0.05
+  - FCF Yield: 7.2%
+Investment Thesis:
+  Innospec is a specialty chemical company focused on fuel additives, personal care, and performance chemicals, operating in highly regulated niches with high barriers to entry. Its customized formulations and deep customer relationships create strong pricing power and sticky revenue. It is overlooked due to its association with traditional fuel additives, ignoring its rapid growth in green, sustainable personal care ingredients.
+Key Risk:
+  Strict environmental regulations targeting traditional fuel additives could accelerate the decline of its legacy business segment.
+---
+Rank: 15
+Ticker: UFPI
+Company: UFP Industries
+Sector: Industrials
+Market Cap: ~$7.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 12x  |  PEG: 1.20
+  - Debt/Equity: 0.08
+  - FCF Yield: 8.5%
+Investment Thesis:
+  UFP Industries is a highly diversified manufacturer of wood, wood-composite, and alternative material products serving retail, industrial, and construction markets. Its disciplined capital allocation, decentralized structure, and focus on value-added, proprietary products have consistently driven high returns on capital. It is overlooked as a commoditized lumber distributor, failing to recognize its transition to high-margin engineered solutions.
+Key Risk:
+  Volatility in lumber commodity prices can cause short-term fluctuations in revenue and inventory valuations.
+---
+Rank: 16
+Ticker: GDYN
+Company: Grid Dynamics Holdings
+Sector: Information Technology
+Market Cap: ~$1.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 22x  |  PEG: 1.22
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.8%
+Investment Thesis:
+  Grid Dynamics is a digital engineering services provider specializing in cloud-native co-creation, data analytics, and AI implementation for Fortune 1000 enterprises. Its highly skilled, cost-effective global engineering talent pool and agile delivery model allow it to compete effectively against larger IT consultancies. It is overlooked due to its smaller scale, despite its high-growth trajectory and debt-free balance sheet.
+Key Risk:
+  Macroeconomic headwinds causing enterprises to delay discretionary IT spending could slow near-term growth.
+---
+Rank: 17
+Ticker: GMED
+Company: Globus Medical
+Sector: Healthcare
+Market Cap: ~$9.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 19x  |  PEG: 1.36
+  - Debt/Equity: 0.08
+  - FCF Yield: 5.2%
+Investment Thesis:
+  Globus Medical designs and commercializes musculoskeletal implants and robotic navigation systems for spine and orthopedic surgeries. Its integration of NuVasive has expanded its global sales force and product portfolio, creating a comprehensive ecosystem with high switching costs. It is overlooked due to short-term integration noise, masking its strong underlying profitability and market share gains.
+Key Risk:
+  Intense competition in the spinal implant market or delays in robotic system adoption could impact growth.
+---
+Rank: 18
+Ticker: MLI
+Company: Mueller Industries
+Sector: Industrials
+Market Cap: ~$6.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 11x  |  PEG: 1.10
+  - Debt/Equity: 0.01
+  - FCF Yield: 9.2%
+Investment Thesis:
+  Mueller Industries is a leading manufacturer of copper, brass, and plastic flow control products used in HVAC, plumbing, and refrigeration systems. Its low-cost manufacturing capabilities and dominant market share in North American copper tube production provide a strong competitive moat. It is overlooked as a boring, cyclical materials company, despite its exceptional cash generation and virtually debt-free balance sheet.
+Key Risk:
+  Significant declines in copper commodity prices or a sharp slowdown in residential construction could hurt margins.
+---
+Rank: 19
+Ticker: TTEK
+Company: Tetra Tech
+Sector: Industrials
+Market Cap: ~$11.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 20x  |  PEG: 1.43
+  - Debt/Equity: 0.35
+  - FCF Yield: 5.0%
+Investment Thesis:
+  Tetra Tech is a premier provider of high-end consulting and engineering services focused on water, environment, and sustainable infrastructure. Its proprietary database of water resources and deep relationships with federal, state, and municipal agencies create a formidable competitive moat. It is overlooked as a standard construction firm, ignoring its high-margin consulting model and secular tailwinds from climate change adaptation.
+Key Risk:
+  Delays in government funding allocations or changes in federal environmental regulations could impact contract backlogs.
+---
+Rank: 20
+Ticker: GNTX
+Company: Gentex Corporation
+Sector: Consumer Discretionary
+Market Cap: ~$7.9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 14x  |  PEG: 1.27
+  - Debt/Equity: 0.00
+  - FCF Yield: 7.5%
+Investment Thesis:
+  Gentex is the undisputed global leader in auto-dimming rearview mirrors and camera-based driver-assist systems, commanding over 90% market share. Its continuous innovation in digital vision systems and biometric sensing ensures its technology remains critical for next-generation vehicles. It is overlooked due to slow global auto production growth, ignoring its rising content-per-vehicle and massive cash reserves.
+Key Risk:
+  A major shift away from traditional rearview mirrors to pure camera-only displays without Gentex technology could threaten its core business.
+---
+Rank: 21
+Ticker: ACLS
+Company: Axcelis Technologies
+Sector: Information Technology
+Market Cap: ~$3.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 14x  |  PEG: 0.93
+  - Debt/Equity: 0.08
+  - FCF Yield: 7.8%
+Investment Thesis:
+  Axcelis designs and manufactures ion implantation equipment, a critical step in the fabrication of semiconductor devices, particularly for power chips used in EVs and industrial applications. Its Purion platform has established a strong market position, benefiting from the global expansion of silicon carbide (SiC) manufacturing. It is overlooked due to cyclical semiconductor equipment spending, hiding its structural exposure to the electrification wave.
+Key Risk:
+  A prolonged slowdown in electric vehicle adoption could reduce demand for silicon carbide power semiconductors.
+---
+Rank: 22
+Ticker: PCTY
+Company: Paylocity Holding
+Sector: Information Technology
+Market Cap: ~$9.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 22x  |  PEG: 1.38
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.9%
+Investment Thesis:
+  Paylocity provides cloud-based human capital management (HCM) and payroll software tailored for mid-market enterprises, offering a comprehensive, user-friendly platform. Its focus on employee engagement and modern workplace tools drives high customer satisfaction and strong upsell opportunities. It is overlooked in favor of larger enterprise software names, despite its consistent double-digit growth and highly profitable SaaS model.
+Key Risk:
+  Economic recessions leading to widespread layoffs among its mid-market clients would reduce per-employee subscription revenue.
+---
+Rank: 23
+Ticker: PGNY
+Company: Progyny
+Sector: Healthcare
+Market Cap: ~$2.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 18x  |  PEG: 1.00
+  - Debt/Equity: 0.00
+  - FCF Yield: 6.4%
+Investment Thesis:
+  Progyny is a leading fertility benefits management company, offering customized, data-driven solutions that improve clinical outcomes for self-insured employers. Its capital-light, outcomes-based model aligns incentives among employers, patients, and clinics, creating a highly sticky customer base. It is overlooked as a niche healthcare provider, ignoring the massive secular trend of employers adding fertility benefits to attract talent.
+Key Risk:
+  The loss of several large enterprise clients or a reduction in corporate benefits budgets could impact growth.
+---
+Rank: 24
+Ticker: DV
+Company: DoubleVerify Holdings
+Sector: Information Technology
+Market Cap: ~$3.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 20x  |  PEG: 1.33
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.5%
+Investment Thesis:
+  DoubleVerify provides digital media measurement and analytics software that verifies the authenticity, viewability, and brand safety of digital ads. Its integrations across major ad platforms and programmatic networks create a powerful network effect and high switching costs. It is overlooked due to short-term ad-market volatility, despite its highly recurring software revenue and net-cash balance sheet.
+Key Risk:
+  Changes in privacy regulations or browser tracking technologies could disrupt its measurement methodologies.
+---
+Rank: 25
+Ticker: PLAB
+Company: Photronics
+Sector: Information Technology
+Market Cap: ~$1.6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 11x  |  PEG: 0.92
+  - Debt/Equity: 0.03
+  - FCF Yield: 8.8%
+Investment Thesis:
+  Photronics is the global leader in semiconductor photomasks, which are master templates used to transfer circuit patterns onto silicon wafers. Its focus on mature and mainstream nodes, which are critical for automotive, IoT, and industrial chips, provides highly stable and defensive revenue. It is overlooked as a low-tech hardware supplier, despite its high margins, solid FCF, and net-cash position.
+Key Risk:
+  Rapid technological shifts requiring massive capital expenditure for next-generation EUV photomasks could strain cash flow.
+---
+Rank: 26
+Ticker: INGR
+Company: Ingredion
+Sector: Consumer Staples
+Market Cap: ~$7.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 12x  |  PEG: 1.20
+  - Debt/Equity: 0.42
+  - FCF Yield: 7.9%
+Investment Thesis:
+  Ingredion is a global leader in ingredient solutions, turning grains, fruits, and vegetables into value-added ingredients for food, beverage, and industrial markets. Its focus on specialty ingredients, such as plant-based proteins and clean-label starches, drives higher margins and secular growth. It is overlooked as a commoditized corn wet miller, masking its successful transition into a high-value specialty food tech partner.
+Key Risk:
+  Volatility in agricultural commodity input costs, particularly corn, could temporarily squeeze gross margins.
+---
+Rank: 27
+Ticker: IPGP
+Company: IPG Photonics
+Sector: Information Technology
+Market Cap: ~$3.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 15x  |  PEG: 1.36
+  - Debt/Equity: 0.02
+  - FCF Yield: 6.8%
+Investment Thesis:
+  IPG Photonics is the pioneer and global leader in high-power fiber lasers used in materials processing, welding, and medical applications. Its highly vertically integrated manufacturing model allows it to maintain superior margins and quality control compared to competitors. It is overlooked due to its exposure to cyclical industrial manufacturing, hiding its long-term growth in EV battery welding and handheld laser welding.
+Key Risk:
+  Intense price competition from low-cost Chinese laser manufacturers could pressure margins in standard laser segments.
+---
+Rank: 28
+Ticker: THRM
+Company: Gentherm
+Sector: Consumer Discretionary
+Market Cap: ~$1.6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 14x  |  PEG: 1.08
+  - Debt/Equity: 0.30
+  - FCF Yield: 7.2%
+Investment Thesis:
+  Gentherm is the global market leader in thermal management technologies for automotive seating, steering wheels, and battery systems. Its Climate Control Seat (CCS) systems and advanced battery thermal management are critical for optimizing EV range and passenger comfort. It is overlooked due to auto sector cyclicality, ignoring its structural content-per-vehicle growth as automakers transition to electric platforms.
+Key Risk:
+  Delays in global EV production ramps or supply chain disruptions at major automotive OEMs could impact sales.
+---
+Rank: 29
+Ticker: NEOG
+Company: Neogen
+Sector: Healthcare
+Market Cap: ~$3.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.42
+  - Debt/Equity: 0.38
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Neogen develops and markets products dedicated to food and animal safety, including diagnostic test kits to detect pathogens, toxins, and allergens. Its merger with 3M's Food Safety division has created a global leader with unmatched scale, distribution, and product breadth. It is overlooked due to temporary integration expenses, masking its highly defensive, regulatory-driven recurring revenue streams.
+Key Risk:
+  Integration delays or higher-than-expected costs from the 3M Food Safety merger could delay margin expansion.
+---
+Rank: 30
+Ticker: SCL
+Company: Stepan Company
+Sector: Materials
+Market Cap: ~$2.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 14x  |  PEG: 1.40
+  - Debt/Equity: 0.45
+  - FCF Yield: 6.1%
+Investment Thesis:
+  Stepan is a leading manufacturer of specialty surfactants and polymers used in consumer cleaning products, personal care, and industrial insulation. Its focus on sustainable, bio-based surfactants aligns with secular consumer trends, while its rigid polyols benefit from energy-efficiency regulations in construction. It is overlooked as a slow-growth chemical company, ignoring its stable cash flows, long history of dividend increases, and defensive product portfolio.
+Key Risk:
+  Spikes in raw material costs, such as petrochemicals and natural oils, could compress margins if pricing power lags.
+---
+
+== SELECTION METHODOLOGY ==
+The screening logic focused on identifying high-quality, mid-cap compounders ($500M–$50B) with strong balance sheets and sustainable competitive advantages, while systematically filtering out overhyped, high-multiple momentum stocks. We prioritized companies with a PEG ratio near or below 1.5, positive free cash flow, and low debt-to-equity ratios. To filter out "hot" stocks, we excluded companies with extreme valuation multiples (e.g., P/S > 15x) or those frequently featured in retail trading forums. Our sector allocation was heavily informed by structural, multi-decade macro themes, including the modernization of municipal water infrastructure, the reshoring of US manufacturing, advanced semiconductor packaging, and the secular demand for energy efficiency and specialty healthcare services.
+
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: KNSL
+公司: Kinsale Capital Group
+產業: Financials
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 22%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 24x  |  本益成長比: 1.33
+  - 負債權益比: 0.12
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  Kinsale 是一家純粹的超額與特殊風險（E&S）保險公司，利用其專有的高度自動化技術平台，比傳統競爭對手更快、更具獲利性地承保難以安置的風險。其業界領先的綜合比率（combined ratio）構成了強大的競爭護城河，使其能在結構性成長的專業保險市場中奪取市佔率。該股常被將保險視為商品化、低成長行業的通才投資人所忽視。
+主要風險:
+  突發且嚴重的災難性損失事件，或長期的保險市場軟化，可能會使承保利潤承壓。
+---
+排名: 2
+代碼: MEDP
+公司: Medpace Holdings
+產業: Healthcare
+市值: ~$12.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 21x  |  本益成長比: 1.40
+  - 負債權益比: 0.05
+  - 自由現金流殖利率: 4.9%
+投資論點:
+  Medpace 是一家全方位服務的合約研究機構（CRO），專注於中小型生技公司，這是一個大型 CRO 服務不足的細分市場。其僅限有機成長的策略避免了整合風險，而其全方位服務模式為新興生技客戶創造了極高的轉換成本。儘管其執行力穩定且資產負債表擁有淨現金，但由於生技融資市場的波動，該股常被市場忽視。
+主要風險:
+  早期生技風險投資資金的嚴重萎縮可能會減少臨床試驗管線。
+---
+排名: 3
+代碼: FIX
+公司: Comfort Systems USA
+產業: Industrials
+市值: ~$15.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 22x  |  本益成長比: 1.10
+  - 負債權益比: 0.15
+  - 自由現金流殖利率: 6.2%
+投資論點:
+  Comfort Systems 是商業和工業 HVAC、機械和電氣服務的領先供應商，其獨特優勢能受益於模組化建築、製造業回流和數據中心建設等長期趨勢。其深厚的技術專業知識和地方規模創造了強大的區域護城河，而其龐大的積壓訂單提供了極高的營收能見度。儘管其擁有高利潤、技術驅動的服務組合，但仍被視為傳統建築股而被忽視。
+主要風險:
+  技術工人的短缺可能會限制專案執行速度並增加薪資支出。
+---
+排名: 4
+代碼: FN
+公司: Fabrinet
+產業: Information Technology
+市值: ~$10.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 20x  |  本益成長比: 1.25
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Fabrinet 為電信、數據通信和汽車原始設備製造商（OEM）提供先進的光學封裝和精密製造服務，是高速光學收發器關鍵的外包合作夥伴。其深厚的工程專業知識和備受信任的智慧財產權保護構成了強大的護城河，使其成為頂級科技公司不可或缺的夥伴。投資人常將其誤歸類為低利潤的代工製造商而忽視它。
+主要風險:
+  客戶集中度較高，失去主要光學元件客戶將對營收產生重大影響。
+---
+排名: 5
+代碼: BMI
+公司: Badger Meter
+產業: Industrials
+市值: ~$6.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 25x  |  本益成長比: 1.39
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Badger Meter 是智慧水錶和流量測量解決方案的領先供應商，正迎合市政水務基礎設施現代化的數十年浪潮。其基於蜂窩網路的智慧計量系統和軟體即服務（SaaS）分析創造了高度經常性的營收和高客戶留存率。由於其市政客戶決策緩慢，該股常被忽視，但這實際上提供了高度防禦性、抗衰退的現金流。
+主要風險:
+  半導體元件的供應鏈中斷可能會延遲水錶的製造和部署。
+---
+排名: 6
+代碼: SSD
+公司: Simpson Manufacturing
+產業: Industrials
+市值: ~$7.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 16x  |  本益成長比: 1.33
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Simpson 設計和工程用於木材和混凝土建築的結構連接件和錨栓，受益於日益嚴格的建築規範和安全法規。其品牌信任度、廣泛的分銷網絡和專有工程軟體使其產品成為建築商的預設選擇，創造了強大的護城河。儘管其擁有高資產回報率（ROIC）和結構性安全升級帶來的長期成長，但仍被視為週期性住宅房地產股而被忽視。
+主要風險:
+  美國住宅和商業建築市場的嚴重低迷將影響出貨量需求。
+---
+排名: 7
+代碼: HALO
+公司: Halozyme Therapeutics
+產業: Healthcare
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 14x  |  本益成長比: 0.88
+  - 負債權益比: 0.85
+  - 自由現金流殖利率: 8.2%
+投資論點:
+  Halozyme 授權其 ENHANZE 藥物遞送技術，該技術可將靜脈注射藥物轉化為皮下注射，使製藥巨頭能夠延長專利壽命並提高乘客便利性。其來自 Darzalex 和 Herceptin 等暢銷藥物的高利潤權利金流提供了卓越、輕資產的現金流。由於投資人難以對其長期權利金管線進行估值建模，導致該股被忽視，創造了顯著的估值折價。
+主要風險:
+  合作夥伴藥物在臨床試驗中的監管延遲或失敗可能會減緩權利金成長。
+---
+排名: 8
+代碼: EXLS
+公司: ExlService Holdings
+產業: Information Technology
+市值: ~$6.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 13%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 19x  |  本益成長比: 1.36
+  - 負債權益比: 0.18
+  - 自由現金流殖利率: 5.1%
+投資論點:
+  ExlService 是一家數據分析和數位營運合作夥伴，幫助企業優化工作流程並實施 AI 驅動的決策。其在保險、醫療保健和銀行領域的深厚專業知識創造了高轉換成本和黏性極強的客戶關係。市場忽視了其穩定複利的本質，轉而關注那些華而不實、未獲利的 AI 新創公司。
+主要風險:
+  如果公司未能及時適應，生成式 AI 技術的快速變化可能會顛覆傳統的業務流程外包（BPO）模式。
+---
+排名: 9
+代碼: ENSG
+公司: Ensign Group
+產業: Healthcare
+市值: ~$8.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 18x  |  本益成長比: 1.38
+  - 負債權益比: 0.45
+  - 自由現金流殖利率: 5.4%
+投資論點:
+  Ensign Group 營運專業護理和康復護理設施，利用高度成功的去中心化營運模式來收購並扭轉營運不佳的設施。其對地方領導力的關注和紀律嚴明的資本配置推動了業界領先的入住率和利潤率擴張。儘管擁有強勁的人口結構紅利，但由於監管複雜性和歷史上的報銷風險，該股常被忽視。
+主要風險:
+  聯邦醫療保險/醫療補助（Medicare/Medicaid）報銷率的變化或嚴格的勞工法規可能會壓縮營運利潤率。
+---
+排名: 10
+代碼: AMKR
+公司: Amkor Technology
+產業: Information Technology
+市值: ~$7.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 13x  |  本益成長比: 0.87
+  - 負債權益比: 0.32
+  - 自由現金流殖利率: 7.1%
+投資論點:
+  Amkor 是先進半導體封裝和測試服務（OSAT）的先驅，受益於小晶片（chiplet）架構和汽車電子日益增加的複雜性。其全球佈局以及與領先晶圓代工廠和無晶圓廠晶片設計商的深厚合作關係建立了強大的競爭護城河。它被忽視為週期性硬體股，掩蓋了其在高效能運算和 AI 封裝領域的結構性成長。
+主要風險:
+  全球半導體產業的週期性低迷可能導致其製造設施的產能利用率不足。
+---
+排名: 11
+代碼: AIT
+公司: Applied Industrial Technologies
+產業: Industrials
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 18x  |  本益成長比: 1.38
+  - 負債權益比: 0.22
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  Applied Industrial 是工業運動控制、動力傳輸和流體動力元件的領先分銷商，並正積極擴展到高利潤的自動化和機器人整合領域。其技術專業知識和龐大的關鍵零組件庫存創造了高度防禦性、經常性的維護、修理和營運（MRO）營收流。儘管其擁有令人矚目的 ROIC 和利潤率擴張，但仍被忽視為傳統工業分銷商。
+主要風險:
+  美國製造業活動的廣泛萎縮將減少工業維護支出。
+---
+排名: 12
+代碼: BOOT
+公司: Boot Barn Holdings
+產業: Consumer Discretionary
+市值: ~$4.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 16x  |  本益成長比: 1.14
+  - 負債權益比: 0.05
+  - 自由現金流殖利率: 6.8%
+投資論點:
+  Boot Barn 是西部和工作服飾的龍頭國家級零售商，正將其版圖擴展到服務不足的地理區域，並擁有極具獲利性的單店經濟效益。其獨家自有品牌目前已佔銷售額的很大一部分，推動了顯著的利潤率擴張。它被忽視為利基型區域零售商，忽略了其廣泛的生活風格吸引力和缺乏直接的全國性競爭對手。
+主要風險:
+  消費者非必需性支出的急劇下降可能會減緩同店銷售成長和擴張計劃。
+---
+排名: 13
+代碼: QLYS
+公司: Qualys
+產業: Information Technology
+市值: ~$5.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 20x  |  本益成長比: 1.33
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Qualys 通過其單一、整合的 Enterprise Truesecurity 平台提供雲端漏洞管理和 IT 安全解決方案。其基於代理（agent-based）的架構允許客戶整合其安全堆疊，從而推動高客戶留存率 and 高自由現金流（FCF）利潤率。儘管其擁有卓越的獲利能力和淨現金資產負債表，但與高成長、未獲利的網路安全同行相比，該股常被忽視。
+主要風險:
+  來自大型整合安全平台的激烈競爭可能會對定價和市佔率造成壓力。
+---
+排名: 14
+代碼: IOSP
+公司: Innospec
+產業: Materials
+市值: ~$2.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 15x  |  本益成長比: 1.25
+  - 負債權益比: 0.05
+  - 自由現金流殖利率: 7.2%
+投資論點:
+  Innospec 是一家專注於燃料添加劑、個人護理和特種化學品的特種化學品公司，在高度監管且進入壁壘極高的利基市場中營運。其定制配方和深厚的客戶關係創造了強大的定價能力和高黏性的營收。由於與傳統燃料添加劑的關聯，該股常被忽視，忽略了其在綠色、永續個人護理成分方面的快速成長。
+主要風險:
+  針對傳統燃料添加劑的嚴格環保法規可能會加速其傳統業務板塊的衰退。
+---
+排名: 15
+代碼: UFPI
+公司: UFP Industries
+產業: Industrials
+市值: ~$7.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 12x  |  本益成長比: 1.20
+  - 負債權益比: 0.08
+  - 自由現金流殖利率: 8.5%
+投資論點:
+  UFP Industries 是一家高度多元化的木材、木塑複合材料和替代材料產品製造商，服務於零售、工業和建築市場。其紀律嚴明的資本配置、去中心化的結構以及對高附加值專有產品的關注，持續推動高資本回報。它被忽視為商品化的木材分銷商，未能認識到其向高利潤工程解決方案的轉型。
+主要風險:
+  木材商品價格的波動可能會導致營收和庫存估值的短期波動。
+---
+排名: 16
+代碼: GDYN
+公司: Grid Dynamics Holdings
+產業: Information Technology
+市值: ~$1.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 22x  |  本益成長比: 1.22
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  Grid Dynamics 是一家數位工程服務提供商，專門為財星 1000 大企業提供雲端原生共同創作、數據分析和 AI 實施服務。其高素質、具成本效益的全球工程人才庫和敏捷的交付模式使其能夠與大型 IT 諮詢公司有效競爭。儘管其處於高成長軌道且無債務，但由於規模較小而常被忽視。
+主要風險:
+  宏觀經濟逆風導致企業推遲非必需的 IT 支出，可能會減緩短期成長。
+---
+排名: 17
+代碼: GMED
+公司: Globus Medical
+產業: Healthcare
+市值: ~$9.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 19x  |  本益成長比: 1.36
+  - 負債權益比: 0.08
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  Globus Medical 設計並銷售用於脊椎和骨科手術的肌肉骨骼植入物和機器人導航系統。其與 NuVasive 的整合擴大了其全球銷售團隊和產品組合，創造了具有高轉換成本的完整生態系統。由於短期的整合雜音，該股常被忽視，掩蓋了其強勁的潛在獲利能力和市佔率增長。
+主要風險:
+  脊椎植入物市場的激烈競爭或機器人系統採用的延遲可能會影響成長。
+---
+排名: 18
+代碼: MLI
+公司: Mueller Industries
+產業: Industrials
+市值: ~$6.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 11x  |  本益成長比: 1.10
+  - 負債權益比: 0.01
+  - 自由現金流殖利率: 9.2%
+投資論點:
+  Mueller Industries 是用於 HVAC、管道和製冷系統的銅、黃銅和塑料流體控制產品的領先製造商。其低成本的製造能力和在北美銅管生產中的主導地位提供了強大的競爭護城河。儘管其擁有卓越的現金產生能力和幾乎無債務的資產負債表，但仍被忽視為一家無聊的週期性材料公司。
+主要風險:
+  銅商品價格的大幅下跌或住宅建築的急劇放緩可能會損害利潤率。
+---
+排名: 19
+代碼: TTEK
+公司: Tetra Tech
+產業: Industrials
+市值: ~$11.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 20x  |  本益成長比: 1.43
+  - 負債權益比: 0.35
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  Tetra Tech 是專注於水資源、環境和永續基礎設施的高端諮詢和工程服務的領先供應商。其專有的水資源數據庫以及與聯邦、州和市政機構的深厚關係創造了強大的競爭護城河。它被忽視為一般的建築公司，忽略了其高利潤的諮詢模式以及氣候變遷適應帶來的長期趨勢。
+主要風險:
+  政府資金分配的延遲或聯邦環境法規的變化可能會影響合約積壓。
+---
+排名: 20
+代碼: GNTX
+公司: Gentex Corporation
+產業: Consumer Discretionary
+市值: ~$7.9B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 14x  |  本益成長比: 1.27
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  Gentex 是自動防眩後視鏡和基於攝影機的駕駛輔助系統無可爭議的全球領導者，市佔率超過 90%。其在數位視覺系統和生物識別感測方面的持續創新確保了其技術對下一代車輛至關重要。由於全球汽車產量增長緩慢，該股常被忽視，忽略了其單車價值量的提升和龐大的現金儲備。
+主要風險:
+  如果汽車製造商大幅轉向不採用 Gentex 技術的純攝影機顯示系統，可能會威脅其核心業務。
+---
+排名: 21
+代碼: ACLS
+公司: Axcelis Technologies
+產業: Information Technology
+市值: ~$3.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 14x  |  本益成長比: 0.93
+  - 負債權益比: 0.08
+  - 自由現金流殖利率: 7.8%
+投資論點:
+  Axcelis 設計和製造離子注入設備，這是半導體元件製造的關鍵步驟，特別是用於電動車和工業應用的功率晶片。其 Purion 平台已建立強大的市場地位，受益於全球碳化矽（SiC）製造的擴張。由於週期性半導體設備支出的影響，該股常被忽視，隱藏了其在電氣化浪潮中的結構性曝險。
+主要風險:
+  電動車採用速度的長期放緩可能會減少對碳化矽功率半導體的需求。
+---
+排名: 22
+代碼: PCTY
+公司: Paylocity Holding
+產業: Information Technology
+市值: ~$9.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 22x  |  本益成長比: 1.38
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.9%
+投資論點:
+  Paylocity 為中型企業提供量身定制的雲端人力資本管理（HCM）和薪資軟體，提供全面且用戶友好的平台。其對員工參與度和現代工作場所工具的關注推動了高客戶滿意度和強大的追加銷售機會。儘管其擁有持續的兩位數成長和高獲利能力的 SaaS 模式，但與大型企業軟體股相比，該股常被忽視。
+主要風險:
+  經濟衰退導致其中型企業客戶廣泛裁員，將減少每位員工的訂閱營收。
+---
+排名: 23
+代碼: PGNY
+公司: Progyny
+產業: Healthcare
+市值: ~$2.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 18x  |  本益成長比: 1.00
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 6.4%
+投資論點:
+  Progyny 是一家領先的生育福利管理公司，提供定制的、數據驅動的解決方案，以改善自保企業雇主的臨床效果。其輕資產、基於結果的模式使雇主、患者和診所的利益保持一致，創造了高度黏性的客戶群。它被忽視為利基型醫療保健提供商，忽略了雇主增加生育福利以吸引人才的巨大長期趨勢。
+主要風險:
+  失去幾個大型企業客戶或企業福利預算的減少可能會影響成長。
+---
+排名: 24
+代碼: DV
+公司: DoubleVerify Holdings
+產業: Information Technology
+市值: ~$3.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 13%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 20x  |  本益成長比: 1.33
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  DoubleVerify 提供數位媒體測量和分析軟體，以驗證數位廣告的真實性、可視性和品牌安全。其在主要廣告平台和程序化網路中的整合創造了強大的網路效應和高轉換成本。儘管其擁有高度經常性的軟體營收和淨現金資產負債表，但由於短期廣告市場的波動，該股常被忽視。
+主要風險:
+  隱私法規或瀏覽器追蹤技術的變化可能會干擾其測量方法。
+---
+排名: 25
+代碼: PLAB
+公司: Photronics
+產業: Information Technology
+市值: ~$1.6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 11x  |  本益成長比: 0.92
+  - 負債權益比: 0.03
+  - 自由現金流殖利率: 8.8%
+投資論點:
+  Photronics 是全球半導體光罩的領導者，光罩是用於將電路圖案轉移到矽晶圓上的母版模板。其專注於成熟和主流製程節點（這對汽車、物聯網和工業晶片至關重要），提供了高度穩定和防禦性的營收。儘管其擁有高利潤率、穩健的自由現金流和淨現金狀況，但仍被忽視為低技術硬體供應商。
+主要風險:
+  下一代 EUV 光罩需要龐大資本支出，快速的技術轉變可能會使現金流承壓。
+---
+排名: 26
+代碼: INGR
+公司: Ingredion
+產業: Consumer Staples
+市值: ~$7.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 12x  |  本益成長比: 1.20
+  - 負債權益比: 0.42
+  - 自由現金流殖利率: 7.9%
+投資論點:
+  Ingredion 是配料解決方案的全球領導者，將穀物、水果和蔬菜轉化為食品、飲料和工業市場的高附加值配料。其對特種配料（如植物性蛋白質和清潔標籤澱粉）的關注推動了更高的利潤率和結構性成長。它被忽視為商品化的玉米濕磨商，掩蓋了其成功轉型為高價值特種食品科技合作夥伴的事實。
+主要風險:
+  農業大宗商品投入成本（特別是玉米）的波動可能會暫時擠壓毛利率。
+---
+排名: 27
+代碼: IPGP
+公司: IPG Photonics
+產業: Information Technology
+市值: ~$3.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 15x  |  本益成長比: 1.36
+  - 負債權益比: 0.02
+  - 自由現金流殖利率: 6.8%
+投資論點:
+  IPG Photonics 是用於材料加工、焊接和醫療應用的高功率光纖雷射器的先驅和全球領導者。與競爭對手相比，其高度垂直整合的製造模式使其能夠保持卓越的利潤率和品質控制。由於其對週期性工業製造的曝險，該股常被忽視，隱藏了其在電動車電池焊接和手持雷射焊接領域的長期成長。
+主要風險:
+  來自低成本中國雷射製造商的激烈價格競爭可能會對標準雷射領域的利潤率造成壓力。
+---
+排名: 28
+代碼: THRM
+公司: Gentherm
+產業: Consumer Discretionary
+市值: ~$1.6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 14x  |  本益成長比: 1.08
+  - 負債權益比: 0.30
+  - 自由現金流殖利率: 7.2%
+投資論點:
+  Gentherm 是汽車座椅、方向盤和電池系統熱管理技術的全球市場領導者。其氣候控制座椅（CCS）系統和先進的電池熱管理對於優化電動車續航里程和乘客舒適度至關重要。由於汽車行業的週期性，該股常被忽視，忽略了隨著汽車製造商向電氣化平台轉型，其單車價值量的結構性增長。
+主要風險:
+  全球電動車產量增速放緩或主要汽車 OEM 的供應鏈中斷可能會影響銷售。
+---
+排名: 29
+代碼: NEOG
+公司: Neogen
+產業: Healthcare
+市值: ~$3.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 17x  |  本益成長比: 1.42
+  - 負債權益比: 0.38
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Neogen 開發和銷售致力於食品和動物安全的產品，包括用於檢測病原體、毒素和過敏原的診斷測試套件。其與 3M 食品安全部門的合併創造了在規模、分銷和產品廣度上無可比擬的全球領導者。由於短期的整合費用，該股常被忽視，掩蓋了其高度防禦性、監管驅動的經常性營收流。
+主要風險:
+  3M 食品安全業務合併的整合延遲或高於預期的成本可能會推遲利潤率的擴張。
+---
+排名: 30
+代碼: SCL
+公司: Stepan Company
+產業: Materials
+市值: ~$2.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 14x  |  本益成長比: 1.40
+  - 負債權益比: 0.45
+  - 自由現金流殖利率: 6.1%
+投資論點:
+  Stepan 是用於消費者清潔產品、個人護理和工業隔熱的特種表面活性劑和聚合物的領先製造商。其對永續、生物基表面活性劑的關注符合長期的消費者趨勢，而其硬質多元醇則受益於建築節能法規。它被忽視為一家低成長的化學公司，忽略了其穩定的現金流、悠久的股利增長歷史和防禦性產品組合。
+主要風險:
+  如果定價能力滯後，石化產品和天然油等原料成本的飆升可能會壓縮利潤率。
+---
+
+== 選股方法論 ==
+選股邏輯專注於識別具有強大資產負債表和可持續競爭優勢的高品質、中型股複利企業（市值介於 5 億至 500 億美元之間），同時系統性地過濾掉過度炒作、高估值的動能股。我們優先考慮本益成長比（PEG）接近或低於 1.5、自由現金流為正且負債權益比較低的企業。為了過濾掉「熱門」股票，我們排除了具有極端估值倍數（例如市銷率 P/S > 15x）或在零售交易論壇中頻繁出現的公司。我們的行業配置深受結構性、跨越數十年的宏觀主題影響，包括市政水務基礎設施的現代化、美國製造業的回流、先進半導體封裝，以及對節能和特種醫療保健服務的長期需求。
