@@ -8,14 +8,21 @@ This module is the single source of truth for:
     middle); nothing else needs to change.
 """
 
+# ``default_tokens`` must cover a full fundamental report: the prompt targets
+# 7000-10000 Traditional Chinese characters across 11 chapters plus the Ch.8 DCF
+# arithmetic, which lands well above 16k output tokens. Anything smaller
+# truncates the tail chapters. Note ``call_openai`` clamps to the model's own
+# ceiling (``OPENAI_MAX_TOKENS``), so gpt-4o effectively caps at 16,384 no
+# matter what is set here — the gpt-5.6 family is the option when a full-length
+# report must survive the OpenAI fallback.
 PROVIDER_DEFAULTS = {
     "claude": {
         "default_model": "claude-sonnet-4-6",
-        "default_tokens": 8000,
+        "default_tokens": 32000,
     },
     "openai": {
         "default_model": "gpt-4o",
-        "default_tokens": 16000,
+        "default_tokens": 32000,
     },
     "gemini": {
         "default_model": "gemini-3.6-flash",
