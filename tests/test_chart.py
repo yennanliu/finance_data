@@ -63,3 +63,31 @@ def test_generate_plotly_candlestick_chart_includes_ma_lines(sample_ohlcv_data):
     html = result.get("plotly_html", "")
     # Check for MA indicators (may appear in JSON data within script)
     assert "MA" in html or "moving" in html.lower()
+
+
+# ── build_technical_chart_embed ──────────────────────────────────────────────
+
+def _embed(monkeypatch, chart_result):
+    from scripts.analysis import pipeline
+    monkeypatch.setattr(pipeline, "generate_plotly_candlestick_chart",
+                        lambda *a, **k: chart_result)
+    return pipeline.build_technical_chart_embed({"hist": object()}, "AMD", "/tmp")
+
+
+def test_chart_embed_uses_markdown_image(monkeypatch):
+    """Raw <img> is not relative-path-rewritten by MkDocs; Markdown images are."""
+    out = _embed(monkeypatch, {"plotly_html": "<div/>", "png_filename": "chart_2026-07-28.png"})
+    assert "<img" not in out
+    assert '<details markdown="1">' in out
+    # Blank lines around the image so md_in_html (and GitHub) parse it.
+    assert "\n\n![Technical Chart](chart_2026-07-28.png)\n\n</details>" in out
+
+
+def test_chart_embed_plotly_only_without_png(monkeypatch):
+    out = _embed(monkeypatch, {"plotly_html": "<div/>", "png_filename": ""})
+    assert out.strip() == "<div/>"
+
+
+def test_chart_embed_empty_without_hist():
+    from scripts.analysis import pipeline
+    assert pipeline.build_technical_chart_embed({"hist": None}, "AMD", "/tmp") == ""

@@ -38,4 +38,9 @@ def frontmatter(fields: dict) -> str:
     return f"---\n{body}---\n\n"
 
 
-__all__ = ["dedup_path", "frontmatter"]
+# Human-readable API label for the `generated_by` front-matter field, shared by
+# the analysis pipeline and the market-news generator.
+GENERATED_BY = {"openai": "OpenAI API", "gemini": "Google Gemini API"}
+
+
+__all__ = ["dedup_path", "frontmatter", "GENERATED_BY"]
