@@ -418,3 +418,105 @@ def test_target_price_block_empty_without_scenarios(monkeypatch, tmp_path):
 
 def test_target_price_block_none_path():
     assert bd.target_price_block("nvda", None, "zh") == ""
+
+
+# ── front matter → header table ──────────────────────────────────────────────
+
+_REPORT_FM = (
+    '---\n'
+    'title: "AMD 基本面深度分析 2026-07-28"\n'
+    'date: 2026-07-28\n'
+    'ticker: AMD\n'
+    'generated_by: Google Gemini API (scripts/generate_analysis.py)\n'
+    '---\n'
+    '\n'
+    '# AMD 基本面深度分析報告\n'
+)
+
+
+def test_split_frontmatter_separates_yaml_and_body():
+    yaml_body, body = bd.split_frontmatter(_REPORT_FM)
+    assert yaml_body.startswith('title: "AMD')
+    assert body.lstrip("\n").startswith("# AMD")
+
+
+def test_split_frontmatter_noop_without_block():
+    assert bd.split_frontmatter("# Title\n") == ("", "# Title\n")
+
+
+def test_frontmatter_table_renders_rows():
+    table = bd.frontmatter_table(bd.split_frontmatter(_REPORT_FM)[0])
+    assert table.startswith("| | |\n|---|---|\n")
+    assert "| **title** | AMD 基本面深度分析 2026-07-28 |" in table  # quotes stripped
+    assert "| **ticker** | AMD |" in table
+    assert "| **generated_by** | Google Gemini API (scripts/generate_analysis.py) |" in table
+
+
+def test_frontmatter_table_skips_nested_and_escapes_pipes():
+    table = bd.frontmatter_table("search:\n  exclude: true\n# note\nlabel: a | b\n")
+    assert "exclude" not in table  # nested key is not a scalar field
+    assert "note" not in table
+    assert r"| **label** | a \| b |" in table
+
+
+def test_frontmatter_table_empty_without_fields():
+    assert bd.frontmatter_table("search:\n  exclude: true\n") == ""
+
+
+def test_copy_file_merges_meta_into_single_block(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "ROOT", tmp_path)  # copy_file logs paths relative to ROOT
+    src = tmp_path / "r.md"
+    src.write_text(_REPORT_FM, encoding="utf-8")
+    dst = tmp_path / "out" / "r.md"
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META)
+    out = dst.read_text(encoding="utf-8")
+    # Exactly one front-matter block, so MkDocs strips it instead of rendering
+    # the report's own block as body text.
+    assert out.count("\n---\n") == 1
+    assert out.startswith("---\nsearch:\n  exclude: true\ntitle: ")
+    assert "| **ticker** | AMD |" in out
+
+
+def test_copy_file_without_meta_leaves_frontmatter_alone(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    src = tmp_path / "r.md"
+    src.write_text(_REPORT_FM, encoding="utf-8")
+    dst = tmp_path / "out" / "r.md"
+    bd.copy_file(src, dst)
+    assert dst.read_text(encoding="utf-8") == _REPORT_FM
+
+
+# ── static chart embed ───────────────────────────────────────────────────────
+
+_LEGACY_EMBED = (
+    "<details>\n"
+    "<summary>📊 靜態圖表 (點擊展開)</summary>\n"
+    '<img src="technical_chart_2026-07-28.png" alt="Technical Chart" style="max-width:100%;">\n'
+    "</details>\n"
+)
+
+
+def test_fix_static_chart_embed_converts_to_markdown_image():
+    out = bd.fix_static_chart_embed(_LEGACY_EMBED)
+    assert out == (
+        '<details markdown="1">\n'
+        "<summary>📊 靜態圖表 (點擊展開)</summary>\n"
+        "\n"
+        "![Technical Chart](technical_chart_2026-07-28.png)\n"
+        "\n"
+        "</details>\n"
+    )
+
+
+def test_fix_static_chart_embed_is_idempotent():
+    once = bd.fix_static_chart_embed(_LEGACY_EMBED)
+    assert bd.fix_static_chart_embed(once) == once
+
+
+def test_fix_static_chart_embed_leaves_absolute_sources():
+    html = '<img src="https://cdn.example.com/x.png" alt="Remote">'
+    assert bd.fix_static_chart_embed(html) == html
+
+
+def test_fix_static_chart_embed_noop_without_images():
+    assert bd.fix_static_chart_embed("# Title\n") == "# Title\n"
