@@ -59,7 +59,7 @@ Generates market news summary (reuses `analysis/utils/llm.py`).
 
 | Type | Use Case |
 |------|----------|
-| `fundamental-analysis` | Deep financials: P/E, debt, ROE, growth + DCF intrinsic value |
+| `fundamental-analysis` | Deep financials: P/E, debt, ROE, growth + DCF intrinsic value (assumption reasoning chain + step-by-step arithmetic + audit checklist) |
 | `technical-analysis` | Charts, MA, RSI, MACD, support/resistance |
 | `stock-eval` | Comprehensive: fundamental + valuation |
 | `stock-valuation` | DCF, EV/EBITDA, target price |
