@@ -26,7 +26,7 @@ generate_analysis.py
 
 ### Config
 - **`config/__init__.py`** — `ANALYSIS_TYPES` dict (12 types), `DEFAULT_MODEL`, `DEFAULT_TOKENS`, `TODAY`
-- **`config/providers.py`** — Per-provider defaults (Claude / OpenAI / Gemini: 32k tokens). Sized for a full-length fundamental report (7000-10000 字 + Ch.8 DCF arithmetic); `call_openai` still clamps to each model's own ceiling, so gpt-4o caps at 16,384.
+- **`config/providers.py`** — Per-provider defaults (Claude / Gemini: 32k tokens; OpenAI: 16k, the gpt-4o ceiling). Documentation of what each paired model can emit — the budget actually sent is `--max-tokens` (default `DEFAULT_TOKENS` = 32000) or, in CI, `.ticker_schedule.json`.
 
 ### Data Fetching (`utils/data_fetch.py`)
 - `fetch_data(ticker)` — fetches OHLCV history + financials (yfinance, Finviz, StockAnalysis)
@@ -78,17 +78,20 @@ Generates market news summary (reuses `analysis/utils/llm.py`).
 # scripts/analysis/config/providers.py
 PROVIDER_DEFAULTS = {
     "claude": {"default_model": "claude-sonnet-4-6", "default_tokens": 32000},
-    "openai": {"default_model": "gpt-4o", "default_tokens": 32000},
+    "openai": {"default_model": "gpt-4o", "default_tokens": 16000},   # gpt-4o ceiling
     "gemini": {"default_model": "gemini-3.6-flash", "default_tokens": 32000},
 }
 ```
 
-Budgets are sized so a full-length fundamental report (7000-10000 字, 11 chapters,
-Ch.8 DCF arithmetic) finishes in one shot. `max_tokens` is a ceiling, not a spend,
-so a generous value costs nothing on shorter reports and avoids a truncate-and-retry
-cycle. Two clamps still apply: `call_openai` caps at the model's own limit
-(gpt-4o: 16,384 — use the gpt-5.6 family for full-length reports), and `call_gemini`
-caps at 65,536 while auto-retrying at that ceiling when it detects truncation.
+Only `default_model` is read by code (`resolve_chain`); `default_tokens` documents
+what each paired model can actually emit. The budget sent to the API comes from
+`--max-tokens` (default `DEFAULT_TOKENS` = 32000) or `.ticker_schedule.json` in CI.
+A full-length fundamental report (7000-10000 字, 11 chapters, Ch.8 DCF arithmetic)
+needs ~32k output tokens to finish in one shot. `max_tokens` is a ceiling, not a
+spend, so a generous value costs nothing on shorter reports. Two clamps apply:
+`run_openai` caps at the model's own limit (gpt-4o: 16,384, so the OpenAI fallback
+truncates full-length reports — use a gpt-5.6-* model to avoid that), and
+`run_gemini` caps at 65,536 while auto-retrying at that ceiling on truncation.
 
 ## CI/CD: Daily Analysis Workflow
 

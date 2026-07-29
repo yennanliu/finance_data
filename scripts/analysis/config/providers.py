@@ -8,21 +8,29 @@ This module is the single source of truth for:
     middle); nothing else needs to change.
 """
 
-# ``default_tokens`` must cover a full fundamental report: the prompt targets
-# 7000-10000 Traditional Chinese characters across 11 chapters plus the Ch.8 DCF
-# arithmetic, which lands well above 16k output tokens. Anything smaller
-# truncates the tail chapters. Note ``call_openai`` clamps to the model's own
-# ceiling (``OPENAI_MAX_TOKENS``), so gpt-4o effectively caps at 16,384 no
-# matter what is set here — the gpt-5.6 family is the option when a full-length
-# report must survive the OpenAI fallback.
+# ``default_tokens`` documents each provider's per-report output budget. Only
+# ``default_model`` is read by code (see ``resolve_chain``); the budget actually
+# handed to the API comes from ``--max-tokens`` (default ``config.DEFAULT_TOKENS``
+# = 32000) or, in CI, ``.ticker_schedule.json``. So keep these numbers truthful
+# about what the paired model can really emit rather than aspirational:
+#
+#   * A full fundamental report (7000-10000 字, 11 chapters, Ch.8 DCF arithmetic)
+#     needs roughly 32k output tokens to finish in one shot.
+#   * ``run_openai`` clamps to the model's own ceiling (``OPENAI_MAX_TOKENS``), so
+#     the gpt-4o default tops out at 16,384 and will truncate a full-length
+#     report's tail chapters. Switch the OpenAI default to a gpt-5.6-* model (32k
+#     capable) if the OpenAI fallback needs to produce complete reports.
+#   * ``run_gemini`` clamps to 65,536 and auto-retries at that ceiling when it
+#     detects truncation, so the primary path self-heals.
 PROVIDER_DEFAULTS = {
     "claude": {
         "default_model": "claude-sonnet-4-6",
         "default_tokens": 32000,
     },
     "openai": {
+        # 16000, not 32000: gpt-4o cannot exceed 16,384 output tokens.
         "default_model": "gpt-4o",
-        "default_tokens": 32000,
+        "default_tokens": 16000,
     },
     "gemini": {
         "default_model": "gemini-3.6-flash",
