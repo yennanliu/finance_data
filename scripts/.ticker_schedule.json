@@ -16,6 +16,6 @@
   "defaults": {
     "provider": "gemini",
     "model": "gemini-3.5-flash",
-    "max_tokens": 16000
+    "max_tokens": 32000
   }
 }
