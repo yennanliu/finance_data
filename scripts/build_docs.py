@@ -68,11 +68,13 @@ SITE_BASE = "/finance_data"
 # Set REPORT_RETENTION_DAYS=0 to publish everything.
 RETENTION_DAYS = int(os.environ.get("REPORT_RETENTION_DAYS", "120"))
 
-# Perf fix #1 — search-index slimming. Prepended to dated report / news /
-# notebook *body* pages so the MkDocs Material search plugin skips their (very
-# large) full text. Index & landing pages stay searchable, so tickers and
-# report titles remain discoverable while search_index.json stays small.
-SEARCH_EXCLUDE_FM = "---\nsearch:\n  exclude: true\n---\n\n"
+# Perf fix #1 — search-index slimming. Merged into the front matter of dated
+# report / news / notebook *body* pages so the MkDocs Material search plugin
+# skips their (very large) full text. Index & landing pages stay searchable, so
+# tickers and report titles remain discoverable while search_index.json stays
+# small. These are YAML lines, not a full block — copy_file merges them with
+# whatever front matter the source file already carries.
+SEARCH_EXCLUDE_META = "search:\n  exclude: true"
 
 _DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
 
@@ -721,10 +723,67 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9_-]", "-", text.lower()).strip("-")
 
 
-def copy_file(src: Path, dst: Path, prepend: str = ""):
-    """Copy src → dst. For Markdown, optionally prepend front matter and
-    pre-render Mermaid; uses a content-equality incremental check so a changed
-    `prepend` is always applied. Binary files use a cheap mtime check."""
+# ── Report header: front matter → rendered table ─────────────────────────────
+# Reports are written with their own YAML front matter (title/date/ticker/…).
+# MkDocs strips exactly ONE leading block, so prepending a second one left the
+# report's own block visible as a run-on paragraph at the top of the page.
+# Instead we merge the two into a single block and re-emit the report's fields
+# as a Markdown table — the header GitHub renders for front matter natively.
+_FRONTMATTER_RE = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*\r?\n", re.DOTALL)
+
+
+def split_frontmatter(content: str) -> "tuple[str, str]":
+    """Split a leading YAML front-matter block off `content` → (yaml, body)."""
+    m = _FRONTMATTER_RE.match(content)
+    if not m:
+        return "", content
+    return m.group(1), content[m.end():]
+
+
+def frontmatter_table(yaml_body: str) -> str:
+    """Render the top-level `key: value` front-matter fields as a table."""
+    rows = []
+    for line in yaml_body.splitlines():
+        # Skip blanks, comments and nested keys — only scalar fields are shown.
+        if not line.strip() or line[:1] in (" ", "\t", "#"):
+            continue
+        key, sep, value = line.partition(":")
+        value = value.strip().strip('"').strip("'").replace("|", r"\|")
+        if not sep or not value:
+            continue
+        rows.append(f"| **{key.strip()}** | {value} |")
+    if not rows:
+        return ""
+    return "\n".join(["| | |", "|---|---|", *rows]) + "\n\n"
+
+
+# ── Static chart embed ───────────────────────────────────────────────────────
+# `use_directory_urls` (MkDocs default) serves each report at <page>/index.html,
+# so a bare relative `<img src="chart.png">` resolves one directory too deep.
+# MkDocs rewrites relative paths for Markdown images but not for raw HTML, so
+# convert the embed to Markdown and let md_in_html parse it inside <details>.
+_STATIC_IMG_RE = re.compile(
+    r'<img\s+src="(?P<src>[^"/:]+\.(?:png|jpe?g|gif|svg|webp))"'
+    r'(?:\s+alt="(?P<alt>[^"]*)")?[^>]*>'
+)
+
+
+def fix_static_chart_embed(content: str) -> str:
+    """Rewrite raw-HTML images with page-relative sources as Markdown images."""
+    if "<img" not in content:
+        return content
+    # md_in_html needs the opt-in attribute to parse the Markdown we inject.
+    content = content.replace("<details>\n<summary>", '<details markdown="1">\n<summary>')
+    return _STATIC_IMG_RE.sub(
+        lambda m: f'\n![{m.group("alt") or "Chart"}]({m.group("src")})\n', content
+    )
+
+
+def copy_file(src: Path, dst: Path, extra_meta: str = ""):
+    """Copy src → dst. For Markdown, merge `extra_meta` into the file's own
+    front matter (re-emitted as a header table), repair chart embeds and
+    pre-render Mermaid; uses a content-equality incremental check so changed
+    `extra_meta` is always applied. Binary files use a cheap mtime check."""
     ensure(dst.parent)
     if src.suffix == ".md":
         content = src.read_text(encoding="utf-8")
@@ -734,7 +793,15 @@ def copy_file(src: Path, dst: Path, prepend: str = ""):
         if _MMDC:
             # Pre-render Mermaid blocks to SVG inline
             content = prerender_mermaid(content)
-        content = prepend + content
+        content = fix_static_chart_embed(content)
+        if extra_meta:
+            yaml_body, body = split_frontmatter(content)
+            merged = f"{extra_meta}\n{yaml_body}" if yaml_body else extra_meta
+            content = (
+                f"---\n{merged}\n---\n\n"
+                + frontmatter_table(yaml_body)
+                + body.lstrip("\n")
+            )
         if _INCREMENTAL and dst.exists() and dst.read_text(encoding="utf-8") == content:
             return
         dst.write_text(content, encoding="utf-8")
@@ -811,7 +878,7 @@ def build_reports(lang: str = "en"):
         if lang == "en":
             for f in md_files:
                 # Perf fix #1 — exclude report bodies from the search index
-                copy_file(f, dst_dir / f.name, prepend=SEARCH_EXCLUDE_FM)
+                copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META)
             for f in html_files + other_files:
                 copy_file(f, dst_dir / f.name)
 
@@ -1053,7 +1120,7 @@ def build_market_news(lang: str = "en"):
             date_str = parts[2] if len(parts) >= 3 else md_file.stem
             if lang == "en":
                 dst_file = dst_ticker_dir / md_file.name
-                copy_file(md_file, dst_file, prepend=SEARCH_EXCLUDE_FM)
+                copy_file(md_file, dst_file, extra_meta=SEARCH_EXCLUDE_META)
                 news_files.append((date_str, dst_file.name, None))
             else:
                 # ZH: link to EN page, no copy
@@ -1065,7 +1132,7 @@ def build_market_news(lang: str = "en"):
             if readme.exists():
                 if lang == "en":
                     dst_file = dst_ticker_dir / f"{date_dir.name}.md"
-                    copy_file(readme, dst_file, prepend=SEARCH_EXCLUDE_FM)
+                    copy_file(readme, dst_file, extra_meta=SEARCH_EXCLUDE_META)
                     news_files.append((date_dir.name, dst_file.name, None))
                 else:
                     en_url = f"{SITE_BASE}/market_news/{ticker}/{date_dir.name}/"
@@ -1154,8 +1221,8 @@ def build_notebooks(lang: str = "en"):
         if lang == "en":
             for f in txts + mds:
                 # Exclude notebook bodies from the search index (perf fix #1)
-                prepend = SEARCH_EXCLUDE_FM if f.suffix == ".md" else ""
-                copy_file(f, dst_dir / f.name, prepend=prepend)
+                extra_meta = SEARCH_EXCLUDE_META if f.suffix == ".md" else ""
+                copy_file(f, dst_dir / f.name, extra_meta=extra_meta)
 
         def nb_link(f: Path) -> str:
             # PDFs are not published with the site — link to the GitHub raw copy.

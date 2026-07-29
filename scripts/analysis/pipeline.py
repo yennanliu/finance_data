@@ -15,10 +15,8 @@ from .context import build_context
 from .data.charts import generate_plotly_candlestick_chart
 from .data.sources import fetch_data
 from .llm import call_llm, run_with_fallback
-from .publish import dedup_path, frontmatter
+from .publish import GENERATED_BY as _GENERATED_BY, dedup_path, frontmatter
 from .utils.mermaid import sanitize_mermaid_blocks
-
-_GENERATED_BY = {"openai": "OpenAI API", "gemini": "Google Gemini API"}
 
 
 def build_technical_chart_embed(data: dict, ticker: str, output_dir) -> str:
@@ -32,10 +30,15 @@ def build_technical_chart_embed(data: dict, ticker: str, output_dir) -> str:
     png_filename = chart_result.get("png_filename", "")
     plotly_html = chart_result.get("plotly_html", "")
     if png_filename:
+        # Markdown image (not a raw <img>) so MkDocs rewrites the relative path
+        # for its directory URLs; `markdown="1"` lets md_in_html parse it inside
+        # the <details>, and the blank lines make GitHub do the same.
         return (
-            f'<details>\n'
+            f'<details markdown="1">\n'
             f'<summary>📊 靜態圖表 (點擊展開)</summary>\n'
-            f'<img src="{png_filename}" alt="Technical Chart" style="max-width:100%;">\n'
+            f'\n'
+            f'![Technical Chart]({png_filename})\n'
+            f'\n'
             f'</details>\n'
             f'\n'
             f'{plotly_html}\n\n'
