@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis.config.providers import resolve_chain
 from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
-from analysis.publish import frontmatter
+from analysis.publish import GENERATED_BY, frontmatter
 
 DEFAULT_PROVIDER = "gemini"
 DEFAULT_MODEL = "gemini-3.6-flash"
@@ -351,11 +351,14 @@ def generate_report(
 
     today = date.today().isoformat()
     front_matter = frontmatter({
+        "title": f'"{ticker} 市場新聞分析 {today}"',
         "ticker": ticker,
         "date": today,
         "type": "market-news",
         "provider": provider,
         "model": model,
+        "language": "zh-TW",
+        "generated_by": f"{GENERATED_BY.get(provider, 'Claude AI')} (scripts/generate_market_news.py)",
     })
 
     output_dir.mkdir(parents=True, exist_ok=True)
