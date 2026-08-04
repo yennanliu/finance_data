@@ -1,6 +1,6 @@
 # Price Store & Unified Chart — Design
 
-**Status:** approved, not yet implemented.
+**Status:** phase 1 implemented (store live, 37 tickers, 3.3 MB); phases 2–5 pending.
 **Rationale and measurements:** [`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md).
 **Written:** 2026-08-04, against commit `5e0e699b`.
 
@@ -171,14 +171,27 @@ Abort the ticker (log, non-zero counter, leave the existing file untouched) if:
 | `high < low`, or close outside `[low, high]` | any |
 | Non-monotonic or duplicate dates in the fetch | any |
 
+The open/close containment check carries a **0.5 % tolerance**
+(`OHLC_TOLERANCE`). Yahoo occasionally reports a close a fraction of a cent
+outside the day's range through its own adjustment rounding, and a hard
+comparison would freeze that ticker's updates indefinitely over noise. Wide
+enough to absorb rounding, far too tight to admit a genuinely bad bar.
+
 The job's existing "exit non-zero only if *nothing* succeeded" policy
 (`generate_kline_data.py:209`) is kept, so one bad ticker doesn't fail the run
 while a total outage still fails loudly.
 
 A large diff is intentionally *not* a gate — it's the legitimate signal of a
-split. It is logged instead: `⟳ amd — history restated (2,520 bars rewritten)`,
+split. It is logged instead (`⟳ RESTATED amd — 2,511 existing bars rewritten`),
 so the cron log and the commit diff together form the audit trail. Any bad
 rewrite is one `git revert` away.
+
+**Provisional bars.** The `restated` signal deliberately ignores the *newest*
+stored bar. 03:30 UTC is after the US close but mid-session in Taipei, so TW
+tickers store a provisional bar that the next run corrects — a fetched bar
+always wins, so it self-heals, but counting it would report `restated` nightly
+and drain the signal of the meaning it exists for. This timing predates the
+store; the old JSON job had exactly the same behaviour.
 
 ### 3.6 Module API
 
@@ -190,17 +203,28 @@ importable by both entry points as `from analysis.data.prices import …`
 ```python
 KEEP_YEARS = 10
 STORE_DIR  = ROOT / "data" / "prices"
+FIELDS     = ("date", "open", "high", "low", "close", "volume", "div", "split")
 
 # ── read path: pure stdlib, no third-party imports, offline-safe ──
-def store_path(key: str) -> Path
-def load_store(key: str) -> list[dict]          # [] when absent
-def window(bars, *, days=None, as_of=None, lookback=0) -> list[dict]
+def fmt_price(v) -> str                          # canonical price text
+def fmt_event(v) -> str                          # canonical div/split text ("" when none)
 def serialise(bars) -> str                       # the one canonical writer
+def parse(text: str) -> list[dict]
+def store_path(key, store_dir=None) -> Path
+def load_store(key, store_dir=None) -> list[dict]      # [] when absent
+def write_store(key, bars, store_dir=None) -> bool     # True only if bytes changed
+def upsert(old, new) -> list[dict]               # fetch wins on collision
+def trim(bars, years=KEEP_YEARS) -> list[dict]
+def window(bars, *, days=None, as_of=None, lookback=0) -> list[dict]
 
 # ── write path: yfinance imported lazily inside ──
-def fetch_history(symbol: str, years: int = KEEP_YEARS) -> list[dict] | None
-def gate(bars_new, bars_old) -> str | None       # None == ok, else reason
-def update(key: str) -> str                      # "appended" | "restated" | "unchanged" | "skipped"
+def fetch_history(symbol, years=KEEP_YEARS) -> list[dict] | None
+def gate(new, old) -> str | None                 # None == ok, else the reason
+def update(key, symbol=None, years=KEEP_YEARS, store_dir=None) -> tuple[str, str]
+#   → ("created" | "appended" | "restated" | "unchanged" | "skipped" | "failed", detail)
+
+# ── ticker helpers (shared with the CLI) ──
+def report_key(t) -> str; def to_yf_symbol(t) -> str; def currency_for(sym) -> str
 ```
 
 The read path importing nothing beyond the standard library is a hard
@@ -313,15 +337,26 @@ disk-space measure, not a correctness requirement.
 
 Each phase is independently committable and leaves the site working.
 
-### Phase 1 — the store
-- Add `scripts/analysis/data/prices.py` (§3.6).
-- Add `--backfill` to `generate_kline_data.py` for the initial 10y pull; rewrite
-  its main loop to call `prices.update()` per ticker.
-- Point `update_kline_data.yml` at `data/prices/` for its commit paths.
-- Initial commit: ~4.6 MB across 38 files.
-- **Accept when:** backfill produces 38 CSVs; a second immediate run reports
-  `unchanged` for all 38 and leaves `git status` clean (I1 + I2 verified in
-  practice, not only in tests).
+### Phase 1 — the store ✅ done
+- `scripts/analysis/data/prices.py` (§3.6) + `tests/test_prices.py` (49 tests).
+- `scripts/update_prices.py` — the CLI, with `--only-missing` and `--dry-run`.
+- `update_kline_data.yml` runs it and commits `data/prices/`.
+
+**Two deviations from the plan as written, both simplifications:**
+
+1. A **new** `scripts/update_prices.py` rather than a rewritten
+   `generate_kline_data.py`. The old script keeps producing
+   `ai_gen_report/kline/*.json` until phase 2 switches `build_docs.py` over, so
+   phase 1 changes nothing user-visible and the site cannot go stale mid-migration.
+   Both scripts run in the workflow for now; the legacy step is deleted in phase 2.
+2. **No `--backfill` flag.** Since the full history is fetched every run, a first
+   run *is* the backfill — one code path instead of two.
+
+**Verified:** 37 CSVs written (the universe is 37, not 38 — one stale `kline`
+JSON had no corresponding report directory), **3.3 MB** total, largest 2,512 bars.
+An immediate second run reported `unchanged` for all 35 US tickers and left
+`git status` clean, confirming I1 + I2 against real Yahoo data rather than only
+fixtures. The two TW tickers appended a provisional bar, as expected mid-session.
 
 ### Phase 2 — derive the payload
 - `build_docs.py` derives `docs/reports/<ticker>/kline.json` from the store
