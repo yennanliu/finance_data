@@ -1,6 +1,7 @@
 # Price Store & Unified Chart — Design
 
-**Status:** phase 1 implemented (store live, 37 tickers, 3.3 MB); phases 2–5 pending.
+**Status:** phases 1–2 implemented (store live and feeding the docs build);
+phases 3–5 pending.
 **Rationale and measurements:** [`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md).
 **Written:** 2026-08-04, against commit `5e0e699b`.
 
@@ -358,15 +359,33 @@ An immediate second run reported `unchanged` for all 35 US tickers and left
 `git status` clean, confirming I1 + I2 against real Yahoo data rather than only
 fixtures. The two TW tickers appended a provisional bar, as expected mid-session.
 
-### Phase 2 — derive the payload
-- `build_docs.py` derives `docs/reports/<ticker>/kline.json` from the store
-  (560-bar window) instead of copying from `ai_gen_report/kline/`.
-- `latest_close()` (`build_docs.py:432`, feeds the price-target table) reads the
-  store instead of the JSON.
-- Delete `ai_gen_report/kline/` and `SRC_KLINE`.
-- **Accept when:** `python3 scripts/build_docs.py && mkdocs serve` renders the
-  index-page chart identically to production, and the price-target table shows
-  the same latest close. **No user-visible change at this point.**
+### Phase 2 — derive the payload ✅ done
+- `build_docs.py` derives `docs/reports/<ticker>/kline.json` from the store:
+  `kline_bars()` → `kline_payload()` → `write_kline_payload()`, a 560-bar window
+  (`KLINE_VISIBLE_BARS` + `KLINE_LOOKBACK_BARS`).
+- `_current_price()` (feeds the price-target table) reads the store.
+- `kline_block()` generalised now rather than in phase 3, since the signature
+  change belongs with the rest of the payload work: `src` / `as_of` / `ma`.
+- Deleted `scripts/generate_kline_data.py`, `ai_gen_report/kline/` (38 files),
+  `SRC_KLINE` and the workflow's legacy step. `okf/datasets/kline-data.md`
+  re-documented for the CSV store.
+- `prices` is imported at `build_docs.py` module scope. Safe: the `analysis`
+  package defers every heavy dependency to inside its functions, so the import
+  costs 8 ms and pulls neither pandas nor yfinance — the docs build stays
+  offline and dependency-light.
+
+**Verified:** the derived payload matches the retired JSON **bar for bar** — 300
+overlapping bars, zero price mismatches, zero volume mismatches — while carrying
+560 bars (back to 2024-05-08) instead of 300, at 42 KB. `_current_price` reads
+correctly for US and TW tickers off the real store. `docs/reports/` is
+gitignored, so the derived payload is untracked by construction. No user-visible
+change, as intended.
+
+> A sample build showed no price-target table for AMD, which looked like a
+> regression but is a sampling artifact: `SAMPLE_LIMIT` had picked AMD's
+> 2026-06-06 fundamental, whose scenario table isn't parseable (0 scenarios). The
+> real newest report (2026-08-03) yields 3 scenarios and renders the table. Worth
+> remembering when reading sample-build output.
 
 ### Phase 3 — the report-page chart
 - `kline-chart.js` per-widget attributes (§5).

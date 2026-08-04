@@ -1,15 +1,11 @@
 name: Update Price Data
 
-# Maintains the price data behind every chart on the site:
+# Maintains data/prices/<ticker>.csv — the committed 10-year OHLCV store that is
+# the single source of truth for every chart on the site (scripts/update_prices.py,
+# design notes in docs/PRICE_STORE_DESIGN.md).
 #
-#   • data/prices/<ticker>.csv     — the 10-year store, source of truth
-#                                    (scripts/update_prices.py)
-#   • ai_gen_report/kline/*.json   — the legacy per-page payload
-#                                    (scripts/generate_kline_data.py)
-#
-# Both run during the migration described in docs/PRICE_STORE_DESIGN.md; the
-# JSON step goes away in phase 2, when build_docs.py starts deriving chart
-# payloads from the store instead.
+# The chart payloads pages actually fetch are *derived* from this store by
+# scripts/build_docs.py at docs-build time and are not committed.
 #
 # Runs shortly before the consolidated nightly deploy (deploy.yml, 04:00 UTC)
 # so freshly-committed prices are picked up in the same publish cycle. Neither
@@ -64,16 +60,11 @@ jobs:
           TICKERS="${{ github.event.inputs.tickers }}"
           python scripts/update_prices.py $TICKERS
 
-      - name: Generate legacy k-line JSON
-        run: |
-          TICKERS="${{ github.event.inputs.tickers }}"
-          python scripts/generate_kline_data.py $TICKERS
-
       - name: Commit and push data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/prices/ ai_gen_report/kline/
+          git add data/prices/
 
           if git diff --cached --quiet; then
             echo "No price changes to commit."
