@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -394,11 +395,42 @@ def get_meta(ticker: str) -> dict:
 # never committed. Deriving here keeps one source of truth for every chart and
 # lets each page ask for the window it needs.
 
-# Bars per payload: 360 trading days of visible range (the widest range button)
+# Bars per payload. 360 trading days of visible range (the widest range button)
 # plus 200 bars of lookback so a client-side MA200 is fully defined at the left
 # edge instead of starting 200 bars in.
 KLINE_VISIBLE_BARS = 360
 KLINE_LOOKBACK_BARS = 200
+
+# …plus an allowance for as-of truncation. A dated report page clips the payload
+# to its own date, so a report at the far end of the retention window would
+# otherwise lose MA200 over the oldest part of its 360-bar view: measured against
+# the real store, a 120-day-old report had MA200 defined for only 279 of 360
+# visible bars. The allowance restores the full overlay for every *published*
+# report at a cost of ~7 KB per (uncommitted) payload.
+# Weekdays per calendar day. An *upper* bound on trading days, since holidays
+# only ever remove sessions — deliberately not 252/365, which is the average and
+# so runs short on a low-holiday window.
+_TRADING_DAYS_PER_CALENDAR_DAY = 5 / 7
+# A few bars of slack for calendar edges (a window can start and end mid-week).
+KLINE_AS_OF_SLACK_BARS = 5
+# Ceiling on that allowance, which also bounds the payload when retention is
+# disabled (REPORT_RETENTION_DAYS=0 publishes arbitrarily old reports). Reports
+# older than this still render; only MA200's left edge thins out.
+KLINE_MAX_AS_OF_BARS = 504  # ≈ 2 years of trading days
+
+
+def kline_as_of_allowance() -> int:
+    """Extra bars carried so as-of truncation can't eat into the MA lookback."""
+    if RETENTION_DAYS <= 0:
+        return KLINE_MAX_AS_OF_BARS
+    return min(KLINE_MAX_AS_OF_BARS,
+               math.ceil(RETENTION_DAYS * _TRADING_DAYS_PER_CALENDAR_DAY)
+               + KLINE_AS_OF_SLACK_BARS)
+
+
+def kline_payload_bars() -> int:
+    """Total bars to derive per ticker."""
+    return KLINE_VISIBLE_BARS + kline_as_of_allowance() + KLINE_LOOKBACK_BARS
 
 
 def kline_bars(ticker: str) -> "list[dict]":
@@ -409,7 +441,7 @@ def kline_bars(ticker: str) -> "list[dict]":
     bars = prices.load_store(ticker, PRICES_DIR)
     if not bars:
         return []
-    return prices.window(bars, days=KLINE_VISIBLE_BARS,
+    return prices.window(bars, days=KLINE_VISIBLE_BARS + kline_as_of_allowance(),
                          lookback=KLINE_LOOKBACK_BARS)
 
 

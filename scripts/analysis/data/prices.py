@@ -316,6 +316,8 @@ def gate(new: list[dict] | None, old: list[dict]) -> str | None:
         slack = h * OHLC_TOLERANCE
         if not (l - slack <= c <= h + slack) or not (l - slack <= o <= h + slack):
             return f"open/close outside high-low range on {d}"
+        if b["volume"] < 0:
+            return f"negative volume on {d}"
 
     # Compare like with like: only stored bars inside the fetched date range can
     # be expected to reappear in the fetch.

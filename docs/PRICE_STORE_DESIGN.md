@@ -25,8 +25,9 @@ time; none are committed. The per-report Plotly + PNG pipeline is deleted.
 - G3 — Nightly updates produce a small, human-reviewable diff.
 - G4 — Splits, dividend re-adjustments and upstream corrections require no
   special-case code.
-- G5 — Report charts are *as-of accurate*: a report dated `D` shows the chart as
-  it stood on `D`.
+- G5 — Report charts are **date-capped to current history**: a report dated `D`
+  charts no bar later than `D`, using the values the store holds *today*. This is
+  deliberately not a point-in-time snapshot — see the caveat below.
 - G6 — Remove plotly / kaleido / mplfinance from the analysis critical path.
 
 **Non-goals**
@@ -144,9 +145,9 @@ These are the load-bearing properties. Each gets a test.
 Nightly, per ticker:
 
 ```
-1. bars_new   = fetch_history(symbol, years=10)      # full fetch, auto_adjust=False
-2. gate(bars_new, bars_old)                          # §3.5 — abort this ticker on failure
-3. bars_old   = load_store(key)                      # [] if the file is absent
+1. bars_old   = load_store(key)                      # [] if the file is absent
+2. bars_new   = fetch_history(symbol, years=10)      # full fetch, auto_adjust=False
+3. gate(bars_new, bars_old)                          # §3.5 — abort this ticker on failure
 4. merged     = upsert(bars_old, bars_new)           # bars_new wins on date collision
 5. merged     = trim(merged, KEEP_YEARS)
 6. write_if_changed(key, merged)                     # serialise, compare bytes, atomic replace
@@ -157,6 +158,23 @@ and upstream corrections a non-event: the restated history simply overwrites the
 stored one, and that night's diff is large instead of one line. On an ordinary day
 `merged` differs from `bars_old` by exactly one appended line (plus one trimmed
 head line), so the diff is one line in each direction.
+
+**Caveat: restatement versus point-in-time accuracy.** Because a fetched bar always
+wins, a later update can change rows dated *before* a report's date. `data-as-of`
+caps the date range; it cannot restore the values that were on screen when the
+report was written. After a 4:1 split, a report saying "resistance at $500" sits
+above a chart whose peak now reads $125.
+
+This is accepted, not overlooked. Keeping a single restated history is what makes
+the chart *continuous* — plotting raw pre-split prices would put a 75% cliff in the
+middle of it — and it's the convention every charting tool follows. The alternative
+is versioned snapshots per report date, which would reintroduce exactly the
+per-report data duplication this design exists to remove. The store therefore
+promises *date-capped current history* (G5), and the split caveat is the price.
+Reports written before a split remain internally consistent in their own text; only
+their relationship to the chart's y-axis shifts. Splits are rare enough — a handful
+a year across 38 tickers — that the trade is worth it. If a report ever needs to be
+read against its original prices, the `split` column reconstructs the factor.
 
 `upsert` keeps stored bars whose dates fall outside the fetched range. That only
 matters if a fetch returns a short window; with a full 10y fetch it is a no-op
@@ -172,8 +190,15 @@ Abort the ticker (log, non-zero counter, leave the existing file untouched) if:
 | Empty / missing fetch | any |
 | Bar count regression | `len(bars_new) < 0.9 × len(overlapping stored bars)` |
 | NaN or ≤0 in any of O/H/L/C | any |
-| `high < low`, or close outside `[low, high]` | any |
+| `high < low` | any |
+| **open** or close outside `[low, high]` | beyond `OHLC_TOLERANCE` |
+| Negative volume | any |
 | Non-monotonic or duplicate dates in the fetch | any |
+
+The count check is scoped to the bars the fetch *overlaps*, not the whole store,
+because `upsert` keeps stored bars the fetch doesn't cover — so a short fetch
+window loses nothing and is not a regression. What it does catch is a fetch that
+spans the same dates but comes back full of holes.
 
 The open/close containment check carries a **0.5 % tolerance**
 (`OHLC_TOLERANCE`). Yahoo occasionally reports a close a fraction of a cent
@@ -182,7 +207,7 @@ comparison would freeze that ticker's updates indefinitely over noise. Wide
 enough to absorb rounding, far too tight to admit a genuinely bad bar.
 
 The job's existing "exit non-zero only if *nothing* succeeded" policy
-(`generate_kline_data.py:209`) is kept, so one bad ticker doesn't fail the run
+(inherited from the retired `generate_kline_data.py`) is kept, so one bad ticker doesn't fail the run
 while a total outage still fails loudly.
 
 A large diff is intentionally *not* a gate — it's the legitimate signal of a
@@ -252,9 +277,27 @@ needs no parser change:
  "bars":[{"t":"2025-01-02","o":..,"h":..,"l":..,"c":..,"v":..}, ...]}
 ```
 
-Window: **560 bars** — 360 trading days of visible range plus 200 bars of
-lookback so MA200 is defined at the left edge of the widest range. ~42 KB/ticker
-uncompressed, ~1.6 MB across 38 tickers, none of it committed.
+Window: **651 bars** = 360 (widest visible range) + 91 (as-of allowance) + 200
+(MA lookback). ~49 KB/ticker uncompressed, ~1.8 MB across 38 tickers, none of it
+committed.
+
+The as-of allowance is the part that isn't obvious. A dated report page clips the
+payload to its own date, so sizing at 360 + 200 alone would let truncation eat
+into the lookback and leave MA200 undefined over the oldest stretch of an old
+report's 360-bar view. Measured against the real store, a 120-day-old report had
+MA200 defined for only **279 of 360** visible bars. `kline_as_of_allowance()`
+therefore adds the trading days a report can be old before retention drops it —
+`ceil(RETENTION_DAYS × 5/7) + 5`, i.e. 91 at the current 120-day retention.
+
+The ratio is weekdays-per-calendar-day, not the 252/365 average, because it must
+be an *upper* bound: holidays only ever remove sessions, whereas the average runs
+short on a low-holiday window. `KLINE_MAX_AS_OF_BARS = 504` caps the allowance,
+which also bounds the payload when retention is disabled
+(`REPORT_RETENTION_DAYS=0` publishes arbitrarily old reports); beyond that a
+report still renders, only MA200's left edge thins out.
+
+With the allowance in place, MA200 covers the full visible range at every report
+age: 0, 30, 60 and 120 days old all measure a gap of zero.
 
 If a 5Y/MAX range is ever wanted, derive a tiered payload — daily bars for the
 recent ~2y, weekly beyond — which keeps the file ~40 KB at any depth. Out of
@@ -314,7 +357,9 @@ helper used by `within_retention()`.
 2. the Plotly block — `<script src="…plotly…">` through the closing `</script>`
    of the `candlestick-chart` div,
 
-then prepend the widget block. Doing this at copy time means all 1,313 existing
+then insert the widget block immediately after the front matter (and the
+header table when one is emitted), never before it — front matter must lead
+the file or `split_frontmatter()` and MkDocs both stop recognising it. Doing this at copy time means all 1,313 existing
 reports get the new chart with no source rewrite, and the change is reversible by
 reverting one function. The one-off source cleanup (phase 4) is then purely a
 disk-space measure, not a correctness requirement.
@@ -364,8 +409,8 @@ fixtures. The two TW tickers appended a provisional bar, as expected mid-session
 
 ### Phase 2 — derive the payload ✅ done
 - `build_docs.py` derives `docs/reports/<ticker>/kline.json` from the store:
-  `kline_bars()` → `kline_payload()` → `write_kline_payload()`, a 560-bar window
-  (`KLINE_VISIBLE_BARS` + `KLINE_LOOKBACK_BARS`).
+  `kline_bars()` → `kline_payload()` → `write_kline_payload()`, sized by
+  `kline_payload_bars()` (§4).
 - `_current_price()` (feeds the price-target table) reads the store.
 - `kline_block()` generalised now rather than in phase 3, since the signature
   change belongs with the rest of the payload work: `src` / `as_of` / `ma`.
@@ -379,7 +424,8 @@ fixtures. The two TW tickers appended a provisional bar, as expected mid-session
 
 **Verified:** the derived payload matches the retired JSON **bar for bar** — 300
 overlapping bars, zero price mismatches, zero volume mismatches — while carrying
-560 bars (back to 2024-05-08) instead of 300, at 42 KB. `_current_price` reads
+560 bars instead of 300 at the time of that check (651 after the payload
+re-sizing below). `_current_price` reads
 correctly for US and TW tickers off the real store. `docs/reports/` is
 gitignored, so the derived payload is untracked by construction. No user-visible
 change, as intended.
