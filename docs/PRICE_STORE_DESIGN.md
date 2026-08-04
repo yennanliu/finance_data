@@ -1,9 +1,10 @@
 # Price Store & Unified Chart — Design
 
-**Status:** phases 1–3 implemented — the store is live, the docs build derives
-every chart payload from it, and technical report pages render the shared widget
-pinned to their own date. Phase 4 (deleting the generator and the 208 MB of
-committed chart payload) is deliberately gated on verifying phase 3 in production.
+**Status:** phases 1–3 and 4a implemented — the store is live, the docs build
+derives every chart payload from it, technical report pages render the shared
+widget pinned to their own date, and the Plotly/PNG generator is gone. Phase 4b
+(deleting the 208 MB of already-committed chart payload) is deliberately gated on
+verifying phase 3 on the deployed site, since it is the only irreversible step.
 **Rationale and measurements:** [`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md).
 **Written:** 2026-08-04, against commit `5e0e699b`.
 
@@ -420,11 +421,38 @@ Regex coverage was checked across the whole corpus first: 1,313 Plotly embeds an
 1,311 PNG blocks matched, **zero** files left with residual chart markup, and no
 `fundamental/` or `stock/` report carries an embed at all.
 
-### Phase 4 — deletions
-- Everything in §7, including the one-off source cleanup (−208 MB working tree).
-- **Accept when:** a technical analysis run end-to-end produces a report with no
-  chart markup, `pytest` is green, and `pip install -e ".[dev]"` no longer pulls
-  plotly/kaleido/mplfinance.
+### Phase 4a — stop generating chart markup ✅ done
+Non-destructive: nothing already committed is touched, so this needs no
+production verification first.
+
+- Deleted `scripts/analysis/data/charts.py`, `build_technical_chart_embed()` and
+  its call in `pipeline.py`, and the re-exports in `data/__init__.py` and
+  `utils/data_fetch.py`.
+- Dropped `plotly`, `matplotlib` and `mplfinance` from `pyproject.toml`,
+  `tests.yml` and `daily_analysis.yml`. No importer of any of them remained.
+- Deleted `tests/test_chart.py` (9 tests for code that no longer exists) and the
+  two volume-less chart cases in `test_data_fetch_net.py`.
+- `docs/ARCHITECTURE.md` re-documented.
+
+**Verified:** 398 tests green; `pipeline.__all__` and `analysis.data.__all__` are
+clean; importing the pipeline still pulls no pandas. New technical reports are now
+pure LLM output.
+
+### Phase 4b — the one-off cleanup ⏸ gated
+**Deliberately not done in this pass.** Deleting 1,299 PNGs (147 MB) and
+stripping inline Plotly from 1,313 committed reports (61.7 MB) is the one
+irreversible step in the migration — recoverable from git history, but not from
+the working tree. It buys disk space only: `strip_legacy_chart_embed()` already
+means no reader ever sees the legacy markup.
+
+- **Gate:** phase 3 verified on the deployed site (report-page charts render,
+  as-of dates correct, no console errors).
+- Then: delete the PNGs, strip the embeds from `ai_gen_report/technical/**.md`
+  via a `maintain_ai_gen_report.py` subcommand, and drop the `technical_chart_`
+  handling at `maintain_ai_gen_report.py:61`.
+- Also then: check whether any other report type still embeds raw-HTML images
+  before removing `fix_static_chart_embed()` — no `fundamental/` or `stock/`
+  report carries a chart embed today, but the helper may serve other images.
 
 ### Phase 5 — tests
 Landed alongside each phase, not deferred:

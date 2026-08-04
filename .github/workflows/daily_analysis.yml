@@ -235,7 +235,9 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 yfinance>=0.2.40 matplotlib>=3.8.0 mplfinance>=0.12.10 plotly>=5.0.0
+          # No plotting deps: charts are rendered client-side from the price
+          # store by the docs build, not baked into reports here.
+          pip install anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 yfinance>=0.2.40
 
       # ── 4. Resolve parameters ─────────────────────────────────────
       #   workflow_dispatch → use user inputs
