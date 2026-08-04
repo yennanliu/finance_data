@@ -1,2 +1,0 @@
-path,ticker,analysis_type,date,provider,issues,line_count,content_lines,note
-/home/runner/work/finance_data/finance_data/ai_gen_report/stock/pltr/fundamental_analysis_2026-06-22_gemini.md,pltr,fundamental_analysis,2026-06-22,gemini,CUTOFF,339,330,last_line='║  Debt / Equity Ratio:  2.48% (極低，'

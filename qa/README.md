@@ -6,6 +6,7 @@
 | Bad reports found | 33 |
 | CSV | [bad_reports_2026-08-02.csv](bad_reports_2026-08-02.csv) |
 | Full summary | [summary_2026-08-02.txt](summary_2026-08-02.txt) |
+| Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
 

@@ -77,3 +77,7 @@ scripts/generate_analysis.py
 - `build_docs.py` merges all three per ticker and copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
 - `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
 - `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
+
+## QA audit
+- `.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC: `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`, then regenerates `qa/README.md`
+- `scripts/prune_qa.py --keep 10` keeps only the 10 most recent run dates in `qa/`; the workflow runs it before committing
