@@ -4,12 +4,14 @@ The heavy build_* orchestrators read/write whole directory trees and run mmdc;
 they're exercised by the CI build smoke. Here we pin the pure logic.
 """
 
-from datetime import date
+import json
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
 
 import build_docs as bd
+from analysis.data import prices
 
 pytestmark = pytest.mark.unit
 
@@ -356,22 +358,37 @@ def test_parse_scenario_missing_file(tmp_path):
     assert bd.parse_scenario_targets(tmp_path / "nope.md") == []
 
 
-def _patch_kline(monkeypatch, tmp_path, ticker, close):
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
-    (tmp_path / f"{ticker}.json").write_text(
-        '{"currency":"USD","updated":"2026-07-18",'
-        '"bars":[{"t":"2026-07-17","c":' + str(close) + "}]}",
-        encoding="utf-8",
-    )
+def _patch_store(monkeypatch, tmp_path, ticker, close, dates=("2026-07-18",)):
+    """Point build_docs at a temp price store holding one ticker."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    bars = [{"date": d, "open": close - 1, "high": close + 1, "low": close - 2,
+             "close": close, "volume": 1_000_000, "div": None, "split": None}
+            for d in dates]
+    prices.write_store(ticker, bars, tmp_path)
+
+
+# Kept under the old name so the many existing call sites read unchanged.
+_patch_kline = _patch_store
 
 
 def test_current_price_reads_latest_close(monkeypatch, tmp_path):
-    _patch_kline(monkeypatch, tmp_path, "xyz", 202.81)
+    _patch_store(monkeypatch, tmp_path, "xyz", 202.81)
     assert bd._current_price("xyz") == (202.81, "2026-07-18")
 
 
+def test_current_price_uses_the_newest_bar(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    prices.write_store("xyz", [
+        {"date": "2026-07-17", "open": 90, "high": 95, "low": 89, "close": 91,
+         "volume": 1, "div": None, "split": None},
+        {"date": "2026-07-18", "open": 91, "high": 99, "low": 90, "close": 98,
+         "volume": 1, "div": None, "split": None},
+    ], tmp_path)
+    assert bd._current_price("xyz") == (98.0, "2026-07-18")
+
+
 def test_current_price_missing_returns_none(monkeypatch, tmp_path):
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
     assert bd._current_price("absent") is None
 
 
@@ -406,7 +423,7 @@ def test_target_price_block_default_prob_note(monkeypatch, tmp_path):
 
 def test_target_price_block_empty_without_kline(monkeypatch, tmp_path):
     md = _write_md(tmp_path, _MD_EMOJI)
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)  # no json written
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)  # empty store
     assert bd.target_price_block("nvda", md, "zh") == ""
 
 
@@ -418,6 +435,255 @@ def test_target_price_block_empty_without_scenarios(monkeypatch, tmp_path):
 
 def test_target_price_block_none_path():
     assert bd.target_price_block("nvda", None, "zh") == ""
+
+
+# ── derived chart payload ────────────────────────────────────────────────────
+def _store_series(monkeypatch, tmp_path, ticker, n):
+    """Write `n` consecutive daily bars for a ticker into a temp store."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    start = date(2020, 1, 1)
+    bars = [{"date": (start + timedelta(days=i)).isoformat(),
+             "open": 100 + i, "high": 102 + i, "low": 98 + i, "close": 101 + i,
+             "volume": 1_000_000 + i, "div": None, "split": None}
+            for i in range(n)]
+    prices.write_store(ticker, bars, tmp_path)
+    return bars
+
+
+def test_kline_payload_shape_matches_what_the_widget_consumes(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    data = json.loads(bd.kline_payload("amd"))
+    assert data["ticker"] == "AMD"
+    assert data["currency"] == "USD"
+    # "updated" describes the data, not the build date, so a stale store reads
+    # as stale rather than as fresh.
+    assert data["updated"] == data["bars"][-1]["t"]
+    assert set(data["bars"][0]) == {"t", "o", "h", "l", "c", "v"}
+
+
+def test_kline_payload_caps_at_the_computed_window(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 1500)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+    assert len(bars) == bd.kline_payload_bars()
+
+
+def test_payload_window_covers_visible_lookback_and_retention(monkeypatch):
+    """The as-of allowance is what keeps MA200 defined across the whole 360-bar
+    view on the *oldest published* report. Without it a report at the far end of
+    retention loses the overlay over its earliest bars."""
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    allowance = bd.kline_as_of_allowance()
+    assert allowance >= 80          # ~120 calendar days of trading sessions
+    assert bd.kline_payload_bars() == bd.KLINE_VISIBLE_BARS + allowance + bd.KLINE_LOOKBACK_BARS
+
+    # The load-bearing property: after truncating to the oldest publishable date,
+    # enough bars remain for a full 360-bar view *plus* the 200-bar MA lookback.
+    remaining = bd.kline_payload_bars() - allowance
+    assert remaining >= bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS
+
+
+def test_payload_window_is_bounded_when_retention_is_disabled(monkeypatch):
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 0)
+    assert bd.kline_as_of_allowance() == bd.KLINE_MAX_AS_OF_BARS
+
+
+def test_payload_window_shrinks_with_a_shorter_retention(monkeypatch):
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 30)
+    short = bd.kline_payload_bars()
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    assert bd.kline_payload_bars() > short
+
+
+def _store_weekday_series(monkeypatch, tmp_path, ticker, n):
+    """`n` bars on weekdays only — a real trading calendar has ~5 sessions per
+    week, so sizing must not be validated against a 7-day-a-week series."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    bars, d, i = [], date(2018, 1, 1), 0
+    while len(bars) < n:
+        if d.weekday() < 5:
+            bars.append({"date": d.isoformat(), "open": 100 + i, "high": 102 + i,
+                         "low": 98 + i, "close": 101 + i, "volume": 1_000_000,
+                         "div": None, "split": None})
+            i += 1
+        d += timedelta(days=1)
+    prices.write_store(ticker, bars, tmp_path)
+    return bars
+
+
+def test_old_report_keeps_ma200_across_the_full_visible_range(monkeypatch, tmp_path):
+    """End-to-end version of the above, against a real payload and a real as-of:
+    a report at the retention limit must still leave 360 + 200 bars after clipping."""
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    _store_weekday_series(monkeypatch, tmp_path, "amd", 2000)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+
+    # Oldest publishable report: 120 calendar days back from the newest bar.
+    newest = date.fromisoformat(bars[-1]["t"])
+    as_of = (newest - timedelta(days=120)).isoformat()
+    kept = [b for b in bars if b["t"] <= as_of]
+
+    assert len(kept) >= bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS, (
+        f"only {len(kept)} bars survive as-of {as_of}; MA200 would be undefined "
+        f"over part of the 360-bar view"
+    )
+
+
+def test_kline_payload_keeps_the_newest_bars(monkeypatch, tmp_path):
+    written = _store_series(monkeypatch, tmp_path, "amd", 900)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+    assert bars[-1]["t"] == written[-1]["date"]
+
+
+def test_kline_payload_none_without_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    assert bd.kline_payload("absent") is None
+
+
+def test_kline_payload_maps_taiwan_currency(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "2330.tw", 3)
+    assert json.loads(bd.kline_payload("2330.tw"))["currency"] == "TWD"
+
+
+def test_write_kline_payload_writes_and_is_idempotent(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    dst = tmp_path / "out"
+    assert bd.write_kline_payload("amd", dst) is True
+    first = (dst / "kline.json").read_text(encoding="utf-8")
+    assert bd.write_kline_payload("amd", dst) is True
+    assert (dst / "kline.json").read_text(encoding="utf-8") == first
+
+
+def test_write_kline_payload_skips_when_no_data(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    dst = tmp_path / "out"
+    assert bd.write_kline_payload("absent", dst) is False
+    assert not (dst / "kline.json").exists()
+
+
+# ── kline_block() attributes ─────────────────────────────────────────────────
+def test_kline_block_defaults_to_a_page_relative_src(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.kline_block("amd")
+    assert 'class="kline-widget"' in out
+    assert 'data-ticker="AMD"' in out
+    assert 'data-src="kline.json"' in out
+    # No as-of on the live index chart.
+    assert "data-as-of" not in out
+
+
+def test_kline_block_report_page_variant(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.kline_block("amd", src="../kline.json",
+                         as_of="2026-07-31", ma="30+,60+,200")
+    # Report bodies are served one level deeper than the ticker index.
+    assert 'data-src="../kline.json"' in out
+    assert 'data-as-of="2026-07-31"' in out
+    assert 'data-ma="30+,60+,200"' in out
+
+
+def test_kline_block_empty_without_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    assert bd.kline_block("absent") == ""
+
+
+def test_report_chart_block_only_for_technical_reports(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    tech = Path("technical_analysis_2026-07-31_gemini.md")
+    fund = Path("fundamental_analysis_2026-07-31_gemini.md")
+    out = bd.report_chart_block("amd", tech)
+    assert 'data-as-of="2026-07-31"' in out
+    assert 'data-src="../kline.json"' in out
+    assert f'data-ma="{bd.REPORT_MA}"' in out
+    assert bd.report_chart_block("amd", fund) == ""
+
+
+def test_report_chart_block_undated_report_has_no_as_of(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.report_chart_block("amd", Path("technical_analysis_latest.md"))
+    assert out and "data-as-of" not in out
+
+
+# ── legacy chart embeds ──────────────────────────────────────────────────────
+_LEGACY_REPORT = """---
+title: "AMD 技術分析 2026-08-03"
+date: 2026-08-03
+---
+
+<details markdown="1">
+<summary>📊 靜態圖表 (點擊展開)</summary>
+
+![Technical Chart](technical_chart_2026-08-03.png)
+
+</details>
+
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div style="height:500px; width:100%;"><script src="https://cdn.plot.ly/plotly-3.7.0.min.js"></script>
+    <div id="candlestick-chart" class="plotly-graph-div"></div>
+    <script>Plotly.newPlot("candlestick-chart", [{"close": [1, 2, 3]}]);</script></div>
+</body>
+</html>
+
+## 一、趨勢判斷
+
+The report text.
+"""
+
+
+def test_strip_legacy_chart_embed_removes_png_and_plotly():
+    out = bd.strip_legacy_chart_embed(_LEGACY_REPORT)
+    assert "technical_chart_" not in out
+    assert "candlestick-chart" not in out
+    assert "plot.ly" not in out
+    assert "<html>" not in out
+    # The report itself survives intact.
+    assert "## 一、趨勢判斷" in out
+    assert "The report text." in out
+    assert out.startswith("---\n")
+
+
+def test_strip_legacy_chart_embed_is_idempotent():
+    once = bd.strip_legacy_chart_embed(_LEGACY_REPORT)
+    assert bd.strip_legacy_chart_embed(once) == once
+
+
+def test_strip_legacy_chart_embed_leaves_clean_reports_alone():
+    clean = "---\ndate: 2026-08-03\n---\n\n## Heading\n\nBody.\n"
+    assert bd.strip_legacy_chart_embed(clean) == clean
+
+
+def test_copy_file_swaps_a_legacy_embed_for_the_widget(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    monkeypatch.setattr(bd, "ROOT", tmp_path)  # copy_file logs paths relative to ROOT
+    src = tmp_path / "technical_analysis_2026-07-31_gemini.md"
+    src.write_text(_LEGACY_REPORT, encoding="utf-8")
+    dst = tmp_path / "out" / src.name
+
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META,
+                 chart_block=bd.report_chart_block("amd", src))
+    out = dst.read_text(encoding="utf-8")
+
+    assert "candlestick-chart" not in out and "technical_chart_" not in out
+    assert 'class="kline-widget"' in out
+    assert 'data-as-of="2026-07-31"' in out
+    # Front matter still leads the file, or MkDocs won't parse it.
+    assert out.startswith("---\n")
+    # The widget precedes the report body.
+    assert out.index("kline-widget") < out.index("## 一、趨勢判斷")
+
+
+def test_copy_file_without_chart_block_is_unchanged_behaviour(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    src = tmp_path / "technical_analysis_2026-07-31_gemini.md"
+    src.write_text(_LEGACY_REPORT, encoding="utf-8")
+    dst = tmp_path / "out" / src.name
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META)
+    out = dst.read_text(encoding="utf-8")
+    assert "kline-widget" not in out
+    # Legacy markup is stripped regardless — the pipeline no longer emits it and
+    # the Plotly CDN embed is dead weight on the page.
+    assert "candlestick-chart" not in out
 
 
 # ── front matter → header table ──────────────────────────────────────────────

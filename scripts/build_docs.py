@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -31,6 +32,12 @@ import sys
 import tempfile
 from datetime import date
 from pathlib import Path
+
+# The price store. Safe to import at module scope: the analysis package defers
+# every heavy dependency (pandas, yfinance, plotly) to inside its functions, and
+# prices.py's read path is pure standard library — so the docs build stays
+# dependency-light and offline.
+from analysis.data import prices
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).resolve().parent.parent
@@ -41,7 +48,7 @@ SITE       = ROOT / "site"
 SRC_STOCK    = ROOT / "ai_gen_report" / "stock"
 SRC_FUNDAMENTAL = ROOT / "ai_gen_report" / "fundamental"
 SRC_TECHNICAL   = ROOT / "ai_gen_report" / "technical"
-SRC_KLINE       = ROOT / "ai_gen_report" / "kline"   # per-ticker OHLCV JSON for the hero chart
+PRICES_DIR      = ROOT / "data" / "prices"           # committed OHLCV store; chart payloads are derived from it
 SRC_MARKET_NEWS = ROOT / "ai_gen_report" / "market_news"
 SRC_NOTEBOOK = ROOT / "notebook_llm"
 SRC_10K      = ROOT / "10-k"
@@ -383,26 +390,146 @@ def get_meta(ticker: str) -> dict:
 
 
 # ── K線 hero chart ─────────────────────────────────────────────────────────────
-def kline_json_src(ticker: str) -> "Path | None":
-    """Source OHLCV JSON for a ticker, or None if it hasn't been generated
-    (see scripts/generate_kline_data.py). Read live off the module global so
-    tests can monkeypatch SRC_KLINE."""
-    f = SRC_KLINE / f"{ticker}.json"
-    return f if f.is_file() else None
+# Chart payloads are *derived* from the committed price store (data/prices/*.csv,
+# see docs/PRICE_STORE_DESIGN.md) at build time and written into docs/ — they are
+# never committed. Deriving here keeps one source of truth for every chart and
+# lets each page ask for the window it needs.
+
+# Bars per payload. 360 trading days of visible range (the widest range button)
+# plus 200 bars of lookback so a client-side MA200 is fully defined at the left
+# edge instead of starting 200 bars in.
+KLINE_VISIBLE_BARS = 360
+KLINE_LOOKBACK_BARS = 200
+
+# …plus an allowance for as-of truncation. A dated report page clips the payload
+# to its own date, so a report at the far end of the retention window would
+# otherwise lose MA200 over the oldest part of its 360-bar view: measured against
+# the real store, a 120-day-old report had MA200 defined for only 279 of 360
+# visible bars. The allowance restores the full overlay for every *published*
+# report at a cost of ~7 KB per (uncommitted) payload.
+# Weekdays per calendar day. An *upper* bound on trading days, since holidays
+# only ever remove sessions — deliberately not 252/365, which is the average and
+# so runs short on a low-holiday window.
+_TRADING_DAYS_PER_CALENDAR_DAY = 5 / 7
+# A few bars of slack for calendar edges (a window can start and end mid-week).
+KLINE_AS_OF_SLACK_BARS = 5
+# Ceiling on that allowance, which also bounds the payload when retention is
+# disabled (REPORT_RETENTION_DAYS=0 publishes arbitrarily old reports). Reports
+# older than this still render; only MA200's left edge thins out.
+KLINE_MAX_AS_OF_BARS = 504  # ≈ 2 years of trading days
 
 
-def kline_block(ticker: str) -> str:
-    """Raw-HTML div for the TradingView-style candlestick chart, injected at the
-    top of a per-ticker report page. Empty string when no data exists so pages
-    without OHLCV never render a broken widget. `md_in_html` (see mkdocs.yml)
-    lets this pass through unescaped; the fetch path is relative to the page's
-    directory URL, so the copied sibling kline.json is found in EN and ZH."""
-    if kline_json_src(ticker) is None:
+def kline_as_of_allowance() -> int:
+    """Extra bars carried so as-of truncation can't eat into the MA lookback."""
+    if RETENTION_DAYS <= 0:
+        return KLINE_MAX_AS_OF_BARS
+    return min(KLINE_MAX_AS_OF_BARS,
+               math.ceil(RETENTION_DAYS * _TRADING_DAYS_PER_CALENDAR_DAY)
+               + KLINE_AS_OF_SLACK_BARS)
+
+
+def kline_payload_bars() -> int:
+    """Total bars to derive per ticker."""
+    return KLINE_VISIBLE_BARS + kline_as_of_allowance() + KLINE_LOOKBACK_BARS
+
+
+def kline_bars(ticker: str) -> "list[dict]":
+    """Bars for a ticker's chart payload, oldest→newest ([] when unavailable).
+
+    Reads the store live off the module global so tests can monkeypatch it.
+    """
+    bars = prices.load_store(ticker, PRICES_DIR)
+    if not bars:
+        return []
+    return prices.window(bars, days=KLINE_VISIBLE_BARS + kline_as_of_allowance(),
+                         lookback=KLINE_LOOKBACK_BARS)
+
+
+def kline_payload(ticker: str) -> "str | None":
+    """The JSON text the widget fetches, or None when the store has no data.
+
+    Short keys and rounded numbers keep the file small (~40 KB); the shape is
+    what docs/javascripts/kline-chart.js already consumes.
+    """
+    bars = kline_bars(ticker)
+    if not bars:
+        return None
+    symbol = prices.to_yf_symbol(ticker)
+    return json.dumps({
+        "ticker": ticker.upper(),
+        "symbol": symbol,
+        "currency": prices.currency_for(symbol),
+        # The newest bar's date, not today's: the payload describes the data it
+        # contains, so a stale store reads as stale rather than as fresh.
+        "updated": bars[-1]["date"],
+        "bars": [{"t": b["date"],
+                  "o": float(prices.fmt_price(b["open"])),
+                  "h": float(prices.fmt_price(b["high"])),
+                  "l": float(prices.fmt_price(b["low"])),
+                  "c": float(prices.fmt_price(b["close"])),
+                  "v": b["volume"]} for b in bars],
+    }, separators=(",", ":"))
+
+
+def write_kline_payload(ticker: str, dst_dir: Path) -> bool:
+    """Write <dst_dir>/kline.json for a ticker. False when there's no data."""
+    payload = kline_payload(ticker)
+    if payload is None:
+        return False
+    ensure(dst_dir)
+    dst = dst_dir / "kline.json"
+    if not dst.exists() or dst.read_text(encoding="utf-8") != payload:
+        dst.write_text(payload, encoding="utf-8")
+    return True
+
+
+def kline_block(ticker: str, *, src: str = "kline.json",
+                as_of: str = "", ma: str = "") -> str:
+    """Raw-HTML div for the TradingView-style candlestick chart.
+
+    Empty string when the store has no data, so pages without OHLCV never render
+    a broken widget. `md_in_html` (see mkdocs.yml) lets this pass through
+    unescaped.
+
+    src    — fetch path *relative to the page's directory URL*. Report bodies are
+             served one level deeper than the ticker index, hence "../kline.json".
+             MkDocs rewrites relative paths in Markdown but not in raw HTML, so
+             this has to be right at build time.
+    as_of  — truncate the chart to this date. Required on dated report pages: the
+             store is always current, so without it a report would show today's
+             prices under text written about an older snapshot.
+    ma     — moving averages to overlay, e.g. "30+,60+,200" ("+" = on by default).
+    """
+    if not kline_bars(ticker):
         return ""
-    return (
-        f'<div class="kline-widget" data-ticker="{ticker.upper()}" '
-        f'data-src="kline.json"></div>'
-    )
+    attrs = ['class="kline-widget"', f'data-ticker="{ticker.upper()}"',
+             f'data-src="{src}"']
+    if as_of:
+        attrs.append(f'data-as-of="{as_of}"')
+    if ma:
+        attrs.append(f'data-ma="{ma}"')
+    return f'<div {" ".join(attrs)}></div>'
+
+
+# Overlays for technical reports: MA30/60 on, MA200 available but off by default,
+# matching the moving averages the retired Plotly chart drew.
+REPORT_MA = "30+,60+,200"
+
+
+def report_chart_block(ticker: str, report: Path) -> str:
+    """Chart markup for a dated technical report page ('' for anything else).
+
+    Only technical reports get one — they are the pages that used to carry their
+    own baked-in chart, and the analysis text discusses it directly. The chart is
+    pinned to the report's date so it shows the prices the text was written
+    about; `../kline.json` because report bodies are served one directory below
+    the ticker index that hosts the payload.
+    """
+    if not report.name.startswith("technical_"):
+        return ""
+    d = _file_date(report)
+    return kline_block(ticker, src="../kline.json",
+                       as_of=d.isoformat() if d else "", ma=REPORT_MA)
 
 
 # ── Price-target scenario table (rendered directly under the hero chart) ──────
@@ -429,19 +556,14 @@ _PCT_RE = re.compile(r"(\d{1,3}(?:\.\d+)?)\s*%")
 
 
 def _current_price(ticker: str) -> "tuple[float, str] | None":
-    """Latest close and its date from the ticker's kline JSON, or None."""
-    src = kline_json_src(ticker)
-    if src is None:
+    """Latest close and its date from the price store, or None."""
+    bars = prices.load_store(ticker, PRICES_DIR)
+    if not bars:
         return None
+    last = bars[-1]
     try:
-        data = json.loads(src.read_text(encoding="utf-8"))
-        bars = data.get("bars") or []
-        if not bars:
-            return None
-        last = bars[-1]
-        price_date = str(data.get("updated") or last.get("t") or "")
-        return float(last["c"]), price_date
-    except (json.JSONDecodeError, OSError, KeyError, TypeError, ValueError):
+        return float(last["close"]), last["date"]
+    except (KeyError, TypeError, ValueError):
         return None
 
 
@@ -576,7 +698,7 @@ def _fmt_pct(v: float) -> str:
 def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
     """Markdown for the price-target & implied-return table shown right under the
     hero chart. Scenario targets come from the latest fundamental report; the
-    current price comes from kline.json and implied returns are recomputed
+    current price comes from the price store and implied returns are recomputed
     against it. Returns '' when either source is unavailable so the page degrades
     gracefully to just the chart."""
     if fund_md is None:
@@ -779,10 +901,38 @@ def fix_static_chart_embed(content: str) -> str:
     )
 
 
-def copy_file(src: Path, dst: Path, extra_meta: str = ""):
+# ── Legacy chart embeds ──────────────────────────────────────────────────────
+# Until 2026-08 every technical report baked its own chart into the committed
+# markdown: a collapsible static PNG plus a full Plotly HTML document (~46 KB of
+# inline JSON each, 61.7 MB across 1,313 reports, and a ~3 MB plotly.js fetch per
+# page view). Both are replaced by the shared widget, which reads the price store.
+#
+# Stripping at copy time rather than rewriting the sources means every existing
+# report gets the new chart immediately and the change is reversible by reverting
+# one function — the one-off source cleanup is then only about disk space.
+_LEGACY_PNG_DETAILS_RE = re.compile(
+    r"<details[^>]*>\s*<summary>.*?</summary>.*?technical_chart_.*?</details>\s*",
+    re.S,
+)
+# plotly's to_html() emits a whole document, so the embed is exactly one
+# <html>…</html> block.
+_LEGACY_PLOTLY_RE = re.compile(r"<html>\s*<head>.*?</html>\s*", re.S)
+
+
+def strip_legacy_chart_embed(content: str) -> str:
+    """Remove a baked-in static-PNG block and/or inline Plotly document."""
+    if "technical_chart_" in content:
+        content = _LEGACY_PNG_DETAILS_RE.sub("", content)
+    if "candlestick-chart" in content or "plot.ly" in content:
+        content = _LEGACY_PLOTLY_RE.sub("", content)
+    return content
+
+
+def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = ""):
     """Copy src → dst. For Markdown, merge `extra_meta` into the file's own
-    front matter (re-emitted as a header table), repair chart embeds and
-    pre-render Mermaid; uses a content-equality incremental check so changed
+    front matter (re-emitted as a header table), strip legacy baked-in charts,
+    optionally inject `chart_block` above the report body, repair chart embeds
+    and pre-render Mermaid; uses a content-equality incremental check so changed
     `extra_meta` is always applied. Binary files use a cheap mtime check."""
     ensure(dst.parent)
     if src.suffix == ".md":
@@ -793,6 +943,7 @@ def copy_file(src: Path, dst: Path, extra_meta: str = ""):
         if _MMDC:
             # Pre-render Mermaid blocks to SVG inline
             content = prerender_mermaid(content)
+        content = strip_legacy_chart_embed(content)
         content = fix_static_chart_embed(content)
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
@@ -800,8 +951,13 @@ def copy_file(src: Path, dst: Path, extra_meta: str = ""):
             content = (
                 f"---\n{merged}\n---\n\n"
                 + frontmatter_table(yaml_body)
+                + (f"{chart_block}\n\n" if chart_block else "")
                 + body.lstrip("\n")
             )
+        elif chart_block:
+            yaml_body, body = split_frontmatter(content)
+            head = f"---\n{yaml_body}\n---\n\n" if yaml_body else ""
+            content = f"{head}{chart_block}\n\n{body.lstrip(chr(10))}"
         if _INCREMENTAL and dst.exists() and dst.read_text(encoding="utf-8") == content:
             return
         dst.write_text(content, encoding="utf-8")
@@ -862,11 +1018,11 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue  # skip empty dirs
 
-        # Copy the OHLCV JSON next to the page so the hero chart fetches it with
-        # a page-relative URL — works for EN and ZH and under `mkdocs serve`.
-        _kline_src = kline_json_src(ticker)
-        if _kline_src is not None:
-            copy_file(_kline_src, dst_dir / "kline.json")
+        # Derive the OHLCV payload from the price store next to the page, so the
+        # hero chart fetches it with a page-relative URL — works for EN and ZH
+        # and under `mkdocs serve`. Report bodies in this same directory reach it
+        # as "../kline.json" from their own directory URL.
+        write_kline_payload(ticker, dst_dir)
 
         # Split md files by report type, newest-first so the latest is on top.
         technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
@@ -878,7 +1034,8 @@ def build_reports(lang: str = "en"):
         if lang == "en":
             for f in md_files:
                 # Perf fix #1 — exclude report bodies from the search index
-                copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META)
+                copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META,
+                          chart_block=report_chart_block(ticker, f))
             for f in html_files + other_files:
                 copy_file(f, dst_dir / f.name)
 
