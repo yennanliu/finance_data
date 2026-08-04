@@ -30,11 +30,14 @@ Two chart pipelines exist side by side and share nothing:
 | Payload in git | **860 KB total, all 38 tickers** | **61.7 MB inline Plotly + 147 MB PNG** |
 | Page weight | ~50 KB vendored library, shared/cached | ~46 KB inline JSON + ~3 MB Plotly CDN fetch |
 
-The report-side pipeline costs roughly **250,000×** more bytes per rendered chart
-than the shared one, produces a *less* capable chart (no range toggle, no MA
-toggle, no crosshair readout), and is on the critical path of every technical
-analysis job via kaleido — a dependency that already needed an mplfinance
-fallback because it is unreliable.
+Across the corpus the report-side pipeline holds **~250× more bytes** than the
+shared one — 208 MB (61.7 MB Plotly + 147 MB PNG) against 860 KB serving all 38
+tickers. Per *additional* chart the gap has no finite ratio: another report costs
+~161 KB (46 KB Plotly + 115 KB PNG) while the shared pipeline costs nothing, since
+the payload already exists. And it buys a *less* capable chart (no range toggle,
+no MA toggle, no crosshair readout) that sits on the critical path of every
+technical analysis job via kaleido — a dependency that already needed an
+mplfinance fallback because it is unreliable.
 
 Unifying on the shared pipeline removes ~208 MB from the working tree, stops
 ~3.4 MB/day of new chart payload, drops three heavy rendering dependencies, and
@@ -101,7 +104,7 @@ Three properties of the current code make this a small change rather than a port
 
 3. **Data coverage is already a superset.** All **27** ticker directories under
    `ai_gen_report/technical/` have a `kline/<ticker>.json` (38 exist).
-   `generate_kline_data.py:82` `discover_tickers()` derives its universe from the
+   `discover_tickers()` derives its universe from the
    union of `.ticker_schedule.json` and existing report directories, so coverage
    stays automatic as tickers are added.
 
@@ -115,7 +118,7 @@ Three properties of the current code make this a small change rather than a port
 | G2 | A shared, always-current JSON would show **today's** prices under text written about a past snapshot. | `data-as-of="<report date>"` → truncate bars to ≤ that date. Retention is 120 days (`build_docs.py:69`) so the window always covers published reports. **Required, not optional.** | ~10 lines JS |
 | G3 | Widget offers MA 20/60/120; report chart uses MA 30/60/200. With 300 stored bars, MA200 is only defined over the most recent 100. | Per-widget `data-ma="30,60,200"`, and enough stored history to define MA200 across the whole visible range. | small |
 | G4 | 1,313 existing reports have Plotly baked into the committed markdown. | Strip on copy in `build_docs.py` (works retroactively, reversible) **and** a one-off cleanup of the source files. | ~15 lines + script |
-| G5 | A brand-new ticker's first report has no `kline.json` until the 03:30 UTC cron runs. | Add `generate_kline_data.py <ticker> --only-missing` as a step in `daily_analysis.yml`. | trivial |
+| G5 | A brand-new ticker's first report has no chart data until the 03:30 UTC cron runs. | Seed it in `daily_analysis.yml` with `update_prices.py <ticker> --only-missing`, staging `data/prices/` alongside the report. | trivial |
 
 **Explicitly not a gap:** the chart disappearing from the raw `.md` as rendered on
 github.com. The widget only works on the docs site, and the `<details>` PNG is
@@ -204,8 +207,11 @@ which are cheap to enforce and easy to test:
    night rewrites every line and the design silently collapses into the model it
    replaced.
 2. **A sanity gate before writing** — self-healing is also self-destroying if
-   upstream is wrong. Refuse to write when a fetch returns fewer bars than the
-   store already holds, or contains NaN/zero closes.
+   upstream is wrong. Refuse to write a fetch that thins out the bars it
+   overlaps, or that carries NaN, non-positive or out-of-range prices.
+   The comparison is scoped to the *overlapping* date range rather than the
+   whole store, because the merge keeps stored bars the fetch doesn't cover —
+   so a short fetch window loses nothing and is not a regression.
 3. **Atomic writes** — temp file + rename, so an interrupted run cannot leave a
    half-written store.
 
@@ -237,7 +243,7 @@ restatement, because plain OHLC is untouched by dividends.
 
 | Phase | Work | Effort |
 |---|---|---|
-| 1 | `scripts/prices.py` store module + backfill; `generate_kline_data.py` rewritten against it | ~half day |
+| 1 | store module + a CLI to maintain it (`scripts/update_prices.py`), replacing `generate_kline_data.py` | ~half day |
 | 2 | `build_docs.py` derives `kline.json` from the store; drop it from git | small |
 | 3 | Per-widget `data-as-of` / `data-ma` / `data-range`; generalised `kline_block()`; inject on technical report pages | ~half day |
 | 4 | Strip legacy embeds on copy; delete `charts.py` + `pipeline.py:22`; one-off cleanup (−208 MB) | small, mostly deletion |

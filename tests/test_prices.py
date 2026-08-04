@@ -223,6 +223,26 @@ def test_gate_rejects_nan_prices():
     assert "NaN" in prices.gate([b], [])
 
 
+def test_gate_rejects_negative_volume():
+    b = bar("2026-07-31")
+    b["volume"] = -1
+    assert "negative volume" in prices.gate([b], [])
+
+
+def test_gate_accepts_zero_volume():
+    # Legitimate: a holiday half-session or an illiquid listing, and NaN volume
+    # is coerced to 0 on the way in.
+    b = bar("2026-07-31", volume=0)
+    assert prices.gate([b], []) is None
+
+
+def test_gate_rejects_an_open_outside_the_range():
+    # Both open and close are range-checked, not just close.
+    b = bar("2026-07-31", 100.0)
+    b["open"] = 150.0
+    assert "outside" in prices.gate([b], [])
+
+
 def test_gate_rejects_high_below_low():
     b = bar("2026-07-31")
     b["high"], b["low"] = 90.0, 110.0

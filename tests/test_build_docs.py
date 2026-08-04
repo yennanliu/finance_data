@@ -461,10 +461,71 @@ def test_kline_payload_shape_matches_what_the_widget_consumes(monkeypatch, tmp_p
     assert set(data["bars"][0]) == {"t", "o", "h", "l", "c", "v"}
 
 
-def test_kline_payload_caps_at_visible_plus_lookback(monkeypatch, tmp_path):
-    _store_series(monkeypatch, tmp_path, "amd", 900)
+def test_kline_payload_caps_at_the_computed_window(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 1500)
     bars = json.loads(bd.kline_payload("amd"))["bars"]
-    assert len(bars) == bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS
+    assert len(bars) == bd.kline_payload_bars()
+
+
+def test_payload_window_covers_visible_lookback_and_retention(monkeypatch):
+    """The as-of allowance is what keeps MA200 defined across the whole 360-bar
+    view on the *oldest published* report. Without it a report at the far end of
+    retention loses the overlay over its earliest bars."""
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    allowance = bd.kline_as_of_allowance()
+    assert allowance >= 80          # ~120 calendar days of trading sessions
+    assert bd.kline_payload_bars() == bd.KLINE_VISIBLE_BARS + allowance + bd.KLINE_LOOKBACK_BARS
+
+    # The load-bearing property: after truncating to the oldest publishable date,
+    # enough bars remain for a full 360-bar view *plus* the 200-bar MA lookback.
+    remaining = bd.kline_payload_bars() - allowance
+    assert remaining >= bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS
+
+
+def test_payload_window_is_bounded_when_retention_is_disabled(monkeypatch):
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 0)
+    assert bd.kline_as_of_allowance() == bd.KLINE_MAX_AS_OF_BARS
+
+
+def test_payload_window_shrinks_with_a_shorter_retention(monkeypatch):
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 30)
+    short = bd.kline_payload_bars()
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    assert bd.kline_payload_bars() > short
+
+
+def _store_weekday_series(monkeypatch, tmp_path, ticker, n):
+    """`n` bars on weekdays only — a real trading calendar has ~5 sessions per
+    week, so sizing must not be validated against a 7-day-a-week series."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    bars, d, i = [], date(2018, 1, 1), 0
+    while len(bars) < n:
+        if d.weekday() < 5:
+            bars.append({"date": d.isoformat(), "open": 100 + i, "high": 102 + i,
+                         "low": 98 + i, "close": 101 + i, "volume": 1_000_000,
+                         "div": None, "split": None})
+            i += 1
+        d += timedelta(days=1)
+    prices.write_store(ticker, bars, tmp_path)
+    return bars
+
+
+def test_old_report_keeps_ma200_across_the_full_visible_range(monkeypatch, tmp_path):
+    """End-to-end version of the above, against a real payload and a real as-of:
+    a report at the retention limit must still leave 360 + 200 bars after clipping."""
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    _store_weekday_series(monkeypatch, tmp_path, "amd", 2000)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+
+    # Oldest publishable report: 120 calendar days back from the newest bar.
+    newest = date.fromisoformat(bars[-1]["t"])
+    as_of = (newest - timedelta(days=120)).isoformat()
+    kept = [b for b in bars if b["t"] <= as_of]
+
+    assert len(kept) >= bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS, (
+        f"only {len(kept)} bars survive as-of {as_of}; MA200 would be undefined "
+        f"over part of the 360-bar view"
+    )
 
 
 def test_kline_payload_keeps_the_newest_bars(monkeypatch, tmp_path):
