@@ -158,3 +158,51 @@ def test_main_sanitizes_broken_mermaid_end_to_end(monkeypatch, tmp_path):
     # The saved source is clean per both the detector and the quality scanner.
     assert mermaid_syntax_issues(text) == []
     assert "MERMAID" not in parse_file(saved).issues
+
+
+# ── reports carry no chart markup ────────────────────────────────────────────
+# Charts used to be baked into technical reports at generation time (a static PNG
+# plus a full inline Plotly document, ~46 KB per report). They are now rendered
+# client-side from the price store by build_docs.py, so a generated report must
+# come out as pure LLM output — for *every* analysis type, technical included.
+
+def _run_generate(monkeypatch, tmp_path, analysis_type, hist=None):
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": hist})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(
+        pipeline, "call_llm",
+        lambda ticker, context, atype, provider, model, max_tokens: "# Report\nbody",
+    )
+    monkeypatch.setattr("sys.argv", [
+        "generate_analysis.py", "amd",
+        "--analysis-type", analysis_type,
+        "--provider", "claude",
+        "--output-dir", str(tmp_path),
+    ])
+    ga.main()
+    files = list(tmp_path.glob("*.md"))
+    assert len(files) == 1
+    return files[0]
+
+
+@pytest.mark.parametrize("analysis_type", ["technical-analysis", "fundamental-analysis"])
+def test_generated_report_has_no_chart_markup(monkeypatch, tmp_path, analysis_type):
+    text = _run_generate(monkeypatch, tmp_path, analysis_type).read_text(encoding="utf-8")
+    for marker in ("candlestick-chart", "plot.ly", "plotly", "technical_chart_",
+                   "<details", "靜態圖表"):
+        assert marker not in text, f"{analysis_type} report still contains {marker!r}"
+    assert text.rstrip().endswith("body")   # LLM output is the whole body
+
+
+def test_technical_report_writes_no_png(monkeypatch, tmp_path):
+    """The PNG path is gone, so a technical run must leave no image behind — even
+    when price history is present, which is what used to trigger it."""
+    hist = object()  # never touched: nothing consumes hist for chart rendering now
+    _run_generate(monkeypatch, tmp_path, "technical-analysis", hist=hist)
+    assert list(tmp_path.glob("*.png")) == []
+
+
+def test_pipeline_no_longer_exposes_a_chart_builder():
+    # A stale re-export would let the old embed creep back in unnoticed.
+    assert not hasattr(pipeline, "build_technical_chart_embed")
+    assert "build_technical_chart_embed" not in pipeline.__all__
