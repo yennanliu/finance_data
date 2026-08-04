@@ -4,12 +4,14 @@ The heavy build_* orchestrators read/write whole directory trees and run mmdc;
 they're exercised by the CI build smoke. Here we pin the pure logic.
 """
 
-from datetime import date
+import json
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
 
 import build_docs as bd
+from analysis.data import prices
 
 pytestmark = pytest.mark.unit
 
@@ -356,22 +358,37 @@ def test_parse_scenario_missing_file(tmp_path):
     assert bd.parse_scenario_targets(tmp_path / "nope.md") == []
 
 
-def _patch_kline(monkeypatch, tmp_path, ticker, close):
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
-    (tmp_path / f"{ticker}.json").write_text(
-        '{"currency":"USD","updated":"2026-07-18",'
-        '"bars":[{"t":"2026-07-17","c":' + str(close) + "}]}",
-        encoding="utf-8",
-    )
+def _patch_store(monkeypatch, tmp_path, ticker, close, dates=("2026-07-18",)):
+    """Point build_docs at a temp price store holding one ticker."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    bars = [{"date": d, "open": close - 1, "high": close + 1, "low": close - 2,
+             "close": close, "volume": 1_000_000, "div": None, "split": None}
+            for d in dates]
+    prices.write_store(ticker, bars, tmp_path)
+
+
+# Kept under the old name so the many existing call sites read unchanged.
+_patch_kline = _patch_store
 
 
 def test_current_price_reads_latest_close(monkeypatch, tmp_path):
-    _patch_kline(monkeypatch, tmp_path, "xyz", 202.81)
+    _patch_store(monkeypatch, tmp_path, "xyz", 202.81)
     assert bd._current_price("xyz") == (202.81, "2026-07-18")
 
 
+def test_current_price_uses_the_newest_bar(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    prices.write_store("xyz", [
+        {"date": "2026-07-17", "open": 90, "high": 95, "low": 89, "close": 91,
+         "volume": 1, "div": None, "split": None},
+        {"date": "2026-07-18", "open": 91, "high": 99, "low": 90, "close": 98,
+         "volume": 1, "div": None, "split": None},
+    ], tmp_path)
+    assert bd._current_price("xyz") == (98.0, "2026-07-18")
+
+
 def test_current_price_missing_returns_none(monkeypatch, tmp_path):
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
     assert bd._current_price("absent") is None
 
 
@@ -406,7 +423,7 @@ def test_target_price_block_default_prob_note(monkeypatch, tmp_path):
 
 def test_target_price_block_empty_without_kline(monkeypatch, tmp_path):
     md = _write_md(tmp_path, _MD_EMOJI)
-    monkeypatch.setattr(bd, "SRC_KLINE", tmp_path)  # no json written
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)  # empty store
     assert bd.target_price_block("nvda", md, "zh") == ""
 
 
@@ -418,6 +435,94 @@ def test_target_price_block_empty_without_scenarios(monkeypatch, tmp_path):
 
 def test_target_price_block_none_path():
     assert bd.target_price_block("nvda", None, "zh") == ""
+
+
+# ── derived chart payload ────────────────────────────────────────────────────
+def _store_series(monkeypatch, tmp_path, ticker, n):
+    """Write `n` consecutive daily bars for a ticker into a temp store."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    start = date(2020, 1, 1)
+    bars = [{"date": (start + timedelta(days=i)).isoformat(),
+             "open": 100 + i, "high": 102 + i, "low": 98 + i, "close": 101 + i,
+             "volume": 1_000_000 + i, "div": None, "split": None}
+            for i in range(n)]
+    prices.write_store(ticker, bars, tmp_path)
+    return bars
+
+
+def test_kline_payload_shape_matches_what_the_widget_consumes(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    data = json.loads(bd.kline_payload("amd"))
+    assert data["ticker"] == "AMD"
+    assert data["currency"] == "USD"
+    # "updated" describes the data, not the build date, so a stale store reads
+    # as stale rather than as fresh.
+    assert data["updated"] == data["bars"][-1]["t"]
+    assert set(data["bars"][0]) == {"t", "o", "h", "l", "c", "v"}
+
+
+def test_kline_payload_caps_at_visible_plus_lookback(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 900)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+    assert len(bars) == bd.KLINE_VISIBLE_BARS + bd.KLINE_LOOKBACK_BARS
+
+
+def test_kline_payload_keeps_the_newest_bars(monkeypatch, tmp_path):
+    written = _store_series(monkeypatch, tmp_path, "amd", 900)
+    bars = json.loads(bd.kline_payload("amd"))["bars"]
+    assert bars[-1]["t"] == written[-1]["date"]
+
+
+def test_kline_payload_none_without_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    assert bd.kline_payload("absent") is None
+
+
+def test_kline_payload_maps_taiwan_currency(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "2330.tw", 3)
+    assert json.loads(bd.kline_payload("2330.tw"))["currency"] == "TWD"
+
+
+def test_write_kline_payload_writes_and_is_idempotent(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    dst = tmp_path / "out"
+    assert bd.write_kline_payload("amd", dst) is True
+    first = (dst / "kline.json").read_text(encoding="utf-8")
+    assert bd.write_kline_payload("amd", dst) is True
+    assert (dst / "kline.json").read_text(encoding="utf-8") == first
+
+
+def test_write_kline_payload_skips_when_no_data(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    dst = tmp_path / "out"
+    assert bd.write_kline_payload("absent", dst) is False
+    assert not (dst / "kline.json").exists()
+
+
+# ── kline_block() attributes ─────────────────────────────────────────────────
+def test_kline_block_defaults_to_a_page_relative_src(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.kline_block("amd")
+    assert 'class="kline-widget"' in out
+    assert 'data-ticker="AMD"' in out
+    assert 'data-src="kline.json"' in out
+    # No as-of on the live index chart.
+    assert "data-as-of" not in out
+
+
+def test_kline_block_report_page_variant(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.kline_block("amd", src="../kline.json",
+                         as_of="2026-07-31", ma="30+,60+,200")
+    # Report bodies are served one level deeper than the ticker index.
+    assert 'data-src="../kline.json"' in out
+    assert 'data-as-of="2026-07-31"' in out
+    assert 'data-ma="30+,60+,200"' in out
+
+
+def test_kline_block_empty_without_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    assert bd.kline_block("absent") == ""
 
 
 # ── front matter → header table ──────────────────────────────────────────────
