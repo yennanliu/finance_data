@@ -1,12 +1,21 @@
-name: Update K-line Chart Data
+name: Update Price Data
 
-# Refreshes the OHLCV JSON that powers the TradingView-style candlestick chart
-# at the top of every report page (see scripts/generate_kline_data.py).
+# Maintains data/prices/<ticker>.csv — the committed 10-year OHLCV store that is
+# the single source of truth for every chart on the site (scripts/update_prices.py,
+# design notes in docs/PRICE_STORE_DESIGN.md).
+#
+# The chart payloads pages actually fetch are *derived* from this store by
+# scripts/build_docs.py at docs-build time and are not committed.
 #
 # Runs shortly before the consolidated nightly deploy (deploy.yml, 04:00 UTC)
-# so freshly-committed prices are picked up in the same publish cycle. Data
-# lives in ai_gen_report/kline/ which is NOT a deploy.yml trigger path, so
-# committing here does not fire an extra deploy — the nightly cron handles it.
+# so freshly-committed prices are picked up in the same publish cycle. Neither
+# data/ nor ai_gen_report/ is a deploy.yml trigger path, so committing here does
+# not fire an extra deploy — the nightly cron handles it.
+#
+# Known and benign: 03:30 UTC is after the US close but *mid-session* in Taipei,
+# so TW tickers (2330.TW, 0050) store a provisional bar that the next run
+# corrects. Harmless — a fetched bar always wins over a stored one — and it
+# predates the store (the old JSON job had exactly the same timing).
 
 on:
   schedule:
@@ -27,9 +36,9 @@ concurrency:
 
 jobs:
   update-kline:
-    name: Fetch OHLCV and commit JSON
+    name: Fetch OHLCV and commit
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout repository
@@ -46,23 +55,26 @@ jobs:
       - name: Install dependencies
         run: pip install "yfinance>=0.2"
 
-      - name: Generate k-line data
+      - name: Update price store
         run: |
           TICKERS="${{ github.event.inputs.tickers }}"
-          python scripts/generate_kline_data.py $TICKERS
+          python scripts/update_prices.py $TICKERS
 
       - name: Commit and push data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ai_gen_report/kline/
+          git add data/prices/
 
           if git diff --cached --quiet; then
-            echo "No k-line changes to commit."
+            echo "No price changes to commit."
           else
             DATE=$(date -u +"%Y-%m-%d")
-            git commit -m "chore: refresh k-line chart data ${DATE}"
+            # Line counts make an unexpected full-file rewrite obvious in the log
+            # — an ordinary night is one appended line per ticker.
+            git diff --cached --stat -- data/prices/ | tail -1
+            git commit -m "chore: refresh price data ${DATE}"
             git pull --rebase origin main
             git push
-            echo "✅ K-line data committed and pushed."
+            echo "✅ Price data committed and pushed."
           fi

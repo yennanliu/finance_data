@@ -31,7 +31,13 @@ generate_analysis.py
 ### Data Fetching (`utils/data_fetch.py`)
 - `fetch_data(ticker)` — fetches OHLCV history + financials (yfinance, Finviz, StockAnalysis)
 - `compute_technicals(hist)` — ASCII technical indicators (MA, RSI, MACD, etc.)
-- `generate_plotly_candlestick_chart(hist, ticker)` — interactive Plotly chart embedded in Markdown
+
+### Price store (`data/prices.py`)
+- `data/prices/<ticker>.csv` — committed 10-year OHLCV store, the single source of
+  truth for every chart on the site. Maintained by `scripts/update_prices.py`;
+  chart payloads are derived from it by `build_docs.py` at build time and are not
+  committed. Reports themselves carry no chart markup. See
+  [`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md).
 
 ### LLM (`utils/llm.py`)
 - `call_claude(...)` — Claude API with rate-limit retries + refusal-override
