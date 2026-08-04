@@ -1,5 +1,0 @@
-path,ticker,analysis_type,date,provider,issues,line_count,content_lines,note
-/home/runner/work/finance_data/finance_data/ai_gen_report/stock/goog/fundamental_analysis_2026-06-24_gemini-2.md,goog,unknown,,unknown,TOO_SHORT,82,73,content_lines=73
-/home/runner/work/finance_data/finance_data/ai_gen_report/stock/meta/fundamental_analysis_2026-06-24_gemini-2.md,meta,unknown,,unknown,"TOO_SHORT,CUTOFF",44,35,"content_lines=35; last_line='    P[""💰 獲利能力<br/>9/10<br/>毛利率'"
-/home/runner/work/finance_data/finance_data/ai_gen_report/stock/onds/fundamental_analysis_2026-06-24_gemini-2.md,onds,unknown,,unknown,TOO_SHORT,18,9,content_lines=9
-/home/runner/work/finance_data/finance_data/ai_gen_report/stock/pltr/fundamental_analysis_2026-06-22_gemini.md,pltr,fundamental_analysis,2026-06-22,gemini,CUTOFF,339,330,last_line='║  Debt / Equity Ratio:  2.48% (極低，'
