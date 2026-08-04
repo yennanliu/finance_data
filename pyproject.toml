@@ -8,13 +8,10 @@ dependencies = [
     "openai>=1.0.0",
     "google-genai>=1.0.0",
     "yfinance>=0.2.40",
-    "plotly>=5.0.0",
     "beautifulsoup4>=4.14.2",
     "requests>=2.32.5",
     "selenium>=4.36.0",
     "webdriver-manager>=4.0.2",
-    "matplotlib>=3.8.0",
-    "mplfinance>=0.12.10",
 ]
 
 [project.optional-dependencies]

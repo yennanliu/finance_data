@@ -246,29 +246,3 @@ def test_fetch_data_insider_with_missing_values(monkeypatch):
     out = fetch_data("X")
     assert "Jane Doe" in out["insider_text"]          # section survived
     assert out["insider_text"] != "  (no data)"
-
-
-# ── charts: volume-less tickers must still render ────────────────────────────
-
-def _ohlc_no_volume(rows=80):
-    idx = pd.date_range("2024-01-01", periods=rows, freq="D")
-    base = [100 + i * 0.2 for i in range(rows)]
-    return pd.DataFrame(
-        {"Open": base, "High": [b + 1 for b in base],
-         "Low": [b - 1 for b in base], "Close": base},
-        index=idx,
-    )
-
-
-def test_plotly_chart_without_volume_column():
-    from scripts.analysis.data.charts import generate_plotly_candlestick_chart
-    out = generate_plotly_candlestick_chart(_ohlc_no_volume(), "IDX")
-    assert out["plotly_html"]  # chart produced despite no Volume column
-
-
-def test_mplfinance_chart_without_volume_column(tmp_path):
-    from scripts.analysis.data.charts import generate_candlestick_chart
-    png = tmp_path / "chart.png"
-    result = generate_candlestick_chart(_ohlc_no_volume(), "IDX", str(png))
-    assert result == str(png)
-    assert png.exists()
