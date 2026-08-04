@@ -428,6 +428,18 @@ jobs:
             --model         "$MODEL" \
             --max-tokens    "$MAX_TOKENS"
 
+      # ── 7b. Seed the price store for a brand-new ticker ───────────
+      # Charts are derived from data/prices/ at docs-build time, and the store is
+      # normally refreshed by update_kline_data.yml at 03:30 UTC. A ticker
+      # analysed for the very first time would otherwise publish with no chart
+      # until that cron next runs. --only-missing makes this a no-op for every
+      # ticker already in the store.
+      - name: Seed price store if missing
+        continue-on-error: true
+        env:
+          TICKER: ${{ steps.params.outputs.ticker }}
+        run: python scripts/update_prices.py "$TICKER" --only-missing
+
       # ── 8. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
         run: |
@@ -446,6 +458,7 @@ jobs:
           git stash pop || true
 
           git add "${{ steps.params.outputs.output_dir }}/"
+          git add data/prices/ || true   # only non-empty when the step above seeded a new ticker
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
