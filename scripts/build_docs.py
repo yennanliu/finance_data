@@ -470,13 +470,34 @@ def kline_block(ticker: str, *, src: str = "kline.json",
     """
     if not kline_bars(ticker):
         return ""
-    attrs = [f'class="kline-widget"', f'data-ticker="{ticker.upper()}"',
+    attrs = ['class="kline-widget"', f'data-ticker="{ticker.upper()}"',
              f'data-src="{src}"']
     if as_of:
         attrs.append(f'data-as-of="{as_of}"')
     if ma:
         attrs.append(f'data-ma="{ma}"')
     return f'<div {" ".join(attrs)}></div>'
+
+
+# Overlays for technical reports: MA30/60 on, MA200 available but off by default,
+# matching the moving averages the retired Plotly chart drew.
+REPORT_MA = "30+,60+,200"
+
+
+def report_chart_block(ticker: str, report: Path) -> str:
+    """Chart markup for a dated technical report page ('' for anything else).
+
+    Only technical reports get one — they are the pages that used to carry their
+    own baked-in chart, and the analysis text discusses it directly. The chart is
+    pinned to the report's date so it shows the prices the text was written
+    about; `../kline.json` because report bodies are served one directory below
+    the ticker index that hosts the payload.
+    """
+    if not report.name.startswith("technical_"):
+        return ""
+    d = _file_date(report)
+    return kline_block(ticker, src="../kline.json",
+                       as_of=d.isoformat() if d else "", ma=REPORT_MA)
 
 
 # ── Price-target scenario table (rendered directly under the hero chart) ──────
@@ -848,10 +869,38 @@ def fix_static_chart_embed(content: str) -> str:
     )
 
 
-def copy_file(src: Path, dst: Path, extra_meta: str = ""):
+# ── Legacy chart embeds ──────────────────────────────────────────────────────
+# Until 2026-08 every technical report baked its own chart into the committed
+# markdown: a collapsible static PNG plus a full Plotly HTML document (~46 KB of
+# inline JSON each, 61.7 MB across 1,313 reports, and a ~3 MB plotly.js fetch per
+# page view). Both are replaced by the shared widget, which reads the price store.
+#
+# Stripping at copy time rather than rewriting the sources means every existing
+# report gets the new chart immediately and the change is reversible by reverting
+# one function — the one-off source cleanup is then only about disk space.
+_LEGACY_PNG_DETAILS_RE = re.compile(
+    r"<details[^>]*>\s*<summary>.*?</summary>.*?technical_chart_.*?</details>\s*",
+    re.S,
+)
+# plotly's to_html() emits a whole document, so the embed is exactly one
+# <html>…</html> block.
+_LEGACY_PLOTLY_RE = re.compile(r"<html>\s*<head>.*?</html>\s*", re.S)
+
+
+def strip_legacy_chart_embed(content: str) -> str:
+    """Remove a baked-in static-PNG block and/or inline Plotly document."""
+    if "technical_chart_" in content:
+        content = _LEGACY_PNG_DETAILS_RE.sub("", content)
+    if "candlestick-chart" in content or "plot.ly" in content:
+        content = _LEGACY_PLOTLY_RE.sub("", content)
+    return content
+
+
+def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = ""):
     """Copy src → dst. For Markdown, merge `extra_meta` into the file's own
-    front matter (re-emitted as a header table), repair chart embeds and
-    pre-render Mermaid; uses a content-equality incremental check so changed
+    front matter (re-emitted as a header table), strip legacy baked-in charts,
+    optionally inject `chart_block` above the report body, repair chart embeds
+    and pre-render Mermaid; uses a content-equality incremental check so changed
     `extra_meta` is always applied. Binary files use a cheap mtime check."""
     ensure(dst.parent)
     if src.suffix == ".md":
@@ -862,6 +911,7 @@ def copy_file(src: Path, dst: Path, extra_meta: str = ""):
         if _MMDC:
             # Pre-render Mermaid blocks to SVG inline
             content = prerender_mermaid(content)
+        content = strip_legacy_chart_embed(content)
         content = fix_static_chart_embed(content)
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
@@ -869,8 +919,13 @@ def copy_file(src: Path, dst: Path, extra_meta: str = ""):
             content = (
                 f"---\n{merged}\n---\n\n"
                 + frontmatter_table(yaml_body)
+                + (f"{chart_block}\n\n" if chart_block else "")
                 + body.lstrip("\n")
             )
+        elif chart_block:
+            yaml_body, body = split_frontmatter(content)
+            head = f"---\n{yaml_body}\n---\n\n" if yaml_body else ""
+            content = f"{head}{chart_block}\n\n{body.lstrip(chr(10))}"
         if _INCREMENTAL and dst.exists() and dst.read_text(encoding="utf-8") == content:
             return
         dst.write_text(content, encoding="utf-8")
@@ -947,7 +1002,8 @@ def build_reports(lang: str = "en"):
         if lang == "en":
             for f in md_files:
                 # Perf fix #1 — exclude report bodies from the search index
-                copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META)
+                copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META,
+                          chart_block=report_chart_block(ticker, f))
             for f in html_files + other_files:
                 copy_file(f, dst_dir / f.name)
 

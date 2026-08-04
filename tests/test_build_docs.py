@@ -525,6 +525,106 @@ def test_kline_block_empty_without_store(monkeypatch, tmp_path):
     assert bd.kline_block("absent") == ""
 
 
+def test_report_chart_block_only_for_technical_reports(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    tech = Path("technical_analysis_2026-07-31_gemini.md")
+    fund = Path("fundamental_analysis_2026-07-31_gemini.md")
+    out = bd.report_chart_block("amd", tech)
+    assert 'data-as-of="2026-07-31"' in out
+    assert 'data-src="../kline.json"' in out
+    assert f'data-ma="{bd.REPORT_MA}"' in out
+    assert bd.report_chart_block("amd", fund) == ""
+
+
+def test_report_chart_block_undated_report_has_no_as_of(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    out = bd.report_chart_block("amd", Path("technical_analysis_latest.md"))
+    assert out and "data-as-of" not in out
+
+
+# ── legacy chart embeds ──────────────────────────────────────────────────────
+_LEGACY_REPORT = """---
+title: "AMD 技術分析 2026-08-03"
+date: 2026-08-03
+---
+
+<details markdown="1">
+<summary>📊 靜態圖表 (點擊展開)</summary>
+
+![Technical Chart](technical_chart_2026-08-03.png)
+
+</details>
+
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div style="height:500px; width:100%;"><script src="https://cdn.plot.ly/plotly-3.7.0.min.js"></script>
+    <div id="candlestick-chart" class="plotly-graph-div"></div>
+    <script>Plotly.newPlot("candlestick-chart", [{"close": [1, 2, 3]}]);</script></div>
+</body>
+</html>
+
+## 一、趨勢判斷
+
+The report text.
+"""
+
+
+def test_strip_legacy_chart_embed_removes_png_and_plotly():
+    out = bd.strip_legacy_chart_embed(_LEGACY_REPORT)
+    assert "technical_chart_" not in out
+    assert "candlestick-chart" not in out
+    assert "plot.ly" not in out
+    assert "<html>" not in out
+    # The report itself survives intact.
+    assert "## 一、趨勢判斷" in out
+    assert "The report text." in out
+    assert out.startswith("---\n")
+
+
+def test_strip_legacy_chart_embed_is_idempotent():
+    once = bd.strip_legacy_chart_embed(_LEGACY_REPORT)
+    assert bd.strip_legacy_chart_embed(once) == once
+
+
+def test_strip_legacy_chart_embed_leaves_clean_reports_alone():
+    clean = "---\ndate: 2026-08-03\n---\n\n## Heading\n\nBody.\n"
+    assert bd.strip_legacy_chart_embed(clean) == clean
+
+
+def test_copy_file_swaps_a_legacy_embed_for_the_widget(monkeypatch, tmp_path):
+    _store_series(monkeypatch, tmp_path, "amd", 5)
+    monkeypatch.setattr(bd, "ROOT", tmp_path)  # copy_file logs paths relative to ROOT
+    src = tmp_path / "technical_analysis_2026-07-31_gemini.md"
+    src.write_text(_LEGACY_REPORT, encoding="utf-8")
+    dst = tmp_path / "out" / src.name
+
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META,
+                 chart_block=bd.report_chart_block("amd", src))
+    out = dst.read_text(encoding="utf-8")
+
+    assert "candlestick-chart" not in out and "technical_chart_" not in out
+    assert 'class="kline-widget"' in out
+    assert 'data-as-of="2026-07-31"' in out
+    # Front matter still leads the file, or MkDocs won't parse it.
+    assert out.startswith("---\n")
+    # The widget precedes the report body.
+    assert out.index("kline-widget") < out.index("## 一、趨勢判斷")
+
+
+def test_copy_file_without_chart_block_is_unchanged_behaviour(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    src = tmp_path / "technical_analysis_2026-07-31_gemini.md"
+    src.write_text(_LEGACY_REPORT, encoding="utf-8")
+    dst = tmp_path / "out" / src.name
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META)
+    out = dst.read_text(encoding="utf-8")
+    assert "kline-widget" not in out
+    # Legacy markup is stripped regardless — the pipeline no longer emits it and
+    # the Plotly CDN embed is dead weight on the page.
+    assert "candlestick-chart" not in out
+
+
 # ── front matter → header table ──────────────────────────────────────────────
 
 _REPORT_FM = (
