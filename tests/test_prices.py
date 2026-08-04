@@ -334,6 +334,123 @@ def test_update_trims_to_the_keep_window(tmp_path, fake_fetch):
         ["2016-08-04", "2026-08-04"]
 
 
+# ── fetch_history(): the yfinance boundary ───────────────────────────────────
+class _FakeHist:
+    """Enough of a yfinance history DataFrame for fetch_history to consume."""
+
+    def __init__(self, rows):
+        self._rows = rows
+        self.empty = not rows
+
+    def iterrows(self):
+        return iter(self._rows)
+
+
+def _row(**kw):
+    base = {"Open": 99.0, "High": 102.0, "Low": 98.0, "Close": 100.0,
+            "Volume": 1_000_000, "Dividends": 0.0, "Stock Splits": 0.0}
+    base.update(kw)
+    return base
+
+
+@pytest.fixture
+def fake_yf(monkeypatch):
+    """Install a fake `yfinance` module; returns a setter for the history rows."""
+    import sys
+    import types
+
+    captured = {}
+
+    class Ticker:
+        def __init__(self, symbol):
+            captured["symbol"] = symbol
+
+        def history(self, **kwargs):
+            captured["kwargs"] = kwargs
+            return captured["hist"]
+
+    mod = types.ModuleType("yfinance")
+    mod.Ticker = Ticker
+    monkeypatch.setitem(sys.modules, "yfinance", mod)
+
+    def setter(rows):
+        captured["hist"] = _FakeHist(rows) if isinstance(rows, list) else rows
+        return captured
+
+    return setter
+
+
+def test_fetch_history_maps_columns_to_store_fields(fake_yf):
+    cap = fake_yf([("2026-07-31 00:00:00-04:00",
+                    _row(Dividends=0.25, **{"Stock Splits": 4.0}))])
+    bars = prices.fetch_history("AMD")
+    assert bars == [{"date": "2026-07-31", "open": 99.0, "high": 102.0, "low": 98.0,
+                     "close": 100.0, "volume": 1_000_000, "div": 0.25, "split": 4.0}]
+    assert cap["symbol"] == "AMD"
+
+
+def test_fetch_history_requests_unadjusted_prices_with_actions(fake_yf):
+    # auto_adjust=False keeps as-reported OHLC and actions=True carries dividends
+    # and splits as their own columns — an adj_close would be restated by every
+    # dividend and rewrite a payer's whole file quarterly.
+    cap = fake_yf([("2026-07-31", _row())])
+    prices.fetch_history("AMD", years=7)
+    assert cap["kwargs"]["auto_adjust"] is False
+    assert cap["kwargs"]["actions"] is True
+    assert cap["kwargs"]["period"] == "7y"
+    assert cap["kwargs"]["interval"] == "1d"
+
+
+def test_fetch_history_zero_events_become_empty(fake_yf):
+    fake_yf([("2026-07-31", _row(Dividends=0.0, **{"Stock Splits": 0.0}))])
+    bar_ = prices.fetch_history("AMD")[0]
+    assert bar_["div"] is None and bar_["split"] is None
+
+
+def test_fetch_history_skips_rows_with_nan_prices(fake_yf):
+    nan = float("nan")
+    fake_yf([
+        ("2026-07-30", _row()),
+        ("2026-07-31", _row(Close=nan)),
+    ])
+    assert [b["date"] for b in prices.fetch_history("AMD")] == ["2026-07-30"]
+
+
+def test_fetch_history_coerces_nan_volume_to_zero(fake_yf):
+    fake_yf([("2026-07-31", _row(Volume=float("nan")))])
+    assert prices.fetch_history("AMD")[0]["volume"] == 0
+
+
+def test_fetch_history_none_on_empty_frame(fake_yf):
+    fake_yf([])
+    assert prices.fetch_history("AMD") is None
+
+
+def test_fetch_history_none_when_every_row_is_unusable(fake_yf):
+    fake_yf([("2026-07-31", _row(Open=float("nan")))])
+    assert prices.fetch_history("AMD") is None
+
+
+def test_fetch_history_none_when_yfinance_returns_none(fake_yf):
+    fake_yf(None)
+    assert prices.fetch_history("AMD") is None
+
+
+def test_fetch_history_output_passes_the_gate(fake_yf):
+    """The fetch and the gate have to agree, or a good fetch is rejected."""
+    fake_yf([("2026-07-30", _row()), ("2026-07-31", _row(Close=101.0))])
+    assert prices.gate(prices.fetch_history("AMD"), []) is None
+
+
+def test_fetch_history_round_trips_through_the_store(fake_yf, tmp_path):
+    """End of the write path: a fetch serialises and re-reads unchanged (I1)."""
+    fake_yf([("2026-07-30", _row(Dividends=0.25)),
+             ("2026-07-31", _row(Close=101.0, **{"Stock Splits": 2.0}))])
+    bars = prices.fetch_history("AMD")
+    prices.write_store("amd", bars, tmp_path)
+    assert prices.write_store("amd", prices.load_store("amd", tmp_path), tmp_path) is False
+
+
 # ── ticker helpers ───────────────────────────────────────────────────────────
 @pytest.mark.parametrize("key, symbol", [
     ("tsla", "TSLA"),

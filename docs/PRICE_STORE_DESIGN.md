@@ -454,20 +454,74 @@ means no reader ever sees the legacy markup.
   before removing `fix_static_chart_embed()` — no `fundamental/` or `stock/`
   report carries a chart embed today, but the helper may serve other images.
 
-### Phase 5 — tests
-Landed alongside each phase, not deferred:
+### Phase 5 — tests ✅ done
+**432 passing, 1 skipped** (was 391 before this work; 11 obsolete tests deleted).
 
 | File | Coverage |
 |---|---|
-| `tests/test_prices.py` (new) | I1 byte-stability round-trip; I2 idempotence; I3 sort/dedup; I4 trimming; upsert-wins-on-collision; **simulated split** (fetch with all closes halved → full restatement, no duplicate dates); every gate rule; `window()` with `as_of` + `lookback` |
-| `tests/test_build_docs.py` | `kline.json` derivation; `kline_block()` attribute emission; `../kline.json` on report pages; legacy Plotly/PNG stripping |
-| `tests/test_chart.py` | 28 chart references — mostly deleted with `charts.py` |
-| `tests/test_data_fetch_net.py` | 9 references — drop the chart-generation cases |
+| `tests/test_prices.py` (new, 59) | I1 byte-stability round-trip incl. the $1-boundary flip-flop and scientific-notation traps; I2 idempotence; I3 sort/dedup; I4 trimming (leap day, clock-independence); upsert-wins-on-collision; **simulated split**; every gate rule incl. the rounding tolerance; `window()` with `as_of` + `lookback`; `fetch_history()` against a fake `yfinance` (column mapping, NaN rows, NaN volume, zero events, `auto_adjust=False`/`actions=True`, and that its output both passes `gate()` and round-trips through the store) |
+| `tests/test_update_prices.py` (new, 18) | CLI: ticker discovery (union, dedup, missing and corrupt schedule), every status path, `--only-missing`, `--dry-run` writing nothing, and the exit-code policy — non-zero on a total outage, zero when one ticker of several fails |
+| `tests/test_build_docs.py` (73) | payload derivation, window capping, TWD mapping, idempotent writes, `kline_block()` attributes, `../kline.json` on report pages, `report_chart_block()` only for technical reports, legacy embed stripping (incl. idempotence), and `copy_file()` swapping a legacy embed for the widget with front matter intact |
+| `tests/test_generate_analysis.py` (12) | generated reports contain **no** chart markup for technical *or* fundamental, no PNG is written, and `build_technical_chart_embed` is gone from `pipeline.__all__` |
+| `tests/js/kline_chart_harness.mjs` + `tests/test_kline_chart_js.py` (new, 32 assertions) | the widget itself — see below |
+| deleted | `tests/test_chart.py` (9 tests for `charts.py`), 2 chart cases in `test_data_fetch_net.py` |
 
-All offline: the store's read path is stdlib-only and the fetch path is mocked,
-consistent with the existing suite (`CLAUDE.md`: "tests are fully offline").
+All offline: the store's read path is stdlib-only, every fetch is mocked, and the
+JS harness has no npm dependencies.
+
+#### Testing the widget
+`kline-chart.js` was the one piece pytest cannot reach, and it owns the as-of
+contract. `tests/js/dom_shim.mjs` provides the small slice of DOM the widget
+actually uses plus a fake Lightweight Charts that records what it was asked to
+draw; the harness runs the **shipping file** — not a copy — and asserts on the
+result. Covered: as-of truncation (candles, volume, readout, header price, footer
+label), `data-ma` parsing incl. the `+` default-on suffix and unparseable input,
+`data-range`/`data-ranges` incl. a range outside the offered set, `zh`
+localisation, empty and fully-truncated payloads degrading to the "unavailable"
+state, and range-button clicks driving the chart.
+
+The harness was **mutation-tested** while being written — disabling as-of
+truncation, ignoring `data-ma`, and swapping the footer label each produced
+failures. Two weaknesses surfaced that way and were fixed: asserting MA
+*visibility* alone couldn't distinguish the report preset from the defaults
+(both are `[on, on, off]`), so the legend labels are asserted too; and the shim's
+HTML parser flattened the tree on a stray `</i>`, which had made the legend
+assertions read `[""]` rather than fail loudly.
 
 ---
+
+## 8b. End-to-end verification (AMD, run locally 2026-08-04)
+
+`tests/js/render_report_page.mjs` closes the loop: it scrapes the widget `<div>`
+out of a **built** page, loads the **derived** `kline.json`, drives the shipping
+widget over both, prints what the chart drew, and exits non-zero if the as-of
+contract is violated — so it can gate a release rather than merely inform one.
+
+The run: store refresh → report generation → docs build → widget render.
+
+| Step | Result |
+|---|---|
+| `update_prices.py AMD` (real Yahoo fetch) | `unchanged`, 2,512 bars — idempotent against live data |
+| `generate_analysis.py amd --analysis-type technical-analysis` | real `fetch_data` (26 keys, 500 rows of history), real context (7,228 chars), real publish; **LLM call stubbed — no provider key locally** |
+| generated report | **378 bytes**, versus ~74 KB for the same report a day earlier. No `candlestick-chart`, `plot.ly`, `technical_chart_`, `<details>` or `<html>`. Mermaid quoted at source |
+| `build_docs.py` | `kline.json` derived (560 bars, 2024-05-08 → 2026-08-03, 42 KB); widget injected as `data-src="../kline.json" data-as-of="2026-08-04" data-ma="30+,60+,200"` |
+| widget render, 60 pages | **60/60 built and passed**, MA200 defined across the whole visible range (361 points of 361 visible bars — the 200-bar lookback earning its keep) |
+
+as-of truncation on the real payload, with the drop count falling monotonically as
+reports get newer — 2026-06-02 → 42 bars dropped, 06-10 → 36, 06-28 → 25,
+08-04 → 0 (nothing to drop: the newest bar is the 08-03 close).
+
+**A bug in the e2e script itself, found and fixed during the run:** the widget
+truncates `data.bars` in place, so the first version measured the drop count
+*after* rendering and reported "0 past as-of, 0 dropped" for a page that had
+visibly dropped 42 bars. The truncation was working; the assertion was vacuous.
+It now snapshots the payload before rendering and passes a clone to the widget.
+
+**Not covered locally:** no real browser was involved — no mkdocs, selenium or
+chromedriver installed, and no provider key for a live LLM call. The widget's
+*logic* is verified against the real payload; its *pixels* are not. A headless
+Chrome pass over `mkdocs serve` is the remaining gap, and is the natural gate for
+phase 4b.
 
 ## 9. Deferred, with triggers
 
