@@ -45,6 +45,9 @@ jobs:
         # slipped through un-sanitized — see scripts/analysis/utils/mermaid.py.
         run: python scripts/check_mermaid.py --root ai_gen_report
 
+      - name: Prune old QA artifacts (keep 10 most recent runs)
+        run: python scripts/prune_qa.py --keep 10
+
       - name: Generate QA index markdown
         run: |
           TODAY=$(date -u +%Y-%m-%d)
@@ -63,6 +66,7 @@ jobs:
           | Bad reports found | ${BAD_COUNT} |
           | CSV | [bad_reports_${TODAY}.csv](bad_reports_${TODAY}.csv) |
           | Full summary | [summary_${TODAY}.txt](summary_${TODAY}.txt) |
+          | Retention | 10 most recent runs (older files pruned by \`scripts/prune_qa.py\`) |
 
           ## Latest Summary
 
@@ -75,7 +79,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add qa/
+          git add -A qa/          # -A so pruned files are staged as deletions
           # Only commit if there are changes
           if git diff --staged --quiet; then
             echo "No changes in QA output — skipping commit."
