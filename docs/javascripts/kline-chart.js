@@ -10,7 +10,14 @@
  *
  * A widget is any element with class `kline-widget` carrying:
  *   data-ticker  — display symbol (e.g. "TSLA")
- *   data-src     — absolute URL to the ticker's OHLCV JSON
+ *   data-src     — URL to the ticker's OHLCV JSON, relative to the page
+ * and optionally, so one renderer serves both the live ticker index and dated
+ * report bodies:
+ *   data-as-of   — "YYYY-MM-DD"; drop bars after this date. Dated reports must
+ *                  show the prices they were written about, not today's.
+ *   data-ma      — overlays to build, e.g. "30+,60+,200" ("+" = on by default)
+ *   data-range   — initially selected range key (e.g. "180")
+ *   data-ranges  — range buttons to offer, e.g. "30,180,360"
  * The markup is injected by scripts/build_docs.py.
  *
  * MkDocs Material runs in instant-navigation (SPA) mode, so we (re)scan on
@@ -35,6 +42,48 @@
     { period: 120, on: false },
   ];
 
+  // ── per-widget option parsing ────────────────────────────────────────────
+  // Each widget may override the module defaults through data-* attributes, so
+  // the ticker index and a dated technical report can share one renderer.
+  function parseMa(spec) {
+    if (!spec) return MA_LINES;
+    var out = [];
+    spec.split(",").forEach(function (tok) {
+      tok = tok.trim();
+      if (!tok) return;
+      var on = /\+$/.test(tok);           // "60+" → visible by default
+      var period = parseInt(tok, 10);
+      if (period > 0) out.push({ period: period, on: on });
+    });
+    return out.length ? out : MA_LINES;
+  }
+
+  function parseRanges(spec) {
+    if (!spec) return RANGES;
+    var out = [];
+    spec.split(",").forEach(function (tok) {
+      var days = parseInt(String(tok).trim(), 10);
+      if (days > 0) out.push({ key: String(days), label: days + "D", days: days });
+    });
+    return out.length ? out : RANGES;
+  }
+
+  function readOpts(node) {
+    var ranges = parseRanges(node.getAttribute("data-ranges"));
+    var wanted = (node.getAttribute("data-range") || "").trim();
+    var pick = ranges.filter(function (r) { return r.key === wanted; })[0];
+    if (!pick) {
+      pick = ranges.filter(function (r) { return r.key === DEFAULT_RANGE; })[0] ||
+             ranges[ranges.length - 1];
+    }
+    return {
+      asOf: (node.getAttribute("data-as-of") || "").trim(),
+      maLines: parseMa(node.getAttribute("data-ma")),
+      ranges: ranges,
+      defaultRange: pick.key,
+    };
+  }
+
   // Live controllers, so a theme toggle can re-colour every visible chart.
   var live = [];
 
@@ -58,13 +107,23 @@
       grid: dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)",
       crosshair: dark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)",
       watermark: dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.035)",
-      // Distinct, theme-aware colours for each moving-average line.
+      // Distinct, theme-aware colours for each moving-average line. Periods a
+      // widget may request via data-ma but that aren't listed here fall back to
+      // the neutral colour, so an unrecognised period still draws.
       ma: {
         20: dark ? "#60a5fa" : "#2563eb", // blue
+        30: dark ? "#60a5fa" : "#2563eb", // blue  (technical reports use MA30)
+        50: dark ? "#34d399" : "#059669", // green
         60: dark ? "#fbbf24" : "#f59e0b", // amber
         120: dark ? "#c084fc" : "#9333ea", // violet
+        200: dark ? "#fb923c" : "#ea580c", // orange
       },
     };
+  }
+
+  // Colour for a moving-average period, with a neutral fallback.
+  function maColor(pal, period) {
+    return pal.ma[period] || pal.text;
   }
 
   // Simple moving average of the close, emitted only where fully defined.
@@ -122,16 +181,19 @@
   function labels() {
     return isZh()
       ? { o: "開", h: "高", l: "低", c: "收", v: "量",
-          updated: "更新", loading: "載入 K線圖…", unavailable: "K線圖暫時無法載入" }
+          updated: "更新", asOf: "資料截至", loading: "載入 K線圖…",
+          unavailable: "K線圖暫時無法載入" }
       : { o: "O", h: "H", l: "L", c: "C", v: "Vol",
-          updated: "Updated", loading: "Loading chart…", unavailable: "Chart unavailable" };
+          updated: "Updated", asOf: "As of", loading: "Loading chart…",
+          unavailable: "Chart unavailable" };
   }
 
   // ── one widget ─────────────────────────────────────────────────────────────
-  function build(node, data) {
+  function build(node, data, opts) {
     var LC = window.LightweightCharts;
     var bars = (data && data.bars) || [];
     var L = labels();
+    opts = opts || { maLines: MA_LINES, ranges: RANGES, defaultRange: DEFAULT_RANGE };
     if (!LC || bars.length < 2) {
       node.classList.add("is-empty");
       node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';
@@ -155,7 +217,7 @@
 
     // ---- scaffold ----
     node.classList.remove("is-empty");
-    var maChips = MA_LINES.map(function (m) {
+    var maChips = opts.maLines.map(function (m) {
       return (
         '<button type="button" class="kline__ma' + (m.on ? " is-on" : "") + '" ' +
         'data-p="' + m.period + '" aria-pressed="' + m.on + '">' +
@@ -180,7 +242,10 @@
         '<div class="kline__ohlc" aria-hidden="true"></div>' +
       '</div>' +
       '<div class="kline__foot">' +
-        '<span>' + L.updated + ' ' + (data.updated || "") + '</span>' +
+        // An as-of chart is pinned to a past date, so reporting the store's own
+        // "updated" stamp would claim a freshness the chart does not have.
+        '<span>' + (opts.asOf ? L.asOf + ' ' + last.t
+                              : L.updated + ' ' + (data.updated || "")) + '</span>' +
         '<span class="kline__brand">Lightweight&nbsp;Charts™</span>' +
       '</div>';
 
@@ -244,9 +309,9 @@
     }));
 
     // ---- moving-average overlays ----
-    var maSeries = MA_LINES.map(function (m) {
+    var maSeries = opts.maLines.map(function (m) {
       var line = chart.addLineSeries({
-        color: pal.ma[m.period], lineWidth: 2,
+        color: maColor(pal, m.period), lineWidth: 2,
         priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
         visible: m.on,
       });
@@ -261,7 +326,7 @@
       chipEls.forEach(function (chip) {
         var period = +chip.getAttribute("data-p");
         var sw = chip.querySelector("i");
-        if (sw) sw.style.background = p.ma[period];
+        if (sw) sw.style.background = maColor(p, period);
       });
     }
     paintChips();
@@ -308,13 +373,13 @@
       if (from < firstT) from = firstT;
       chart.timeScale().setVisibleRange({ from: from, to: lastT });
     }
-    RANGES.forEach(function (r) {
+    opts.ranges.forEach(function (r) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "kline__range";
       btn.textContent = r.label;
       btn.setAttribute("data-r", r.key);
-      if (r.key === DEFAULT_RANGE) btn.classList.add("is-active");
+      if (r.key === opts.defaultRange) btn.classList.add("is-active");
       btn.addEventListener("click", function () {
         rangesEl.querySelectorAll(".kline__range").forEach(function (b) { b.classList.remove("is-active"); });
         btn.classList.add("is-active");
@@ -322,7 +387,9 @@
       });
       rangesEl.appendChild(btn);
     });
-    applyRange(RANGES.filter(function (r) { return r.key === DEFAULT_RANGE; })[0].days);
+    var initial = opts.ranges.filter(function (r) { return r.key === opts.defaultRange; })[0]
+                  || opts.ranges[opts.ranges.length - 1];
+    applyRange(initial.days);
 
     // ---- controller (for theme re-colour) ----
     var ctrl = {
@@ -348,7 +415,7 @@
         volume.setData(bars.map(function (b) {
           return { time: b.t, value: b.v, color: b.c >= b.o ? p.up + "55" : p.down + "55" };
         }));
-        maSeries.forEach(function (s) { s.series.applyOptions({ color: p.ma[s.period] }); });
+        maSeries.forEach(function (s) { s.series.applyOptions({ color: maColor(p, s.period) }); });
         paintChips();
       },
       // Free the Lightweight Charts instance (and its resize observer /
@@ -374,10 +441,19 @@
       var src = node.getAttribute("data-src");
       if (!src) return;
       var L = labels();
+      var opts = readOpts(node);
       node.innerHTML = '<div class="kline__msg">' + L.loading + '</div>';
       fetch(src)
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(function (data) { build(node, data); })
+        .then(function (data) {
+          // Truncate before build() so every downstream computation — moving
+          // averages, volume colours, the readout, range clamping — is as-of
+          // correct without needing to know about as-of at all.
+          if (opts.asOf && data && data.bars) {
+            data.bars = data.bars.filter(function (b) { return b.t <= opts.asOf; });
+          }
+          build(node, data, opts);
+        })
         .catch(function () {
           node.classList.add("is-empty");
           node.innerHTML = '<div class="kline__msg">' + L.unavailable + '</div>';

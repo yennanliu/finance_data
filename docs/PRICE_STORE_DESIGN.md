@@ -1,7 +1,9 @@
 # Price Store & Unified Chart — Design
 
-**Status:** phases 1–2 implemented (store live and feeding the docs build);
-phases 3–5 pending.
+**Status:** phases 1–3 implemented — the store is live, the docs build derives
+every chart payload from it, and technical report pages render the shared widget
+pinned to their own date. Phase 4 (deleting the generator and the 208 MB of
+committed chart payload) is deliberately gated on verifying phase 3 in production.
 **Rationale and measurements:** [`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md).
 **Written:** 2026-08-04, against commit `5e0e699b`.
 
@@ -387,17 +389,36 @@ change, as intended.
 > real newest report (2026-08-03) yields 3 scenarios and renders the table. Worth
 > remembering when reading sample-build output.
 
-### Phase 3 — the report-page chart
-- `kline-chart.js` per-widget attributes (§5).
-- Generalised `kline_block()` + injection on technical report pages (§6).
-- Legacy embed stripping in `copy_file()`.
-- Add `generate_kline_data.py <ticker> --only-missing` to `daily_analysis.yml`
-  (eval G5).
-- **Accept when:** a technical report page shows the chart with correct as-of
-  truncation (an old report's last bar equals its report date), MA30/60/200
-  render across all three ranges, light/dark toggle re-colours, instant-nav
-  between two report pages leaves no leaked chart instance, and no Plotly script
-  tag remains in the built HTML.
+### Phase 3 — the report-page chart ✅ done
+- `kline-chart.js`: `parseMa()` / `parseRanges()` / `readOpts()` read the
+  per-widget attributes; `build(node, data, opts)` takes them instead of the
+  module constants. As-of truncation happens in `initAll()` between `fetch` and
+  `build`, so moving averages, volume colours, the readout and range clamping are
+  all as-of correct without any of them knowing about as-of.
+- `maColor()` with a neutral fallback, plus MA30/50/200 palette entries.
+- `report_chart_block()` + `REPORT_MA = "30+,60+,200"`, injected via a new
+  `chart_block` parameter on `copy_file()` — placed after the front matter and
+  header table, above the report body, exactly where the Plotly embed used to sit.
+- `strip_legacy_chart_embed()` removes the baked-in PNG `<details>` block and the
+  inline Plotly document (plotly emits a whole `<html>` document, so the embed is
+  one well-delimited block). Applied to all copied markdown, not just when a
+  chart is injected — the pipeline no longer emits it and a dead 3 MB CDN fetch
+  helps no one.
+- `daily_analysis.yml` seeds the store for a first-time ticker
+  (`update_prices.py "$TICKER" --only-missing`, `continue-on-error`).
+
+**One addition beyond the plan:** the footer shows `As of <date>` / `資料截至`
+instead of `Updated <date>` when `as_of` is set. Reporting the store's own
+freshness stamp on a chart pinned to a past date would claim a currency the
+chart doesn't have.
+
+**Verified** against 59 built AMD technical pages: every page's `data-as-of`
+equals its own filename date (59/59, no mismatches); zero residual
+`candlestick-chart` / `plot.ly` / `technical_chart_` references; no widget on
+fundamental pages; built markdown 50 % smaller (5.5 MB → 2.8 MB for AMD alone).
+Regex coverage was checked across the whole corpus first: 1,313 Plotly embeds and
+1,311 PNG blocks matched, **zero** files left with residual chart markup, and no
+`fundamental/` or `stock/` report carries an embed at all.
 
 ### Phase 4 — deletions
 - Everything in §7, including the one-off source cleanup (−208 MB working tree).
