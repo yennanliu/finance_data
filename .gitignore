@@ -6,6 +6,8 @@ notebook_llm/.DS_Store
 # MkDocs build output
 site/
 
+
+
 # Generated docs sub-dirs (rebuilt in CI by scripts/build_docs.py)
 docs/reports/
 docs/market_news/
