@@ -1,0 +1,10 @@
+
+============================================================
+Total scanned : 3220
+Bad reports   : 0  (0.0%)
+
+Issue breakdown:
+
+Top 10 tickers by bad-report count:
+
+CSV written → qa/bad_reports_2026-08-06.csv
