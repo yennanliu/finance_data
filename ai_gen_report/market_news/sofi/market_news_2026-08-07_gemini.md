@@ -15,133 +15,130 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-SoFi Technologies, Inc.（股票代碼：SOFI）是一家總部位於美國的數位金融服務公司，致力於打造「一站式金融服務平台（Everything App）」。公司業務涵蓋學生貸款重組、個人貸款、房屋貸款等數位信貸服務，並擴展至數位銀行存款、投資交易（SoFi Invest）、信用卡及技術平台（Galileo 與 Technisys）。目前 SOFI 最新股價為 **18.1 USD**，作為挑戰傳統銀行體系的 Fintech 領頭羊之一，其營運表現與華爾街的評價近期出現顯著背離。
+SoFi Technologies, Inc.（NASDAQ: SOFI）為美國領先的數位金融服務與金融科技公司。公司以學生貸款再融資業務起家，隨後成功轉型為涵蓋個人貸款、房貸、存款账户、投資交易（SoFi Invest）、信用卡以及金融科技基礎設施（如 Galileo 與 Technisys 科技平台）的「一站式金融服務平台」（One-Stop Shop / Everything App）。SOFI 擁有聯邦銀行牌照，致力於透過數位化生態系統提供低成本、高效率的綜合金融服務。目前最新股價為 **18.275 USD**，所屬產業為金融服務業（Financial Services）。
 
 ---
 
 ## 📝 新聞摘要總覽
+近期關於 SoFi Technologies（SOFI）的市場討論呈現出**「強勁基本面與軟弱股價走勢嚴重背離」**的矛盾格局。公司剛剛公布了強勁的第二季度（Q2）財務報告，季度營收創下歷史新高，獲利（Earnings）更大幅飆升 50%，展現出其「一站式金融 App」生態系統在面對市場資金凍結（Funding Freeze）環境下的強韌抗壓性與規模效益拐點。
 
-SoFi Technologies（SOFI）近期公布了極為亮眼的 2026 年第二季財報，營收實現高達 **41% 的年成長（YoY）**，獲利更暴增 **50%**，並創下貸款承銷量（Loan Originations）的新高紀錄。這表明 SoFi 倡導的「一站式金融 App（One-Stop Shop）」策略在經歷市場資金凍結（Funding Freeze）的極端環境下，依然展現出強大的營運韌性與業務轉折點（Inflection Point）。
+然而，亮眼的財報並未立即轉化為資本市場的漲勢。財報發布後，SOFI 股價遭遇強烈賣壓，單日重挫達 13%。截至 2026 年 8 月初，SOFI 股價年初至今（YTD）已下跌約 28% 至 32%，距離其 52 週高點回檔幅度達 43% 至 50%，處於近期的相對低檔區間。
 
-然而，資本市場的反應卻顯得極度矛盾。財報公布後，SOFI 股價一度暴跌 **13%**，隨後雖然在週一迎來強勁反彈，但整體表現依然承壓。今年以來（YTD），SOFI 股價累計下跌 **28% 至 32%**，距其 52 週高點更大幅回檔 **43% 至 50%**。市場分析指出，華爾街目前傾向將資金與關註焦點轉向競爭對手 Robinhood，儘管 SoFi 展現了突破性的成長數據，大多數賣方分析師對 SOFI 的態度仍偏向審慎觀望。
-
-綜合近期市場討論，分析師普遍認為股價的重挫與基本面出現了嚴重脫節，充滿「華爾街資本遊戲（Wall St. Games）」的意味。隨著利空情緒消化，部分市場觀點認為 SOFI 在深幅修正後已具備極高投資價值，目前正是「逢低買進（Buy the Dip）」的良機。然而，若要推升股價重回 **25 美元** 的高位，除了強勁的財報外，SoFi 仍需補齊市場信心與華爾街法人認同這塊「關鍵拼圖」。
+華爾街對 SOFI 的態度呈現顯著分歧。一方面，市場資金與部分機構分析師近期似乎更偏好其競爭對手 Robinhood，無視 SOFI 創紀錄的業務成長，且多數華爾街分析師仍未轉向明確看多；另一方面，看好 SOFI 的財經媒體與投資機構（如 Seeking Alpha、Yahoo Finance 等）則主張，市場拋售已造成價值錯估，目前正是「逢低布局（Buy the Dip）」的絕佳時機。綜合市場觀點，SOFI 若要重返 25 美元的歷史高位水平，除了需要持續證明其科技平台的成長性外，還需要等待華爾街機構資金認同度提升這一「關鍵缺失要素（Missing Ingredient）」的到位。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **財報數據與股價走勢嚴重脫節**：SoFi Q2 營收成長 41%、獲利激增 50%，但股價公布後卻重挫 13%。這顯示華爾街短線聚焦於利多出盡或非基本面因素，導致股價反應失真，為長線價值投資者創造了錯價機會。
-- **「一站式金融 App」策略發揮抗風險效應**：在信貸與資金市場面臨冰封（Funding Freeze）的挑戰下，SoFi 透過多元化的金融產品線維持了強勁的資金吸納能力與貸款承銷量，證實其商業模式具備極高的營運槓桿。
-- **華爾街對比偏好：Robinhood 奪走市場光環**：華爾街資金近期更青睞 Robinhood，忽視了 SoFi 的突破性成長。這種資金分流效應是壓制 SOFI 股價估值修復的主因之一。
-- **極端修正釋放估值壓力**：SOFI 股價自高點重挫 43%–50%，年內跌幅達 28%–32%。大幅度的技術性修正已將多數潛在利空反映完畢，風險報酬比（Risk-Reward Ratio）正轉向有利於買方的方向。
-- **攻克 25 美元的關鍵催化劑**：要推升股價重返 25 美元關卡，單靠優於預期的財報數據已不足夠，SoFi 必須展現技術平台業務（Galileo/Technisys）的加速成長，並爭取賣方分析師集體上修評級。
-- **散戶與法人情緒的分歧**：市場對 SOFI 的態度呈現兩極化，部分獨立分析師高喊「強烈買進（Strong Buy）」，但機構分析師多數仍維持中立或保守評級，短期內股價波動將居高不下。
+- **營運實力與股價表現大幅背離**：SoFi Q2 財報交出創紀錄營收與獲利成長 50% 的優異成績單，但股價卻在財報後暴跌 13%，YTD 跌幅超過 30%。這反映出市場目前的定價主要由宏觀資金流向與華爾街情緒主導，而非短期基本面。
+- **「全能金融 App」（Everything App）拐點確立**：新聞指出 SoFi 在 Q2 展現了「一站式平台」的拐點效應，用戶跨產品交叉使用率提升，使得公司在市場資金凍結（Funding Freeze）的逆風下，依然能保持強勁的資金吸納與營收增長。
+- **華爾街對標偏好轉移**：華爾街資本當前對同業 Robinhood 展現出更高的關注度與資金偏好，忽視了 SoFi 的高成長性。華爾街機構對 SOFI 的整體看多比例偏低，成為壓抑估值重估（Re-rating）的主因。
+- **逢低布局（Buy the Dip）的價值區域顯現**：隨著股價自 52 週高點修正 43%–50%，多數技術與價值分析指出，SOFI 已經進入深度超賣與價值重估區域，對於中長期投資者而言，當前回檔提供了具吸引力的風險報酬比。
+- **重返 25 美元關卡需「關鍵催化劑」**：分析指出，單靠優於預期的營收與獲利已不足以支撐股價持續反彈，SOFI 股價若要衝上 $25，必須出現如科技平台業務突破、華爾街評級大規模上調或降息週期推動融資需求回升等「關鍵缺失要素」。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-06 | Why Wall Street Keeps Ignoring SoFi’s Record Growth for Robinhood — Yahoo News
-- 2026-08-05 | SoFi Q2: The One-Stop Shop Held Through A Funding Freeze — Seeking Alpha
-- 2026-08-05 | Why It’s Time to Buy the Dip In SoFi Stock — Yahoo Finance
-- 2026-08-05 | SoFi's Price Has Already Made A Call; Its Earnings Haven't — Seeking Alpha
-- 2026-08-05 | Why It’s Time to Buy the Dip in SoFi Stock — Bing News / MSN
-- 2026-08-05 | SoFi's Price Has Already Made A Call; Its Earnings Haven't — Bing News / Seeking Alpha
-- 2026-08-04 | SoFi's Next Rally Depends On One Missing Ingredient — Seeking Alpha
-- 2026-08-04 | SoFi Stock Sinks 50%, But Most Analysts Still Aren’t Bullish — Barchart.com
-- 2026-08-03 | SoFi Stock Surges Monday: What's Driving the Post-Earnings Rebound? — Benzinga
-- 2026-08-03 | SoFi Is Still Down 32% This Year. What Will It Take to Get SOFI Stock Back Up to $25? — Bing News / AOL
-- 2026-08-02 | SoFi: More Wall St. Games — Seeking Alpha
-- 2026-08-02 | SoFi: More Wall St. Games — Bing News / Seeking Alpha
-- 2026-08-01 | SoFi Just Reported Earnings. Is the Stock a Buy Now? — Yahoo News
-- 2026-08-01 | SoFi just reported earnings. Is the stock a buy now? — Bing News / MSN
-- 2026-07-31 | SoFi Technologies Q2: The Everything App Inflection Just Showed Up In The Numbers — Seeking Alpha
-
-*(註：新聞列表已自動過濾無效及非相關內容)*
+- **2026-08-06** | Why Wall Street Keeps Ignoring SoFi’s Record Growth for Robinhood — *Yahoo Finance*
+- **2026-08-05** | SoFi Q2: The One-Stop Shop Held Through A Funding Freeze — *Seeking Alpha*
+- **2026-08-05** | Why It’s Time to Buy the Dip In SoFi Stock — *Yahoo Finance / MSN*
+- **2026-08-05** | SoFi's Price Has Already Made A Call; Its Earnings Haven't — *Seeking Alpha / Bing News*
+- **2026-08-04** | SOFI Stock Price Forecast – What Technical Indicators Say Post Q2 Earnings — *TipRanks*
+- **2026-08-04** | SoFi's Next Rally Depends On One Missing Ingredient — *Seeking Alpha*
+- **2026-08-04** | SoFi Stock Sinks 50%, But Most Analysts Still Aren’t Bullish — *Barchart.com*
+- **2026-08-03** | SoFi Is Still Down 32% This Year. What Will It Take to Get SOFI Stock Back Up to $25? — *AOL / Bing News*
+- **2026-08-02** | SoFi: More Wall St. Games — *Seeking Alpha*
+- **2026-08-01** | SoFi Just Reported Earnings. Is the Stock a Buy Now? (Fell 13% post report) — *Yahoo Finance / Bing News*
+- **2026-07-31** | SoFi Technologies Q2: The Everything App Inflection Just Showed Up In The Numbers — *Seeking Alpha*
+- **2026-07-24** | Is SoFi Technologies Stock a Bargain After Its Big Drop, or a Falling Knife? — *Bing News / MSN*
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. Q2 財報創紀錄卻遭市場拋售：基本面與股價的劇烈背離
-- **新聞來源**：Seeking Alpha, Bing News, AOL (2026-08-01 ~ 2026-08-03)
-- **分析內容**：
-  SoFi 在最新公布的第二季財報中，遞交了一份亮眼的成績單：營收年增率達到 **41%**，淨利潤（Earnings）大幅成長 **50%**，並實現了創紀錄的貸款承銷量。儘管數據極為強勁，財報公布後股價卻重挫 **13%**，隨後才在週一出現強勁反彈。
-- **對營運與股價的影響**：
-  這種「優於預期的財報卻引發拋售」現象，被多位分析師稱為典型的「華爾街資本遊戲」。市場對獲利預期早已打入股價，導致短線獲利了結賣壓湧現。然而，從營運角度看，41% 的營收成長代表 SoFi 的「一站式金融」業務模式具備高客戶黏性與交叉銷售效率，營運基本面極其穩健，短期的股價回檔反而拉低了遠期估值倍數。
+### 1. Q2 財報公布與市場強烈反差：亮眼業績下的 13% 暴跌
+- **新聞來源**：*Seeking Alpha, AOL, Yahoo Finance (2026-07-31 ~ 2026-08-03)*
+- **核心內容分析**：
+  SoFi 發布的第二季度（Q2）財報顯示，公司營收再創歷史新高，且淨獲利同比暴升 50%。數據證實了 SoFi 的「Everything App」商業模式已經迎來營運拐點，獲利能力顯著增強。然而，財報公布後 SoFi 股價卻單日重挫 13%，使今年以來的累計跌幅擴大至 32%。
+- **營運與財務影響**：
+  這顯示出市場對於 SoFi 的期望值極高，或者存在「利多出盡（Sell the News）」的短期獲利了結賣壓。雖然基本面強勁且盈利能力增長，但市場顯然在關注其他潛在隱憂（例如信貸品質、利息收入前景或科技平台增速是否符合預期）。
 
-### 2. 華爾街偏見：Robinhood 的吸金效應與 SoFi 的冷落
-- **新聞來源**：Yahoo Finance (2026-08-06)
-- **分析內容**：
-  報導深入探討了為何華爾街在 SoFi 展現創紀錄成長時，依然選擇將關注度與資金轉向 Robinhood。儘管 SoFi 擁有更完善的銀行與貸款體系，但 Robinhood 在交易量與散戶參與度上的高彈性吸引了更多機構資金的青睞。
-- **對營運與股價的影響**：
-  華爾街的偏好直接影響了 SOFI 的資金流向與估值溢價。由於大部分機構分析師（Most Analysts）仍未轉向看多（Bullish），SOFI 的股價缺乏強力的法人買盤支撐。SOFI 若要打破此僵局，必須證明其非貸款業務（如技術平台與財富管理）能帶來比 Robinhood 更具可預測性且高利潤的現金流。
+### 2. 華爾街冷落 SoFi 轉向 Robinhood：華爾街博弈與態度偏見
+- **新聞來源**：*Yahoo Finance, Barchart, Seeking Alpha (2026-08-02 ~ 2026-08-06)*
+- **核心內容分析**：
+  報導探討了「華爾街為何持續忽視 SoFi 的創紀錄成長，轉而青睞 Robinhood」的現象。即使 SOFI 股價距高點已回落達 50%，多數華爾街賣方分析師依然維持觀望或保守態度，未轉轉看多。Seeking Alpha 文章更直指這是「華爾街金融遊戲（Wall St. Games）」，機構資金定價策略與散戶或基本面投資者存在嚴重分歧。
+- **投資啟示**：
+  缺少華爾街機構評級的上調與大型買盤入場，是壓抑 SOFI 估值修復的核心阻力。投資人需留意機構資金何時結束對 Robinhood 等同業的偏好轉移，並對 SoFi 進行重新定價。
 
-### 3. 抗抗資金冰封期：一站式金融 App 的轉折點
-- **新聞來源**：Seeking Alpha (2026-07-31, 2026-08-05)
-- **分析內容**：
-  分析文章指出，Q2 財報證明了 SoFi 的「Everything App」策略已迎來真正的營運轉折點（Inflection Point）。在總體經濟面臨高利率與信貸資金凍結（Funding Freeze）的逆風下，SoFi 依靠存款規模的成長推動了貸款業務，避免了融資成本飆升的危機。
-- **對營運與股價的影響**：
-  這項分析確認了 SoFi 相較於傳統 Fintech 業者的防禦性優勢。擁有銀行執照讓 SoFi 能以較低的存款成本為貸款融資，即使在大環境資金緊縮時也能持續承銷貸款。長線來看，這將確立其在數位銀行領域的領頭羊地位。
+### 3. 「逢低布局」（Buy the Dip）vs「掉下來的刀子」（Falling Knife）之爭
+- **新聞來源**：*Bing News, Yahoo Finance, TipRanks (2026-07-24 ~ 2026-08-05)*
+- **核心內容分析**：
+  市場正熱烈討論，自高點回檔 43%–50% 的 SOFI 究竟是難得的抄底良機（Bargain），還是一把「接了會受傷的刀子（Falling Knife）」。TipRanks 的技術指標顯示，Q2 財報後股票出現過度賣壓，技術面進入超賣區；而 Yahoo Finance 與 Seeking Alpha 分析師則認為，考量到其獲利成長 50% 的硬實力，目前股價提供了極高的安全邊際。
+- **股價影響**：
+  短期內技術面止跌築底訊號至關重要。若能於 $18 美元關卡附近建立堅實支撐，長線投資人的「逢低買進」買盤預計將逐漸發揮作用，推動股價修復。
 
-### 4. 股價大修正後的「逢低買進」機會與重返 25 美元之路
-- **新聞來源**：Yahoo Finance, Barchart, Seeking Alpha (2026-08-04 ~ 2026-08-05)
-- **分析內容**：
-  目前 SOFI 股價位於 **18.1 USD**，較今年高點已下挫 43% 至 50%，年初至今跌幅約 28% 至 32%。多篇報導探討當前是否為「逢低買進（Buy the Dip）」的最佳時機，以及重返 25 美元所需的條件。
-- **對營運與股價的影響**：
-  股價從高點腰斬意味著市場已消化了大部分利空（如信貸違約風險與降息預期延後）。然而，要重新發起強勁反彈並邁向 25 美元，SoFi 需要一個「關鍵拼圖（Missing Ingredient）」——即持續的季度盈利能力證明、技術平台營收翻倍，以及華爾街整體評級的上修。
+### 4. 克服資金凍結（Funding Freeze）與衝擊 25 美元的「缺失要素」
+- **新聞來源**：*Seeking Alpha, AOL (2026-08-04 ~ 2026-08-05)*
+- **核心內容分析**：
+  Seeking Alpha 指出，SoFi 的一站式金融模式在市場資金流動性緊縮/資金凍結的挑戰下，依然維持住了資產負債表的穩健性。然而，報導也警告，若要推動股價從當前的 $18 美元一路回升至 $25 美元，不能僅憑現有的零售業務成長，還需要「一個缺失的要素（One Missing Ingredient）」——這包含更高的資本市場流動性、科技平台（Galileo）的加速爆發，或是聯準會降息週期帶來的信貸擴張紅利。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏正（多空拉鋸，基本面強勁但技術面與機構態度偏保守）**
+**整體市場情緒**：🟡 **中性至偏弱（基本面 🟢 正面 vs 技術/機構情緒 🔴 負面）**
 
-| 正面因素 🟢 | 負面因素 🔴 |
-| :--- | :--- |
-| Q2 營收年增 41%，獲利大增 50% | 財報公布後股價一度重挫 13%，市場反應冷淡 |
-| 貸款承銷量創下歷史新高紀錄 | 年初至今股價下跌 28%–32%，較高點回檔 43%–50% |
-| 「Everything App」轉折點確立，有效應對資金冰封 | 大多數華爾街賣方分析師態度仍不夠看多 |
-| 修正後估值吸引力大幅提升，逢低買進呼聲高 | 華爾街資金偏好 Robinhood，造成資金分流 |
+```
+┌────────────────────────────────────────────────────────┐
+│               SOFI 市場情緒分化對比                    │
+├────────────────────────────┬───────────────────────────┤
+│    🟢 正面因素（營運基本面）   │    🔴 負面因素（市場/資金面） │
+├────────────────────────────┼───────────────────────────┤
+│ • Q2 營收創歷史新高         │ • 財報發布後股價單日重挫 13%│
+│ • 獲利（Earnings）同比大增 50%│ • YTD 累計下跌 28% ~ 32%  │
+│ • 克服資金凍結，產品交叉銷售強│ • 距 52 週高點回檔 43% ~ 50%│
+│ • 「逢低布局」價值吸引力顯現 │ • 華爾街偏好 Robinhood，看多少│
+└────────────────────────────┴───────────────────────────┘
+```
+
+**評估依據**：
+1. **正面因素**：業務營運與財務數據極其亮眼（Q2 營收創新高、獲利大增 50%），展現出高成長金融科技公司的營運槓桿。
+2. **負面因素**：市場資金面與華爾街態度冷淡，財報後 13% 的暴跌以及全年近 30% 以上的跌幅，顯示短期技術面與機構信任度仍待建立。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **華爾街法人認同度不足風險**：儘管基本面優異，但若大多數賣方分析師持續維持中立評級，將限制股價上行空間，導致股價長期低迷。
-- 🔴 **高利率與信貸市場持續冰封風險**：若整體信貸環境進一步惡化， SoFi 創紀錄的貸款承銷量可能面臨更高的違約率或資產品質下滑風險。
-- 🟡 **競爭加劇與資金分流風險**：以 Robinhood 為首的競業在資本市場吸引了更多資金目光，可能導致 SOFI 在同業評估中被相對低估。
+- 🔴 **華爾街評級與資金偏好風險（高風險）**：華爾街分析師普遍對 SOFI 持觀望態度，機構資金目前傾向配置於 Robinhood 等同業，缺乏大宗買盤支撐可能導致估值長期受壓。
+- 🟡 **財報後技術面破位與賣壓風險（中風險）**：儘管基本面強勁，但財報後股價重挫 13%，技術指標尚處於震盪探底階段，需防範市場情緒恐慌導致的二次下探（Falling Knife 效應）。
+- 🟡 **總體經濟與資金融資環境（中風險）**：新聞提及市場存在「資金凍結（Funding Freeze）」環境，若高利率或流動性緊縮持續更長時間，可能影響 SoFi 貸款生成量（Loan Origination）及資金成本。
 
 ---
 
 ## 🔮 短期關注重點（未來 1–4 週）
 
-1. **財報拋售後的股價打底與反彈延續性**：觀察 SOFI 在 18.1 USD 附近能否確立底部，並延續週一的反彈勢頭。
-2. **賣方分析師目標價與評級調整**：關注華爾街大型機構在消化 Q2 財報後，是否會掀起一波上修評級或目標價的熱潮。
-3. **貸款次級市場交易動向**：持續追蹤 SoFi 將貸款出售給第三方機構的定價與需求，這是驗證其資產品質與流動性的重要指標。
+1. **$18 美元整數關卡支撐確認**：觀察股價在財報重挫後，能否於目前 $18.275 美元附近有效止跌並建立底部的技術型態。
+2. **華爾街分析師目標價調整**：關注 TipRanks 等平台上，各家投行（如摩根大通、高盛等）在 Q2 財報後是否會重新評估 SOFI，上調目標價或評級。
+3. **競爭同業（如 Robinhood）財報與資金流向**：觀察華爾街資金是否會從同業輪動回流至估值相對便宜的 SoFi。
+4. **管理層與內部人動向**：留意在股價大幅回檔 43%–50% 後，公司高層是否有內部人增持（Insider Buying）動作，以增強市場信心。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Why Wall Street Keeps Ignoring SoFi’s Record Growth for Robinhood — Yahoo News (2026-08-06)
-2. SoFi Q2: The One-Stop Shop Held Through A Funding Freeze — Seeking Alpha (2026-08-05)
-3. Why It’s Time to Buy the Dip In SoFi Stock — Yahoo Finance (2026-08-05)
-4. SoFi's Price Has Already Made A Call; Its Earnings Haven't — Seeking Alpha (2026-08-05)
-5. Why It’s Time to Buy the Dip in SoFi Stock — Bing News / MSN (2026-08-05)
-6. SoFi's Price Has Already Made A Call; Its Earnings Haven't — Bing News / Seeking Alpha (2026-08-05)
-7. SoFi's Next Rally Depends On One Missing Ingredient — Seeking Alpha (2026-08-04)
-8. SoFi Stock Sinks 50%, But Most Analysts Still Aren’t Bullish — Barchart.com (2026-08-04)
-9. SoFi Stock Surges Monday: What's Driving the Post-Earnings Rebound? — Benzinga (2026-08-03)
-10. SoFi Is Still Down 32% This Year. What Will It Take to Get SOFI Stock Back Up to $25? — Bing News / AOL (2026-08-03)
-11. SoFi: More Wall St. Games — Seeking Alpha (2026-08-02)
-12. Bloom Energy vs. Oklo: Which Power Stock Is a Better Buy in 2026? — Yahoo News (2026-08-02) *(非 SOFI 直接相關)*
-13. SoFi: More Wall St. Games — Bing News / Seeking Alpha (2026-08-02)
-14. SoFi Just Reported Earnings. Is the Stock a Buy Now? — Yahoo News (2026-08-01)
-15. SoFi just reported earnings. Is the stock a buy now? — Bing News / MSN (2026-08-01)
-16. SoFi Technologies Q2: The Everything App Inflection Just Showed Up In The Numbers — Seeking Alpha (2026-07-31)
-17. SoFi Technologies, Inc. (SOFI) Stock Price, News, Quote & History — Yahoo Finance (2019-11-30)
+1. **Why Wall Street Keeps Ignoring SoFi’s Record Growth for Robinhood** — *Yahoo Finance* (2026-08-06)
+2. **SoFi Q2: The One-Stop Shop Held Through A Funding Freeze** — *Seeking Alpha* (2026-08-05)
+3. **Why It’s Time to Buy the Dip In SoFi Stock** — *Yahoo Finance / MSN* (2026-08-05)
+4. **SoFi's Price Has Already Made A Call; Its Earnings Haven't** — *Seeking Alpha / Bing News* (2026-08-05)
+5. **SOFI Stock Price Forecast – What Technical Indicators Say Post Q2 Earnings** — *TipRanks* (2026-08-04)
+6. **SoFi's Next Rally Depends On One Missing Ingredient** — *Seeking Alpha* (2026-08-04)
+7. **SoFi Stock Sinks 50%, But Most Analysts Still Aren’t Bullish** — *Barchart.com* (2026-08-04)
+8. **SoFi Is Still Down 32% This Year. What Will It Take to Get SOFI Stock Back Up to $25?** — *AOL / Bing News* (2026-08-03)
+9. **SoFi: More Wall St. Games** — *Seeking Alpha* (2026-08-02)
+10. **SoFi Just Reported Earnings. Is the Stock a Buy Now?** — *Yahoo Finance / Bing News* (2026-08-01)
+11. **SoFi Technologies Q2: The Everything App Inflection Just Showed Up In The Numbers** — *Seeking Alpha* (2026-07-31)
+12. **Is SoFi Technologies Stock a Bargain After Its Big Drop, or a Falling Knife?** — *Bing News / MSN* (2026-07-24)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
