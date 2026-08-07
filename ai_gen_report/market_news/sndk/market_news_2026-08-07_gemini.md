@@ -15,134 +15,131 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-SanDisk Corporation（代碼：SNDK）是全球高階記憶體與快閃記憶體（Flash Memory）儲存解決方案的領先巨頭，其產品廣泛應用於資料中心、AI 伺服器、消費性電子與企業級儲存系統。隨著全球人工智慧（AI）算力需求的爆發性成長，SNDK 在 AI 記憶體市場中扮演著關鍵供應商的角色。目前最新收盤股價為 **1,258.58 USD**。
+Sandisk Corporation（NASDAQ: SNDK）為全球儲存解決方案與 NAND 快閃記憶體（Flash Memory）大廠，隸屬於科技產業（Technology）。公司產品廣泛應用於資料中心（Datacenter）、企業級儲存、消費性電子與 AI 伺服器運算等領域。隨著全球 AI 基礎設施加速建設，企業級快閃記憶體與高階儲存需求顯著增長，使 Sandisk 在當前 AI 記憶體供應鏈中佔據極其關鍵的戰略地位。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期 Sandisk（SNDK）成為美股市場與晶片產業的焦點。公司最新公布的財務數據展現出驚人的營運爆發力：**單季營收近 90 億美元**（較去年同期大幅成長近 5 倍），**年度營收成長率達 175%**，且**毛利率高達 84.6%**。然而，受制於市場先前過於苛刻的期待，公司發布的下一財季（FY27 Q1）營收展望微幅低於華爾街預期約 2%，引發了盤後及正規交易時段的強烈拋售潮，股價較先前高點已修正約 50%。
 
-儘管短期股價因展望微幅未達標而大幅拉回，但法人機構與華爾街分析師的觀點出現嚴重分歧。美商銀行（BofA）重申 SNDK 具備「長期結構性機遇」（Secular Opportunity），並預期股價有 **100% 的上漲空間**；Seeking Alpha 分析師甚至發表報告將其評級上調，直言在強勁的 AI 記憶體基本面下，「2,000 美元僅是熊市情境（Bear Case）」。此外，多家財經媒體指出，當前華爾街在拋售記憶體類股的同時，晶片大廠自身與內部人士卻在積極實施庫藏股回購，顯示產業內部對長期營運充滿信心。整體而言，AI 記憶體板塊在 SNDK 財報公布後多數維持升勢，反映市場對 AI 硬體需求的長期基本面依然看好，當前回檔更多源於高槓桿資金退場與過高期待值的校正。
+Sandisk Corporation（SNDK）近期公布了強勁的第四季（Q4）及全年度財務報告，營運亮點包含第四季毛利率高達 **84.6%**，且調整後自由現金流（FCF）達到 **50.4 億美元**。強勁的業績主要由企業級資料中心需求暴增及 NAND 快閃記憶體的穩健定價能力所驅動。
+
+然而，儘管第四季獲利與營收雙雙擊敗市場預期，SNDK 股價在財報公布後卻出現顯著回檔，常規交易日下跌約 5.4%，盤後及後續交易日進一步走低。引發市場拋售的主因在於公司給出的**近期營收展望（Revenue Guidance）低於華爾街預期**。加上 SNDK 股價在過去一年內已暴漲高達 **3,000%**，市場對其財報標準極高，任何指引未達完美的信號皆引發利多出盡的獲利了結賣壓。
+
+法人的反應呈現極度分歧。華爾街投行如**美銀（Bank of America）**重申「買入」評級，強調 AI 驅動的長期需求未變、毛利率表現優異且能見度持續改善；部分 Seeking Alpha 分析師甚至認為長遠來看 $2,000 僅是悲觀情境下的目標價，稱此次崩跌為「非理性的過度反應」，並給予投機性買進評級。然而，**Jefferies** 則因對記憶體產業成長動能的疑慮，一舉將 SNDK 的目標價大幅下修近 **50%**，亦有市場分析指出該股目前交易價格顯著高於公允價值，提醒投資人留意下行風險。同業美光（Micron, MU）亦於 8 月 7 日同步走低，顯示整體記憶體類股短期受指引疑慮影響出現集體拉回。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **財報爆發力與市場高標準的極致矛盾**：SNDK 繳出單季營收 90 億美元、年增 175% 及毛利率 84.6% 的極佳成績，但僅因未來一季展望低於預期約 2% 即遭重挫。這反映出經歷過去一年高達 3,000% 的驚人漲幅後，市場對其財務容錯率極低。
-- **華爾街拋售與企業內部回購的籌碼背離**：當短期避險資金與高槓桿散戶在財報後急於獲利了結時，晶片大廠（包括 SNDK 產業鏈相關公司）正利用重措時機啟動大規模庫藏股回購，顯示產業高層對長期獲利能力具備高度信心。
-- **法人目標價大幅溢價，展現結構性多頭信念**：美商銀行（BofA）看好 100% 潛在上漲空間，Seeking Alpha 更給出「2,000 美元為熊市底線」的評級上調。這表明機構投資人認為當前的回檔是基於過度反應（Absurd Sell-off），而非基本面反轉。
-- **AI 記憶體長期需求驅動未變**：雖然 SNDK 股價短期劇烈波動，但整體 AI 記憶體與晶片類股在財報公布後大多呈現上漲態勢，顯示市場整體對 AI 算力基礎設施中的記憶體升級需求依然相當堅實。
-- **槓桿資金清理與市場風險預警**：近期市場傳出隱藏版保證金債務（Margin Debt）預警，加上同業 SK 海力士（SK Hynix）出現快閃崩盤（Flash Crash），顯示記憶體板塊短期受高槓桿交易清算影響極深，投資人需留意流動性風險。
+- **指引與歷史業績脫鉤觸發短期賣壓**：SNDK 第四季財報表現極為亮眼，但低於預期的短期營收指引成為資本市場拋售的直接導火線，顯示當前高估值環境下，市場對未來的成長預期容錯率極低。
+- **超高毛利率展現定價權優勢**：第四季毛利率高達 84.6%，配合單季 50.4 億美元的調整後自由現金流，證實高階 Enterprise NAND 與 AI 資料中心產品具備極強的定價能力與現金創造能力。
+- **消化一年 3000% 漲幅的估值修復**：股價在一年內大漲 3000% 後，市場預期已被拉升至極致。「財報再好也不夠好（Hard to be good enough）」成為當前投資人獲利入袋的心理主軸。
+- **華爾街機構觀點高度對立**：Jefferies 直線下修目標價近 50%，反映對記憶體產業週期放緩的憂慮；但美銀（BofA）則堅守買進評級，凸顯機構法人對「短期指引波動」與「長期 AI 結構性需求」解讀存在巨大分歧。
+- **AI 資料中心需求具備結構性支撐**：多數多頭分析師指出，AI 工作負載對於高效能 NAND 的需求屬於多年期的結構性轉變，短期營收波動並未改變企業級儲存長期供不應求的趨勢。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-06 | Sandisk: $2,000 Is The Bear Case (Rating Upgrade) — Seeking Alpha
-- 2026-08-06 | World's Smartest Banker Warns Of Hidden Margin Debt; SanDisk, WDC Disappoint; SK Hynix's Flash Crash — Benzinga
-- 2026-08-06 | AI memory, chip stocks largely show gains after Sandisk's results — Seeking Alpha
+- 2026-08-07 | Sandisk Shares Fall Despite Strong Q4 Results. How to Play SNDK Stock Here. — Barchart.com
+- 2026-08-07 | Why Are Micron (MU) and SanDisk (SNDK) Stocks Trending Lower Today, 8/7/26? — TipRanks
+- 2026-08-07 | Sandisk Stock: Watch The Downside (NASDAQ:SNDK) — Seeking Alpha
+- 2026-08-07 | What the vicious Sandisk bears are forgetting — Yahoo Finance
+- 2026-08-07 | Sandisk's Selloff Is Missing The Bigger Shift — Seeking Alpha
+- 2026-08-07 | Wall Street Revises Sandisk Stock Price Target After Earnings — GuruFocus
+- 2026-08-07 | Bank of America reiterates buy rating on SanDisk stock — MSN / BofA
+- 2026-08-07 | Sandisk Is Trading Significantly Above Fair Value, Watch The Downside — Seeking Alpha
+- 2026-08-07 | SNDK Stock Edges Up Overnight: Jefferies Slashes Price Target By Nearly 50% On Memory Growth Concerns — Yahoo Finance
+- 2026-08-06 | Sandisk: $2,000 Is The Bear Case (Rating Upgrade) — Seeking Alpha / Barron's
+- 2026-08-06 | SNDK Q4 Earnings Beat Estimates, Revenues Rise on Datacenter Growth — Yahoo Finance
+- 2026-08-06 | Sandisk: A Meltdown Worth Speculative Buy Upgrade - Structurally Durable AI Demand (SNDK) — Seeking Alpha
 - 2026-08-06 | Why the Sandisk post-earnings sell-off looks absurd — Yahoo Finance
-- 2026-08-06 | Stocks making the biggest moves premarket: Zillow, Peloton, Sandisk, Moderna & more — CNBC
-- 2026-08-06 | Situational Awareness: Lessons of leverage from the AI trade — Seeking Alpha
-- 2026-08-06 | Why Are Nasdaq Futures Falling Premarket? SPCX, SNDK, SOUN, IONQ, FIG Stocks Are In Focus — Stocktwits
-- 2026-08-06 | SanDisk stock's 'secular opportunity:' BofA sees 100% rally — Bing News / MSN
-- 2026-08-06 | Sandisk stock is still down 50% from its highs. Is the memory winner still a screaming buy before September? — Bing News / MSN
-- 2026-08-06 | Wall Street Is Selling Memory Stocks – Chipmakers Are Buying Them Back — Yahoo Finance
-- 2026-08-05 | Sandisk: This Insane Growth May Not Be Good Enough — Seeking Alpha
-- 2026-08-05 | SNDK Stock Dips After-Hours As Sandisk's Q1 FY27 Outlook Misses Expectations Despite Memory-Driven Q4 Profit — Yahoo Finance
-- 2026-08-05 | SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance / Barron's
+- 2026-08-06 | Sandisk Q4: Structural And Durable? I’m Not Fully Convinced — Seeking Alpha
+- 2026-08-05 | SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance
+- 2026-08-05 | SanDisk stock tanked after earnings, but here’s why this sell-off may not last — Invezz / Bing
 - 2026-08-05 | SA analyst upgrades/downgrades: AAPL, PLTR, SNDK, AMZN — Seeking Alpha
-- 2026-08-05 | Sandisk stock steady ahead of AI highflier's earnings — Yahoo Finance Singapore
-- 2026-08-04 | The Price of Reinvention for SanDisk Stock — trefis.com
+- 2026-08-05 | Sandisk Earnings Soar, but the Stock Is Still Dropping — MSN / Bing
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 財報超預期但未來展望微幅欠佳，致股價大幅回檔
-- **新聞來源**：MSN / Yahoo Finance (2026-08-05 & 2026-08-06)
-- **核心內容**：SNDK 發布最新財報，單季營收接近 90 億美元（年增近 5 倍），年度營收成長率達 175%，毛利率高達驚人的 84.6%。然而，公司對 FY27 第一財季的營收展望略低於市場預期約 2%。由於該股在過去一年中已飆升約 3,000%，高昂的估值導致華爾街對任何微小的瑕疵採取極端拋售，使股價從歷史高點回落高達 50%。
-- **營運與財務影響**：毛利率達 84.6% 證明 SNDK 在高階 AI 記憶體市場擁有極高的定價權與產品壁壘。短期展望落後 2% 屬於正常供應鏈排程與庫存調節，基本面盈利能力並未受損。
-- **股價潛在影響**：短期衝擊市場信心，引發獲利了結賣壓；但超高的獲利能力將為中長期股價提供強勁支撐。
+### 1. 第四季財報超預期與營收指引放緩之衝突
+- **核心內容**：SNDK 頒布之 Q4 財報顯示營收與獲利均超出預期，主要得益於資料中心強勁需求。第四季毛利率達到驚人的 **84.6%**，單季調整後 FCF 達到 **50.4 億美元**。然而，公司對下一季度的營收展望低於華爾街預期，觸發股價急跌超過 5%。
+- **營運與財務影響**：財務數據證明 SNDK 目前產品組合獲利能力處於歷史頂峰，自由現金流非常健康。然而，展望低於預期意味著短期內客戶拉貨節奏可能出現暫時性調整，或部分產能轉換影響了短期出貨量。
+- **股價影響**：引發短期的估值修正與技術面賣壓，市場優先反映對未來一至兩季成長放緩的擔憂。
 
-### 2. 美商銀行與機構分析師力挺，評級上調與超高目標價
-- **新聞來源**：Seeking Alpha / MSN (2026-08-06)
-- **核心內容**：美商銀行（BofA）發布報告指出，SNDK 正處於 AI 記憶體的長期結構性機遇中，維持極其看好的態度，並預測股價有 100% 的再翻倍空間。同時，Seeking Alpha 分析師將 SNDK 評級調升，並提出「2,000 美元僅是熊市情境（Bear Case）」的激進觀點，認為市場急跌是極佳的買點。
-- **營運與財務影響**：機構的正面評級確認了 SNDK 在 AI 供應鏈中的龍頭地位，有助於吸引中長期價值型法人資金在低位接盤。
-- **股價潛在影響**：為股價下檔提供強烈的心理支撐，當市場情緒平復後，機構的買盤注入將加速股價築底回升。
+### 2. 華爾街投行看法撕裂：Jefferies 砍半目標價 vs. 美銀重申買進
+- **核心內容**：針對財報後的展望，Jefferies 因擔心記憶體成長前景，將 SNDK 目標價大砍近 50%；但美銀（Bank of America）則發表報告重申「買入」評級，認為訂單能見度改善、毛利率堅挺且 AI 需求穩固。
+- **營運與財務影響**：Jefferies 的下修反映了市場空頭對記憶體週期頂部（Cycle Top）的疑慮；美銀的肯定則著眼於 AI 帶來的結構性轉變，認為傳統記憶體週期規律已不完全適用。
+- **股價影響**：機構目標價的劇烈分歧加大短期股價波動性，但美銀等大型法人的背書為長線資金提供進場信心。
 
-### 3. 華爾街賣出 vs. 晶片巨頭庫藏股回購
-- **新聞來源**：Yahoo Finance (2026-08-06)
-- **核心內容**：儘管華爾街短線資金因為營運展望話題拋售記憶體類股，但包含 SNDK 在內的晶片製造商正利用股價回檔積極進行股份回購（Share Buybacks）。同時，媒體評述稱本次財後賣壓「極其荒謬」（absurd），過度放大了短期微小波動。
-- **營運與財務影響**：公司管理層在股價大幅修正時實施庫藏股回購，提升了每股盈餘（EPS）表現，並向市場傳遞了「當前股價被嚴重低估」的明確信號。
-- **股價潛在影響**：庫藏股回購能直接吸收市場拋盤，減緩股價下行壓力，為股價反彈奠定籌碼基礎。
+### 3. 多頭陣營觀點：過度拋售與「$2,000 為悲觀情境」
+- **核心內容**：Yahoo Finance 及 Seeking Alpha 等多位分析師指出這次拋售「極其荒謬（Absurd）」。分析師認為市場忽視了 AI 需求的長期結構性轉移，甚至有分析文章直接給出評級上調，主張 $2,000 僅是該股在悲觀情境下的合理價值，目前的急挫提供投機性買進機會。
+- **營運與財務影響**：多頭強調 SNDK 高達 84.6% 的毛利率並非偶然，而是企業級 NAND Flash 在 AI 大模型訓練與推理中的高壁壘展現，長期盈利能力未被破壞。
+- **股價影響**：若市場情緒在消化完短期指引利空後回穩，此類多頭觀點有助於吸引價值投資與抄底買盤，形成股價下檔支撐。
 
-### 4. 產業槓桿風險與 SK 海力士閃崩效應
-- **新聞來源**：Benzinga / Seeking Alpha (2026-08-06)
-- **核心內容**：市場發出關於 AI 交易中「隱藏保證金債務（Hidden Margin Debt）」與高槓桿風險的警訊。同期 SK 海力士（SK Hynix）出現快閃崩盤（Flash Crash），顯示部分高槓桿投資人在記憶體族群進行集中清算。
-- **營運與財務影響**：此現象屬於資本市場資金面與槓桿去化風險，對 SNDK 實體營運及訂單無直接負面影響，但加劇了短期股價波動度。
-- **股價潛在影響**：短線可能導致技術面走勢較為震盪，需等待槓桿洗清後，股價才能回歸由基本面驅動的軌道。
+### 4. 空頭陣營警告：漲幅過大與高於公允價值
+- **核心內容**：部分 Seeking Alpha 分析師與 Barron's 報導指出，SNDK 在過去一年中股價狂飆 **3,000%**，即使業績極佳，也難以滿足市場被拉高的期望。多篇分析警告 SNDK 當前股價已顯著高於公允價值，提醒投資人注意下行風險。
+- **營運與財務影響**：高估值代表容錯率極低，一旦基本面成長斜率稍有放緩，估值倍數（Multiple De-rating）的壓縮速度將快於獲利成長速度。
+- **股價影響**：短期內高點獲利了結賣壓強勁，限制了股價迅速反彈回升的空間。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性**
+**整體市場情緒**：🟡 **中性 (Neutral)**
 
 ```
-   [🔴 負面] <======== [🟡 中性] ========> [🟢 正面]
-                         ▲ (當前位置)
+【正面因素】                                 【負面因素】
+ 🟢 Q4 毛利率達 84.6%，極具定價權             🔴 近期營收指引低於華爾街預期
+ 🟢 調整後 FCF 達 50.4 億美元，財務健全       🔴 過去一年暴漲 3000%，面臨獲利了結
+ 🟢 AI 資料中心需求具備長期結構性動能         🔴 Jefferies 大幅下修目標價近 50%
+ 🟢 美銀等大型機構重申「買入」評級           🔴 記憶體類股整體走弱（如 MU 同步下跌）
 ```
 
-### 評估依據：
-- **正面因素（🟢）**：
-  - 超強勁的財務基本面（單季營收近 $90B，年增 175%，毛利率 84.6%）。
-  - 大行力挺（BofA 看好 100% 上漲空間，Seeking Alpha 上調評級至看好 $2,000 的熊市情境）。
-  - 晶片大廠趁低進行庫藏股回購，顯示內部對價值的認同。
-  - AI 記憶體板塊整體需求持續旺盛。
-- **負面因素（🔴）**：
-  - FY27 Q1 營收展望微幅低於預期約 2%，觸發高期待下的拋售。
-  - 股價自高點已修正 50%，短期技術面遭遇重挫。
-  - 全球 AI 交易存在高槓桿與保證金債務清算壓力，同業 SK Hynix 出現閃崩走勢。
+**評估依據**：雖然財報公布後股價顯著下挫且 Jefferies 大幅調降目標價，造成短期市場情緒偏向恐慌（負面）；但考量到公司第四季高達 84.6% 的超高毛利率與 50.4 億美元的強勁現金流，基本面本質依然非常健康，且有美銀等機構力挺。多空交織下，整體市場情緒評定為中性，屬於高位消化利空的震盪階段。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **高槓桿資金清算風險**：AI 交易熱潮積累了大量保證金債務，若市場波動加劇，可能引發連鎖停損拋售。
-- 🟡 **短期營運展望過度敏感風險**：在過去一年股價上漲 3,000% 的背景下，市場對任何微幅未達預期的財務指引（如本次遜於預期 2%）反應過度敏感。
-- 🟡 **記憶體產業週期與競爭風險**：雖然 AI 需求強勁，但快閃記憶體整體市場仍受供需週期影響，需密切關注同業產能擴充情況。
-- 🟢 **評價面大幅修整後的波動**：股價自高點重挫 50% 後，雖然價值浮現，但尋求底部支撐的過程中短線波動率依然偏高。
+1. 🔴 **營收展望下修與季增動能放緩**：短期營收指引未達預期，若未來一至兩季出貨無法迅速回升，可能進一步修正市場評價。
+2. 🔴 **高估值回檔與獲利了結賣壓**：一年內 3,000% 的巨大漲幅意味著市場累積了大量的獲利籌碼，情緒轉變時賣壓釋放可能相當迅速。
+3. 🟡 **華爾街評級與目標價下修潮**：Jefferies 切半目標價可能引發其他研究機構跟進下調，短期內對法人籌碼面構成壓力。
+4. 🟡 **記憶體產業週期性疑慮**：市場對 NAND Flash 是否再次進入傳統供需循環的高點存有疑慮，可能影響資金長期駐留意願。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **現價支撐與築底狀況**：關注股價在 **1,258.58 USD** 附近能否止跌回穩，並觀察交易量是否縮小至正常水準。
-2. **公司庫藏股回購執行進度**：關注管理層是否在財報發布後加速執行股票回購計畫，以穩定市場信心。
-3. **華爾街法人目標價調整潮**：持續追蹤其他各大投行（如摩根大通、高盛等）在 SNDK 財報後的最新評級與目標價修正動態。
-4. **AI 記憶體產業鏈整體動向**：留意同業（如美光、SK 海力士、西部數據 WDC）的後續表現，確認 AI 記憶體需求是否持續暢旺。
+- **指引細節與供應鏈確認**：關注管理層在財報電話會議或後續券商會議中，對「營收指引放緩」的具體解釋（是產能限制還是需求暫緩）。
+- **華爾街目標價共識修訂**：觀察未來 1–2 週內是否有更多投行跟進 Jefferies 下修，或是選擇加入美銀的買進陣營。
+- **1,200 美元整數關卡支撐力道**：目前最新股價為 1,212.21 美元，需密切留意能否在關鍵心理關卡與技術均線獲得支撐。
+- **同業美光（MU）與整體記憶體板塊走勢**：觀察記憶體板塊是否出現連帶效應，或是僅為 SNDK 個別指引引起的短期波動。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Sandisk: $2,000 Is The Bear Case (Rating Upgrade) — Seeking Alpha (2026-08-06)
-2. World's Smartest Banker Warns Of Hidden Margin Debt; SanDisk, WDC Disappoint; SK Hynix's Flash Crash — Benzinga (2026-08-06)
-3. AI memory, chip stocks largely show gains after Sandisk's results — Seeking Alpha (2026-08-06)
-4. Why the Sandisk post-earnings sell-off looks absurd — Yahoo Finance (2026-08-06)
-5. Stocks making the biggest moves premarket: Zillow, Peloton, Sandisk, Moderna & more — CNBC (2026-08-06)
-6. Situational Awareness: Lessons of leverage from the AI trade — Seeking Alpha (2026-08-06)
-7. Why Are Nasdaq Futures Falling Premarket? SPCX, SNDK, SOUN, IONQ, FIG Stocks Are In Focus — Stocktwits (2026-08-06)
-8. SanDisk stock's 'secular opportunity:' BofA sees 100% rally — MSN / BofA (2026-08-06)
-9. Sandisk stock is still down 50% from its highs. Is the memory winner still a screaming buy before September? — MSN (2026-08-06)
-10. Wall Street Is Selling Memory Stocks – Chipmakers Are Buying Them Back — Yahoo Finance (2026-08-06)
-11. Sandisk: This Insane Growth May Not Be Good Enough — Seeking Alpha (2026-08-05)
-12. SNDK Stock Dips After-Hours As Sandisk's Q1 FY27 Outlook Misses Expectations Despite Memory-Driven Q4 Profit — Yahoo Finance (2026-08-05)
-13. SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance / Barron's (2026-08-05)
-14. SA analyst upgrades/downgrades: AAPL, PLTR, SNDK, AMZN — Seeking Alpha (2026-08-05)
-15. Sandisk stock steady ahead of AI highflier's earnings — Yahoo Finance Singapore (2026-08-05)
-16. The Price of Reinvention for SanDisk Stock — trefis.com (2026-08-04)
+1. Sandisk Shares Fall Despite Strong Q4 Results. How to Play SNDK Stock Here. — Barchart.com (2026-08-07)
+2. Why Are Micron (MU) and SanDisk (SNDK) Stocks Trending Lower Today, 8/7/26? — TipRanks (2026-08-07)
+3. Sandisk Stock: Watch The Downside (NASDAQ:SNDK) — Seeking Alpha (2026-08-07)
+4. What the vicious Sandisk bears are forgetting — Yahoo Finance (2026-08-07)
+5. Sandisk's Selloff Is Missing The Bigger Shift — Seeking Alpha (2026-08-07)
+6. Wall Street Revises Sandisk Stock Price Target After Earnings — GuruFocus (2026-08-07)
+7. Bank of America reiterates buy rating on SanDisk stock — MSN / BofA (2026-08-07)
+8. Sandisk Is Trading Significantly Above Fair Value, Watch The Downside — Seeking Alpha (2026-08-07)
+9. SNDK Stock Edges Up Overnight: Jefferies Slashes Price Target By Nearly 50% On Memory Growth Concerns — Yahoo Finance (2026-08-07)
+10. Sandisk: $2,000 Is The Bear Case (Rating Upgrade) — Seeking Alpha / Barron's (2026-08-06)
+11. SNDK Q4 Earnings Beat Estimates, Revenues Rise on Datacenter Growth — Yahoo Finance (2026-08-06)
+12. Sandisk: A Meltdown Worth Speculative Buy Upgrade - Structurally Durable AI Demand (SNDK) — Seeking Alpha (2026-08-06)
+13. Why the Sandisk post-earnings sell-off looks absurd — Yahoo Finance (2026-08-06)
+14. Sandisk Q4: Structural And Durable? I’m Not Fully Convinced — Seeking Alpha (2026-08-06)
+15. SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance (2026-08-05)
+16. SanDisk stock tanked after earnings, but here’s why this sell-off may not last — Invezz / Bing (2026-08-05)
+17. SA analyst upgrades/downgrades: AAPL, PLTR, SNDK, AMZN — Seeking Alpha (2026-08-05)
+18. Sandisk Earnings Soar, but the Stock Is Still Dropping — MSN / Bing (2026-08-05)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
