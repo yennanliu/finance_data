@@ -12,134 +12,135 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 # VST 市場新聞分析報告 (2026-08-07)
 
 ## 📅 報告日期
-2026-08-07
+2026年8月7日
 
 ## 🏢 公司概覽
-Vistra Corp.（紐約證券交易所代碼：VST）是美國領先的競爭性發電與零售能源巨頭，屬於公用事業（Utilities）產業，最新收盤價為 141.38 美元。公司擁有極具競爭力的多元化發電組合，涵蓋核能、天然氣、太陽能及大型電池儲能系統。隨著人工智慧（AI）數據中心對 24/7 全天候基載電力需求呈現爆發式成長，Vistra 憑藉其核能與潔淨能源發電能力，已成為科技巨頭爭相合作的關鍵電力供應商，並持續透過優異的現金流進展進行資本回饋。
+**Vistra Corp. (NYSE: VST)** 是美國領先的綜合電力與零售能源巨頭，屬於公用事業（Utilities）板塊。公司擁有極具競爭力的多元化發電組合，涵蓋核能、天然氣發電、太陽能及大型儲能系統。隨著人工智慧（AI）數據中心爆發式成長、雲端運算算力需求激增以及全美電氣化進程加速，VST 憑藉其基載核電與高效調峰能力，已從傳統公用事業股轉型為全球 AI 基礎設施鏈中不可或缺的核心能源供應商。
 
 ---
 
 ## 📝 新聞摘要總覽
-進入 2026 年 8 月，Vistra Corp.（VST）正處於第二季（Q2）財報發布前夕的關鍵節點，市場關注度顯著提升。綜合近期新聞發布，VST 股價的最新動向主要由「AI 電力需求樂觀情緒」、「財報前夕押注」、「資本回饋政策升級」以及「宏觀大宗商品市場波動」四重大因素共同驅動。
 
-首先，在營運與財務預期方面，市場對 VST 即將公布的 Q2 財報抱持高度期待。Quiver Quantitative 與 Zacks 的報導指出，AI 數據中心對龐大電力的持續需求，成功掀起市場對公用事業與獨立發電廠（IPP）的重新估值浪潮。受此推升，VST 在財報公布前獲得買盤支撐。與此同時，公司管理層進一步強化了資本配置策略，宣布提升普通股與優先股股東的股利發放，展現出對公司自由現金流生成能力與資產負債表健康度的強烈信心。
+根據 2026 年 8 月 7 日發布的最新財報與市場消息，Vistra Corp. (VST) 公布了極具亮點的財務業績。公司最新一期調整後 EBITDA（未計利息、稅項、折舊及攤銷前盈餘）實現了超過 **30%（達 31%）** 的顯著強勁成長，並同時**重申（Reaffirm）了 2026 全年的財務指引與營運展望**。這充分證實了公司在發電合約鎖定、零售能源定價以及核電資產收購後的優異整合營運能力。
 
-然而，市場並非毫無波動。在 8 月初，國際油價暴跌引發整體能源與電力板塊的短線賣壓，VST 股價跟隨 COP、HAL 等能源股一同拉回（先前在 7 月底亦曾單日重挫 5.37% 至 148.64 美元）。但華爾街機構反應相對積極，據報導高盛（Goldman Sachs）在油價拉回期間明確建議投資人「逢低承接（Buy the Dip）」，凸顯法人對其長期基本面的看好。
+然而，儘管基本面表現出色，VST 股價在 8 月 7 日交易日卻出現拉回下錯，最新收盤價來到 **140.59 美元**（相較於 7 月底的 148.64 美元高點有所回落）。市場分析指出，這主要源於短期內「賣事實（Sell the News）」的獲利了結賣壓。先前市場已提前計入大量對 AI 電力需求的樂觀預期，使得 VST 估值相較於傳統公用事業同業處於溢價區間（前瞻市盈率曾達 20.41 倍，遠高於同業平均）。
 
-在估值維度上，VST 展現出極具吸引力的投資價值。資料顯示，VST 的 12 個月前瞻本益比（Forward P/E）已由 2025 年初高點的 20.41 倍，大幅修正回升至約 15.22 倍。此估值水準不僅遠低於其歷史高位，更比 Zacks 電氣公用事業產業平均的 15.6 倍折價約 2.42%。結合聯準會降息循環對資本密集型發電擴展的環境利多，VST 在財報公布前夕正展現出基本面強勁、估算合理的防守與進攻兼備特質。
+在長期需求端，市場消息強調 VST 正迎來高達 **20 吉瓦（Gigawatt, GW）的新增電力需求**浪潮。這主要受惠於科技巨頭為建造大型 AI 數據中心所展開的長期購電協議（PPA）爭奪。在同業對比分析中，VST 在股東權益報酬率（ROE）、營業利潤率、盈餘成長動能及市場份額獲取上，均全面領先主要競爭對手（如 NRG Energy），奠定了其在能源轉型與 AI 基礎設施浪潮中的龍頭地位。總結來看，本次股價回調反映的是估值修復與籌碼整理，公司長遠的發電需求與盈餘能見度依然高度穩健。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **AI 算力狂潮帶動核能與基載電力重估**：AI 數據中心的耗電需求已非短期概念，而是長期結構性拐點。VST 擁有核能與多元發電資產，能提供穩定的基載電力，成為科技巨頭優質的購電合約（PPA）對象，營運長期能見度極高。
-- **股利提升釋放強烈現金流信心信號**：公司同時提高普通股與優先股的股利率，表明管理層不僅將資本用於擴建發電產能，同時嚴格執行股東回報計畫，顯著提升長線收益型資金的配置意願。
-- **估值從「溢價」回落至「折價」，安全邊際浮現**：VST 的前瞻本益比自 2025 年的 20.41 倍高位回落至 15.22 倍，低於同業平均（15.6 倍）約 2.42%。此估值修正有效消化了前期過熱情緒，為第二季財報前提供了更具吸引力的進場點。
-- **油價大跌引發板塊誤殺，提供法人認可的買點**：近期受油價崩跌影響，VST 隨能源板塊短線重挫，但其核心獲利結構與原油價格波動關聯度有限。高盛及時喊買「逢低承接」，反映機構法人認定此為市場情緒誤殺。
-- **降息環境提供資本支出與融資成本順風**：公用事業為高資本支出產業，降息循環能直接降低 VST 在併購核能/綠能資產以及電池儲能擴建上的融資成本，進一步放大其長期成長策略效益。
+- **EBITDA 大增 31% 與指引重申：展現營運高確定性**
+  VST 季度調整後 EBITDA 年增超過 30%，並順利確認 2026 年財務目標，證明其發電量對沖策略與零售業務定價能力能有效抵抗能源市場波動，為股東提供高度可預測的現金流。
+- **短期市場出現「賣事實」情緒：高期待下的估值消化**
+  儘管財報數字亮眼，股價當日仍面臨下行壓力。這表明市場在此前已大量反映 AI 能源題材，強勁財報公布後激發了短線資金的獲利了結行為，股價需要時間消化高估值溢價。
+- **20 GW 巨量電力需求潮：AI 數據中心帶動超級週期**
+  報導提及市場高達 20 吉瓦的新增電力需求，直接受惠者正是具備零碳基載（核電）與彈性調峰（天然氣）發電能力的 VST。AI 算力的電力缺口已成為公司未來數年的核心成長引擎。
+- **同業競爭優勢顯著：高於 NRG 的資本回報與利潤率**
+  與同業競爭對手 NRG Energy 相比，VST 在 ROE、獲利能力及盈餘動能上均展現出更強勁的經營效率，這也是投資機構願意給予 VST 估值溢價的主要支柱。
+- **AI 基礎設施板塊輪動：防禦與成長雙重屬性**
+   Seeking Alpha 分析指出市場資金正在 AI 基礎設施概念（如 Eaton 及 VST）之間進行輪動。VST 兼具公用事業的穩定現金流防禦性與 AI 數據中心爆發的成長性，吸引機構法人長期配置。
+- **利率環境演變利好資本密集型擴張**
+  歷史分析顯示，潛在的降息環境將有效降低 VST 在資本支出（如核電廠維護、再生能源與儲能項目）上的融資成本，進一步提升其自由現金流收益率。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-06 | Vistra to Report Q2 Earnings: What to Expect From the Stock? — Zacks Investment Research
-- 2026-08-06 | How Investors May Respond To Vistra (VST) Boosting Dividends To Common And Preferred Shareholders — simplywall.st
-- 2026-08-03 | Vistra gains as AI-power optimism and earnings anticipation lift the stock — Quiver Quantitative
-- 2026-08-02 | COP, HAL, PR, VST Stocks Fall Amid Tumbling Oil Prices — Goldman Reportedly Urges Buying The Dip — Stocktwits
-- 2026-07-28 | Vistra Corp. (VST) stock declines while market improves ($148.64, -5.37%) — MSN / Bing News
-- 2026-07-23 | Vistra Corp. (VST) is attracting investor attention — Zacks / Bing News
-- 2026-07-13 | VST Stock Trading at a Discounted Value (Forward P/E 15.22X vs Industry 15.6X) — The Globe and Mail / Zacks
-- 2025-12-16 | Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — Nasdaq
-- 2025-04-29 | VST Stock Trades at a Premium Valuation (Forward P/E 20.41X) — Nasdaq
+- 2026-08-07 | What's Going On With Vistra Stock Friday? — *Benzinga*
+- 2026-08-07 | Vistra Corp. (VST) Stock Forecasts — *Yahoo! Finance Canada*
+- 2026-08-07 | Vistra (NYSE:VST) Shares Fall Despite 31% Rise in EBITDA, Maintains 2026 Outlook — *ts2.tech*
+- 2026-08-07 | Vistra Corp. (NYSE: VST) lifts adjusted EBITDA over 30% and reaffirms 2026 guidance — *Stock Titan*
+- 2026-08-07 | Vistra (VST) Gains From New 20 Gigawatt Power Demand — *simplywall.st*
+- 2026-08-03 | Semiconductor stocks pare losses amid fears of increased competition from China — *Yahoo Finance*
+- 2026-08-03 | Eaton: Rotating Within The AI Infrastructure Play (NYSE:ETN) — *Seeking Alpha*
+- 2026-08-03 | Alibaba Drops Another China AI Model With Breakthrough Performance — *Yahoo Finance*
+- 2026-08-02 | Earnings Week Ahead: PLTR, AMD, PFE, DIS, SHOP, VTRS, CGC, MCD, ROKU, ABNB, and more — *Seeking Alpha*
+- 2026-07-31 | Page 8 | Vistra Corp. (VST) Latest Stock News — *Seeking Alpha*
+- 2026-07-28 | Vistra Corp. (VST) stock declines while market improves: Some information for investors — *Bing News / MSN*
+- 2026-07-28 | VST or NRG: Which Utility Stock Has Greater Upside Potential? — *Bing News / Yahoo Finance*
+- 2025-12-16 | Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — *Bing News / Nasdaq*
+- 2025-04-29 | VST Stock Trades at a Premium Valuation: How to Play With the Stock? — *Bing News / Nasdaq*
+- 2025-04-16 | Is Vistra Corp. (VST) the Best Renewable Energy Stock to Buy in 2025? — *Bing News / MSN*
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. Q2 財報公布在即與 AI 電力需求預期拉升
-- **新聞來源**：Zacks / Quiver Quantitative（2026-08-03 ~ 2026-08-06）
-- **核心內容**：VST 即將公布第二季財務業績。在財報發布前，市場對 AI 數據中心引發的電力需求保持強烈樂觀情緒，帶動買盤提前卡位。
-- **深度分析與營運影響**：
-  公用事業板塊傳統上被視為防守型標的，但 VST 因具備獨立發電廠（IPP）屬性及龐大的核能/天然氣資產，轉身成為 AI 基礎設施核心受益者。市場關注焦點將集中在：(1) 是否有與 Hyperscaler（大型雲端業者）簽署新的長期購電協議（PPA）；(2) 對全年的 EBITDA 與自由現金流指引是否調升。財報前的股價上漲顯示市場計入了強勁的營運展望，若業績或指引超預期，將開啟新一波估值重估行情。
+### 1. 財報超預期但股價拉回：EBITDA 成長 31% 並重申 2026 指引
+- **新聞來源**：*ts2.tech* / *Stock Titan* (2026-08-07)
+- **核心內容**：Vistra Corp. 發布最新業績報告，顯示調整後 EBITDA 較去年同期激增超過 30%（達 31%），並正式宣布維持並重申 2026 年的全年財務目標指引。然而，股價在公布後出現下挫。
+- **深度解析與影響**：
+  - **營運層面**：EBITDA 成長逾 30% 證明了 VST 的容量市場（Capacity Market）出價策略以及與數據中心客戶簽署的長期電力合約已開始貢獻實質利潤。重申 2026 年展望消除了市場對下半年電力價格波動的疑慮。
+  - **股價效應**：股價未能因強勁財報而上揚，主因是「利多出盡」效應。由於該股在此前幾季已有巨大漲幅，投資人對財報的要求極高。140.59 美元的股價反映了市場正在消化短期籌碼，但基本面的強勁成長為股價提供了下檔支撐。
 
-### 2. 管理層提高普通股與優先股股利
-- **新聞來源**：Simply Wall St（2026-08-06）
-- **核心內容**：Vistra 宣佈調升普通股及優先股股東的股利發放額度。
-- **深度分析與營運影響**：
-  在資本密集型的公用事業領域，持續且穩定地提升股利率是企業財務體質健全的最佳證明。Vistra 近年透過併購（如 Energy Harbor）擴大核能版圖後，市場曾擔憂其債務負擔與資本支出壓力。本次雙重調升股利，傳達出管理層對營運現金流入的極高能見度，並展現了平衡「產能擴充」與「股東回饋」的承諾，有助於吸引偏好穩定收益的法人機構與退休基金持股。
+### 2. 迎接 20 GW 新增電力需求：AI 數據中心轉型催化劑
+- **新聞來源**：*simplywall.st* (2026-08-07)
+- **核心內容**：分析報告指出，VST 正受益於全美高達 20 Gigawatt (GW) 的新電力需求潮，龐大的電力缺口主要來自科技巨頭的 AI 數據中心建造計畫。
+- **深度解析與影響**：
+  - **產業趨勢**：傳統公用事業過去數十年電力需求年成長率僅約 1%，但 AI 算力的爆發將需求拉升至歷史新高。20 GW 的需求規模龐大，需要高穩定度的電網支援。
+  - **財務影響**：VST 擁有龐大的核能（如 Comanche Peak 等核電廠）與天然氣發電資產，能提供 24/7 不間斷的無碳或低碳電力。這使 VST 在與超大規模雲端服務商（Hyperscalers）洽談高溢價購電協議（PPA）時具備極高的議價能力，長期提升毛利率。
 
-### 3. 油價崩跌引發短線賣壓，高盛喊買「逢低承接」
-- **新聞來源**：Stocktwits / Yahoo Finance（2026-08-02 ~ 2026-08-03）
-- **核心內容**：隨著國際原油價格大跌，VST 股價與 COP、HAL 等傳統石油巨頭一同下挫。然而，高盛（Goldman Sachs）報告建議投資人應趁此拉回逢低買進。
-- **深度分析與營運影響**：
-  VST 的核心盈利來自電力批發與零售（包含容量市場及長期合約），對原油價格的直接風險暴露極低。原油價格下跌所帶動的電力股修正，本質上是演算法交易與大宗商品 ETF 資金池流出造成的「系統性誤殺」。高盛呼籲買進，反映出聰明錢（Smart Money）意識到此類拉回提供了極佳的風險回報比（Risk-Reward Ratio），為財報前提供了二次佈局機會。
+### 3. 同業對比分析：VST 顯著優於 NRG Energy
+- **新聞來源**：*Bing News / Yahoo Finance* (2026-07-28)
+- **核心內容**：投資分析比較了兩大獨立發電商 VST 與 NRG Energy，結算顯示 VST 在 ROE（股東權益報酬率）、利潤率、盈餘成長動能及市場份額增長上皆領先 NRG。
+- **深度解析與影響**：
+  - **競爭格局**：NRG 側重於零售終端市場，而 VST 則成功建構了「發電+零售」的雙重對衝閉環，並擁有核電資產這一關鍵 AI 電力供應武器。
+  - **投資啟示**：雖然 VST 的預估市盈率高於公用事業平均水平，但其卓越的 ROE 和成長動能證明其估值溢價具有合理性，相較同業更能吸引機構法人的長期買盤。
 
-### 4. 估值由歷史高位回落，展現折價吸引力
-- **新聞來源**：The Globe and Mail / Nasdaq（2025-04-29 ~ 2026-07-13）
-- **核心內容**：VST 的 12 個月前瞻本益比（Forward P/E）在 2025 年 4 月曾高達 20.41 倍（高於同業），但至 2026 年 7 月已回落至 15.22 倍，較同業平均的 15.6 倍折價 2.42%。
-- **深度分析與營運影響**：
-  從估值演變來看，VST 經歷了從「熱門炒作高溢價」到「基本面消化後回落至合理值」的過程。目前 15.22 倍的前瞻本益比不僅消除泡沫疑慮，且相較於其高於同業平均的盈餘成長率（受益於 AI 電力需求），出現 2.42% 的折價實屬不合理。這代表投資人在當前價位（141.38 美元）買進，承擔的 Valuation Risk（估值過高風險）已大幅降低。
+### 4. 估值考量與 AI 基礎設施資金輪動
+- **新聞來源**：*Seeking Alpha* / *Nasdaq* (2025-04-29 & 2026-08-03)
+- **核心內容**：市場將 VST 視為 AI 基礎設施鏈（AI Infrastructure Play）的一環，資金在硬體設備商（如 Eaton）與電力供應商（如 VST）之間輪動；過往數據顯示其前瞻 P/E 曾達 20.41 倍，大幅高於傳統公用事業。
+- **深度解析與影響**：
+  - **市場定位改變**：VST 已被華爾街從「低成長公用事業」重新劃分為「AI 科技基礎設施股」，這導致其交易特性更具彈性與波動性。
+  - **風險與機會**：當 AI 板塊整體面臨估值修正時，VST 難免受到連帶影響；但其公用事業的公用事業合約屬性又能在市場崩盤時提供基本面保護。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟢 正面（樂觀中帶有審慎期待）**
+**整體市場情緒：🟡 中性偏正 (Neutral to Mildly Positive)**
 
-```
-[正面因素] ----------------------------------------●--- [負面因素]
- AI電力需求爆發                     原油崩跌短期拖累
- 股利調升提升資本回饋                財報公布前股價波動
- 估值呈 2.42% 折價具吸引力
- 高盛背書逢低承接
-```
-
-- **評估依據**：
-  - **正面因素**：AI 數據中心結構性電力缺口提供長期基本面支撐；股利提升證明財務健全；估值折價（15.22X）提供安全邊際；華爾街大廠（高盛）積極看多。
-  - **負面因素**：宏觀大宗商品（油價）波動導致大盤資金抽離；第二季財報發布前的短線獲利了結賣壓。
+| 評估維度 | 評價 | 詳細說明 |
+| :--- | :---: | :--- |
+| **基本面情緒** | 🟢 正面 | EBITDA 大增 31%、重申 2026 指引、享有 20 GW 需求紅利。 |
+| **技術面/籌碼面** | 🔴 負面 | 財報公布後股價下挫至 140.59 美元，呈現 Sell the News 態勢。 |
+| **產業長期前景** | 🟢 正面 | AI 數據中心電力需求極度緊缺，VST 資產稀缺性高。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-| 風險項目 | 風險等級 | 詳細說明 |
-| :--- | :---: | :--- |
-| **大宗商品與能源市場劇烈波動** | 🔴 高風險 | 國際油價或天然氣價格暴跌可能帶動整體能源/公用事業板塊遭到大宗商品基金無差別拋售。 |
-| **財報與電力合約指引不如預期** | 🟡 中風險 | 若 Q2 財報中關於 AI 數據中心新簽合約進度延宕，或全年 EBITDA 指引未達市場高標準，股價可能面臨利多出盡的修正。 |
-| **監管與容量市場機制變更** | 🟡 中風險 | PJM 或其他區域電力市場（RTO）對容量拍賣規則或核能補助政策的調整，可能影響未來現金流。 |
-| **降息預期反轉與高利率持續** | 🟢 低風險 | 若通膨反彈導致利率維持高位，將增加 VST 未來債務展期與綠能擴建的利息支出成本。 |
+- 🔴 **估值溢價修復風險（高風險）**
+  VST 目前交易價格隱含了市場對 AI 電力合約的高成長預期。若市場總體資金流出科技與 AI 基礎設施板塊，VST 可能面臨估值下修壓力。
+- 🟡 **發電廠營運與停機維護風險（中風險）**
+  核電廠與大型天然氣機組的非預期停機（Unplanned Outages）將直接衝擊容量市場收益，並迫使公司在高價現貨市場購電補足缺口。
+- 🟡 **電網併網與監管審查延遲（中風險）**
+  新數據中心與發電設施的併網審查（Interconnection Queue）若受到聯邦能源管制委員會（FERC）或區域電網組織（RTO）的延誤，可能延後 PPA 合約的營收認列時間。
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
+## 🔮 短期關注重點
 
-1. **Q2 財報發布與電話會議（Earnings Call）**：重點關注營收、EPS 是否超預期，以及管理層對 2026 全年 EBITDA 和自由現金流（FCF）的最新指引。
-2. **AI 電力合約細節**：關注管理層是否透露與 Hyperscalers（如 Microsoft, Amazon, Alphabet 等）簽署的最新直接供電協議或購電價格。
-3. **股利與股票買回執行進度**：確認普通股與優先股股利調升後的具體除息日，以及管理層在股票買回授權上的執行力道。
-4. **能源板塊資金流向**：觀察油價落底狀況，以及高盛等法人「逢低買進」建議是否帶動機構資金重新淨流入 VST。
+1. **大型科技客戶 PPA 合約簽署進展**：關注未來 1–4 週內是否宣布與科技巨頭簽署新的數據中心直接供電（Direct PPA）合約細節。
+2. **財報發布後的券商評級與目標價調整**：留意各大投行（如摩根大通、高盛等）在 30% EBITDA 大增後，是否上調其目標價或維持買入評級。
+3. **電網容量拍賣價格（Capacity Auction Prices）**：關注 PJM 等區域電網監管機構發布的最新容量市場拍賣結果，這將直接影響公司 2026 年後的利潤率。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Vistra to Report Q2 Earnings: What to Expect From the Stock? — *Zacks Investment Research* (2026-08-06)
-2. How Investors May Respond To Vistra (VST) Boosting Dividends To Common And Preferred Shareholders — *Simply Wall St* (2026-08-06)
-3. Caterpillar stock pops on record quarterly revenue — *Yahoo Finance* (2026-08-04)
-4. After a nearly $2 billion exit, Bai founder Ben Weiss targets a new niche — *Yahoo Finance* (2026-08-03)
-5. Vistra gains as AI-power optimism and earnings anticipation lift the stock — *Quiver Quantitative* (2026-08-03)
-6. The Dow Adds 560 Points as Oil Prices Fall Off a Cliff — *Yahoo Finance* (2026-08-03)
-7. Semiconductor stocks pare losses amid fears of increased competition — *Yahoo Finance* (2026-08-03)
-8. Eaton: Rotating Within The AI Infrastructure Play — *Seeking Alpha* (2026-08-03)
-9. COP, HAL, PR, VST Stocks Fall Amid Tumbling Oil Prices — Goldman Reportedly Urges Buying The Dip — *Stocktwits* (2026-08-02)
-10. Earnings Week Ahead: PLTR, AMD, PFE, DIS, SHOP, VTRS, and more — *Seeking Alpha* (2026-08-02)
-11. Odds of Hormuz traffic returning to normal pop as Trump halts strikes — *Seeking Alpha* (2026-08-02)
-12. Alphabet Stock Rallies 3.9% as Amazon Revives AI Confidence — *Yahoo Finance* (2026-07-31)
-13. Vistra Corp. (VST) stock declines while market improves — *MSN / Bing News* (2026-07-28)
-14. Vistra Corp. (VST) is attracting investor attention: Here is what you should know — *Zacks / Bing News* (2026-07-23)
-15. VST Stock Trading at a Discounted Value: Should You Buy, Sell or Hold? — *The Globe and Mail / Zacks* (2026-07-13)
-16. Vistra Corp. (VST) Stock Slides as Market Rises — *Yahoo Finance* (2026-06-30)
-17. Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — *Nasdaq* (2025-12-16)
-18. VST Stock Trades at a Premium Valuation: How to Play With the Stock? — *Nasdaq* (2025-04-29)
+1. **What's Going On With Vistra Stock Friday?** — *Benzinga* (2026-08-07)
+2. **Vistra Corp. (VST) Stock Forecasts** — *Yahoo! Finance Canada* (2026-08-07)
+3. **Vistra (NYSE:VST) Shares Fall Despite 31% Rise in EBITDA, Maintains 2026 Outlook** — *ts2.tech* (2026-08-07)
+4. **Vistra Corp. (NYSE: VST) lifts adjusted EBITDA over 30% and reaffirms 2026 guidance** — *Stock Titan* (2026-08-07)
+5. **Vistra (VST) Gains From New 20 Gigawatt Power Demand** — *simplywall.st* (2026-08-07)
+6. **Eaton: Rotating Within The AI Infrastructure Play (NYSE:ETN)** — *Seeking Alpha* (2026-08-03)
+7. **Vistra Corp. (VST) stock declines while market improves** — *Bing News / MSN* (2026-07-28)
+8. **VST or NRG: Which Utility Stock Has Greater Upside Potential?** — *Bing News / Yahoo Finance* (2026-07-28)
+9. **Can Lower Interest Rates Amplify VST Stock's Growth Strategy?** — *Bing News / Nasdaq* (2025-12-16)
+10. **VST Stock Trades at a Premium Valuation: How to Play With the Stock?** — *Bing News / Nasdaq* (2025-04-29)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
