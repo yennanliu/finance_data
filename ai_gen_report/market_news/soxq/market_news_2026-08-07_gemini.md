@@ -15,137 +15,142 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-Invesco PHLX Semiconductor ETF（NASDAQ: SOXQ）是由 Invesco 發行的半導體產業 ETF，旨在追蹤 PHLX Semiconductor Sector Index（費城半導體指數）。SOXQ 提供投資人對美國上市頂尖半導體企業的直接投資管道，涵蓋晶片設計、製造、封裝及半導體設備等核心領域。作為市場上具備低管理費優勢的半導體 ETF，SOXQ 深受極度依賴人工智慧（AI）、高效能運算（HPC）與資料中心擴建等長期趨勢的投資人關注，在半導體板塊中佔據關鍵戰略地位。
+Invesco PHLX Semiconductor ETF（股票代碼：SOXQ）是由景順（Invesco）發行的半導體指數型 ETF，旨在追蹤費城半導體指數（PHLX Semiconductor Index）的績效。SOXQ 為投資人提供對全球半導體龍頭企業（包括晶片設計、製造、封測及設備商，如 NVIDIA、Broadcom、AMD、Micron 等）的直接投資管道。作為低管理費率的半導體 ETF 代表，SOXQ 在人工智慧（AI）浪潮、超大規模雲端服務商（Hyperscalers）資本支出擴張，以及半導體供應鏈重組中占據核心地位，其資產規模在 AI 晶片持股的帶動下大幅躍升。最新交易價格為 **97.2 USD**。
 
 ---
 
 ## 📝 新聞摘要總覽
-截至 2026 年 8 月 7 日，SOXQ 的最新股價來到 **94.8 USD**。對比 2026 年 2 月初約 64.24 USD 的價格區間，該 ETF 在 2026 年展現了顯著的上行衝勁。根據最新揭露的新聞與研報，SOXQ 的核心成長動能主要來自於 AI 晶片需求，其投資組合中包含超過 **10 億美元** 的 AI 相關晶片持股，而超大型雲端服務商（Hyperscalers）的資本支出（Capex）政策，正深刻決定著該 ETF 的中長期走勢。
+截至 2026 年 8 月 7 日，Invesco PHLX Semiconductor ETF（SOXQ）股價展現強勁動能，自 2026 年 2 月的 64.24 USD 大幅上揚至當前的 97.2 USD。市場焦點集中於超大規模雲端巨頭（如微軟 Microsoft, MSFT）的 AI 資本支出展望，以及核心持股（如美光 Micron, MU）在記憶體市場中的複利增長能力，這些因素構成了半導體板塊上漲的核心驅動力。
 
-從歷史數據與財務指標來看，Seeking Alpha 與 247 Wall St 的分析指出，SOXQ 在近三年的總報酬率達到 **190%**，展現極強的資本增值能力。然而，該基金同時伴隨著高達 **40% 的年化波動率**，且整體投資組合的本益比（P/E）約在 **27 倍** 左右，顯示出高估值與高波動並存的特質。
+衍生品市場交易熱度同步升溫。最新數據顯示，SOXQ 2026 年 8 月到期、履約價 92.00 美元的買權（Call）呈現高買氣，顯示短線多頭資金持續押注其超越 92 美元後的續航力；然而，市場亦出現 2026 年 10 月到期、履約價 69.00 美元的賣權（Put）佈局，反映部分機構法人在經歷快速漲幅後，開始著手進行中長期尾部風險的對沖管理。
 
-市場動態方面，儘管半導體產業受惠於 AI 長期紅利，但市場並非一路順風。2026 年 6 月初，AI 連結型 ETF 在經歷數月的大幅上漲後遭遇科技股拋售潮（Selloff），引發短期修正。隨著 8 月的到來，演算法交易模型（Algorithmic Entry Frameworks）與期權市場（Options Market）對 SOXQ 的交投熱度顯著提升。期權市場數據顯示，市場出現了包括 2026 年 8 月到期履約價 109 USD 的看漲期權（Call），以及 8 月 85 USD、9 月 90 USD 的看跌期權（Put）。這表明市場參與者在博弈進一步上攻動能的同時，也在 $90–$95 的當前價位附近建立了適度的下行保護機制。
-
-整體而言，SOXQ 以其較低的手續費結構（相比傳統同類產品如 SOXX）以及高度集中於 AI 龍頭的持股配置，持續作為機構與散戶布局半導體產業的重要工具。
+從量化與技術面來看，Stock Traders Daily 等機構指出，SOXQ 已進入演算法交易系統的核心監測區域，波段操作資金正密切觀察關鍵進場與獲利結算點位。從基本面與歷史績效回顧，SOXQ 憑藉低廉的總費用率，在過去 3 年實現高達 190% 的總回報率，展現出超越傳統老牌 ETF（如 SOXX）的費率優勢與價值策略彈性。然而，分析報告同時警示，SOXQ 的年化波動率高達 40%，且本益比（P/E）約在 27 倍高位，這意味著在科技股遭遇總體經濟衝擊或 AI 資本支出出現疑慮時，該 ETF 易出現劇烈回檔。總體而言，SOXQ 目前處於多頭動能強勁但衍生品避險需求同步升溫的複合格局。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **雲端巨頭資本支出（Hyperscaler Capex）為最核心催化劑**：SOXQ 持有超過 10 億美元的 AI 晶片龍頭股，其營收與獲利成長高度依賴微軟、谷歌、亞馬遜等雲端巨頭的 AI 基礎建設預算。超大型企業資本支出的增減將直接主導 SOXQ 未來的表現。
-- **高報酬與高波動的雙刃劍（40% 年化波動率）**：雖然 3 年總報酬率達 190% 的歷史績效極具吸引力，但 40% 的年化波動率意味著投資人必須承受嚴重的短期回撤（如 6 月份的科技股拋售潮），並不適合低風險偏好的投資人。
-- **估值處於歷史高位（P/E 達 27 倍）**：27 倍的本益比反映了市場對 AI 成長的高度預期，但在高估值環境下，任何業績不達預期或總體經濟變數都可能引發較深幅度的估值修正。
-- **期權市場展現「區間博弈與下行避險」特徵**：最新期權數據（如 Aug $109 Call 與 Sep $90 Put）顯示，市場交易者一方面推升上方目標價至 $109，另一方面也在當前 $94.8 價位下方（$85-$90）建立防禦性避險，反映市場對短期高位震盪的警惕。
-- **低成本結構優勢逐漸發酵**：與競爭對手（如 iShares 的 SOXX）相比，SOXQ 以較低的總費用率（Low-Fee Strategy）吸引長線價值與成長型資金流入，內部穿透分析（Holdings Transparency）成為投資人選擇 SOXQ 的關鍵考慮要素。
-- **演算法交易模型關注關鍵進出場點**：隨著 Stock Traders Daily 等機構發布 SOXQ 在演算法框架內的走勢分析，量化資金在當前價位附近的多空操作頻率提升，增添了短線的流動性與波動幅度。
+- **超大規模雲端支出驅動龍頭晶片需求**：微軟（MSFT）等科技巨頭的 AI 資本支出（Capex）預算，依然是決定 SOXQ 持股業績表現的終極關鍵。只要超大規模資料中心的建置未見停滯，半導體組件（GPU、ASIC、HBM）的拉貨動能將持續支撐 ETF 淨值。
+- **衍生品市場呈現「短多長避險」分歧格局**：市場同時出現 8 月履約價 $92 的價內買權交易與 10 月履約價 $69 的避險賣權。這表明投資人認同短期上漲趨勢（目前股價 $97.2），但對第三季末至第四季初可能的市場修正保持警惕。
+- **低管理費率帶來的結構性競爭優勢**：相較於市場上其他龍頭半導體 ETF（如 SOXX），SOXQ 保持著低費用率優勢（Low-fee ETF）。在長期持有與複利效應下，SOXQ 吸引了大量尋求低成本參與 AI 產業成長的散戶與機構資金。
+- **記憶體晶片龍頭（MU）的複利效應注入增長動能**：美光（Micron, MU）等存儲晶片大廠在高頻寬記憶體（HBM）領域的定價權與產能滿載，成為 SOXQ 投資組合中除了運算晶片（NVIDIA/AMD）之外的第二強勁增長引擎。
+- **高估值與高波動度的雙刃劍特質**：SOXQ 當前 P/E 約為 27 倍，年化波動率高達 40%。雖然過去 3 年累積高達 190% 的總回報，但在科技股大盤出現拋售（如 AI 概念股回檔）時，其回檔幅度亦會明顯高於大盤（QQQ）。
+- **演算法交易框架（Algorithmic Frameworks）支配短線資金流向**：隨著 SOXQ 股價攀升至 $97.2 的歷史高檔區，量化基金與演算法系統正嚴密監控其突破區間與超買訊號，短線技術面交易將進一步放大日內波動。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-04 | Invesco PHLX Semiconductor ETF (NASDAQ: SOXQ) Stock Price, News & Analysis — Kalkine
+- 2026-08-07 | SOXQ Oct 2026 69.000 put (SOXQ261016P00069000) stock price, news, quote and history — Yahoo Finance Australia
+- 2026-08-07 | SOXQ260821C00092000 Interactive Stock Chart | SOXQ Aug 2026 92.000 call Stock — Yahoo! Finance Canada
+- 2026-08-07 | Can MU Stock Compound Its Way Higher? — Yahoo Finance
+- 2026-08-07 | Microsoft Corporation (MSFT) Stock Price, News, Quote & History — Yahoo Finance
 - 2026-08-04 | Invesco Semiconductors ETF (PSI) Price, Quote, News & Analysis — Seeking Alpha
-- 2026-08-04 | Invesco PHLX Semiconductor ETF (SOXQ) Price, Quote, News & Analysis — Seeking Alpha
 - 2026-08-02 | (SOXQ) Movement Within Algorithmic Entry Frameworks — Stock Traders Daily
-- 2026-08-01 | Here’s How Much You Would Have Made Owning Invesco PHLX Semiconductor ETF Stock In The Last 5 Years — Webull
-- 2026-07-31 | SOXQ Aug 2026 109.000 Call Interactive Stock Chart — Yahoo Finance Australia
-- 2026-07-29 | SOXQ Oct 2026 59.000 Call Stock Price, News, Quote & History — Yahoo Finance
-- 2026-07-29 | SOXQ Sep 2026 90.000 Put Stock Historical Prices and Data — Yahoo Finance Singapore
-- 2026-07-27 | SOXQ Aug 2026 85.000 Put Interactive Stock Chart — Yahoo Finance UK
+- 2026-08-01 | Here’s How Much You Would Have Made Owning Invesco PHLX Semiconductor ETF Stock In The Last 5 Years — webull.com
 - 2026-07-17 | Invesco PHLX Semiconductor ETF (SOXQ) Competitor Stock Analysis — Seeking Alpha
 - 2026-07-06 | What You Really Own Inside SOXQ ETF — Trefis
-- 2026-06-24 | Should You Invest in the Invesco PHLX Semiconductor ETF (SOXQ)? — Yahoo Finance
-- 2026-06-08 | AI-linked ETFs Tumbled in Friday's Tech Selloff After Months of Outsized Gains — Seeking Alpha
-- 2026-02-12 | SOXQ Holds $1 Billion in AI Chip Stocks as Hyperscaler Capex Dictates What Happen Next — 247 Wall St
+- 2026-06-08 | AI-linked ETFs tumbled in Friday's tech selloff after months of outsized gains (QQQ:NASDAQ) — Seeking Alpha
+- 2026-02-12 | SOXQ Holds $1 Billion in AI Chip Stocks as Hyperscaler Capex Dictates What Happen Next — 247WallSt
 - 2026-02-05 | SOXQ: What Makes This Semiconductor ETF Tick? — Seeking Alpha
 - 2024-02-23 | SOXQ: This Low-Fee Semiconductor ETF Is Overlooked — Nasdaq
 - 2023-05-29 | SOXQ ETF: Front-Row Exposure to Semiconductor Stocks and AI — Nasdaq
-- 2022-05-29 | SOXX Is Good But SOXQ Appears Better For The Value Strategy — Seeking Alpha
+- 2022-05-29 | SOXXX Is Good But SOXQ Appears Better For The Value Strategy — Seeking Alpha
 - 2021-06-12 | Invesco PHLX Semiconductor ETF (SOXQ) Stock Competitors & Similar Stocks Comparison — Seeking Alpha
+- 2021-06-11 | Invesco PHLX Semiconductor ETF (SOXQ) Price, Quote, News & Analysis — Seeking Alpha
+- 2008-06-24 | META_TITLE_QUOTE — Yahoo Finance
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 超大型雲端業者資本支出與 10 億美元 AI 晶片持股分析
-- **新聞事件**：247 Wall St 報導指出，SOXQ 持有超過 10 億美元的 AI 晶片股票，超大型雲端業者的資本支出將直接決定其未來走勢。
-- **深度分析**：
-  在 2026 年 2 月初時，SOXQ 股價約為 $64.24，而至 8 月已大幅成長至 $94.8。這段漲幅印證了 AI 基礎建設浪潮的猛烈。SOXQ 的持股高度集中於引領 AI 革命的半導體巨頭。當微軟、Meta、Google 等企業持續擴大 AI 資料中心預算時，半導體供應鏈的訂單能見度大增，使 SOXQ 成為集中享有 AI 紅利的最直接標的。然而，這種高度集中也意味著一旦雲端巨頭出現資本支出放緩的訊號，SOXQ 缺乏非科技板塊的防禦緩衝，下行壓力將極為直接。
+### 1. 衍生品期權交易訊號：8月 $92 Call 與 10月 $69 Put 異動
+- **新聞來源**：Yahoo Finance Australia / Yahoo Finance Canada (2026-08-07)
+- **分析內容**：
+  近期市場出現兩筆關鍵期權數據：SOXQ 2026 年 8 月到期的 92 美元 Call 買權合約，以及 2026 年 10 月到期的 69 美元 Put 賣權合約。當前 SOXQ 現貨價格已來到 **97.2 USD**，意味著 8 月履約價 $92 的 Call 已進入價內（In-the-money），展現多頭資金在短線上的強勁獲利能力與高成交量。
+  然而，10 月到期、履約價僅 $69 的 Deep OTM（極深價外）Put 買氣增加，顯示機構法人正在為秋季可能出現的科技股拉回進行「下行尾部風險（Tail Risk）對沖」。這意味著市場雖然享受目前的強勢上漲，但也開始防範 15%–20% 的潛在回調。
 
-### 2. 基金績效指標與風險特徵：3 年 190% 報酬率與 40% 年化波動率
-- **新聞事件**：Seeking Alpha 分析文章揭露 SOXQ 的核心數據：3 年總報酬率達 190%，年化波動率高達 40%，本益比為 27 倍。
-- **深度分析**：
-  3 年 190% 的總報酬展現了半導體超級週期的威力，使其成為市場上表現最亮眼的產業型 ETF 之一。然而，高達 40% 的年化波動率提醒投資人，該基金的急跌風險極大。配合 27 倍的估值水準，市場已將相當程度的未來獲利成長計入股價中。此種高 beta 特性決定了 SOXQ 更適合做為戰術性配置（Tactical Allocation）或採取分批定額投資，而非低風險的避險資產。
+### 2. 雲端巨頭 Capex 趨勢與 AI 晶片資產規模效應
+- **新聞來源**：247WallSt / Yahoo Finance (2026-02-12 & 2026-08-07)
+- **分析內容**：
+  SOXQ 在 2026 年初資產規模即已跨越 10 億美元大關，核心驅動力在於其高度集中持有 AI 晶片供應鏈龍頭。微軟（MSFT）等超大規模雲端服務商最新公佈的資本支出計畫，證實了對 AI 基礎設施的投資力道持續加大。
+  此外，核心持股如美光（Micron, MU）展現出極佳的複利成長（Compound growth）能力，高頻寬記憶體（HBM）的供不應求直接反映在 ETF 的淨值增長上。SOXQ 的股價從 2026 年 2 月的 $64.24 飆升至 8 月的 $97.2，展現出與 AI Capex 高度正相關的槓桿效益。
 
-### 3. AI 科技股回檔修正（2026 年 6 月 selloff）之影響
-- **新聞事件**：Seeking Alpha 報導，6 月初 AI 連結型 ETF 在經歷數月大漲後，於科技股拋售潮中出現大幅下挫。
-- **深度分析**：
-  6 月的市場回撤反映了獲利結算壓力以及對獲利變現時程的短期疑慮。這項事件為 SOXQ 提供了重要的壓力測試：當市場情緒從盲目熱情轉向理性檢視時，高估值半導體個股易首當其衝。雖然股價後續反彈至目前的 $94.8，但此事件證實了 SOXQ 對於宏觀科技股情緒高度敏感。
+### 3. SOXQ 評價面與波動度結構分析
+- **新聞來源**：Seeking Alpha (2026-02-05)
+- **分析內容**：
+   Seeking Alpha 針對 SOXQ 的深度報告揭示了該 ETF 的基本面輪廓：SOXQ 過去 3 年的總回報率高達 190%，大幅跑贏廣義科技大盤。但其投資組合具備三大特徵：
+  1. **高波動度**：年化波動率約 40%，屬於高 beta 資產。
+  2. **高估值**：整體本益比（P/E）約在 27 倍左右。
+  3. **高集中度**：前十大持股占比顯著。
+  這意味著 SOXQ 是極佳的牛市進攻工具，但在市場風險偏好下降（如 2026 年 6 月發生的 AI 概念股急跌事件）時，淨值受創幅度亦會極大。
 
-### 4. 期權市場佈局（2026 年 8–10 月 Call/Put 合約）
-- **新聞事件**：Yahoo Finance 多國板塊揭露 SOXQ 期權異動，包括 8 月 109 USD Call、10 月 59 USD Call、9 月 90 USD Put 以及 8 月 85 USD Put。
-- **深度分析**：
-  期權鏈數據提供了極具參考價值的市場情緒地圖：
-  - **看漲期權（109 USD Call）**：顯示部分極端看多資金仍預期股價有機會衝破 100 美元關卡，向上挑戰 109 美元。
-  - **看跌期權（90 USD Put / 85 USD Put）**：當前股價為 $94.8，在 $90 與 $85 的 Put 交易量活躍，表明機構法人在近價位建立了保護性賣權（Protective Puts），以防範短期回檔跌破 $90 關卡。
+### 4. 量化與演算法交易框架（Algorithmic Entry Frameworks）
+- **新聞來源**：Stock Traders Daily (2026-08-02)
+- **分析內容**：
+  Stock Traders Daily 的量化分析指出，SOXQ 的走勢已高度受到演算法交易（Algo Trading）的驅動。隨著 ETF 突破多個歷史阻力位並觸及 $97.2，演算法模型正根據動能指標（Momentum）與平均真實區間（ATR）重新計算進場與停損點。對於交易型投資人而言，必須注意演算法在關鍵支撐位破位時可能引發的程式化拋售潮。
+
+### 5. 費用優勢與同業競爭力（SOXQ vs. SOXX / PSI）
+- **新聞來源**：Seeking Alpha / Nasdaq (2022-05-29 & 2024-02-23)
+- **分析內容**：
+  在半導體 ETF 的競爭格局中，SOXQ 憑藉極具競爭力的低費用率（Low Expense Ratio），在與 iShares 的 SOXX 及 Invesco 自家的 PSI 等同業競爭中脫穎而出。儘管持有成分股重疊度高，但 SOXQ 在價值策略（Value Strategy）與費用扣抵後的長期總回報上，展現了更優異的成本效益，成為長期資金配置半導體板塊的首選標的之一。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒**：🟡 **中性偏正面**
+**整體市場情緒：🟢 正面**
 
-### 評估依據：
-
-- **正面因素**：
-  1. 股價展現強勁長期動能（從 2026 年 2 月的 $64.24 上升至目前的 $94.8）。
-  2. 3 年總報酬率高達 190%，AI 晶片長期需求基礎堅實。
-  3. 低管理費優勢吸引長線資金對標同類 ETF（如 SOXX）。
-
-- **負面/警示因素**：
-  1. 估值偏高（P/E 27），且具備高達 40% 的年化波動率。
-  2. 期權市場在 $85-$90 區間出現明確的避險需求。
-  3. 6 月份的科技股拋售潮顯示高位獲利結算賣壓仍隨時可能爆發。
+| 評估維度 | 評級 | 詳細說明 |
+| :--- | :--- | :--- |
+| **價格動能** | 🟢 正面 | 股價從 2026 年 2 月的 $64.24 突破至 $97.20，漲幅凌厲，且 8 月 $92 Call 展現強勁價內動能。 |
+| **產業基本面** | 🟢 正面 | 微軟等巨頭 Capex 承諾未減，美光（MU）等存儲晶片複利效應顯著，AI 晶片需求持續旺盛。 |
+| **評價與風險** | 🟡 中性 | P/E 達 27 倍且年化波動率高達 40%，10 月 $69 Put 出現避險買盤，顯示高位震盪風險增加。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **雲端巨頭資本支出（Capex）縮減風險**（高）：若 Hyperscalers 因 AI 投資回報率（ROI）不如預期而調降 Capex 預算，SOXQ 的核心成長論述將遭受直接打擊。
-- 🟡 **高估值與極高波動性風險**（中）：27 倍 P/E 與 40% 的年化波動率意味著一旦總體經濟出現黑天鵝或利率政策變化，SOXQ 可能面臨雙位數百分比的劇烈回撤。
-- 🟡 **市場集中度與持股偏好風險**（中）：SOXQ 高度集中於少數 AI 晶片龍頭，個別巨頭的財報失利或供應鏈瓶頸將對整體 ETF 造成不對稱的衝擊。
+- 🟡 **高估值修正與高波動風險（P/E 27x / 波動率 40%）**
+  SOXQ 本益比已處於歷史高檔區（~27倍），且年化波動率達 40%。若總體經濟利率環境發生變化或科技股整體盈餘不達預期，易引發高 Beta 資產的大幅拉回。
+
+- 🔴 **超大規模雲端服務商（Hyperscalers）資本支出放緩風險**
+  SOXQ 淨值高度依賴 AI 晶片需求。若微軟、亞馬遜、Alphabet 等雲端巨頭未來調降 AI 相關 Capex 支出，將直接打擊 NVIDIA、AMD、Broadcom 等核心持股的營收成長。
+
+- 🟡 **衍生品市場指示的下行 tail-risk（尾部風險）**
+  10 月 $69 賣權（Put）交易量增加，顯示聰明錢（Smart Money）正在鎖定利潤並購買下行保險，投資人需防範秋季可能出現的獲利了結賣壓。
 
 ---
 
-## 🔮 短期關注重點
+## 🔮 短期關注重點（未來 1–4 週）
 
-1. **2026 年 8 月與 9 月期權到期結算**：關注 $109 看漲期權與 $90/$85 看跌期權的未平倉合約變化，這將成為 $94.8 當前價位附近的關鍵支撐與壓力線。
-2. **超大型雲端巨頭財報與 Capex 聲明**：密切追蹤微軟、Alphabet、亞馬遜、Meta 等企業對 AI 基礎建設支出的最新展望。
-3. **演算法交易點位訊號**：觀察 Stock Traders Daily 等量化模型在 $95 關卡附近的進出場訊號，慎防短線程式碼交易帶來的暴漲暴跌。
+1. **雲端巨頭（MSFT 等）最新財報與 Capex 指引**：持續追蹤巨頭在 AI 伺服器與晶片採購上的最新預算調升或調降動向。
+2. **2026 年 8 月期權到期日結算**：關注履約價 $92 的 Call 合約到期後，多頭資金是否進行滾動續約（Roll over）以維持拉抬動能。
+3. **演算法交易關鍵支撐點位**：密切觀察量化模型在 $90–$92 區間的支撐力道，若跌破可能觸發程式化獲利了結賣壓。
+4. **核心持股（Micron, MU 等）之營運展望**：記憶體晶片與 HBM 的定價趨勢將決定 SOXQ 盈利預期的上修空間。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Invesco PHLX Semiconductor ETF (NASDAQ: SOXQ) Stock Price, News & Analysis — Kalkine (2026-08-04)
-2. Invesco Semiconductors ETF (PSI) Price, Quote, News & Analysis — Seeking Alpha (2026-08-04)
-3. Invesco PHLX Semiconductor ETF (SOXQ) Price, Quote, News & Analysis — Seeking Alpha (2026-08-04)
-4. (SOXQ) Movement Within Algorithmic Entry Frameworks — Stock Traders Daily (2026-08-02)
-5. Here’s How Much You Would Have Made Owning Invesco PHLX Semiconductor ETF Stock In The Last 5 Years — Webull (2026-08-01)
-6. SOXQ Aug 2026 109.000 Call Interactive Stock Chart — Yahoo Finance Australia (2026-07-31)
-7. SOXQ Oct 2026 59.000 Call Stock Price, News, Quote & History — Yahoo Finance (2026-07-29)
-8. SOXQ Sep 2026 90.000 Put Stock Historical Prices and Data — Yahoo Finance Singapore (2026-07-29)
-9. SOXQ Aug 2026 85.000 Put Interactive Stock Chart — Yahoo Finance UK (2026-07-27)
-10. Invesco PHLX Semiconductor ETF (SOXQ) Competitor Stock Analysis — Seeking Alpha (2026-07-17)
-11. What You Really Own Inside SOXQ ETF — Trefis (2026-07-06)
-12. Should You Invest in the Invesco PHLX Semiconductor ETF (SOXQ)? — Yahoo Finance (2026-06-24)
-13. AI-linked ETFs Tumbled in Friday's Tech Selloff After Months of Outsized Gains — Seeking Alpha (2026-06-08)
-14. SOXQ Holds $1 Billion in AI Chip Stocks as Hyperscaler Capex Dictates What Happen Next — 247 Wall St (2026-02-12)
-15. SOXQ: What Makes This Semiconductor ETF Tick? — Seeking Alpha (2026-02-05)
-16. SOXQ: This Low-Fee Semiconductor ETF Is Overlooked — Nasdaq (2024-02-23)
-17. SOXQ ETF: Front-Row Exposure to Semiconductor Stocks and AI — Nasdaq (2023-05-29)
-18. SOXX Is Good But SOXQ Appears Better For The Value Strategy — Seeking Alpha (2022-05-29)
-19. Invesco PHLX Semiconductor ETF (SOXQ) Stock Competitors & Similar Stocks Comparison — Seeking Alpha (2021-06-12)
+1. SOXQ Oct 2026 69.000 put (SOXQ261016P00069000) stock price, news, quote and history — Yahoo Finance Australia (2026-08-07)
+2. SOXQ260821C00092000 Interactive Stock Chart | SOXQ Aug 2026 92.000 call Stock — Yahoo! Finance Canada (2026-08-07)
+3. Can MU Stock Compound Its Way Higher? — Yahoo Finance (2026-08-07)
+4. Microsoft Corporation (MSFT) Stock Price, News, Quote & History — Yahoo Finance (2026-08-07)
+5. Invesco Semiconductors ETF (PSI) Price, Quote, News & Analysis — Seeking Alpha (2026-08-04)
+6. (SOXQ) Movement Within Algorithmic Entry Frameworks — Stock Traders Daily (2026-08-02)
+7. Here’s How Much You Would Have Made Owning Invesco PHLX Semiconductor ETF Stock In The Last 5 Years — webull.com (2026-08-01)
+8. Invesco PHLX Semiconductor ETF (SOXQ) Competitor Stock Analysis — Seeking Alpha (2026-07-17)
+9. What You Really Own Inside SOXQ ETF — Trefis (2026-07-06)
+10. AI-linked ETFs tumbled in Friday's tech selloff after months of outsized gains (QQQ:NASDAQ) — Seeking Alpha (2026-06-08)
+11. SOXQ Holds $1 Billion in AI Chip Stocks as Hyperscaler Capex Dictates What Happen Next — 247WallSt (2026-02-12)
+12. SOXQ: What Makes This Semiconductor ETF Tick? — Seeking Alpha (2026-02-05)
+13. SOXQ: This Low-Fee Semiconductor ETF Is Overlooked — Nasdaq (2024-02-23)
+14. SOXQ ETF: Front-Row Exposure to Semiconductor Stocks and AI — Nasdaq (2023-05-29)
+15. SOXXX Is Good But SOXQ Appears Better For The Value Strategy — Seeking Alpha (2022-05-29)
+16. Invesco PHLX Semiconductor ETF (SOXQ) Stock Competitors & Similar Stocks Comparison — Seeking Alpha (2021-06-12)
+17. Invesco PHLX Semiconductor ETF (SOXQ) Price, Quote, News & Analysis — Seeking Alpha (2021-06-11)
+18. META_TITLE_QUOTE — Yahoo Finance (2008-06-24)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
