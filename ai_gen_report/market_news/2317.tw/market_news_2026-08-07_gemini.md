@@ -15,94 +15,99 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-鴻海精密工業股份有限公司（Hon Hai Precision Industry Co., Ltd., 股票代號：2317.TW）為全球規模最大的電子製造服務（EMS）龍頭企業，最新收盤價為 264.5 TWD。鴻海長期穩居蘋果（Apple）iPhone 主要組裝合作夥伴，並積極推動「3+3」戰略轉型，將業務版圖深化至 AI 伺服器、電動車（EV）及半導體等高附加價值領域。在全球 AI 基礎設施建置浪潮中，鴻海憑藉強大的機櫃級（Rack-level）系統整合能力、全球化製造布局與關鍵零組件垂直整合優勢，躍升為全球 AI 伺服器供應鏈的核心要角。
+鴻海精密工業股份有限公司（Hon Hai Precision Industry Co., Ltd.，股票代碼：2317.TW）為全球最大的電子製造服務（EMS）龍頭企業，最新市場交易股價為 260.0 TWD。鴻海長期在消費性電子產品組裝領域占據主導地位，並隨著全球科技浪潮演進，全面深化在人工智能（AI）伺服器製造、高階運算組件、電動車（EV）及先進連接技術領域的布局。憑藉大規模量產優勢與供應鏈管理實力，鴻海已升級為全球 AI 基礎設施蓬勃發展下的核心製造合作夥伴。
 
 ## 📝 新聞摘要總覽
-2026 年 8 月初，台灣加權指數經歷劇烈波動。在大盤於 8 月 5 日因美伊和談曙光大漲 1,250 點並重返 44,600 點高位後，隨即於 8 月 6 日因台積電回檔 40 元而失守 44,000 點關卡，單日下跌 214 點。整體市場觀望氣氛轉濃，外資買超金額縮減至微幅的 2.02 億新台幣，籌碼面呈現高位震盪與個股輪動。
+根據最新的市場動態與新聞匯整，鴻海（2317.TW）在整體台股市場劇烈波動與全球 AI 基礎建設成長大潮中，展現出強勁的營運抗壓性與正面的基本面發展軌跡。
 
-儘管宏觀大盤震盪，AI 產業基本面仍展現出強勁的擴張動能。同業 Celestica（CLS）近期贏得 OpenAI 與 Broadcom 的重要合約，證實科技巨頭對 AI 基礎建設的「鏟子（Shovel）」需求依然強勁，相關供應鏈商機蓬勃發展。儘管 6 月初博通（Broadcom）引發的 AI 族群回檔曾短暫擾動亞洲科技股，且 Astera Labs 等業者針對 AI 連接瓶頸進行技術攻堅，反映出 AI 系統架構升級的迫切性，但整體 AI 硬體資本支出方向並未改變。
+在宏觀市場環境方面，台股大盤於 2026 年 8 月初經歷顯著的高波動洗盤。受到美伊談判傳出正面曙光的激勵，台股大盤先前曾大漲 1,250 點並重返 44,600 點高位，台積電市值甚至衝上 NT$62 兆；然而隨後市場隨即出現回檔修正，台股失守 44,000 點整數關卡，單日下挫 214 點，台積電亦下跌 NT$40。在如此劇烈的大盤波動背景下，鴻海股價最新維持在 260.0 TWD，展現出大型權值股的相對韌性。
 
-針對鴻海（2317.TW），知名投資分析機構 Seeking Alpha 在近期報告中多次給予正面評價，指出鴻海在強勁的第四季業績表現之後，擁有多元化業務發展與顯著的短中期成長前景。市場分析亦著眼於 TradingView 發布至 2027 年的長期目標價預測，顯示法人機構對鴻海從傳統代工廠轉型為 AI 系統整合與關鍵零組件巨頭的長期 re-rating（價值重估）過程抱持信心。鴻海目前股價維持在 264.5 TWD，在市場波動中展現出穩健的獲利防禦力與長線增長潛力。
+在公司個股基本面與產業趨勢上，專業投資分析平台 Seeking Alpha 陸續發布研究報告，指出鴻海在最新公佈的第四季（Q4）財報中繳出強勁的營運成果，並對後續展望給予正面的評價。市場分析普遍認為鴻海中短期前景極具吸引力，TradingView 等機構亦持續針對鴻海發表至 2027 年的長線目標價與前瞻預測。
+
+此外，AI 供應鏈的外部動態亦為鴻海提供了實質利多支撐。例如 Celestica 贏得 OpenAI 與 Broadcom 的重要合約，凸顯出全球 AI 算力設備與「軍火商」鏈條的高成長動能；同時 Astera Labs 針對 AI 高速連接瓶頸的技術突破，進一步推進了 AI 伺服器硬體的升級需求。作為 AI 伺服器製造的核心巨頭，鴻海受惠於產業鏈資本支出的快速增長，在全球市場（包含 Yahoo Finance 加拿大、澳洲及新加坡等國際財經媒體）獲得高度的投資關注。
 
 ## 💡 關鍵洞察
-
-- **大盤極致波動下的籌碼觀望與個股評價分化**：台股大盤在 44,000 至 44,600 點間劇烈震盪，外資買超顯著縮減至 2.02 億台幣。這意味著市場資金從全面普漲轉向精準選擇，鴻海作為權值股，其 264.5 TWD 的股價位階將更仰賴實際的 AI 伺服器出貨業績與毛利率改善來支撐，而非僅靠大盤資金浪潮推升。
-- **AI 基礎設施需求從 GPU 擴散至 ASIC 與整體系統**：Celestica 奪得 OpenAI 與 Broadcom 的合約，凸顯客製化晶片（ASIC）與 AI 伺服器硬體需求正在全面發酵。鴻海作為全球最大伺服器組裝業者，具備承接主流 GPU 與客製化 ASIC 系統的全面產能，將持續受惠於此波 AI 資本支出浪潮。
-- **產業短波衝擊難掩長線擴張趨勢**：6 月博通引發的科技股賣壓反映了市場對高估值的敏感度，但 Seeking Alpha 與市場數據顯示，鴻海基本面依舊健全。短期的市場波動為長線資金提供了檢視公司實質獲利能力的機會，鴻海強大的供應鏈管理能力可有效緩衝短線情緒擾動。
-- **機櫃系統整合與高頻連接技術成為獲利新引擎**：Astera Labs 針對 AI 連接瓶頸的突破，對應到鴻海在機櫃內部高速連接器、散熱系統及電源管理模組的垂直整合布局。鴻海不僅提供組裝，更能藉由提高單機價值量（ASP）來推升整體毛利率。
-- **短中期展望明朗與 2027 年長線評價重估**：Seeking Alpha 評估鴻海短中期前景光明，配合 TradingView 對 2027 年的目標價預測，顯示法人圈已將鴻海定位為 AI 浪潮的長期贏家。隨著 AI 伺服器營收比重提升，鴻海本益比有望擺脫過去傳統代工廠的低估值區間。
+- **基本面強勁支撐股價底座**：Seeking Alpha 報告確認鴻海最新 Q4 營運成果優異且前景積極，為其股價提供堅實的基本面價值支撐，使其在大盤劇烈回檔時依然穩守 260.0 TWD 關卡。
+- **AI 伺服器供應鏈溢價顯現**：隨著全球 AI 巨頭（如 OpenAI、Broadcom 等）大舉擴張硬體採購合約，伺服器與代工供應鏈獲利展望提升，鴻海身為主要製造業者，享有產業高成長紅利。
+- **大盤高位震盪下的權值避風港**：台股大盤在衝上 44,600 點後迅速修正跌破 44,000 點，台積電等權值龍頭大幅波動，鴻海憑藉多元化業務結構展現相對防禦屬性。
+- **機構給予中長線長遠評價**：專業分析機構與數據平台（如 TradingView）積極評估鴻海至 2027 年的遠景目標價，顯示法人資本已將目光從短期消費電子循環，轉向 AI 與電動車帶來的長線重估（Re-rating）。
+- **關鍵連接技術緩解供應鏈瓶頸**：產業鏈中如 Astera Labs 針對 AI 連接瓶頸的推進，有助於高階 AI 伺服器順利出貨，進而加速鴻海高毛利 AI 產品線的營收認列速度。
+- **國際資本市場高度關注**：包含加拿大、澳洲及新加坡等 Yahoo Finance 國際頻道頻繁追蹤鴻海最新動態，反映全球機構法人對鴻海流動性與國際供應鏈地位的持續重視。
 
 ## 📰 近期新聞總覽
-- 2026-08-06 | 外資買超縮減至微幅 2.02 億台幣；加碼力積電將近 4 萬張，砍碼六檔金融股 — finance.biggo.com
-- 2026-08-06 | 台股失守 44,000 點關卡，收跌 214 點；台積電下跌 40 元，記憶體雙雄逆勢衝漲停 — finance.biggo.com
-- 2026-08-05 | 美伊和談曙光帶動台股大漲 1,250 點重返 44,600 點，台積電市值突破 62 兆台幣 — finance.biggo.com
-- 2026-08-01 | Celestica 贏得 OpenAI/Broadcom 合約 — 具備優質成長前景的 AI 鏟子 (CLS) — Seeking Alpha
-- 2026-06-25 | 2317 股價預測 — 目標價 — 2027 年預測 — TradingView
-- 2026-06-10 | 鴻海：極具前景的短中期發展前瞻 (OTCMKTS:HNHPF) — Seeking Alpha
-- 2026-06-04 | 博通擾動 AI 交易帶動美股走低，亞洲科技股隨之下跌 — CNBC
-- 2026-05-08 | Astera Labs：攻克 AI 連接瓶頸 (ALAB) — Seeking Alpha
-- 2026-03-19 | 鴻海精密：強勁的第四季業績與正向展望 (HNHPF) — Seeking Alpha
+- 2026-08-07 | Hon Hai Precision Industry Co., Ltd. (2317.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada
+- 2026-08-06 | Hon Hai Precision Industry Co., Ltd. (2317.TW) stock price, news, quote and history — Yahoo Finance Australia
+- 2026-08-06 | Taiwan Stocks Lose 44,000 Level, Close Down 214 Points; TSMC Drops NT$40, Memory Duo Buck Trend to Hit Limit Up — finance.biggo.com
+- 2026-08-05 | US-Iran Talks Spark Hope; Taiwan Stocks Surge 1,250 Points to Reclaim 44,600 as TSMC Market Cap Tops NT$62 Trillion — finance.biggo.com
+- 2026-08-01 | Celestica Wins OpenAI/Broadcom Contracts - AI Shovel With Premium Growth Prospects (CLS) — Seeking Alpha
+- 2026-07-01 | Hon Hai Precision Industry Co. Ltd. — Barron's
+- 2026-06-25 | 2317 Forecast — Price Target — Prediction for 2027 — TradingView
+- 2026-06-10 | Hon Hai: Promising Short-To-Medium Term Prospects — Seeking Alpha
+- 2026-05-08 | Astera Labs: Attacking The AI Connectivity Bottleneck (ALAB) — Seeking Alpha
+- 2026-03-19 | Hon Hai Precision: Strong Q4 Results And Positive Outlook (HNHPF) — Seeking Alpha
+- 2018-10-03 | Advantage Energy Ltd. (AAVVF) Stock Historical Price Data — Seeking Alpha
+- 2017-06-28 | Hon Hai Precision Industry Co., Ltd. (2317.TW) latest stock news and headlines — Yahoo Finance Singapore
+- 2016-12-10 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) Stock Price — Yahoo Finance
+- 2016-07-15 | MediaTek Inc. (2454.TW) Stock Price — Yahoo Finance
 
 ## 🔍 重點新聞深度分析
 
-### 1. 台股大盤高位劇烈震盪與外資籌碼動態 (2026-08-05 ~ 2026-08-06)
-- **新聞核心內容**：台股大盤在美伊談訪曙光激勵下強勢大漲 1,250 點重返 44,600 點後，隔日因台積電大跌 40 元拖累，下挫 214 點失守 44,000 點。外資買超金額急速降至 2.02 億新台幣，資金操作轉趨謹慎。
-- **對營運與股價的潛在影響**：鴻海（264.5 TWD）作為台股第二大權值股，股價高度受到整體大盤資金流向與外資資產配置影響。大盤在 44,000 點上方出現劇烈震盪且外資買超縮減，顯示法人在歷史高檔區間開始進行籌碼調節。然而，鴻海相對具備 AI 實質獲利支撐，在資金從高估值純概念股轉向高基本面權值股過程中，其股價具備較強的抗跌性與防禦價值。
+### 1. 鴻海強勁 Q4 財報與中短期展望正向
+- **新聞來源**：Seeking Alpha (2026-03-19 & 2026-06-10)
+- **分析內容**：
+  Seeking Alpha 針對鴻海發布的專題分析明確指出，公司在 Q4 取得強勁的財務表現，並且管理層對後續營運給予極為正面的前景展望。報告分析強調，鴻海中短期展望具備高度確定性，主因在於 AI 伺服器需求持續拉升，抵銷了傳統消費電子季節性波動的影響。
+- **投資影響與財務評估**：
+  優於預期的營運業績代表鴻海在產品組合優化（高毛利伺服器占比提升）上取得實質進展。這不僅提升了市場對其利潤率改善的信心，更成為支撐目前股價（260.0 TWD）穩健運行的堅實基石。
 
-### 2. Seeking Alpha 法人報告：鴻海強勁業績與光明短中期前景 (2026-03-19 & 2026-06-10)
-- **新聞核心內容**：Seeking Alpha 發布深度研報指出，鴻海在展現強勁的第四季財務業績後，維持正向的營運展望。分析師評估其短中期前景極具吸引力（Promising Short-To-Medium Term Prospects）。
-- **對營運與股價的潛在影響**：此系列分析確立了國際法人對鴻海獲利能力的認可。隨著 AI 伺服器出貨量比重顯著增加，鴻海的毛利率與營益率結構正迎來實質改善。這不僅奠定了鴻海在 2026 年獲利大幅成長的基礎，更提供了長期投資人安心持股的依據，有助於支撐其股價向更高的估值區間邁進。
+### 2. 台股大盤高位震盪與宏觀局勢洗盤
+- **新聞來源**：finance.biggo.com (2026-08-05 & 2026-08-06)
+- **分析內容**：
+  台股市場近期出現大幅洗盤，8 月 5 日受美伊對話緩和地緣緊張局勢帶動，大盤暴漲 1,250 點，重返 44,600 點高位，台積電市值突破 NT$62 兆；隨後於 8 月 6 日因獲利了結壓力和市場觀望，大盤重挫 214 點跌破 44,000 點，台積電下跌 NT$40。
+- **投資影響與財務評估**：
+  大盤高位震盪反映出市場對宏觀政治局勢敏感度極高。鴻海作為台股第二大權值股，在大盤劇烈波動期間未出現 panic sell（恐慌性拋售），展現強大的法人持股信心，對於整體公募基金與外資而言，是極佳的資產配置避風港。
 
-### 3. Celestica 奪 OpenAI/Broadcom 大單，印證 AI 伺服器產業擴張 (2026-08-01)
-- **新聞核心內容**：Celestica（CLS）獲得 OpenAI 及 Broadcom 的 AI 硬體製造合約，被市場視為具備優質增長前景的「AI 鏟子」。
-- **對營運與股價的潛在影響**：這項產業新聞對鴻海屬於高度正面的產業訊號（Read-across）。Celestica 奪單證實了各大 CSP（雲端服務業者）與晶片設計巨頭對 AI 基礎設施的資本支出並未放緩，反而加速釋出至外包製造商。鴻海身為全球規模最大、垂直整合最完整的 EMS 廠，將在龐大的機櫃級 AI 伺服器需求中持續分得最大份額的訂單。
+### 3. AI 基礎設施巨額合約爆發帶動供應鏈連動效益
+- **新聞來源**：Seeking Alpha (2026-08-01 & 2026-05-08)
+- **分析內容**：
+  Celestica 贏得 OpenAI 與 Broadcom 的 AI 基礎設施大單，被市場稱為具備溢價成長前景的「AI 鏟子股」；同時，Astera Labs 致力於解決 AI 高速運算的連接瓶頸。這些新聞揭示了全球科技巨頭正在加碼投注 AI 算力建設。
+- **投資影響與財務評估**：
+  AI 產業巨頭與連接技術廠商的強勁訂單，直接印證了 AI 硬體生態系的訂單能見度極高。鴻海具備全球領先的伺服器垂直整合與大規模製造能力，必然能夠分享此波全球算力擴張的龐大商機，推動伺服器業務營收持續走高。
 
-### 4. 博通擾動 AI 市場與 Astera Labs 破解連接瓶頸 (2026-05-08 & 2026-06-04)
-- **新聞核心內容**：博通（Broadcom）6 月初的警訊引發美股 AI 族群修正，並拖累亞洲科技股；而 Astera Labs 則致力於解決 AI 晶片間的高速傳輸與連接瓶頸。
-- **對營運與股價的潛在影響**：博通事件顯示市場對 AI 供應鏈短期估值拉回的敏感度，但 Astera Labs 所針對的連接瓶頸，正是鴻海的競爭優勢所在。鴻海在 NVLink 高速連接線、匯流排（Busbar）及先進散熱模組上均有深厚技術累積。當 AI 晶片算力提升帶來傳輸瓶頸時，鴻海提供的高階機櫃零組件單價（ASP）將相應提升，抵禦了短線情緒帶來的股價波動。
+### 4. 長線估值預測與 2027 年目標價展望
+- **新聞來源**：TradingView (2026-06-25)
+- **分析內容**：
+  TradingView 數據與分析平台針對鴻海（2317）發布了至 2027 年的價格預測與目標價預估，評估鴻海在轉型「3+3」（電動車、數位健康、機器人；人工智慧、半導體、新型通訊）戰略下的長期價值。
+- **投資影響與財務評估**：
+  市場對於鴻海的估值模型正從傳統的「低毛利代工廠」向「AI 與高科技製造平台」進行修訂。長線預測顯示機構法人認可鴻海在 2026-2027 年的獲利成長潛力，有助於帶動中長期估值本益比（P/E Ratio）的修復與提升。
 
 ## 📊 市場情緒評估
-**整體市場情緒：🟢 正面**
+**整體市場情緒**：🟢 正面
 
-```
-[正面因素] -----------------------------------------> (70%)
-- AI 伺服器基礎建設需求強勁（OpenAI/Broadcom 訂單增加）
-- Seeking Alpha 等法人機構維持強勁業績與正向展望
-- 2027 年長期目標價看好，長線 re-rating 趨勢確立
-
-[負面因素] <----------------------------------------- (30%)
-- 台股大盤失守 44,000 點，外資買超縮減至 2.02 億台幣
-- 晶片大廠（如 Broadcom）引發的短期科技股估值震盪
-```
-
-- **評估依據**：
-  - **正面因素**：AI 產業基礎設施需求依然熱絡，同業獲利與法人的正面分析報告不斷確認 AI 伺服器出貨強勁。鴻海自身的業績與中短期前景獲得市場認可，長線投資邏輯穩固。
-  - **負面因素**：近期台股大盤自 44,600 點回檔並跌破 44,000 點，外資買盤動能減緩，市場籌碼面短線面臨整理壓力。
+### 詳細評估依據：
+- **🟢 正面因素**：
+  1. **基本面穩健**：Q4 財報強勁，中短期營運展望受到 Seeking Alpha 等機構認可。
+  2. **AI 產業利多不斷**：OpenAI、Broadcom 及 Astera Labs 等產業鏈訊息證實 AI 硬體需求依舊爆發。
+  3. **國際資本關注度高**：多國 Yahoo Finance 及 Barron's 數據持續追蹤，全球投資人關注度高。
+  4. **股價展現韌性**：在台股大盤重挫 214 點、台積電跌 NT$40 之際，鴻海股價維持於 260.0 TWD 高位。
+- **🔴 負面因素**：
+  1. **宏觀與地緣政治不確定性**：美伊局勢與國際政經動態引發台股大盤失守 44,000 點關卡，短線市場避險情緒升溫。
+  2. **大盤獲利了結賣壓**：台股大盤歷史高位震盪，可能對權值股形成被動式的資金抽離壓力。
 
 ## ⚠️ 主要風險因素
-
-| 風險等級 | 風險類型 | 詳細說明 |
-| :--- | :--- | :--- |
-| 🔴 **高風險** | **總體經濟與大盤高位波動風險** | 台股大盤失守 44,000 點關卡，美伊局勢與全球宏觀變數導致市場波動加劇，外資單日買超降至 2.02 億台幣，可能引發權值股短線獲利結算。 |
-| 🟡 **中風險** | **科技巨頭資本支出與估值修正** | 如博通引發的 AI 族群震盪所示，市場對科技巨頭 AI 資本支出的投報率極為敏感，若晶片拉貨步調短暫放緩，可能影響供應鏈短線股價表現。 |
-| 🟢 **低風險** | **產業技術瓶頸與同行競爭** | AI 連接與散熱瓶頸增加技術難度，且 Celestica 等同業積極搶單。但鴻海具備規模經濟與機櫃整合能力，競爭屏障較高。 |
+- 🔴 **地緣政治與宏觀市場波動風險**：國際局勢變動（如美伊對話進展）導致台股大盤極度敏感，單日千點上下震盪可能壓抑整體科技類股的評價空間。
+- 🟡 **供應鏈組件瓶頸風險**：如 Astera Labs 報導所提及，AI 晶片與高速連接組件之供應鏈瓶頸若再度加劇，可能影響鴻海高階伺服器的實際交付進度。
+- 🟡 **權值股被動資金流出風險**：台股大盤回檔修正（跌破 44,000 點），台積電等龍頭大跌，若引發 ETF（如 0050）被動賣壓，鴻海短線股價可能面臨被動調降資產配置的連帶影響。
 
 ## 🔮 短期關注重點
-1. **外資對鴻海（2317.TW）之籌碼動向**：在大盤震盪跌破 44,000 點之際，觀察外資是否將鴻海列為避險及價值布局的加碼標的。
-2. **AI 伺服器出貨量與機櫃營收佔比**：關注鴻海最新月度營收報告中，AI 伺服器（特別是高階機櫃系統）的貢獻比例與毛利率走勢。
-3. **客戶端 ASIC 與 GPU 伺服器新專案進度**：追蹤 OpenAI、Broadcom、NVIDIA 等大廠新一代 AI 晶片伺服器量產交貨的時間時程。
+1. **台股大盤止跌信號**：密切觀察大盤能否在失守 44,000 點後迅速築底回升，以及權值股資金回流狀況。
+2. **AI 伺服器營收拉貨動能**：持續追蹤公司後續發布之月度營收中，AI 伺服器與高運算產品之貢獻占比。
+3. **國際法人動向與目標價調整**：關注華爾街與外資研究機構在鴻海強勁財報公布後，是否進一步調升其 2026 至 2027 年的目標價與評等。
 
 ## 📌 新聞來源索引
-1. Foreign Investors Pull Back with Modest NT$2.02 Billion Net Buy; Load Up on Powerchip Nearly 40,000 Shares While Dumping Six Financial Stocks — finance.biggo.com (2026-08-06)
-2. Taiwan Stocks Lose 44,000 Level, Close Down 214 Points; TSMC Drops NT$40, Memory Duo Buck Trend to Hit Limit Up — finance.biggo.com (2026-08-06)
-3. US-Iran Talks Spark Hope; Taiwan Stocks Surge 1,250 Points to Reclaim 44,600 as TSMC Market Cap Tops NT$62 Trillion — finance.biggo.com (2026-08-05)
-4. Celestica Wins OpenAI/Broadcom Contracts - AI Shovel With Premium Growth Prospects (CLS) — Seeking Alpha (2026-08-01)
-5. Hon Hai Precision Industry Co. Ltd. — FactSet / Barron's (2026-07-01)
-6. 2317 Forecast — Price Target — Prediction for 2027 — TradingView (2026-06-25)
-7. Hon Hai: Promising Short-To-Medium Term Prospects (OTCMKTS:HNHPF) — Seeking Alpha (2026-06-10)
-8. Asia tech stocks drop after Broadcom rattles AI trade and drags Wall Street names lower — CNBC (2026-06-04)
-9. Astera Labs: Attacking The AI Connectivity Bottleneck (ALAB) — Seeking Alpha (2026-05-08)
-10. Hon Hai Precision: Strong Q4 Results And Positive Outlook (HNHPF) — Seeking Alpha (2026-03-19)
-
----
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
+1. Hon Hai Precision Industry Co., Ltd. (2317.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada (2026-08-07)
+2. Hon Hai Precision Industry Co., Ltd. (2317.TW) stock price, news, quote and history — Yahoo Finance Australia (2026-08-06)
+3. Taiwan Stocks Lose 44,000 Level, Close Down 214 Points; TSMC Drops NT$40, Memory Duo Buck Trend to Hit Limit Up — finance.biggo.com (2026-08-06)
+4. US-Iran Talks Spark Hope; Taiwan Stocks Surge 1,250 Points to Reclaim 44,600 as TSMC Market Cap Tops NT$62 Trillion — finance.biggo.com (2026-08-05)
+5. Celestica Wins OpenAI/Broadcom Contracts - AI Shovel With Premium Growth Prospects (CLS) — Seeking Alpha (2026-08-01)
+6. Hon Hai Precision Industry Co. Ltd. — Barron's (2026-07-01)
+7. 2317 Forecast — Price Target — Prediction for 2027 — TradingView (2026-06
