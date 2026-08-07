@@ -15,120 +15,147 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-Ondas Inc.（股票代碼：ONDS）是一家總部位於美國的高科技企業，致力於提供無人駕駛與多領域自主平台（Multi-Domain Autonomous Platforms）以及專用無線通訊網絡解決方案。公司關鍵業務已成功從早期小型科技公司延伸至國防與安全領域，為軍方及工業客戶提供無跑道依賴無人機系統（Runway-Independent Aircraft）、無 GPS 環境下（GPS-Denied）的再補給無人機，以及 Mistral 等關鍵防衛系統。當前最新股價為 8.74 美元，已從過往低於 1 美元的全美仙股轉變為備受期待的國防科技新星。
+Ondas Inc.（股票代碼：ONDS）是一家總部位於美國的高科技企業，專注於提供次世代私有無線數據網路、自主無人機（Autonomous Drones）以及無人機防禦與反制系統（Counter-Drone Systems，如 Sentrycs 與 Mistral 平台）。公司業務橫跨國防軍工、關鍵基礎設施防護及商業安防領域，致力於打造多領域自主作業平台。近期受惠於地緣政治緊張及全球軍工需求強勁，ONDS 已成功從過去的低價微型股轉型為備受矚目的國防科技競爭者。
+
+---
 
 ## 📝 新聞摘要總覽
-近期針對 Ondas Inc.（ONDS）的新聞報導顯示，該公司正處於營運轉型與業績爆發的關鍵拐點。在國防業務方面，Ondas 接連獲得重大訂單突破：公司最新宣布獲得美國陸軍 5,000 萬美元的追加訂單，帶動旗下 Mistral 項目獲得的累計合約金額突破 2.4 億美元（$240M）；同時，公司亦宣布獲得美國海軍（Navy Contract）最新合約，市場關注度持續攀升。技術層面上，Ondas 正全力推進其具備「無跑道依賴」與「無 GPS 環境自主導航」能力的再補給無人航空器開發，精準切入軍事現代化補給的核心痛點。
+近一週以來，Ondas Inc.（ONDS）在資本市場與業務接單方面迎來爆發性利多。股價目前攀升至 **9.065 USD**，延續了從過去一年不到 $1 美元一路飆升逾 980% 的強勁漲勢。
 
-在資本市場與機構動向方面，華爾街資產管理巨頭貝萊德（BlackRock）透過 SEC 申報文件揭露持有 Ondas 達 3,810 萬股，持股比例躍升至 7.2%，為市場注入強心針。然而，籌碼面呈現極度多空對峙，Ondas 的空頭餘額（Short Interest）已連續五個月維持在 30% 以上的高位，顯示市場仍存在顯著的投機力道與潛在的「軋空」（Short Squeeze）機會。財報歷史數據顯示，公司 2025 年全年營運大幅改善，營收達 4,760 萬至 4,960 萬美元（年增近 6 倍），展示出強勁的營收成長動能。整體而言，儘管大盤科技股與晶片股（如 AMD、SanDisk）出現震盪，Ondas 憑藉國防訂單落地與巨頭入股，成為 2026 年中小型國防科技股中的亮點。
+在**國防與政府訂單**方面，美國陸軍正式向 Ondas 旗下 Mistral 追加了 **5,000 萬美元**的戰術無人機訂單，使 Mistral 獲得的累計合約總額突破 **2.4 億美元**。此外，公司亦成功斬獲**美軍海軍（U.S. Navy）的新合約**，進一步鞏固其在軍用無人機及戰術系統的供應商地位，成為推動股價啟動新一輪上升趨勢的核心引擎。
+
+在**商業與公共安全領域**，Ondas 的 Sentrycs 反無人機系統宣佈被選定用於本季 NFL 傑克森維爾美洲豹隊（Jacksonville Jaguars）的主場賽事安防。該系統能在數秒內精確定位無人機飛行員，成功展示了其無人機防禦技術從軍用拓展至大型體育活動與大型公共場所的商業實力。
+
+在**籌碼面與資本市場反應**方面，機構巨頭貝萊德（BlackRock）最新申報揭露持有 Ondas **7.2%** 的股權，為公司提供了強烈的機構背書。受國防訂單利多與財報發布前的買盤推升影響，ONDS 市值在短短兩天內暴增了 **7.81 億美元**。儘管市場高空頭槓桿（High Short Interest）帶來了顯著的波動性，但強勁的訂單流與基本面轉折正吸引大量資金持續流入。
+
+---
 
 ## 💡 關鍵洞察
-- **國防訂單能見度爆發**：美國陸軍 5,000 萬美元的新訂單將 Mistral 項目總獎勵金額推升至 2.4 億美元以上，搭配美國海軍新合約，顯示公司的國防產品已獲得軍方高階客戶的實質認可，進入大規模商業採購階段。
-- **機構巨頭貝萊德重磅入股**：BlackRock 揭露持有 7.2%（38.1M 股）股權，為 Ondas 提供強大的基本面背書與長線資金支持，大幅提升了這家轉型期科技公司的機構信用評等。
-- **高空頭比率蓄積潛在軋空動能**：超過 30% 的空頭持倉已維持逾 5 個月，在利多消息（軍方大單、機構持股揭露）連續刺激下，極易觸發空頭回補（Short Squeeze），進一步推升短期股價劇烈上漲。
-- **技術障礙突破與差異化競爭力**：推出能在無 GPS 訊號與無跑道限制條件下運行的自主補給無人機，直接解決當前地緣政治衝突中的電子戰干擾痛點，鎖定國防供應鏈中的高利基市場。
-- **營收六倍增長的基本面拐點**：2025 財年營收實現約 6 倍的年成長率（達到 $47.6M–$49.6M），證實公司已順利從概念開發期過渡至高成長獲利期，擺脫仙股（Penny Stock）標籤。
+
+- **軍工訂單動能強勁， Mistral 累計金額突破 2.4 億美元**：
+  美國陸軍追加 5,000 萬美元戰術無人機訂單，不僅直接增添營收能見度，更證明其無人機技術已深深嵌入美軍採購體系，國防板塊已成為公司最穩固的成長基石。
+
+- **商業安防拓展有成，NFL 賽事防護樹立示範效應**：
+  Sentrycs 系統進入 NFL 賽事安防領域，能在數秒內追蹤無人機飛航源頭，驗證了其技術在複雜城市與大眾集會環境的實用性，開啟了體育場館與關鍵基礎設施的商業化大門。
+
+- **法人機構權威背書，BlackRock 戰略入股 7.2%**：
+  世界最大資產管理公司貝萊德揭露持股 7.2%，有效提升了 Ondas 在資本市場的信譽度，吸引長期機構法人資金進駐，緩解了過往微型股時期市場對其流動性與治理的疑慮。
+
+- **財報爆發力顯現，從微型股轉型為實質獲利成長股**：
+  回顧 2025 全年營收達 4,760 萬至 4,960 萬美元（年增近 6 倍），第四季營收暴增，顯現公司業務具備極高營運槓桿。本次財報前兩天市值大增 7.81 億美元，反映市場對即將公布的新一期財報抱持極高期望。
+
+- **高融券空頭軋空風險與高波動性並存**：
+  儘管基本面全面看好，但市場高空頭比例（High Short Interest）使 ONDS 成為短線交易者與軋空（Short Squeeze）熱門標的，投資人需留意財報發布前後股價劇烈震盪的風險。
+
+---
 
 ## 📰 近期新聞總覽
-- 2026-08-06 | ONDS Stock Prediction: Why Ondas Holdings Is Set To Explode In 2026 — Mshale
-- 2026-08-06 | Ondas' Runway-Independent Aircraft Targets GPS-Denied Resupply — Stock Titan
-- 2026-08-06 | When to buy bonds vs. stocks: Guide and examples — MSN / Bing News
-- 2026-08-05 | SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance
-- 2026-08-05 | 'This was not an exceptional result': Why AMD stock tanked 5% after earnings — Yahoo Finance
-- 2026-08-05 | Google stock drops amid DeepMind leadership shake-up — Yahoo Finance
-- 2026-08-05 | Nvidia stock rises after Musk says SpaceX will exclusively use company's chips — Yahoo Finance
+
+- 2026-08-07 | ONDS Stock Pops As U.S. Defense Orders Power New Uptrend — StocksToTrade
+- 2026-08-07 | Ondas' Sentrycs selected to protect Jacksonville Jaguars games this NFL season — Seeking Alpha
+- 2026-08-07 | Jaguars Games Set to Use Counter-Drone System That Can Locate Pilots in Seconds — Stock Titan
+- 2026-08-07 | ONDS Stock In The Spotlight After New Navy Contract – Everything To Know About The Deal — Stocktwits
 - 2026-08-05 | ONDS Stock Rises After $50M Army Order Lifts Mistral Awards Above $240M — Yahoo Finance
-- 2026-08-05 | Biggest stock movers Wednesday: AMD, SPCX, SHOP, and more — Seeking Alpha
-- 2026-08-05 | ONDS Stock In The Spotlight After New Navy Contract – Everything To Know About The Deal — Stocktwits
-- 2026-08-05 | AI-driven tech melt-up fuels $3.5T Nasdaq 100 surge in four days — Seeking Alpha
-- 2026-08-04 | Most shorted stocks on Wall Street as earnings season heats up — Seeking Alpha
-- 2026-08-04 | AMD leads AI chip stocks higher ahead of Q2 results — Seeking Alpha
-- 2026-08-04 | Oil prices slide as U.S.-Iran talks raise hopes for Strait of Hormuz reopening — Seeking Alpha
-- 2026-08-01 | Why BlackRock Is Betting Big on Ondas Stock Now — Barchart.com
-- 2026-07-29 | ONDS stock gains overnight: BlackRock reveals 7.2% Ondas stake, high short interest keeps traders watching — MSN / Bing News
-- 2026-07-27 | Bond market flashing a warning signal for stocks — CNBC / Bing News
+- 2026-08-05 | Ondas (NASDAQ:ONDS) Shares Gain $781 Million Over Two Days Ahead of Earnings Release — TechStock²
+- 2026-07-30 | ONDS Stock Gains Overnight: BlackRock Reveals 7.2% Ondas Stake, High Short Interest Keeps Traders Watching — Yahoo Finance
+- 2026-06-08 | Look At Ondas Inc (ONDS) Stock After Record Q1 Results — Bing News
 - 2026-05-12 | Ondas: The Growth Vector Is Too Sweet To Look Past — Seeking Alpha
 - 2026-03-03 | Ondas: From Penny Stock To Defense Contender — Seeking Alpha
 
+*(註：部分非 ONDS 直接相關之總體經濟或個股新聞已過濾，詳細完整名單請參見文末索引)*
+
+---
+
 ## 🔍 重點新聞深度分析
 
-### 1. 美國陸軍 5,000 萬美元訂單到位，Mistral 項目累計突破 2.4 億美元
-- **新聞標題**：ONDS Stock Rises After $50M Army Order Lifts Mistral Awards Above $240M
-- **發布日期**：2026-08-05
-- **核心內容**：Ondas 宣佈獲得美國陸軍價值 5,000 萬美元的新訂單，推升旗下 Mistral 項目相關合約總金額突破 2.4 億美元大關。消息公佈後，ONDS 股價應聲上漲。
-- **深度影響評估**：
-  - **營運與財務**：5,000 萬美元的新訂單為 Ondas 提供了強勁的短期營收能見度。考慮到公司 2025 年全年營收約為 4,760 萬至 4,960 萬美元，單一陸軍合約的規模即已超過 2025 全年營收，預示著 2026 財年的財務表現將迎來跨越式增長。
-  - **市場評價**：這證實 Ondas 產品已正式列入軍方長期預算規劃，降低了過往投資人對其產品商業化進度過慢的疑慮，強化了其作為國防國防承包商（Defense Contender）的市場地位。
+### 1. 美軍追加 5,000 萬美元訂單與海軍合約挹注
+* **事件摘要**：美國陸軍擴大戰術無人機採購，向 Ondas 旗下的 Mistral 追加 5,000 萬美元任務訂單，使總累計合約突破 2.4 億美元；同時，美軍海軍亦頒發新合約。
+* **營運與財務影響**：這項大單直接挹注公司未實現訂單（Backlog），奠定未來幾個季度的營收高成長。美軍連續追加訂單，代表 Mistral 的無人機產品順利通過軍規實戰驗證，大幅降低營運不確定性。
+* **股價催化**：市場將 ONDS 重新定位為純正「國防軍工概念股」，享有更高估值倍數（Valuation Multiple）。
 
-### 2. 貝萊德（BlackRock）揭露持股 7.2%，展現機構強烈信心
-- **新聞標題**：Why BlackRock Is Betting Big on Ondas Stock Now / BlackRock reveals 7.2% Ondas stake
-- **發布日期**：2026-07-29 / 2026-08-01
-- **核心內容**：根據 SEC 監管申報文件，世界最大資產管理公司貝萊德（BlackRock）買入 3,810 萬股 Ondas 股票，持有其 7.2% 的股權。
-- **深度影響評估**：
-  - **籌碼面改善**：大型機構的挺進顯著減少了市場上的流通籌碼，鎖定了長期股權，為股價下檔提供了堅實支撐。
-  - **市場暗示**：BlackRock 的入股往往代表其經過深度的盡職調查（Due Diligence），認可 Ondas 在自主無人機及國防通訊領域的技術壁壘與財務改善潛力，有助於吸引更多法案基金與散戶資金跟進。
+### 2. Sentrycs 獲選護衛 NFL 美洲豹隊賽事
+* **事件摘要**：Ondas 的 Sentrycs 反無人機系統將用於保護 NFL 傑克森維爾美洲豹隊本賽季賽事，該系統具備在幾秒鐘內精確定位無人機駕駛員位置的能力。
+* **營運與財務影響**：此舉標誌著 Ondas 從「軍用」跨足「大型民用安防」領域。大型體育場館與賽事對空域安全需求急遽上升，Sentrycs 的成功導入為其開啟訂閱制安防服務（Security-as-a-Service）等多元獲利模式。
+* **股價催化**：驗證其技術多元應用的可行性，減輕市場對其過度依賴單一政府採購的疑慮。
 
-### 3. 美國海軍新合約與無跑道/無 GPS 補給無人機技術突破
-- **新聞標題**：ONDS Stock In The Spotlight After New Navy Contract & Ondas' Runway-Independent Aircraft Targets GPS-Denied Resupply
-- **發布日期**：2026-08-05 / 2026-08-06
-- **核心內容**：Ondas 聚焦於研發可在「無跑道（Runway-Independent）」及「無 GPS 訊號（GPS-Denied）」環境下執行任務的自主再補給無人機，並宣布獲得美國海軍（Navy Contract）最新合約。
-- **深度影響評估**：
-  - **技術屏障與戰術價值**：現代戰場（如戰術電子干擾區域或艦艇前線補給）對 GPS 依賴度低且不需要長跑道的無人載具需求極高。Ondas 的這項技術解決了軍方前線物流補給的瓶頸。
-  - **軍種擴展能力**：繼美陸軍大單後再獲海軍合約，展現出其自主平台技術具備跨軍種（Multi-Domain）應用的彈性，市場潛在規模（TAM）大幅擴展。
+### 3. 貝萊德（BlackRock）持股 7.2% 與財報前買盤噴發
+* **事件摘要**：貝萊德申報持有 ONDS 7.2% 股權，刺激股價隔夜大漲；隨後在財報公布前兩天，公司總市值暴增 7.81 億美元。
+* **營運與財務影響**：頂級機構法人入股，提供資本市場信心保障，並大幅改善股票流動性。然而，短時間內市值急劇膨脹與高融券空頭比例，顯示市場極度聚焦即將發布的財報數據。
+* **股價催化**：籌碼高度集中，若財報營收與展望超越預期，極易觸發強烈的軋空行情。
 
-### 4. 高空頭比例與營收爆發（由 Penny Stock 到國防新星）
-- **新聞標題**：Most shorted stocks on Wall Street & Ondas: From Penny Stock To Defense Contender
-- **發布日期**：2026-03-03 / 2026-08-04
-- **核心內容**：Ondas 股價在過去一年內由低於 1 美元飆升至 9 美元以上；其 2025 年 Q4 營收達 $2,700萬–$2,900萬（年增近 6 倍、超出內部目標 51%）。同時，其空頭比率（Short Interest）已連續五個月高於 30%。
-- **深度影響評估**：
-  - **股價波動性**：高高空頭比率意味著市場上仍有相當一部分資金看空或進行避險對沖。但在基本面（合約與營收）持續超出預期的背景下，此種結構隨時可能轉化為強烈的「軋空潮」，造成短期股價爆發性拉升。
+### 4. 從低價股渡過轉折點：歷史財務與營收爆發
+* **事件摘要**：Ondas 2025 年全年營收達 4,760 萬至 4,960 萬美元（較 2024 年成長近 6 倍），第四季營收達 2,700 萬至 2,900 萬美元，股價從不到 $1 美元一路攀升至 $9 美元以上。
+* **營運與財務影響**：顯示 Ondas 已成功渡過無人機與無線通訊技術的商業化谷底（Inflection Point），邁入規模化量產階段。
+* **股價催化**：營收爆發性成長扭轉了過往微型股市場對其流動性與下市風險的擔憂，吸引更多成長型基金（Growth Funds）關注。
+
+---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟢 正面**
+**整體市場情緒：🟢 正面（Bullish）**
 
-| 評估維度 | 情緒標記 | 依據說明 |
-| :--- | :---: | :--- |
-| **訂單與營收** | 🟢 正面 | 美國陸軍 $50M 訂單、Mistral 項目累計突破 $240M，海軍合約加持，營收暴增 6 倍。 |
-| **機構法人動向**| 🟢 正面 | BlackRock 大舉購入 3,810 萬股（持股 7.2%），提供機構面強力背書。 |
-| **技術研發成果**| 🟢 正面 | 成功進軍無 GPS 與無跑道環境之軍用補給無人機，技術壁壘確立。 |
-| **籌碼與市場波幅**| 🟡 中性/警告 | 空頭比率維持 30% 以上高位，將帶來較高之股價波動風險，但也隱含軋空機會。 |
-| **整體科技大盤**| 🟡 中性 | 美國大盤科技股（AMD、Google、SanDisk）在財報季呈現分化與震盪，帶來些許大盤干擾。 |
+```
+[極度悲觀] ---- [中性] ----|---- [極度樂觀]
+                           ▲ (當前位置: 85%)
+```
+
+### 評估依據：
+* **正面因素**：
+  1. 美國陸軍（5,000萬美元追加訂單，累計突破 2.4 億美元）與海軍持續下單，國防利多連發。
+  2. 貝萊德（BlackRock）持有 7.2% 股權，頂級機構背書。
+  3. Sentrycs 導入 NFL 賽事，民用與商業反無人機市場拓展順利。
+  4. 基本面成長強勁（2025 全年營收年增近 6 倍）。
+* **負面/警示因素**：
+  1. 高空頭比例（High Short Interest）導致股價短期震盪加劇。
+  2. 財報前兩天市值暴增 7.81 億美元，市場期望值拉得極高，若財報利多出盡可能面臨獲利了結賣壓。
+
+---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **高空頭比率帶來的極端波動風險**：空頭比率長期高於 30%，意味著市場多空對立極為激烈，若未來業績成長稍微放緩或大盤拉回，可能引發空頭襲擊導致股價劇烈下挫。
-- 🟡 **軍方合約執行與交付時程風險**：國防合約雖金額龐大（如 $50M 陸軍訂單），但通常面臨嚴格的國防驗收標準與供應鏈交付考驗，若出現延遲可能影響季度財報表現。
-- 🟡 **大盤與科技股修正風險**：當前科技股財報季波動加劇（如 AMD 盤後大跌 5%、SanDisk 展望不如預期），若美股整體出現流動性緊縮，恐連帶影響 ONDS 等高 Beta 值的轉型期個股。
+| 風險項目 | 風險等級 | 詳細說明 |
+| :--- | :---: | :--- |
+| **短線籌碼與高波動風險** | 🔴 高 | 目前市場融券餘額高，財報發布前後易出現劇烈震盪或軋空後的獲利回吐拉回。 |
+| **客戶集中度風險** | 🟡 中 | 國防訂單（美軍 Mistral 合約）佔整體營收比重極高，政府預算編列或採購時程若有變動將影響營收表現。 |
+| **產能放大與執行風險** | 🟡 中 | 營收年增數倍的情況下，供應鏈管理、無人機組裝產能與軟體交付能力面臨考驗。 |
 
-## 🔮 短期關注重點
+---
 
-1. **季度財報發布**：關注即將公布的最新季度財報，確認營收是否延續 2025 年的倍數成長動能，以及 Mistral 項目的實際毛利率與獲利能力改善狀況。
-2. **海軍合約細節披露**：持續追蹤最新美國海軍合約的具體金額與交付條款。
-3. **無人機測試與部署進展**：關注「無跑道/無 GPS 補給無人機」軍方實測或實戰部署之里程碑。
-4. **空頭餘額變化**：密切留意 ONDS 的空頭持倉是否降溫，警惕潛在軋空行情爆發後的獲利回吐賣壓。
+## 🔮 短期關注重點（未來 1–4 週）
+
+1. **最新第二季財報發布（Q2 Earnings Release）**：
+   關注實際營收成長率、毛利率變化，以及管理層對 2026 全年營收指引（Guidance）的修正。
+2. **美軍海軍（Navy）新合約細節**：
+   進一步追蹤海軍訂單的具體金額、交付時程及後續潛在採購規模。
+3. **Sentrycs 在 NFL 美洲豹隊賽事執行狀況**：
+   觀察實際運作效果與潛在其他 NFL 體育場館或商業安防客戶的複製效應。
+4. **融券餘額與籌碼面變化**：
+   留意空頭回補（Short Covering）力道是否能維持股價在 9 美元以上的關鍵支撐。
+
+---
 
 ## 📌 新聞來源索引
 
-1. ONDS Stock Prediction: Why Ondas Holdings Is Set To Explode In 2026 Mlb — Mshale (2026-08-06)
-2. Ondas' Runway-Independent Aircraft Targets GPS-Denied Resupply — Stock Titan (2026-08-06)
-3. When to buy bonds vs. stocks: Guide and examples — MSN / Bing News (2026-08-06)
-4. SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance (2026-08-05)
-5. 'This was not an exceptional result': Why AMD stock tanked 5% after earnings — Yahoo Finance (2026-08-05)
-6. Google stock drops amid DeepMind leadership shake-up — Yahoo Finance (2026-08-05)
-7. Nvidia stock rises after Musk says SpaceX will exclusively use company's chips — Yahoo Finance (2026-08-05)
-8. ONDS Stock Rises After $50M Army Order Lifts Mistral Awards Above $240M — Yahoo Finance (2026-08-05)
-9. Biggest stock movers Wednesday: AMD, SPCX, SHOP, and more — Seeking Alpha (2026-08-05)
-10. ONDS Stock In The Spotlight After New Navy Contract – Everything To Know About The Deal — Stocktwits (2026-08-05)
-11. AI-driven tech melt-up fuels $3.5T Nasdaq 100 surge in four days — Seeking Alpha (2026-08-05)
-12. Most shorted stocks on Wall Street as earnings season heats up — Seeking Alpha (2026-08-04)
-13. AMD leads AI chip stocks higher ahead of Q2 results — Seeking Alpha (2026-08-04)
-14. Oil prices slide as U.S.-Iran talks raise hopes for Strait of Hormuz reopening — Seeking Alpha (2026-08-04)
-15. Why BlackRock Is Betting Big on Ondas Stock Now — Barchart.com (2026-08-01)
-16. ONDS stock gains overnight: BlackRock reveals 7.2% Ondas stake, high short interest keeps traders watching — MSN / Bing News (2026-07-29)
-17. Bond market flashing a warning signal for stocks — CNBC / Bing News (2026-07-27)
-18. Ondas: The Growth Vector Is Too Sweet To Look Past — Seeking Alpha (2026-05-12)
-19. Ondas: From Penny Stock To Defense Contender — Seeking Alpha (2026-03-03)
+1. ONDS Stock Pops As U.S. Defense Orders Power New Uptrend — StocksToTrade (2026-08-07)
+2. Ondas' Sentrycs selected to protect Jacksonville Jaguars games this NFL season — Seeking Alpha (2026-08-07)
+3. Jaguars Games Set to Use Counter-Drone System That Can Locate Pilots in Seconds — Stock Titan (2026-08-07)
+4. ONDS Stock In The Spotlight After New Navy Contract – Everything To Know About The Deal — Stocktwits (2026-08-07)
+5. Goldman Sachs stock doubles from 'Liberation Day' lows — Yahoo Finance (2026-08-05)
+6. ONDS Stock Rises After $50M Army Order Lifts Mistral Awards Above $240M — Yahoo Finance (2026-08-05)
+7. Get on line because Disney parks drove Q3 growth, earnings lift stock — Yahoo Finance (2026-08-05)
+8. Ondas (NASDAQ:ONDS) Shares Gain $781 Million Over Two Days Ahead of Earnings Release — TechStock² (2026-08-05)
+9. ONDS stock rises after $50M Army order lifts Mistral awards above $240M — Bing News (2026-08-05)
+10. AMD Earnings 'Were Good,' Says Analyst Even as Stock Sinks 9% After Hours — Yahoo Finance (2026-08-05)
+11. Most shorted stocks on Wall Street as earnings season heats up — Seeking Alpha (2026-08-04)
+12. Oil prices slide as U.S.-Iran talks raise hopes for Strait of Hormuz reopening — Seeking Alpha (2026-08-04)
+13. The 60/40 portfolio is officially broken, Apollo says — Seeking Alpha (2026-08-04)
+14. Here's How to Play NuScale Stock Before Q2 Earnings Release — Yahoo Finance (2026-08-03)
+15. ONDS Stock Gains Overnight: BlackRock Reveals 7.2% Ondas Stake, High Short Interest Keeps Traders Watching — Yahoo Finance (2026-07-30)
+16. Look At Ondas Inc (ONDS) Stock After Record Q1 Results — Bing News (2026-06-08)
+17. Ondas: The Growth Vector Is Too Sweet To Look Past — Seeking Alpha (2026-05-12)
+18. Ondas: From Penny Stock To Defense Contender — Seeking Alpha (2026-03-03)
+19. ONDS vs. DPRO: Which Drone Tech Stock Is the Better Pick Now? — Bing News (2026-02-24)
+20. Seeking Alpha | Stock Market Analysis & Tools for Investors — Seeking Alpha (2011-01-17)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
