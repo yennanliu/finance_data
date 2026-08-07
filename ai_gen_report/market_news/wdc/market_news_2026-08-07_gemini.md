@@ -15,126 +15,141 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-07
 
 ## 🏢 公司概覽
-西部數據（Western Digital Corporation, NASDAQ: WDC）為全球數據儲存解決方案的領先巨頭，業務涵蓋傳統硬碟（HDD）與固態硬碟（SSD/NAND 快閃記憶體）。隨著人工智慧（AI）算力爆發、雲端資料中心大規模擴建以及企業級儲存需求激增，WDC 在全球數據基礎設施中占據關鍵地位。近期公司積極透過產能優化、債務去槓桿化以及潛在的業務拆分/策略重組，尋求釋放企業長期價值。
+西部數據（Western Digital Corporation, 股票代碼：WDC）是全球知名的數據儲存解決方案巨頭，主要業務涵蓋硬碟（HDD）與 NAND 快閃記憶體（Flash Storage，與 SanDisk 業務緊密相關）。公司在雲端資料中心、企業級儲存以及人工智慧（AI）基礎設施所需的大容量儲存領域中佔據關鍵地位，屬於科技產業中的半導體與儲存設備板塊。
 
 ---
 
 ## 📝 新聞摘要總覽
-西部數據（WDC）於 2026 年 8 月初公布了第四財季（FQ4）財務報告。儘管公司在該季度的營收與每股盈餘（EPS）雙雙超越華爾街分析師預期，但股價卻遭遇重挫，單日跌幅達 10% 至 11.7%，甚至在記憶體板塊拋售潮中一度重挫 16%。最新收盤價來到 **451.52 USD**。
+西部數據（WDC）近期發布了其 2026 財年第四季（FQ4）財報，雖然營收與每股盈餘（EPS）雙雙超越市場預期，且公司展現出強勁的營運轉折——包含產能售罄（Sold out）以及近期歷史上首次實現淨現金（Net cash-positive）資產負債表，但資本市場對此並未買帳。
 
-本次股價暴跌的核心主因在於「市場對利多消息的鈍化與過高的預期標準」。雖然 WDC 給出了高於市場共識的展望引導，但部分細節與未來營收預測仍無法滿足已被 AI 熱潮極度拉高的市場胃口。此外，部分研究機構指出 WDC 的毛利率正呈現「穩定化（Margin Stabilization）」跡象，暗示過去的高速成長與毛利率擴張期可能接近尾聲。加上該股在此前經歷了高達 600% 的驚人漲幅（受益於 HDD/SSD 拆分預期與 AI 儲存強勁需求），引發了強烈的獲利了結賣壓。
+財報公布後，WDC 股價出現強烈拋售潮，於 2026 年 8 月 6 日單日暴跌近 16%，並引發整個記憶體與儲存設備板塊的連鎖重挫，其中同業 SanDisk 下跌 11%，美光（Micron）亦下跌 6%。本次股價大幅修正的主因，在於市場對科技股指引（Guidance）與未來成長的高標準要求，加上分析師將 WDC 的業績與同業希捷（Seagate, STX）進行對比，認為市場預期已極度透支。
 
-這波拋售同時蔓延至整個存儲與記憶體族群，同業 SanDisk 重挫 11%，美光（Micron）下跌 6%。然而，亦有分析師抱持相反看法，認為在產能售罄（Sold Out）、資產負債表持續去槓桿，以及正在進行的 AI 儲存合作談判推動下，經過此次大幅修正後的 WDC 股票價值可能被低估高達 49%，展現出長線投資人的潛在買點。
+在估值面，市場出現顯著分歧：部分 Seeking Alpha 分析師指出，WDC 目前非 GAAP 市盈率（Non-GAAP P/E）高達 66.17 倍，市場過度將循環型（Cyclical）企業按照長期複利型（Compounder）企業進行定價，評級給予「賣出」；然而，另一派觀點（Yahoo Finance）則指出，隨著 WDC 積極展開 AI 儲存交易談判（AI Storage Deal Talks），若相關高毛利 AI 訂單落地，WDC 目前股價可能被低估高達 49%。
+
+總體而言，WDC 目前處於基本面營運強勁、財務結構去槓桿化，但市場估值過高、投資人對指引極度敏感的劇烈波動期。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **財報雙超難敵獲利賣壓，市場陷入「預期陷阱」**：WDC 第四財季業績優於預估，但股價仍暴跌逾 10%。這表明在經過長期大漲後，市場對 AI 供應鏈硬體股的標準已拉高至「完美無瑕」，單純的業績超預期已不足以支撐當前估值。
-- **毛利率趨穩訊號，暗示急銳成長期可能告一段落**： Seeking Alpha 分析團隊指出 WDC 的毛利率擴張趨勢出現穩定化，這通常是儲存產業週期循環中的中後段特徵，導致部分機構將其評級由「買進」調降至「賣出」。
-- **記憶體與儲存板塊連帶受挫，市場情緒整體降溫**： WDC 的重挫引發板塊連鎖反應，SanDisk 下跌 11%、美光跌 6%，顯示資本市場正對整體記憶體與硬碟儲存類股進行集體估值修正。
-- **AI 儲存訂單全滿，基本面與股價短期脫節**： 儘管股價大跌，WDC 實體營運依然強勁，產品產能處於「售罄（Sold Out）」狀態，且資產負債表顯著去槓桿，基本面並未出現實質性惡化。
-- **大幅拉回後的估值重估：潛在 49% 折價空間**： 部分 Yahoo Finance 報導分析指出，考量到 WDC 目前正在進行的 AI 儲存大型交易談判，若以長期折現模型與同業比較，經歷大幅修正後的股價可能存在高達 49% 的低估空間。
+- **洞察 1：業績利多出盡，市場對「指引」要求進入極端苛刻期**
+  WDC 第四財季營收與 EPS 均超越預期，但股價卻出現 16% 的劇烈拉回。這表明在當前高股價背景下，單純的「業績超預期（Earnings Beat）」已不足以支撐股價，投資人對未來成長指引的容錯率極低。
+- **洞察 2：週期股定價過高（Non-GAAP P/E 達 66.17 倍）引發評價修復**
+  儲存產業本質上具備強烈週期性。當非 GAAP 市盈率推升至 66.17 倍時，市場已預估了極為完美的成長情境。將週期股視為長期穩定複利股定價，是導致本次股價大幅修正的核心估值風險。
+- **洞察 3：財務結構迎來里程碑，淨現金資產負債表提供下行支撐**
+  公司成功實現去槓桿化（De-leveraged），並達到近期歷史上首次「淨現金正數」狀態，且產能處於售罄狀態。這代表 WDC 的營運基本面與財務防禦力極佳，破產或流動性風險已完全排除。
+- **洞察 4：AI 儲存談判為潛在催化劑，隱含 49% 重估空間**
+  AI 模型訓練與推理對大容量、高傳輸儲存的需求急升。市場傳出 WDC 正在進行 AI 儲存交易談判，若能成功鎖定高毛利的長約（LTA），技術面上可能帶動高達 49% 的潛在估值修復。
+- **洞察 5：同業希捷（Seagate）表現形成相對壓理**
+  分析師在評估 WDC 時，高度參照了同業希捷（STX）的表現。同業的營運指標與展望成為市場衡量 WDC 競爭力的錨點，間接加劇了 WDC 在財報發布後的賣壓。
+- **洞察 6：儲存板塊連帶抛售，系統性風險上升**
+  WDC 的重挫引發 SanDisk（-11%）與美光（-6%）等儲存與記憶體晶片股的集體回檔，顯示資金正從短期漲幅過大、預期過高的硬體儲存板塊獲利結算。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-06 | Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance
-- 2026-08-06 | Western Digital Sinks 16%, SanDisk Falls 11%, Micron Drops 6% as Memory Selloff Hits Storage Stocks — 24/7 Wall St.
-- 2026-08-06 | Western Digital's Margin Stabilization Signals Its Run-Up May Be Ending — Seeking Alpha
-- 2026-08-06 | Western Digital Q4 earnings: by the numbers — The Motley Fool
-- 2026-08-06 | Western Digital: Even Unprecedented Demand Has A Price (Rating Downgrade) — Seeking Alpha
-- 2026-08-06 | Why Western Digital stock is tumbling despite a big earnings beat — Investor's Business Daily / MSN
-- 2026-08-06 | Western Digital stock tanks. An earnings beat isn’t enough these days. — Barron's
-- 2026-08-05 | Sandisk: This Insane Growth May Not Be Good Enough — Seeking Alpha
+- 2026-08-07 | SA analyst upgrades/downgrades: TSLA, NVDA, BBBY, WDC — Seeking Alpha
+- 2026-08-07 | Western Digital: When A Cyclical Is Priced As A Compounder — Seeking Alpha (Bing News)
+- 2026-08-06 | Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance (Google News)
+- 2026-08-06 | Western Digital Stock Tanks. An Earnings Beat Isn’t Enough These Days. — Barron's (Google News)
+- 2026-08-06 | Biggest stock movers Thursday: APP, CLS, DDOG, SNDK, and more — Seeking Alpha
+- 2026-08-06 | Western Digital Sinks 16%, SanDisk Falls 11%, Micron Drops 6% as Memory Selloff Hits Storage Stocks — 24/7 Wall St. (Google News)
+- 2026-08-06 | Why Western Digital Stock Is Tumbling Despite A Big Earnings Beat — Investor's Business Daily (Google News)
+- 2026-08-06 | Sandisk, Western Digital weigh on chip sector as high expectations eclipse strong earnings — Yahoo Finance
+- 2026-08-06 | Western Digital slumps despite Q2 beat as analysts highlight peer Seagate's results — Seeking Alpha (Bing News)
+- 2026-08-06 | Western Digital stock tanks. An earnings beat isn’t enough these days. — MSN / Barron's (Bing News)
+- 2026-08-05 | Sandisk: This Insane Growth May Not Be Good Enough — Seeking Alpha (Google News)
 - 2026-08-05 | Western Digital tops estimates, offers above-consensus guidance but shares sink — Yahoo Finance
-- 2026-08-05 | WDC Earnings: Western Digital Stock Falls 10% Despite Strong Financial Results — TipRanks
-- 2026-08-05 | SanDisk stock sinks as revenue forecast falls short of expectations — Yahoo Finance
-- 2026-08-05 | AI chip stocks mixed after AMD dips as outlook fails to impress — Seeking Alpha
-- 2026-08-05 | Western Digital: Sold Out, De-Levered, And Walking Into FQ4 With Momentum — Seeking Alpha
+- 2026-08-05 | Western Digital Beats Q4 Estimates, Stock Falls on Guidance — Benzinga (Google News)
+- 2026-08-05 | Why Western Digital stock is tumbling despite a big earnings beat — MSN / IBD (Bing News)
+- 2026-08-05 | Western Digital: Sold Out, De-Levered, And Walking Into FQ4 With Momentum — Seeking Alpha (Google News)
+- 2026-08-05 | Western Digital (WDC) Q4 2026 earnings results beat revenue and EPS expectations — Shacknews (Bing News)
 - 2026-08-04 | Buy Western Digital (WDC) Stock as Q4 Earnings Approach? — Yahoo Finance
-- 2026-08-03 | The Zacks Analyst Blog Highlights Micron, Seagate, Western Digital, Sandisk and Vertiv — Yahoo Finance
+- 2016-07-10 | Western Digital Corporation (WDC) Stock Price, News, Quote & History — Yahoo Finance
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. FQ4 業績雙超預期卻遭暴跌：預期過高與賣壓釋放
-* **新聞核心**：WDC 發布 2026 財年第四季財報，營收與獲利均超越分析師預期，且給出高於市場共識的指引，但開盤後股價重挫 10% 至 11.7%（*The Motley Fool*, *Barron's*, *Yahoo Finance*）。
-* **營運與財務影響**：財務數據本身亮眼，證明 AI 伺服器與企業級儲存需求依然充沛。然而，市場反應揭示了投資人對未來成長動能遞減的疑慮，顯示前期的股價已完全反映甚至超前反映了財報利多。
-* **股價影響**：短期內股價陷入技術性破位與籌碼清洗，需等待市場重新尋求估值平衡點。
+### 1. 2026 財年第四季財報勝預期卻大跌 16%：預期落差與指引困局
+* **新聞源頭**：Barron's, Investor's Business Daily, Benzinga, 24/7 Wall St. (2026-08-05 至 2026-08-06)
+* **分析**：
+  WDC 發布的 FQ4 財報中，營收與 EPS 均超越華爾街預期。然而，發布後股價卻遭遇重挫，單日下挫 16%。此現象反映出當前市場對半導體及儲存類股極度高企的期待值。即使公司給出了高於共識的指引（Above-consensus guidance），投資人仍認為未來幾季的成長速度無法合理化當前的股價位置。「財報利多出盡（Sell the news）」的極端反應，致使大量獲利盤湧出，並帶動 SanDisk 下跌 11%、美光跌 6%，引發儲存板塊的集體修復。
 
-### 2. 記憶體與儲存板塊連帶拋售潮
-* **新聞核心**：WDC 跌幅一度擴大至 16%，拖累 SanDisk 大跌 11%、美光（Micron）下跌 6%（*24/7 Wall St.*）。
-* **產業與趨勢影響**：此波拋售不僅針對 WDC 單一公司，而是擴展至整個儲存硬體產業。AMD 前日展望不佳，加上 SanDisk 營收預測未能滿足最樂觀預期，引發資金自半導體與儲存板塊大規模流出。
-* **投資啟示**：儲存產業具有強烈的週期性，當市場開始懷疑頂部接近時，資金撤離速度極快。
+### 2. 估值爭議：週期股被按「複利股」定價（Non-GAAP P/E 66.17 倍）
+* **新聞源頭**：Seeking Alpha (2026-08-07)
+* **分析**：
+  分析師警告，WDC 的非 GAAP 市盈率已高達 66.17 倍。雖然 WDC 目前產能售罄、營運勢頭強勁，且資產負債表近期首次回升至淨現金（Net cash-positive）狀態，但在歷史經驗中，儲存產業具備強烈的景氣循環特性。市場在景氣高點給予高達 66 倍以上的市盈率，意味著將其誤評價為不受週期影響的「成長複利股」。分析師給予「賣出」評級，提示投資人留意後續景氣反轉或毛利率觸頂時的估值壓縮風險。
 
-### 3. 毛利率穩定化與評級調降：高成長紅利結算？
-* **新聞核心**：Seeking Alpha 分析師發布報告，將 WDC 評級調降至「賣出」，主因是毛利率擴張呈現穩定化（不再快速爆發），且股價自其初始 Buy 評級以來已累計暴漲超過 600%。
-* **業務評估**：WDC 過去透過 HDD 與 SSD 業務分拆預期、資產負債表修復（去槓桿）創造了巨大價值。然而當前毛利率穩定，意味著定價能力與成本優化的邊際效益正在遞減。
-* **風險評估**：即使面對「前所未有的需求（Unprecedented Demand）」，高估值依然需要更高速的財務成長來支撐，否則極易面臨估值修復壓力。
+### 3. AI 儲存合約談判：49% 的潛在重估價值
+* **新聞源頭**：Yahoo Finance (2026-08-06)
+* **分析**：
+  與估值過高的隱憂相反，另一線索指出 WDC 正在就 AI 儲存供給進行重大談判（AI Storage Deal Talks）。AI 伺服器對高容量近線硬碟（Nearline HDD）與高效能 Flash 的需求極為強勁。若 WDC 能與超大型雲端業者（Hyperscalers）達成長期供貨協議，將顯著提升其獲利能見度。部分估值模型認為，考量 AI 驅動的長期結構性需求，WDC 的股價相較於其潛在現金流價值，可能存在高達 49% 的被低估空間。
 
-### 4. AI 儲存談判與長線潛在折價 49% 觀點
-* **新聞核心**：部分市場分析指出（*Yahoo Finance*, *Seeking Alpha*），WDC 目前產能已被預訂一空（Sold Out），且正就大規模 AI 儲存供應進行深度談判，股價暴跌後折價空間可能高達 49%。
-* **長期價值分析**：WDC 具備實質基本面支撐（去槓桿完成、AI 儲存剛性需求）。對於價值型或長線投資者而言，市場因情緒過度反應所導致的暴跌，往往提供了極具吸引力的風險回報比（Risk-Reward Ratio）。
+### 4. 同業比較效應：希捷（Seagate）財務表現帶來的相對壓力
+* **新聞源頭**：Seeking Alpha, Yahoo Finance (2026-08-06)
+* **分析**：
+  市場分析師在解讀 WDC 財報時，特別將其與競爭對手希捷（Seagate, STX）的最新業績進行橫向對比。希捷在近線 HDD 領域的毛利率與技術推進（如 HAMR 技術普及度）成為法門標竿。分析師認為，相對比較下，WDC 的表現並未展現出壓倒性的領先優勢，進而削弱了多頭資金在財報發布後繼續追高的信心。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🔴 短期負面 / 🟡 中性偏謹慎**
+**整體市場情緒：🔴 負面**
 
-| 驅動因素 | 具體表現與影響 |
-| :--- | :--- |
-| 🟢 **正面因素** | FQ4 營收與獲利均超越預期，未來指引高於共識；AI 儲存需求強勁且產能售罄；財務去槓桿有成；潛在 AI 大單談判。 |
-| 🔴 **負面因素** | 股價經歷 600%+ 大漲後估值高企；毛利率擴張放緩趨穩；獲利賣壓湧現；記憶體與儲存板塊集體回檔；機構調降評級。 |
-
-**評估依據**：雖然公司基本面與業績指引依然穩健，但市場資金對儲存族群的風險偏好急遽下降，短期內技術面賣壓與情緒宣洩佔據主導地位，預計短期呈震盪打底格局。
+### 評估依據：
+* **負面因素（主導短期走勢）**：
+  1. 財報發布後股價急挫 16%，技術面呈現極端破位。
+  2. 非 GAAP 市盈率達 66.17 倍，估值處於歷史高位區間，面臨修復壓力。
+  3. 市場對公司給出的展望與指引態度苛刻，顯示投資人信心脆弱。
+  4. 儲存板塊（SNDK、MU）出現整體獲利了結賣壓。
+* **正面因素（長期基本面支撐）**：
+  1. 第四財季營收與 EPS 均超越預期。
+  2. 資產負債表達近近年首見的「淨現金」狀態，去槓桿成效顯著。
+  3. 產品產能售罄（Sold out），顯示短期市場需求依然強勁。
+  4. AI 儲存交易談判帶來潛在催化劑。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-1. 🔴 **估值修正與利多出盡風險（Valuation & News Exhaustion Risk）**
-   - **說明**：股價在前期大幅上漲後，對任何未達「極致完美」的指引均極為敏感，容易引發恐慌性獲利拋售。
-
-2. 🟡 **儲存產業週期毛利率見頂風險（Margin Peak & Cyclicality Risk）**
-   - **說明**：若毛利率擴張停止並進入平台期，將直接限制每股盈餘（EPS）的增長空間，導致市場下修其市盈率（P/E）估值倍數。
-
-3. 🟡 **半導體與儲存板塊系統性回檔（Sector Contagion Risk）**
-   - **說明**：美光、SanDisk 及 AMD 等同業股價弱勢，可能誘發ETF及量化資金對整體科技硬體供應鏈進行系統性減碼。
+* 🔴 **高估值修正風險（極高）**：非 GAAP 市盈率高達 66.17 倍，若後續營收成長放緩，可能面臨「盈利與估值雙殺」的乘數修復。
+* 🟡 **產業景氣週期波動風險（中等）**：儲存產業歷史上多次出現「供給過剩—價格暴跌」的週期循環，需警惕客戶過度下單（Overbooking）後的庫存調整。
+* 🟡 **同業競爭壓力（中等）**：希捷（STX）在 HDD 市場的競爭，以及南韓記憶體大廠在 Flash 領域的產能競爭，可能壓制毛利率提升空間。
+* 🟢 **財務流動性風險（低）**：公司擁有淨現金資產負債表，財務體質健康，短期內無債務違約或流動性危機。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **AI 儲存訂單與大型客戶協議之具體進展**：關注 WDC 是否宣佈與大型雲端服務商（CSP）簽署長期儲存供應合約。
-2. **華爾街目標價與評級調整動向**：密切追蹤各大投行（如大摩、小摩、高盛等）在財報公布後是否大規模調降目標價。
-3. **記憶體族群止跌訊號**：觀察 WDC、SanDisk 與 Micron 股價是否能在關鍵均線處建立有效支撐並放量止跌。
+1. **AI 儲存交易談判進展**：關注公司是否會在未來數週內正式宣布與微軟、 Google 或亞馬遜等雲端巨頭簽署 AI 儲存長期供貨協議。
+2. **分析師評級與目標價修正**：關注華爾街投資銀行（如 SA Analysts 等）在財報公布後，是否會對 WDC 發起大規模的評級調降或目標價下修。
+3. **儲存板塊止跌訊號**：觀察 WDC 股價能否在 434.3 美元附近打底，以及美光（MU）、SanDisk 等同業股價是否停止連帶下挫。
+4. **同業希捷（STX）與記憶體大廠的後續市場動態**：追蹤整體儲存供應鏈的產能利用率與合約價格（Contract Price）走勢。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — *Yahoo Finance* (2026-08-06)
-2. Western Digital Sinks 16%, SanDisk Falls 11%, Micron Drops 6% as Memory Selloff Hits Storage Stocks — *24/7 Wall St.* (2026-08-06)
-3. Western Digital's Margin Stabilization Signals Its Run-Up May Be Ending — *Seeking Alpha* (2026-08-06)
-4. Western Digital Q4 earnings: by the numbers — *The Motley Fool* (2026-08-06)
-5. Western Digital: Even Unprecedented Demand Has A Price (Rating Downgrade) — *Seeking Alpha* (2026-08-06)
-6. Why Western Digital stock is tumbling despite a big earnings beat — *MSN / Investor's Business Daily* (2026-08-06)
-7. Western Digital stock tanks. An earnings beat isn’t enough these days. — *Barron's* (2026-08-06)
-8. Sandisk: This Insane Growth May Not Be Good Enough — *Seeking Alpha* (2026-08-05)
-9. Stocks making the biggest moves after hours: Sandisk, Western Digital, E.l.f. Beauty, AppLovin & more — *CNBC* (2026-08-05)
-10. Western Digital tops estimates, offers above-consensus guidance but shares sink — *Yahoo Finance* (2026-08-05)
-11. WDC Earnings: Western Digital Stock Falls 10% Despite Strong Financial Results — *TipRanks* (2026-08-05)
-12. SanDisk stock sinks as revenue forecast falls short of expectations — *Yahoo Finance* (2026-08-05)
-13. AI chip stocks mixed after AMD dips as outlook fails to impress — *Seeking Alpha* (2026-08-05)
-14. Western Digital: Sold Out, De-Levered, And Walking Into FQ4 With Momentum — *Seeking Alpha* (2026-08-05)
-15. Buy Western Digital (WDC) Stock as Q4 Earnings Approach? — *Yahoo Finance* (2026-08-04)
-16. The Zacks Analyst Blog Highlights Micron, Seagate, Western Digital, Sandisk and Vertiv — *Yahoo Finance* (2026-08-03)
-17. Sandisk: Looking Like A Buy Ahead Of Earnings — *Seeking Alpha* (2026-08-03)
-18. Earnings Week Ahead: PLTR, AMD, PFE, DIS, SHOP, VTRS, CGC, MCD, ROKU, ABNB, and more — *Seeking Alpha* (2026-08-02)
+1. SA analyst upgrades/downgrades: TSLA, NVDA, BBBY, WDC — Seeking Alpha (2026-08-07)
+2. Western Digital: When A Cyclical Is Priced As A Compounder — Seeking Alpha / Bing News (2026-08-07)
+3. Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance / Google News (2026-08-06)
+4. Western Digital Stock Tanks. An Earnings Beat Isn’t Enough These Days. — Barron's / Google News (2026-08-06)
+5. Biggest stock movers Thursday: APP, CLS, DDOG, SNDK, and more — Seeking Alpha (2026-08-06)
+6. Western Digital Sinks 16%, SanDisk Falls 11%, Micron Drops 6% as Memory Selloff Hits Storage Stocks — 24/7 Wall St. / Google News (2026-08-06)
+7. Why Western Digital Stock Is Tumbling Despite A Big Earnings Beat — Investor's Business Daily / Google News (2026-08-06)
+8. Sandisk, Western Digital weigh on chip sector as high expectations eclipse strong earnings — Yahoo Finance (2026-08-06)
+9. Western Digital slumps despite Q2 beat as analysts highlight peer Seagate's results — Seeking Alpha / Bing News (2026-08-06)
+10. Western Digital stock tanks. An earnings beat isn’t enough these days. — MSN / Barron's / Bing News (2026-08-06)
+11. Sandisk: This Insane Growth May Not Be Good Enough — Seeking Alpha / Google News (2026-08-05)
+12. Western Digital tops estimates, offers above-consensus guidance but shares sink — Yahoo Finance (2026-08-05)
+13. Western Digital Beats Q4 Estimates, Stock Falls on Guidance — Benzinga / Google News (2026-08-05)
+14. Why Western Digital stock is tumbling despite a big earnings beat — MSN / Bing News (2026-08-05)
+15. Western Digital: Sold Out, De-Levered, And Walking Into FQ4 With Momentum — Seeking Alpha / Google News (2026-08-05)
+16. Western Digital (WDC) Q4 2026 earnings results beat revenue and EPS expectations — Shacknews / Bing News (2026-08-05)
+17. Buy Western Digital (WDC) Stock as Q4 Earnings Approach? — Yahoo Finance (2026-08-04)
+18. Western Digital Corporation (WDC) Stock Price, News, Quote & History — Yahoo Finance (2016-07-10)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
