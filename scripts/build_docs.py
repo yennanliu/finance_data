@@ -1581,13 +1581,14 @@ def build_other_sec(lang: str = "en"):
         "",
         f"> Quarterly SEC filings. Last indexed: **{TODAY}**",
         "",
-        "!!! info",
-        "    10-Q downloads are in progress. Use the download scripts to fetch filings.",
-        "",
         "## Download",
         "",
         "```bash",
-        "python scripts/download_10k_edgar.py AAPL --form 10-Q",
+        "# Latest quarterly for a ticker; existing files are skipped.",
+        "python scripts/download_10q_edgar.py AAPL --limit 1",
+        "",
+        "# Foreign private issuers (e.g. TSM) file 6-K rather than 10-Q.",
+        "python scripts/download_10q_edgar.py TSM --form 6-K",
         "```",
     ]
     write(DST_SEC / "10q.md", "\n".join(lines_10q))
@@ -1694,7 +1695,12 @@ def build_scripts_page(lang: str = "en"):
     docs_root = get_docs_root(lang)
     scripts_page = docs_root / "scripts.md"
     script_dir = ROOT / "scripts"
-    py_scripts = sorted(script_dir.glob("*.py")) if script_dir.exists() else []
+    # Only entry points belong on this page — shared modules like edgar_common
+    # are imported, not run, so a "python scripts/<name> --help" block would lie.
+    py_scripts = sorted(
+        p for p in script_dir.glob("*.py")
+        if '__main__' in p.read_text(encoding="utf-8", errors="ignore")
+    ) if script_dir.exists() else []
     sh_scripts = sorted(script_dir.glob("*.sh")) if script_dir.exists() else []
 
     lines = [
