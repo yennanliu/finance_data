@@ -1,13 +1,14 @@
 """Unit/integration tests for the pure parsers in the download_* scripts.
 
 Only the HTML/JSON parsing seams are tested; no browser, no real HTTP.
+
+The SEC EDGAR downloaders live in ``test_edgar_common.py``.
 """
 
 import pytest
 from bs4 import BeautifulSoup
 
 import download_10k_pdf as d10
-import download_10k_edgar as edgar
 import download_grab_6k as grab
 
 pytestmark = pytest.mark.integration
@@ -163,146 +164,6 @@ def test_download_10k_skips_existing_files(mock_download, monkeypatch):
 def test_download_10k_returns_false_when_page_missing(mock_download, monkeypatch):
     monkeypatch.setattr(d10, "fetch_page", lambda slug: None)
     assert d10.download_10k("does-not-exist") is False
-
-
-# ── download_10k_edgar: get_cik / get_filings ────────────────────────────────
-
-class _Resp:
-    def __init__(self, payload):
-        self._payload = payload
-
-    def raise_for_status(self):
-        pass
-
-    def json(self):
-        return self._payload
-
-
-def test_get_cik_normalizes_and_zero_pads(monkeypatch):
-    payload = {
-        "0": {"ticker": "AAPL", "cik_str": 320193},
-        "1": {"ticker": "BRK-B", "cik_str": 1067983},
-    }
-    monkeypatch.setattr(edgar.requests, "get", lambda *a, **k: _Resp(payload))
-    assert edgar.get_cik("AAPL") == "0000320193"
-    assert edgar.get_cik("BRK.B") == "0001067983"   # dot normalised to dash
-    assert edgar.get_cik("NOPE") is None
-
-
-def test_get_filings_filters_by_form_and_sorts(monkeypatch):
-    payload = {"filings": {"recent": {
-        "form": ["10-K", "10-Q", "10-K"],
-        "filingDate": ["2023-02-01", "2023-05-01", "2022-02-01"],
-        "accessionNumber": ["a-2023", "q-2023", "a-2022"],
-        "primaryDocument": ["d2023.htm", "q2023.htm", "d2022.htm"],
-    }}}
-    monkeypatch.setattr(edgar.requests, "get", lambda *a, **k: _Resp(payload))
-    out = edgar.get_filings("0000320193", "10-K", years=20)
-    assert [f["date"] for f in out] == ["2023-02-01", "2022-02-01"]  # 10-Q excluded, sorted desc
-    assert out[0]["accession"] == "a-2023"
-
-
-def test_get_filings_pages_into_archive_files(monkeypatch):
-    """When the requested window reaches past the 'recent' block, older filings
-    are pulled from the paginated archive files too (GOOG/META case)."""
-    main = {"filings": {
-        "recent": {
-            "form": ["10-K"],
-            "filingDate": ["2025-02-01"],
-            "accessionNumber": ["a-2025"],
-            "primaryDocument": ["d2025.htm"],
-        },
-        "files": [{"name": "CIK-submissions-001.json"}],
-    }}
-    archive = {
-        "form": ["10-K", "8-K", "10-K"],
-        "filingDate": ["2021-02-01", "2021-03-01", "2020-02-01"],
-        "accessionNumber": ["a-2021", "k-2021", "a-2020"],
-        "primaryDocument": ["d2021.htm", "k.htm", "d2020.htm"],
-    }
-
-    def fake_get(url, *a, **k):
-        return _Resp(main if url.endswith("CIK0000320193.json") else archive)
-
-    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
-    monkeypatch.setattr(edgar.requests, "get", fake_get)
-
-    out = edgar.get_filings("0000320193", "10-K", years=20)
-    # recent (2025) + archive (2021, 2020); 8-K dropped; newest first
-    assert [f["date"] for f in out] == ["2025-02-01", "2021-02-01", "2020-02-01"]
-
-
-def test_get_filings_skips_archives_when_recent_covers_window(monkeypatch):
-    # recent already reaches back to 2010, well before any realistic cutoff, so
-    # the archive files must not be fetched.
-    payload = {"filings": {
-        "recent": {
-            "form": ["10-K", "10-K"],
-            "filingDate": ["2025-02-01", "2010-02-01"],
-            "accessionNumber": ["a-2025", "a-2010"],
-            "primaryDocument": ["d2025.htm", "d2010.htm"],
-        },
-        "files": [{"name": "should-not-be-fetched.json"}],
-    }}
-    fetched = []
-
-    def fake_get(url, *a, **k):
-        fetched.append(url)
-        return _Resp(payload)
-
-    monkeypatch.setattr(edgar.requests, "get", fake_get)
-    out = edgar.get_filings("0000320193", "10-K", years=3)  # recent oldest (2010) predates cutoff
-    assert [f["date"] for f in out] == ["2025-02-01"]
-    assert len(fetched) == 1  # archive file never requested
-
-
-def test_download_10k_falls_back_to_20f(monkeypatch, tmp_path):
-    """Foreign private issuers file 20-F; when no 10-K exists we retry as 20-F."""
-    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
-    monkeypatch.setattr(edgar, "SAVE_DIR", tmp_path)
-    monkeypatch.setattr(edgar, "get_cik", lambda t: "0000000001")
-    monkeypatch.setattr(edgar, "find_pdf_in_filing", lambda cik, acc: None)
-
-    forms_tried = []
-
-    def fake_get_filings(cik, form, years):
-        forms_tried.append(form)
-        if form == "10-K":
-            return []  # foreign filer → no 10-K
-        return [{"date": "2025-04-01", "accession": "a-2025", "primary_doc": "d.htm"}]
-
-    monkeypatch.setattr(edgar, "get_filings", fake_get_filings)
-
-    saved = []
-
-    def fake_download_as_pdf(url, path):
-        saved.append(path)
-        path.write_bytes(b"%PDF-1.4")
-        return True
-
-    monkeypatch.setattr(edgar, "download_as_pdf", fake_download_as_pdf)
-
-    assert edgar.download_10k("TSMFAKE", years=3) is True
-    assert forms_tried == ["10-K", "20-F"]  # tried 10-K first, then fell back
-    assert [p.name for p in saved] == ["TSMFAKE_2025_20-F.pdf"]
-
-
-def test_download_10k_no_fallback_when_10k_exists(monkeypatch, tmp_path):
-    monkeypatch.setattr(edgar.time, "sleep", lambda *_a: None)
-    monkeypatch.setattr(edgar, "SAVE_DIR", tmp_path)
-    monkeypatch.setattr(edgar, "get_cik", lambda t: "0000000001")
-    monkeypatch.setattr(edgar, "find_pdf_in_filing", lambda cik, acc: None)
-    monkeypatch.setattr(edgar, "download_as_pdf", lambda url, path: True)
-
-    forms_tried = []
-
-    def fake_get_filings(cik, form, years):
-        forms_tried.append(form)
-        return [{"date": "2025-04-01", "accession": "a", "primary_doc": "d.htm"}]
-
-    monkeypatch.setattr(edgar, "get_filings", fake_get_filings)
-    edgar.download_10k("AAPL", years=1)
-    assert forms_tried == ["10-K"]  # 10-K found → never queries 20-F
 
 
 # ── download_grab_6k: extract_pdf_links ──────────────────────────────────────
