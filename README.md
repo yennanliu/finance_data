@@ -24,6 +24,7 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 | Category | Description | Location |
 |----------|-------------|----------|
 | Analysis Reports | 12 AI-generated analysis types — fundamental, technical, valuation, insider trading, institutional ownership, earnings-call, sector, and more | `ai_gen_report/fundamental/`, `ai_gen_report/technical/`, `ai_gen_report/stock/` |
+| Price Data | 10 years of daily OHLCV per ticker, published as browsable charts (drawdown, rolling volatility, return distribution, monthly heatmap) plus CSV / JSON / ZIP downloads | `data/prices/` → site **Price Data** tab |
 | Market News | Daily AI-curated market news per ticker | `ai_gen_report/market_news/` |
 | Stock Watchlist | Pre-market AI-generated fundamental watchlist | `ai_gen_report/` |
 | Progress & QA Reports | Auto-generated daily progress summaries and report-quality (QA) checks | `ai_gen_report/` |
@@ -127,6 +128,7 @@ finance_data/
 ├── ai_gen_report/
 │   ├── stock/        # AI-generated analysis reports (Markdown)
 │   └── market_news/  # Daily AI-curated market news
+├── data/prices/      # Committed 10y OHLCV store — source of every chart, published as the Price Data section
 ├── notebook_llm/     # NotebookLM deep research notes
 ├── 10-k/             # SEC 10-K annual reports (PDF)
 ├── 10-q/             # SEC 10-Q quarterly reports

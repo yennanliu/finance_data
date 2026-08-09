@@ -303,6 +303,34 @@ If a 5Y/MAX range is ever wanted, derive a tiered payload — daily bars for the
 recent ~2y, weekly beyond — which keeps the file ~40 KB at any depth. Out of
 scope now; the store makes it a build-time change only.
 
+### 4b. Price Data payloads (added 2026-08)
+
+The report pages get the windowed payload above. The **Price Data** section
+(`docs/prices/`, §12) needs the whole store, so it writes two more files per
+ticker — untracked, same as `kline.json`:
+
+| File | Shape | Size |
+|---|---|---|
+| `prices.json` | identical schema to `kline.json`, but the *entire* store | ~180 KB |
+| `analytics.json` | `{summary, drawdown[], volatility[], histogram[]}` | ~150 KB |
+
+`prices.json` reuses the `kline.json` schema deliberately: one widget then serves
+both a 360-bar report chart and a ten-year Price Data chart, the only difference
+being `data-ranges="30,180,360,756,2520"`. This is the tiered-payload idea's
+cheap alternative — 180 KB uncompressed is acceptable on a page whose whole
+purpose is the price data, where it would not be on 3,500 report pages.
+
+`analytics.json` carries series **pre-computed in Python**
+(`scripts/analysis/data/price_analytics.py`) rather than derived in the browser.
+That is the same principle as the store itself: compute once, in a place that can
+be tested, so the page and the download can never disagree. It is also what keeps
+`price-charts.js` a pure renderer.
+
+Both files are written into the EN *and* ZH trees (~24 MB total) so the charts
+work under `mkdocs serve` in either language. The bulky language-neutral
+downloads — the raw CSVs and `all_prices.zip` — are written once into the EN tree
+and linked absolutely from ZH.
+
 `ai_gen_report/kline/` is deleted and `.gitignore` gains `docs/reports/` coverage
 already (it's ignored today), so the derived JSON is untracked by construction.
 
@@ -605,3 +633,56 @@ Phase-scoped and cheap:
 - **Phase 4** — the destructive one. Deletion of the PNGs and inline Plotly is
   recoverable from git history but not from the working tree, so it lands **only
   after phase 3 is verified in production**.
+
+---
+
+## 12. The Price Data section (added 2026-08)
+
+Phases 1–5 made the store the single source of truth for every chart, but only
+as an implementation detail — nothing on the site exposed the data itself. This
+section publishes it.
+
+### What it produces
+
+```text
+docs/prices/
+  index.md          overview table: last close, 1D/1M/YTD/1Y, 52W band, avg volume,
+                    coverage span and a CSV link for every ticker in the store
+  index.json        the same, machine-readable (plus absolute URLs to each file)
+  all_prices.zip    every CSV in one deterministic archive
+  <key>/
+    index.md        candles (30D…10Y) · returns · key stats · drawdown ·
+                    rolling volatility · return histogram · monthly heatmap · downloads
+    prices.json     full-history OHLCV payload  (§4b)
+    analytics.json  pre-computed derived series (§4b)
+    <key>.csv       the raw store file, verbatim
+```
+
+Built by `build_docs.build_prices()`, mirrored into `docs/zh/prices/` with
+localised prose. It sits in the nav between **AI Gen Reports** and **Market
+News**; each report ticker page links across to its own price page.
+
+### Why the maths is in Python
+
+Every statistic on these pages comes from `analysis/data/price_analytics.py`,
+which is pure stdlib and takes the same `list[dict]` `prices.load_store()`
+returns. `price-charts.js` fetches `analytics.json` and draws it; it computes
+nothing. The result is that the numbers the site shows are asserted directly in
+`tests/test_price_analytics.py` against hand-worked arithmetic, and the widget's
+own wiring (series selection, chart kind, crosshair readout, degradation) is
+asserted in `tests/js/price_charts_harness.mjs`.
+
+### Choices worth remembering
+
+- **Returns are total returns.** The store holds Yahoo's adjusted close, so a
+  return computed from it already includes dividends. The pages say so rather
+  than implying a price change.
+- **A short history yields `None`, not a number.** A 1Y return needs 253 bars; a
+  CAGR needs at least six months. Reporting them off less would understate a
+  young ticker and invent a trend for a new one.
+- **The heatmap chains its months.** A year's total is the product of its monthly
+  returns, so it only appears for years covered from January.
+- **Deterministic ZIP.** Fixed member timestamps, sorted members — otherwise the
+  incremental build rewrites a multi-megabyte file on every run.
+- **Downloads live in the EN tree only.** They are language-neutral; duplicating
+  ~5 MB of CSV for the ZH tree buys nothing.
