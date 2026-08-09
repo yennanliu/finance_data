@@ -1,0 +1,1035 @@
+Generated: 2026-08-09 22:35 UTC
+Model: gemini-3.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+Rank: 1
+Ticker: FIX
+Company: Comfort Systems USA, Inc.
+Sector: Industrials
+Market Cap: ~$14.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18.0%
+  - EPS Growth (forward): 22.0%
+  - P/E (fwd): 28.0x  |  PEG: 1.27
+  - Debt/Equity: 0.12
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Comfort Systems is a premier provider of commercial HVAC, electrical, and plumbing services, uniquely positioned to benefit from the secular boom in data centers, semiconductor fabs, and domestic manufacturing reshoring. Its highly skilled labor force and specialized modular construction capabilities create a formidable local moat. The market overlooks the highly recurring nature of its maintenance contracts and the massive multi-year backlog supporting its growth.
+Key Risk:
+  A severe shortage of skilled trade labor could limit project execution capacity and drive up wage expenses, compressing margins.
+
+---
+Rank: 2
+Ticker: HALO
+Company: Halozyme Therapeutics, Inc.
+Sector: Healthcare
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16.0%
+  - EPS Growth (forward): 22.0%
+  - P/E (fwd): 15.0x  |  PEG: 0.68
+  - Debt/Equity: 0.25
+  - FCF Yield: 8.0%
+Investment Thesis:
+  Halozyme's ENHANZE technology allows intravenous biologics to be delivered subcutaneously, offering massive convenience to patients and extending patent lifespans for major pharma partners. The company operates a high-margin royalty model with virtually no capital expenditure requirements, leading to exceptional free cash flow. It remains overlooked due to fears of concentration in a few key partner drugs, despite a rapidly diversifying pipeline.
+Key Risk:
+  Loss of royalty streams from key partner drugs like Darzalex or Herceptin due to biosimilar competition or patent challenges.
+
+---
+Rank: 3
+Ticker: MEDP
+Company: Medpace Holdings, Inc.
+Sector: Healthcare
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16.0%
+  - EPS Growth (forward): 20.0%
+  - P/E (fwd): 26.0x  |  PEG: 1.30
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.5%
+Investment Thesis:
+  Medpace is a founder-led, full-service contract research organization (CRO) focusing exclusively on small-to-mid-sized biotech companies. Its full-service, execution-focused model creates high switching costs and superior customer loyalty compared to larger peers. The company has a pristine, debt-free balance sheet and is overlooked by investors who overstate the volatility of early-stage biotech funding.
+Key Risk:
+  A prolonged freeze in biotech venture capital funding could eventually slow down new contract bookings.
+
+---
+Rank: 4
+Ticker: BLD
+Company: TopBuild Corp.
+Sector: Consumer Cyclical
+Market Cap: ~$12.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12.0%
+  - EPS Growth (forward): 16.0%
+  - P/E (fwd): 18.0x  |  PEG: 1.13
+  - Debt/Equity: 0.42
+  - FCF Yield: 6.0%
+Investment Thesis:
+  TopBuild is the leading installer and distributor of insulation products in the US, benefiting from structural underbuilding in housing and tightening energy efficiency regulations. Its scale allows it to secure supply when materials are scarce, creating a strong competitive advantage over fragmented local competitors. The market underestimates its ability to pass through price increases and its highly successful roll-up M&A strategy.
+Key Risk:
+  A sharp downturn in US residential housing starts driven by persistent high mortgage rates.
+
+---
+Rank: 5
+Ticker: UTHR
+Company: United Therapeutics Corporation
+Sector: Healthcare
+Market Cap: ~$13.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15.0%
+  - EPS Growth (forward): 18.0%
+  - P/E (fwd): 14.0x  |  PEG: 0.78
+  - Debt/Equity: 0.10
+  - FCF Yield: 8.5%
+Investment Thesis:
+  United Therapeutics is a leader in treating pulmonary arterial hypertension (PAH) with a strong, high-barrier product portfolio and innovative pipeline, including organ manufacturing. The company's dry powder and strong cash generation allow for aggressive share buybacks and R&D reinvestment. It is valued cheaply due to perceived generic threats, which are mitigated by its superior drug delivery technologies (e.g., Tyvaso DPI).
+Key Risk:
+  Generic competition entering the PAH market faster than the company can transition patients to its newer delivery platforms.
+
+---
+Rank: 6
+Ticker: MANH
+Company: Manhattan Associates, Inc.
+Sector: Technology
+Market Cap: ~$15.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15.0%
+  - EPS Growth (forward): 20.0%
+  - P/E (fwd): 29.0x  |  PEG: 1.45
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.2%
+Investment Thesis:
+  Manhattan Associates is the gold standard in supply chain execution software, particularly warehouse management systems (WMS). Its cloud-native "Manhattan Active" platform has created high switching costs and a highly predictable recurring revenue stream. The company is a prime beneficiary of omni-channel retail complexity and warehouse automation, yet remains overlooked compared to broader enterprise software giants.
+Key Risk:
+  A slowdown in enterprise IT spending could delay large-scale supply chain modernization projects.
+
+---
+Rank: 7
+Ticker: SFM
+Company: Sprouts Farmers Market, Inc.
+Sector: Consumer Defensive
+Market Cap: ~$11.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11.0%
+  - EPS Growth (forward): 16.0%
+  - P/E (fwd): 22.0x  |  PEG: 1.38
+  - Debt/Equity: 0.08
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Sprouts operates a highly profitable, small-box grocery format focused on healthy, organic, and fresh foods. Its unique store layout and product curation attract a highly loyal, affluent demographic, insulating it from traditional grocery price wars. The company has excellent unit economics and a clear path to expand its store footprint by 10% annually, which is underappreciated by the market.
+Key Risk:
+  Intense competition from larger players like Whole Foods (Amazon) or traditional grocers expanding their organic offerings.
+
+---
+Rank: 8
+Ticker: AZEK
+Company: The AZEK Company Inc.
+Sector: Industrials
+Market Cap: ~$6.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12.0%
+  - EPS Growth (forward): 18.0%
+  - P/E (fwd): 24.0x  |  PEG: 1.33
+  - Debt/Equity: 0.32
+  - FCF Yield: 4.5%
+Investment Thesis:
+  AZEK is a leading manufacturer of low-maintenance, sustainable outdoor living products, primarily composite decking and trim. The company is capitalizing on a massive secular shift from traditional wood to composite materials, which offer superior durability and environmental benefits. AZEK's strong brand equity and deep distributor relationships create a solid moat, while its margin profile is expanding due to recycling initiatives.
+Key Risk:
+  A decline in discretionary consumer spending on home remodeling projects.
+
+---
+Rank: 9
+Ticker: OSIS
+Company: OSI Systems, Inc.
+Sector: Technology
+Market Cap: ~$2.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12.0%
+  - EPS Growth (forward): 17.0%
+  - P/E (fwd): 15.0x  |  PEG: 0.88
+  - Debt/Equity: 0.35
+  - FCF Yield: 7.2%
+Investment Thesis:
+  OSI Systems specializes in security inspection systems (Rapiscan) and optoelectronic devices, benefiting from rising global security and border control spending. The company's proprietary algorithms and integrated turnkey service models create high customer retention and long-term government contracts. It is highly overlooked due to its complex, multi-divisional structure, despite trading at a very attractive valuation relative to its growth.
+Key Risk:
+  Lumpiness in government contract awards and potential delays in international border security projects.
+
+---
+Rank: 10
+Ticker: ENS
+Company: EnerSys
+Sector: Industrials
+Market Cap: ~$4.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9.0%
+  - EPS Growth (forward): 14.0%
+  - P/E (fwd): 15.0x  |  PEG: 1.07
+  - Debt/Equity: 0.38
+  - FCF Yield: 6.5%
+Investment Thesis:
+  EnerSys is a global leader in stored energy solutions for industrial applications, including motive power, telecom, and defense. The company is transitioning toward high-margin lithium-ion technology and is a key beneficiary of the IRA (Inflation Reduction Act) tax credits for domestic battery manufacturing. The market values it as a legacy lead-acid battery maker, ignoring its critical role in grid modernization and 5G infrastructure.
+Key Risk:
+  Slower-than-expected adoption of lithium-ion solutions by conservative industrial customers.
+
+---
+Rank: 11
+Ticker: HLI
+Company: Houlihan Lokey, Inc.
+Sector: Financials
+Market Cap: ~$10.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12.0%
+  - EPS Growth (forward): 15.0%
+  - P/E (fwd): 21.0x  |  PEG: 1.40
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.8%
+Investment Thesis:
+  Houlihan Lokey is the global leader in mid-market M&A advisory and financial restructuring. Its business model is highly counter-cyclical; when M&A slows down, its restructuring practice thrives, providing highly stable earnings across economic cycles. The firm is debt-free, capital-light, and has a strong culture of employee ownership, making it a premier, overlooked compounder in the financial sector.
+Key Risk:
+  A prolonged period of extremely low corporate defaults could temporarily depress its restructuring revenues.
+
+---
+Rank: 12
+Ticker: EXLS
+Company: ExlService Holdings, Inc.
+Sector: Technology
+Market Cap: ~$5.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 13.0%
+  - EPS Growth (forward): 16.0%
+  - P/E (fwd): 22.0x  |  PEG: 1.38
+  - Debt/Equity: 0.15
+  - FCF Yield: 5.0%
+Investment Thesis:
+  ExlService provides data analytics and digital operations solutions, helping insurance, healthcare, and financial services companies automate operations. Its deep domain expertise in complex industries makes its services highly sticky, with switching costs increasing as it integrates AI into client workflows. It is overlooked in favor of larger IT consulting firms, despite consistently outperforming them in organic growth and margin stability.
+Key Risk:
+  Rapid advancements in generative AI could disrupt traditional business process outsourcing models if EXL cannot adapt quickly enough.
+
+---
+Rank: 13
+Ticker: BRO
+Company: Brown & Brown, Inc.
+Sector: Financials
+Market Cap: ~$26.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11.0%
+  - EPS Growth (forward): 14.0%
+  - P/E (fwd): 20.0x  |  PEG: 1.43
+  - Debt/Equity: 0.45
+  - FCF Yield: 5.2%
+Investment Thesis:
+  Brown & Brown is a leading insurance broker utilizing a highly decentralized model to acquire and grow localized agencies. Insurance brokerage is an exceptionally resilient business, characterized by high recurring commissions and low capital requirements. The company has a long track record of disciplined M&A and organic growth, yet is often overlooked compared to larger, more leveraged peers.
+Key Risk:
+  A sudden softening of the commercial insurance pricing cycle (soft market) could slow organic commission growth.
+
+---
+Rank: 14
+Ticker: ITT
+Company: ITT Inc.
+Sector: Industrials
+Market Cap: ~$11.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9.0%
+  - EPS Growth (forward): 13.0%
+  - P/E (fwd): 18.0x  |  PEG: 1.38
+  - Debt/Equity: 0.22
+  - FCF Yield: 5.8%
+Investment Thesis:
+  ITT is a diversified manufacturer of highly engineered critical components, primarily serving the aerospace, defense, chemical, and transportation sectors. Its focus on specialized, high-barrier products like motion technologies and industrial pumps ensures high customer retention and pricing power. The market overlooks ITT's significant portfolio optimization and margin expansion potential under its current disciplined management team.
+Key Risk:
+  Cyclical downturns in global industrial production and automotive markets.
+
+---
+Rank: 15
+Ticker: CR
+Company: Crane NXT, Co.
+Sector: Industrials
+Market Cap: ~$3.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9.0%
+  - EPS Growth (forward): 13.0%
+  - P/E (fwd): 16.0x  |  PEG: 1.23
+  - Debt/Equity: 0.50
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Crane NXT is an industrial technology company specializing in advanced micro-optics and security technologies for physical and digital authentication. Following its spin-off from Crane Co., the market has failed to recognize its high-margin, recurring software and services business. Its dominant market share in banknote security and product authentication provides a highly defensive cash flow stream.
+Key Risk:
+  A faster-than-expected global shift away from physical cash toward digital payment methods.
+
+---
+Rank: 16
+Ticker: UFPI
+Company: UFP Industries, Inc.
+Sector: Industrials
+Market Cap: ~$7.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8.0%
+  - EPS Growth (forward): 12.0%
+  - P/E (fwd): 13.0x  |  PEG: 1.08
+  - Debt/Equity: 0.10
+  - FCF Yield: 7.5%
+Investment Thesis:
+  UFP Industries is a highly diversified wood and alternative material manufacturer serving the retail, packaging, and construction markets. The company has successfully shifted its product mix toward high-margin, proprietary engineered products, reducing its exposure to commodity lumber volatility. It trades at a very low valuation despite having a pristine balance sheet and a stellar history of capital allocation.
+Key Risk:
+  Severe volatility in lumber prices or a sharp contraction in industrial packaging demand.
+
+---
+Rank: 17
+Ticker: EPAM
+Company: EPAM Systems, Inc.
+Sector: Technology
+Market Cap: ~$11.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10.0%
+  - EPS Growth (forward): 14.0%
+  - P/E (fwd): 18.0x  |  PEG: 1.29
+  - Debt/Equity: 0.05
+  - FCF Yield: 6.0%
+Investment Thesis:
+  EPAM is a premier software engineering and digital product design consultancy that has successfully diversified its global delivery footprint. The company is a key partner for enterprises undertaking complex digital transformations and AI integrations, which require deep engineering expertise. It is currently undervalued due to temporary geopolitical disruptions, presenting a compelling entry point for a high-quality compounder.
+Key Risk:
+  Geopolitical instability in Eastern Europe affecting delivery centers, or slower-than-expected recovery in enterprise IT budgets.
+
+---
+Rank: 18
+Ticker: POWI
+Company: Power Integrations, Inc.
+Sector: Technology
+Market Cap: ~$4.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14.0%
+  - EPS Growth (forward): 20.0%
+  - P/E (fwd): 28.0x  |  PEG: 1.40
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.2%
+Investment Thesis:
+  Power Integrations designs high-voltage analog integrated circuits used in energy-efficient power conversion. Its proprietary Gallium Nitride (GaN) technology allows for smaller, more efficient power supplies, capturing market share in smartphones, EVs, and industrial IoT. The company is debt-free, holds a massive patent portfolio, and is highly overlooked as a pure-play green technology enabler.
+Key Risk:
+  Intense competition from larger analog chipmakers or a prolonged cyclical downturn in consumer electronics.
+
+---
+Rank: 19
+Ticker: QLYS
+Company: Qualys, Inc.
+Sector: Technology
+Market Cap: ~$5.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11.0%
+  - EPS Growth (forward): 14.0%
+  - P/E (fwd): 20.0x  |  PEG: 1.43
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Qualys is a pioneer in cloud-based security and compliance solutions, offering a highly integrated platform that reduces the need for multiple security agents. The company boasts industry-leading operating margins and a debt-free balance sheet, driven by its efficient self-service sales model. It is overlooked in favor of high-growth, unprofitable cybersecurity names, despite its superior cash-flow profile.
+Key Risk:
+  Market share loss to larger consolidated security platforms (e.g., CrowdStrike, Palo Alto Networks) if its platform innovation slows.
+
+---
+Rank: 20
+Ticker: MUSA
+Company: Murphy USA Inc.
+Sector: Consumer Cyclical
+Market Cap: ~$9.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6.0%
+  - EPS Growth (forward): 12.0%
+  - P/E (fwd): 16.0x  |  PEG: 1.33
+  - Debt/Equity: 0.65
+  - FCF Yield: 7.0%
+Investment Thesis:
+  Murphy USA is a low-price fuel and convenience retailer, strategically located adjacent to Walmart stores. Its low-cost operating model and high-volume fuel sales create a structural cost advantage that competitors cannot match. The company uses its high free cash flow to aggressively buy back shares, compounding EPS growth even in a mature industry.
+Key Risk:
+  A rapid acceleration in EV adoption that materially reduces long-term retail fuel demand.
+
+---
+Rank: 21
+Ticker: GFL
+Company: GFL Environmental Inc.
+Sector: Industrials
+Market Cap: ~$12.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11.0%
+  - EPS Growth (forward): 16.0%
+  - P/E (fwd): 22.0x  |  PEG: 1.38
+  - Debt/Equity: 1.10
+  - FCF Yield: 5.2%
+Investment Thesis:
+  GFL is the fourth-largest solid waste management company in North America, operating in a highly defensive, recession-resistant sector. Its dense asset network and long-term municipal contracts create high barriers to entry and strong pricing power. The market is concerned about its debt load, but ignores its rapid deleveraging profile and the highly predictable nature of its cash flows.
+Key Risk:
+  High interest rates increasing the cost of refinancing its debt, or integration issues with future acquisitions.
+
+---
+Rank: 22
+Ticker: KNX
+Company: Knight-Swift Transportation Holdings Inc.
+Sector: Industrials
+Market Cap: ~$8.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10.0%
+  - EPS Growth (forward): 20.0%
+  - P/E (fwd): 18.0x  |  PEG: 0.90
+  - Debt/Equity: 0.40
+  - FCF Yield: 6.2%
+Investment Thesis:
+  Knight-Swift is the largest truckload carrier in North America, possessing unmatched scale and operational efficiency. The company is poised for a massive earnings recovery as the cyclical freight recession bottoms out and capacity exits the industry. Its expansion into the less-than-truckload (LTL) market provides a long-term growth runway that is currently underappreciated by the market.
+Key Risk:
+  A prolonged freight recession or persistent driver shortages that drive up labor costs.
+
+---
+Rank: 23
+Ticker: CACI
+Company: CACI International Inc.
+Sector: Industrials
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11.0%
+  - EPS Growth (forward): 14.0%
+  - P/E (fwd): 19.0x  |  PEG: 1.36
+  - Debt/Equity: 0.42
+  - FCF Yield: 6.0%
+Investment Thesis:
+  CACI provides expertise and technology to enterprise IT, defense, and intelligence agencies of the US government. The company's deep-rooted relationships and high percentage of cleared personnel create a massive moat, with over 80% of its revenue coming from prime contracts. It is a direct beneficiary of rising national security budgets and cyber-defense spending, yet trades at a discount to commercial IT peers.
+Key Risk:
+  Changes in US federal budget priorities or delays in the passing of defense appropriations bills.
+
+---
+Rank: 24
+Ticker: SXI
+Company: Standex International Corporation
+Sector: Industrials
+Market Cap: ~$2.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8.0%
+  - EPS Growth (forward): 12.0%
+  - P/E (fwd): 16.0x  |  PEG: 1.33
+  - Debt/Equity: 0.20
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Standex is a multi-industry manufacturer of highly engineered products, including electronics, engraving, and specialty technologies. The company has successfully divested low-margin businesses to focus on high-margin, high-growth segments like custom electronics for EVs and aerospace. This portfolio optimization has led to record margins and cash flow, which the market has yet to fully value.
+Key Risk:
+  Slower-than-expected adoption of electric vehicles or aerospace supply chain bottlenecks.
+
+---
+Rank: 25
+Ticker: MASI
+Company: Masimo Corporation
+Sector: Healthcare
+Market Cap: ~$6.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9.0%
+  - EPS Growth (forward): 15.0%
+  - P/E (fwd): 21.0x  |  PEG: 1.40
+  - Debt/Equity: 0.40
+  - FCF Yield: 5.0%
+Investment Thesis:
+  Masimo is a global leader in non-invasive patient monitoring technologies, primarily pulse oximetry. The company's core healthcare business has extremely high switching costs due to its proprietary sensors and long-term hospital contracts. A planned spin-off of its non-core consumer audio business is expected to unlock significant margin expansion and re-rate the stock, which is currently overlooked due to past capital allocation concerns.
+Key Risk:
+  Delays or unfavorable terms in the execution of the consumer business spin-off.
+
+---
+Rank: 26
+Ticker: TTC
+Company: The Toro Company
+Sector: Industrials
+Market Cap: ~$8.9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7.0%
+  - EPS Growth (forward): 12.0%
+  - P/E (fwd): 17.0x  |  PEG: 1.42
+  - Debt/Equity: 0.50
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Toro is a leading provider of turf maintenance, landscape, and underground construction equipment. The company has a dominant brand and distribution network in the professional market, which represents over 80% of its sales. It is currently experiencing a temporary cyclical dip in residential demand, creating an attractive entry point for a high-quality business with strong long-term tailwinds in infrastructure and golf course spending.
+Key Risk:
+  Unfavorable weather patterns (e.g., drought or lack of snow) that reduce demand for turf and snow-removal equipment.
+
+---
+Rank: 27
+Ticker: NEO
+Company: NeoGenomics, Inc.
+Sector: Healthcare
+Market Cap: ~$1.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12.0%
+  - EPS Growth (forward): 25.0%
+  - P/E (fwd): 30.0x  |  PEG: 1.20
+  - Debt/Equity: 0.20
+  - FCF Yield: 4.0%
+Investment Thesis:
+  NeoGenomics is a leading oncology-focused clinical laboratory, offering comprehensive cancer testing services to hospitals and biopharma. Following a successful operational turnaround, the company is seeing significant margin expansion as it scales its high-margin next-generation sequencing (NGS) tests. It remains overlooked as a small-cap turnaround play, despite its critical role in precision medicine.
+Key Risk:
+  Changes in Medicare reimbursement rates for oncology testing or intense competition from larger diagnostic labs.
+
+---
+Rank: 28
+Ticker: MIDD
+Company: The Middleby Corporation
+Sector: Industrials
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7.0%
+  - EPS Growth (forward): 11.0%
+  - P/E (fwd): 14.0x  |  PEG: 1.27
+  - Debt/Equity: 0.52
+  - FCF Yield: 6.8%
+Investment Thesis:
+  Middleby is a global leader in commercial foodservice equipment, boasting a portfolio of highly respected brands and advanced cooking technologies. The company is a key beneficiary of restaurant automation and energy-efficiency trends, helping operators combat high labor costs. The market is overly focused on short-term restaurant CapEx cycles, ignoring Middleby's strong pricing power and high recurring parts-and-service revenue.
+Key Risk:
+  A severe consumer spending slowdown that causes restaurant chains to defer equipment upgrades.
+
+---
+Rank: 29
+Ticker: LECO
+Company: Lincoln Electric Holdings, Inc.
+Sector: Industrials
+Market Cap: ~$12.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8.0%
+  - EPS Growth (forward): 15.0%
+  - P/E (fwd): 20.0x  |  PEG: 1.33
+  - Debt/Equity: 0.40
+  - FCF Yield: 5.0%
+Investment Thesis:
+  Lincoln Electric is the global leader in welding and cutting equipment, with a strong focus on automation and advanced metallurgy. The company has a highly sticky customer base due to its proprietary consumables and software-integrated welding systems. It is uniquely positioned to benefit from structural trends in structural steel, infrastructure spending, and its expansion into EV fast-charger manufacturing.
+Key Risk:
+  A sharp slowdown in global heavy industrial manufacturing and construction activity.
+
+---
+Rank: 30
+Ticker: WSO
+Company: Watsco, Inc.
+Sector: Industrials
+Market Cap: ~$18.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10.0%
+  - EPS Growth (forward): 18.0%
+  - P/E (fwd): 26.0x  |  PEG: 1.44
+  - Debt/Equity: 0.15
+  - FCF Yield: 4.5%
+Investment Thesis:
+  Watsco is the largest distributor of HVAC equipment and parts in North America, operating in a highly fragmented industry. Its massive scale and proprietary digital tools provide a significant moat, helping contractors run their businesses more efficiently. The company is a prime beneficiary of the multi-decade transition to energy-efficient heat pumps and regulatory refrigerant transitions, which drive higher average selling prices.
+Key Risk:
+  Supply chain disruptions or a sudden slowdown in residential replacement demand due to economic weakness.
+
+---
+
+== SELECTION METHODOLOGY ==
+Our screening methodology was designed to identify high-quality, resilient compounders while strictly avoiding the speculative excesses of the broader market. We filtered out any company with a market capitalization exceeding $50 billion or those frequently mentioned in mainstream financial media and social platforms, effectively eliminating overvalued mega-caps and momentum-driven 'meme' stocks. Instead, we focused on small-to-mid-cap companies ($500M to $50B) possessing strong balance sheets, positive free cash flow, and high returns on capital. We balanced growth and value by prioritizing companies with a PEG ratio below 1.5, ensuring we did not overpay for growth. Our selection was heavily informed by structural, multi-year macro themes, including domestic manufacturing reshoring, infrastructure modernization, automation to combat labor shortages, and energy-efficiency transitions. This disciplined approach highlights overlooked businesses with deep competitive moats that are well-positioned to deliver superior risk-adjusted returns over the long term.
+
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+排名: 1
+代碼: FIX
+公司: Comfort Systems USA, Inc.
+產業: Industrials
+市值: ~$14.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18.0%
+  - 每股盈餘成長（預估）: 22.0%
+  - 本益比（預估）: 28.0x  |  本益成長比: 1.27
+  - 負債權益比: 0.12
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Comfort Systems 是商業暖通空調（HVAC）、電力和管道服務的領先供應商，其獨特優勢能從數據中心、半導體晶圓廠和國內製造業回流的長期繁榮中受益。其高素質的勞動力和專業的模組化建造能力，在地方市場建立了強大的競爭護城河。市場忽視了其維護合約的高度經常性本質，以及支持其成長的龐大多年期積壓訂單。
+主要風險:
+  技術工人的嚴重短缺可能會限制項目的執行能力，並推高工資支出，從而壓縮利潤率。
+
+---
+排名: 2
+代碼: HALO
+公司: Halozyme Therapeutics, Inc.
+產業: Healthcare
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16.0%
+  - 每股盈餘成長（預估）: 22.0%
+  - 本益比（預估）: 15.0x  |  本益成長比: 0.68
+  - 負債權益比: 0.25
+  - 自由現金流殖利率: 8.0%
+投資論點:
+  Halozyme 的 ENHANZE 技術能將靜脈注射生物製劑轉化為皮下注射，為患者提供極大的便利，並延長了主要製藥合作夥伴的專利壽命。該公司採用高利潤的專利授權模式，幾乎沒有資本支出需求，從而產生了卓越的自由現金流。儘管其研發管線正迅速多元化，但由於投資人擔心其營收過度集中於少數幾款關鍵合作藥物，該公司仍被市場低估。
+主要風險:
+  由於生物相似藥的競爭或專利挑戰，導致來自 Darzalex 或 Herceptin 等關鍵合作藥物的專利授權收入流失。
+
+---
+排名: 3
+代碼: MEDP
+公司: Medpace Holdings, Inc.
+產業: Healthcare
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16.0%
+  - 每股盈餘成長（預估）: 20.0%
+  - 本益比（預估）: 26.0x  |  本益成長比: 1.30
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  Medpace 是一家由創辦人領導、提供全方位服務的委託研究機構（CRO），專注於中小型生技公司。其以執行為導向的全方位服務模式，與大型同業相比，創造了極高的轉換成本和優異的客戶忠誠度。該公司擁有健全且無負債的資產負債表，卻因投資人過度放大早期生技融資的波動性而被市場忽視。
+主要風險:
+  生技風險投資資金的長期凍結，可能會逐漸減緩新合約的簽訂速度。
+
+---
+排名: 4
+代碼: BLD
+公司: TopBuild Corp.
+產業: Consumer Cyclical
+市值: ~$12.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12.0%
+  - 每股盈餘成長（預估）: 16.0%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.13
+  - 負債權益比: 0.42
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  TopBuild 是美國領先的隔熱材料安裝和分銷商，受益於住宅建設的結構性不足以及日益嚴格的節能法規。其規模優勢使其能在材料短缺時確保供應，從而對零散的地方競爭對手形成強大的競爭優勢。市場低估了其轉嫁價格上漲的能力以及其非常成功的併購（M&A）整合策略。
+主要風險:
+  在持續高房貸利率的推動下，美國住宅新屋開工量出現急劇下滑。
+
+---
+排名: 5
+代碼: UTHR
+公司: United Therapeutics Corporation
+產業: Healthcare
+市值: ~$13.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15.0%
+  - 每股盈餘成長（預估）: 18.0%
+  - 本益比（預估）: 14.0x  |  本益成長比: 0.78
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 8.5%
+投資論點:
+  United Therapeutics 是治療肺動脈高壓（PAH）的領導者，擁有強大、高壁壘的產品組合 and 創新的研發管線（包括器官製造）。該公司充沛的現金和強大的現金產生能力，使其能夠進行積極的股份回購和研發再投資。由於市場擔憂學名藥的威脅，其估值偏低，但其優異的藥物傳遞技術（如 Tyvaso DPI）減輕了這一風險。
+主要風險:
+  學名藥競爭對手進入 PAH 市場的速度，快於該公司將患者轉移到其新藥物傳遞平台的速度。
+
+---
+排名: 6
+代碼: MANH
+公司: Manhattan Associates, Inc.
+產業: Technology
+市值: ~$15.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15.0%
+  - 每股盈餘成長（預估）: 20.0%
+  - 本益比（預估）: 29.0x  |  本益成長比: 1.45
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.2%
+投資論點:
+  Manhattan Associates 是供應鏈執行軟體（特別是倉庫管理系統 WMS）的黃金標準。其雲端原生平台「Manhattan Active」創造了極高的轉換成本和高度可預測的經常性營收。該公司是全通路零售複雜化和倉庫自動化的主要受益者，但與大型企業軟體巨頭相比，仍被市場忽視。
+主要風險:
+  企業 IT 支出的放緩可能會延遲大型供應鏈現代化項目的實施。
+
+---
+排名: 7
+代碼: SFM
+公司: Sprouts Farmers Market, Inc.
+產業: Consumer Defensive
+市值: ~$11.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11.0%
+  - 每股盈餘成長（預估）: 16.0%
+  - 本益比（預估）: 22.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.08
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Sprouts 營運著一種高獲利的小型超市模式，專注於健康、有機和新鮮食品。其獨特的店面佈局和產品策劃吸引了高度忠誠且富裕的客群，使其免受傳統超市價格戰的影響。該公司擁有優異的單店經濟效益，並有明確的計劃每年擴大 10% 的店面版圖，這一點未被市場充分重視。
+主要風險:
+  來自 Whole Foods（亞馬遜）等大型競爭對手或擴大有機產品線的傳統超市的激烈競爭。
+
+---
+排名: 8
+代碼: AZEK
+公司: The AZEK Company Inc.
+產業: Industrials
+市值: ~$6.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12.0%
+  - 每股盈餘成長（預估）: 18.0%
+  - 本益比（預估）: 24.0x  |  本益成長比: 1.33
+  - 負債權益比: 0.32
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  AZEK 是低維護、永續戶外生活產品（主要是複合材料甲板和飾板）的領先製造商。該公司正受益於從傳統木材到複合材料的巨大結構性轉變，後者提供了更優異的耐用性和環保優勢。AZEK 強大的品牌資產和深厚的分銷商關係構成了堅實的護城河，而其利潤率也因回收計劃而持續擴大。
+主要風險:
+  消費者在住宅改造項目上的自由支配支出出現下降。
+
+---
+排名: 9
+代碼: OSIS
+公司: OSI Systems, Inc.
+產業: Technology
+市值: ~$2.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12.0%
+  - 每股盈餘成長（預估）: 17.0%
+  - 本益比（預估）: 15.0x  |  本益成長比: 0.88
+  - 負債權益比: 0.35
+  - 自由現金流殖利率: 7.2%
+投資論點:
+  OSI Systems 專注於安全檢查系統（Rapiscan）和光電設備，受益於全球安全和邊境管制支出的上升。該公司的專利演算法和整合式統包服務模式創造了極高的客戶留存率和長期政府合約。由於其複雜的多部門結構，該公司被嚴重忽視，儘管相對於其成長性，其估值非常具吸引力。
+主要風險:
+  政府合約授予的波動性，以及國際邊境安全項目可能出現的延遲。
+
+---
+排名: 10
+代碼: ENS
+公司: EnerSys
+產業: Industrials
+市值: ~$4.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9.0%
+  - 每股盈餘成長（預估）: 14.0%
+  - 本益比（預估）: 15.0x  |  本益成長比: 1.07
+  - 負債權益比: 0.38
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  EnerSys 是全球工業儲能解決方案的領導者，產品應用於動力、電信和國防等領域。該公司正轉向高利潤的鋰離子技術，並且是美國《降低通膨法案》（IRA）國內電池製造稅收抵免的主要受益者。市場將其視為傳統的鉛酸電池製造商，忽視了其在電網現代化和 5G 基礎設施中的關鍵作用。
+主要風險:
+  保守的工業客戶對鋰離子解決方案的採用速度慢於預期。
+
+---
+排名: 11
+代碼: HLI
+公司: Houlihan Lokey, Inc.
+產業: Financials
+市值: ~$10.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12.0%
+  - 每股盈餘成長（預估）: 15.0%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.40
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  Houlihan Lokey 是全球中型市場併購諮詢和財務重組的領導者。其業務模式具有高度的反週期性；當併購放緩時，其重組業務就會蓬勃發展，從而在整個經濟週期中提供高度穩定的獲利。該公司無負債、輕資產，並擁有強大的員工持股文化，使其成為金融領域中一個被忽視的優質複合成長企業。
+主要風險:
+  企業違約率長期處於極低水平，可能會暫時壓低其重組業務的營收。
+
+---
+排名: 12
+代碼: EXLS
+公司: ExlService Holdings, Inc.
+產業: Technology
+市值: ~$5.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 13.0%
+  - 每股盈餘成長（預估）: 16.0%
+  - 本益比（預估）: 22.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.15
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  ExlService 提供數據分析和數位營運解決方案，幫助保險、醫療保健和金融服務公司實現營運自動化。其在複雜行業中的深厚領域知識使其服務具有極高的黏性，隨著其將人工智慧整合到客戶的工作流程中，轉換成本進一步增加。儘管其在有機成長和利潤率穩定性方面持續優於大型 IT 諮詢公司，但仍被市場忽視。
+主要風險:
+  如果 EXL 無法足夠快地適應，生成式人工智慧的快速發展可能會顛覆傳統的業務流程外包（BPO）模式。
+
+---
+排名: 13
+代碼: BRO
+公司: Brown & Brown, Inc.
+產業: Financials
+市值: ~$26.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11.0%
+  - 每股盈餘成長（預估）: 14.0%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.43
+  - 負債權益比: 0.45
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  Brown & Brown 是一家領先的保險經紀公司，採用高度去中心化的模式來收購和發展地方性機構。保險經紀是一項極具韌性的業務，其特點是高經常性佣金和低資本需求。該公司在紀律嚴明的併購和有機成長方面擁有長期記錄，但與規模更大、槓桿率更高的同業相比，往往被市場忽視。
+主要風險:
+  商業保險定價週期的突然走軟（軟市）可能會減緩有機佣金的成長。
+
+---
+排名: 14
+代碼: ITT
+公司: ITT Inc.
+產業: Industrials
+市值: ~$11.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9.0%
+  - 每股盈餘成長（預估）: 13.0%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.22
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  ITT 是一家高度工程化關鍵零組件的多元化製造商，主要服務於航空航天、國防、化工和運輸領域。其對運動技術和工業泵等高壁壘專業產品的專注，確保了高客戶留存率和定價權。市場忽視了 ITT 在目前紀律嚴明的管理團隊領導下，顯著的投資組合優化和利潤率擴張潛力。
+主要風險:
+  全球 industrial 生產和汽車市場的週期性低迷。
+
+---
+排名: 15
+代碼: CR
+公司: Crane NXT, Co.
+產業: Industrials
+市值: ~$3.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9.0%
+  - 每股盈餘成長（預估）: 13.0%
+  - 本益比（預估）: 16.0x  |  本益成長比: 1.23
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Crane NXT 是一家工業技術公司，專注於用於實體和數位身份驗證的先進微光學和安全技術。自 Crane Co. 分拆出來後，市場未能認識到其高利潤、經常性的軟體和服務業務。其在紙鈔安全和產品防偽領域的絕對市場份額，提供了高度防禦性的現金流。
+主要風險:
+  全球從實體現金向數位支付方式轉變的速度快於預期。
+
+---
+排名: 16
+代碼: UFPI
+公司: UFP Industries, Inc.
+產業: Industrials
+市值: ~$7.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8.0%
+  - 每股盈餘成長（預估）: 12.0%
+  - 本益比（預估）: 13.0x  |  本益成長比: 1.08
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  UFP Industries 是一家高度多元化的木材及替代材料製造商，服務於零售、包裝和建築市場。該公司已成功將其產品結構轉向高利潤、專有的工程產品，減少了對大宗商品木材價格波動的曝險。儘管擁有健全的資產負債表和輝煌的資本配置歷史，其交易估值依然非常低。
+主要風險:
+  木材價格的劇烈波動或工業包裝需求的急劇收縮。
+
+---
+排名: 17
+代碼: EPAM
+公司: EPAM Systems, Inc.
+產業: Technology
+市值: ~$11.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10.0%
+  - 每股盈餘成長（預估）: 14.0%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.29
+  - 負債權益比: 0.05
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  EPAM 是一家頂尖的軟體工程和數位產品設計諮詢公司，已成功實現其全球交付版圖的多元化。該公司是企業進行複雜數位轉型和人工智慧整合的關鍵合作夥伴，這需要深厚的工程專業知識。由於暫時的地緣政治干擾，該公司目前被低估，為這家高質量的複合成長企業提供了一個極具吸引力的進場點。
+主要風險:
+  東歐地緣政治不穩定影響其交付中心，或企業 IT 預算復甦慢於預期。
+
+---
+排名: 18
+代碼: POWI
+公司: Power Integrations, Inc.
+產業: Technology
+市值: ~$4.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14.0%
+  - 每股盈餘成長（預估）: 20.0%
+  - 本益比（預估）: 28.0x  |  本益成長比: 1.40
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.2%
+投資論點:
+  Power Integrations 設計用於高效能電源轉換的高壓類比積體電路。其專有的氮化鎵（GaN）技術可實現更小、更高效的電源，並在智慧型手機、電動車和工業物聯網（IoT）中奪取市場份額。該公司無負債，擁有龐大的專利庫，作為純粹的綠色技術推動者，被市場嚴重忽視。
+主要風險:
+  來自大型類比晶片製造商的激烈競爭，或消費電子產品的長期週期性低迷。
+
+---
+排名: 19
+代碼: QLYS
+公司: Qualys, Inc.
+產業: Technology
+市值: ~$5.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11.0%
+  - 每股盈餘成長（預估）: 14.0%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.43
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Qualys 是雲端安全和合規解決方案的先驅，提供高度整合的平台，減少了對多個安全代理程式的需求。在其高效的自助式銷售模式推動下，該公司擁有業界領先的營運利潤率和無負債的資產負債表。儘管其擁有優異的現金流狀況，但與高成長、未獲利的網路安全公司相比，它仍被忽視。
+主要風險:
+  如果其平台創新放緩，市場份額可能會流失給更大、整合度更高的安全平台（如 CrowdStrike、Palo Alto Networks）。
+
+---
+排名: 20
+代碼: MUSA
+公司: Murphy USA Inc.
+產業: Consumer Cyclical
+市值: ~$9.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6.0%
+  - 每股盈餘成長（預估）: 12.0%
+  - 本益比（預估）: 16.0x  |  本益成長比: 1.33
+  - 負債權益比: 0.65
+  - 自由現金流殖利率: 7.0%
+投資論點:
+  Murphy USA 是一家低價燃油和便利商店零售商，戰略性地坐落於沃爾瑪（Walmart）門市旁。其低成本的營運模式和高銷量的燃油銷售，創造了競爭對手無法企及的結構性成本優勢。該公司利用其高自由現金流積極回購股份，即使在成熟行業中也能使每股盈餘（EPS）持續複合成長。
+主要風險:
+  電動車普及速度急劇加快，實質性地減少了長期的零售燃油需求。
+
+---
+排名: 21
+代碼: GFL
+公司: GFL Environmental Inc.
+產業: Industrials
+市值: ~$12.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11.0%
+  - 每股盈餘成長（預估）: 16.0%
+  - 本益比（預估）: 22.0x  |  本益成長比: 1.38
+  - 負債權益比: 1.10
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  GFL 是北美第四大固體廢棄物管理公司，營運於一個高度防禦性、抗衰退的行業。其密集的資產網絡和長期市政合約創造了高進入壁壘和強大的定價權。市場對其債務負擔感到擔憂，但忽視了其快速去槓桿的趨勢以及其現金流高度可預測的本質。
+主要風險:
+  高利率增加了其債務再融資的成本，或未來收購帶來的整合問題。
+
+---
+排名: 22
+代碼: KNX
+公司: Knight-Swift Transportation Holdings Inc.
+產業: Industrials
+市值: ~$8.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10.0%
+  - 每股盈餘成長（預估）: 20.0%
+  - 本益比（預估）: 18.0x  |  本益成長比: 0.90
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 6.2%
+投資論點:
+  Knight-Swift 是北美最大的整車貨運承運商，擁有無與倫比的規模和營運效率。隨著週期性貨運蕭條觸底且產能退出行業，該公司已準備好迎來巨大的獲利復甦。其向零擔貨運（LTL）市場的擴張，提供了目前未被市場充分重視的長期成長路徑。
+主要風險:
+  貨運業長期低迷，或持續的司機短缺推高了勞動力成本。
+
+---
+排名: 23
+代碼: CACI
+公司: CACI International Inc.
+產業: Industrials
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11.0%
+  - 每股盈餘成長（預估）: 14.0%
+  - 本益比（預估）: 19.0x  |  本益成長比: 1.36
+  - 負債權益比: 0.42
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  CACI 為美國政府的企業 IT、國防和情報機構提供專業知識和技術。該公司深厚的根基關係和高比例的安全審查人員創造了巨大的護城河，其 80% 以上的營收來自主要合約。它是國家安全預算和網絡防禦支出上升的直接受益者，但其交易估值相對於商業 IT 同業卻有折價。
+主要風險:
+  美國聯邦預算優先事項的變化，或國防撥款法案通過的延遲。
+
+---
+排名: 24
+代碼: SXI
+公司: Standex International Corporation
+產業: Industrials
+市值: ~$2.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8.0%
+  - 每股盈餘成長（預估）: 12.0%
+  - 本益比（預估）: 16.0x  |  本益成長比: 1.33
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Standex 是一家高度工程化產品的多行業製造商，包括電子、雕刻和專業技術。該公司已成功剝離低利潤業務，專注於高利潤、高成長的領域，如用於電動車和航空航天的客製化電子產品。這種投資組合優化帶來了創紀錄的利潤率和現金流，而市場尚未對其進行充分估值。
+主要風險:
+  電動車普及速度慢於預期，或航空航天供應鏈出現瓶頸。
+
+---
+排名: 25
+代碼: MASI
+公司: Masimo Corporation
+產業: Healthcare
+市值: ~$6.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9.0%
+  - 每股盈餘成長（預估）: 15.0%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.40
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  Masimo 是非侵入性患者監測技術（主要是脈搏血氧儀）的全球領導者。由於其專有傳感器和長期醫院合約，其核心醫療保健業務具有極高的轉換成本。計劃分拆其非核心消費音訊業務，預計將釋放顯著的利潤率擴張並重估股價，該股目前因過去的資本配置擔憂而被市場忽視。
+主要風險:
+  消費業務分拆的執行出現延遲或條款不利。
+
+---
+排名: 26
+代碼: TTC
+公司: The Toro Company
+產業: Industrials
+市值: ~$8.9B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7.0%
+  - 每股盈餘成長（預估）: 12.0%
+  - 本益比（預估）: 17.0x  |  本益成長比: 1.42
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Toro 是草坪維護、景觀美化和地下施工設備的領先供應商。該公司在專業市場擁有主導品牌 and 分銷網絡，專業市場佔其銷售額的 80% 以上。目前，它正經歷住宅需求的暫時性週期性下滑，這為這家在基礎設施和高爾夫球場支出方面擁有強大長期驅動力的優質企業，提供了一個具吸引力的進場點。
+主要風險:
+  不利的天氣模式（如乾旱或缺雪）減少了對草坪和除雪設備的需求。
+
+---
+排名: 27
+代碼: NEO
+公司: NeoGenomics, Inc.
+產業: Healthcare
+市值: ~$1.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12.0%
+  - 每股盈餘成長（預估）: 25.0%
+  - 本益比（預估）: 30.0x  |  本益成長比: 1.20
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 4.0%
+投資論點:
+  NeoGenomics 是一家領先的專注於腫瘤學的臨床實驗室，為醫院和生物製藥公司提供全面的癌症檢測服務。在成功實現營運轉型後，隨著該公司擴大其高利潤的次世代定序（NGS）檢測，其利潤率正顯著擴張。儘管其在精準醫療中發揮著關鍵作用，但作為一家小市值轉型企業，它仍被市場忽視。
+主要風險:
+  腫瘤檢測的聯邦醫療保險（Medicare）報銷率發生變化，或來自大型診斷實驗室的激烈競爭。
+
+---
+排名: 28
+代碼: MIDD
+公司: The Middleby Corporation
+產業: Industrials
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7.0%
+  - 每股盈餘成長（預估）: 11.0%
+  - 本益比（預估）: 14.0x  |  本益成長比: 1.27
+  - 負債權益比: 0.52
+  - 自由現金流殖利率: 6.8%
+投資論點:
+  Middleby 是商業餐飲服務設備的全球領導者，擁有備受推崇的品牌組合和先進的烹飪技術。該公司是餐廳自動化和節能趨勢的主要受益者，幫助業者應對高昂的勞動力成本。市場過度關注短期餐廳資本支出週期，忽視了 Middleby 強大的定價權以及高經常性的零件與服務營收。
+主要風險:
+  消費者支出嚴重放緩，導致連鎖餐廳推遲設備升級。
+
+---
+排名: 29
+代碼: LECO
+公司: Lincoln Electric Holdings, Inc.
+產業: Industrials
+市值: ~$12.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8.0%
+  - 每股盈餘成長（預估）: 15.0%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.33
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  Lincoln Electric 是全球焊接和切割設備的領導者，高度專注於自動化和先進冶金技術。由於其專有的消耗品和整合軟體的焊接系統，該公司擁有極高黏性的客戶群。其獨特優勢能從結構鋼、基礎設施支出等結構性趨勢，以及其向電動車快速充電器製造的擴張中受益。
+主要風險:
+  全球重工業製造和建築活動急劇放緩。
+
+---
+排名: 30
+代碼: WSO
+公司: Watsco, Inc.
+產業: Industrials
+市值: ~$18.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10.0%
+  - 每股盈餘成長（預估）: 18.0%
+  - 本益比（預估）: 26.0x  |  本益成長比: 1.44
+  - 負債權益比: 0.15
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  Watsco 是北美最大的暖通空調（HVAC）設備和零件分銷商，營運於一個高度零散的行業。其龐大的規模和專有的數位工具提供了顯著的護城河，幫助承包商更高效地營運業務。該公司是向節能熱泵過渡以及法規冷媒轉換的數十年趨勢的主要受益者，這些趨勢推高了平均售價。
+主要風險:
+  供應鏈中斷，或由於經濟疲軟導致住宅更換需求突然放緩。
+
+---
+
+== 選股方法論 ==
+我們的篩選方法旨在識別高質量、具韌性的複合成長企業，同時嚴格避免大盤中的投機性過熱現象。我們過濾掉了任何市值超過 500 億美元的公司，以及在主流財經媒體和社群平台上頻繁被提及的公司，從而有效排除了估值過高的超大市值股和動能驅動的「迷因」股。相反，我們專注於市值在 5 億至 500 億美元之間、擁有健全資產負債表、正自由現金流和高資本回報率的中小市值公司。我們通過優先考慮本益成長比（PEG）低於 1.5 的公司來平衡成長與價值，確保我們不會為成長支付過高溢價。我們的選擇在很大程度上受到多年期結構性宏觀主題的啟發，包括國內製造業回流、基礎設施現代化、應對勞動力短缺的自動化以及節能轉型。這種紀律嚴明的方法突顯了那些擁有深厚競爭護城河、且在長期內有能力提供優異風險調整後回報的被忽視企業。
