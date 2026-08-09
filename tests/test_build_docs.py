@@ -786,3 +786,180 @@ def test_fix_static_chart_embed_leaves_absolute_sources():
 
 def test_fix_static_chart_embed_noop_without_images():
     assert bd.fix_static_chart_embed("# Title\n") == "# Title\n"
+
+
+# ── Price Data section ───────────────────────────────────────────────────────
+
+def _store(monkeypatch, tmp_path, *keys, bars=40):
+    """A temp price store holding `keys`, each with a rising `bars`-day series."""
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    start = date(2026, 1, 1)
+    for key in keys:
+        series = [{"date": (start + timedelta(days=i)).isoformat(),
+                   "open": 100.0 + i, "high": 101.0 + i, "low": 99.0 + i,
+                   "close": 100.0 + i, "volume": 1_000_000, "div": None, "split": None}
+                  for i in range(bars)]
+        prices.write_store(key, series, tmp_path)
+
+
+def test_price_keys_lists_the_store_and_keeps_dotted_names(monkeypatch, tmp_path):
+    _store(monkeypatch, tmp_path, "nvda", "2330.tw")
+    assert bd.price_keys() == ["2330.tw", "nvda"]
+
+
+def test_price_keys_empty_when_the_store_is_absent(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "nope")
+    assert bd.price_keys() == []
+
+
+def test_published_price_keys_honours_sample_mode(monkeypatch, tmp_path):
+    _store(monkeypatch, tmp_path, "aaa", "bbb", "ccc")
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", True)
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 2)
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", [])
+    assert bd.published_price_keys() == ["aaa", "bbb"]
+
+
+def test_published_price_keys_follows_the_sample_ticker_allowlist(monkeypatch, tmp_path):
+    """A sample build must publish price pages for the same names the report
+    pages cover, or the cross-link is silently dropped from every one of them."""
+    _store(monkeypatch, tmp_path, "aaa", "bbb", "ccc")
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", True)
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 3)
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", ["ccc"])
+    assert bd.published_price_keys() == ["ccc"]
+
+
+def test_full_price_payload_carries_the_whole_store(monkeypatch, tmp_path):
+    """Unlike kline.json this is not windowed — the 10Y range button needs it all."""
+    _store(monkeypatch, tmp_path, "nvda", bars=30)
+    bars = prices.load_store("nvda", tmp_path)
+    payload = json.loads(bd.full_price_payload("nvda", bars))
+    assert payload["ticker"] == "NVDA"
+    assert payload["currency"] == "USD"
+    assert len(payload["bars"]) == 30
+    assert payload["updated"] == payload["bars"][-1]["t"]
+    assert set(payload["bars"][0]) == {"t", "o", "h", "l", "c", "v"}
+
+
+def test_analytics_payload_holds_every_series_the_widget_asks_for(monkeypatch, tmp_path):
+    _store(monkeypatch, tmp_path, "nvda", bars=40)
+    bars = prices.load_store("nvda", tmp_path)
+    payload = json.loads(bd.analytics_payload("nvda", bars))
+    # The data-series values in pchart_block() must all resolve.
+    for key in ("drawdown", "volatility", "histogram"):
+        assert payload[key], key
+    assert payload["summary"]["bars"] == 40
+
+
+def test_pct_cell_colours_by_sign():
+    assert bd._pct_cell(3.456) == '<span class="pos">+3.46%</span>'
+    assert bd._pct_cell(-3.456) == '<span class="neg">-3.46%</span>'
+    assert bd._pct_cell(None) == "—"
+
+
+def test_compact_volume_scales():
+    assert bd._compact_volume(1_234_567_890) == "1.23B"
+    assert bd._compact_volume(45_600_000) == "45.60M"
+    assert bd._compact_volume(789) == "789"
+    assert bd._compact_volume(None) == "—"
+
+
+def test_heat_class_scales_with_magnitude_and_sign():
+    assert bd._heat_class(0.5) == "g1"
+    assert bd._heat_class(-0.5) == "r1"
+    assert bd._heat_class(12.0) == "g4"
+    assert bd._heat_class(-12.0) == "r4"
+    assert bd._heat_class(None) == ""
+
+
+def test_build_prices_writes_pages_payloads_and_downloads(monkeypatch, tmp_path):
+    _store(monkeypatch, tmp_path / "store", "nvda", "amd")
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_prices(lang="en")
+
+    out = tmp_path / "docs" / "prices"
+    assert (out / "index.md").exists()
+    assert (out / "all_prices.zip").exists()
+    for key in ("nvda", "amd"):
+        assert (out / key / "index.md").exists()
+        assert (out / key / "prices.json").exists()
+        assert (out / key / "analytics.json").exists()
+        # The raw CSV is the point of the section — it must land next to the page.
+        assert (out / key / f"{key}.csv").exists()
+
+    index = (out / "index.md").read_text(encoding="utf-8")
+    # Index links reach one directory down; the ticker page links alongside.
+    assert "[CSV](nvda/nvda.csv)" in index
+    # Pages are linked as .md so mkdocs --strict can verify the target.
+    assert "[NVDA](nvda/index.md)" in index
+    assert "[**nvda.csv**](nvda.csv)" in (out / "nvda" / "index.md").read_text(encoding="utf-8")
+
+    manifest = json.loads((out / "index.json").read_text(encoding="utf-8"))
+    assert manifest["count"] == 2
+    assert manifest["columns"] == list(prices.FIELDS)
+    assert {t["ticker"] for t in manifest["tickers"]} == {"NVDA", "AMD"}
+
+
+def test_build_prices_zip_is_deterministic(monkeypatch, tmp_path):
+    """Non-deterministic bytes would rewrite a multi-MB file on every build."""
+    _store(monkeypatch, tmp_path / "store", "nvda")
+    first = bd._price_zip_bytes(["nvda"])
+    assert bd._price_zip_bytes(["nvda"]) == first
+
+
+def test_build_prices_zh_links_to_the_english_downloads(monkeypatch, tmp_path):
+    """Downloads are language-neutral, so ZH points at the EN copy rather than
+    duplicating several megabytes of CSV."""
+    _store(monkeypatch, tmp_path / "store", "nvda")
+    monkeypatch.setattr(bd, "DOCS_ZH", tmp_path / "docs" / "zh")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_prices(lang="zh")
+
+    out = tmp_path / "docs" / "zh" / "prices"
+    assert not (out / "nvda" / "nvda.csv").exists()
+    assert not (out / "all_prices.zip").exists()
+    # …but the chart payloads are local, so the ZH page renders under mkdocs serve.
+    assert (out / "nvda" / "prices.json").exists()
+    assert f"{bd.SITE_BASE}/prices/nvda/nvda.csv" in (out / "nvda" / "index.md").read_text(encoding="utf-8")
+
+
+def test_build_prices_handles_an_empty_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "empty")
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_prices(lang="en")
+    assert "No price data found." in (tmp_path / "docs" / "prices" / "index.md").read_text(encoding="utf-8")
+
+
+def test_monthly_heatmap_is_newest_year_first(monkeypatch, tmp_path):
+    bars = ([{"date": f"2025-{m:02d}-28", "open": 100.0, "high": 101.0, "low": 99.0,
+              "close": 100.0 + m, "volume": 1, "div": None, "split": None}
+             for m in range(1, 13)] +
+            [{"date": "2026-01-30", "open": 100.0, "high": 101.0, "low": 99.0,
+              "close": 200.0, "volume": 1, "div": None, "split": None}])
+    rows = [ln for ln in bd.monthly_heatmap(bars, "en") if ln.startswith("| **")]
+    assert rows[0].startswith("| **2026**")
+    assert rows[1].startswith("| **2025**")
+
+
+def test_kline_block_emits_the_requested_ranges(monkeypatch, tmp_path):
+    _patch_store(monkeypatch, tmp_path, "nvda", 100.0)
+    block = bd.kline_block("nvda", src="prices.json", ranges="30,2520")
+    assert 'data-ranges="30,2520"' in block
+    assert 'data-src="prices.json"' in block
+
+
+def test_kline_block_omits_ranges_when_not_asked(monkeypatch, tmp_path):
+    _patch_store(monkeypatch, tmp_path, "nvda", 100.0)
+    assert "data-ranges" not in bd.kline_block("nvda")
+
+
+def test_nav_drops_investor_day_and_adds_prices(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_nav_pages(lang="en")
+    nav = (tmp_path / "docs" / ".pages").read_text(encoding="utf-8")
+    assert "  - prices\n" in nav
+    assert "investor_day" not in nav

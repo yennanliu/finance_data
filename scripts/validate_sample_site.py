@@ -72,6 +72,24 @@ def main() -> None:
         fail("no report pages in site/reports/ — sample build produced nothing")
     print(f"✅ site built: {len(html_pages)} HTML pages, {len(report_pages)} report indexes")
 
+    # 1b. Price Data section ────────────────────────────────────────────────
+    # The charts and the download links are useless if MkDocs didn't carry the
+    # derived payloads and the raw CSV through to site/ — and a missing static
+    # file is exactly the kind of failure --strict does not catch.
+    prices_dir = SITE / "prices"
+    if not (prices_dir / "index.html").exists():
+        fail("site/prices/index.html missing — the Price Data section did not build")
+    ticker_dirs = [d for d in prices_dir.iterdir() if d.is_dir()]
+    if not ticker_dirs:
+        fail("no per-ticker pages under site/prices/")
+    for d in ticker_dirs:
+        for artefact in ("index.html", "prices.json", "analytics.json", f"{d.name}.csv"):
+            if not (d / artefact).exists():
+                fail(f"site/prices/{d.name}/{artefact} missing")
+    if not (prices_dir / "all_prices.zip").exists():
+        fail("site/prices/all_prices.zip missing — bulk download would 404")
+    print(f"✅ price data: {len(ticker_dirs)} tickers with charts, payloads and CSV")
+
     # 2. Mermaid zero-regression gate ───────────────────────────────────────
     mmdc = shutil.which("mmdc")
     if not mmdc:

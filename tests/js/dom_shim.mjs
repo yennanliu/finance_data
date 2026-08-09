@@ -18,6 +18,7 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(HERE, "..", "..");
 export const WIDGET_JS = path.join(ROOT, "docs", "javascripts", "kline-chart.js");
+export const PRICE_CHARTS_JS = path.join(ROOT, "docs", "javascripts", "price-charts.js");
 
 // ── the smallest DOM the widget actually uses ───────────────────────────────
 // innerHTML is assigned as a string and then queried, so the shim has to parse
@@ -173,7 +174,7 @@ export function makeLC(log) {
     return s;
   }
   return {
-    CrosshairMode: { Magnet: "magnet" },
+    CrosshairMode: { Magnet: "magnet", Normal: "normal" },
     LineStyle: { Dashed: "dashed" },
     createChart(el, opts) {
       log.chartOptions = opts;
@@ -182,12 +183,30 @@ export function makeLC(log) {
         addCandlestickSeries(o) { const s = series("candle"); s.applyOptions(o); log.candle = s; return s; },
         addHistogramSeries(o) { const s = series("volume"); s.applyOptions(o); log.volume = s; return s; },
         addLineSeries(o) { const s = series("line"); s.applyOptions(o); log.lines.push(s); return s; },
+        // Only price-charts.js draws areas (the drawdown chart); logged
+        // separately so a harness can tell an area from a line at a glance.
+        addAreaSeries(o) { const s = series("area"); s.applyOptions(o); log.areas.push(s); return s; },
         applyOptions(o) { log.appliedOptions.push(o); },
         subscribeCrosshairMove(fn) { log.crosshairHandler = fn; },
-        timeScale() { return { setVisibleRange(r) { log.visibleRanges.push(r); } }; },
+        timeScale() {
+          return {
+            setVisibleRange(r) { log.visibleRanges.push(r); },
+            fitContent() { log.fitContent = true; },
+          };
+        },
         remove() { log.removed = true; },
       };
     },
+  };
+}
+
+
+/** A fresh draw log; every field the fake LC and the harnesses read. */
+function newLog() {
+  return {
+    series: [], lines: [], areas: [], appliedOptions: [], visibleRanges: [],
+    chartOptions: null, candle: null, volume: null, removed: false,
+    fitContent: false,
   };
 }
 
@@ -199,13 +218,24 @@ export function makeLC(log) {
  * @returns {node, log} the widget node after build, and the draw log
  */
 export async function renderWidget(attrs, payload, opts = {}) {
-  const log = {
-    series: [], lines: [], appliedOptions: [], visibleRanges: [],
-    chartOptions: null, candle: null, volume: null, removed: false,
-  };
+  return renderIn(WIDGET_JS, "kline-widget", attrs, payload, opts);
+}
+
+
+/**
+ * The same, for docs/javascripts/price-charts.js — one `.pchart` node driven
+ * against an analytics.json payload.
+ */
+export async function renderPriceChart(attrs, payload, opts = {}) {
+  return renderIn(PRICE_CHARTS_JS, "pchart", attrs, payload, opts);
+}
+
+
+async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
+  const log = newLog();
 
   const node = new El("div");
-  node.className = "kline-widget";
+  node.className = cls;
   Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
 
   const body = new El("body");
@@ -237,7 +267,7 @@ export async function renderWidget(attrs, payload, opts = {}) {
   sandbox.globalThis = sandbox;
 
   vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync(WIDGET_JS, "utf8"), sandbox, { filename: WIDGET_JS });
+  vm.runInContext(fs.readFileSync(scriptPath, "utf8"), sandbox, { filename: scriptPath });
 
   document._ready();            // the widget's DOMContentLoaded entry point
   await new Promise((r) => setImmediate(r));  // let the fetch promise settle
