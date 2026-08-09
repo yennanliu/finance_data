@@ -820,6 +820,17 @@ def test_published_price_keys_honours_sample_mode(monkeypatch, tmp_path):
     assert bd.published_price_keys() == ["aaa", "bbb"]
 
 
+def test_published_price_keys_drops_stores_with_no_bars(monkeypatch, tmp_path):
+    """A ticker added to data/prices/ before the first update_prices.py run leaves
+    a header-only CSV. build_prices() writes no page for it, so listing it here
+    would point every report page at a page that doesn't exist."""
+    _store(monkeypatch, tmp_path, "nvda")
+    (tmp_path / "empty.csv").write_text("date,open,high,low,close,volume,div,split\n",
+                                        encoding="utf-8")
+    assert bd.price_keys() == ["empty", "nvda"]      # the file is there…
+    assert bd.published_price_keys() == ["nvda"]     # …but it is not published
+
+
 def test_published_price_keys_follows_the_sample_ticker_allowlist(monkeypatch, tmp_path):
     """A sample build must publish price pages for the same names the report
     pages cover, or the cross-link is silently dropped from every one of them."""
@@ -856,6 +867,14 @@ def test_pct_cell_colours_by_sign():
     assert bd._pct_cell(3.456) == '<span class="pos">+3.46%</span>'
     assert bd._pct_cell(-3.456) == '<span class="neg">-3.46%</span>'
     assert bd._pct_cell(None) == "—"
+
+
+def test_pct_plain_keeps_the_suffix_inside_the_helper():
+    """A flat 52-week band gives range_position=None, a one-bar store gives
+    volatility=None; both cells must read '—', not '—%'."""
+    assert bd._pct_plain(71.6) == "71.60%"
+    assert bd._pct_plain(77.0, 0) == "77%"
+    assert bd._pct_plain(None) == "—"
 
 
 def test_compact_volume_scales():

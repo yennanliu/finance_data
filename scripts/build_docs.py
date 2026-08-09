@@ -1970,8 +1970,14 @@ def published_price_keys() -> "list[str]":
     through _sample_dirs (via the same virtual-Path trick merged_ticker_dirs
     uses) so a sample build honours SAMPLE_TICKERS and covers the *same* names
     the report pages do, instead of the first three alphabetically.
+
+    Stores that parse to no bars are dropped, because build_prices() writes no
+    page for them: a ticker added to data/prices/ before the first
+    update_prices.py run leaves a header-only CSV behind, and listing it here
+    would point every report page at a page that was never written.
     """
-    return [p.name for p in _sample_dirs([Path(k) for k in price_keys()])]
+    keys = [k for k in price_keys() if prices.load_store(k, PRICES_DIR)]
+    return [p.name for p in _sample_dirs([Path(k) for k in keys])]
 
 
 def full_price_payload(key: str, bars: "list[dict]") -> str:
@@ -2026,6 +2032,12 @@ def _pct_cell(v: "float | None", digits: int = 2) -> str:
 
 def _num(v: "float | None", digits: int = 2) -> str:
     return "—" if v is None else f"{v:,.{digits}f}"
+
+
+def _pct_plain(v: "float | None", digits: int = 2) -> str:
+    """An unsigned percentage. The suffix lives inside the helper so a missing
+    value renders as '—' rather than '—%'."""
+    return "—" if v is None else f"{v:,.{digits}f}%"
 
 
 def _compact_volume(v: "int | None") -> str:
@@ -2273,11 +2285,11 @@ def price_ticker_page(key: str, meta: dict, stats: dict, bars: "list[dict]",
         f"| {t(lang, 'p_52w_high')} | {_num(stats['high_52w'])} |",
         f"| {t(lang, 'p_52w_low')} | {_num(stats['low_52w'])} |",
         f"| {t(lang, 'p_from_high')} | {_pct_cell(stats['from_52w_high'])} |",
-        f"| {t(lang, 'p_range_pos')} | {_num(stats['range_position'], 0)}% |",
+        f"| {t(lang, 'p_range_pos')} | {_pct_plain(stats['range_position'], 0)} |",
         f"| {t(lang, 'p_ath')} | {_num(stats['all_time_high'])} |",
         f"| {t(lang, 'p_max_dd')} | {_pct_cell(stats['max_drawdown'])} "
         f"({stats['max_drawdown_date']}) |",
-        f"| {t(lang, 'p_vol_1y')} | {_num(stats['volatility_1y'])}% |",
+        f"| {t(lang, 'p_vol_1y')} | {_pct_plain(stats['volatility_1y'])} |",
         f"| {t(lang, 'p_cagr')} | {_pct_cell(stats['cagr'])} |",
         f"| {t(lang, 'p_avg_vol')} | {_compact_volume(stats['avg_volume_30d'])} |",
         "",

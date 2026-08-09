@@ -109,10 +109,14 @@
         // zero-crossing bucket ("-1 to 0%") counts as a loss, which is what it is.
         var neg = b.to != null ? b.to <= 0 : false;
         var share = (b.count / total) * 100;
+        // The bar is a graphic whose meaning is entirely in its height, so it
+        // carries the reading as an accessible name — `title` alone is a
+        // pointer-only affordance and never reaches a keyboard or screen reader.
+        var desc = b.label + " · " + b.count + " " + L.sessions +
+                   " (" + share.toFixed(1) + "%)";
         return (
           '<div class="pchart__hbar' + (neg ? " is-down" : " is-up") + '" ' +
-          'title="' + b.label + " · " + b.count + " " + L.sessions +
-          " (" + share.toFixed(1) + '%)">' +
+          'role="img" aria-label="' + desc + '" title="' + desc + '">' +
           '<div class="pchart__hbar-fill" style="height:' +
           ((b.count / peak) * 100).toFixed(1) + '%"></div>' +
           '<span class="pchart__hbar-label">' + b.label.replace(" to ", "–") + "</span>" +
