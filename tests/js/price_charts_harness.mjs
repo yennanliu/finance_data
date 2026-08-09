@@ -128,6 +128,11 @@ const data = payload();
   check("histogram: the modal bucket is full height",
         fills[2].getAttribute("style") === "height:100.0%",
         fills[2].getAttribute("style"));
+  // The bar's meaning lives entirely in its height, so the reading has to be an
+  // accessible name — `title` is a pointer-only affordance.
+  eq("histogram: each bar is an image with an accessible name",
+     bars.map((b) => [b.getAttribute("role"), b.getAttribute("aria-label")])[0],
+     ["img", "< -10% · 2 sessions (8.0%)"]);
   check("histogram: total session count in the header",
         node.querySelector(".pchart__meta").textContent.includes("25"),
         node.querySelector(".pchart__meta").textContent);
