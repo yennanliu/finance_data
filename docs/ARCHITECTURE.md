@@ -39,6 +39,16 @@ generate_analysis.py
   committed. Reports themselves carry no chart markup. See
   [`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md).
 
+### Price analytics (`data/price_analytics.py`)
+- Pure-stdlib statistics derived from the store: period returns, 52-week band,
+  drawdown, rolling volatility, daily-return histogram, monthly-return grid.
+- Consumed by `build_docs.py` to render the **Price Data** section
+  (`docs/prices/`), which publishes the store as a browsable + downloadable
+  dataset: a page per ticker with candles, drawdown, volatility and seasonality
+  charts, plus the raw CSV, a bulk ZIP and a JSON manifest.
+- The browser does no maths — `docs/javascripts/price-charts.js` only draws the
+  pre-computed series, which is what keeps the site's numbers testable in pytest.
+
 ### LLM (`utils/llm.py`)
 - `call_claude(...)` — Claude API with rate-limit retries + refusal-override
 - `call_openai(...)` — OpenAI API with model-specific token caps + rate-limit retries

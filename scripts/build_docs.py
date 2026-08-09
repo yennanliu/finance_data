@@ -13,6 +13,7 @@ Generates the `docs/` directory content from source files:
   • 10-q/                      → docs/sec/10q.md   (index only, PDFs not copied)
   • 13-f/                      → docs/sec/13f.md
   • investor_day/              → docs/investor_day/
+  • data/prices/               → docs/prices/<ticker>/  (charts + CSV download)
   • README.md                  → enriches docs/index.md
 
 Run locally:   python scripts/build_docs.py
@@ -22,6 +23,7 @@ Run in CI:     automatically called before `mkdocs build`
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import math
 import os
@@ -30,14 +32,15 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from datetime import date
 from pathlib import Path
 
-# The price store. Safe to import at module scope: the analysis package defers
-# every heavy dependency (pandas, yfinance, plotly) to inside its functions, and
-# prices.py's read path is pure standard library — so the docs build stays
-# dependency-light and offline.
-from analysis.data import prices
+# The price store and the statistics derived from it. Safe to import at module
+# scope: the analysis package defers every heavy dependency (pandas, yfinance,
+# plotly) to inside its functions, and both of these modules are pure standard
+# library — so the docs build stays dependency-light and offline.
+from analysis.data import price_analytics, prices
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).resolve().parent.parent
@@ -281,6 +284,78 @@ LANG_TEXT = {
         "presentations": "Presentations",
         "download_scripts": "Download Scripts",
         "scripts_desc": "Python and Bash tools for batch-downloading SEC filings",
+        # ── Price Data section ──
+        "prices": "Price Data",
+        "prices_desc": "{n} tickers · up to {years} years of daily OHLCV",
+        "prices_intro": (
+            "Every chart on this site is drawn from one committed dataset: a CSV per ticker "
+            "under `data/prices/`, refreshed nightly from Yahoo Finance and capped at "
+            "ten years of daily bars. This page publishes that dataset — browse the derived "
+            "charts per ticker, or download the raw files and run your own analysis."
+        ),
+        "p_no_data": "No price data found.",
+        "p_download": "📥 Download",
+        "p_zip": "all_prices.zip",
+        "p_zip_desc": "every ticker's CSV in one archive ({n} files)",
+        "p_manifest_desc": "machine-readable summary of every ticker (last close, returns, volatility, file URLs)",
+        "p_per_ticker_desc": "Per-ticker CSV links are in the table below, and on each ticker's page.",
+        "p_columns": "CSV columns",
+        "p_columns_desc": (
+            "One row per trading session, oldest first. Prices are split- and "
+            "dividend-adjusted, so a return computed from `close` is a total return. "
+            "`div` and `split` carry the event on the day it happened and are empty otherwise."
+        ),
+        "p_coverage": "Coverage",
+        "p_last": "Last",
+        "p_52w_range": "52W Range",
+        "p_avg_vol": "Avg Vol (30D)",
+        "p_history": "History",
+        "p_price_history": "Price History",
+        "p_bars": "Bars",
+        "p_returns": "📈 Returns",
+        "p_key_stats": "📊 Key Statistics",
+        "p_metric": "Metric",
+        "p_value": "Value",
+        "p_last_close": "Last close",
+        "p_52w_high": "52-week high",
+        "p_52w_low": "52-week low",
+        "p_from_high": "From 52-week high",
+        "p_range_pos": "Position in 52-week range",
+        "p_ath": "Highest price on record",
+        "p_max_dd": "Max drawdown (stored history)",
+        "p_vol_1y": "Annualised volatility (1Y)",
+        "p_cagr": "CAGR (stored history)",
+        "p_drawdown": "📉 Drawdown from Peak",
+        "p_drawdown_desc": (
+            "How far the close sits below its running all-time high. The depth and the "
+            "width of each trough say more about holding this name than any single return figure."
+        ),
+        "p_volatility": "🌡️ Rolling Volatility",
+        "p_volatility_desc": (
+            "Annualised standard deviation of daily returns over a rolling {window}-session window."
+        ),
+        "p_distribution": "🎲 Daily Return Distribution",
+        "p_distribution_desc": (
+            "How the daily moves are spread. Fat tails on either side mean the average "
+            "return is a poor description of a typical day."
+        ),
+        "p_monthly": "🗓️ Monthly Returns",
+        "p_monthly_desc": (
+            "Calendar-month returns; the year column chains its months, so it only "
+            "appears for years covered from January onward."
+        ),
+        "p_year": "Year",
+        "p_year_total": "Total",
+        "p_csv_desc": "raw daily OHLCV, {n:,} rows",
+        "p_prices_json_desc": "the full history in the JSON shape the candlestick chart consumes",
+        "p_analytics_json_desc": "pre-computed drawdown, rolling volatility and return histogram",
+        "p_back_to_index": "← Back to Price Data",
+        "p_more_charts": "Full price history, drawdown & CSV download",
+        "p_disclaimer": (
+            "Price data is sourced from Yahoo Finance and provided as-is for research and "
+            "educational use. It is not verified against an official exchange feed and must "
+            "not be relied on for trading decisions."
+        ),
     },
     "zh": {
         "last_updated": "最後更新",
@@ -360,6 +435,73 @@ LANG_TEXT = {
         "presentations": "簡報",
         "download_scripts": "下載腳本",
         "scripts_desc": "用於批量下載 SEC 文件的 Python 和 Bash 工具",
+        # ── Price Data section ──
+        "prices": "股價資料",
+        "prices_desc": "{n} 檔標的 · 最多 {years} 年的每日 OHLCV",
+        "prices_intro": (
+            "本站所有圖表都來自同一份資料集：`data/prices/` 下每檔標的一個 CSV，"
+            "每晚自 Yahoo Finance 更新，保留最多十年的日線資料。"
+            "本頁將這份資料集公開 — 可瀏覽每檔標的的衍生圖表，也可直接下載原始檔案自行分析。"
+        ),
+        "p_no_data": "查無股價資料。",
+        "p_download": "📥 下載",
+        "p_zip": "all_prices.zip",
+        "p_zip_desc": "所有標的的 CSV 打包下載（共 {n} 個檔案）",
+        "p_manifest_desc": "機器可讀的彙總資料（最新收盤、報酬率、波動率、檔案網址）",
+        "p_per_ticker_desc": "個別標的的 CSV 連結請見下方表格，或各標的頁面。",
+        "p_columns": "CSV 欄位",
+        "p_columns_desc": (
+            "每個交易日一列，由舊到新。價格已還原股票分割與股利，"
+            "因此以 `close` 計算的報酬率即為總報酬。"
+            "`div` 與 `split` 僅在事件發生當日有值，其餘為空。"
+        ),
+        "p_coverage": "涵蓋標的",
+        "p_last": "最新價",
+        "p_52w_range": "52 週區間",
+        "p_avg_vol": "30 日均量",
+        "p_history": "資料期間",
+        "p_price_history": "股價歷史",
+        "p_bars": "資料筆數",
+        "p_returns": "📈 報酬率",
+        "p_key_stats": "📊 關鍵統計",
+        "p_metric": "指標",
+        "p_value": "數值",
+        "p_last_close": "最新收盤",
+        "p_52w_high": "52 週高點",
+        "p_52w_low": "52 週低點",
+        "p_from_high": "距 52 週高點",
+        "p_range_pos": "於 52 週區間位置",
+        "p_ath": "歷史最高價",
+        "p_max_dd": "最大回撤（資料期間）",
+        "p_vol_1y": "年化波動率（1 年）",
+        "p_cagr": "年化報酬率 CAGR（資料期間）",
+        "p_drawdown": "📉 距高點回撤",
+        "p_drawdown_desc": (
+            "收盤價低於歷史高點的幅度。回撤的深度與持續時間，"
+            "比單一報酬率數字更能說明持有這檔標的的實際體感。"
+        ),
+        "p_volatility": "🌡️ 滾動波動率",
+        "p_volatility_desc": "以滾動 {window} 個交易日計算的日報酬標準差（年化）。",
+        "p_distribution": "🎲 日報酬分布",
+        "p_distribution_desc": (
+            "日漲跌幅的分布狀況。兩側若出現厚尾，代表平均報酬並不足以描述「一般的一天」。"
+        ),
+        "p_monthly": "🗓️ 月報酬",
+        "p_monthly_desc": (
+            "各日曆月份的報酬率；年度欄位由各月份連乘而得，"
+            "因此僅在資料自 1 月起完整涵蓋的年度才會顯示。"
+        ),
+        "p_year": "年度",
+        "p_year_total": "全年",
+        "p_csv_desc": "原始每日 OHLCV，共 {n:,} 列",
+        "p_prices_json_desc": "K線圖使用的完整歷史 JSON",
+        "p_analytics_json_desc": "預先計算的回撤、滾動波動率與報酬分布",
+        "p_back_to_index": "← 返回股價資料",
+        "p_more_charts": "完整股價歷史、回撤圖與 CSV 下載",
+        "p_disclaimer": (
+            "股價資料來自 Yahoo Finance，僅供研究與教育用途，未與官方交易所行情核對，"
+            "不得作為交易決策依據。"
+        ),
     }
 }
 
@@ -391,6 +533,27 @@ COMPANY_META: dict[str, dict] = {
     "goog":     {"name": "Alphabet Inc.",             "flag": "🔍", "sector": "Search / Cloud"},
     "orcl":     {"name": "Oracle Corp.",              "flag": "🗄️",  "sector": "Enterprise Software / Cloud"},
     "tsm":      {"name": "Taiwan Semiconductor",      "flag": "🇹🇼", "sector": "Semiconductors / Foundry"},
+    # Names carried by the price store but with no report directory of their own
+    # — the Price Data section covers every CSV, so these keep it from falling
+    # back to a bare ticker + "Equity" for a third of the table.
+    "intc":     {"name": "Intel Corp.",               "flag": "🔷", "sector": "Semiconductors"},
+    "mrvl":     {"name": "Marvell Technology",        "flag": "🌊", "sector": "Semiconductors"},
+    "mu":       {"name": "Micron Technology",         "flag": "🧠", "sector": "Memory / Storage"},
+    "nbis":     {"name": "Nebius Group",              "flag": "☁️",  "sector": "AI Cloud"},
+    "nu":       {"name": "Nu Holdings",               "flag": "💜", "sector": "LatAm Fintech"},
+    "sndk":     {"name": "SanDisk Corp.",             "flag": "💾", "sector": "Memory / Storage"},
+    "uber":     {"name": "Uber Technologies",         "flag": "🚕", "sector": "Mobility / Delivery"},
+    "wdc":      {"name": "Western Digital",           "flag": "💽", "sector": "Storage"},
+    "qqq":      {"name": "Invesco QQQ Trust",         "flag": "📈", "sector": "ETF · Nasdaq-100"},
+    "vti":      {"name": "Vanguard Total Stock Mkt",  "flag": "📈", "sector": "ETF · US Total Market"},
+    "soxx":     {"name": "iShares Semiconductor ETF", "flag": "🔌", "sector": "ETF · Semiconductors"},
+    "soxq":     {"name": "Invesco PHLX Semi ETF",     "flag": "🔌", "sector": "ETF · Semiconductors"},
+    "robo":     {"name": "ROBO Global Robotics ETF",  "flag": "🤖", "sector": "ETF · Robotics / AI"},
+    # skhy / spcx / wqtm are deliberately absent: get_meta falls back to the bare
+    # ticker, which is honest, and a guessed company name on a data page is worse
+    # than none. Add them when the real issuer name is confirmed.
+    "0050":     {"name": "Yuanta Taiwan Top 50 ETF",  "flag": "🇹🇼", "sector": "ETF · Taiwan"},
+    "2330.tw":  {"name": "TSMC (Taiwan listing)",     "flag": "🇹🇼", "sector": "Semiconductors / Foundry"},
 }
 
 def get_meta(ticker: str) -> dict:
@@ -497,7 +660,7 @@ def write_kline_payload(ticker: str, dst_dir: Path) -> bool:
 
 
 def kline_block(ticker: str, *, src: str = "kline.json",
-                as_of: str = "", ma: str = "") -> str:
+                as_of: str = "", ma: str = "", ranges: str = "") -> str:
     """Raw-HTML div for the TradingView-style candlestick chart.
 
     Empty string when the store has no data, so pages without OHLCV never render
@@ -512,6 +675,9 @@ def kline_block(ticker: str, *, src: str = "kline.json",
              store is always current, so without it a report would show today's
              prices under text written about an older snapshot.
     ma     — moving averages to overlay, e.g. "30+,60+,200" ("+" = on by default).
+    ranges — range buttons to offer in trading days, e.g. "30,180,360". The
+             Price Data pages carry the whole store, so they offer far longer
+             windows than a report's 30/180/360.
     """
     if not kline_bars(ticker):
         return ""
@@ -521,6 +687,8 @@ def kline_block(ticker: str, *, src: str = "kline.json",
         attrs.append(f'data-as-of="{as_of}"')
     if ma:
         attrs.append(f'data-ma="{ma}"')
+    if ranges:
+        attrs.append(f'data-ranges="{ranges}"')
     return f'<div {" ".join(attrs)}></div>'
 
 
@@ -848,7 +1016,7 @@ def ensure(path: Path):
 
 def clean_generated(path: Path):
     """Remove generated sub-dirs, leave hand-crafted files."""
-    for sub in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
+    for sub in ["reports", "prices", "market_news", "notebooks", "sec", "investor_day"]:
         target = path / sub
         if target.exists():
             shutil.rmtree(target)
@@ -992,6 +1160,15 @@ def write(path: Path, content: str):
     print(f"  write {path.relative_to(ROOT)}")
 
 
+def write_bytes(path: Path, data: bytes):
+    """The same, for binary content: skip the write when the bytes are unchanged."""
+    ensure(path.parent)
+    if _INCREMENTAL and path.exists() and path.read_bytes() == data:
+        return
+    path.write_bytes(data)
+    print(f"  write {path.relative_to(ROOT)}")
+
+
 # ── 1. ai_gen_report/stock → docs/reports/ ───────────────────────────────────
 def build_reports(lang: str = "en"):
     docs_root = get_docs_root(lang)
@@ -1005,6 +1182,9 @@ def build_reports(lang: str = "en"):
         return
 
     tickers = _sample_dirs(merged_ticker_dirs())
+    # Computed once: build_prices() publishes exactly these, and each ticker page
+    # links across to its own only if it is among them.
+    priced_keys = set(published_price_keys())
 
     for ticker_dir in tickers:
         ticker = ticker_dir.name.lower()
@@ -1094,6 +1274,13 @@ def build_reports(lang: str = "en"):
         chart = kline_block(ticker)
         if chart:
             lines += [chart, ""]
+            # The hero chart only shows the last ~18 months; point readers at the
+            # Price Data page for the full store, the derived charts and the CSV.
+            # Guarded on the page actually existing — a sample build publishes
+            # only a few tickers and --strict would reject a dangling link.
+            if ticker in priced_keys:
+                lines += [f"[:material-chart-line: {t(lang, 'p_more_charts')}]"
+                          f"(../../prices/{ticker}/index.md){{.report-link}}", ""]
         # Price-target & implied-return table directly under the chart, sourced
         # from the latest fundamental report's scenario targets.
         target_tbl = target_price_block(
@@ -1741,7 +1928,415 @@ def build_investor_day(lang: str = "en"):
     write(DST_INV_DAY / "index.md", "\n".join(lines))
 
 
-# ── 6. scripts.md ─────────────────────────────────────────────────────────────
+# ── 6. data/prices → docs/prices/ ─────────────────────────────────────────────
+# The committed price store already powers every chart on the site, but only as
+# an implementation detail — nothing exposed the data itself. This section
+# publishes it as a first-class dataset: a browsable page per ticker with the
+# charts you cannot draw from candles alone (drawdown, rolling volatility,
+# return distribution, monthly seasonality), plus the raw CSV to download.
+#
+# Every number shown here is derived at build time by
+# scripts/analysis/data/price_analytics.py, so the page and the download can
+# never disagree, and the arithmetic is covered by tests/test_price_analytics.py.
+
+# The Price Data candlestick carries the *whole* store, so it offers ranges the
+# report charts cannot: one month through ten years.
+PRICE_PAGE_RANGES = "30,180,360,756,2520"
+PRICE_PAGE_MA = "20+,60+,200"
+
+# Heatmap shading thresholds (absolute monthly return, %) → CSS class suffix 1-4.
+_HEAT_STEPS = (2.0, 5.0, 10.0)
+
+_MONTH_ABBR = {
+    "en": ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
+    "zh": tuple(f"{m}月" for m in range(1, 13)),
+}
+
+
+def price_keys() -> "list[str]":
+    """Every ticker key in the committed store, sorted. Read live off the module
+    global so tests can point PRICES_DIR at a fixture directory."""
+    if not PRICES_DIR.exists():
+        return []
+    return sorted(p.name[:-4] for p in PRICES_DIR.glob("*.csv"))
+
+
+def published_price_keys() -> "list[str]":
+    """The keys build_prices() actually publishes (sample-capped).
+
+    Report pages consult this before linking across, so the two sections can
+    never disagree about which tickers have a Price Data page. Selection goes
+    through _sample_dirs (via the same virtual-Path trick merged_ticker_dirs
+    uses) so a sample build honours SAMPLE_TICKERS and covers the *same* names
+    the report pages do, instead of the first three alphabetically.
+
+    Stores that parse to no bars are dropped, because build_prices() writes no
+    page for them: a ticker added to data/prices/ before the first
+    update_prices.py run leaves a header-only CSV behind, and listing it here
+    would point every report page at a page that was never written.
+    """
+    keys = [k for k in price_keys() if prices.load_store(k, PRICES_DIR)]
+    return [p.name for p in _sample_dirs([Path(k) for k in keys])]
+
+
+def full_price_payload(key: str, bars: "list[dict]") -> str:
+    """The whole stored history in the shape kline-chart.js consumes.
+
+    Same schema as kline.json — the report pages just get a windowed slice of it
+    — so one widget serves both without knowing which page it is on.
+    """
+    symbol = prices.to_yf_symbol(key)
+    return json.dumps({
+        "ticker": key.upper(),
+        "symbol": symbol,
+        "currency": prices.currency_for(symbol),
+        "updated": bars[-1]["date"],
+        "bars": [{"t": b["date"],
+                  "o": float(prices.fmt_price(b["open"])),
+                  "h": float(prices.fmt_price(b["high"])),
+                  "l": float(prices.fmt_price(b["low"])),
+                  "c": float(prices.fmt_price(b["close"])),
+                  "v": b["volume"]} for b in bars],
+    }, separators=(",", ":"))
+
+
+def analytics_payload(key: str, bars: "list[dict]") -> str:
+    """Pre-computed series for price-charts.js, plus the summary as metadata.
+
+    The browser does no maths: it fetches this and draws. Keeping the
+    computation in Python is what lets pytest assert on the numbers the site
+    actually shows.
+    """
+    return json.dumps({
+        "ticker": key.upper(),
+        "updated": bars[-1]["date"],
+        "summary": price_analytics.summary(bars),
+        "drawdown": price_analytics.drawdown_series(bars),
+        "volatility": price_analytics.volatility_series(bars),
+        "histogram": price_analytics.return_histogram(bars),
+    }, separators=(",", ":"))
+
+
+def _pct_cell(v: "float | None", digits: int = 2) -> str:
+    """A signed percentage as a coloured span ('—' when undefined).
+
+    Raw HTML rather than attr_list: this lands inside a Markdown table cell,
+    where `{.pos}` would be rendered literally.
+    """
+    if v is None:
+        return "—"
+    cls = "pos" if v >= 0 else "neg"
+    return f'<span class="{cls}">{v:+.{digits}f}%</span>'
+
+
+def _num(v: "float | None", digits: int = 2) -> str:
+    return "—" if v is None else f"{v:,.{digits}f}"
+
+
+def _pct_plain(v: "float | None", digits: int = 2) -> str:
+    """An unsigned percentage. The suffix lives inside the helper so a missing
+    value renders as '—' rather than '—%'."""
+    return "—" if v is None else f"{v:,.{digits}f}%"
+
+
+def _compact_volume(v: "int | None") -> str:
+    """Volume as 1.23B / 45.6M / 789K."""
+    if not v:
+        return "—"
+    for unit, size in (("B", 1e9), ("M", 1e6), ("K", 1e3)):
+        if abs(v) >= size:
+            return f"{v / size:.2f}{unit}"
+    return str(v)
+
+
+def _heat_class(v: "float | None") -> str:
+    """CSS class for a monthly-return heatmap cell."""
+    if v is None:
+        return ""
+    prefix = "g" if v >= 0 else "r"
+    level = 1 + sum(1 for step in _HEAT_STEPS if abs(v) >= step)
+    return f"{prefix}{level}"
+
+
+def monthly_heatmap(bars: "list[dict]", lang: str) -> "list[str]":
+    """Monthly-return grid as a Markdown table wrapped in a `.pheat` div.
+
+    Newest year on top, matching the newest-first ordering used everywhere else
+    on the site. Cells carry both a colour and the number — the colour is an
+    accent, never the only channel.
+    """
+    rows = price_analytics.monthly_returns(bars)
+    if not rows:
+        return []
+    out = ['<div class="pheat" markdown="1">', "",
+           "| " + t(lang, "p_year") + " | "
+           + " | ".join(_MONTH_ABBR.get(lang, _MONTH_ABBR["en"])) + " | "
+           + t(lang, "p_year_total") + " |",
+           "|" + "---|" * 14]
+    for row in reversed(rows):
+        cells = []
+        for m in range(1, 13):
+            v = row["months"].get(m)
+            if v is None:
+                cells.append("")
+                continue
+            cls = _heat_class(v)
+            cells.append(f'<span class="{cls}">{v:+.1f}</span>')
+        total = row["year_pct"]
+        cells.append(f"**{total:+.1f}**" if total is not None else "")
+        out.append(f"| **{row['year']}** | " + " | ".join(cells) + " |")
+    out += ["", "</div>", ""]
+    return out
+
+
+def pchart_block(*, src: str, series: str, kind: str, title: str,
+                 color: str = "blue", unit: str = "%") -> str:
+    """Raw-HTML div for one derived-analytics chart (see price-charts.js)."""
+    return (f'<div class="pchart" data-src="{src}" data-series="{series}" '
+            f'data-kind="{kind}" data-title="{title}" data-color="{color}" '
+            f'data-unit="{unit}"></div>')
+
+
+def _price_zip_bytes(keys: "list[str]") -> bytes:
+    """Every published CSV in one deterministic archive.
+
+    Fixed timestamps (and sorted members) so re-running the build produces
+    byte-identical output — otherwise the incremental check would rewrite a
+    multi-megabyte file on every run.
+    """
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for key in keys:
+            src = PRICES_DIR / f"{key}.csv"
+            if not src.exists():
+                continue
+            info = zipfile.ZipInfo(f"prices/{key}.csv", date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            zf.writestr(info, src.read_bytes())
+    return buf.getvalue()
+
+
+def build_prices(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST_PRICES = docs_root / "prices"
+    ensure(DST_PRICES)
+
+    keys = published_price_keys()
+    if not keys:
+        write(DST_PRICES / "index.md",
+              f"# {t(lang, 'prices')}\n\n{t(lang, 'p_no_data')}\n")
+        return
+
+    # Downloads are language-neutral: written once into the EN tree, linked
+    # absolutely from ZH — the same rule the ZH report index already follows.
+    download_base = "" if lang == "en" else f"{SITE_BASE}/prices/"
+
+    rows: "list[str]" = []
+    manifest: "list[dict]" = []
+
+    for key in keys:
+        bars = prices.load_store(key, PRICES_DIR)
+        stats = price_analytics.summary(bars)
+        if not stats:
+            continue
+        meta = get_meta(key)
+        dst_dir = DST_PRICES / key
+        ensure(dst_dir)
+
+        # Chart payloads are written into *both* language trees so the pages work
+        # under `mkdocs serve` in either tree; only the bulky raw CSV is shared.
+        write(dst_dir / "prices.json", full_price_payload(key, bars))
+        write(dst_dir / "analytics.json", analytics_payload(key, bars))
+        csv_name = f"{key}.csv"
+        if lang == "en":
+            copy_file(PRICES_DIR / csv_name, dst_dir / csv_name)
+        # Two links to the same file: the ticker page sits next to it, the index
+        # one level up. ZH gets the absolute EN path in both cases.
+        csv_href = (f"{download_base}{key}/{csv_name}" if download_base else csv_name)
+        csv_href_index = (f"{download_base}{key}/{csv_name}" if download_base
+                          else f"{key}/{csv_name}")
+
+        write(dst_dir / "index.md",
+              "\n".join(price_ticker_page(key, meta, stats, bars, csv_href, lang)))
+
+        rows.append(
+            # Link the .md, not the directory: MkDocs resolves it to the
+            # directory URL and --strict can verify the target exists.
+            f"| {meta['flag']} [{key.upper()}]({key}/index.md) | {meta['name']} "
+            f"| {_num(stats['last_close'])} "
+            f"| {_pct_cell(stats['returns']['1d'])} "
+            f"| {_pct_cell(stats['returns']['1m'])} "
+            f"| {_pct_cell(stats['ytd'])} "
+            f"| {_pct_cell(stats['returns']['1y'])} "
+            f"| {_num(stats['low_52w'])} – {_num(stats['high_52w'])} "
+            f"| {_compact_volume(stats['avg_volume_30d'])} "
+            f"| {stats['first_date']} → {stats['last_date']} "
+            f"| [CSV]({csv_href_index}) |"
+        )
+        manifest.append({"ticker": key.upper(), "key": key,
+                         "csv": f"{SITE_BASE}/prices/{key}/{csv_name}",
+                         "prices_json": f"{SITE_BASE}/prices/{key}/prices.json",
+                         "analytics_json": f"{SITE_BASE}/prices/{key}/analytics.json",
+                         **stats})
+
+    if lang == "en":
+        # One-click bulk download, and a machine-readable manifest so the data is
+        # usable from a script without scraping the page.
+        write_bytes(DST_PRICES / "all_prices.zip", _price_zip_bytes(keys))
+        write(DST_PRICES / "index.json",
+              json.dumps({"updated": TODAY, "count": len(manifest),
+                          "columns": list(prices.FIELDS), "tickers": manifest},
+                         separators=(",", ":")))
+
+    write(DST_PRICES / "index.md",
+          "\n".join(price_index_page(rows, len(manifest), download_base, lang)))
+
+
+def price_index_page(rows: "list[str]", count: int, download_base: str,
+                     lang: str) -> "list[str]":
+    """The Price Data landing page: what the dataset is, how to get it, and a
+    sortable-by-eye overview of every ticker in it."""
+    zip_href = f"{download_base}all_prices.zip" if download_base else "all_prices.zip"
+    json_href = f"{download_base}index.json" if download_base else "index.json"
+    return [
+        f"# 💹 {t(lang, 'prices')}",
+        "",
+        f"> {t(lang, 'prices_desc').format(n=count, years=prices.KEEP_YEARS)}  "
+        f"|  **{t(lang, 'last_updated')}:** {TODAY}",
+        "",
+        t(lang, "prices_intro"),
+        "",
+        f"## {t(lang, 'p_download')}",
+        "",
+        f"- :material-folder-zip: [**{t(lang, 'p_zip')}**]({zip_href}) — "
+        f"{t(lang, 'p_zip_desc').format(n=count)}",
+        f"- :material-code-json: [**`index.json`**]({json_href}) — "
+        f"{t(lang, 'p_manifest_desc')}",
+        f"- {t(lang, 'p_per_ticker_desc')}",
+        "",
+        f"### {t(lang, 'p_columns')}",
+        "",
+        "```",
+        ",".join(prices.FIELDS),
+        "```",
+        "",
+        t(lang, "p_columns_desc"),
+        "",
+        "```python",
+        "import pandas as pd",
+        "",
+        f'url = "https://yennanliu.github.io{SITE_BASE}/prices/nvda/nvda.csv"',
+        'df = pd.read_csv(url, parse_dates=["date"]).set_index("date")',
+        'df["close"].pct_change().std() * (252 ** 0.5)  # annualised volatility',
+        "```",
+        "",
+        f"## {t(lang, 'p_coverage')}",
+        "",
+        '<div class="ptable" markdown="1">',
+        "",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'p_last')} "
+        f"| 1D | 1M | YTD | 1Y | {t(lang, 'p_52w_range')} | {t(lang, 'p_avg_vol')} "
+        f"| {t(lang, 'p_history')} | CSV |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
+        *rows,
+        "",
+        "</div>",
+        "",
+        f"!!! warning \"{t(lang, 'disclaimer')}\"",
+        "",
+        f"    {t(lang, 'p_disclaimer')}",
+        "",
+    ]
+
+
+def price_ticker_page(key: str, meta: dict, stats: dict, bars: "list[dict]",
+                      csv_href: str, lang: str) -> "list[str]":
+    """One ticker's Price Data page: candles, derived charts, stats, download."""
+    ret = stats["returns"]
+    # get_meta falls back to the bare ticker for names it doesn't carry; without
+    # this the heading would read "SKHY (SKHY)".
+    title = (key.upper() if meta["name"] == key.upper()
+             else f"{meta['name']} ({key.upper()})")
+    lines = [
+        f"# {meta['flag']} {title} — {t(lang, 'p_price_history')}",
+        "",
+        f"> **{t(lang, 'sector')}:** {meta['sector']}  |  "
+        f"**{t(lang, 'p_bars')}:** {stats['bars']:,}  |  "
+        f"{stats['first_date']} → {stats['last_date']}",
+        "",
+        kline_block(key, src="prices.json", ma=PRICE_PAGE_MA, ranges=PRICE_PAGE_RANGES),
+        "",
+        f"## {t(lang, 'p_returns')}",
+        "",
+        "| 1D | 1W | 1M | 3M | 6M | YTD | 1Y | 3Y | 5Y |",
+        "|---|---|---|---|---|---|---|---|---|",
+        "| " + " | ".join([
+            _pct_cell(ret["1d"]), _pct_cell(ret["1w"]), _pct_cell(ret["1m"]),
+            _pct_cell(ret["3m"]), _pct_cell(ret["6m"]), _pct_cell(stats["ytd"]),
+            _pct_cell(ret["1y"]), _pct_cell(ret["3y"]), _pct_cell(ret["5y"]),
+        ]) + " |",
+        "",
+        f"## {t(lang, 'p_key_stats')}",
+        "",
+        f"| {t(lang, 'p_metric')} | {t(lang, 'p_value')} |",
+        "|---|---|",
+        f"| {t(lang, 'p_last_close')} | **{_num(stats['last_close'])}** ({stats['last_date']}) |",
+        f"| {t(lang, 'p_52w_high')} | {_num(stats['high_52w'])} |",
+        f"| {t(lang, 'p_52w_low')} | {_num(stats['low_52w'])} |",
+        f"| {t(lang, 'p_from_high')} | {_pct_cell(stats['from_52w_high'])} |",
+        f"| {t(lang, 'p_range_pos')} | {_pct_plain(stats['range_position'], 0)} |",
+        f"| {t(lang, 'p_ath')} | {_num(stats['all_time_high'])} |",
+        f"| {t(lang, 'p_max_dd')} | {_pct_cell(stats['max_drawdown'])} "
+        f"({stats['max_drawdown_date']}) |",
+        f"| {t(lang, 'p_vol_1y')} | {_pct_plain(stats['volatility_1y'])} |",
+        f"| {t(lang, 'p_cagr')} | {_pct_cell(stats['cagr'])} |",
+        f"| {t(lang, 'p_avg_vol')} | {_compact_volume(stats['avg_volume_30d'])} |",
+        "",
+        f"## {t(lang, 'p_drawdown')}",
+        "",
+        t(lang, "p_drawdown_desc"),
+        "",
+        pchart_block(src="analytics.json", series="drawdown", kind="area",
+                     title=t(lang, "p_drawdown"), color="red"),
+        "",
+        f"## {t(lang, 'p_volatility')}",
+        "",
+        t(lang, "p_volatility_desc").format(window=price_analytics.VOL_WINDOW),
+        "",
+        pchart_block(src="analytics.json", series="volatility", kind="line",
+                     title=t(lang, "p_volatility"), color="amber"),
+        "",
+        f"## {t(lang, 'p_distribution')}",
+        "",
+        t(lang, "p_distribution_desc"),
+        "",
+        pchart_block(src="analytics.json", series="histogram", kind="histogram",
+                     title=t(lang, "p_distribution"), color="blue"),
+        "",
+        f"## {t(lang, 'p_monthly')}",
+        "",
+        t(lang, "p_monthly_desc"),
+        "",
+    ]
+    lines += monthly_heatmap(bars, lang)
+    lines += [
+        f"## {t(lang, 'p_download')}",
+        "",
+        f"- :material-file-delimited: [**{key}.csv**]({csv_href}) — "
+        f"{t(lang, 'p_csv_desc').format(n=stats['bars'])}",
+        "- :material-code-json: [`prices.json`](prices.json) — "
+        f"{t(lang, 'p_prices_json_desc')}",
+        "- :material-code-json: [`analytics.json`](analytics.json) — "
+        f"{t(lang, 'p_analytics_json_desc')}",
+        "",
+        f"[{t(lang, 'p_back_to_index')}](../index.md)",
+        "",
+    ]
+    return lines
+
+
+# ── 7. scripts.md ─────────────────────────────────────────────────────────────
 def build_scripts_page(lang: str = "en"):
     docs_root = get_docs_root(lang)
     scripts_page = docs_root / "scripts.md"
@@ -1808,24 +2403,27 @@ def build_scripts_page(lang: str = "en"):
     write(scripts_page, "\n".join(lines))
 
 
-# ── 7. .pages files for awesome-pages plugin ──────────────────────────────────
+# ── 8. .pages files for awesome-pages plugin ──────────────────────────────────
 def build_nav_pages(lang: str = "en"):
     """Write .pages files so awesome-pages controls navigation order."""
     docs_root = get_docs_root(lang)
     root_pages = docs_root / ".pages"
+    # investor_day is deliberately absent: the section is still built and its
+    # pages stay reachable by URL, but it no longer occupies a top-level tab.
     write(root_pages, "\n".join([
         "nav:",
         "  - index.md",
         "  - reports",
+        "  - prices",
         "  - market_news",
         "  - notebooks",
         "  - sec",
-        "  - investor_day",
         "  - scripts.md",
         "",
     ]))
 
     DST_REPORTS = docs_root / "reports"
+    DST_PRICES = docs_root / "prices"
     DST_MARKET_NEWS = docs_root / "market_news"
     DST_NOTEBOOKS = docs_root / "notebooks"
     DST_SEC = docs_root / "sec"
@@ -1835,6 +2433,16 @@ def build_nav_pages(lang: str = "en"):
         if subdir.exists():
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
+
+    # Price Data section: localised nav title, index first then the tickers.
+    if DST_PRICES.exists():
+        write(DST_PRICES / ".pages",
+              f"title: {t(lang, 'prices')}\nnav:\n  - index.md\n  - ...\n")
+        for ticker_dir in DST_PRICES.iterdir():
+            if ticker_dir.is_dir():
+                # Quoted for the same reason as the report dirs: an all-digit
+                # ticker ("0050") would otherwise parse as a YAML int.
+                write(ticker_dir / ".pages", f'title: "{ticker_dir.name.upper()}"\n')
 
     # Reports section: rename the nav tab from "Reports" → "AI Gen Reports"
     if DST_REPORTS.exists():
@@ -1875,7 +2483,7 @@ def build_nav_pages(lang: str = "en"):
             write(form_dir / ".pages", "nav:\n  - ...\n")
 
 
-# ── 8. includes/abbreviations.md ─────────────────────────────────────────────
+# ── 9. includes/abbreviations.md ─────────────────────────────────────────────
 def build_abbreviations(lang: str = "en"):
     docs_root = get_docs_root(lang)
     inc = docs_root / "includes"
@@ -1926,7 +2534,7 @@ def main():
     # Clean previously generated dirs (full rebuild only)
     if not _INCREMENTAL:
         for lang_dir in [DOCS, DOCS_ZH]:
-            for subdir in ["reports", "market_news", "notebooks", "sec", "investor_day"]:
+            for subdir in ["reports", "prices", "market_news", "notebooks", "sec", "investor_day"]:
                 path = lang_dir / subdir
                 if path.exists():
                     shutil.rmtree(path)
@@ -1937,29 +2545,32 @@ def main():
     print(" Building English version (docs/)")
     print(f"{'─'*70}")
 
-    print("\n[EN 1/8] Building ai_gen_report/stock reports...")
+    print("\n[EN 1/9] Building ai_gen_report/stock reports...")
     build_reports(lang="en")
 
-    print("\n[EN 2/8] Building ai_gen_report/market_news...")
+    print("\n[EN 2/9] Building ai_gen_report/market_news...")
     build_market_news(lang="en")
 
-    print("\n[EN 3/8] Building notebook_llm pages...")
+    print("\n[EN 3/9] Building notebook_llm pages...")
     build_notebooks(lang="en")
 
-    print("\n[EN 4/8] Building 10-K + 10-Q indices...")
+    print("\n[EN 4/9] Building 10-K + 10-Q indices...")
     build_filing_index(lang="en", form="10k")
     build_filing_index(lang="en", form="10q")
 
-    print("\n[EN 5/8] Building other SEC indices (13-F, 6-K)...")
+    print("\n[EN 5/9] Building other SEC indices (13-F, 6-K)...")
     build_other_sec(lang="en")
 
-    print("\n[EN 6/8] Building investor_day pages...")
+    print("\n[EN 6/9] Building investor_day pages...")
     build_investor_day(lang="en")
 
-    print("\n[EN 7/8] Building scripts page...")
+    print("\n[EN 7/9] Building price data pages...")
+    build_prices(lang="en")
+
+    print("\n[EN 8/9] Building scripts page...")
     build_scripts_page(lang="en")
 
-    print("\n[EN 8/8] Writing .pages nav files & abbreviations...")
+    print("\n[EN 9/9] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="en")
     build_abbreviations(lang="en")
 
@@ -1968,29 +2579,32 @@ def main():
     print(" Building Traditional Chinese version (docs/zh/)")
     print(f"{'─'*70}")
 
-    print("\n[ZH 1/8] Building ai_gen_report/stock reports...")
+    print("\n[ZH 1/9] Building ai_gen_report/stock reports...")
     build_reports(lang="zh")
 
-    print("\n[ZH 2/8] Building ai_gen_report/market_news...")
+    print("\n[ZH 2/9] Building ai_gen_report/market_news...")
     build_market_news(lang="zh")
 
-    print("\n[ZH 3/8] Building notebook_llm pages...")
+    print("\n[ZH 3/9] Building notebook_llm pages...")
     build_notebooks(lang="zh")
 
-    print("\n[ZH 4/8] Building 10-K + 10-Q indices...")
+    print("\n[ZH 4/9] Building 10-K + 10-Q indices...")
     build_filing_index(lang="zh", form="10k")
     build_filing_index(lang="zh", form="10q")
 
-    print("\n[ZH 5/8] Building other SEC indices (13-F, 6-K)...")
+    print("\n[ZH 5/9] Building other SEC indices (13-F, 6-K)...")
     build_other_sec(lang="zh")
 
-    print("\n[ZH 6/8] Building investor_day pages...")
+    print("\n[ZH 6/9] Building investor_day pages...")
     build_investor_day(lang="zh")
 
-    print("\n[ZH 7/8] Building scripts page...")
+    print("\n[ZH 7/9] Building price data pages...")
+    build_prices(lang="zh")
+
+    print("\n[ZH 8/9] Building scripts page...")
     build_scripts_page(lang="zh")
 
-    print("\n[ZH 8/8] Writing .pages nav files & abbreviations...")
+    print("\n[ZH 9/9] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="zh")
     build_abbreviations(lang="zh")
 
