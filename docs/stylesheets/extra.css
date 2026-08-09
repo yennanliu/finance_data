@@ -287,7 +287,7 @@
   bottom: 0.28rem;
   height: 2px;
   border-radius: 2px;
-  background: currentColor;
+  background: currentcolor;
 }
 
 [data-md-color-scheme="default"] .md-tabs__link:hover {
@@ -1015,7 +1015,7 @@
 
 .md-typeset a:not(.report-link):not(.card-cta):not(.pdf-btn):not(.headerlink):not(.md-button):not([class*="lp-"]):not([class*="fp-"]):hover {
   color: var(--fp-link-hover);
-  text-decoration-color: currentColor;
+  text-decoration-color: currentcolor;
 }
 
 /* Table links (ticker index) stay bold so whole-row clicks read as intentional. */
@@ -1076,6 +1076,11 @@
   transition: transform .15s;
 }
 
+/* Reports that open in a new tab (standalone HTML) say so. */
+.md-typeset a.report-link[target="_blank"]::after {
+  content: "↗";
+}
+
 .md-typeset a.report-link:hover {
   background: var(--fp-bg-card-hover);
   border-color: var(--md-typeset-a-color);
@@ -1130,7 +1135,7 @@
 .md-typeset a.card-cta svg {
   width: 1em;
   height: 1em;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 /* Color badge helpers */

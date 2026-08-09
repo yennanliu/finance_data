@@ -1235,11 +1235,14 @@ def build_reports(lang: str = "en"):
             top_lines.append(f"**{t(lang, 'html_reports')}:**")
             top_lines.append("")
             for f in html_files:
+                # Same full-width row treatment as the md reports above. The
+                # `↗` marker that .report-link[target=_blank] adds replaces the
+                # inline open-in-new icon these rows used to carry.
                 label = report_label(f)
                 if lang == "zh":
-                    top_lines.append(f"- [:material-open-in-new: {label}]({SITE_BASE}/reports/{ticker}/{f.name}){{target=_blank .pdf-btn}}")
+                    top_lines.append(f"- [{label}]({SITE_BASE}/reports/{ticker}/{f.name}){{.report-link target=_blank}}")
                 else:
-                    top_lines.append(f"- [:material-open-in-new: {label}]({ticker}/{f.name}){{target=_blank .pdf-btn}}")
+                    top_lines.append(f"- [{label}]({ticker}/{f.name}){{.report-link target=_blank}}")
             top_lines.append("")
 
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
