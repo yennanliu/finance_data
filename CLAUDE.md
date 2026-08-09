@@ -59,6 +59,8 @@ scripts/generate_analysis.py
 - `scripts/analysis/utils/llm.py` — `run_with_fallback()` runs an ordered `(provider, model)` chain, returning the first success; context is fetched once and reused across fallback attempts
 - `scripts/analysis/utils/context.py` — 12-branch context assembler; touch when adding analysis types
 - `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides
+- `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
+- `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid); powers the **Price Data** section (`docs/prices/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
 - `.github/workflows/daily_analysis.yml` — cron that fires 42 jobs/day (21 tickers × 2 types)
 
@@ -75,6 +77,7 @@ scripts/generate_analysis.py
 ## Report output
 - Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)
 - `build_docs.py` merges all three per ticker and copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
+- `build_docs.py` also publishes `data/prices/` as `docs/prices/` — an overview table plus a page per ticker (candles, drawdown, volatility, return distribution, monthly heatmap) with CSV / JSON / ZIP downloads
 - `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
 - `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
 
