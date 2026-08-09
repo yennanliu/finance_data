@@ -88,6 +88,8 @@ def main() -> None:
                 fail(f"site/prices/{d.name}/{artefact} missing")
     if not (prices_dir / "all_prices.zip").exists():
         fail("site/prices/all_prices.zip missing — bulk download would 404")
+    if not (prices_dir / "index.json").exists():
+        fail("site/prices/index.json missing — the manifest would 404")
     print(f"✅ price data: {len(ticker_dirs)} tickers with charts, payloads and CSV")
 
     # 2. Mermaid zero-regression gate ───────────────────────────────────────

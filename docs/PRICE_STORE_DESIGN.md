@@ -644,7 +644,7 @@ section publishes it.
 
 ### What it produces
 
-```
+```text
 docs/prices/
   index.md          overview table: last close, 1D/1M/YTD/1Y, 52W band, avg volume,
                     coverage span and a CSV link for every ticker in the store

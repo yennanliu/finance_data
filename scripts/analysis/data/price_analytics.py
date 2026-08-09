@@ -256,7 +256,7 @@ def monthly_returns(bars: "list[dict]") -> "list[dict]":
         rows[year]["months"][month] = round(pct, 2)
 
     # A year's return chains its months; only complete-from-January years get one.
-    for year, row in rows.items():
+    for row in rows.values():
         if 1 not in row["months"]:
             continue
         growth = 1.0
