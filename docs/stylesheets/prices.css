@@ -1,0 +1,136 @@
+/* ===========================================================================
+   prices.css — Price Data section
+   Styles the derived-analytics charts rendered by price-charts.js and the
+   monthly-return heatmap that build_docs.py emits as a plain table.
+   Uses the site's --fp-* design tokens so it tracks light/dark automatically.
+   =========================================================================== */
+
+/* ── chart card ── */
+.pchart {
+  margin: 0 0 1.5rem;
+  padding: 0.9rem 1.05rem 0.75rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 14px;
+  background: var(--fp-bg-card, #16161a);
+}
+
+.pchart__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.pchart__title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--fp-text, #fafafa);
+}
+
+.pchart__readout,
+.pchart__meta {
+  font-size: 0.78rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+.pchart__readout b { color: var(--fp-text, #fafafa); }
+
+.pchart__canvas { height: 240px; }
+
+.pchart__msg {
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--fp-text-muted, #71717a);
+}
+
+.pchart.is-empty { background: transparent; }
+
+/* Lightweight Charts injects its own attribution link; the card footer of the
+   K線 widget already credits the library once per page. */
+.pchart__canvas #tv-attr-logo { display: none; }
+
+/* ── return-distribution histogram (pure DOM bars) ── */
+.pchart__hist {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 200px;
+  padding-bottom: 1.6rem; /* room for the bucket labels below the baseline */
+  position: relative;
+}
+
+.pchart__hbar {
+  flex: 1 1 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  min-width: 0;
+}
+
+/* The renderer always tags a bucket is-up or is-down, so this base colour is
+   only a fallback if that ever stops being true. */
+.pchart__hbar-fill {
+  border-radius: 3px 3px 0 0;
+  background: var(--fp-text-muted, #71717a);
+  transition: opacity 0.15s ease;
+}
+.pchart__hbar.is-down .pchart__hbar-fill { background: var(--fp-red, #ef4444); }
+.pchart__hbar.is-up   .pchart__hbar-fill { background: var(--fp-green, #22c55e); }
+.pchart__hbar:hover .pchart__hbar-fill { opacity: 0.75; }
+
+.pchart__hbar-label {
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.58rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bucket labels collide well before the bars do on a phone; the hover title
+   still carries the exact range. */
+@media screen and (max-width: 60em) {
+  .pchart__hbar-label { display: none; }
+  .pchart__hist { padding-bottom: 0; }
+}
+
+/* ── monthly-return heatmap ── */
+/* Emitted as a normal Markdown table with a wrapper class, so it keeps the
+   theme's table behaviour (and responsive-tables.js) and only gains colour. */
+.md-typeset .pheat table {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+}
+.md-typeset .pheat td,
+.md-typeset .pheat th {
+  padding: 0.3rem 0.4rem;
+  text-align: right;
+}
+.md-typeset .pheat td:first-child,
+.md-typeset .pheat th:first-child {
+  text-align: left;
+  font-weight: 700;
+}
+
+/* Five buckets each way. Colour carries magnitude, the number carries the
+   value — the cell is never colour-only. */
+.md-typeset .pheat .g1 { background: rgba(34, 197, 94, 0.12); }
+.md-typeset .pheat .g2 { background: rgba(34, 197, 94, 0.24); }
+.md-typeset .pheat .g3 { background: rgba(34, 197, 94, 0.38); }
+.md-typeset .pheat .g4 { background: rgba(34, 197, 94, 0.52); }
+.md-typeset .pheat .r1 { background: rgba(239, 68, 68, 0.12); }
+.md-typeset .pheat .r2 { background: rgba(239, 68, 68, 0.24); }
+.md-typeset .pheat .r3 { background: rgba(239, 68, 68, 0.38); }
+.md-typeset .pheat .r4 { background: rgba(239, 68, 68, 0.52); }
+
+/* ── overview table: signed returns ── */
+.md-typeset .ptable table { font-variant-numeric: tabular-nums; }
+.md-typeset .pos { color: var(--fp-green, #16a34a); font-weight: 600; }
+.md-typeset .neg { color: var(--fp-red, #dc2626); font-weight: 600; }
