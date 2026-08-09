@@ -151,6 +151,7 @@ extra:
 extra_css:
   - stylesheets/extra.css
   - stylesheets/kline.css
+  - stylesheets/prices.css
 
 extra_javascript:
   - javascripts/clickable-rows.js
@@ -159,3 +160,6 @@ extra_javascript:
   # The library must load before kline-chart.js (order is preserved).
   - javascripts/lightweight-charts.standalone.production.js
   - javascripts/kline-chart.js
+  # Derived-analytics charts (drawdown / volatility / return distribution) on
+  # the Price Data pages — shares the same charting library.
+  - javascripts/price-charts.js
