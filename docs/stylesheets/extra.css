@@ -58,8 +58,11 @@
   --md-default-fg-color: #fafafa;
   --md-primary-fg-color: #fafafa;
   --md-primary-bg-color: #09090b;
-  --md-accent-fg-color: #a1a1aa;
-  --md-typeset-a-color: #d4d4d8;
+  --md-accent-fg-color: #7dd3fc;
+  /* Links need their own hue: the previous near-white made them
+     indistinguishable from body copy, so nothing looked clickable. */
+  --md-typeset-a-color: #60a5fa;
+  --fp-link-hover: #93c5fd;
 }
 
 /* ── Light mode variables ── */
@@ -107,8 +110,9 @@
   /* MkDocs Material overrides */
   --md-primary-fg-color: #18181b;
   --md-primary-bg-color: #ffffff;
-  --md-accent-fg-color: #18181b;
-  --md-typeset-a-color: #18181b;
+  --md-accent-fg-color: #1d4ed8;
+  --md-typeset-a-color: #2563eb;
+  --fp-link-hover: #1d4ed8;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -196,6 +200,9 @@
   color: #52525b;
 }
 
+/* Material marks the active tab on the <li> (.md-tabs__item--active); the
+   --active class on the link itself only exists in some layouts, so match both. */
+[data-md-color-scheme="default"] .md-tabs__item--active .md-tabs__link,
 [data-md-color-scheme="default"] .md-tabs__link--active,
 [data-md-color-scheme="default"] .md-tabs__link:hover {
   color: #18181b;
@@ -211,9 +218,94 @@
   opacity: 1;
 }
 
+[data-md-color-scheme="slate"] .md-tabs__item--active .md-tabs__link,
 [data-md-color-scheme="slate"] .md-tabs__link--active,
 [data-md-color-scheme="slate"] .md-tabs__link:hover {
   color: #fafafa;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Top navigation — larger, tappable, obvious hit targets
+   Material's default tabs are 0.7rem text with no hover surface, so the
+   sections read as flat labels. Give each one padding, a hover pill and an
+   active underline so picking a section is unambiguous.
+   ══════════════════════════════════════════════════════════════ */
+.md-header__title {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.md-tabs {
+  /* Height follows the padded links instead of Material's fixed 2.4rem. */
+  height: auto;
+}
+
+.md-tabs__list {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.3rem 0;
+}
+
+.md-tabs__item {
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.md-tabs__link {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  opacity: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.md-tabs__link:focus-visible {
+  outline: 2px solid var(--md-typeset-a-color);
+  outline-offset: -2px;
+}
+
+.md-tabs__item--active > .md-tabs__link,
+.md-tabs__link--active {
+  position: relative;
+  font-weight: 700;
+}
+
+/* Underline marker on the current section. */
+.md-tabs__item--active > .md-tabs__link::after,
+.md-tabs__link--active::after {
+  content: "";
+  position: absolute;
+  left: 0.9rem;
+  right: 0.9rem;
+  bottom: 0.28rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+[data-md-color-scheme="default"] .md-tabs__link:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-md-color-scheme="default"] .md-tabs__item--active > .md-tabs__link,
+[data-md-color-scheme="default"] .md-tabs__link--active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-md-color-scheme="slate"] .md-tabs__link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-md-color-scheme="slate"] .md-tabs__item--active > .md-tabs__link,
+[data-md-color-scheme="slate"] .md-tabs__link--active {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -898,11 +990,147 @@
 /* Card grid improvements */
 .md-typeset .grid.cards > ul > li {
   border-radius: 12px;
-  transition: box-shadow .2s, transform .2s;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
 }
 .md-typeset .grid.cards > ul > li:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
   transform: translateY(-2px);
+  border-color: var(--md-typeset-a-color);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Links — make it obvious what is clickable
+   ══════════════════════════════════════════════════════════════ */
+
+/* Body links get the accent hue plus a soft underline that solidifies on
+   hover. Buttons, report rows, permalinks and the landing page opt out —
+   they carry their own affordance. */
+.md-typeset a:not(.report-link):not(.card-cta):not(.pdf-btn):not(.headerlink):not(.md-button):not([class*="lp-"]):not([class*="fp-"]) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--md-typeset-a-color) 40%, transparent);
+  text-underline-offset: 0.18em;
+  transition: color .15s, text-decoration-color .15s;
+}
+
+.md-typeset a:not(.report-link):not(.card-cta):not(.pdf-btn):not(.headerlink):not(.md-button):not([class*="lp-"]):not([class*="fp-"]):hover {
+  color: var(--fp-link-hover);
+  text-decoration-color: currentColor;
+}
+
+/* Table links (ticker index) stay bold so whole-row clicks read as intentional. */
+.md-typeset table:not([class]) td a,
+.md-typeset table:not([class]) th a {
+  font-weight: 600;
+}
+
+/* ── Report list rows ──
+   Every dated report becomes a full-width card: bigger tap target, arrow
+   affordance, hover highlight. Applied via `{.report-link}` in build_docs.py. */
+.md-typeset ul:has(> li > a.report-link) {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.md-typeset ul:has(> li > a.report-link) > li {
+  margin: 0;
+}
+
+.md-typeset a.report-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--fp-border);
+  border-left: 3px solid var(--fp-border);
+  border-radius: 8px;
+  background: var(--fp-bg-card);
+  color: var(--fp-text) !important;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none !important;
+  transition: background .15s, border-color .15s, box-shadow .15s, transform .15s;
+}
+
+/* Leading dot + trailing arrow: two cheap "this is a link" cues. */
+.md-typeset a.report-link::before {
+  content: "";
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--md-typeset-a-color);
+  opacity: 0.75;
+}
+
+.md-typeset a.report-link::after {
+  content: "→";
+  margin-left: auto;
+  padding-left: 0.5rem;
+  color: var(--md-typeset-a-color);
+  font-weight: 700;
+  transition: transform .15s;
+}
+
+.md-typeset a.report-link:hover {
+  background: var(--fp-bg-card-hover);
+  border-color: var(--md-typeset-a-color);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+  color: var(--md-typeset-a-color) !important;
+  transform: translateX(2px);
+}
+
+.md-typeset a.report-link:hover::after {
+  transform: translateX(3px);
+}
+
+.md-typeset a.report-link:focus-visible {
+  outline: 2px solid var(--md-typeset-a-color);
+  outline-offset: 2px;
+}
+
+/* Inside the "Show N older" details block the rows sit flush with the body. */
+.md-typeset details .md-typeset a.report-link,
+.md-typeset details a.report-link {
+  background: transparent;
+}
+
+/* ── Card call-to-action button ──
+   The "Open latest" link on each quick-access card. */
+.md-typeset a.card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 8px;
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: opacity .15s, transform .15s, box-shadow .15s;
+}
+
+.md-typeset a.card-cta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+
+.md-typeset a.card-cta:focus-visible {
+  outline: 2px solid var(--md-typeset-a-color);
+  outline-offset: 2px;
+}
+
+.md-typeset a.card-cta .twemoji,
+.md-typeset a.card-cta svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
 }
 
 /* Color badge helpers */
@@ -1141,6 +1369,18 @@ body,
   .md-content__inner {
     padding-top: 2rem !important;
     padding-bottom: 3.5rem !important;
+  }
+
+  /* Report rows — 44px+ tap targets on phones */
+  .md-typeset a.report-link {
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .md-typeset a.card-cta {
+    width: 100%;
+    justify-content: center;
+    padding: 0.7rem 1rem;
   }
 }
 

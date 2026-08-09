@@ -1060,14 +1060,14 @@ def build_reports(lang: str = "en"):
             lines.append(f"### {heading}")
             lines.append("")
             for f in ordered[:RECENT_COUNT]:
-                lines.append(f"- [{report_label(f)}]({link_fn(f)})")
+                lines.append(f"- [{report_label(f)}]({link_fn(f)}){{.report-link}}")
             lines.append("")
             older = ordered[RECENT_COUNT:]
             if older:
                 lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
                 lines.append("")
                 for f in older:
-                    lines.append(f"    - [{report_label(f)}]({link_fn(f)})")
+                    lines.append(f"    - [{report_label(f)}]({link_fn(f)}){{.report-link}}")
                 lines.append("")
 
         # Generate per-ticker index.md
@@ -1109,7 +1109,9 @@ def build_reports(lang: str = "en"):
             lines.append('<div class="grid cards" markdown>')
             lines.append("")
             for title, f, link_fn, is_html in cards:
-                blank = "{target=_blank}" if is_html else ""
+                # `.card-cta` renders the link as a filled button (extra.css) so
+                # the primary action on each card reads as clickable at a glance.
+                attrs = "{.card-cta target=_blank}" if is_html else "{.card-cta}"
                 lines.append(f"-   __{title}__")
                 lines.append("")
                 lines.append(f"    ---")
@@ -1118,7 +1120,7 @@ def build_reports(lang: str = "en"):
                 lines.append("")
                 lines.append(
                     f"    [:octicons-arrow-right-24: {t(lang, 'open_latest')}]"
-                    f"({link_fn(f)}){blank}"
+                    f"({link_fn(f)}){attrs}"
                 )
                 lines.append("")
             lines.append("</div>")
@@ -1135,7 +1137,9 @@ def build_reports(lang: str = "en"):
             lines.append(f"### {t(lang, 'html_reports')}")
             lines.append("")
             for f in html_files:
-                lines.append(f"- [{report_label(f)}]({html_link(f)}){{target=_blank}}")
+                lines.append(
+                    f"- [{report_label(f)}]({html_link(f)}){{.report-link target=_blank}}"
+                )
             lines.append("")
 
         write(dst_dir / "index.md", "\n".join(lines))
@@ -1214,14 +1218,14 @@ def build_reports(lang: str = "en"):
             top_lines.append(f"**{t(lang, label_key)}:**")
             top_lines.append("")
             for f in ordered[:RECENT_COUNT]:
-                top_lines.append(f"- [{report_label(f)}]({top_link(f)})")
+                top_lines.append(f"- [{report_label(f)}]({top_link(f)}){{.report-link}}")
             top_lines.append("")
             older = ordered[RECENT_COUNT:]
             if older:
                 top_lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
                 top_lines.append("")
                 for f in older:
-                    top_lines.append(f"    - [{report_label(f)}]({top_link(f)})")
+                    top_lines.append(f"    - [{report_label(f)}]({top_link(f)}){{.report-link}}")
                 top_lines.append("")
 
         emit_top_section("fundamental_analysis", fundamental_md)
