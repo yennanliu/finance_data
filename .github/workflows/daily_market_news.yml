@@ -99,7 +99,7 @@ on:
       model:
         description: "Model ID"
         required: false
-        default: "gemini-3.6-flash"
+        default: "gemini-3.7-flash"
         type: choice
         options:
           # OpenAI models
@@ -110,6 +110,7 @@ on:
           - gpt-4o-mini
           - gpt-4-turbo
           # Gemini 3.x models (latest)
+          - gemini-3.7-flash
           - gemini-3.6-flash
           - gemini-3.5-flash
           - gemini-3.1-pro-preview
@@ -141,7 +142,7 @@ jobs:
     timeout-minutes: 30
     env:
       DEFAULT_PROVIDER: gemini
-      DEFAULT_MODEL: gemini-3.6-flash
+      DEFAULT_MODEL: gemini-3.7-flash
       DEFAULT_MAX_TOKENS: "20000"
 
     steps:
@@ -230,7 +231,7 @@ jobs:
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.6-flash" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.7-flash" ;;
             openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac

@@ -40,7 +40,7 @@ on:
       model:
         description: "Model ID"
         required: false
-        default: "gemini-3.6-flash"
+        default: "gemini-3.7-flash"
         type: choice
         options:
           # OpenAI models
@@ -55,6 +55,7 @@ on:
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
           # Gemini models
+          - gemini-3.7-flash
           - gemini-3.6-flash
           - gemini-3.5-flash
           - gemini-3.1-pro-preview
@@ -114,12 +115,12 @@ jobs:
           TICKER="${TICKER:-AAPL}"
           ANALYSIS_TYPE="${ANALYSIS_TYPE:-earnings-call-analysis}"
           PROVIDER="${PROVIDER:-gemini}"
-          MODEL="${MODEL:-gemini-3.6-flash}"
+          MODEL="${MODEL:-gemini-3.7-flash}"
           MAX_TOKENS="${MAX_TOKENS:-20000}"
 
           # Auto-correct model when it doesn't match the chosen provider
           case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.6-flash" ;;
+            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.7-flash" ;;
             openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
             claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
           esac
