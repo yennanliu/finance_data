@@ -95,7 +95,7 @@ Generates market news summary (reuses `analysis/utils/llm.py`).
 PROVIDER_DEFAULTS = {
     "claude": {"default_model": "claude-sonnet-4-6", "default_tokens": 32000},
     "openai": {"default_model": "gpt-4o", "default_tokens": 16000},   # gpt-4o ceiling
-    "gemini": {"default_model": "gemini-3.6-flash", "default_tokens": 32000},
+    "gemini": {"default_model": "gemini-3.7-flash", "default_tokens": 32000},
 }
 ```
 
