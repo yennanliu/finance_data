@@ -2,10 +2,10 @@
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-08-25 |
+| Last run | 2026-08-26 |
 | Bad reports found | 0 |
-| CSV | [bad_reports_2026-08-25.csv](bad_reports_2026-08-25.csv) |
-| Full summary | [summary_2026-08-25.txt](summary_2026-08-25.txt) |
+| CSV | [bad_reports_2026-08-26.csv](bad_reports_2026-08-26.csv) |
+| Full summary | [summary_2026-08-26.txt](summary_2026-08-26.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -13,12 +13,12 @@
 ```
 
 ============================================================
-Total scanned : 3785
+Total scanned : 3846
 Bad reports   : 0  (0.0%)
 
 Issue breakdown:
 
 Top 10 tickers by bad-report count:
 
-CSV written → qa/bad_reports_2026-08-25.csv
+CSV written → qa/bad_reports_2026-08-26.csv
 ```
