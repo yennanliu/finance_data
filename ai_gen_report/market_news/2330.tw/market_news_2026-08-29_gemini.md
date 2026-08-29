@@ -14,125 +14,118 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-08-29
 
----
-
 ## 🏢 公司概覽
-台灣積體電路製造股份有限公司（TSMC，代碼：2330.TW）為全球晶圓代工領域之絕對龍頭，在先進製程（包含 3nm、2nm 及先進封裝 CoWoS 等關鍵技術）擁有超過 85% 以上的高階市佔率。身為全球科技巨頭與 AI 運算架構之核心基礎設施供應商，台積電營運動能與全球高效能運算（HPC）、智慧型手機以及生成式人工智慧產業資本支出高度連動。截至 2026 年 8 月 29 日，台積電股價報 2420.0 TWD，持續反映其無可取代的技術護城河與獲利成長力道。
+台灣積體電路製造股份有限公司（TSMC，代碼：2330.TW）是全球晶圓代工領域的絕對龍頭，在先進製程（如 3 奈米、2 奈米及先進封裝 CoWoS）擁有壓倒性的市場佔有率。台積電為全球頂級無晶圓廠晶片設計公司（包括 Nvidia、Apple、AMD 等）提供關鍵製造服務，是全球人工智慧（AI）、高效能運算（HPC）與行動運算硬體生態系不可或缺的核心基礎。目前最新股價為 2420.0 TWD。
 
 ---
 
 ## 📝 新聞摘要總覽
-回顧 2026 年 8 月以來的市場動態，半導體產業鏈與台股市場呈現「基本面強勁、結構性資金湧入、但總體波動劇烈」之格局。首先在產業營運動能方面，台積電 2026 年第一季營運繳出亮麗成績單，單季營收達 359 億美元（季增 6.4%），毛利率高達 66.2%，單季每股純益（EPS）達 22.08 元新台幣，雙雙超越原先財測指引，管理層更進一步調升全年美元營收成長目標。上游設備巨頭應用材料（Applied Materials, AMAT）最新的 AI 積壓訂單激增與全球新晶圓廠建設加速，進一步印證了以台積電為核心的先進製程擴產需求仍維持高檔。
+台積電近期發布的 2026 年第一季財務報告展現了極為強勁的營運成果與獲利爆發力。該季度單季營收達 359 億美元，季增 6.4%，毛利率大幅擴張至 66.2%，單季每股盈餘（EPS）達到新台幣 22.08 元，各項關鍵財務指標均大幅超越原先給出的財務指引；同時管理層也調升了全年度美元營收成長展望，顯示 AI 與 HPC 帶動的晶圓代工需求依然處於高速擴張週期。在產業生態鏈方面，市場高度關注 Nvidia 創紀錄的季度業績對台積電股價的拉動效應，確立先進製程產能滿載的確定性。
 
-在資本市場與籌碼面層面，避險基金等機構法人持續大舉買進具代表性的 AI 核心標的，顯示長線機構資金對先進半導體的主題佈局未有減退。然而，台股大盤在 8 月初經歷顯著震盪，加權指數一度跌破 43,000 點整數關卡，台積電單日亦曾出現回檔 55 元新台幣之修正；隨後在美國就業數據出爐淡化升息疑慮後，指數迅速強彈逾 600 點並成功收復季線。伴隨市場震盪，台灣證券交易所公布之鉅額交易排行榜中，台積電以高達 67.7 億元新台幣的鉅額成交金額居冠，凸顯出外資與大型機構在盤勢高檔劇烈震盪之際，正透過鉅額交易進行大規模部位換手與高價股輪動。總結而言，強韌的基本面數據、上游資本設備訂單擴張及機構換手買盤，共同支撐台積電股價維持於 2420.0 TWD 的歷史高檔區間。
+在資本市場與籌碼面方面，台灣加權指數近期呈現劇烈波動，台股大盤在 8 月初一度跌破 43,000 點整數關卡，台積電亦曾面臨單日下跌 55 元的短線修正；但隨著美國就業市場數據緩解了聯準會的升息擔憂，台股隨後強彈逾 600 點並收復季線。值得注意的是，在台股巨震與高價股輪動之際，台積電在台灣證券交易所鉅額交易排行中以新台幣 67.7 億元高居榜首，凸顯法人機構及大額資金在市場震盪期間趁拉回大舉承接的強烈意願。整體而言，儘管總體經濟數據與大盤震盪引發短線波動，台積電憑藉卓越的獲利能力與 AI 核心地位，基本面持續支撐其長期多頭格局。
 
 ---
 
 ## 💡 關鍵洞察
-
-- **獲利結構展現極致定價權**：台積電 2026 年第一季毛利率衝上 66.2%、單季 EPS 達 22.08 元新台幣，顯示先進製程產能利用率滿載且產品均價（ASP）具備強大溢價能力，營運槓桿與獲利爆發力顯著超越市場預期。
-- **機構鉅額換手奠定籌碼新支撐**：單日錄得 67.7 億元新台幣的台積電鉅額交易成交量，反映長線主權基金與法人機構在市場震盪期間承接高價權值股，籌碼由浮動散戶轉移至長期核心資金。
-- **上游設備訂單積壓印證擴產週期延續**：應用材料（AMAT）AI 相關訂單積壓創高與新晶圓廠建置加速，為台積電海內外先進製程與先進封裝產能的實質投產提供了強有力的產業鏈佐證。
-- **總體降息預期回溫提供流動性保護傘**：美國非農就業數據緩解市場對貨幣緊縮的擔憂，帶動台股自 43,000 點下方急遽反彈並重回季線，改善高估值科技權值股的折現率與資金動能。
-- **避險基金集中持股強化 AI 結構性牛市**：全球避險基金積極加碼 AI 核心資產，台積電作為所有前沿晶片（GPU、ASIC、加速處理器）的唯一製造樞紐，持續享有估值溢價。
-- **盤勢高檔震盪加劇凸顯風險定價機制**：台股單日波動達 700 點以上、台積電單日波動逾 50 元已成常態，投資人應關注高檔獲利了結與高價股板塊輪動所帶來的短期再平衡壓力。
+- **獲利結構優化與定價權鞏固**：2026 年 Q1 毛利率攀升至 66.2%、單季 EPS 達 22.08 元，顯示台積電在先進製程與先進封裝具備無可替代的定價優勢，成本轉嫁能力強勁，破除市場對擴產折舊壓力的疑慮。
+- **AI 驅動全年度營收指引上修**：管理層調升全年度美元營收成長預期，佐證來自 Nvidia 等核心 AI 客戶的訂單需求非短暫泡沫，而是長線實質結構性增長。
+- **機構大戶籌碼鎖定明確**：鉅額交易金額高達新台幣 67.7 億元居台股之冠，反映在近期市場大幅震盪、高價股輪動過程中，長線機構法人持續將台積電視為核心資產配置首選。
+- **大盤中樞地位與高 Beta 波動特徵**：台股在 43,000 點上下劇烈震盪，台積電作為權值股受總體經濟及資金流向影響顯著，但在大盤自低檔反彈逾 600 點收復季線時展現出強大領漲力道。
+- **總體經濟利率預期緩解提供估值支撐**：美國就業數據平息升息疑慮，有助於降低科技權值股的折現率壓力，為台積電維持高估值水準提供寬鬆的資金環境。
 
 ---
 
 ## 📰 近期新聞總覽
-
-- 2026-08-27 | How Investors Are Reacting To Applied Materials (AMAT) AI-Fueled Backlog, New Fabs And EPIC Center Bet — Yahoo News
-- 2026-08-27 | 3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist — Yahoo News
+- 2026-08-28 | TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — Bing News
 - 2026-08-26 | 4 Ultra-High-Yield Stocks Retirees Should Never Hold in a Taxable Account — Yahoo News
+- 2026-08-25 | Prediction: TSMC Stock Will Soar After Aug. 26 Thanks to Nvidia’s Historic Quarter — Yahoo News
 - 2026-08-19 | Taiwan Stocks Swing More Than 700 Points, Late-Session Surge Lifts Index 214 Points Back Above Quarterly Line — finance.biggo.com
 - 2026-08-13 | Taiwan Stock Exchange Block Trade Rankings Released: TSMC Tops at NT$6.77 Billion, High-Priced Stocks Show Clear Rotation — finance.biggo.com
 - 2026-08-09 | US Jobs Data Shock Douses Rate Hike Fears; Taiwan Stocks Surge Over 600 Points, Reclaiming Quarterly Moving Average — finance.biggo.com
 - 2026-08-03 | Taiwan's Stock Market Wobbles After Breaking Below 43,000 Points, Shedding Over 490 Points in Early Trading; TSMC Continues Slide, Down NT$55 — finance.biggo.com
 - 2026-06-25 | 2330 Forecast — Price Target — Prediction for 2027 — TradingView
-- 2026-04-29 | Taiwan Semiconductor Manufacturing Co. Ltd. — Barron's / FactSet
-- 2026-04-16 | TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — Yahoo Finance
+- 2026-06-25 | Taiwan Semiconductor Manufacturing Co. Ltd. — Bing News
+- 2025-10-28 | Taiwan Semiconductor Manufacturing Company (TWSE:2330) Price Target Increased by 24.97% to 1,777.58 — Bing News
+- 2025-10-23 | Here's Why TSMC Didn't Rise Despite Record Profits In Q3 2025 (NYSE:TSM) — Seeking Alpha
+- 2024-12-09 | VXUS: 51 Countries Against 1 (NASDAQ:VXUS) — Seeking Alpha
+- 2023-10-19 | East 72 - Virtu Financial: From Lust To Loathing — Seeking Alpha
+- 2017-12-11 | Corporación América Airports S.A. (CAAP) Stock Price, Quote, News & Analysis — Seeking Alpha
+- 2017-05-26 | Taiwan Semiconductor Manufacturing Company Limited (TSM) Stock Price, News, Quote & History — Yahoo! Finance Canada
+- 2016-07-07 | META_TITLE_QUOTE — Yahoo Finance
+- 2015-07-03 | T-Mobile US, Inc. (TMUS) Stock Price, Quote, News & Analysis — Seeking Alpha
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 台積電 2026 Q1 財報優於預期並上修全年展望 (2026-04-16)
-- **新聞核心內容**：台積電第一季營收達到 359 億美元，季增 6.4%，毛利率達 66.2%，單季 EPS 報 22.08 元新台幣，各項核心財務指標全面擊敗財測指引，管理層隨後正式上修全年美元營收成長目標。
-- **營運與財務影響**：毛利率攀升至 66.2% 反映先進節點良率成熟且折舊成本控制得宜，每股單季賺逾 22 元確立了全年 EPS 挑戰高點的堅實基礎。此財報確認了高效能運算與邊緣 AI 晶片需求非但未見放緩，反而持續推升晶圓出貨單價。
-- **股價意涵**：強大的獲利基本面為目前 2420.0 TWD 股價提供了實質本益比支撐，化解市場對半導體週期見頂的疑慮。
+### 1. 2026 年第一季法說會：獲利全線超越預期與營收指引上修
+- **事件解析**：台積電公布 2026 年 Q1 業績，單季營收達 359 億美元（季增 6.4%），毛利率衝上 66.2%，單季每股盈餘達到新台幣 22.08 元。管理層同步上調全年度美元營收成長展望。
+- **財務與營運影響**：毛利率達 66.2% 創下高水準表現，證明先進製程良率持續改善且高定價能力有效抵消新產線建置折舊。單季 EPS 22.08 元奠定了全年高獲利基調，調升全年美元營收展望進一步確認整體半導體晶圓製造景氣處於強勢上升軌道。
+- **投資啟示**：基本面成長無虞，為股價在 2400 元以上區間提供堅實的每股獲利支撐。
 
----
+### 2. Nvidia 歷史級業績對台積電之拉動效應
+- **事件解析**：市場分析指出 Nvidia 繳出歷史級季度表現，直接帶動市場對其最大代工夥伴台積電的看漲情緒。
+- **財務與營運影響**：Nvidia GPU 的強勁出貨直接轉化為台積電 3 奈米/4 奈米晶圓代工與 CoWoS 先進封裝產能的全面滿載，鞏固了台積電高效能運算（HPC）部門的營收貢獻，並確保其供應鏈上游不可替代的主導權。
+- **投資啟示**：台積電為 AI 浪潮最直接且低單一產品風險的受惠標的，與主要客戶的業績呈現高度正相關。
 
-### 2. 證交所鉅額交易榜首：台積電成交 67.7 億元新台幣與板塊輪動 (2026-08-13)
-- **新聞核心內容**：台灣證券交易所鉅額交易統計顯示，台積電以 67.7 億元新台幣的鉅額成交金額拔得頭籌，同期間台股高價股呈現顯著的輪動格局。
-- **營運與籌碼影響**：鉅額交易金額高達 67.7 億元，顯示大型機構投資者（如主權基金、全球退休基金或 ETF 機構）在盤勢高檔進行了大規模的非公開市場部位移轉。此舉有效避免了對公開撮合市場造成的劇烈滑價衝擊。
-- **股價意涵**：鉅額交易的順利對敲通常意味著長線機構承接力道強韌，奠定股價在 2400 TWD 附近的法人持股成本支撐區間。
+### 3. 證交所鉅額交易榜首：台積電獲 67.7 億元大額資金挹注
+- **事件解析**：台灣證券交易所鉅額交易排行公布，台積電以新台幣 67.7 億元居冠，市場高價股同步呈現輪動格局。
+- **財務與營運影響**：鉅額交易金額龐大，通常意味著外資法人或政府大型基金進行長線戰略佈局或倉位調整。高額成交量有助於在現貨市場建立強烈支撐底部，減緩市場拋售壓力。
+- **投資啟示**：機構投資人對台積電長期基本面抱持極高信心，震盪期逢低承接意願強烈。
 
----
-
-### 3. 上游設備廠應用材料 (AMAT) AI 積壓訂單激增與新廠建置 (2026-08-27)
-- **新聞核心內容**：應用材料（Applied Materials）受惠於 AI 晶圓廠建設加速及 EPIC Center 投資，設備積壓訂單持續累積，投資人反應正面。
-- **產業鏈連動分析**：半導體設備積壓訂單為晶圓代工產能擴張的前瞻指標。AMAT 的強勁訂單反映台積電及其生態系夥伴正加速推進全球晶圓廠（包含海外擴產與先進封裝據點）的設備裝機進度。
-- **股價意涵**：設備端景氣能見度拉長，印證台積電中期擴產藍圖具備高度可信度，有助於平抑市場對 2027 年資本支出過度擴張的週期性疑慮。
-
----
-
-### 4. 總體就業數據緩解升息恐慌，台股巨震收復季線 (2026-08-09 / 2026-08-19)
-- **新聞核心內容**：8 月初台股一度因市場恐慌跌破 43,000 點（台積電單日下挫 55 元），隨後在美國就業數據平息貨幣緊縮擔憂後，市場單日強彈逾 600 點，並在經歷單日超過 700 點的震盪後收復季線。
-- **宏觀環境影響**：宏觀利率預期的轉折直接影響科技權值股的折現率。在升息擔憂降溫後，全球流動性壓力釋放，使資金迅速回流台股權值核心。
-- **股價意涵**：台股指數在季線附近展現強勁防守買盤，確認台積電作為權值支柱在市場系統性修正時具有極高的逢低買盤彈性。
+### 4. 台股市場劇烈波動與技術面收復季線
+- **事件解析**：8 月初台股指數一度破 43,000 點，台積電單日下跌 55 元；隨後受美就業數據緩解升息疑慮激勵，大盤出現逾 700 點震盪並強彈逾 600 點，重新站回季線。
+- **財務與營運影響**：宏觀情緒與利率預期短期內主導資金流向，造成權值股震盪；然而台積電迅速帶動大盤收復關鍵均線，展現其作為指數定海神針的角色。
+- **投資啟示**：短線震盪主要來自總經雜音而非公司營運惡化，技術面季線獲得回補確認多頭結構未破。
 
 ---
 
 ## 📊 市場情緒評估
+**整體市場情緒：🟢 正面**
 
-**整體市場情緒**：🟢 **正面偏多（高檔強勢整理）**
-
-```
-[  🔴 悲觀  |  🟡 中性  |  🟢 正面 (當前位置: 80/100)  ]
-```
-
-### 評估依據
-| 維度 | 狀態 | 關鍵驅動因素 |
+| 評估面向 | 狀態 / 權重 | 依據與分析說明 |
 | :--- | :---: | :--- |
-| **基本面獲利** | 🟢 強勁 | Q1 2026 EPS 達 22.08 TWD，毛利率 66.2%，管理層上調全年美元營收指引。 |
-| **產業景氣度** | 🟢 擴張 | AMAT 設備積壓訂單大增，避險基金持續買進 AI 核心標的。 |
-| **法人籌碼面** | 🟢 正向 | 台積電單日鉅額交易達 67.7 億元，顯示大型機構長期配置意願高。 |
-| **市場波動度** | 🟡 中性偏震盪 | 台股單日震盪逾 700 點，大盤在 43,000 點整數關卡與季線附近激烈攻防。 |
+| **基本面與財報** | 🟢 強烈正面 | 2026 Q1 營收達 359 億美元、毛利率達 66.2%、單季 EPS 22.08 元，全年度展望上修。 |
+| **產業需求拉動** | 🟢 正面 | Nvidia 等主要客戶業績創高，AI 晶片與 HPC 需求持續帶動先進製程滿載。 |
+| **資金籌碼面** | 🟢 正面 | 證交所鉅額交易以 67.7 億元居榜首，機構大戶低接買盤積極。 |
+| **總體市場環境** | 🟡 中性偏正 | 美國升息預期降溫，台股在劇烈震盪後收復季線，但宏觀波動性仍存。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **總體經濟與利率路徑波動風險**（風險等級：中等）
-  - 儘管最新就業數據舒緩升息預期，但若後續通膨數據出現反覆，全球債券殖利率反彈將對 2400 TWD 以上高估值權值股造成折現率回調壓力。
-- 🟡 **高檔獲利了結與類股輪動風險**（風險等級：中等）
-  - 台股於 43,000 點上方震盪加劇，鉅額交易頻繁出現顯示部分前期獲利資金正進行部位調整與高價股輪動，短期股價可能面臨高檔整理。
-- 🟢 **產能建置與供應鏈交付風險**（風險等級：較低）
-  - 上游設備商訂單積壓龐大，需持續追蹤先進製程機台設備能否如期交付與裝機驗收，以確保後續產能順暢開出。
+- 🔴 **高基期與獲利兌現壓力**：股價已處於 2420 TWD 高檔，市場預期已被顯著推高，未來季度若成長幅度放緩可能誘發獲利了結賣壓。
+- 🟡 **總體經濟與大盤高檔波動風險**：台股大盤指數處於 43,000 點震盪區間，若國際總體經濟數據反覆，高權重權值股易受系統性資金撤出波及。
+- 🟡 **大客戶資本支出週期變化**：雖然 Nvidia 等客戶當前需求強勁，但仍須密切關注終端雲端服務提供商（CSP）對 AI 資本支出的後續持續性。
+- 🟢 **產能擴張與折舊認列**：雖然目前毛利率達到 66.2% 高位，但全球擴產帶來的後續海外廠營運成本與折舊仍需長期跟蹤。
 
 ---
 
 ## 🔮 短期關注重點
-
-1. **台股大盤季線支撐與 43,000 點整數關卡穩定度**：觀察指數在大幅震盪後能否在季線上方築底走穩，維持權值股評價空間。
-2. **機構鉅額交易續航力與外資買賣超動向**：追蹤鉅額交易後外資在集中市場的買盤延續性，確認 67.7 億元換手後是否形成堅實支撐。
-3. **下世代節點產能擴充與上游設備交期進度**：密切跟進 AMAT 等設備巨頭的交貨節奏，作為評估台積電 2026 下半年至 2027 年先進節點量產進度的關鍵指標。
+1. **AI 客戶後續拉貨動能**：持續追蹤 Nvidia 及各大晶片設計客戶在先進封裝與 3nm/2nm 製程的下單進展。
+2. **季線支撐與大盤穩定度**：觀察台股加權指數在收復季線後的量能變化，台積電股價在 2400 TWD 之上的整固情況。
+3. **國際利率與宏觀數據**：關注美國就業數據與通膨指標對聯準會貨幣政策路徑的實質引導，確保科技股估值環境維持穩定。
 
 ---
 
 ## 📌 新聞來源索引
-
-1. How Investors Are Reacting To Applied Materials (AMAT) AI-Fueled Backlog, New Fabs And EPIC Center Bet — *Yahoo News* (2026-08-27)
-2. 3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist — *Yahoo News* (2026-08-27)
-3. 4 Ultra-High-Yield Stocks Retirees Should Never Hold in a Taxable Account — *Yahoo News* (2026-08-26)
-4. Taiwan Stocks Swing More Than 700 Points, Late-Session Surge Lifts Index 214 Points Back Above Quarterly Line — *finance.biggo.com* (2026-08-19)
-5. Taiwan Stock Exchange Block Trade Rankings Released: TSMC Tops at NT$6.77 Billion, High-Priced Stocks Show Clear Rotation — *finance.biggo.com* (2026-08-13)
-6. US Jobs Data Shock Douses Rate Hike Fears; Taiwan Stocks Surge Over 600 Points, Reclaiming Quarterly Moving Average — *finance.biggo.com* (2026-08-09)
-7. Taiwan's Stock Market Wobbles After Breaking Below 43,000 Points, Shedding Over 490 Points in Early Trading; TSMC Continues Slide, Down NT$55 — *finance.biggo.com* (2026-08-03)
-8. 2330 Forecast — Price Target — Prediction for 2027 — *TradingView* (2026-06-25)
-9. Taiwan Semiconductor Manufacturing Co. Ltd. — *Barron's / FactSet* (2026-04-29)
-10. TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — *Yahoo Finance* (2026-04-16)
+1. TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — Bing News (2026-08-28)
+2. 4 Ultra-High-Yield Stocks Retirees Should Never Hold in a Taxable Account — Yahoo News (2026-08-26)
+3. Prediction: TSMC Stock Will Soar After Aug. 26 Thanks to Nvidia’s Historic Quarter — Yahoo News (2026-08-25)
+4. Taiwan Stocks Swing More Than 700 Points, Late-Session Surge Lifts Index 214 Points Back Above Quarterly Line — finance.biggo.com (2026-08-19)
+5. Taiwan Stock Exchange Block Trade Rankings Released: TSMC Tops at NT$6.77 Billion, High-Priced Stocks Show Clear Rotation — finance.biggo.com (2026-08-13)
+6. US Jobs Data Shock Douses Rate Hike Fears; Taiwan Stocks Surge Over 600 Points, Reclaiming Quarterly Moving Average — finance.biggo.com (2026-08-09)
+7. Taiwan's Stock Market Wobbles After Breaking Below 43,000 Points, Shedding Over 490 Points in Early Trading; TSMC Continues Slide, Down NT$55 — finance.biggo.com (2026-08-03)
+8. 2330 Forecast — Price Target — Prediction for 2027 — TradingView (2026-06-25)
+9. Taiwan Semiconductor Manufacturing Co. Ltd. — Bing News (2026-06-25)
+10. Taiwan Semiconductor Manufacturing Company (TWSE:2330) Price Target Increased by 24.97% to 1,777.58 — Bing News (2025-10-28)
+11. Here's Why TSMC Didn't Rise Despite Record Profits In Q3 2025 (NYSE:TSM) — Seeking Alpha (2025-10-23)
+12. VXUS: 51 Countries Against 1 (NASDAQ:VXUS) — Seeking Alpha (2024-12-09)
+13. East 72 - Virtu Financial: From Lust To Loathing — Seeking Alpha (2023-10-19)
+14. Corporación América Airports S.A. (CAAP) Stock Price, Quote, News & Analysis — Seeking Alpha (2017-12-11)
+15. Taiwan Semiconductor Manufacturing Company Limited (TSM) Stock Price, News, Quote & History — Yahoo! Finance Canada (2017-05-26)
+16. META_TITLE_QUOTE — Yahoo Finance (2016-07-07)
+17. T-Mobile US, Inc. (TMUS) Stock Price, Quote, News & Analysis — Seeking Alpha (2015-07-03)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估風險並自負盈虧。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
