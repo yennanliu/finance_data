@@ -14,121 +14,120 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-08-29
 
+---
+
 ## 🏢 公司概覽
-Space Exploration Technologies Corp.（NASDAQ: SPCX）是全球航太與衛星通訊產業的龍頭企業，隸屬於工業板塊（Industrials）。公司業務核心涵蓋可重複使用軌道發射系統（Falcon 9、Falcon Heavy 及次世代巨型火箭 Starship 星艦）、全球低軌道衛星網際網路服務（Starlink 星鏈），並逐步將高軌道與近地基礎設施延伸至人工智慧（AI）軌道運算中心及深空探索任務。目前 SPCX 處於 IPO 上市後的價值重估期，股價收在 141.5 美元，於 140 美元支撐關口進行多空博弈。
+**Space Exploration Technologies Corp.（代碼：SPCX）** 是全球商業航太、軌道發射服務以及次世代低軌衛星通訊網絡（Starlink）的絕對龍頭。公司旗下擁有目前全球發射頻次最高的可重複使用火箭系統（Falcon 系列）以及具備星際運輸能力的新一代重型運載火箭（Starship）。近年來，SPCX 正加速將業務版圖拓展至軌道 AI 運算基礎設施、太空晶片部署與先進製造領域，試圖從傳統航太防務承包商轉型為跨維度的硬科技與太空基建平台。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期圍繞 SPCX（SpaceX）的市場焦點集中於 IPO 後估值定價爭議、技術催化劑進展、巨頭股權收益以及延伸至 AI 運算架構的新敘事。
+SpaceX（SPCX）近期於美國公開市場掛牌後，股價經歷了劇烈的多空震盪。在經歷掛牌初期的追價熱潮後，近期股價回落並跌破 IPO 價格，最新收盤價報 141.5 美元。市場目前圍繞 SPCX 展現出極端分歧的評價：一方面，公司基本面擴張動能極為強勁，管理層正式公布了一項位於路易斯安那州、規模高達 1,000 億美元的 Starship 基地建造計畫，且已確認與晶片巨頭輝達（Nvidia）達成戰略合作，將共同開發專為軌道部署設計的 Vera Rubin AI 晶片；此外，高盛（Goldman Sachs）亦指出馬斯克的 Terafab 計畫有望催生高達 2,810 億美元的太空晶片生態體系。
 
-在技術與營運里程碑方面，SpaceX 順利完成「Ship 40」星艦回收任務，提振市場對預計於 9 月登場的次世代星艦試飛信心，推動股價守穩 140 美元關卡。此外，Morgan Stanley 等機構指出，SpaceX 在路易斯安那州規劃興建全新星艦基地（Starbase），加上與輝達（Nvidia）深化技術合作、利用債券融資擴大 AI 衛星運算佈局，均為長期基本面注入新動能。早期戰略投資者 Alphabet（GOOGL）十年來對 SpaceX 的投資價值已激增 100 倍至 940 億美元，進一步確立了其顛覆性產業價值。
-
-然而，二級市場多空分歧劇烈。雖然華爾街平均目標價高達 232 美元以上，且看多情境達 215 美元，但部分市場分析師與學者（如 Scott Galloway）對其高估值示警，認為爆炸性增長仍難以完全支撐當前溢價，悲觀預期甚至下探 90 美元。同時，期權市場出現異常交易活動，且傳出摩根大通（JPMorgan）允許內部人在 IPO 後常規 135 天閉鎖期前，以持股作為抵押進行套現，引發市場對潛在籌碼鬆動與 FOMO 追高情緒的風險擔憂。整體而言，SPCX 正處於技術催化與估值消化交織的關鍵轉折點。
+然而，在宏大願景背後，資本市場對其財務結構與籌碼流動性浮現隱憂。尋求阿爾法（Seeking Alpha）等多位分析師警示，SPCX 目前估值過高，且公司高度依賴債務融資來支撐 AI 與太空基建擴張；同時，摩根大通（JPMorgan）傳出正協助早期內部人士進行股份提前套現，引發市場對 IPO 閉鎖期解禁（Lock-up Unlock Calendar）賣壓的恐慌。目前華爾街平均目標價仍維持在 232 美元以上，相較現價 141.5 美元存在顯著溢價，摩根士丹利（Morgan Stanley）等機構亦將此次大幅回調視為罕見的進場良機。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **AI 與軌道運算新敘事形成第二增長曲線**：SpaceX 與輝達（Nvidia）關係持續升溫，並透過債券融資加速太空與 AI 的結合。這意味著市場已不單純將 SpaceX 視為發射服務商，而是開始給予其「太空 AI 算力基礎設施」的科技成長股估值溢價。
-- **IPO 閉鎖期與內部人融資帶來籌碼面隱憂**：摩根大通傳出接受內部人持股作為貸款抵押品，形同在常規 135 天等待期前提供流動性。這雖減緩了直接拋售的壓力，但暗示內部高階人士與早期股東有強烈的變現意願，可能在上方形成隱形籌碼壓力。
-- **機構目標價與現價存在顯著定價缺口**：華爾街平均目標價超過 232 美元，對比現價 141.5 美元存在超過 60% 的潛在空間；然而看空陣營則警示 90 美元甚至更大幅度的回檔風險。這種極端分歧突顯了市場對公司年化經常性收入（ARR）與資本密集度解讀的巨大差異。
-- **技術執行力提供堅實支撐**：Ship 40 的成功回收有效穩住了 140 美元心理防線，消除了部分發射失敗風險，為即將到來的 9 月星艦重大試飛奠定了正向預期。
-- **Alphabet 的 940 億美元資產背書**：Alphabet 早期投資增值至 940 億美元的歷史戰績，向機構投資人展示了 SpaceX 的長期資本複合回報能力，成為市場逢低承接的重要信心來源。
+- **太空與 AI 算力基礎設施的深度融合**：SPCX 確認攜手 Nvidia 研發 Vera Rubin 軌道 AI 晶片，並推動 Terafab 製造體系，這意味著其衛星網絡正在從單純的通訊中繼站，升級為具備邊緣運算能力的「軌道數據中心」，有望打開千億美元級別的全新 TAM（潛在市場規模）。
+- **資本支出（CapEx）超級週期帶來現金流壓力**：路易斯安那州 1,000 億美元的 Starship 擴建計畫展現了統治商業發射市場的野心，但「以債養擴張」的資本結構在利率高檔環境下將推升財務槓桿風險。
+- **IPO 解禁日程與內部人套現構成短期籌碼天花板**：JPMorgan 協助早期內部股東套現的傳聞，加上即將面臨的解禁日程表，使得衍生品市場與選擇權交易者對沖情緒升溫，短線股價上方承壓明顯。
+- **華爾街目標價與市場現價出現嚴重認知脫節**：現價 141.5 美元與華爾街平均目標價 232 美元之間存在逾 60% 的折價空間，反映出機構法人對其長期太空壟斷定價權的認可，但散戶與動能交易者受破發情緒主導。
+- **早期機構投資價值驗證**：Alphabet（GOOGL）十年前對 SPCX 的早期投資價值已膨脹百倍至 940 億美元，從資產端證明了 SpaceX 過去十年具備極其罕見的指數級價值創造能力。
+- **生態壁壘與軟體自主化趨勢**：OpenAI 決定切斷對 SpaceX 旗下 Cursor 的支援，但馬斯克並未示弱，暗示 SPCX 未來將加速整合 xAI 體系以構築全棧自主閉環，降低外部依賴。
 
 ---
 
 ## 📰 近期新聞總覽
-- 2026-08-28 | Alphabet (GOOGL)’s Early SpaceX (SPCX) Investment Skyrockets 100-Fold to $94 Billion Over a Decade — Yahoo Finance
-- 2026-08-28 | SpaceX: Buy This Debt-Fueled Launch Into AI (NASDAQ:SPCX) — Seeking Alpha
-- 2026-08-28 | SKHY or SPCX: Which Stock Should You Bet on After Impressive US Debut? — Yahoo Finance
-- 2026-08-28 | SpaceX: Long Term Prospects Are Bright Despite Risks, A Buy — Seeking Alpha
-- 2026-08-28 | SpaceX (SPCX) Stock: Gains as SpaceX Completes Ship 40 Recovery — Bing News / Blockonomi
-- 2026-08-27 | Here's How Much a $1,000 investment in SpaceX Stock Could Be Worth by 2027 — The Motley Fool
-- 2026-08-27 | Inside Nvidia and SpaceX’s growing relationship — Yahoo Finance
-- 2026-08-27 | SpaceX shares are doing something very unusual. Options traders are taking note — CNBC
-- 2026-08-27 | Morgan Stanley sees a 'unique opportunity' in SpaceX stock after its plunge from post-IPO heights — Bing News / Business Insider
-- 2026-08-27 | SpaceX Stock Trades Near $140 While Wall Street's Average Target Sits Above $232. Who's Right? — Yahoo Finance
-- 2026-08-26 | SpaceX: FOMO Is The Ultimate Wealth Destroyer (NASDAQ:SPCX) — Seeking Alpha
-- 2026-08-26 | SpaceX: Explosive Growth Still Can't Justify This Stock Price (NASDAQ:SPCX) — Seeking Alpha
-- 2026-08-26 | Wall Street Breakfast Podcast: Bullseye Misses The Mark — Seeking Alpha
-- 2026-08-26 | SPCX Stock Climbs Premarket: JPMorgan Is Reportedly Helping Insiders Cash Out Early After Earning Big From Underwriting IPO — Bing News / MSN
-- 2026-08-24 | SpaceX SPCX Stock Prediction: $215 Bull Case vs $90 Bear Case — Bing News / FinanceFeeds
-- 2026-08-19 | Scott Galloway Blasts SpaceX as “Crazy Overvalued.” Says the Stock Could Fall 90% From Here — Bing News / 247WallSt
+
+- **2026-08-29** | A $100 billion buildout in Louisiana is planned for Starship. What this means for SPCX stock. — Bing News
+- **2026-08-29** | SpaceX: The Valuation And The Unlock Calendar Keep Me On The Sidelines (NASDAQ:SPCX) — Seeking Alpha
+- **2026-08-29** | Musk shrugs off OpenAI decision to cut off SpaceX-owned Cursor — Seeking Alpha
+- **2026-08-28** | Alphabet (GOOGL)’s Early SpaceX (SPCX) Investment Skyrockets 100-Fold to $94 Billion Over a Decade — Yahoo Finance
+- **2026-08-28** | SpaceX: Buy This Debt-Fueled Launch Into AI (NASDAQ:SPCX) — Seeking Alpha
+- **2026-08-28** | SKHY or SPCX: Which Stock Should You Bet on After Impressive US Debut? — Yahoo Finance
+- **2026-08-28** | SpaceX: Long Term Prospects Are Bright Despite Risks, A Buy — Seeking Alpha
+- **2026-08-27** | SpaceX shares are doing something very unusual. Options traders are taking note — CNBC
+- **2026-08-27** | A $3,000 Investment Made in SpaceX Stock Today Could Be Worth This Much by August 2027 — The Motley Fool
+- **2026-08-27** | Morgan Stanley sees a 'unique opportunity' in SpaceX stock after its plunge from post-IPO heights — Business Insider / Bing News
+- **2026-08-27** | SpaceX Stock Trades Near $140 While Wall Street's Average Target Sits Above $232. Who's Right? — Yahoo Finance
+- **2026-08-26** | SpaceX: Explosive Growth Still Can't Justify This Stock Price (NASDAQ:SPCX) — Seeking Alpha
+- **2026-08-26** | SPCX Stock Climbs Premarket: JPMorgan Is Reportedly Helping Insiders Cash Out Early After Earning Big From Underwriting IPO — Yahoo Finance
+- **2026-08-25** | SpaceX Stock Just Crashed Below Its IPO Price: Here’s the Bull Case Nobody Can Ignore — Yahoo Finance
+- **2026-08-25** | SpaceX (SPCX) Stock Gains as Nvidia Partnership for AI-Powered Satellites Confirmed — Blockonomi / Bing News
+- **2026-08-24** | SPCX stock climbs after Trump discloses SpaceX stake — Goldman sees Musk’s Terafab fueling a $281B chip boom — MSN / Bing News
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 估值鴻溝：現價 141.5 美元 vs. 華爾街目標價 232 美元與極端空頭觀點
-- **事件解析**：SPCX 自 IPO 發行價 135 美元上市後經歷劇烈波動，目前於 141.5 美元附近盤整。Yahoo Finance 與 FinanceFeeds 指出，華爾街平均目標價達 232 美元（樂觀情境 215 美元以上），但紐約大學教授 Scott Galloway 與 Seeking Alpha 分析師則警告公司估值過高，悲觀情境下恐跌至 90 美元。
-- **營運與財務影響**：市場多頭聚焦於 Starlink 的全球現金流收斂以及路易斯安那州新 Starbase 的擴產潛力；空頭則對高達 440 億美元的 ARR 增長缺口及資本開支負擔感到擔憂。
-- **投資啟示**：當前股價接近發行價防線，估值具備一定安全邊際，但市場尚未形成方向共識，短期易受市場情緒影響而大幅震盪。
+### 1. 路易斯安那州千億美元 Starship 基地建造與 Morgan Stanley 評級
+- **事件解析**：SPCX 正式規劃在路易斯安那州投入 1,000 億美元建立全新的 Starbase 發射與製造樞紐。Morgan Stanley 隨即發布研究報告指出，股價自上市高點回落後已具備吸引力，新基地的建設計畫將成為推動商業發射頻次呈指數成長的全新催化劑。
+- **財務與營運影響**：1,000 億美元的 CapEx 雖然龐大，但一旦完工，將大幅降低每公斤有效載荷入軌的邊際成本，進一步拉開與 Blue Origin、ULA 等同業的競爭差距。然而，巨額固定資產投資將在未來數季壓抑自由現金流（FCF）轉正的時程。
 
-### 2. 航太遇上 AI：Nvidia 合作深化與債務融資佈局
-- **事件解析**：根據 Yahoo Finance 與 Seeking Alpha 分析，SpaceX 正深化與晶片巨頭 Nvidia 的技術合作，並透過舉債籌資大舉進軍 AI 應用與軌道基礎設施。
-- **營運與財務影響**：透過引入 Nvidia 的硬體與運算生態，SpaceX 有望將低軌衛星網提升為具備分散式邊緣運算能力的「天基 AI 網絡」。儘管債務融資會增加資產負債表的槓桿率，但在降息週期預期下，舉債加速技術護城河建設是具侵略性的戰略舉措。
-- **投資啟示**：AI 概念為 SPCX 帶來了高於傳統航太工業板塊的估值乘數，中長期有望吸引科技與 AI 主題基金的被動配置。
+### 2. Nvidia 戰略合作確認：軌道部署 Vera Rubin AI 晶片
+- **事件解析**：馬斯克證實 SpaceX 與 Nvidia 建立合作夥伴關係，共同研發針對外太空環境優化的 Vera Rubin 架構 AI 晶片，用於未來新世代衛星與軌道平台。
+- **財務與營運影響**：此舉標誌著 Starlink 衛星正在轉變為分佈式太空雲端運算節點，大幅降低地面傳輸延遲與頻寬成本。這使 SPCX 的估值邏輯從單純的「航太運載/電信營運商」躍升為「太空 AI 基礎設施供應商」，享有更高的科技股估值溢價倍數。
 
-### 3. 星艦進展與產能擴張：Ship 40 成功回收與新 Starbase 規劃
-- **事件解析**：SpaceX 成功完成 Ship 40 回收，使股價守住 140 美元支撐。Morgan Stanley 亦指出，公司在路易斯安那州擴建全新星艦基地（Starbase）的計劃將成為下一個重要催化劑。
-- **營運與財務影響**：Ship 40 的回收驗證了隔熱層與軌道再入的可重複使用性，大幅降低單次發射邊際成本。新 Starbase 的建設則解決了德州 Boca Chica 基地面臨的發射頻次與監管瓶頸，為未來超大規模發射提供了物理擴展性。
-- **投資啟示**：技術執行力持續被驗證，預計於 9 月展開的星艦下一次試飛將是推動股價向 160–180 美元阻力位挑戰的核心動能。
+### 3. JPMorgan 涉入內部人提前套現與解禁期（Lock-up）籌碼博弈
+- **事件解析**：市場消息指出，主承銷商 JPMorgan 正協助早期投資人與內部員工透過特定結構性管道提前變現，引發市場對 IPO 閉鎖期正式解禁時可能迎來大規模拋售潮的強烈擔憂。
+- **財務與營運影響**：籌碼面的非理性釋放是造成股價跌破 IPO 價格並徘徊在 141.5 美元的主因。機構與內部人急於變現可能暗示內部對短期高估值存在顧慮，短期內將限制股價的反彈空間。
 
-### 4. 籌碼與流動性動態：內部人抵押融資與期權市場異動
-- **事件解析**：MSN 與 CNBC 報導，主承銷商摩根大通協助內部人以 SPCX 股票作為貸款抵押品套現，避開了傳統 135 天的解禁等待期；與此同時，衍生品市場出現不尋常的期權異動。
-- **營運與財務影響**：股票質押貸款避免了二級市場的集中拋售潮，短期對現貨價格形成緩衝，但衍生品市場波動加劇表明大資金正在進行劇烈的對沖或方向性押注。
-- **投資啟示**：投資人應密切關注認沽/認購期權比例（Put/Call Ratio）及大宗質押平倉風險，警惕突發性流動性波動。
+### 4. 估值大論戰：現價 141.5 美元 vs. 華爾街目標價 232 美元
+- **事件解析**：市場上出現極端多空分歧。空方（如 Seeking Alpha 部份分析師）認為 SPCX 是標普 500 大型股中估值最昂貴的標的之一，爆發性增長已被透支；多方（如 Goldman Sachs、Morgan Stanley）則強調 Terafab 晶片熱潮及長期壟斷地位，維持 232 美元以上的目標價。
+- **財務與營運影響**：目前股價在 140 美元關卡構築防線，CNBC 指出選擇權市場出現不尋常異動，顯示機構部位正在利用低位隱含波動率進行大額跨月買權（Call Options）佈局，靜待情緒回穩。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性（多空激烈拉鋸）**
+**整體市場情緒：🟡 中性（多空劇烈分歧）**
 
-| 維度 | 評估指標 / 依據 | 影響偏向 |
-| :--- | :--- | :---: |
-| **多頭支撐因素** | • 成功回收 Ship 40，9 月星艦測試具催化效果<br>• Morgan Stanley 重申買入機會，路州基地提供擴產潛力<br>• Nvidia 深度合作擴展天基 AI 運算想像空間<br>• Alphabet 早期投資 100 倍獲利（940 億美元）強化市場長期信心 | 🟢 正面 |
-| **空頭壓制因素** | • 知名學者與分析師警示估值過高，悲觀目標價下看 90 美元<br>• 期權市場出現異常波動，顯示衍生品市場避險情緒升高<br>• 摩根大通協助內部人質押套現，暗示籌碼鬆動隱憂<br>• 上市後高點回檔後 FOMO 情緒消退 | 🔴 負面 |
+| 構面 | 驅動因素 | 影響權重 |
+| :--- | :--- | :--- |
+| **🟢 正面因素** | • 與 Nvidia 合作 Vera Rubin 太空 AI 晶片，開闢第二成長曲線<br>• 路易斯安那州 1,000 億美元 Starship 新基地確立長期產能霸權<br>• 華爾街平均目標價（$232+）與現價（$141.5）存在高達 64% 潛在上行空間<br>• Alphabet 早期持股增值 100 倍（達 $940 億），印證長期回報能力 | **高** |
+| **🔴 負面因素** | • 股價跌破 IPO 發行價，動能指標走弱<br>• JPMorgan 協助內部人提前套現，市場擔憂後續解禁拋壓<br>• 千億 CapEx 依賴債務融資，利息負擔與現金流消耗劇烈<br>• OpenAI 終止 Cursor 支援，凸顯外部 AI 生態合作存在摩擦 | **高** |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **星艦 9 月測試不確定性（技術/執行風險）**：即將進行的星艦測試若發生爆炸或回收失敗，可能引發短線多頭停損，考驗 140 美元發行價支撐。
-- 🔴 **內部人質押與解禁賣壓（流動性風險）**：摩根大通提前提供的質押套現渠道可能在股價下跌時觸發補繳保證金機制，加劇二級市場拋壓。
-- 🟡 **負債驅動擴張之財務負擔（利率/槓桿風險）**：公司積極透過債務融資進軍 AI 與重型發射產能，若現金流收斂速度不如預期，將加重財務槓桿負擔。
-- 🔴 **估值重估與倍數壓縮（市場定價風險）**：相較於工業板塊常規倍數，SPCX 當前定價隱含了極高成長預期，若後續季報 ARR 增長未達 440 億美元預期路徑，面臨估值下修。
+- 🔴 **高度風險 — 解禁期（Lock-up）籌碼堰塞湖**：若早期投資人與員工在解禁窗口密集變現，短期流動性將難以承受巨額拋盤，恐引發二度破底。
+- 🔴 **高度風險 — 債務驅動型擴張的財務脆弱性**：在千億美元星艦基地建設過程中，若債務成本持續攀升且 Starlink 營收轉化不如預期，將面臨信評降評風險。
+- 🟡 **中度風險 — 資本支出超支與發射監管遞延**：路易斯安那大型基地興建可能面臨聯邦航空總署（FAA）與環保法規審查，存在預算超支與進度落後風險。
+- 🟢 **低度風險 — 軟體生態鏈摩擦**：OpenAI 封鎖 Cursor 雖對特定開發環節造成短期不便，但以 SpaceX 的工程研發底蘊與 xAI 的技術儲備，可控性極高。
 
 ---
 
 ## 🔮 短期關注重點（未來 1–4 週）
 
-1. **2026 年 9 月星艦（Starship）次世代軌道試飛**：觀察發射、在軌測試及回收各環節的完整度，為股價能否突破 150 美元阻力之核心指標。
-2. **路易斯安那州 Starbase 基地審批與動土進度**：關注官方環評、聯邦航空總署（FAA）與地方政府的建設許可進展。
-3. **SPCX 期權市場引伸波幅（IV）與異常大單走向**：持續追蹤 CNBC 指出的異常期權建倉方向，確認機構主力部位偏向。
-4. **140.00 美元整數關卡支撐有效性**：此處為 IPO 發行價（135 美元）上方的關鍵心理與技術防線。
+1. **IPO 解禁日程細節確認**：關注官方 SEC 文件的解禁日期與大股東持股異動申報（Form 4）。
+2. **選擇權異常大單方向性突破**：追蹤 CNBC 報導的選擇權異常活動，特別是履約價在 $180–$200 的買權（Call）未平倉量變化。
+3. **路易斯安那 Starbase 監管與融資條款**：關注該 1,000 億美元計畫的具體分期融資架構（股權 vs. 債券融資比例）。
+4. **Nvidia 合作進一步細節**：留意 GTC 或太空國防論壇中關於 Vera Rubin 晶片送樣與軌道測試的時間表。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Alphabet (GOOGL)’s Early SpaceX (SPCX) Investment Skyrockets 100-Fold to $94 Billion Over a Decade — Yahoo Finance (2026-08-28)
-2. SpaceX: Buy This Debt-Fueled Launch Into AI (NASDAQ:SPCX) — Seeking Alpha (2026-08-28)
-3. SKHY or SPCX: Which Stock Should You Bet on After Impressive US Debut? — Yahoo Finance (2026-08-28)
-4. SpaceX: Long Term Prospects Are Bright Despite Risks, A Buy — Seeking Alpha (2026-08-28)
-5. SpaceX (SPCX) Stock: Gains as SpaceX Completes Ship 40 Recovery — Bing News / Blockonomi (2026-08-28)
-6. Here's How Much a $1,000 investment in SpaceX Stock Could Be Worth by 2027 — The Motley Fool (2026-08-27)
-7. Inside Nvidia and SpaceX’s growing relationship — Yahoo Finance (2026-08-27)
-8. SpaceX shares are doing something very unusual. Options traders are taking note — CNBC (2026-08-27)
-9. Morgan Stanley sees a 'unique opportunity' in SpaceX stock after its plunge from post-IPO heights — Bing News / Business Insider (2026-08-27)
-10. SpaceX Stock Trades Near $140 While Wall Street's Average Target Sits Above $232. Who's Right? — Yahoo Finance (2026-08-27)
-11. SpaceX: FOMO Is The Ultimate Wealth Destroyer (NASDAQ:SPCX) — Seeking Alpha (2026-08-26)
-12. SpaceX: Explosive Growth Still Can't Justify This Stock Price (NASDAQ:SPCX) — Seeking Alpha (2026-08-26)
-13. Wall Street Breakfast Podcast: Bullseye Misses The Mark — Seeking Alpha (2026-08-26)
-14. SPCX Stock Climbs Premarket: JPMorgan Is Reportedly Helping Insiders Cash Out Early After Earning Big From Underwriting IPO — Bing News / MSN (2026-08-26)
-15. SpaceX SPCX Stock Prediction: $215 Bull Case vs $90 Bear Case — Bing News / FinanceFeeds (2026-08-24)
-16. Scott Galloway Blasts SpaceX as “Crazy Overvalued.” Says the Stock Could Fall 90% From Here — Bing News / 247WallSt (2026-08-19)
+1. **A $100 billion buildout in Louisiana is planned for Starship. What this means for SPCX stock.** — *Bing News* (2026-08-29)
+2. **SpaceX: The Valuation And The Unlock Calendar Keep Me On The Sidelines (NASDAQ:SPCX)** — *Seeking Alpha* (2026-08-29)
+3. **Musk shrugs off OpenAI decision to cut off SpaceX-owned Cursor** — *Seeking Alpha* (2026-08-29)
+4. **Alphabet (GOOGL)’s Early SpaceX (SPCX) Investment Skyrockets 100-Fold to $94 Billion Over a Decade** — *Yahoo Finance* (2026-08-28)
+5. **SpaceX: Buy This Debt-Fueled Launch Into AI (NASDAQ:SPCX)** — *Seeking Alpha* (2026-08-28)
+6. **SKHY or SPCX: Which Stock Should You Bet on After Impressive US Debut?** — *Yahoo Finance* (2026-08-28)
+7. **SpaceX: Long Term Prospects Are Bright Despite Risks, A Buy** — *Seeking Alpha* (2026-08-28)
+8. **SpaceX shares are doing something very unusual. Options traders are taking note** — *CNBC* (2026-08-27)
+9. **A $3,000 Investment Made in SpaceX Stock Today Could Be Worth This Much by August 2027** — *The Motley Fool* (2026-08-27)
+10. **Morgan Stanley sees a 'unique opportunity' in SpaceX stock after its plunge from post-IPO heights** — *Business Insider / Bing News* (2026-08-27)
+11. **SpaceX Stock Trades Near $140 While Wall Street's Average Target Sits Above $232. Who's Right?** — *Yahoo Finance* (2026-08-27)
+12. **SpaceX: Explosive Growth Still Can't Justify This Stock Price (NASDAQ:SPCX)** — *Seeking Alpha* (2026-08-26)
+13. **SPCX Stock Climbs Premarket: JPMorgan Is Reportedly Helping Insiders Cash Out Early After Earning Big From Underwriting IPO** — *Yahoo Finance* (2026-08-26)
+14. **SpaceX: Explosive Growth Still Can't Justify This Stock Price** — *Bing News / Seeking Alpha* (2026-08-26)
+15. **SpaceX Stock Just Crashed Below Its IPO Price: Here’s the Bull Case Nobody Can Ignore** — *Yahoo Finance* (2026-08-25)
+16. **SpaceX (SPCX) Stock Gains as Nvidia Partnership for AI-Powered Satellites Confirmed** — *Blockonomi / Bing News* (2026-08-25)
+17. **SPCX stock climbs after Trump discloses SpaceX stake — Goldman sees Musk’s Terafab fueling a $281B chip boom** — *MSN / Bing News* (2026-08-24)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估相關風險並自負盈虧。*
