@@ -17,125 +17,116 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ---
 
 ## 🏢 公司概覽
-**AeroVironment, Inc. (NASDAQ: AVAV)** 成立於 1971 年，總部位於美國加州，是全球無人作戰飛行載具系統（UAS）、巡航飛彈系統（如 Switchblade 彈簧刀無人機系列）以及地面機器人系統的領先研發與製造商。公司深耕美國國防部及全球盟國軍事採購鏈，近年來更將其超輕量空氣動力學與自主飛行控制技術延伸至航太探索領域，包含與美國國家航空暨太空總署（NASA）合作的火星探測飛行器項目。在現代不對稱作戰與無人自主技術需求激增的背景下，AVAV 在全球國防科技與航太特種載具市場中佔據關鍵戰略地位。
+**AeroVironment, Inc. (NASDAQ: AVAV)** 是全球領先的無人機系統（UAS）、巡飛彈藥（Loitering Munition Systems，如著名的「彈簧刀」Switchblade 系列）以及戰術無人地面車輛研發與製造商。公司深耕美國國防部及盟國軍事合約市場，並在極端環境航空技術（包括 NASA 火星直升機計畫）具備頂尖的工程實力。隨著全球地緣政治緊張升溫及現代戰術轉向無人作戰，AeroVironment 在戰術防禦與航太領域佔據關鍵的戰略地位。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期 AeroVironment（AVAV）在營運基本面、政府國防採購及航太探索領域接連迎來重磅催化劑，惟股價在經歷多頭波段後出現短線高檔震盪。
+近期 AeroVironment（AVAV）在業務擴張、重大國防訂單及航太前沿技術領域捷報頻傳，但股價在短期內呈現「利多鈍化」與震盪回檔的技術性分歧格局。
 
-在業務與合約拓展方面，AVAV 展現出強勁的技術護城河與訂單動能。首先，NASA 宣佈選定 AVAV 為預計於 2028 年 11 月發射的「SkyFall」火星任務共同製造 3 架火星直升機，AVAV 將負責核心飛行組件開發，繼過去成功協助火星「機智號」（Ingenuity）後，進一步鞏固其深空飛行器研發的獨家地位。國防端方面，公司在即將公佈第一季度財報前夕，順利斬獲美國陸軍價值 5,100 萬美元的新採購合約；AVAV 執行長更公開表示，受全球地緣政治局勢與無人作戰系統需求推動，未來兩年國防需求將迎來「史無前例（Unprecedented）」的爆發性成長，公司正積極擴大產能並拓展歐洲市場。
+在業務與合約層面，公司宣布獲得美國陸軍價值 5,100 萬美元的追加訂單，用於採購 Switchblade 600 Block 2 巡飛彈系統；同時，為因應持續激增的全球防務需求，AeroVironment 正在加州投資 1 億美元擴建新園區以大幅提升產能。此外，公司亦成功切入前瞻航太供應鏈，獲得 NASA 選定為 2028 年 11 月發射的火星「SkyFall」任務共同製造三架火星直升機關鍵零組件。管理層方面，執行長公開表示未來兩年國防需求呈現「史無前例（Unprecedented）」的強勁態勢，加上近期無人機新關稅政策帶來的國產供應鏈紅利，基本面動能極為扎實。
 
-然而，市場資本面對其估值看法出現分歧。股價在 2026 年 8 月 28 日單日下跌 2.9% 至 147.94 美元。部分華爾街分析師指出，AVAV 過去三年累積漲幅達 57%，短期估值倍數偏高（Valuation Stretched），面臨技術性獲利了結壓力；但技術派觀點則認為先前股價於 137.76 美元附近構築雙底形態，且有 50 日均線支撐。目前市場焦點全面轉向 AVAV 即將召開的 2027 財年第一季度（Q1 FY2027）財報電話會議，投資人正高度聚焦其產能擴建進度、積壓訂單轉化率以及歐洲防衛市場的營收貢獻。
+然而，在市場價格與技術面上，股價在突破前波高點後出現拉回。截至 2026 年 8 月 28 日收盤，股價收於 146.92 美元（最新報價 147.94 美元），跌破 50 日與 200 日移動平均線。市場分析觀點分歧：部分機構（如 Yahoo Finance）指出公司在過去三年累計上漲 57% 後估值已有緊繃跡象；但價值評估機構（如 GuruFocus，給出 GF Score 79/100）則認為目前估值仍具吸引力。隨著 2027 財年第一季（Q1 FY2027）財報公布在即，投資人情緒在長期營運高成長預期與短期技術面修正之間拉鋸。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **NASA 火星直升機合約確立技術無可替代性**：入選 2028 年「SkyFall」火星任務 3 架直升機的共同製造商，不僅為 AVAV 帶來高毛利的特種航太工程研發營收，更向全球國防與航太界證明其在極端環境自主飛行控制領域的頂級技術實力。
-- **執行長釋出「前所未有」的兩年國防需求指引**：管理層對未來 24 個月的國防需求給出極高評價，顯示俄烏戰爭與全球區域衝突引發的無人機消耗戰與庫存回補週期已進入長期採購合約階段，訂單能見度顯著拉長。
-- **5,100 萬美元陸軍新合約強化 Q1 財報基本面底氣**：在公佈 2027 財年第一季財報前夕敲定陸軍訂單，直接減緩市場對政府國防預算撥款延遲的擔憂，為本季度的未交付訂單（Backlog）提供實質支撐。
-- **歐洲防務擴張成為第二成長曲線**：除了美國國防部的核心合約外，新聞明確點出公司在歐洲市場的產能佈局與業務擴張，顯示北約盟國對巡飛彈與戰術無人載具的採購預算正快速向 AVAV 傾斜。
-- **估值擴張後的獲利回吐 vs. 產能兌現壓力**：三年 57% 的漲幅引發估值偏高的市場討論。當前 147.94 美元的股價反映市場對未來的超額預期，後續估值能否獲得支撐，完全取決於產能擴建是否能及時轉化為每股盈餘（EPS）的高速成長。
-- **技術面多空分水嶺浮現**：技術面上先前在 137.76 美元形成雙底支撐，但在 200 美元整數關卡面臨較大頸線反壓，近期回檔考驗 50 日均線支撐強度，短線波動度將隨財報發布而加劇。
+- **國防訂單能見度極高與產能擴張同步推進**：美國陸軍 5,100 萬美元的 Switchblade 600 Block 2 合約與 1 億美元的加州新廠投資，證實了戰術巡飛彈需求已從試點轉為常態化量產採購，產能瓶頸解決後將進一步釋放營收潛力。
+- **管理層釋出罕見強烈多頭訊號**：執行長直言未來兩年國防需求「史無前例」，反映烏俄衝突及全球現代化戰備週期已使無人作戰系統成為各國軍費分配的核心重點，長期合約儲備厚實。
+- **深空航太技術護城河深化**：獲選參與 NASA 2028 年火星「SkyFall」任務直升機製造，證明 AVAV 在極限空氣動力學與輕量化航電領域的絕對技術壁壘，有助於享有更高估值溢價並開拓非軍事高階航太市場。
+- **政策保護主義提供額外順風**：美國針對外國無人機施加的新關稅政策，為本土國防科技承包商構築了天然屏障，鞏固 AVAV、Kratos 等本土廠商在美國防務與政府市場的獨佔優勢。
+- **基本面強勁與技術面走弱形成背離**：儘管接連釋出合約與 NASA 合作利多，股價卻跌破 50 日與 200 日均線（近期自 171 美元上方拉回），顯示市場在 Q1 財報前夕對估值倍數及獲利兌現能力存在獲利了結壓力，短期需關注底部支撐力道。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- **2026-08-28** | AeroVironment (NASDAQ:AVAV) Stock Price Down 2.9% - Should You Sell? — *MarketBeat*
-- **2026-08-28** | AeroVironment (AVAV) Stock Looks Stretched On Its 57% Three Year Run — *Yahoo Finance*
-- **2026-08-27** | AVAV Stock Eyes Weekly Gain: AeroVironment CEO Sees ‘Unprecedented’ Defense Demand Over Next Two Years — *Stocktwits*
-- **2026-08-27** | AeroVironment to co-manufacture helicopters for Mars with NASA (AVAV:NASDAQ) — *Seeking Alpha*
-- **2026-08-27** | AeroVironment Stock (AVAV) Opinions on Recent Army Contract Wins — *Quiver Quantitative*
-- **2026-08-27** | AVAV stock gains as NASA taps AeroVironment for three Mars helicopters for 2028 mission — here’s what they’ll be looking for under the Martian surface — *Bing News / MSN*
-- **2026-08-27** | AVAV stock rises overnight: AeroVironment pockets $51M Army contract ahead of Q1 earnings — *Bing News / MSN*
-- **2026-08-26** | AeroVironment, Inc. to Announce First Quarter of Fiscal Year 2027 Earnings and Host Conference Call — *Yahoo Finance*
-- **2026-08-24** | nLIGHT, AAON, AeroVironment, Kratos, and ChargePoint Shares Are Falling, What You Need To Know — *Yahoo Finance*
-- **2026-08-17** | AVAV stock double bottoms as AeroVironment earnings loom — *Bing News / Invezz*
-- **2026-08-12** | AeroVironment (AVAV) Stock Declines While Market Improves: Some Information for Investors — *Bing News / MSN*
-- **2026-03-26** | AeroVironment (AVAV) Stock Up After Jim Cramer Said He Liked It — *Bing News / Insider Monkey*
+- 2026-08-29 | AVAV stock slips after a $51 million Army order — *Bing News*
+- 2026-08-28 | AeroVironment (NASDAQ:AVAV) Stock Price Down 2.9% - Should You Sell? — *MarketBeat*
+- 2026-08-28 | AeroVironment (AVAV) Stock Looks Stretched On Its 57% Three Year Run — *Yahoo Finance*
+- 2026-08-27 | AVAV Stock Eyes Weekly Gain: AeroVironment CEO Sees ‘Unprecedented’ Defense Demand Over Next Two Years — *Stocktwits*
+- 2026-08-27 | AeroVironment Inc (AVAV) Stock Up 3.7% and Still Undervalued -- GF Score: 79/100 — *GuruFocus*
+- 2026-08-27 | AeroVironment to co-manufacture helicopters for Mars with NASA (AVAV:NASDAQ) — *Seeking Alpha*
+- 2026-08-27 | AeroVironment Stock (AVAV) Opinions on Recent Army Contract Wins — *Quiver Quantitative*
+- 2026-08-27 | AVAV stock gains as NASA taps AeroVironment for three Mars helicopters for 2028 mission — *Bing News / MSN*
+- 2026-08-26 | AVAV stock rises overnight: AeroVironment pockets $51M Army contract ahead of Q1 earnings — *Bing News / MSN*
+- 2026-08-26 | AeroVironment, Inc. to Announce First Quarter of Fiscal Year 2027 Earnings and Host Conference Call — *Yahoo Finance*
+- 2026-08-21 | Trump’s New Drone Tariffs Give AeroVironment, Kratos and Red Cat a Policy Tailwind — *Yahoo Finance*
+- 2026-08-17 | AVAV stock double bottoms as AeroVironment earnings loom — *Bing News / Invezz*
+- 2026-08-06 | AeroVironment (AVAV) Advances While Market Declines: Some Information for Investors — *Bing News*
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. NASA 敲定 2028 年「SkyFall」火星任務：AVAV 共同製造 3 架火星直升機
-- **事件解析**：NASA 官方正式確認 AVAV 將參與 2028 年 11 月發射窗口的「SkyFall」火星探測任務，負責打造 3 架攜帶探測儀器的火星直升機核心組件，用於探測火星地表下方結構。
-- **營運與財務影響**：此項專案雖屬於政府特種航太科研合約，營收規模雖可能不及量產型無人機，但合約通常具備高毛利與研發補貼性質。更關鍵的是，這項合約鞏固了 AVAV 在超低大氣密度、極端溫差環境下高可靠度航空結構與自動控制演算法的全球領先地位，具有不可替代的專利與技術壁壘。
-- **投資啟示**：確立了 AVAV 非純粹軍工概念股，而是兼具尖端航太工程能力的科技先驅，為公司長期估值提供科技溢價空間。
+### 1. 美國陸軍 5,100 萬美元訂單到位與 1 億美元加州擴產
+- **新聞核心**：美國陸軍正式追加 5,100 萬美元採購 Switchblade 600 Block 2 系統；同時 AVAV 投入 1 億美元建設加州新園區以提升產線容量。
+- **營運與財務影響**：Switchblade 600 作為重型反裝甲巡飛彈，其單價與毛利率顯著高於傳統小型無人機。5,100 萬美元合約不僅直接增厚即期在手訂單（Backlog），更確立了 Block 2 新版本的實戰採購地位。斥資 1 億美元擴產雖會在短期增加資本支出（CapEx），但長線將解決過去市場最擔憂的產能上限問題，為未來 2–3 年營收階梯式成長奠定基礎。
+- **股價意涵**：消息公布初期帶動盤後走揚，但隨後股價拉回，顯示市場焦點已轉移至該產能何時能轉化為 EPS 實質貢獻。
 
----
+### 2. 獲選參與 NASA 2028 年火星「SkyFall」任務
+- **新聞核心**：NASA 選定 AVAV 共同製造三架配備科學儀器的火星直升機，預計於 2028 年 11 月發射升空，用於探測火星地表以下結構。
+- **營運與財務影響**：延續先前「機智號（Ingenuity）」在火星成功飛行的歷史紀錄，AVAV 再次鞏固其在極稀薄大氣層與極端溫度環境下的飛行器設計霸權。雖然 NASA 專案直接帶來的營收佔比可能不如軍工訂單龐大，但此類專案具備高利潤率、政府研發經費補助及極高的技術溢價效應，能外溢至國防高階無人機的氣動與電池熱管理技術。
+- **股價意涵**：此利多強化了公司「高科技航太先驅」而非單純「軍工代工廠」的市場定位，提供估值乘數（P/E Multiple）強大支撐。
 
-### 2. 斬獲美國陸軍 5,100 萬美元合約 & 執行長釋出 2 年空前需求展望
-- **事件解析**：AVAV 於 8 月 27 日獲取美國陸軍 5,100 萬美元合約，同時管理層釋出未來兩年全球國防需求將進入前所未見高增長期的正面訊號。
-- **營運與財務影響**：此合約展示了主力產品（如 Switchblade 系列巡飛彈或 Puma 戰術無人機）在美軍常規採購中的持續轉化能力。執行長對未來兩年需求的背書，確認了烏克蘭戰場實戰反饋所引發的北約各國戰術無人系統換裝潮，正在實質化為確定性訂單。產能擴建完成後，營運槓桿效應預期將帶動營業利益率顯著提升。
-- **投資啟示**：直接消除市場對國防合約處於空窗期的疑慮，訂單能見度已延伸至 2027–2028 年。
+### 3. 管理層展望「史無前例」國防需求與無人機關稅政策紅利
+- **新聞核心**：執行長指出未來兩年國防需求規模前所未見；同時美國對外國無人機施加的新關稅政策帶來利多。
+- **營運與財務影響**：執行長的樂觀展望反映了美軍各軍種以及北約盟友對現代無人蜂群、精確打擊武器的剛性採購計畫。結合無人機關稅與國防採購國產化限制（如 NDAA 規範），進一步排除了潛在的外國低成本競爭對手，AVAV 在美國本土市場的定價權與市佔率更加穩固。
+- **股價意涵**：確認了產業超級週期的存在，中長線基本面趨勢維持強勁向上。
 
----
-
-### 3. 2027 財年 Q1 財報發布在即：產能擴張與歐洲佈局成為焦點
-- **事件解析**：公司宣布即將發布 2027 財年第一季財務報告並召開電話會議，市場聚焦產能擴增進度、歐洲營運增長與新訂單儲備。
-- **營運與財務影響**：Q1 財報的關鍵不僅在於單季營收與獲利是否達標，而在於管理層對「全財年指引（Full-Year Guidance）」的調整。隨著歐洲地緣局勢對無人機自主防禦需求的拉動，歐洲市場的營收佔比將成為衡量其全球化擴張成果的核心指標。
-- **投資啟示**：財報電話會議中的產能爬坡進度（Capacity Ramp-up）將是檢驗公司能否消化「前所未有國防需求」的試金石。
-
----
-
-### 4. 估值拉動 57% 後面臨估值過度延伸（Stretched）爭議與技術面波動
-- **事件解析**：Yahoo Finance 與 MarketBeat 等財經媒體相繼指出，AVAV 股價在過去三年上漲 57% 後，短期估值呈現緊繃狀態，引發 8 月 28 日單日回檔 2.9% 至 147.94 美元。
-- **營運與財務影響**：防務類股整體近期出現分化整理（如 Kratos 等同業亦出現波動）。在基本面利多頻出的同時股價下跌，表明短期市場已充分定價（Priced-in）常規利多，投資人對高本益比的容忍度下降，任何產能瓶頸或交付延誤都可能引起更大幅度的股價修正。
-- **投資啟示**：技術面先前於 137.76 美元構築支撐，但上方 200 美元頸線阻力巨大。短線投資人應提防財報公佈前後的雙向波動風險，中長期投資人則可利用估值回調分批布局。
+### 4. Q1 FY2027 財報前夕市場多空分歧
+- **新聞核心**：公司即將召開 Q1 FY2027 財報會議，市場對於其三年上漲 57% 後的評價出現爭議（Yahoo Finance 認為估值緊繃 vs GuruFocus 給予 GF Score 79 評為低估）。
+- **營運與財務影響**：財報即將檢驗近期訂單轉化為營收的速度、供應鏈與加州新廠的推進進度，以及研發與擴產對營業利益率的短期壓制程度。
+- **股價意涵**：股價目前自 171 美元上方拉回至 147 美元附近，技術線型跌破 50 日與 200 日移動平均線。技術派投資人正密切觀察前期雙底支撐區域（約 137.76 美元），財報表現將成為股價是否能向上挑戰 200 美元頸線的關鍵催化劑。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏正面**
+**整體市場情緒**：🟡 **中性偏多（基本面強勁 vs 短期技術面整理）**
 
-| 評估維度 | 狀態 | 核心驅動因素 |
+| 評估維度 | 訊號 | 詳細說明 |
 | :--- | :---: | :--- |
-| **正面因素 🟢** | 強勁 | 1. 獲 NASA 2028 火星任務 3 架直升機共造合約。<br>2. 美國陸軍 5,100 萬美元新訂單到位。<br>3. 執行長明確預告未來 2 年國防需求創歷史新高。<br>4. 歐洲市場擴張與生產線擴建順利推進。 |
-| **負面因素 🔴** | 警戒 | 1. 三年漲幅達 57%，估值面臨拉回修正壓力。<br>2. 單日股價下跌 2.9%，技術面受制於 200 美元關卡。<br>3. 國防同業板塊（如 Kratos 等）近期集體面臨資金獲利了結。 |
+| **正面因素** | 🟢 | 1. 陸軍 5,100 萬美元合約入帳，訂單動能無虞。<br>2. 1 億美元產能擴張計畫確保中長期交付能力。<br>3. NASA 火星任務確立頂級航太研發地位。<br>4. 關稅政策保護本土供應鏈，執行長釋出未來兩年極度樂觀預期。 |
+| **負面/中性因素** | 🔴 | 1. 短期技術面走弱，股價跌破 50 日與 200 日均線。<br>2. 過去三年累計漲幅達 57%，部分機構擔憂短線估值擴張過快。<br>3. 財報前夕市場觀望氣氛濃厚，獲利了結賣壓湧現。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **估值回調風險（Valuation Compression）**：股價三年上漲 57%，目前在 147.94 美元附近整理。若即將公佈的 Q1 FY2027 獲利表現未能大幅優於預期，高估值倍數可能引發機構法人的進一步去槓桿拋售。
-- 🔴 **產能擴張與供應鏈交付瓶頸**：管理層預期未來兩年需求「前所未有」，然而特種航太零組件、微電子與火藥推進劑供應鏈若出現交付延誤，將直接阻礙未交付訂單（Backlog）轉化為實際營收的速度。
-- 🟡 **政府國防採購時程與預算審批變數**：雖然公司近期獲得 5,100 萬美元合約，但大規模採購案仍高度依賴美國國防授權法案（NDAA）與外國軍事銷售（FMS）項目的行政審批進度。
-- 🟢 **航太深空探索項目的研發執行風險**：NASA 2028 年「SkyFall」火星任務技術門檻極高，若前期研發出現重大工程挑戰或預算超支，可能影響相關項目的利潤率及技術商譽。
+- 🟡 **短期獲利了結與技術破位風險（中）**：股價跌破 50 日及 200 日移動平均線，若即將公布的 Q1 財報未能顯著優於預期，股價恐向下測試前波雙底低點（約 137.76 美元）。
+- 🟡 **資本支出擴張期的利潤率承壓風險（中）**：加州新廠 1 億美元的投資與擴建，短期內可能帶來較高的折舊費用與營運支出，壓制近幾季的營業利潤率與自由現金流。
+- 🟢 **政府合約認列進度延遲風險（低至中）**：國防合約受撥款審批與驗收時程影響，營收認列可能在各季之間呈現較大波動。
+- 🟢 **估值倍數收縮風險（低至中）**：市場在升息尾聲及大盤輪動過程中，對高本益比軍工成長股的估值容忍度可能下降。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **Q1 FY2027 財報數據與電話會議指引**：
-   - 關注公司公布的季度每股盈餘（EPS）、營收年增率以及積壓訂單總額（Backlog）。
-   - 特別留意管理層對 2027 全財年營收指引是否上調，以及對「兩年國防大週期」的具體量化說明。
-2. **歐洲產能與海外營收佔比**：
-   - 追蹤電話會議中關於歐洲生產基地擴建進度與北約盟國新採購意向的細節。
-3. **NASA SkyFall 項目初期資金撥款進度**：
-   - 留意 2028 火星直升機項目的前期合約分拆金額與工程研發里程碑認列時程。
-4. **關鍵技術支撐與壓力關卡**：
-   - 觀察股價能否穩守前波雙底支撐區間（137.76 美元附近）與 50 日均線，並留意放量突破 200 美元阻力區的信號。
+1. **Q1 FY2027 財報與法說會引導**：重點關注營收成長率、Switchblade 600 出貨進度、在手訂單（Backlog）總額變化及全財年財測更新。
+2. **加州新園區建設進度**：管理層對 1 億美元資本支出時程及新產能上線節點的具體說明。
+3. **技術面關鍵支撐與反彈測試**：觀察 137.76–140.00 美元支撐區間的防守力道，以及能否迅速收復 50 日與 200 日均線；上檔重要反轉關卡為 200 美元頸線。
+4. **國際軍購合約進展**：關注除美軍外，是否有其他盟國跟進下達無人機或巡飛彈新訂單。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. **AeroVironment (NASDAQ:AVAV) Stock Price Down 2.9% - Should You Sell?** — *MarketBeat (2026-08-28)*
-2. **AeroVironment (AVAV) Stock Looks Stretched On Its 57% Three Year Run** — *Yahoo Finance (2026-08-28)*
-3. **AVAV Stock Eyes Weekly Gain: AeroVironment CEO Sees ‘Unprecedented’ Defense Demand Over Next Two Years** — *Stocktwits (2026-08-27)*
-4. **AeroVironment to co-manufacture helicopters for Mars with NASA (AVAV:NASDAQ)** — *Seeking Alpha (2026-08-27)*
-5. **AeroVironment Stock (AVAV) Opinions on Recent Army Contract Wins** — *Quiver Quantitative (2026-08-27)*
-6. **AVAV stock gains as NASA taps AeroVironment for three Mars helicopters for 2028 mission — here’s what they’ll be looking for under the Martian surface** — *Bing News / MSN (2026-08-27)*
-7. **AVAV stock rises overnight: AeroVironment pockets $51M Army contract ahead of Q1 earnings** — *Bing News / MSN (2026-08-27)*
-8. **AeroVironment, Inc. to Announce First Quarter of Fiscal Year 2027 Earnings and Host Conference Call** — *Yahoo Finance (2026-08-26)*
-9. **nLIGHT, AAON, AeroVironment, Kratos, and ChargePoint Shares Are Falling, What You Need To Know** — *Yahoo Finance (2026-08-24)*
-10. **AVAV stock double bottoms as AeroVironment earnings loom** — *Bing News / Invezz (2026-08-17)*
-11. **AeroVironment (AVAV) Stock Declines While Market Improves: Some Information for Investors** — *Bing News / MSN (2026-08-12)*
-12. **AeroVironment (AVAV) Stock Up After Jim Cramer Said He Liked It** — *Bing News / Insider Monkey (2026-03-26)*
+1. AVAV stock slips after a $51 million Army order — *Bing News (2026-08-29)*
+2. AeroVironment (NASDAQ:AVAV) Stock Price Down 2.9% - Should You Sell? — *MarketBeat (2026-08-28)*
+3. AeroVironment (AVAV) Stock Looks Stretched On Its 57% Three Year Run — *Yahoo Finance (2026-08-28)*
+4. AVAV Stock Eyes Weekly Gain: AeroVironment CEO Sees ‘Unprecedented’ Defense Demand Over Next Two Years — *Stocktwits (2026-08-27)*
+5. AeroVironment Inc (AVAV) Stock Up 3.7% and Still Undervalued -- GF Score: 79/100 — *GuruFocus (2026-08-27)*
+6. AeroVironment to co-manufacture helicopters for Mars with NASA (AVAV:NASDAQ) — *Seeking Alpha (2026-08-27)*
+7. AeroVironment Stock (AVAV) Opinions on Recent Army Contract Wins — *Quiver Quantitative (2026-08-27)*
+8. AVAV stock gains as NASA taps AeroVironment for three Mars helicopters for 2028 mission — *Bing News / MSN (2026-08-27)*
+9. Why Are Nasdaq, S&P 500 Futures Soaring Premarket? — *Yahoo News (2026-08-27)*
+10. AVAV stock rises overnight: AeroVironment pockets $51M Army contract ahead of Q1 earnings — *Bing News / MSN (2026-08-26)*
+11. AeroVironment, Inc. to Announce First Quarter of Fiscal Year 2027 Earnings and Host Conference Call — *Yahoo Finance (2026-08-26)*
+12. Trump’s New Drone Tariffs Give AeroVironment, Kratos and Red Cat a Policy Tailwind — *Yahoo Finance (2026-08-21)*
+13. AVAV stock double bottoms as AeroVironment earnings loom — *Bing News / Invezz (2026-08-17)*
+14. AeroVironment (AVAV) Advances While Market Declines — *Bing News (2026-08-06)*
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估風險，並審慎做出投資決策。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
