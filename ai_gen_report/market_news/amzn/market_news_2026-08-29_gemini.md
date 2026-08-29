@@ -15,73 +15,73 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-29
 
 ## 🏢 公司概覽
-亞馬遜公司（Amazon.com, Inc.，NASDAQ: AMZN）為全球電商與雲端運算（Cloud Computing）龍頭企業，主要營運範疇跨足全球電子商務、亞馬遜網路服務（AWS）、數位廣告、串流媒體訂閱以及智慧硬體生態系統。隨著生成式人工智慧（Generative AI）技術進入商業化深水區，亞馬遜憑藉全球覆蓋最廣的雲端基礎設施、龐大的零售消費數據及全球領先的智慧物流網絡，正全面深化「AWS 雲端算力 + 代理型 AI（Agentic AI）電商 + 物流自動化」的多維護城河。
+亞馬遜（Amazon.com, Inc.，NASDAQ: AMZN）為全球電商與雲端運算龍頭，業務涵蓋三大核心板塊：以 AWS（Amazon Web Services）為首的雲端基建與企業級 AI 服務、全球線上零售與第三方賣家生態系，以及高速成長的數位零售廣告業務。此外，公司近年積極布局自研 AI 晶片（如 Trainium、Inferentia）、自駕出行（Zoox）與次世代物流自動化。AMZN 目前在標普 500 與「科技七巨頭（Magnificent Seven）」中佔有關鍵權重，在最新交易日中股價報 266.43 美元。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期亞馬遜（AMZN）股價展現強勁動能，單日勁揚超過 4%，突破 266 美元關卡，成為引領美股「科技七巨頭（Magnificent Seven）」上攻的核心領頭羊。推動本輪強勢行情的關鍵，在於雲端運算事業部 AWS 展現極具爆發力的營收成長，最新數據顯示其營收年增率高達 37%，直接消除了市場先前對雲端支出放緩的疑慮。為滿足企業端對生成式 AI 的龐大需求，亞馬遜大規模布署超過 200 萬顆 GPU 算力集群，雖然龐大的資本支出曾引發市場短暫消化震盪，但隨即被強勁的算力變現能力所弭平。
+近期市場圍繞亞馬遜（AMZN）的核心催化劑主要集中在「AI 基礎設施大規模擴建」、「代理型 AI（Agentic AI）賦能電商生態」以及「華爾街投行全面上修估值目標」。知名投行 Evercore ISI 發布最新研究報告，將亞馬遜目標價大幅上修至 355 美元，推動股價單日勁揚逾 4%，在科技七巨頭中表現領先。Evercore 指出，強勁的零售端數據以及 AWS 雲端算力的持續擴張是推升股價的核心動力；特別是具備自主決策與執行能力的「代理型 AI」技術，預期將為亞馬遜電商業務注入強大的增長動能。
 
-在零售端，華爾街投行 Evercore 大幅調升亞馬遜目標價至 355 美元（原為 315 美元），強調「代理型 AI（Agentic AI）」將成為驅動電商變現的下一波爆發點；調研顯示多達 57% 的 Alexa AI 用戶透過智慧推薦購買了原本未接觸的商品。營運效率方面，亞馬遜啟動內部代號為「Project Tetromino」的自動化計畫，預計注資逾 5.3 億美元推動最後一哩配送站的 AI 與機器人全自動化，進一步壓低單件履約成本。
+在硬體與算力配置方面，亞馬遜近期確認追加採購高達 200 萬顆輝達（Nvidia）GPU 以擴充 AWS 基礎設施。儘管市場最初對巨額資本支出（CapEx）與利潤率消化期產生短暫顧慮，但機構投資人迅速轉向正面解讀，認為這彰顯了亞馬遜在企業級生成式 AI 算力需求的強烈信心；同時，市場亦開始重估亞馬遜自研晶片業務的龐大隱含價值。在業務多元化擴展方面，亞馬遜旗下自駕車部門 Zoox 於舊金山正式啟動大規模 Robotaxi 營運，正面迎戰 Alphabet 旗下的 Waymo 與特斯拉（Tesla），為長期估值開闢全新成長曲線。
 
-資本市場評價亦出現顯著轉變。Citizens 分析指出，亞馬遜目前交易於 2027 預估盈餘的 24 倍本益比，在獲利結構加速改善下，合理估值應達 29 倍；同時億萬富豪與機構法人正加速建倉。伴隨收購 DuckLabs 以及與 Moonshot 就 Kimi K3 模型的潛在分成合作，亞馬遜在算力底座、模型生態與終端應用全面發力，展現出估值與獲利雙重擴張的強勁格局。
+此外，研究機構 Citizens 指出，亞馬遜目前交易於 2027 年預估本益比 24 倍，考量其廣告業務的高毛利轉化與 AWS 成長再加速，合理評價應提升至 29 倍。伴隨對 DuckLabs 的技術併購及對沖基金資金的大幅回流，市場正逐步消化財報後的短期震盪，重新聚焦於亞馬遜跨業務協同的長期結構性優勢。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **AWS 成長重新加速，算力變現步入收成期**：AWS 營收年增率達到 37%，印證大規模擴充 200 萬顆 GPU 等 AI 基礎建設的資本支出並非過度投資，而是轉化為實質雲端運算合約與營收，奠定雲端霸主地位。
-- **代理型 AI（Agentic AI）重構電商商業模式**：Evercore 數據指出 57% Alexa AI 使用者產生增量購買，代表 AI 助理已從單純「語音工具」轉變為「高轉化率銷售節點」，有效提升零售客單價與推薦精準度。
-- **最後一哩自動化（Project Tetromino）擴大營運槓桿**：規劃逾 5.3 億美元導入配送站機器人與 AI 排程，鎖定履約鏈條中成本最高昂的環節，預期將在中長期顯著釋放北美及國際零售的營業利益率。
-- **估值重估（Re-rating）空間明確**：機構評估亞馬遜目前 24 倍的 2027 預估本益比偏向價值股區間，隨著高毛利的 AWS 與廣告業務佔比提升，本益比向 29 倍修復具備扎實支撐。
-- **生態擴展與模型多元化戰略**：透過併購 DuckLabs 及與外部頂尖模型（如 Moonshot Kimi K3）探討分成機制，亞馬遜正避免被單一大型語言模型綁架，維持平台中立性與雲端多模型生態優勢。
-- **大額資本支出（CapEx）消化疑慮消除**：市場逐步理解亞馬遜具備成熟的資本配置能力，前期硬體投資能快速與 AWS 企業客戶合約對接，消除了科技股常見的「CapEx 懸崖」擔憂。
+- **投行目標價上修至 355 美元確立顯著上行空間**：Evercore 將目標價調升至 355 美元，相較當前 266.43 美元現價具備超過 33% 的潛在上漲潛力，反映市場對亞馬遜獲利結構改善與頂線增長具備高度信心。
+- **200 萬顆 GPU 訂單奠定雲端算力霸主地位**：AWS 承諾擴大導入 200 萬顆 Nvidia GPU，短線雖帶來資本開銷折舊壓力，但長線確保了 AWS 能滿足企業級客戶對大語言模型（LLM）訓練與推論的爆發性需求。
+- **代理型 AI（Agentic AI）重塑零售轉化效率**：AI 技術正從「輔助生成」跨入「自主執行任務」的 Agentic 階段，將大幅優化亞馬遜零售搜尋、個人化推薦與全自動供應鏈調度，顯著拉升每用戶平均貢獻度。
+- **自研晶片價值逐步浮現，形成不對稱護城河**：頂級機構投資人指出，亞馬遜已低調建立全球規模最大的晶片業務之一，自研晶片能有效降低算力成本並減輕對單一供應商的依賴，形成雲端毛利的長期防禦力。
+- **Robotaxi 於舊金山落地，拓展出行商業化想像**：Zoox 在舊金山正式推進規模化無人計程車營運，證明其全自動駕駛技術進入商業落地階段，直接加入與 Waymo、Tesla 的高階出行競爭。
+- **估值重估（Rerating）動能強勁**：目前 AMZN 交易於 2027 年預估盈餘的 24 倍，相較同業與歷史水準具吸引力，機構認為隨著高毛利站內廣告與 AWS 雙引擎驅動，評價倍數有望向 29 倍靠攏。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-28 | Why is Amazon stock rallying today? — Investing.com
-- 2026-08-28 | Stocks making the biggest moves midday: Amazon, Marvell, PayPal, Salesforce & more — CNBC
-- 2026-08-28 | US Stock Market Moves | Amazon (AMZN.US) Surges Over 4%, Leading the Magnificent Seven as AI Computing Power Expansion Continues — Moomoo
-- 2026-08-28 | Amazon Still Holds A Massive Upside Potential (NASDAQ:AMZN) — Seeking Alpha
-- 2026-08-28 | Amazon (AMZN) Stock: AI Investment Gains Momentum as AWS Revenue Surges — Blockonomi
-- 2026-08-28 | AMZN stock rallies 4% after Evercore says agentic AI could supercharge Amazon’s retail growth — MSN / Evercore
-- 2026-08-27 | Amazon Adds 2 Million GPUs--and the Stock Falls — Yahoo Finance
-- 2026-08-27 | Amazon Trades at 24x 2027 Earnings. Citizens Says It Should Be Worth 29x — Yahoo Finance
-- 2026-08-26 | Amazon: Proven Capital Allocation At A Good Price (NASDAQ:AMZN) — Seeking Alpha
+- 2026-08-29 | Amazon (AMZN) Stock Surges 4% on Evercore Upgrade and Major AI Infrastructure Plans — Bing News / Blockonomi
+- 2026-08-28 | Amazon Stock (AMZN) Jumps as Top Evercore Analyst Lifts Target to $355 on Strong Retail Signals — Google News / TipRanks
+- 2026-08-28 | AMZN Stock Rallies 4% After Evercore Says Agentic AI Could Supercharge Amazon’s Retail Growth — Google News / Yahoo Finance
+- 2026-08-28 | Amazon Just Committed to 2 Million More Nvidia GPUs, and the Stock Traded Lower — Yahoo News / Yahoo Finance
+- 2026-08-28 | Stocks making the biggest moves midday: Amazon, Marvell, PayPal, Salesforce & more — Google News / CNBC
+- 2026-08-28 | Amazon Takes on Waymo and Tesla With Massive Robotaxi Launch in San Francisco. What That Means for AMZN Stock. — Google News / Barchart.com
+- 2026-08-28 | US Stock Market Moves | Amazon (AMZN.US) Surges Over 4%, Leading the Magnificent Seven as AI Computing Power Expansion Continues — Google News / Moomoo
+- 2026-08-28 | Amazon Still Holds A Massive Upside Potential — Seeking Alpha
+- 2026-08-28 | Amazon’s post-Q2 earnings rally has faded but don’t give up on AMZN stock just yet — Bing News / MSN
+- 2026-08-27 | Amazon Adds 2 Million GPUs--and the Stock Falls — Yahoo News / Yahoo Finance
+- 2026-08-27 | Amazon, Walmart lean into onsite ads for bottom-of-funnel sales — Seeking Alpha
+- 2026-08-27 | 3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist — Yahoo News / Yahoo Finance
+- 2026-08-27 | Amazon Trades at 24x 2027 Earnings. Citizens Says It Should Be Worth 29x — Yahoo News / Yahoo Finance
+- 2026-08-26 | Amazon: Proven Capital Allocation At A Good Price — Seeking Alpha
 - 2026-08-26 | SA analyst upgrades/downgrades: AMZN, SNDK, MRVL, ORI — Seeking Alpha
-- 2026-08-26 | Billionaires Are Quietly Loading Up on Amazon While It Trades Like a Value Stock — Yahoo Finance
-- 2026-08-26 | Amazon acquires DuckLabs (AMZN:NASDAQ) — Seeking Alpha
-- 2026-08-26 | Moonshot mulls revenue-sharing deals with Microsoft, Amazon, Google over Kimi K3 AI model: report — Seeking Alpha
-- 2026-08-25 | Prediction: Amazon Stock Could Be the Sleeper Winner of the AI Boom — Yahoo Finance
-- 2026-08-24 | AMZN stock climbs as Amazon reportedly plans automation initiative to use AI and robotics for delivery stations — MSN / Business Insider
-- 2026-07-30 | Here’s How Much Amazon Stock Is Expected to Move After Earnings — Investopedia
-- 2026-05-22 | Amazon: The Coming AI Digestion Phase Could Reset The Stock — Seeking Alpha
+- 2026-08-26 | Amazon acquires DuckLabs — Seeking Alpha
+- 2026-08-17 | Top Investors See Value in AMZN: “Amazon Has Built One of the Largest Chip Businesses in the World and Barely Anyone Has Noticed” — Bing News / 247WallSt
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. AWS 營收強勁增長 37%，算力大擴張帶動價值重估
-- **事件內容**：亞馬遜大規模部署超過 200 萬顆 GPU 擴展 AI 基礎設施，推動 AWS 雲端運算業務營收年增率跳升至 37%，帶動股價突破 266 美元，領漲美股主要科技指數。
-- **營運與財務影響**：AWS 是亞馬遜最核心的獲利來源。37% 的高增速證明企業在生成式 AI 模型訓練與推論上的運算需求依然飢渴，且高度集中於 AWS 平台。雖然擴充 200 萬顆 GPU 造成短期折舊與資本支出拉高，但產能迅速被企業客戶填滿，營收規模擴大帶來的營運槓桿將直接擴大營業利益率。
-- **投資啟示**：市場對科技巨頭資本支出過度的恐慌正在轉化為對算力變現能力的信心，AWS 重回高速成長軌道是 AMZN 股價維持多頭架構的最堅實底氣。
+### 1. Evercore 大幅調升目標價至 355 美元，看好 Agentic AI 賦能零售
+- **事件解析**：Evercore 分析師發布最新報告，將 AMZN 目標價調升至 355 美元，並指出強勁的零售基本面數據及「代理型 AI（Agentic AI）」將顯著加速電商業務增長。受此激勵，AMZN 單日股價上漲逾 4%。
+- **營運與財務影響**：傳統電商推薦僅能做到商品展示，而 Agentic AI 能實現端到端自主化購物輔助、精準庫存預測與定價最佳化。這將有效降低退貨率與履約成本，同時提高購物車結帳轉化率，預期帶動北美及國際零售部門的營業利益率（Operating Margin）進一步提升。
+- **投資啟示**：市場過去多將 AI 題材聚焦於 AWS，但 Evercore 的觀點提醒投資人，亞馬遜龐大的零售消費場景本身就是 AI 最直接變現的試驗場，有助於帶動整體營收增長超預期。
 
-### 2. 華爾街投行調升評級，代理型 AI（Agentic AI）啟動零售新引擎
-- **事件內容**：Evercore 發布研報維持「跑贏大盤」評級，將目標價由 315 美元大幅上調至 355 美元。報告指出代理型 AI 將深度變革電商流程，調查顯示 57% 的 Alexa AI 用戶購買了此前未發掘的產品。
-- **營運與財務影響**：傳統電商仰賴用戶主動搜尋或演算法推薦，而「代理型 AI」具備自主推理與主動決策能力，能精準洞察消費者潛在需求並實現自主下單。57% 的增量購買轉化率意味著零售業務將迎來更高的客單價、更低的獲客成本（CAC），並直接帶動高毛利之亞馬遜數位廣告業務成長。
-- **投資啟示**：亞馬遜不僅僅是「AI 基礎設施賣方」，更是具備廣大終端落地場景的「AI 應用最大受益者」，市場將進一步對其電商業務進行溢價重估。
+### 2. 算力版圖大擴張：承諾採購 200 萬顆 Nvidia GPU 與自研晶片價值浮現
+- **事件解析**：亞馬遜確認擴大 200 萬顆輝達 GPU 的採購規模以強化 AWS 基礎設施。市場在消息公布初期短暫擔憂高昂資本開銷（CapEx），但隨後轉為聚焦於其雲端算力領先地位及自研晶片板塊的戰略價值。
+- **營運與財務影響**：鎖定高達 200 萬顆高階 GPU 確保了 AWS 在面對微軟 Azure 和 Google Cloud 時的算力充裕度，防止企業級 AI 訂單流失。儘管短期折舊費用增加，但 AWS 的 AI 年化營收有望顯著提升。此外，自研晶片生態的成熟將為非關鍵任務提供更具性價比的選擇，長期壓低單位運算成本。
+- **投資啟示**：市場情緒由「擔憂資本開銷」快速修復為「認同 AI 商業化前景」，顯示機構投資人更加看重算力資產帶來的長期自由現金流折現價值。
 
-### 3. Project Tetromino 物流自動化計畫：資本投資逾 5.3 億美元
-- **事件內容**：內部文件顯示，亞馬遜正推行 Project Tetromino 計畫，預計投資超過 5.3 億美元，將 AI 與新世代機器人技術導入末端配送站（Delivery Stations），目標實現「最後一哩路（Last Mile）」全自動化。
-- **營運與財務影響**：最後一哩配送一向佔據電商整體物流成本的 40%–50%，且受限於勞動力市場緊缺與薪資通膨。Project Tetromino 的落地將大幅降低配送站的人力依賴與分揀錯誤率，提升整體物流週轉速率，是支撐零售業務營業利潤率持續爬坡的關鍵舉措。
-- **投資啟示**：該項具體投資展現管理層高度專注於長期成本曲線的壓降，自動化帶來的單位成本優勢將進一步拉大與競爭對手的護城河差距。
+### 3. Zoox 於舊金山展開大規模 Robotaxi 營運，切入無人自駕出行
+- **事件解析**：亞馬遜旗下自駕車子公司 Zoox 在舊金山啟動大規模 Robotaxi 商業化運營，正面與 Alphabet 旗下 Waymo 以及特斯拉展開市場爭奪。
+- **營運與財務影響**：此舉象徵 Zoox 從純研發階段正式過渡至商業驗證期。雖然短期內對集團整體營收貢獻有限，且面臨加州自駕法規與安全審查，但為亞馬遜打開了數千億美元級別的智慧出行與未來無人物流配送（Last-mile Delivery）的協同潛力。
+- **投資啟示**：Zoox 實體商業化為 AMZN 注入額外的期權價值（Optionality），若營運模式在舊金山驗證成功，將成為後續估值重估的重要催化劑。
 
-### 4. 估值偏低吸引超級機構建倉，本益比具向上修復空間
-- **事件內容**：Citizens 研報指出，亞馬遜目前交易於 2027 預估每股盈餘的 24 倍，考量其複合增長動能，合理評價應提升至 29 倍；同時多位億萬富豪投資人正大舉買進。
-- **營運與財務影響**：相較於其他 AI 概念股與科技巨頭，亞馬遜兼具實質獲利成長與較低估值水準，隨著 AWS 加速、物流降本及資本配置效率被市場驗證，獲利預期與本益比倍數有望形成「戴維斯雙擊（Davis Double Play）」。
-- **投資啟示**：機構資金的持續流入為股價提供了堅實的下檔保護，目標價 355 美元相較於現價 266.43 美元展現出超過 30% 的潛在上行空間。
+### 4. 估值重估潛力：Citizens 指出 2027 年本益比應由 24 倍升至 29 倍
+- **事件解析**：Citizens 評估報告指出，AMZN 目前交易於 2027 年預估盈餘的 24 倍，考慮到其站內零售廣告（Onsite Ads）的超高毛利貢獻與電商效率提升，合理估值倍數應達 29 倍。
+- **營運與財務影響**：站內廣告業務具備高轉換率與高利潤率特質，正成為亞馬遜底層獲利的主要發動機之一。伴隨對 DuckLabs 的技術併購，底層數據處理與技術整合實力增強，整體 EBITDA 與自由現金流增長速度預期將超越純零售營收增速。
+- **投資啟示**：當前本益比尚未完全反映 AWS AI 加速與廣告利潤率的雙重爆發，估值具備較大安全邊際。
 
 ---
 
@@ -90,62 +90,61 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 **整體市場情緒：🟢 正面**
 
 ```
-市場情緒指標分佈
-[極度悲觀] ──── [悲觀] ──── [中性] ──── [正面] ──── [極度樂觀]
-                                         ▲ (當前位置: 82/100)
+┌────────────────────────────────────────────────────────┐
+│                   市場多空力量平衡評估                  │
+├──────────────────────────┬─────────────────────────────┤
+│        正面因素 (Bullish) │        負面/中性因素 (Bearish)│
+├──────────────────────────┼─────────────────────────────┤
+│ • Evercore 上修目標價至 $355│ • 200 萬顆 GPU 帶來鉅額 CapEx│
+│ • Agentic AI 加速電商增長 │ • 自駕車 Robotaxi 面臨法規挑戰│
+│ • AWS 算力基建領先地位穩固 │ • Q2 財報後市場仍有獲利了結盤│
+│ • 站內廣告高毛利全速擴張   │ • 宏觀非必需消費品週期波動   │
+│ • 對沖基金大舉增持 AMZN   │                             │
+└──────────────────────────┴─────────────────────────────┘
 ```
 
-### 評估依據：
-1. **正面因素**：
-   - AWS 營收成長率大幅提速至 37%，消弭市場對於雲端業務動能衰退的疑慮。
-   - 頂級投行（Evercore）將目標價調升至 355 美元，明確點出代理型 AI 的變現潛力。
-   - 2027 預估本益比僅 24 倍，處於科技巨頭中相對便宜的水準，吸引機構法人與超級富豪持續建倉。
-   - 自動化專案（Project Tetromino）明確勾勒出中長期履約成本下降與利潤率擴張的路徑。
-2. **負面/中性因素**：
-   - 擴充 200 萬顆 GPU 伴隨高額資本開支（CapEx），折舊與電網能耗成本仍需密切追蹤。
-   - 外部大環境對整體高估值科技股的宏觀流動性變化仍具敏感度。
+**評估依據**：
+主流投行與專業研究機構密集發布看多報告，目標價調升至 355 美元帶來明確的情緒提振。儘管巨額 GPU 採購一度引發短線利潤率擔憂，但市場迅速定價為長線利多，推動股價放量反彈 4%，技術面與基本面呈現共振向上格局。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-| 風險項目 | 風險等級 | 影響評估與說明 |
-| :--- | :---: | :--- |
-| **資本支出（CapEx）效益消化** | 🟡 中度 | 增加 200 萬顆 GPU 涉及龐大資金與後續資料中心折舊成本，若企業終端 AI 應用需求未能長期維持高增速，可能對自由現金流（FCF）造成短期壓力。 |
-| **電網與算力基礎設施瓶頸** | 🟡 中度 | 隨著資料中心算力極速擴張，電力供應限制、冷卻架構以及高效能晶片供應鏈交付週期可能制約後續營收轉化節奏。 |
-| **物流自動化導入與執行風險** | 🟢 輕度 | Project Tetromino 需投入逾 5.3 億美元，在各大站點落地過程中可能面臨技術整合磨合期或工會組織的潛在反彈。 |
-| **反壟斷與模型監管審查** | 🟢 輕度 | 收購 DuckLabs 以及與 Moonshot 等外部 AI 團隊的分成合作，需面臨全球反壟斷主管機關對於科技巨頭壟斷 AI 資源的審查。 |
+- 🔴 **資本支出（CapEx）暴增與折舊壓力**：承諾採購 200 萬顆 Nvidia GPU 意味著未來數季的資本支出將維持高檔，若企業級 AI 應用變現速度不及預期，將對短期營業利益率造成壓縮。
+- 🟡 **Robotaxi 營運安全與監管審查風險**：Zoox 在舊金山擴大車隊營運，任何潛在的交通事故或系統異常都可能招致加州監管機構的嚴格調查，甚至暫停營運許可。
+- 🟡 **非必需消費品支出放緩風險**：作為 Consumer Cyclical 產業代表，整體電商與零售銷售仍受總體經濟循環、通膨與消費者信心波動影響。
+- 🟢 **雲端運算與自研晶片競爭風險**：微軟、Google 等競爭對手在雲端 AI 領域持續削價競爭，可能對 AWS 的市佔率與合約定價權構成挑戰。
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
+## 🔮 短期關注重點
 
-1. **AWS 訂單轉化與大型企業合約動能**：持續追蹤 200 萬顆 GPU 投產後，企業客戶在雲端 AI 開發平台（如 Amazon Bedrock）的採用率與計費消耗速度。
-2. **Alexa AI / Agentic AI 商業化推進**：觀察亞馬遜在購物季前夕對代理型 AI 購物助理的推廣進度，以及消費者的實際下單轉化數據。
-3. **Project Tetromino 自動化試點回饋**：留意供應鏈與科技媒體關於最後一哩配送站機器人佈建進度的進一步報導與成本效益測算。
-4. **分析師目標價調整潮**：關注繼 Evercore 與 Citizens 調升評級後，其他華爾街投行是否跟進上修 AMZN 獲利預估與目標價區間。
+1. **GPU 部署進度與 AWS AI 營收指引**：持續追蹤 200 萬顆 GPU 的交付節奏，以及管理層對 AWS 生成式 AI 相關收入年化增長率的最新更新。
+2. **Zoox 舊金山營運指標與安全數據**：關注 Zoox 在舊金山商業化初期的載客里程、用戶反饋及監管合規報告。
+3. **電商 Agentic AI 功能實際轉化成果**：觀察秋季促銷及年末購物季前夕，新導入的 AI 購物工具對轉換率與用戶停留時間的具體拉動數據。
+4. **股價於 270–280 美元區間之技術面突破**：在 Evercore 355 美元目標價激勵下，觀察成交量能否支撐股價突破近期盤整區間。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Why is Amazon stock rallying today? — Google News / Investing.com (2026-08-28)
-2. Stocks making the biggest moves midday: Amazon, Marvell, PayPal, Salesforce & more — Google News / CNBC (2026-08-28)
-3. US Stock Market Moves | Amazon (AMZN.US) Surges Over 4%, Leading the Magnificent Seven as AI Computing Power Expansion Continues — Google News / Moomoo (2026-08-28)
-4. Amazon Still Holds A Massive Upside Potential (NASDAQ:AMZN) — Google News / Seeking Alpha (2026-08-28)
-5. Amazon (AMZN) Stock: AI Investment Gains Momentum as AWS Revenue Surges — Bing News / Blockonomi (2026-08-28)
-6. AMZN stock rallies 4% after Evercore says agentic AI could supercharge Amazon’s retail growth — Bing News / MSN (2026-08-28)
-7. Amazon Adds 2 Million GPUs--and the Stock Falls — Google News / Yahoo Finance (2026-08-27)
-8. Amazon Trades at 24x 2027 Earnings. Citizens Says It Should Be Worth 29x — Yahoo News / Yahoo Finance (2026-08-27)
-9. Amazon: Proven Capital Allocation At A Good Price (NASDAQ:AMZN) — Seeking Alpha (2026-08-26)
-10. SA analyst upgrades/downgrades: AMZN, SNDK, MRVL, ORI — Seeking Alpha (2026-08-26)
-11. Billionaires Are Quietly Loading Up on Amazon While It Trades Like a Value Stock — Yahoo News / Yahoo Finance (2026-08-26)
-12. Amazon acquires DuckLabs (AMZN:NASDAQ) — Seeking Alpha (2026-08-26)
-13. Moonshot mulls revenue-sharing deals with Microsoft, Amazon, Google over Kimi K3 AI model: report — Seeking Alpha (2026-08-26)
-14. Prediction: Amazon Stock Could Be the Sleeper Winner of the AI Boom — Yahoo News / Yahoo Finance (2026-08-25)
-15. AMZN stock climbs as Amazon reportedly plans automation initiative to use AI and robotics for delivery stations — Bing News / MSN (2026-08-24)
-16. Here’s How Much Amazon Stock Is Expected to Move After Earnings — Bing News / Investopedia (2026-07-30)
-17. Amazon: The Coming AI Digestion Phase Could Reset The Stock — Bing News / Seeking Alpha (2026-05-22)
+1. Amazon (AMZN) Stock Surges 4% on Evercore Upgrade and Major AI Infrastructure Plans — Bing News / Blockonomi (2026-08-29)
+2. Amazon Stock (AMZN) Jumps as Top Evercore Analyst Lifts Target to $355 on Strong Retail Signals — Google News / TipRanks (2026-08-28)
+3. AMZN Stock Rallies 4% After Evercore Says Agentic AI Could Supercharge Amazon’s Retail Growth — Google News / Yahoo Finance (2026-08-28)
+4. Amazon Just Committed to 2 Million More Nvidia GPUs, and the Stock Traded Lower — Yahoo News / Yahoo Finance (2026-08-28)
+5. Stocks making the biggest moves midday: Amazon, Marvell, PayPal, Salesforce & more — Google News / CNBC (2026-08-28)
+6. Amazon Takes on Waymo and Tesla With Massive Robotaxi Launch in San Francisco. What That Means for AMZN Stock. — Google News / Barchart.com (2026-08-28)
+7. US Stock Market Moves | Amazon (AMZN.US) Surges Over 4%, Leading the Magnificent Seven as AI Computing Power Expansion Continues — Google News / Moomoo (2026-08-28)
+8. Amazon Still Holds A Massive Upside Potential — Seeking Alpha (2026-08-28)
+9. Amazon’s post-Q2 earnings rally has faded but don’t give up on AMZN stock just yet — Bing News / MSN (2026-08-28)
+10. Amazon Adds 2 Million GPUs--and the Stock Falls — Yahoo News / Yahoo Finance (2026-08-27)
+11. Amazon, Walmart lean into onsite ads for bottom-of-funnel sales — Seeking Alpha (2026-08-27)
+12. 3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist — Yahoo News / Yahoo Finance (2026-08-27)
+13. Amazon Trades at 24x 2027 Earnings. Citizens Says It Should Be Worth 29x — Yahoo News / Yahoo Finance (2026-08-27)
+14. Amazon: Proven Capital Allocation At A Good Price — Seeking Alpha (2026-08-26)
+15. SA analyst upgrades/downgrades: AMZN, SNDK, MRVL, ORI — Seeking Alpha (2026-08-26)
+16. Amazon acquires DuckLabs — Seeking Alpha (2026-08-26)
+17. Top Investors See Value in AMZN: “Amazon Has Built One of the Largest Chip Businesses in the World and Barely Anyone Has Noticed” — Bing News / 247WallSt (2026-08-17)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
