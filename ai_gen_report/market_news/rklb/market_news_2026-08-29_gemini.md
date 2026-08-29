@@ -15,136 +15,130 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-29
 
 ## 🏢 公司概覽
-Rocket Lab Corporation（NASDAQ: RKLB）是全球領先的商業航太與發射服務供應商，隸屬於工業板塊。公司核心業務涵蓋以小型運載火箭 Electron 為主的發射服務、正在研發的中型可重複使用火箭 Neutron，以及衛星製造與太空系統組件（Space Systems）。隨著各國國防太空預算擴張及低軌衛星星座需求激增，Rocket Lab 已建立起僅次於 SpaceX 的常態化發射軌跡，並持續朝全方位端到端（End-to-End）太空解決方案提供商轉型。
+Rocket Lab Corporation（NASDAQ: RKLB）是全球商業航太與發射服務領域的領導企業之一，隸屬於工業板塊（Industrials）。公司以其成熟且高頻率發射的小型火箭 Electron 奠定市場地位，並積極拓展中型可重複使用運載火箭 Neutron 的研發。除核心發射服務外，Rocket Lab 正加速轉型為全方位航太科技巨頭，業務涵蓋衛星製造、太空系統組件（Space Systems）以及國防太空合約，在當前全球國防航太支出加速與商業衛星星座建設浪潮中佔據重要戰略樞紐地位。最新股價報 64.39 美元。
 
 ---
 
 ## 📝 新聞摘要總覽
-Rocket Lab（RKLB）近期在資本市場與業務營運上面臨多空交織的複雜局面。股價最新報收 64.39 美元，在經歷了連續七個交易日的劇烈下挫後，市值蒸發近 100 億美元（跌幅達 19.4%），技術面與籌碼面承受沉重壓力。引發市場短期拋售的核心導火線，在於主要競爭對手 SpaceX 向美國聯邦通訊委員會（FCC）提出異議，要求審查 Iridium 在 Rocket Lab 擬議收購案中的相關行為，直指次世代 Starlink 網關與頻譜共享可能產生的干擾問題，導致監管不確定性驟增；同日公司股價重挫 6%，且營運長（COO）Frank Klein 出脫價值約 237 萬美元之持股，進一步打擊了短線市場信心。
+回顧 2026 年 8 月下旬的市場動態，Rocket Lab（RKLB）股價在劇烈的產業競爭與監管博弈中出現顯著波動。近期最核心的催化事件為 SpaceX 與 Iridium 之間的監管爭端直接波及 Rocket Lab。市場消息指出，圍繞高達 80 億美元的重大交易，SpaceX 向美國聯邦通信委員會（FCC）提出異議並引發爭議，導致 RKLB 股價單日重挫 6%，同板塊的 Intuitive Machines 亦下跌 5%。市場分析指出，Rocket Lab 先前曾將對 Iridium 相關競標報價提高 30%，市場推測其背後可能面臨來自 AST SpaceMobile（ASTS）等對手的激烈競爭。這場涉及 FCC 監管審查與巨額合約的博弈，使投資人對短期合約落地的確定性產生疑慮。
 
-然而，基本面與長期業務架構仍展現出高度韌性。發射業務方面，Electron 火箭已成功累積達 93 次發射里程碑，奠定高可靠度發射服務基礎；針對次世代中型火箭 Neutron，公司正展開「飢餓河馬」（Hungry Hippo）整流罩的飛行模擬測試，並力拚於第四季將火箭交付發射台。在國防與政府訂單領域，Rocket Lab 成功拿下美國太空軍（U.S. Space Force）近 10 億美元專案的參與席位，凸顯國防太空支出加速帶來的長期動能。市場分析機構看法呈現分歧，FinanceFeeds 給出樂觀 104 美元、基準 76 美元、悲觀 41 美元之目標預測，而 Zacks 則指出連續回檔後或為逢低承接（Bottom Fishing）投資人提供潛在切入契機。
+然而，在監管與合約爭端的噪音之外，華爾街與專業分析機構對 Rocket Lab 的基本面展開了深度的多空辯論。正面觀點強調，隨著全球國防太空支出加速成長，Rocket Lab 具備超越傳統衛星通訊商（如 Viasat）的強大動能，且其太空系統與衛星製造業務蓬勃發展，使公司「正成長為遠超越 Neutron 單一火箭項目的全方位巨頭」；甚至有分析師主張，在商業發射與太空生態系佈局上，Rocket Lab 相較於 SpaceX 具備獨特的公開市場投資價值。另一方面，審慎觀點則聚焦於高 Beta 值的估值波動、Neutron 研發進度可能再度面臨延遲的技術風險，以及該股是否已陷入估值過高的陷阱。整體而言，市場正處於評估短線監管衝擊與長線國防太空成長潛力的關鍵拉鋸期。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **監管博弈升溫壓抑短線估值**：SpaceX 透過向 FCC 質疑 Rocket Lab 與 Iridium 合作案的頻譜干擾問題，展現出巨頭利用監管槓桿壓制競爭對手的策略，短期內將拉長法規審查週期並增加併購摩擦成本。
-- **高階主管減持打擊市場籌碼信心**：營運長 Frank Klein 在股價回檔之際出售 237 萬美元持股，在連跌 7 日、市值縮水近百億美元的背景下，容易引發市場對短期內部營運節奏或估值高點的疑慮。
-- **發射業務規模化與 Neutron 研發關鍵期**：Electron 達成 93 次發射鞏固了商業小型發射市場的護城河，但中長期營收倍增仍繫於 Neutron 火箭能否如期在 Q4 交付發射台，任何進一步延遲都將直接壓抑重估動能。
-- **太空系統與國防訂單構築實質護城河**：公司獲選納入近 10 億美元的美國太空軍專案，佐證 Rocket Lab 業務範疇已超越單純火箭發射，太空系統與國防合約將成為抗景氣循環的核心營收來源。
-- **市場分歧擴大，高 Beta 波動性加劇**：機構目標價自 41 美元（悲觀）至 104 美元（樂觀）跨度極大，反映出市場對「常態獲利能力」與「研發執行風險」存在巨大認知落差，個股短線呈現高 Beta 特性。
+- **巨額合約監管博弈升溫，短線壓制估值倍數**：SpaceX 向 FCC 針對 Iridium 的 80 億美元相關交易提出質疑，直接造成 RKLB 股價下挫 6%。這反映出商業航太巨頭在爭奪關鍵頻譜與衛星合約時，監管與行政程序已成為重要競爭武器，短期內將增加合約落地的時間成本與不確定性。
+- **競標溢價揭示太空通訊市場白熱化競爭**：分析指出 Rocket Lab 將其 Iridium 相關競標金額大幅調高 30%，推測競標對手可能包含 AST SpaceMobile。這顯示低軌衛星通訊與國防通訊節點的戰略價值極高，但同時也暗示未來專案的利潤率可能因激進競標而面臨壓縮風險。
+- **業務結構多元化，擺脫「單一發射商」標籤**：多篇分析強調 Rocket Lab 正在「超越 Neutron」，其衛星零組件、平台製造及全生命週期服務已構成強大的營收支柱。這意味著即便中型火箭研發面臨技術時程調整，公司的季度基礎營運依然具備穩固支撐。
+- **國防太空支出加速成為長期核心驅動力**：相較於傳統衛星通訊營運商（如 Viasat），Rocket Lab 具備垂直整合製造與快速響應能力，在五角大廈及盟國國防太空預算擴張的浪潮中，處於極為有利的市佔擴張位置。
+- **Neutron 研發時程仍是股價多空分水嶺**：市場對於 Neutron 是否會再次延期存在分歧。雖然當前季度營運不依賴 Neutron，但其被視為挑戰 SpaceX 中重型發射壟斷市場的唯一實質利器，任何進度延宕都將直接影響市場對其 2026 年以後營收爆發力的預期。
+- **市場出現逢低佈局訊號與高 Beta 特性拉鋸**：隨著拋售潮趨緩，部分市場觀點將 RKLB 視為抄底（Bottom Fisher）的絕佳標的，但其高 Beta 特性意味著股價對宏觀流動性與單一產業新聞極度敏感，投資人需權衡高成長潛力與劇烈波動風險。
 
 ---
 
 ## 📰 近期新聞總覽
-- 2026-08-28 | Rocket Lab COO Frank Klein sells $2.37 million of RKLB common stock — Investing.com UK
+
+- 2026-08-28 | SpaceX-Iridium Dispute Hits Rocket Lab (NASDAQ: RKLB): $8 Billion Deal Sends RKLB Down 6% — Stocks Down Under
 - 2026-08-28 | Rocket Lab Falls 6% as SpaceX Flags Iridium Deal to the FCC, Intuitive Machines Slides 5% — 24/7 Wall St.
 - 2026-08-28 | Rocket Lab: The Dream That Hasn't Launched Yet (NASDAQ:RKLB) — Seeking Alpha
-- 2026-08-28 | Here's Why Rocket Lab Corporation (RKLB) Could be Great Choice for a Bottom Fisher — Zacks Investment Research
-- 2026-08-28 | Rocket Lab Just Hit 93 Electron Launches. Is the Neutron Timeline Still the Stock's Biggest Risk? — Bing News / The Globe and Mail
-- 2026-08-28 | Rocket Lab (RKLB) Shed Nearly $10 Billion in Seven Sessions While the S&P Held — Here’s Why — FinanceFeeds
-- 2026-08-27 | RKLB stock heads for third weekly loss after 7 bruising sessions: SpaceX raises red flag over Iridium deal — MSN / FinanceFeeds
+- 2026-08-28 | Here's Why Rocket Lab Corporation (RKLB) Could be Great Choice for a Bottom Fisher — Yahoo Finance
 - 2026-08-27 | Is RKLB Stock A Buy Or A High-Beta Trap? — Trefis
 - 2026-08-27 | Rocket Lab Doesn't Need Neutron To Justify This Quarter, But Does For What's Next (RKLB) — Seeking Alpha
-- 2026-08-27 | Rocket Lab RKLB stock prediction: $104 bull, $76 base, $41 bear — FinanceFeeds
+- 2026-08-27 | Why Did Rocket Lab Hike Its Iridium Bid By 30%? Analyst Says ASTS May Have Been Mystery Rival — Stocktwits
 - 2026-08-26 | Why Rocket Lab (RKLB) Could Outpace Viasat (VSAT) as Defense Space Spending Accelerates — Yahoo Finance
 - 2026-08-26 | Rocket Lab Is Becoming Much Bigger Than Neutron (NASDAQ:RKLB) — Seeking Alpha
+- 2026-08-26 | AST SpaceMobile Falls 4%, Rocket Lab Holds Steady: Is the Falcon 9 Wind-Down Really Hitting Space Stocks? — Yahoo Finance
 - 2026-08-26 | RKLB vs. PL: Which Space Stock Has the Stronger Investment Case? — Yahoo Finance
 - 2026-08-25 | Rocket Lab: Neutron May Yet Again Be Delayed (NASDAQ:RKLB) — Seeking Alpha
 - 2026-08-25 | 3 High-Flying Stocks Worth Your Attention — Yahoo Finance
 - 2026-08-24 | Why I’m Buying Rocket Lab Over SpaceX (NASDAQ:RKLB) — Seeking Alpha
-- 2026-08-23 | RKLB stock rockets toward best month since May: 'Hungry Hippo' begins flight-like testing ahead of Neutron debut — MSN
-- 2026-08-22 | Rocket Lab (RKLB) Lands Spot On Nearly $1 Billion Space Force Program — Yahoo Finance
-- 2026-08-20 | US Stock Indices End Lower As Trump’s ‘Economic Warfare’ Threats Push Yields, Oil Higher — WMT, CRWV, SBUX, DE, RKLB In Focus — Yahoo Finance
+- 2026-08-23 | Rocket Lab's Sell-Off Is Fading—Is It Finally Safe to Buy? — Yahoo Finance
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. SpaceX 向 FCC 質疑 Iridium 合作案，引發監管與競爭阻力
-- **新聞事件**：SpaceX 敦促 FCC 審查 Rocket Lab 擬議收購 Iridium 交易中的相關行為，主張次世代 Starlink 網關共用頻譜存在潛在干擾風險。受此消息衝擊，RKLB 單日重挫 6%，並加劇連跌走勢。
-- **營運與財務影響**：此舉顯示巨頭 SpaceX 開始利用頻譜分配與法規審批程序壓制潛在挑戰者。若 FCC 延長審查週期或附加限制條款，將提高併購重組的法律與合規成本，並推遲衛星通訊整合效益的體現。
-- **投資啟示**：頻譜資源是商業航太的核心資產，法規干預為 RKLB 的無機成長（M&A）路徑帶來額外折價風險。
+### 1. SpaceX 與 Iridium 爭端引發監管阻力，RKLB 單日挫跌 6%
+- **新聞事件**：2026 年 8 月 28 日，SpaceX 向 FCC 針對涉及 Iridium 的 80 億美元重大交易提出質疑與異議，該監管爭端迅速引發市場恐慌，導致 Rocket Lab（RKLB）股價下挫 6%，相關太空板塊（如 Intuitive Machines）同步走低。
+- **營運與財務影響**：此項交易涉及龐大的衛星通訊與後續發射、製造生態系。SpaceX 透過 FCC 監管程序進行干預，意在維護其自身 Starlink 頻譜與直連設備（Direct-to-Cell）的競爭優勢。對 Rocket Lab 而言，監管審查可能拖延潛在合約的最終定案與現金流注入時程，短期內對商業發射與硬體訂單的確認帶來不確定性。
+- **股價影響**：市場對監管風險極為敏感，機構投資人短期採取避險減持操作，導致股價在 64 美元區間遭遇賣壓測試。
 
-### 2. 連續七日下挫蒸發百億市值，COO 減持 237 萬美元持股
-- **新聞事件**：RKLB 在 7 個交易日內下挫 19.4%，市值蒸發近 100 億美元；在此期間，營運長 Frank Klein 處分價值 237 萬美元之普通股。
-- **營運與財務影響**：雖然高階主管售股可能涉及既定的 10b5-1 交易計畫或稅務規劃，但在股價經歷劇烈回檔之際傳出內部人減持，顯著弱化了多頭防守信心，並引發短線流動性與籌碼面承壓。
-- **投資啟示**：短線技術結構遭到破壞，市場對管理層信號高度敏感，籌碼沉澱仍需時間消化。
+### 2. 提高 Iridium 競標報價 30%，市場競爭白熱化
+- **新聞事件**：市場分析披露 Rocket Lab 在與 Iridium 相關的項目競標中，將報價調高了 30%，分析師指出 AST SpaceMobile（ASTS）可能是背後的神秘競爭對手。
+- **營運與財務影響**：加價 30% 競標顯示出 Rocket Lab 爭奪戰略性高價值太空合約的強烈企圖心。若成功中標，將大幅推升公司未完成訂單（Backlog）總額；但若該加價行為是為了應對激烈的規格與技術競爭，未來專案交付時的毛利率表現將面臨嚴格考驗。
+- **股價影響**：投資人一方面認可公司的業務擴張野心，另一方面擔憂資本支出與執行成本攀升，加劇了股價在近期的高波動特性。
 
-### 3. Neutron 火箭測試進展與時程延遲疑慮
-- **新聞事件**：Rocket Lab 成功實施「Hungry Hippo」獨特整流罩的飛行狀態測試，目標指向 Q4 將 Neutron 交付發射台；然而，市場對其首飛時程是否再次推遲仍存擔憂。
-- **營運與財務影響**：Neutron 是 Rocket Lab 跨入中型載荷市場、直面競爭 Falcon 9 的關鍵產品。雖然 Electron 已達成 93 次發射，但 Electron 單價較低，唯有 Neutron 成功商業化才能推動營收階梯式跳升與毛利率改善。
-- **投資啟示**：Q4 發射台交付是關鍵里程碑驗證點，在 Neutron 正式點火前，市場將對研發時程維持嚴格的風險定價。
+### 3. 多元化太空生態成型與國防太空支出爆發
+- **新聞事件**：Seeking Alpha 與 Yahoo Finance 近期連續發表深度分析，指出 Rocket Lab「正成長為遠大於 Neutron 的企業」，並預期其在美國及盟國國防太空支出加速擴張的背景下，營運表現將優於 Viasat（VSAT）等傳統衛星業者。
+- **營運與財務影響**：Rocket Lab 的太空系統部門（涵蓋反應輪、太陽能板、星載電腦及衛星平台）已成為營收成長的關鍵引擎。相較於單純依賴火箭發射收入，多元化的太空硬體與國防合約提供了更高可預測性的經常性收入，大幅增強了公司的抗風險能力。
+- **股價影響**：為中長線機構投資人提供了堅實的持股理由，支撐了市場在股價回檔時進行價值型逢低買進（Bottom Fishing）的信心。
 
-### 4. 成功入選美國太空軍近 10 億美元合約
-- **新聞事件**：Rocket Lab 獲選加入美國太空軍規模近 10 億美元的防務計畫，與國防供應鏈的綁定進一步深化。
-- **營運與財務影響**：此合約驗證了公司從商業發射轉型為國防級承包商的戰略成功。國防預算具備高度可預測性與抗景氣衰退特性，為公司未來數年提供穩定的營收底線與現金流支持。
-- **投資啟示**：國防太空支出擴張（超越傳統供應商如 Viasat）是支撐 RKLB 長期估值的核心支柱。
+### 4. Neutron 研發進度分歧：短期無虞 vs. 長期天花板
+- **新聞事件**：市場分析指出，雖然 Rocket Lab「不需要 Neutron 即可支撐當前季度的營運表現」，但分析機構 Seeking Alpha 亦預警 Neutron 運載火箭可能再次面臨時程延遲。
+- **營運與財務影響**：Electron 火箭與太空系統業務足以支撐近期的營收基本盤，但 Neutron 承載著 Rocket Lab 進軍中大型載荷發射、星座組網發射以及巨額政府國防發射市場的戰略使命。若 Neutron 再次延期，將延後公司獲取更高毛利大型合約的時點，並給予競爭對手更長的防守窗口。
+- **股價影響**：限制了短期估值倍數的進一步擴張，使市場在每次重大技術節點公佈前保持審慎態度。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏空（短線震盪加劇）**
+**整體市場情緒：🟡 中性（多空激烈交鋒）**
 
 ```
-多頭動能 [====--------] 空頭壓力 (40% 正面 / 60% 負面)
+┌──────────────────────────────────────────────────────────┐
+│                      市場情緒指標                         │
+├─────────────────────────┬────────────────────────────────┤
+│ 🟢 正面因素              │ 🔴 負面因素                    │
+├─────────────────────────┼────────────────────────────────┤
+│ • 國防太空支出加速成長   │ • SpaceX-Iridium 監管爭端衝擊 │
+│ • 太空系統業務多元化推進 │ • 80 億美元交易面臨 FCC 審查   │
+│ • 拋售潮趨緩浮現買點     │ • Neutron 火箭潛在延期風險     │
+│ • 小型發射業務維持領先   │ • 高 Beta 值帶來的劇烈波動性   │
+└─────────────────────────┴────────────────────────────────┤
 ```
 
-### 評估依據：
-- **正面因素 (🟢)**：
-  - 成功卡位美國太空軍近 10 億美元計畫，防務訂單基本盤穩固。
-  - Electron 累積 93 次成功發射，商業發射可靠度領先同業。
-  - Neutron 整流罩測試順利推進，Q4 交付目標維持不變。
-  - 機構（如 Zacks）提出估值超跌後的潛在左側布局機會。
-- **負面因素 (🔴)**：
-  - 連續 7 日回檔 19.4%，市值蒸發近百億美元，技術型態偏弱。
-  - SpaceX 祭出 FCC 監管異議，打擊市場對 Iridium 交易案預期。
-  - 營運長減持 237 萬美元持股，加劇散戶與機構觀望情緒。
-  - 市場對 Neutron 首飛時程是否再次遞延存在高度戒心。
+### 評估依據說明
+市場情緒呈現明顯的分歧狀態。正面情緒來自於公司長期基本面的結構性改善，特別是國防航太支出的順風與太空系統部門的擴張，吸引了逢低佈局買盤；負面情緒則主要受制於突發的 SpaceX-FCC 監管爭端及 80 億美元合約的不確定性，加上市場對 Neutron 研發進度延遲的疑慮。多空拉鋸下，整體市場情緒維持「中性」。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-| 風險項目 | 風險等級 | 具體評估與潛在影響 |
-| :--- | :---: | :--- |
-| **監管與競爭阻力** | 🔴 高度風險 | SpaceX 向 FCC 提出頻譜干擾異議，可能導致 Iridium 交易延宕或面臨額外營運限制。 |
-| **Neutron 研發與交付時程** | 🔴 高度風險 | 中型火箭工程複雜度極高，若 Q4 交付或後續發射計畫遞延，將重創估值溢價。 |
-| **內部人減持與籌碼鬆動** | 🟡 中度風險 | 高管減持與連續大跌引發流動性踩踏，短線高 Beta 波動特性顯著。 |
-| **宏觀與地緣政治波動** | 🟡 中度風險 | 總體經濟貿易爭端與利率預期反覆，壓抑高估值成長型工業科技股的表現。 |
-| **發射任務執行失敗率** | 🟢 低度風險 | Electron 已達 93 次發射，商業成熟度極高，常態化發射失敗風險處於可控範圍。 |
+- 🔴 **高風險｜監管與審查干預風險**：SpaceX 向 FCC 針對 Iridium 相關交易提出異議，若監管審查時間拉長或裁決不利，可能直接衝擊相關合約的落地進度與實質營收認列。
+- 🔴 **高風險｜Neutron 研發時程延宕風險**：中型火箭 Neutron 是公司未來幾年營收跳躍式成長的關鍵。若研發進度再度落後，將導致研發費用超支並推遲大型商用與國防發射營收的實現。
+- 🟡 **中風險｜市場競標激烈化與利潤率壓縮**：面對 AST SpaceMobile 等潛在對手的競爭，公司大幅提高競標報價 30%，可能在未來專案執行中面臨履約成本攀升及毛利率不如預期的風險。
+- 🟡 **中風險｜高 Beta 值市場波動風險**：作為高成長、高估值的商業航太代表股，RKLB 具備高 Beta 屬性，在宏觀經濟波動或板塊資金輪動時易出現大幅度回撤。
+- 🟢 **低風險｜小型發射市場市佔率下滑**：Electron 火箭已建立成熟發射紀錄，在小型專屬發射市場具備深厚護城河，短線基本盤流失風險相對較低。
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
-1. **FCC 對 SpaceX 異議之官方反饋**：觀察監管機構是否針對 Iridium 案啟動進一步調查或召開聽證程序。
-2. **Neutron 發射台交付進度**：密切追蹤第四季（Q4）Neutron 硬體移交維吉尼亞發射場地的實際時間表。
-3. **技術支撐與籌碼沉澱**：觀察 64 美元附近整數關卡之支撐力度，以及機構是否在超跌後進場承接。
-4. **太空軍專案實質交付時程**：追蹤近 10 億美元國防專案的具體任務分派與初期營收認列節奏。
+## 🔮 短期關注重點
+
+1. **FCC 監管進展與 SpaceX-Iridium 爭端後續**：密切追蹤 FCC 對 SpaceX 異議的回應，以及 Iridium 80 億美元相關交易的審查進度與最終結構。
+2. **Neutron 火箭研發與測試最新里程碑**：關注管理層或官方發布的熱火測試、發射台建設進度更新，確認是否存在進一步延遲的跡象。
+3. **重大國防與商業合約中標公告**：觀察美國國防太空預算釋出過程中，Rocket Lab 在衛星製造與發射服務方面的最新得標動態。
+4. **股價技術面支撐與成交量變化**：觀察經歷 6% 回調後，股價在 60–64 美元區間的支撐力道，評估逢低買盤（Bottom Fishing）是否持續進場承接。
 
 ---
 
 ## 📌 新聞來源索引
-1. Rocket Lab COO Frank Klein sells $2.37 million of RKLB common stock — Investing.com UK (2026-08-28)
+
+1. SpaceX-Iridium Dispute Hits Rocket Lab (NASDAQ: RKLB): $8 Billion Deal Sends RKLB Down 6% — Stocks Down Under (2026-08-28)
 2. Rocket Lab Falls 6% as SpaceX Flags Iridium Deal to the FCC, Intuitive Machines Slides 5% — 24/7 Wall St. (2026-08-28)
 3. Rocket Lab: The Dream That Hasn't Launched Yet (NASDAQ:RKLB) — Seeking Alpha (2026-08-28)
-4. Here's Why Rocket Lab Corporation (RKLB) Could be Great Choice for a Bottom Fisher — Zacks Investment Research (2026-08-28)
-5. Rocket Lab Just Hit 93 Electron Launches. Is the Neutron Timeline Still the Stock's Biggest Risk? — The Globe and Mail (2026-08-28)
-6. Rocket Lab (RKLB) Shed Nearly $10 Billion in Seven Sessions While the S&P Held — Here’s Why — FinanceFeeds (2026-08-28)
-7. RKLB stock heads for third weekly loss after 7 bruising sessions: SpaceX raises red flag over Iridium deal — MSN / FinanceFeeds (2026-08-27)
-8. Is RKLB Stock A Buy Or A High-Beta Trap? — Trefis (2026-08-27)
-9. Rocket Lab Doesn't Need Neutron To Justify This Quarter, But Does For What's Next (RKLB) — Seeking Alpha (2026-08-27)
-10. Rocket Lab RKLB stock prediction: $104 bull, $76 base, $41 bear — FinanceFeeds (2026-08-27)
-11. Why Rocket Lab (RKLB) Could Outpace Viasat (VSAT) as Defense Space Spending Accelerates — Yahoo Finance (2026-08-26)
-12. Rocket Lab Is Becoming Much Bigger Than Neutron (NASDAQ:RKLB) — Seeking Alpha (2026-08-26)
-13. RKLB vs. PL: Which Space Stock Has the Stronger Investment Case? — Yahoo Finance (2026-08-26)
-14. Rocket Lab: Neutron May Yet Again Be Delayed (NASDAQ:RKLB) — Seeking Alpha (2026-08-25)
-15. 3 High-Flying Stocks Worth Your Attention — Yahoo Finance (2026-08-25)
-16. Why I’m Buying Rocket Lab Over SpaceX (NASDAQ:RKLB) — Seeking Alpha (2026-08-24)
-17. RKLB stock rockets toward best month since May: 'Hungry Hippo' begins flight-like testing ahead of Neutron debut — MSN (2026-08-23)
-18. Rocket Lab (RKLB) Lands Spot On Nearly $1 Billion Space Force Program — Yahoo Finance (2026-08-22)
-19. US Stock Indices End Lower As Trump’s ‘Economic Warfare’ Threats Push Yields, Oil Higher — Yahoo Finance (2026-08-20)
+4. Here's Why Rocket Lab Corporation (RKLB) Could be Great Choice for a Bottom Fisher — Yahoo Finance (2026-08-28)
+5. Is RKLB Stock A Buy Or A High-Beta Trap? — Trefis (2026-08-27)
+6. Rocket Lab Doesn't Need Neutron To Justify This Quarter, But Does For What's Next (RKLB) — Seeking Alpha (2026-08-27)
+7. Why Did Rocket Lab Hike Its Iridium Bid By 30%? Analyst Says ASTS May Have Been Mystery Rival — Stocktwits (2026-08-27)
+8. Why Rocket Lab (RKLB) Could Outpace Viasat (VSAT) as Defense Space Spending Accelerates — Yahoo Finance (2026-08-26)
+9. Rocket Lab Is Becoming Much Bigger Than Neutron (NASDAQ:RKLB) — Seeking Alpha (2026-08-26)
+10. AST SpaceMobile Falls 4%, Rocket Lab Holds Steady: Is the Falcon 9 Wind-Down Really Hitting Space Stocks? — Yahoo Finance (2026-08-26)
+11. RKLB vs. PL: Which Space Stock Has the Stronger Investment Case? — Yahoo Finance (2026-08-26)
+12. Rocket Lab: Neutron May Yet Again Be Delayed (NASDAQ:RKLB) — Seeking Alpha (2026-08-25)
+13. 3 High-Flying Stocks Worth Your Attention — Yahoo Finance (2026-08-25)
+14. Why I’m Buying Rocket Lab Over SpaceX (NASDAQ:RKLB) — Seeking Alpha (2026-08-24)
+15. Rocket Lab's Sell-Off Is Fading—Is It Finally Safe to Buy? — Yahoo Finance (2026-08-23)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
