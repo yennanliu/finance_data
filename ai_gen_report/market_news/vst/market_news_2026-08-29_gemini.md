@@ -14,144 +14,131 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-08-29
 
----
-
 ## 🏢 公司概覽
-Vistra Corp.（NYSE: VST）是美國領先的綜合性獨立電力生產商（IPP）與零售能源供應商，總部位於德克薩斯州。公司擁有龐大且多元化的發電資產組合，涵蓋核能、天然氣、燃煤、太陽能及大型電池儲能系統（BESS）。隨著生成式人工智慧（AI）與超大規模資料中心（Hyperscale Data Centers）的爆發式增長，Vistra 憑藉其全天候穩定供電（Baseload Power）能力與核能資產（如 Comanche Peak 核電廠），在美國電力市場結構轉型中佔據了關鍵戰略樞紐地位。
+Vistra Corp.（NYSE: VST）是美國領先的綜合電力與零售能源供應商，業務範疇涵蓋大型發電設施運營及電力零售。公司旗下擁有龐大且多元化的發電組合，包含核電、天然氣、燃煤發電以及大規模儲能設施與太陽能資產。隨著人工智慧（AI）算力中心激增帶來龐大電力缺口，Vistra 憑藉其具備基載電力供電能力的核電與天然氣發電資產，成為美股公用事業板塊中「AI 電力概念」的核心領導者之一。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期圍繞 Vistra Corp.（VST）的市場新聞與分析主要聚焦於三個核心軸線：**AI 資料中心電力需求的長期結構性支撐**、**股價自歷史高點回檔後的估值再評估**，以及**總體經濟利率環境對公用事業板塊的擾動**。
+近期圍繞 Vistra Corp.（VST）的市場動態主要集中在財報獲利結構、AI 算力基礎設施推動的長期電力需求，以及近期股價走勢與大盤總體經濟環境的拉鋸。
 
-在基本面與產業趨勢方面，市場高度關注科技巨頭對清潔與穩定電力的剛性需求。知名投資人（包括彼得·提爾 Peter Thiel 與大衛·泰珀 David Tepper 等機構投資者動向）持續將「電力供應短缺」視為 AI 擴張的最大瓶頸，這使得具備核能與調峰發電能力的 Vistra 與 Constellation Energy（CEG）成為公用事業板塊中成長評級分化的領頭羊。最新分析指出，市場雖然普遍認知到供電吃緊的現象，但對於 VST 未來高價長期購電合約（PPA）所帶來的獲利結構升級（Contracted Earnings Upgrade），仍存在顯著的低估空間。
+在最新營運與財務方面，Vistra 展現了強勁的營運核心動能，其 EBITDA 成長達到 31%；然而，受電力套期保值策略影響，公司錄得 4.72 億美元的避險損失（Hedging Loss），部分抵消了本業成長，拖累當日股價小幅回檔約 2%。此外，過去 6 個月內 VST 的走勢相較於大盤與整體公用事業板塊略顯疲弱，股價目前在 137.09 美元附近震盪，引發市場針對「買入或持有」的熱烈討論。技術面上雖有短線偏弱訊號，但機構分析普遍指出，近期的整理反而提供了逢低布局的逆向交易機會。
 
-然而，在股價表現與市場情緒層面，VST 在經歷前期的爆發性上漲後，近 6 個月出現漲多拉回與相對公用事業同業表現落後（Underperformance）的走勢。這引發了華爾街分析師與研究機構（如 Zacks、Simply Wall St）對於「當前估值是否過高」或「拉回是否創造絕佳反向買點」的激烈多空辯論。部分技術指標甚至出現短期超賣與強烈賣出評級，反而吸引了衍生性金融商品市場的逆勢套利資金關注。
-
-此外，總體經濟變數亦不容忽視。聯準會（Fed）官員重申抗通膨決心使市場對降息節奏保持謹慎，美股大盤承壓，高資本支出的公用事業板塊對融資成本走勢高度敏感。整體而言，VST 正處於短期估值消化與長期合約獲利即將兌現的過渡期。
+在產業與長期基本面層面，AI 資料中心的電力短缺瓶頸持續受到頂級投資人高度關注。Peter Thiel 等知名投資者的投資布局突顯了電力基礎設施已成為限制 AI 算力擴展的最大瓶頸；同時，David Tepper 旗下的 Appaloosa Management 亦持續調整其投資組合中的電力部位。Seeking Alpha 等研究機構指出，市場雖然已經為「電力短缺」進行定價，但尚未完全反映 Vistra 與大型科技公司簽署長期電力購售合約（PPA）所帶來的潛在獲利上修空間。在 S&P 公用事業板塊中，Vistra 與 Constellation Energy 依然是成長潛力最為突出的代表性標的。總體經濟方面，聯準會主席對抗通膨的鷹派言論對整體美股帶來波動，但能源結構性短缺的核心邏輯仍為 VST 提供了中長期支撐。
 
 ---
 
 ## 💡 關鍵洞察
-
-- **AI 電力瓶頸催化長期合約重定價**：科技巨頭對全天候無碳電力的迫切需求，正促使核能發電商享有前所未有的議價權。市場目前僅反映了電網現貨電價上漲，尚未充分定價 VST 與大型科技客戶簽訂溢價長期固定合約的獲利重估潛力。
-- **公用事業板塊內部成長動能分化**：以 VST 與 CEG 為代表的獨立發電商（IPP）憑藉核能與非管制市場彈性，其獲利成長預期顯著脫離傳統受監管公用事業（Regulated Utilities），在 S&P 500 公用事業類股中呈現結構性強者恆強的態勢。
-- **近 6 個月股價整理提供估值消化窗口**：VST 股價自前期高點回檔並跑輸板塊基準，主要反映了前期估值倍數過度擴張後的均值回歸，而非基本面惡化。機構投資者正利用此波震盪進行籌碼換手與部位重新配置。
-- **逆勢期權交易與市場空頭分歧加劇**：短期技術指標走弱（如部分量化指標給予偏空評級）與基本面強勁的電力需求形成鮮明對比，選擇權市場已出現押注基本面修復的反向套利（Contrarian Arbitrage）買盤。
-- **高利率持續性構成短期估值壓制**：聯準會抗通膨立場堅定使得無風險利率維持在相對高檔，雖然 VST 現金流強勁，但整體公用事業板塊對利率環境變化的敏感度仍將限制短期估值倍數的進一步擴張。
+- **避險損失掩蓋核心 EBITDA 爆發力**：Vistra 繳出 EBITDA 增長 31% 的強勁成績，但 4.72 億美元的避險損失引發短期賣壓。這種損失多屬於合約價格與即期電價落差的會計調整，並未實質破壞其發電資產的高盈利能力，拉回反而凸顯核心獲利底氣。
+- **合約升級效益尚未被完全定價**：市場目前僅將 VST 視為電力供應吃緊的受惠者，但尚未充分反映長期固定收益合約（PPA）升級對未來獲利的提振效果。隨著科技巨頭加速鎖定專屬基載電力，高利潤率的長期合約將成為獲利穩定的加速器。
+- **AI 算力擴張的核心瓶頸確立為「能源」**：知名投資機構（如 Peter Thiel 與 Appaloosa Management）的資金動向顯示，AI 數據中心面臨的最大實體約束不是晶片供應，而是電力取得。Vistra 具備核能與天然氣等全天候發電能力，戰略地位無可替代。
+- **公用事業板塊內部成長動能分化**：在標普公用事業（XLU）板塊內部，傳統受監管電廠與非監管獨立發電商（IPP）的成長評級顯著分化。Vistra 與 Constellation Energy 憑藉市場化定價能力，顯著優於傳統防禦型電力股。
+- **短線落後與技術面修正醞釀估值修復**：過去 6 個月 VST 出現落後公用事業板塊的震盪整理，技術面評級雖受壓制，但在基本面電力需求激增的大背景下，此波回檔為長線資金創造了估值更具吸引力的進場機會。
 
 ---
 
 ## 📰 近期新聞總覽
-
+- 2026-08-29 | Vistra Shares Slip 2% Despite $472 Million Hedging Loss Offsetting 31% EBITDA Rise — TechStock²
+- 2026-08-29 | Insider trades: Alibaba, IBM, Coca-Cola among major names (KO:NYSE) — Seeking Alpha
 - 2026-08-28 | Wall Street ends lower after Fed Chair Warsh reaffirms inflation fight — Yahoo Finance
 - 2026-08-28 | Vistra Corp Stock (VST) Opinions on AI Data Center Power Needs — Quiver Quantitative
-- 2026-08-27 | Vistra (VST) Pulls Back From Earlier Highs, Is The Valuation Gap Too Wide To Ignore? — Simply Wall St
 - 2026-08-27 | VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Yahoo Finance
 - 2026-08-27 | VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Zacks Investment Research
-- 2026-08-27 | Is Vistra (VST) Undervalued As Power Demand Expectations Stay In Focus? — Bing News / Yahoo Finance
+- 2026-08-27 | Is Vistra (VST) Undervalued As Power Demand Expectations Stay In Focus? — Yahoo Finance / Bing
+- 2026-08-26 | Jim Cramer Highlights Sandisk’s (SNDK) Massive Buybacks After Stock Surge — Yahoo Finance
 - 2026-08-26 | Tracking David Tepper’s Appaloosa Management Portfolio – Q2 2026 Update — Seeking Alpha
 - 2026-08-25 | Vistra: The Market Is Pricing The Power Shortage, But Not The Contracted Earnings Upgrade — Seeking Alpha
-- 2026-08-25 | S&P utilities: Vistra, Constellation Energy lead as growth grades diverge (SPX:) (XLU:) — Seeking Alpha
+- 2026-08-25 | S&P utilities: Vistra, Constellation Energy lead as growth grades diverge (SPX:) (XLU:NYSEARCA) — Seeking Alpha
 - 2026-08-24 | Peter Thiel’s $418 Million Bet On These 8 Companies Reveals AI’s Biggest Bottleneck — Yahoo Finance
 - 2026-08-24 | Vistra Corp. Stock: Is Wall Street Bullish or Bearish? — Yahoo Finance
-- 2026-08-16 | Vistra (VST) Stock Looks Above Fair Value On Earnings Yet Supported By Demand — Yahoo Finance
-- 2026-08-10 | Vistra Corp (VST) stock’s underperformance could open up a contrarian options trade — MSN / Barchart
-- 2026-08-09 | Vistra Has Progress, But Not Enough For A Buy — Seeking Alpha
-- 2026-01-16 | Where will Vistra (VST) stock be in 1 year? — Bing News / MSN
-- 2025-12-15 | Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — Nasdaq
-- 2025-11-18 | Options Corner: Tech Sector Volatility Provides An Ideal Proposition For Power Supplier Vistra Energy — Benzinga
+- 2026-08-17 | Vistra Is Under $150. Here's Why I Think It Won't Stay That Way. — Yahoo Finance
+- 2026-08-10 | Vistra Corp (VST) stock’s underperformance could open up a contrarian options trade — MSN / Bing
+- 2026-01-16 | Where will Vistra (VST) stock be in 1 year? — MSN / Bing
+- 2025-12-15 | Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — Nasdaq / Bing
+- 2025-11-18 | Options Corner: Tech Sector Volatility Provides An Ideal Proposition For Power Supplier Vistra Energy — Benzinga / Bing
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 長期合約重估潛力：市場定價尚未完全反映獲利升級
-* **關聯新聞**：《Vistra: The Market Is Pricing The Power Shortage, But Not The Contracted Earnings Upgrade》（Seeking Alpha, 2026-08-25）
-* **深度分析**：
-  * **營運與獲利機制**：當前市場共識已充分認知 AI 資料中心所帶來的全美電力吃緊現狀，但在財務預測模型中，多數分析師仍採用過往歷史電價或短期批發市場價格進行折現。然而，超大規模雲端服務商（如 Microsoft、Amazon、Google）為了鎖定 10 至 20 年的無中斷基載電力，願意支付遠高於批發市場的溢價簽署長期購電合約（PPA）。
-  * **財務與股價影響**：這種高利潤率的合約結構將直接提升 VST 的長期每股盈餘（EPS）可見度，並將營收屬性由高波動的商品型發電轉化為具備防禦性的高收益現金流。若未來數季宣布重大 PPA 協議，將促使市場模型進行大規模的合約獲利上修（Contracted Earnings Upgrade），推動股價重新評價（Re-rating）。
+### 1. 財務與獲利剖析：EBITDA 增長 31% vs 避險損失 4.72 億美元
+- **新聞來源**：TechStock² (2026-08-29)
+- **分析內容**：
+  Vistra 最新數據顯示其營運核心展現強大韌性，EBITDA 年增率達 31%，反映出現貨電價高企與發電容量利用率提升帶來的強勁現金流。然而，4.72 億美元的避險合約虧損導致市場情緒受到短暫打擊，股價下跌約 2%。
+- **營運與股價影響**：
+  電力公用事業為鎖定未來現金流通常會進行遠期合約套保。當市場電價上漲超預期時，避險部位常會出現未實現或會計層面的結算損失。這類損失本質上是為了降低波動度所產生的代價，並未損及公司實質供電資產的長期價值，反而證實了市場實際電價的高景氣度。
 
-### 2. 估值回檔與近 6 個月落後表現：多空爭辯與介入時機
-* **關聯新聞**：《Vistra (VST) Pulls Back From Earlier Highs, Is The Valuation Gap Too Wide To Ignore?》（Simply Wall St, 2026-08-27）及《VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold?》（Zacks, 2026-08-27）
-* **深度分析**：
-  * **市場現象解讀**：在經歷前期強勁漲勢後，VST 股價拉回至 137.09 美元，過去 6 個月相較傳統公用事業指數（XLU）表現落後。華爾街機構觀點出現分歧：保守派認為股價相對於當前會計盈餘已處於合理偏高水準（Above Fair Value on current earnings）；積極派則認為這創造了顯著的「估值落差（Valuation Gap）」。
-  * **投資策略啟示**：6 個月的橫盤與回檔有效冷卻了先前過熱的投機氛圍。Zacks 與 Simply Wall St 的討論顯示，市場正處於「持有觀望」至「逢低布局」的轉折點。對於著眼中長期基本面的機構投資人而言，技術面修正反而提供了降低建倉成本的機會。
+### 2. 定價邏輯深化：電力短缺定價 vs 長期合約重估
+- **新聞來源**：Seeking Alpha (2026-08-25)
+- **分析內容**：
+  市場目前對 VST 的交易邏輯主要基於全美電力供應短缺的宏觀利多。然而，該分析指出，投資人忽略了更重要的「合約升級週期」——即現有合約到期後，Vistra 能夠以顯著更高的價格與超大型雲端服務商（Hyperscalers）簽訂 10–20 年的穩定購電協議。
+- **營運與股價影響**：
+  合約重簽將推動 Vistra 的獲利能見度與毛利率長期抬升。一旦這部分合約現金流在未來的季報中逐步兌現，市場給予 VST 的估值倍數（如 EV/EBITDA）將從傳統公用事業向高成長基礎設施靠攏。
 
-### 3. 公用事業內部成長動能分化與頂級機構籌碼背書
-* **關聯新聞**：《S&P utilities: Vistra, Constellation Energy lead as growth grades diverge》（Seeking Alpha, 2026-08-25）與《Tracking David Tepper’s Appaloosa Management Portfolio》（Seeking Alpha, 2026-08-26）
-* **深度分析**：
-  * **產業結構性變化**：傳統受監管公用事業受限於資產報酬率（ROE）管制，獲利成長緩慢；相反地，VST 與 Constellation Energy（CEG）屬於獨立發電商，能直接捕獲非管制電力市場量價齊揚的超額利潤。在 S&P 500 公用事業板塊中，兩者的成長評級顯著超越傳統同業。
-  * **機構投資信號**：億萬富豪投資人 David Tepper 旗下 Appaloosa Management 以及 Peter Thiel 等重量級資本對 AI 能源瓶頸的押注，顯示聰明錢（Smart Money）仍將具備大規模核能發電產能的 VST 視為 AI 基礎設施供應鏈中不可或缺的配置標的。
+### 3. AI 瓶頸與頂級資金布局：科技巨頭爭奪基載電力
+- **新聞來源**：Yahoo Finance (2026-08-24) / Seeking Alpha (2026-08-26)
+- **分析內容**：
+  知名創投家 Peter Thiel 與著名對沖基金經理人 David Tepper 的持倉與策略均指向同一結論：電力是限制人工智慧模型訓練與推論部署的核心瓶頸。Vistra 作為少數能夠提供大規模無碳核電與穩定天然氣發電的企業，直接站在算力基建的核心交界處。
+- **營運與股價影響**：
+  頂級資本的背書不僅加固了 VST 的長期投資邏輯，也預示著未來科技巨頭可能會以溢價預付款或共同投資的形式鎖定 VST 的發電產能，進一步降低 VST 的資本支出壓力。
 
-### 4. 總體經濟與貨幣政策挑戰：利率環境與抗通膨言論
-* **關聯新聞**：《Wall Street ends lower after Fed Chair Warsh reaffirms inflation fight》（Yahoo Finance, 2026-08-28）
-* **深度分析**：
-  * **總體環境衝擊**：聯準會官員堅定對抗通膨的鷹派言論引發美股全線走低。公用事業屬於高資本密集型產業，儘管 IPP 的商業模式具備較高彈性，但維持高檔的利率環境將增加再融資成本與新建發電/儲能項目的資本支出負擔。
-  * **股價連動反應**：短期內，利率預期的反覆將壓抑防禦性與公用事業類股的本益比倍數擴張空間，成為壓制 VST 快速重返歷史高點的主要總體阻力。
+### 4. 股價短線分化：過去 6 個月落後整體板塊的逆向機會
+- **新聞來源**：Yahoo Finance / Zacks (2026-08-27)
+- **分析內容**：
+  VST 在過去 6 個月的表現落後於部分公用事業同業，引發 Zacks 等機構對其短線評級的保守看待。然而，分析亦指出，在當前股價（約 137 美元）且低於 150 美元的區間內，這種落後為基本面投資者提供了逆向操作（Contrarian Buy）與期權策略佈局的良機。
+- **營運與股價影響**：
+  技術性整理有助於消化前期的估值泡沫，在基本面長期向上（AI 需求、產能緊張）未變的情況下，落後補漲的機率正持續累積。
 
 ---
 
 ## 📊 市場情緒評估
+**整體市場情緒：🟡 中性偏正面**
 
-**整體市場情緒：🟡 中性偏正面（Neutral to Bullish）**
-
-```
-[正面動能] ■■■■■■□□□□ [負面逆風]
-         (60% 多方佔優)
-```
-
-### 評估依據：
-* **正面因素**：
-  1. AI 與資料中心電力需求屬於長達數年的超級週期，基本面需求剛性且持續擴張。
-  2. 頂級避險基金（如 Appaloosa）與知名創投資本持續持有並關注電力瓶頸標的。
-  3. 未來具備潛在長期高價 PPA 合約簽署與獲利上修的實質催化劑。
-* **負面因素**：
-  1. 股價過去 6 個月表現落後於板塊，技術面短期承壓（部分量化指標呈現偏空評級）。
-  2. 聯準會抗通膨立場使高利率環境持續時間長於預期，增加資本成本。
-  3. 短期估值相較於已實現的會計盈餘處於消化階段，市場追價意願謹慎。
+| 評估維度 | 具體因素與信號 |
+| :--- | :--- |
+| **🟢 正面因素** | 1. 核心 EBITDA 大幅增長 31%，營運現金流充沛。<br>2. AI 算力中心帶動的電力需求具有長期不可逆性。<br>3. 頂級投資人（Peter Thiel、David Tepper）持續聚焦電力基建瓶頸。<br>4. 與科技巨頭的長期電力合約存在大幅調升空間。 |
+| **🔴 負面因素** | 1. 短期避險損失達 4.72 億美元，對單季帳面利潤造成侵蝕。<br>2. 過去 6 個月股價跑輸公用事業同業，技術面面臨整理壓力。<br>3. 總體經濟受聯準會高利率抗通膨立場影響，高資本支出板塊估值承壓。 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-| 風險項目 | 等級 | 風險說明與潛在影響 |
+| 風險項目 | 風險等級 | 詳細說明 |
 | :--- | :---: | :--- |
-| **總體利率與融資成本** | 🔴 高 | 若聯準會維持限制性高利率更長時間，將推升發電資產擴建與電網升級的債務利息負擔，壓抑自由現金流與估值倍數。 |
-| **大型合約簽署進度不如預期** | 🟡 中 | 市場已部分預期科技巨頭將簽署高溢價 PPA；若談判週期拉長或合約條件不如市場樂觀，可能引發進一步估值修正。 |
-| **電網監管與政策干預** | 🟡 中 | 隨著零售電價與商業電價上揚，區域電力市場（如 ERCOT、PJM）可能面臨監管機構對電網可靠性及暴利稅等政策審查風險。 |
-| **技術面破位與短期拋壓** | 🟢 低 | 近期技術指標走弱可能引發短線量化賣盤，但預期在強勁基本面與逢低買盤支撐下，下檔空間相對可控。 |
+| **商品價格與避險風險** | 🔴 高 | 批發電價與天然氣價格波動可能導致避險策略持續產生帳面或現金虧損，影響短期獲利表現。 |
+| **高利率與總體經濟壓制** | 🟡 中 | 聯準會若長期維持高利率以對抗通膨，將推升公用事業的融資與債務滾動成本。 |
+| **AI 資料中心建設延遲** | 🟡 中 | 若科技巨頭放緩 AI 資本支出或電網併網審批受阻，長期合約溢價兌現的速度可能不及市場預期。 |
+| **發電設備運營與極端氣候** | 🟢 低 | 極端氣候可能對發電機組帶來負荷壓力，需關注核電與天然氣機組的非計畫性停機風險。 |
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
-
-1. **資料中心 PPA 合約進展**：關注 VST 是否公布與大型科技客戶（Hyperscalers）簽署核能或天然氣發電長期固定購電協議的具體公告。
-2. **區域電力市場電價動態**：追蹤 PJM 容量拍賣（Capacity Auction）結果與 ERCOT 夏季用電高峰後的電價結算表現，評估批發利潤率趨勢。
-3. **聯準會貨幣政策動向**：密切關注利率預期對公用事業板塊資金流向的影響，特別是公債殖利率波動對高股息與高資本支出資產的定價壓力。
-4. **股價關鍵支撐與期權未平倉量**：觀察 VST 股價在 137 美元附近的整理情況，以及期權市場逆勢看多部位是否逐步轉化為現貨推升力道。
+## 🔮 短期關注重點
+1. **150 美元關鍵整數關卡收復進度**：關注 VST 能否在 137 美元附近完成打底，並突破 150 美元壓力區間。
+2. **避險合約滾動與更新進展**：追蹤管理層在後續溝通中對 4.72 億美元避險損失的後續策略調整及未實現部位的結算時間表。
+3. **大型科技客戶合約簽署公告**：密切留意是否有新的資料中心長期電力採購合約（PPA）細節公布。
+4. **聯準會貨幣政策言論與利率走向**：觀察利率預期對公用事業與資本密集型類股的折現率影響。
 
 ---
 
 ## 📌 新聞來源索引
-
-1. Wall Street ends lower after Fed Chair Warsh reaffirms inflation fight — Yahoo Finance (2026-08-28)
-2. Vistra Corp Stock (VST) Opinions on AI Data Center Power Needs — Quiver Quantitative (2026-08-28)
-3. Vistra (VST) Pulls Back From Earlier Highs, Is The Valuation Gap Too Wide To Ignore? — Simply Wall St (2026-08-27)
-4. VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Yahoo Finance (2026-08-27)
-5. VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Zacks Investment Research (2026-08-27)
-6. Is Vistra (VST) Undervalued As Power Demand Expectations Stay In Focus? — Bing News / Yahoo Finance (2026-08-27)
-7. Tracking David Tepper’s Appaloosa Management Portfolio – Q2 2026 Update — Seeking Alpha (2026-08-26)
-8. Vistra: The Market Is Pricing The Power Shortage, But Not The Contracted Earnings Upgrade — Seeking Alpha (2026-08-25)
-9. S&P utilities: Vistra, Constellation Energy lead as growth grades diverge — Seeking Alpha (2026-08-25)
-10. Peter Thiel’s $418 Million Bet On These 8 Companies Reveals AI’s Biggest Bottleneck — Yahoo Finance (2026-08-24)
-11. Vistra Corp. Stock: Is Wall Street Bullish or Bearish? — Yahoo Finance (2026-08-24)
-12. Vistra (VST) Stock Looks Above Fair Value On Earnings Yet Supported By Demand — Yahoo Finance (2026-08-16)
-13. Vistra Corp (VST) stock’s underperformance could open up a contrarian options trade — MSN / Barchart (2026-08-10)
-14. Vistra Has Progress, But Not Enough For A Buy — Seeking Alpha (2026-08-09)
-15. Where will Vistra (VST) stock be in 1 year? — Bing News / MSN (2026-01-16)
-16. Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — Nasdaq (2025-12-15)
-17. Options Corner: Tech Sector Volatility Provides An Ideal Proposition For Power Supplier Vistra Energy — Benzinga (2025-11-18)
+1. Vistra Shares Slip 2% Despite $472 Million Hedging Loss Offsetting 31% EBITDA Rise — TechStock² (2026-08-29)
+2. Insider trades: Alibaba, IBM, Coca-Cola among major names (KO:NYSE) — Seeking Alpha (2026-08-29)
+3. Wall Street ends lower after Fed Chair Warsh reaffirms inflation fight — Yahoo Finance (2026-08-28)
+4. Vistra Corp Stock (VST) Opinions on AI Data Center Power Needs — Quiver Quantitative (2026-08-28)
+5. VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Yahoo Finance (2026-08-27)
+6. VST Stock Underperforms Industry in the Past 6 Months: Buy or Hold? — Zacks Investment Research (2026-08-27)
+7. Is Vistra (VST) Undervalued As Power Demand Expectations Stay In Focus? — Yahoo Finance / Bing (2026-08-27)
+8. Jim Cramer Highlights Sandisk’s (SNDK) Massive Buybacks After Stock Surge — Yahoo Finance (2026-08-26)
+9. Tracking David Tepper’s Appaloosa Management Portfolio – Q2 2026 Update — Seeking Alpha (2026-08-26)
+10. Vistra: The Market Is Pricing The Power Shortage, But Not The Contracted Earnings Upgrade — Seeking Alpha (2026-08-25)
+11. S&P utilities: Vistra, Constellation Energy lead as growth grades diverge (SPX:) (XLU:NYSEARCA) — Seeking Alpha (2026-08-25)
+12. Peter Thiel’s $418 Million Bet On These 8 Companies Reveals AI’s Biggest Bottleneck — Yahoo Finance (2026-08-24)
+13. Vistra Corp. Stock: Is Wall Street Bullish or Bearish? — Yahoo Finance (2026-08-24)
+14. Vistra Is Under $150. Here's Why I Think It Won't Stay That Way. — Yahoo Finance (2026-08-17)
+15. Vistra Corp (VST) stock’s underperformance could open up a contrarian options trade — MSN / Bing (2026-08-10)
+16. Where will Vistra (VST) stock be in 1 year? — MSN / Bing (2026-01-16)
+17. Can Lower Interest Rates Amplify VST Stock's Growth Strategy? — Nasdaq / Bing (2025-12-15)
+18. Options Corner: Tech Sector Volatility Provides An Ideal Proposition For Power Supplier Vistra Energy — Benzinga / Bing (2025-11-18)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
