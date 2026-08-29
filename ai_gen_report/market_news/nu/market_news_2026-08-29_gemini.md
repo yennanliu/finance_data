@@ -15,116 +15,140 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-08-29
 
 ## 🏢 公司概覽
-Nu Holdings Ltd.（NYSE: NU，通稱 Nubank）是全球規模最大且成長最迅猛的數位金融科技平台之一，總部位於巴西聖保羅。公司致力於透過專利技術與以客戶為中心的數位架構，顛覆拉丁美洲傳統高度寡占且高收費的銀行體系。Nubank 主要在巴西、墨西哥及哥倫比亞提供多元化的數位金融服務，涵蓋無手續費信用卡、個人儲蓄帳戶、消費貸款、投資管理及商業帳戶。截至 2026 年第一季，其總服務用戶數已達 1.35 億戶，其中巴西本土用戶超過 1.15 億戶。憑藉著極低的獲客成本（CAC）、卓越的營運槓桿以及持續擴張的淨利差（NIM），Nu Holdings 已從高成長的新創純網銀成功轉型為具備強大獲利能力的金融科技巨頭。
+Nu Holdings Ltd.（NYSE: NU，通常稱為 Nubank）是拉丁美洲規模最大的數位金融服務平台與新創銀行（Neobank）龍頭。公司總部位於巴西，業務版圖涵蓋巴西、墨西哥與哥倫比亞，提供數位帳戶、信用卡、個人信貸、投資與保險等多元金融商品。憑藉專有的低成本數位營運架構、卓越的獲客效率與數據驅動的風控模型，Nu 在拉丁美洲傳統高費率、寡占的銀行體系中快速崛起，已建立起龐大的跨國數位金融生態圈。
 
 ---
 
 ## 📝 新聞摘要總覽
-Nu Holdings（NU）近期股價經歷了從財報大漲到短期拉回的劇烈波動。在 2026 年 8 月中旬，該公司公布了亮眼的第二季財務報告，營收與獲利均大幅超越市場預期，並創下自 2022 年 8 月以來的最大單日漲幅，股價一舉刷新逾五個月高點。市場研究機構 Susquehanna 等分析師特別指出，Nu Holdings 的單季淨利正朝向 10 億美元（$1 Billion）的里程碑邁進，受惠於破紀錄的單位經濟效益與令人驚艷的淨利差（NIM）表現，顯示機構投資人與避險基金在第二季積極加碼金融類股的趨勢下，NU 成為拉美金融科技領域的核心標的。
+回顧 2026 年 8 月的市場動態，Nu Holdings（NU）呈現出「獲利創歷史新高」與「信貸資產品質隱憂」交織的多空拉鋸局面。
 
-然而，在經歷強勁反彈後，NU 股價於 8 月 28 日單日回檔約 3.9% 至 4.1%，最新收盤價報 14.3 美元。本次拉回主要受到多項短期逆風疊加影響：首先是美元匯率持續走強，為跨國換算以拉美貨幣（如巴西雷亞爾）計價的營收帶來匯兌折算壓力，市場擔憂這可能考驗其維持 10 億美元獲利連勝的節奏；其次，監管披露的內部人售股通知（Insider Sale Notice）引發短線獲利了結賣壓；同時，整體巴西金融市場情緒轉趨謹慎、美國即將公布的非農就業報告等總體經濟事件，亦促使部分交易員在關鍵支撐位前採取觀望態度。
+在基本面表現上，公司在 8 月中旬公布了極具爆發力的第二季度（Q2）財報，營收與淨利潤雙雙顯著超越市場預期。受惠於優異的淨利差（NIM）擴張以及規模經濟效益，市場機構 Susquehanna 指出公司季度淨利潤正式突破 10 億美元（$1B）的重要里程碑，激勵股價於 8 月 14 日單日飆漲 13%，創下逾五個月新高，並錄得自 2022 年 8 月以來最大單日漲幅。此外，公司持續深化基礎建設與區域布局，先前收購巴西 Banco Porto Real de Investimentos SA 以強化其在巴西的銀行牌照優勢，同時在墨西哥與哥倫比亞持續拓展市場，總用戶數已跨越 1.35 億大關（其中巴西本土達 1.15 億）。
 
-儘管短線面臨總體匯率與籌碼面干擾，GuruFocus 賦予其 78 分的 GF Score，反映其長期基本面與財務體質依然穩健。此外，公司在 7 月份宣布收購巴西 Banco Porto Real de Investimentos SA，進一步鞏固其銀行牌照與本土監管優勢。整體而言，Nu Holdings 的核心獲利引擎、客戶黏著度與跨國擴張動能未變，短線修正主要反映估值消化與外匯波動。
+然而，8 月下旬市場焦點轉向資產品質與內部動向，股價自高點回落至 14.3 美元附近。最新市場報告顯示，儘管利潤創下歷史新高，但 Nu 的不良貸款率（Bad Loans / NPL）攀升至 6.9%，引發市場對拉美信貸週期的擔憂，導致股價單日下跌 3.9%。與此同時，內部人股權出售通知（Insider Sale Notice）以及市場對巴西宏觀經濟環境的審慎評估，進一步加劇賣壓，單日拉回 4.1%。
+
+整體而言，Nu 目前處於高成長轉入高獲利期的關鍵節點，雖然核心獲利能力與用戶黏著度無庸置疑，但短期內市場正密切審視其在信貸擴張下的風險定價能力，交易員亦正高度關注股價拉回後的關鍵支撐力道。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **單季 10 億美元淨利里程碑驗證強大營運槓桿**：受惠於第二季全面擊敗預期的業績，NU 正邁向單季獲利 10 億美元的重大關卡。這證明了其純數位銀行的商業模式具備極高的邊際利潤率，隨著用戶規模突破 1.35 億，營運費用率持續下降，規模效益已轉化為實質盈利能力。
-- **淨利差（NIM）超預期擴張鞏固核心護城河**：近期分析指出 Nu Holdings 的淨利差擴張幅度驚人，主因在於其低成本的存款基礎與高定價效率的消費信貸產品組合。在高利率環境具備韌性的同時，展現出強大的資金定價能力。
-- **強勢美元形成短線匯兌逆風**：由於 Nu 的核心營收以巴西雷亞爾、墨西哥披索等計價，美元升值將在換算為美元財報時造成帳面營收與獲利增速放緩。這是導致 8 月底股價單日下跌 3.9% 的核心宏觀誘因。
-- **內部人售股通知引發籌碼面震盪**：市場近期消化內部人士減持申報，引發投資人短線防禦心理，導致股價回測支撐區間。然而此類減持通常屬於高階主管常規流動性規劃，並未動搖公司長線競爭優勢。
-- **併購 Banco Porto Real 強化監管與牌照護城河**：公司於 7 月收購 Banco Porto Real de Investimentos SA，有效強化了其在巴西本地的銀行特許經營權與機構金融業務能力，有助於降低法規監管風險並拓寬產品線。
-- **墨西哥與哥倫比亞構成第二成長曲線**：在巴西本土用戶達到 1.15 億並佔據主導地位後，墨西哥與哥倫比亞合計超過 2000 萬用戶的快速擴張，將成為維持未來數年營收雙位數成長的關鍵動能。
+- **季度獲利突破 10 億美元里程碑，規模經濟效益確立**：
+  Nu 在 Q2 財報中展現了強勁的獲利爆發力，季度淨利潤正式達成 10 億美元大關。這意味著新創銀行已完全擺脫「燒錢擴張」的早期階段，其每用戶平均營收（ARPAC）提升與極低的服務邊際成本形成正向飛輪，為長期估值提供實質基本面支撐。
+- **不良貸款率升至 6.9%，資產品質成為短期估值天花板**：
+  儘管獲利創新高，但壞帳率攀升至 6.9% 是引發近期股價修正的核心主因。在個人信貸與信用卡業務快速增長下，拉美消費者承擔高利率環境的能力正受考驗，投資人需密切觀察風控模型是否能有效覆蓋預期信用損失。
+- **淨利差（NIM）表現超預期，核心利息收入引擎穩健**：
+  Seeking Alpha 指出 Nu 展現出令人驚喜的淨利差擴張力。透過龐大的低成本零息/低息數位存款基礎，結合具備定價權的信貸資產發放，Nu 展現出優於傳統同業的利差收益與資金成本優勢。
+- **內部人減持通知引發籌碼面波動**：
+  在股價衝上波段高點後，市場出現內部人申報售股通知，促使短線獲利了結賣壓湧現。這類籌碼變動雖屬高階主管個人的資產配置常態，但在高估值環境下容易放大市場情緒波動。
+- **監管牌照戰略落地，鞏固巴西市場護城河**：
+  收購 Banco Porto Real de Investimentos SA 協助 Nu 進一步獲取並完善巴西本土銀行牌照與投資業務架構，大幅增強資本運作靈活性，為推進高淨值財富管理與複雜金融商品奠定基礎。
+- **國際化（墨、哥市場）進展成為下一階段估值重估催化劑**：
+  巴西本土用戶已達 1.15 億（滲透率極高），未來的增長極已明確轉移至墨西哥與哥倫比亞。若能在這兩大市場複製巴西的獲客與獲利曲線，將有效分散單一國家宏觀經濟風險。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-28 | Nu Holdings Shares Slide 3.9% as Stronger Dollar Challenges $1 Billion Profit Streak — TechStock²
-- 2026-08-28 | Nu Holdings Ltd (NU) Shares Fall 3.9% -- What GF Score of 78 Tells — GuruFocus
+- 2026-08-29 | Nu Holdings Shares Drop 3.9% After Profit Hits Record and Bad Loans Climb to 6.9% — TechStock²
 - 2026-08-28 | NU Stock Pulls Back As Traders Watch Support — timothysykes.com
 - 2026-08-28 | Nu Holdings Slides 4.1% as Investors Weigh Insider Sale Notice and Brazil Market Caution — Quiver Quantitative
-- 2026-08-28 | Jobs report, Broadcom results pose next hurdles for stock market rally — Yahoo Finance
+- 2026-08-28 | Why PayPal Stock Just Crashed — Yahoo Finance
+- 2026-08-27 | Nubank (NU): Buy, Sell, or Hold Post Q1 Earnings? — Yahoo Finance
+- 2026-08-27 | MercadoLibre: The Brazil Risk Is Overblown (NASDAQ:MELI) — Seeking Alpha
 - 2026-08-25 | Why Is NU Stock Rising Today? — Stocktwits
 - 2026-08-25 | Nu Holdings: Surprising NIM Drives Future Expectations (NYSE:NU) — Seeking Alpha
-- 2026-08-23 | Should You Buy, Sell, or Hold Nu Holdings Now That Its Earnings Are Out? — Yahoo Finance
-- 2026-08-23 | Why Fund Managers Loaded Up On Financial Stocks In Q2 — Seeking Alpha
-- 2026-08-14 | NU stock: why Q2 earnings may have unlocked further upside — Bing News / MSN
-- 2026-08-14 | NU stock hits over 5-month high in largest single-day gain since 2022 – Susquehanna points to $1B profit milestone — Bing News / MSN
-- 2026-07-20 | NU Stock Inches Up Overnight After Best Day In Over 2 Weeks: What’s Lifting It? (Banco Porto Real Acquisition) — Bing News / Yahoo Finance
-- 2026-06-18 | 3 Catalysts That Could Send Nu Stock Soaring This Year — Motley Fool / Bing News
+- 2026-08-14 | NU stock: why Q2 earnings may have unlocked further upside — Bing News
+- 2026-08-14 | NU stock hits over 5-month high in largest single-day gain since 2022 – Susquehanna points to $1B profit milestone — Bing News
+- 2026-08-14 | Why Nu Holdings Stock Jumped 13% Today — Yahoo Finance
+- 2026-07-20 | NU Stock Inches Up Overnight After Best Day In Over 2 Weeks: What’s Lifting It? — Bing News
+- 2026-06-18 | 3 Catalysts That Could Send Nu Stock Soaring This Year — Bing News
+
+*(註：部分與標的無直接關聯之科技同業新聞已於下文分析中去蕪存菁)*
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. Q2 財報全面超預期與單季 10 億美元獲利里程碑
-- **相關新聞**：*NU stock: why Q2 earnings may have unlocked further upside* (2026-08-14) / *Susquehanna points to $1B profit milestone* (2026-08-14)
-- **深度解析**：
-  Nu Holdings 在 8 月中旬發布的 2026 年第二季財報引發市場強烈共鳴，推動股價創下自 2022 年 8 月以來的最大單日漲幅。華爾街投行 Susquehanna 等機構指出，NU 正迅速逼近單季淨利 10 億美元的里程碑。財報顯示其營收與獲利均以「決定性優勢」超越市場共識。這項進展代表 Nubank 的單位經濟模型已達到成熟拐點，客戶平均營收貢獻（ARPAC）持續增長，而每位活躍客戶的服務成本維持在極低水平，確立了其相較於傳統拉美銀行的結構性成本優勢。
+### 1. 不良貸款率升至 6.9% 引發獲利了結賣壓
+- **事件解析**：根據 TechStock² 於 8 月 29 日的報導，Nu 在創下歷史獲利紀錄的同時，不良貸款率上升至 6.9%，引發市場對信貸品質惡化的擔憂，股價應聲下跌 3.9%。
+- **營運與財務影響**：6.9% 的壞帳率反映出在擴大個人無擔保信貸規模的過程中，信用損失撥備（Provisions）可能在未來數季逐步增加，進而侵蝕部分利潤率。雖然新創銀行的單位經濟效益允許較高的風險容忍度，但若壞帳率突破安全邊際，將迫使管理層收緊授信標準，短期內可能壓抑貸款資產的增長速度。
+- **投資啟示**：投資人需區分「壞帳成長是由於放款激增的滯後效應」還是「風控模型失效」。目前看來屬於高收益信貸產品擴張下的正常波動，但估值倍數短期內將受此指標壓制。
 
-### 2. 強勢美元壓抑換算收益與內部人售股引發短線修正
-- **相關新聞**：*Nu Holdings Shares Slide 3.9% as Stronger Dollar Challenges $1 Billion Profit Streak* (2026-08-28) / *Nu Holdings Slides 4.1% as Investors Weigh Insider Sale Notice and Brazil Market Caution* (2026-08-28)
-- **深度解析**：
-  8 月 28 日 NU 股價回跌約 3.9% 至 4.1%，收在 14.3 美元，主要是多重外部與籌碼因素共振所致。首先，美元走強使得以美元計價申報的跨國企業面臨換算逆風，特別是巴西雷亞爾匯率波動可能壓縮折算後的美元淨利，對能否連續達成 10 億美元淨利構成考驗；其次，市場傳出內部人申報售股通知，在股價創五個月新高後引發獲利了結潮；第三，投資人對巴西總體市場環境保持審慎。技術面上，交易員正密切關注股價是否能在關鍵均線與前波突破點形成支撐。
+### 2. 內部人售股通知疊加巴西宏觀審慎情緒
+- **事件解析**：Quiver Quantitative 報導指出，Nu 股價於 8 月 28 日下跌 4.1%，主因投資人消化內部人申報售股通知，以及對巴西市場總體經濟環境的謹慎預期。
+- **營運與財務影響**：內部人出售通知通常在財報利多出盡（Post-Earnings Rally）後出現，容易對市場籌碼造成心理壓力。同時，市場對巴西利率路徑、通膨與財政赤字的宏觀審慎態度（如 MercadoLibre 相關評論亦提及巴西風險），使得資金在拉美資產配置上轉趨保守。
+- **投資啟示**：內部人賣股多屬個人財務規畫，並未改變公司基本面營運體質；然而在股價自 8 月中旬大幅上漲後，此類消息易被放大為獲利了結的藉口，技術面回檔有助於清洗浮額。
 
-### 3. 淨利差（NIM）超預期擴張與基本面評分
-- **相關新聞**：*Nu Holdings: Surprising NIM Drives Future Expectations* (2026-08-25) / *What GF Score of 78 Tells* (2026-08-28)
-- **深度解析**：
-  Seeking Alpha 分析指出，NU 令人驚訝的高淨利差（NIM）是驅動分析師上調長期獲利預測的核心動力。Nubank 不僅成功將龐大的無息/低息儲蓄存款轉化為高收益的信用卡循環信貸與個人貸款，同時有效控制了信貸違約風險。GuruFocus 評定其 GF Score 為 78 分，反映出公司在成長性與財務健康度方面處於優良水準，即便面臨短線宏觀震盪，內在價值依然具備防禦彈性。
+### 3. Q2 財報爆發：單季淨利衝破 10 億美元，創歷史級大漲
+- **事件解析**：8 月 14 日，Nu 股價暴漲 13%，創 5 個月新高與 2022 年以來最大單日漲幅。機構 Susquehanna 指出公司季度淨利正式達成 10 億美元歷史里程碑。
+- **營運與財務影響**：此項成績印證了 Nu 商業模式的強大變現能力。在用戶基數超過 1.35 億人的規模下，營運槓桿（Operating Leverage）全面釋放，淨利差（NIM）擴張帶動頂線與底線同步擊敗市場預期。這鞏固了 Nu 作為全球獲利能力最強的新創銀行地位。
+- **投資啟示**：這奠定了 NU 股價的中長期底部。即使短線因壞帳率或內部人減持出現回檔，10 億美元的季度淨利基礎已證明其獲利的可持續性，拉回反而提供長線投資人較具吸引力的估值進場點。
 
-### 4. 戰略收購 Banco Porto Real 鞏固巴西銀行牌照
-- **相關新聞**：*NU Stock Inches Up Overnight After Best Day In Over 2 Weeks: What’s Lifting It?* (2026-07-20)
-- **深度解析**：
-  Nu Holdings 於 7 月宣布收購巴西本土的 Banco Porto Real de Investimentos SA，這是一項重要的戰略舉措。此收購案直接協助 Nubank 取得並鞏固在巴西的正式銀行特許牌照（Banking License）。這不僅強化了其監管合規地位，使其能直接開展更廣泛的機構業務、外匯交易與資本市場投資產品，更能進一步降低資金清算與跨行交易成本，為其在巴西超過 1.15 億的龐大客群提供更深度的金融產品滲透。
+### 4. 戰略併購 Banco Porto Real 強化監管與牌照護城河
+- **事件解析**：7 月下旬，Nu 宣布收購巴西 Banco Porto Real de Investimentos SA，以協助其在巴西獲得完整的銀行牌照優勢。
+- **營運與財務影響**：獲得專屬銀行與投資機構牌照後，Nu 將能大幅減少對第三方銀行管道的依賴，直接降低資金清算與跨行交易成本，並能合法發行更廣泛的財富管理、外匯與結構化金融商品，深化對中高資產階級客戶的滲透率。
+- **投資啟示**：監管牌照是金融科技公司邁向全功能商業銀行的關鍵護城河，此舉為 Nu 未來 3–5 年在巴西市場釋放多元收入來源奠定法規與基礎設施基礎。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏正（Neutral to Positive）**
+**整體市場情緒：🟡 中性偏多（Short-term Neutral / Long-term Bullish）**
 
-| 維度 | 評估指標 | 驅動因素說明 |
-| :--- | :---: | :--- |
-| **正面因素** | 🟢 強勁 | Q2 財報全面超預期、單季獲利叩關 10 億美元、NIM 表現亮眼、基金經理人 Q2 大幅加碼金融股。 |
-| **負面因素** | 🔴 偏弱 | 美元持續走強壓制匯兌換算收益、內部人售股通知引發短線賣壓、巴西總體市場情緒短暫審慎。 |
-| **技術與籌碼** | 🟡 中性 | 股價自高點拉回 3.9%~4.1% 回測支撐，GF Score 報 78，短線進入高檔整理與籌碼沉澱階段。 |
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🟢 正面驅動因素                          🔴 負面壓抑因素       │
+├─────────────────────────────────────────────────────────────┤
+│  • Q2 季度淨利破 10 億美元里程碑          • 不良貸款率上升至 6.9%   │
+│  • 淨利差（NIM）超預期擴張                 • 內部人售股通知引發賣壓 │
+│  • 用戶總數達 1.35 億，拉美滲透率穩固       • 巴西宏觀利率與信用週期 │
+│  • 成功收購銀行牌照強化長期營運體質        • 短線大漲 13% 後的獲利了結│
+└─────────────────────────────────────────────────────────────┘
+```
+
+**評估依據**：
+Nu Holdings 的長期基本面動能極為強勁（10 億美元季度獲利與 NIM 擴張），但 8 月底市場情緒受到「壞帳率上升至 6.9%」及「內部人賣股」兩大利空因素壓抑，短線進入技術性拉回與籌碼沉澱階段。整體情緒從 8 月中旬的極度亢奮轉為理性的多空拉鋸。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **外匯與匯率折算風險（High）**：公司大部分營收來自巴西雷亞爾及墨西哥披索，但財報以美元計價。美元持續強勢將直接侵蝕以美元計算的營收與獲利成長率，對連續實現 10 億美元單季淨利形成實質挑戰。
-- 🟡 **內部人減持與籌碼鬆動風險（Medium）**：內部人售股通知可能在短期內壓抑市場買盤意願，若大盤同步回檔，可能加劇技術性修正幅度。
-- 🟡 **拉丁美洲總體經濟與信貸品質風險（Medium）**：巴西與墨西哥的利率週期、通膨水準與就業狀況直接影響消費者的還款能力。若總體經濟放緩導致不良貸款率（NPL）攀升，將對高淨利差（NIM）產生擠壓。
-- 🟢 **監管與擴張執行風險（Low - Medium）**：儘管收購 Banco Porto Real 有助於鞏固巴西牌照，但在墨西哥與哥倫比亞申請並營運全功能銀行牌照的進度，仍受當地監管法規與政策變動影響。
+| 風險項目 | 風險等級 | 具體評估說明 |
+| :--- | :---: | :--- |
+| **信貸資產品質惡化** | 🔴 高 | 不良貸款率已攀升至 6.9%，若拉美總體經濟下行導致違約率進一步擴大，信貸損失撥備將大幅侵蝕營業利潤。 |
+| **拉美宏觀與匯率風險** | 🟡 中 | 公司主要營收來自巴西黑奧、墨西哥披索與哥倫比亞披索，若拉美貨幣對美元大幅貶值，將對以美元計價的財報收益造成匯兌折損。 |
+| **國際市場擴張推進不及預期** | 🟡 中 | 墨西哥與哥倫比亞市場的獲客成本與監管環境與巴西不同，若國際化步伐受阻，將削弱 Nu 長期高成長溢價。 |
+| **短線籌碼面與估值修正** | 🟢 低至中 | 內部人減持通知引發短線波動，股價在創下波段高點後測試支撐，短期內波動度可能加大。 |
 
 ---
 
-## 🔮 短期關注重點
+## 🔮 短期關注重點（未來 1–4 週）
 
-1. **技術支撐位與換手量能（未來 1–2 週）**：關注股價在 14.3 美元附近及前波突破支撐區的防守力道，觀察內部人售股賣壓是否迅速被長線機構資金消化。
-2. **美元指數走勢與匯率折算影響（未來 2–4 週）**：持續追蹤美元對巴西雷亞爾及墨西哥披索的匯率波動，評估對第三季財務指引與美元計價獲利的折算衝擊。
-3. **宏觀就業數據與總體市場風險溢價（未來 1 週）**：美國非農就業報告等總體數據發布後對新興市場資產風險偏好的外溢效應。
-4. **墨西哥與哥倫比亞業務擴張進度（未來 1 個月）**：追蹤非巴西地區的用戶增長、存款吸收速度以及銀行牌照審批最新動態。
+1. **技術支撐位測試與籌碼沉澱**：
+   關注 NU 在 14.0–14.3 USD 區間的支撐強度，確認 8 月底由壞帳消息與內部人賣股引發的賣壓是否逐步衰竭。
+2. **管理層對 6.9% 壞帳率的應對措施**：
+   觀察管理層在後續產業論壇或投資人會議中，對資產品質、撥備覆蓋率以及下半年授信標準調整的最新指引。
+3. **墨西哥與哥倫比亞的存貸款月度數據**：
+   追蹤國際市場的用戶成長與存款累積速度，確認拉美跨國擴張是否如期填補巴西本土增速放緩的缺口。
+4. **巴西總體經濟與利率政策動態**：
+   密切留意巴西央行（BCB）的基準利率（Selic）政策路徑對消費者信貸需求與新創銀行資金成本的連鎖影響。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. *Nu Holdings Shares Slide 3.9% as Stronger Dollar Challenges $1 Billion Profit Streak* — TechStock² (2026-08-28)
-2. *Nu Holdings Ltd (NU) Shares Fall 3.9% -- What GF Score of 78 Tells* — GuruFocus (2026-08-28)
-3. *NU Stock Pulls Back As Traders Watch Support* — timothysykes.com (2026-08-28)
-4. *Nu Holdings Slides 4.1% as Investors Weigh Insider Sale Notice and Brazil Market Caution* — Quiver Quantitative (2026-08-28)
-5. *Why Is NU Stock Rising Today?* — Stocktwits (2026-08-25)
-6. *Nu Holdings: Surprising NIM Drives Future Expectations (NYSE:NU)* — Seeking Alpha (2026-08-25)
-7. *Should You Buy, Sell, or Hold Nu Holdings Now That Its Earnings Are Out?* — Yahoo Finance (2026-08-23)
-8. *Why Fund Managers Loaded Up On Financial Stocks In Q2* — Seeking Alpha (2026-08-23)
-9. *NU stock: why Q2 earnings may have unlocked further upside* — MSN / Bing News (2026-08-14)
-10. *NU stock hits over 5-month high in largest single-day gain since 2022 – Susquehanna points to $1B profit milestone* — MSN / Bing News (2026-08-14)
-11. *NU Stock Inches Up Overnight After Best Day In Over 2 Weeks: What’s Lifting It?* — Yahoo Finance / Bing News (2026-07-20)
-12. *3 Catalysts That Could Send Nu Stock Soaring This Year* — Motley Fool / Bing News (2026-06-18)
+1. Nu Holdings Shares Drop 3.9% After Profit Hits Record and Bad Loans Climb to 6.9% — TechStock² (2026-08-29)
+2. NU Stock Pulls Back As Traders Watch Support — timothysykes.com (2026-08-28)
+3. Nu Holdings Slides 4.1% as Investors Weigh Insider Sale Notice and Brazil Market Caution — Quiver Quantitative (2026-08-28)
+4. Nubank (NU): Buy, Sell, or Hold Post Q1 Earnings? — Yahoo Finance (2026-08-27)
+5. MercadoLibre: The Brazil Risk Is Overblown (NASDAQ:MELI) — Seeking Alpha (2026-08-27)
+6. Why Is NU Stock Rising Today? — Stocktwits (2026-08-25)
+7. Nu Holdings: Surprising NIM Drives Future Expectations (NYSE:NU) — Seeking Alpha (2026-08-25)
+8. NU stock: why Q2 earnings may have unlocked further upside — Bing News (2026-08-14)
+9. NU stock hits over 5-month high in largest single-day gain since 2022 – Susquehanna points to $1B profit milestone — Bing News (2026-08-14)
+10. Why Nu Holdings Stock Jumped 13% Today — Yahoo Finance (2026-08-14)
+11. NU Stock Inches Up Overnight After Best Day In Over 2 Weeks: What’s Lifting It? — Bing News (2026-07-20)
+12. 3 Catalysts That Could Send Nu Stock Soaring This Year — Bing News (2026-06-18)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估相關風險並自負盈虧。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
