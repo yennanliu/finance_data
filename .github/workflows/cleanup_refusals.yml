@@ -186,8 +186,10 @@ jobs:
           # branch, and is identical to the old behaviour for the scheduled run
           # (where GITHUB_REF_NAME is "main").
           #
-          # This cron (0 2 * * *) collides with daily_analysis (MU fundamental)
-          # and qa_report_quality, so retry around a rebase.
+          # The retry-around-a-rebase stays even though this job no longer
+          # shares a cron minute with anything (it moved to 04:10, and the QA
+          # audit moved into collect_daily.yml): a manual dispatch can still
+          # land while the collector is pushing.
           BRANCH="${GITHUB_REF_NAME}"
           echo "📤 Pushing changes to ${BRANCH}..."
           pushed=""
