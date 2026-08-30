@@ -145,29 +145,48 @@ jobs:
             exit 0
           fi
 
-          # Stage deleted files
-          git add -A
+          # Stage deleted files. -u (tracked only) rather than -A: this job only
+          # ever removes tracked files, so -A could sweep in unrelated strays.
+          git add -u
 
           # Commit
           FILE_COUNT=${{ steps.find.outputs.file_count }}
           PATTERN="${{ steps.params.outputs.search_pattern }}"
           DIRECTORY="${{ steps.params.outputs.search_directory }}"
 
-          git commit -m "chore: cleanup $FILE_COUNT files with refusal message
+          # NOTE: every line here must stay indented inside the `run: |` block.
+          # This message used to be a single -m whose continuation lines sat at
+          # column 0, which closed the block scalar and made the whole workflow
+          # unparseable — it failed at 0s on every trigger and never ran.
+          TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
+          BODY=$(printf -- '- Pattern: %s\n- Directory: %s\n- File count: %s\n- Timestamp: %s' \
+            "$PATTERN" "$DIRECTORY" "$FILE_COUNT" "$TIMESTAMP")
 
-Automated cleanup: removed files containing pattern
+          git commit \
+            -m "chore: cleanup $FILE_COUNT files with refusal message" \
+            -m "Automated cleanup: removed files containing pattern" \
+            -m "$BODY" \
+            -m "[skip ci]"
 
-- Pattern: $PATTERN
-- Directory: $DIRECTORY
-- File count: $FILE_COUNT
-- Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-
-[skip ci]"
-
-          # Push
+          # Push. This cron (0 2 * * *) collides with daily_analysis (MU
+          # fundamental) and qa_report_quality, so retry around a rebase.
           echo "📤 Pushing changes..."
-          git push origin main
-          echo "✅ Changes pushed to main"
+          pushed=""
+          for i in 1 2 3 4 5; do
+            if git push origin main; then
+              echo "✅ Changes pushed to main"
+              pushed=yes
+              break
+            fi
+            echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
+            sleep 10
+            git pull --rebase origin main
+          done
+
+          if [ -z "$pushed" ]; then
+            echo "::error::Push failed after 5 attempts — cleanup was NOT persisted."
+            exit 1
+          fi
 
       # ── Skip auto-commit notice
       - name: Auto-commit disabled notice

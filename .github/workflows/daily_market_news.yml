@@ -132,7 +132,9 @@ permissions:
   contents: write   # needed to commit & push generated report
 
 concurrency:
-  group: "daily-market-news-${{ github.run_id }}"
+  # Per cron slot (= per ticker); see the note in daily_analysis.yml for why
+  # this is not run_id-keyed and not one static group.
+  group: "daily-market-news-${{ github.event.schedule || github.event.inputs.ticker || github.run_id }}"
   cancel-in-progress: false
 
 jobs:

@@ -72,7 +72,10 @@ permissions:
   contents: write
 
 concurrency:
-  group: "advanced-analysis-${{ github.run_id }}"
+  # Per ticker — two dispatches for different tickers may run concurrently, but
+  # the same ticker must not race itself onto the same output path.
+  # (Was run_id-keyed = a no-op.)
+  group: "advanced-analysis-${{ github.event.inputs.ticker }}"
   cancel-in-progress: false
 
 jobs:
