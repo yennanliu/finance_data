@@ -29,7 +29,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: "daily-stock-watchlist-${{ github.run_id }}"
+  # Static group is safe here: one cron a day, so this only ever guards the
+  # cron against a concurrent manual dispatch. (Was run_id-keyed = a no-op.)
+  group: "daily-stock-watchlist"
   cancel-in-progress: false
 
 jobs:

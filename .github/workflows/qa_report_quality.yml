@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # full history so the commit step can pull --rebase
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -86,5 +88,23 @@ jobs:
           else
             TODAY=$(date -u +%Y-%m-%d)
             git commit -m "chore: auto-generate QA quality report ${TODAY}"
-            git push
+
+            # This cron (0 2 * * *) collides with daily_analysis (MU fundamental)
+            # and cleanup_refusals, so a bare push loses the race outright.
+            pushed=""
+            for i in 1 2 3 4 5; do
+              if git push; then
+                echo "✅ QA results pushed."
+                pushed=yes
+                break
+              fi
+              echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
+              sleep 10
+              git pull --rebase origin main
+            done
+
+            if [ -z "$pushed" ]; then
+              echo "::error::Push failed after 5 attempts — QA results were NOT persisted."
+              exit 1
+            fi
           fi
