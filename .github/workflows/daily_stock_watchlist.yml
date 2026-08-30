@@ -31,6 +31,14 @@ permissions:
 concurrency:
   # Static group is safe here: one cron a day, so this only ever guards the
   # cron against a concurrent manual dispatch. (Was run_id-keyed = a no-op.)
+  #
+  # Queue behaviour worth knowing: GitHub holds only ONE pending run per group.
+  # With a run in progress, dispatching twice in quick succession cancels the
+  # older pending run — the newer dispatch replaces it. There is no queue-depth
+  # setting to change this (concurrency accepts only `group` and
+  # `cancel-in-progress`); the alternative, dropping the group, would instead
+  # let two runs race on the same ws/ output file, which is worse. At one cron
+  # a day plus the occasional manual run, a three-deep queue is not a real case.
   group: "daily-stock-watchlist"
   cancel-in-progress: false
 
