@@ -129,7 +129,7 @@ on:
         default: "20000"
 
 permissions:
-  contents: write   # needed to commit & push generated report
+  contents: read    # output goes to an artifact; only collect_daily.yml writes
 
 concurrency:
   # Per cron slot (= per ticker); see the note in daily_analysis.yml for why
@@ -315,25 +315,45 @@ jobs:
             --model       "$MODEL" \
             --max-tokens  "$MAX_TOKENS"
 
-      # ── 7. Commit & push ──────────────────────────────────────────
-      - name: Commit and push report
+      # ── 7. Hand off to the daily collector ────────────────────────
+      # This job no longer commits; collect_daily.yml gathers every artifact in
+      # the cycle into a single commit. See docs/DAILY_COLLECTOR.md.
+      - name: Resolve cycle name
+        id: cycle
+        run: echo "date=$(python scripts/cycle.py)" >> "$GITHUB_OUTPUT"
+
+      - name: Stage generated files
+        id: stage
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+          STAGE="${RUNNER_TEMP}/cycle-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
 
-          git add "${{ steps.params.outputs.output_dir }}/"
+          # Only what THIS run produced — the output dir also holds previously
+          # committed news files from the checkout.
+          git add -A "${{ steps.params.outputs.output_dir }}/" 2>/dev/null || true
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            TICKER="${{ steps.params.outputs.ticker }}"
-            git commit -m "chore: auto-fetch ${TICKER} market-news ${DATE}"
+          COUNT=0
+          while IFS= read -r -d '' f; do
+            mkdir -p "$STAGE/$(dirname "$f")"
+            cp "$f" "$STAGE/$f"
+            COUNT=$((COUNT + 1))
+          done < <(git diff --cached --name-only --diff-filter=ACM -z)
 
-            echo "📥 Pulling latest changes from remote..."
-            git pull --rebase origin main
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "dir=$STAGE" >> "$GITHUB_OUTPUT"
+          echo "📦 Staged $COUNT file(s) for cycle ${{ steps.cycle.outputs.date }}."
 
-            echo "📤 Pushing changes to remote..."
-            git push
-            echo "✅ News report committed and pushed."
-          fi
+      - name: Upload news artifact
+        if: steps.stage.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cycle-${{ steps.cycle.outputs.date }}-news-${{ steps.params.outputs.ticker }}
+          path: ${{ steps.stage.outputs.dir }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Report empty run
+        if: steps.stage.outputs.count == '0'
+        run: echo "No new files produced — nothing to hand to the collector."

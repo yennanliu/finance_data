@@ -28,9 +28,14 @@ on:
     #   daily_analysis fundamental: 17:00 – 21:00  (last: NBIS)
     #   daily_analysis technical:   21:30 – 01:30  (last: NBIS, next day)
     #   daily_analysis fundamental: 02:00 – 03:40  (additional; last: ROBO)
-    # → Last job scheduled 03:40 UTC; deploy at 04:00 UTC to capture it.
-    #   (GitHub may delay scheduled crons; push this later if tail jobs are missed.)
-    - cron: "0 4 * * *"
+    #
+    # Generators no longer push; collect_daily.yml lands the whole cycle as one
+    # commit at 03:50 UTC. Deploy must therefore run after the COLLECTOR, not
+    # merely after the last generator. 05:00 leaves it ~70 min — the old 04:00
+    # gave the collector only 10, and a slow or retried collect would have
+    # published a day-old site.
+    #   (GitHub may delay scheduled crons; push this later if content is missed.)
+    - cron: "0 5 * * *"
   workflow_dispatch:      # allow manual trigger from GitHub UI
 
 permissions:

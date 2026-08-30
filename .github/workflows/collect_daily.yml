@@ -1,0 +1,197 @@
+name: Collect Daily Cycle
+
+# The single writer for generated content.
+#
+# The ~100 generator jobs (daily_analysis, daily_market_news,
+# daily_stock_watchlist, update_kline_data) used to each commit and push their
+# own output. That produced ~100 commits a day and a permanent push race — 36
+# of 38 market-news runs share a cron minute with an analysis run — which was
+# silently dropping reports when a push retry loop ran out.
+#
+# They now upload artifacts instead. This job collects a whole cycle, runs the
+# QA audit and progress summary over the result, and lands all of it as ONE
+# commit. See docs/DAILY_COLLECTOR.md.
+
+on:
+  schedule:
+    # Generation window (UTC) ends with ROBO fundamental at 03:40; deploy.yml
+    # publishes at 05:00. This sits between them with margin on both sides.
+    - cron: "50 3 * * *"
+  workflow_dispatch:
+    inputs:
+      cycle_date:
+        description: "Cycle to collect (YYYY-MM-DD). Empty = current cycle."
+        required: false
+        default: ""
+
+permissions:
+  contents: write   # the only workflow that writes generated content
+  actions: read     # list and download artifacts from the generator runs
+
+concurrency:
+  # A real mutex: two collectors must never build a commit at once.
+  group: "collect-daily"
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect cycle into one commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # full history so the push step can pull --rebase
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]" --quiet || pip install yfinance --quiet
+
+      - name: Resolve cycle
+        id: cycle
+        run: |
+          set -euo pipefail
+          INPUT="${{ github.event.inputs.cycle_date }}"
+          if [ -n "$INPUT" ]; then
+            DATE="$INPUT"
+          else
+            DATE="$(python scripts/cycle.py)"
+          fi
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "Collecting cycle $DATE"
+
+      - name: Collect cycle artifacts
+        id: collect
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python scripts/collect_cycle.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --cycle-date "${{ steps.cycle.outputs.date }}" \
+            --dest . \
+            --summary-out "${RUNNER_TEMP}/collected.txt"
+
+          COUNT=$(grep -c . "${RUNNER_TEMP}/collected.txt" || true)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Collected $COUNT file(s)."
+
+      - name: Nothing to collect
+        if: steps.collect.outputs.count == '0'
+        run: |
+          echo "::warning::No artifacts found for cycle ${{ steps.cycle.outputs.date }}."
+          echo "Every generator failed, or the artifacts have expired."
+
+      # ── QA audit, moved here from qa_report_quality.yml ─────────────────
+      # It has to run after collection: it audits the reports on disk, and
+      # those no longer exist in the tree until the step above unpacks them.
+      # Non-blocking — a QA failure must not cost the cycle its commit.
+      - name: Run quality checker
+        if: steps.collect.outputs.count != '0'
+        continue-on-error: true
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          mkdir -p qa
+          python scripts/check_report_quality.py \
+            --csv "qa/bad_reports_${TODAY}.csv" \
+            --summary \
+            | tee "qa/summary_${TODAY}.txt"
+
+      - name: Alert on unrenderable Mermaid diagrams
+        if: steps.collect.outputs.count != '0'
+        continue-on-error: true
+        run: python scripts/check_mermaid.py --root ai_gen_report
+
+      - name: Prune old QA artifacts (keep 10 most recent runs)
+        if: steps.collect.outputs.count != '0'
+        continue-on-error: true
+        run: python scripts/prune_qa.py --keep 10
+
+      - name: Generate QA index markdown
+        if: steps.collect.outputs.count != '0'
+        continue-on-error: true
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          SUMMARY="qa/summary_${TODAY}.txt"
+          CSV="qa/bad_reports_${TODAY}.csv"
+          [ -f "$CSV" ] || exit 0
+
+          BAD_COUNT=$(( $(wc -l < "$CSV") - 1 ))
+
+          cat > "qa/README.md" << EOF
+          # Report Quality Audit
+
+          | Field | Value |
+          |-------|-------|
+          | Last run | ${TODAY} |
+          | Bad reports found | ${BAD_COUNT} |
+          | CSV | [bad_reports_${TODAY}.csv](bad_reports_${TODAY}.csv) |
+          | Full summary | [summary_${TODAY}.txt](summary_${TODAY}.txt) |
+          | Retention | 10 most recent runs (older files pruned by \`scripts/prune_qa.py\`) |
+
+          ## Latest Summary
+
+          \`\`\`
+          $(cat "$SUMMARY")
+          \`\`\`
+          EOF
+
+      # ── Progress summary, moved here from daily_progress.yml ────────────
+      # Built from the collector's exact file list rather than
+      # `git log --since="12 hours ago"`, which only worked while every report
+      # arrived as a separate commit.
+      - name: Generate progress summary
+        if: steps.collect.outputs.count != '0'
+        continue-on-error: true
+        run: |
+          YYYYMMDD=$(date -u -d "${{ steps.cycle.outputs.date }}" +"%Y%m%d")
+          python scripts/build_progress.py \
+            --files "${RUNNER_TEMP}/collected.txt" \
+            --out "progress/progress_${YYYYMMDD}.txt"
+
+      # ── The one commit ──────────────────────────────────────────────────
+      - name: Commit and push the cycle
+        if: steps.collect.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A ai_gen_report/ data/ ws/ progress/ qa/ 2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "Artifacts collected but tree is unchanged — nothing to commit."
+            exit 0
+          fi
+
+          DATE="${{ steps.cycle.outputs.date }}"
+          FILES=$(git diff --cached --name-only | wc -l | tr -d ' ')
+          git diff --cached --shortstat
+
+          git commit \
+            -m "chore: daily cycle ${DATE} (${FILES} files)" \
+            -m "Collected from $(grep -c . "${RUNNER_TEMP}/collected.txt") generator artifacts by collect_daily.yml."
+
+          echo "📤 Pushing..."
+          pushed=""
+          for i in 1 2 3 4 5; do
+            if git push; then
+              echo "✅ Cycle ${DATE} committed and pushed."
+              pushed=yes
+              break
+            fi
+            echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
+            sleep 10
+            git pull --rebase origin main
+          done
+
+          if [ -z "$pushed" ]; then
+            echo "::error::Push failed after 5 attempts. Artifacts are retained for 7 days — re-run this workflow with cycle_date=${DATE}."
+            exit 1
+          fi

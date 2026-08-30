@@ -3,8 +3,15 @@ name: Cleanup Refusal Posts
 # ── Schedule & Manual Trigger ─────────────────────────────────────
 on:
   schedule:
-    # Daily at 2:00 AM UTC (10:00 AM Taipei)
-    - cron: "0 2 * * *"
+    # 04:10 UTC — after collect_daily.yml lands the cycle (03:50), before
+    # deploy.yml publishes (05:00).
+    #
+    # This used to run at 02:00, which is now too early twice over: it sits
+    # inside the generation window (the additional fundamental block runs
+    # 02:00-03:40), and a refusal deleted from the branch then would simply be
+    # restored when the collector unpacks that report's artifact at 03:50.
+    # Cleanup has to see the cycle's content before it can prune it.
+    - cron: "10 4 * * *"
 
   workflow_dispatch:
     inputs:

@@ -5,8 +5,11 @@ name: QA Report Quality Check
 # → QA runs at 02:00 UTC (30 min buffer)
 
 on:
-  schedule:
-    - cron: "0 2 * * *"     # 02:00 UTC = 10:00 Taipei (after all report-gen jobs)
+  # The nightly cron moved into collect_daily.yml. QA audits the reports on
+  # disk, and since generators now hand their output to the collector instead
+  # of pushing it, nothing is in the tree to audit until the collector unpacks
+  # it. Running here at 02:00 would have graded the previous day's content.
+  # Kept dispatch-only so the audit can still be run by hand against main.
   workflow_dispatch:          # allow manual trigger from GitHub UI
 
 permissions:

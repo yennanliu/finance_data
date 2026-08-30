@@ -1,9 +1,16 @@
 name: Daily Progress Summary
 
-# Runs after all cron jobs finish (last job ends ~00:20 UTC)
+# The nightly cron moved into collect_daily.yml.
+#
+# This workflow derived its summary from `git log --since="12 hours ago"`,
+# which only worked while every report arrived as its own commit. A cycle now
+# lands as a single commit, so that scan would return either nothing (running
+# mid-cycle at 00:40, as it used to) or one undifferentiated commit. The
+# collector builds the same summary from its exact file list instead — see
+# scripts/build_progress.py.
+#
+# Kept dispatch-only for ad-hoc regeneration against whatever is on main.
 on:
-  schedule:
-    - cron: "40 0 * * *"   # 00:40 UTC = 08:40 Taipei
   workflow_dispatch:
 
 permissions:

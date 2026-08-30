@@ -62,7 +62,8 @@ scripts/generate_analysis.py
 - `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
 - `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid); powers the **Price Data** section (`docs/prices/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
-- `.github/workflows/daily_analysis.yml` — cron that fires 42 jobs/day (21 tickers × 2 types)
+- `.github/workflows/daily_analysis.yml` — 61 cron entries (36 fundamental + 25 technical), one per ticker-analysis pair
+- `.github/workflows/collect_daily.yml` — the **only** workflow that commits generated content. Generators upload artifacts; this collects a whole cycle into one commit at 03:50 UTC. See `docs/DAILY_COLLECTOR.md`
 
 ### Adding a new analysis type
 1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`
@@ -82,5 +83,6 @@ scripts/generate_analysis.py
 - `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
 
 ## QA audit
-- `.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC: `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`, then regenerates `qa/README.md`
+- Runs as part of `.github/workflows/collect_daily.yml` (03:50 UTC), after the cycle's reports are unpacked: `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`, then regenerates `qa/README.md`. It must run after collection — the reports it audits are not on the branch until then
+- `.github/workflows/qa_report_quality.yml` is kept `workflow_dispatch`-only for running the audit by hand against `main`
 - `scripts/prune_qa.py --keep 10` keeps only the 10 most recent run dates in `qa/`; the workflow runs it before committing

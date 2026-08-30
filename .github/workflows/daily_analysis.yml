@@ -201,7 +201,7 @@ on:
         default: "32000"
 
 permissions:
-  contents: write   # needed to commit & push generated report
+  contents: read    # output goes to an artifact; only collect_daily.yml writes
   actions: write    # needed to update workflow run display_title
 
 concurrency:
@@ -449,52 +449,49 @@ jobs:
         run: python scripts/update_prices.py "$TICKER" --only-missing
 
       # ── 8. Commit & push ──────────────────────────────────────────
-      - name: Commit and push report
+      # ── 8. Hand off to the daily collector ────────────────────────
+      # This job no longer commits. Every generator in the cycle uploads its
+      # output as an artifact and collect_daily.yml gathers them into a single
+      # commit at 03:50 UTC. See docs/DAILY_COLLECTOR.md.
+      - name: Resolve cycle name
+        id: cycle
+        run: echo "date=$(python scripts/cycle.py)" >> "$GITHUB_OUTPUT"
+
+      - name: Stage generated files
+        id: stage
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+          STAGE="${RUNNER_TEMP}/cycle-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
 
-          # Stash generated files so git pull --rebase can run cleanly
-          echo "📦 Stashing generated files..."
-          git stash --include-untracked || true
+          # Copy only what THIS run produced. The output dir also holds every
+          # previously committed report from the checkout, so the set is taken
+          # from the index diff rather than by copying the directory wholesale.
+          git add -A "${{ steps.params.outputs.output_dir }}/" 2>/dev/null || true
+          git add -A data/prices/ 2>/dev/null || true
 
-          echo "📥 Pulling latest changes from remote..."
-          git pull --rebase origin main
+          COUNT=0
+          while IFS= read -r -d '' f; do
+            mkdir -p "$STAGE/$(dirname "$f")"
+            cp "$f" "$STAGE/$f"
+            COUNT=$((COUNT + 1))
+          done < <(git diff --cached --name-only --diff-filter=ACM -z)
 
-          # Restore generated files
-          echo "📂 Restoring generated files..."
-          git stash pop || true
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "dir=$STAGE" >> "$GITHUB_OUTPUT"
+          echo "📦 Staged $COUNT file(s) for cycle ${{ steps.cycle.outputs.date }}."
 
-          git add "${{ steps.params.outputs.output_dir }}/"
-          git add data/prices/ || true   # only non-empty when the step above seeded a new ticker
+      - name: Upload report artifact
+        if: steps.stage.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cycle-${{ steps.cycle.outputs.date }}-analysis-${{ steps.params.outputs.ticker }}-${{ steps.params.outputs.analysis_type }}
+          path: ${{ steps.stage.outputs.dir }}
+          if-no-files-found: error
+          # Long enough to re-run a failed collector for several days.
+          retention-days: 7
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            TICKER="${{ steps.params.outputs.ticker }}"
-            ATYPE="${{ steps.params.outputs.analysis_type }}"
-            git commit -m "chore: auto-generate ${TICKER} ${ATYPE} ${DATE}"
-
-            echo "📤 Pushing changes to remote..."
-            pushed=""
-            for i in 1 2 3 4 5; do
-              if git push; then
-                echo "✅ Report committed and pushed."
-                pushed=yes
-                break
-              fi
-              echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
-              sleep 10
-              git stash
-              git pull --rebase origin main
-              git stash pop || true
-            done
-
-            # Without this the step exits 0 after 5 failed pushes and the
-            # generated report is silently dropped.
-            if [ -z "$pushed" ]; then
-              echo "::error::Push failed after 5 attempts — report was NOT persisted."
-              exit 1
-            fi
-          fi
+      - name: Report empty run
+        if: steps.stage.outputs.count == '0'
+        run: echo "No new files produced — nothing to hand to the collector."

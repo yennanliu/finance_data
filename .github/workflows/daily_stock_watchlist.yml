@@ -26,7 +26,7 @@ on:
         default: "16000"
 
 permissions:
-  contents: write
+  contents: read    # output goes to an artifact; only collect_daily.yml writes
 
 concurrency:
   # Static group is safe here: one cron a day, so this only ever guards the
@@ -83,18 +83,37 @@ jobs:
             --model "$MODEL" \
             --max-tokens "$MAX_TOKENS"
 
-      - name: Commit and push watchlist
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ws/
+      # Hands off to collect_daily.yml rather than committing.
+      - name: Resolve cycle name
+        id: cycle
+        run: echo "date=$(python scripts/cycle.py)" >> "$GITHUB_OUTPUT"
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            git commit -m "chore: auto-generate stock watchlist ${DATE}"
-            git pull --rebase origin main
-            git push
-            echo "✅ Watchlist committed and pushed."
-          fi
+      - name: Stage watchlist
+        id: stage
+        run: |
+          set -euo pipefail
+          STAGE="${RUNNER_TEMP}/cycle-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+
+          git add -A ws/ 2>/dev/null || true
+
+          COUNT=0
+          while IFS= read -r -d '' f; do
+            mkdir -p "$STAGE/$(dirname "$f")"
+            cp "$f" "$STAGE/$f"
+            COUNT=$((COUNT + 1))
+          done < <(git diff --cached --name-only --diff-filter=ACM -z)
+
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "dir=$STAGE" >> "$GITHUB_OUTPUT"
+          echo "📦 Staged $COUNT file(s) for cycle ${{ steps.cycle.outputs.date }}."
+
+      - name: Upload watchlist artifact
+        if: steps.stage.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cycle-${{ steps.cycle.outputs.date }}-watchlist
+          path: ${{ steps.stage.outputs.dir }}
+          if-no-files-found: error
+          retention-days: 7
