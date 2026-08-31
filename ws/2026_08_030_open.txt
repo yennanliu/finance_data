@@ -1,0 +1,977 @@
+Generated: 2026-08-31 00:18 UTC
+Model: gemini-3.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: FIX
+Company: Comfort Systems USA Inc.
+Sector: Industrials
+Market Cap: ~$16.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 24x  |  PEG: 1.09
+  - Debt/Equity: 0.15
+  - FCF Yield: 5.2%
+Investment Thesis:
+  The core growth driver is the massive demand for HVAC and electrical systems in data centers and advanced manufacturing facilities. Their moat lies in a highly skilled, localized labor force and deep relationships with general contractors. They are overlooked because they operate in a low-profile, fragmented industry, despite compound returns that rival tech giants.
+Key Risk:
+  Labor shortages or a sudden slowdown in data center construction.
+---
+Rank: 2
+Ticker: MEDP
+Company: Medpace Holdings Inc.
+Sector: Healthcare
+Market Cap: ~$11.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 22x  |  PEG: 1.22
+  - Debt/Equity: 0.05
+  - FCF Yield: 5.8%
+Investment Thesis:
+  A pure-play clinical research organization (CRO) focusing on small-to-mid-sized biotech companies. Their moat is a full-service, therapeutic-focused model that makes them indispensable to capital-constrained biotechs. They are overlooked because they avoid mega-cap pharma clients, which actually shields them from large-scale project cancellations.
+Key Risk:
+  Biotech funding dry spells or regulatory delays in drug approvals.
+---
+Rank: 3
+Ticker: BMI
+Company: Badger Meter Inc.
+Sector: Industrials
+Market Cap: ~$6.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 24x  |  PEG: 1.33
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.5%
+Investment Thesis:
+  Leading provider of smart water meters and flow measurement solutions for municipal water systems. The core driver is the urgent need for cities to upgrade aging infrastructure to prevent water loss and automate billing. Their moat is a massive installed base and proprietary software that locks in municipal clients for decades.
+Key Risk:
+  Municipal budget constraints or supply chain disruptions for electronic components.
+---
+Rank: 4
+Ticker: ROLL
+Company: RBC Bearings Inc.
+Sector: Industrials
+Market Cap: ~$8.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 20x  |  PEG: 1.43
+  - Debt/Equity: 0.30
+  - FCF Yield: 5.0%
+Investment Thesis:
+  Manufacturer of highly engineered precision bearings for aerospace, defense, and industrial applications. The tailwind is the prolonged aerospace recovery and rising global defense spending. Their moat is the high cost of failure for their products, making customers highly reluctant to switch to unproven competitors.
+Key Risk:
+  Cyclical downturns in industrial manufacturing or raw material price inflation.
+---
+Rank: 5
+Ticker: ENSG
+Company: The Ensign Group Inc.
+Sector: Healthcare
+Market Cap: ~$8.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 19x  |  PEG: 1.19
+  - Debt/Equity: 0.45
+  - FCF Yield: 6.2%
+Investment Thesis:
+  Operator of skilled nursing and senior living facilities, benefiting from the long-term demographic tailwind of an aging US population. Their moat is an opportunistic acquisition strategy, buying underperforming facilities and rapidly improving their operational efficiency. They are overlooked because the nursing home sector is perceived as low-margin and highly regulated.
+Key Risk:
+  Changes in Medicare/Medicaid reimbursement rates or nursing labor shortages.
+---
+Rank: 6
+Ticker: UFPI
+Company: UFP Industries Inc.
+Sector: Materials
+Market Cap: ~$7.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 13x  |  PEG: 1.18
+  - Debt/Equity: 0.08
+  - FCF Yield: 8.5%
+Investment Thesis:
+  A diversified wood and alternative materials manufacturer serving retail, industrial, and construction markets. Their moat is a vast distribution network and a highly decentralized management structure that optimizes local pricing power. They are overlooked as a simple lumber play, hiding their shift toward high-margin engineered packaging and structural components.
+Key Risk:
+  Volatility in lumber commodity prices or a sharp downturn in residential housing.
+---
+Rank: 7
+Ticker: BLD
+Company: TopBuild Corp.
+Sector: Consumer Discretionary
+Market Cap: ~$13.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 16x  |  PEG: 1.07
+  - Debt/Equity: 0.55
+  - FCF Yield: 7.0%
+Investment Thesis:
+  The leading installer of insulation and building envelope solutions in the US. The structural tailwind is the tightening of building energy-efficiency regulations and a chronic undersupply of US housing. Their moat is their national scale, which allows them to secure material supply when smaller competitors cannot.
+Key Risk:
+  A severe housing market crash or rising interest rates dampening new construction.
+---
+Rank: 8
+Ticker: HUBB
+Company: Hubbell Inc.
+Sector: Industrials
+Market Cap: ~$22.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.42
+  - Debt/Equity: 0.40
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Manufacturer of electrical and electronic products for utility, industrial, and commercial markets. The core driver is the massive, multi-decade upgrade cycle of the US electrical grid to support renewable energy and EV charging. Their moat is a dominant market share in critical utility components like connectors and insulators.
+Key Risk:
+  Delays in federal infrastructure funding or copper price volatility.
+---
+Rank: 9
+Ticker: EXPO
+Company: Exponent Inc.
+Sector: Industrials
+Market Cap: ~$5.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25x  |  PEG: 1.39
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.2%
+Investment Thesis:
+  A multidisciplinary engineering and scientific consulting firm that investigates accidents, product failures, and environmental issues. Their moat is an elite roster of PhD-level consultants and a reputation as the premier firm for high-stakes litigation defense. They are overlooked because they do not advertise and operate entirely behind the scenes of major corporate crises.
+Key Risk:
+  A decline in large-scale corporate litigation or difficulty recruiting top-tier scientific talent.
+---
+Rank: 10
+Ticker: NDSN
+Company: Nordson Corp.
+Sector: Industrials
+Market Cap: ~$14.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.42
+  - Debt/Equity: 0.35
+  - FCF Yield: 5.6%
+Investment Thesis:
+  Manufacturer of precision dispensing equipment used in electronics, medical devices, and consumer packaging. Their moat is the extremely high cost of failure for their components, which apply microscopic amounts of adhesives or fluids in high-speed assembly lines. They are overlooked because they operate in niche, highly technical markets with low public visibility.
+Key Risk:
+  A slowdown in global semiconductor or electronics manufacturing.
+---
+Rank: 11
+Ticker: SSD
+Company: Simpson Manufacturing Co. Inc.
+Sector: Industrials
+Market Cap: ~$7.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 16x  |  PEG: 1.33
+  - Debt/Equity: 0.12
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Designs and manufactures structural connectors, anchors, and fastening systems for wood and concrete construction. The core driver is the adoption of stricter building codes to withstand extreme weather events. Their moat is a trusted brand name and deep relationships with structural engineers who specify Simpson products in blueprints.
+Key Risk:
+  A downturn in commercial and residential construction activity.
+---
+Rank: 12
+Ticker: ATR
+Company: AptarGroup Inc.
+Sector: Materials
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 15x  |  PEG: 1.36
+  - Debt/Equity: 0.42
+  - FCF Yield: 6.0%
+Investment Thesis:
+  A global leader in drug delivery, consumer product dispensing, and active packaging solutions. Their moat is the high regulatory hurdle for pharmaceutical packaging, which creates long-term, sticky relationships with drug manufacturers. They are overlooked because they are categorized as a packaging company, masking their high-margin medical device characteristics.
+Key Risk:
+  Regulatory delays in FDA approvals for new drug delivery systems.
+---
+Rank: 13
+Ticker: MMS
+Company: Maximus Inc.
+Sector: Industrials
+Market Cap: ~$5.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 14x  |  PEG: 1.08
+  - Debt/Equity: 0.50
+  - FCF Yield: 7.5%
+Investment Thesis:
+  Administers government-sponsored health and human services programs, including Medicaid, Medicare, and student loan servicing. The tailwind is the increasing outsourcing of complex administrative tasks by state and federal governments. Their moat is a long track record of compliance and proprietary technology platforms that competitors cannot easily replicate.
+Key Risk:
+  Political shifts that change government program funding or contract renewal losses.
+---
+Rank: 14
+Ticker: SXI
+Company: Standex International Corp.
+Sector: Industrials
+Market Cap: ~$2.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 18x  |  PEG: 1.20
+  - Debt/Equity: 0.18
+  - FCF Yield: 6.8%
+Investment Thesis:
+  A diversified industrial manufacturer producing highly engineered components for electronics, energy, and medical markets. Their moat is their leadership in niche markets, such as reed switches and specialized hydraulics, where they face minimal competition. They are overlooked due to their conglomerate-like structure, which hides the high margins of their individual business units.
+Key Risk:
+  Integration risks from their active acquisition strategy or cyclical industrial demand.
+---
+Rank: 15
+Ticker: CR
+Company: Crane NXT Co.
+Sector: Technology
+Market Cap: ~$3.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 15x  |  PEG: 1.07
+  - Debt/Equity: 0.48
+  - FCF Yield: 7.2%
+Investment Thesis:
+  Provides security and validation technologies for cash, currency, and high-value brand protection. Their moat is proprietary micro-optics and software used in banknotes and secure transactions globally. They are overlooked as a legacy cash-handling business, ignoring their growth in digital brand protection and automated payment systems.
+Key Risk:
+  The long-term global decline in cash usage.
+---
+Rank: 16
+Ticker: QLYS
+Company: Qualys Inc.
+Sector: Technology
+Market Cap: ~$5.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 22x  |  PEG: 1.38
+  - Debt/Equity: 0.00
+  - FCF Yield: 6.5%
+Investment Thesis:
+  A pioneer in cloud-based security and compliance solutions, specializing in vulnerability management. Their moat is a single, integrated agent architecture that provides real-time visibility across a company's entire IT infrastructure. They are overlooked in favor of high-growth, unprofitable cybersecurity peers, despite maintaining industry-leading operating margins and cash flow.
+Key Risk:
+  Intense competition from larger, consolidated security platform providers.
+---
+Rank: 17
+Ticker: WSO
+Company: Watsco Inc.
+Sector: Industrials
+Market Cap: ~$19.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 21x  |  PEG: 1.40
+  - Debt/Equity: 0.10
+  - FCF Yield: 5.0%
+Investment Thesis:
+  The largest distributor of HVAC and refrigeration equipment in North America. Their moat is an extensive network of over 600 locations and exclusive distribution agreements with leading HVAC manufacturers like Carrier. They are overlooked because distribution is seen as a low-margin business, ignoring their immense pricing power and roll-up acquisition strategy.
+Key Risk:
+  A slowdown in residential renovation spending or supply chain bottlenecks.
+---
+Rank: 18
+Ticker: LANC
+Company: Lancaster Colony Corp.
+Sector: Consumer Staples
+Market Cap: ~$5.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 19x  |  PEG: 1.36
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.2%
+Investment Thesis:
+  A manufacturer of specialty food products, focusing on private-label and licensed restaurant brands (e.g., Olive Garden, Buffalo Wild Wings). Their moat is deep integration with major grocery chains and food service providers who rely on their custom formulation capabilities. They are overlooked as a slow-growth food stock, missing their consistent margin expansion and fortress balance sheet.
+Key Risk:
+  Rapid inflation in food commodity inputs like soybean oil and sugar.
+---
+Rank: 19
+Ticker: NEU
+Company: NewMarket Corp.
+Sector: Materials
+Market Cap: ~$5.6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 5%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 13x  |  PEG: 1.30
+  - Debt/Equity: 0.65
+  - FCF Yield: 8.0%
+Investment Thesis:
+  A global developer and manufacturer of petroleum additives for lubricants and fuels. Their moat is a highly consolidated oligopoly market with high barriers to entry due to complex chemical formulations and regulatory approvals. They are overlooked due to the perceived threat of electric vehicles, ignoring the long-term demand for high-performance fluids in hybrid and industrial applications.
+Key Risk:
+  A faster-than-expected global transition to pure battery electric vehicles.
+---
+Rank: 20
+Ticker: CHE
+Company: Chemed Corp.
+Sector: Healthcare
+Market Cap: ~$9.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.42
+  - Debt/Equity: 0.10
+  - FCF Yield: 5.8%
+Investment Thesis:
+  Operates VITAS Healthcare (the nation's largest hospice provider) and Roto-Rooter (the largest plumbing and drain cleaning service). Their moat is the dominant scale in two highly fragmented, recession-proof industries. They are overlooked because of the bizarre combination of businesses, which obscures the highly predictable, cash-generative nature of both segments.
+Key Risk:
+  Changes in Medicare reimbursement rates for hospice care or labor shortages in skilled plumbing.
+---
+Rank: 21
+Ticker: AWI
+Company: Armstrong World Industries Inc.
+Sector: Industrials
+Market Cap: ~$6.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 15x  |  PEG: 1.36
+  - Debt/Equity: 0.70
+  - FCF Yield: 7.0%
+Investment Thesis:
+  A leading manufacturer of commercial and residential ceiling and suspension systems. Their moat is a dominant market share in North America and an exclusive distribution network that locks out foreign competitors. They are overlooked because they are tied to commercial construction, ignoring the steady stream of high-margin renovation and acoustic upgrade projects.
+Key Risk:
+  A prolonged downturn in commercial office space utilization.
+---
+Rank: 22
+Ticker: LECO
+Company: Lincoln Electric Holdings Inc.
+Sector: Industrials
+Market Cap: ~$12.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 17x  |  PEG: 1.42
+  - Debt/Equity: 0.45
+  - FCF Yield: 5.5%
+Investment Thesis:
+  The global leader in arc welding and cutting equipment, and increasingly, automated welding systems. Their moat is a legendary brand reputation and a massive global distribution network. They are overlooked as a legacy industrial company, missing their growth in robotic automation and new high-speed EV charger manufacturing.
+Key Risk:
+  A global slowdown in heavy manufacturing and infrastructure spending.
+---
+Rank: 23
+Ticker: POWI
+Company: Power Integrations Inc.
+Sector: Technology
+Market Cap: ~$4.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 22x  |  PEG: 1.38
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Designs high-voltage analog integrated circuits used in power conversion. Their moat is their proprietary Gallium Nitride (GaN) technology, which allows for smaller, more energy-efficient power supplies. They are overlooked because they are a smaller player in the semiconductor space, despite being a key beneficiary of the global push for energy efficiency.
+Key Risk:
+  Intense competition from larger analog chipmakers or cyclical semiconductor downturns.
+---
+Rank: 24
+Ticker: GFL
+Company: GFL Environmental Inc.
+Sector: Industrials
+Market Cap: ~$16.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 18x  |  PEG: 1.20
+  - Debt/Equity: 1.10
+  - FCF Yield: 6.0%
+Investment Thesis:
+  The fourth-largest solid waste management company in North America. Their moat is the highly defensive nature of waste collection, combined with long-term municipal contracts and owned landfill assets. They are overlooked because of their higher leverage, which was used to fund rapid acquisitions that are now generating massive free cash flow.
+Key Risk:
+  High interest rates increasing the cost of refinancing their debt.
+---
+Rank: 25
+Ticker: TTC
+Company: The Toro Company
+Sector: Industrials
+Market Cap: ~$9.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 15x  |  PEG: 1.36
+  - Debt/Equity: 0.50
+  - FCF Yield: 6.2%
+Investment Thesis:
+  A leading manufacturer of turf maintenance, landscape, and smart irrigation equipment. Their moat is a highly respected brand portfolio (Toro, Ditch Witch) and a dominant position in professional golf course and sports field maintenance. They are overlooked as a seasonal consumer play, ignoring their highly profitable professional and underground construction segments.
+Key Risk:
+  Adverse weather patterns affecting seasonal demand or rising raw material costs.
+---
+Rank: 26
+Ticker: MIDD
+Company: The Middleby Corp.
+Sector: Industrials
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 14x  |  PEG: 1.17
+  - Debt/Equity: 0.40
+  - FCF Yield: 7.5%
+Investment Thesis:
+  A global leader in commercial foodservice equipment, specializing in kitchen automation and energy-efficient cooking technologies. Their moat is a portfolio of industry-standard brands and deep relationships with major global restaurant chains. They are overlooked due to short-term restaurant capital expenditure cycles, ignoring the long-term need for labor-saving automation in kitchens.
+Key Risk:
+  A prolonged slowdown in global restaurant industry expansion.
+---
+Rank: 27
+Ticker: HIFS
+Company: Hingham Institution for Savings
+Sector: Financials
+Market Cap: ~$0.6B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 12x  |  PEG: 1.20
+  - Debt/Equity: 0.12
+  - FCF Yield: 8.0%
+Investment Thesis:
+  A highly conservative, family-managed bank specializing in commercial real estate lending in Boston and Washington D.C. Their moat is an industry-leading efficiency ratio and an exceptionally low historical rate of loan defaults. They are overlooked because they do not engage in risky investment banking or rapid expansion, focusing instead on compounding book value.
+Key Risk:
+  A severe downturn in the commercial real estate markets of their core geographies.
+---
+Rank: 28
+Ticker: SCL
+Company: Stepan Company
+Sector: Materials
+Market Cap: ~$2.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 14x  |  PEG: 1.27
+  - Debt/Equity: 0.35
+  - FCF Yield: 7.2%
+Investment Thesis:
+  A leading manufacturer of surfactants used in cleaning products and polyurethane polyols used in insulation. Their moat is their deep integration into the supply chains of major consumer goods and construction companies. They are overlooked as a cyclical chemical company, missing their steady margin improvements from high-value specialty formulations.
+Key Risk:
+  Volatility in petrochemical feedstock prices.
+---
+Rank: 29
+Ticker: CCJ
+Company: Cameco Corp.
+Sector: Energy
+Market Cap: ~$24.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 25%
+  - P/E (fwd): 28x  |  PEG: 1.12
+  - Debt/Equity: 0.20
+  - FCF Yield: 5.0%
+Investment Thesis:
+  One of the world's largest producers of uranium, critical for the global transition to clean nuclear energy. Their moat is ownership of the world's highest-grade, lowest-cost uranium mines in Canada. They are overlooked by ESG-focused investors who historically avoided nuclear, despite the massive structural deficit in global uranium supply.
+Key Risk:
+  A major nuclear accident dampening global support for nuclear energy.
+---
+Rank: 30
+Ticker: HELE
+Company: Helen of Troy Ltd.
+Sector: Consumer Discretionary
+Market Cap: ~$1.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 4%
+  - EPS Growth (forward): 9%
+  - P/E (fwd): 10x  |  PEG: 1.11
+  - Debt/Equity: 0.55
+  - FCF Yield: 11.0%
+Investment Thesis:
+  A consumer products company with a portfolio of well-known brands (OXO, Hydro Flask, PUR). Their moat is strong brand equity in everyday household categories that command premium pricing. They are overlooked as a beaten-down retail stock, presenting a compelling deep-value turnaround opportunity with high free cash flow generation.
+Key Risk:
+  Failure to successfully execute their operational restructuring and brand revitalization plans.
+---
+
+== SELECTION METHODOLOGY ==
+The screening process was designed to filter out highly volatile, momentum-driven stocks and mega-cap market leaders, focusing instead on high-quality small-to-mid-cap companies ($500M to $50B market cap) with durable competitive advantages. We prioritized companies with consistent revenue and earnings growth, strong balance sheets (low debt-to-equity), and attractive valuations relative to their growth potential (PEG < 1.5). Key structural themes informing our selection include the modernization of the US electrical grid, municipal water infrastructure upgrades, demographic tailwinds in senior healthcare, industrial automation, and the global nuclear energy renaissance. By focusing on niche market leaders with high customer switching costs and essential product offerings, this watchlist identifies overlooked compounders capable of delivering superior long-term risk-adjusted returns.
+
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: FIX
+公司: Comfort Systems USA Inc.
+產業: 工業
+市值: ~$16.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 22%
+  - 本益比（預估）: 24x  |  本益成長比: 1.09
+  - 負債權益比: 0.15
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  核心成長驅動因素是數據中心和先進製造設施對暖通空調（HVAC）和電氣系統的巨大需求。他們的護城河在於高度專業化、在地化的勞動力以及與總承包商的深厚關係。他們被忽視是因為其運營於低調且分散的產業中，儘管其複合回報率堪比科技巨頭。
+主要風險:
+  勞動力短缺或數據中心建設突然放緩。
+---
+排名: 2
+代碼: MEDP
+公司: Medpace Holdings Inc.
+產業: 醫療保健
+市值: ~$11.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 22x  |  本益成長比: 1.22
+  - 負債權益比: 0.05
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  一家專注於中小型生技公司的純臨床研究機構（CRO）。他們的護城河在於全方位服務、專注於特定療法的模式，這使他們對資金受限的生技公司而言不可或缺。他們被忽視是因為避開了大型製藥客戶，這實際上保護了他們免受大規模項目取消的影響。
+主要風險:
+  生技融資枯竭期或藥物批准的監管延遲。
+---
+排名: 3
+代碼: BMI
+公司: Badger Meter Inc.
+產業: 工業
+市值: ~$6.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 24x  |  本益成長比: 1.33
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  城市水務系統智慧水錶和流量測量解決方案的領先供應商。核心驅動因素是城市迫切需要升級老化基礎設施以防止水資源流失並自動化計費。他們的護城河在於龐大的安裝基礎和鎖定市政客戶數十年的專有軟體。
+主要風險:
+  市政預算限制或電子元件的供應鏈中斷。
+---
+排名: 4
+代碼: ROLL
+公司: RBC Bearings Inc.
+產業: 工業
+市值: ~$8.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 20x  |  本益成長比: 1.43
+  - 負債權益比: 0.30
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  用於航空航天、國防和工業應用的高度工程化精密軸承製造商。行業順風是長期的航空航天復甦和全球國防開支的增長。他們的護城河在於其產品極高的故障成本，這使得客戶非常不願意轉向未經證實的競爭對手。
+主要風險:
+  工業製造的週期性低迷或原材料價格通膨。
+---
+排名: 5
+代碼: ENSG
+公司: The Ensign Group Inc.
+產業: 醫療保健
+市值: ~$8.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 19x  |  本益成長比: 1.19
+  - 負債權益比: 0.45
+  - 自由現金流殖利率: 6.2%
+投資論點:
+  專業護理和養老設施的運營商，受益於美國人口老齡化的長期人口結構紅利。他們的護城河在於機會主義的收購策略，即購買運營不佳的設施並迅速提高其運營效率。他們被忽視是因為養老院板塊被認為是低利潤且受到高度監管的。
+主要風險:
+  聯邦醫療保險/醫療補助（Medicare/Medicaid）報銷率的變化或護理勞動力短缺。
+---
+排名: 6
+代碼: UFPI
+公司: UFP Industries Inc.
+產業: 材料
+市值: ~$7.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 13x  |  本益成長比: 1.18
+  - 負債權益比: 0.08
+  - 自由現金流殖利率: 8.5%
+投資論點:
+  一家服務於零售、工業和建築市場的多元化木材和替代材料製造商。他們的護城河是龐大的分銷網絡和高度去中心化的管理結構，這優化了當地的定價權。他們被忽視為單純的木材股，這掩蓋了他們向高利潤工程包裝和結構部件的轉型。
+主要風險:
+  木材商品價格的波動或住宅市場的急劇下滑。
+---
+排名: 7
+代碼: BLD
+公司: TopBuild Corp.
+產業: 非必需消費品
+市值: ~$13.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 16x  |  本益成長比: 1.07
+  - 負債權益比: 0.55
+  - 自由現金流殖利率: 7.0%
+投資論點:
+  美國領先的保溫材料和建築外殼解決方案安裝商。結構性順風是建築節能法規的收緊以及美國住房的長期供應不足。他們的護城河在於其全國性的規模，這使他們能夠在較小競爭對手無法獲得材料供應時確保材料供應。
+主要風險:
+  嚴重的房地產市場崩潰或利率上升抑制新建築需求。
+---
+排名: 8
+代碼: HUBB
+公司: Hubbell Inc.
+產業: 工業
+市值: ~$22.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 17x  |  本益成長比: 1.42
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  用於公用事業、工業和商業市場的電氣和電子產品製造商。核心驅動因素是美國電網為支持可再生能源和電動汽車充電而進行的長達數十年的大規模升級週期。他們的護城河在於在連接器和絕緣體等關鍵公用事業部件中佔據主導市場份額。
+主要風險:
+  聯邦基礎設施資金撥付延遲或銅價波動。
+---
+排名: 9
+代碼: EXPO
+公司: Exponent Inc.
+產業: 工業
+市值: ~$5.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 25x  |  本益成長比: 1.39
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.2%
+投資論點:
+  一家多學科工程和科學諮詢公司，專門調查事故、產品故障和環境問題。他們的護城河在於擁有博士級顧問的精英名冊，以及作為高風險訴訟辯護首選公司的聲譽。他們被忽視是因為他們不打廣告，完全在重大企業危機的幕後運作。
+主要風險:
+  大型企業訴訟減少或難以招募頂尖科學人才。
+---
+排名: 10
+代碼: NDSN
+公司: Nordson Corp.
+產業: 工業
+市值: ~$14.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 17x  |  本益成長比: 1.42
+  - 負債權益比: 0.35
+  - 自由現金流殖利率: 5.6%
+投資論點:
+  用於電子、醫療設備和消費包裝的精密點膠設備製造商。他們的護城河在於其部件極高的故障成本，這些部件在高速裝配線上塗抹微量的粘合劑或流體。他們被忽視是因為他們在公眾知名度較低、技術性極強的利基市場中運營。
+主要風險:
+  全球半導體或電子製造業放緩。
+---
+排名: 11
+代碼: SSD
+公司: Simpson Manufacturing Co. Inc.
+產業: 工業
+市值: ~$7.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 16x  |  本益成長比: 1.33
+  - 負債權益比: 0.12
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  設計和製造用於木材和混凝土建築的結構連接器、錨栓和緊固系統。核心驅動因素是採用更嚴格的建築規範以抵禦極端天氣事件。他們的護城河是值得信賴的品牌名稱，以及與在藍圖中指定 Simpson 產品的結構工程師的深厚關係。
+主要風險:
+  商業和住宅建築活動低迷。
+---
+排名: 12
+代碼: ATR
+公司: AptarGroup Inc.
+產業: 材料
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 15x  |  本益成長比: 1.36
+  - 負債權益比: 0.42
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  藥物遞送、消費品點膠和活性包裝解決方案的全球領導者。他們的護城河在於製藥包裝的高監管壁壘，這與藥物製造商建立了長期、粘性的關係。他們被忽視是因為他們被歸類為包裝公司，掩蓋了其高利潤醫療設備的特徵。
+主要風險:
+  新型藥物遞送系統獲得 FDA 批准的監管延遲。
+---
+排名: 13
+代碼: MMS
+公司: Maximus Inc.
+產業: 工業
+市值: ~$5.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 14x  |  本益成長比: 1.08
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  管理政府資助的健康和公共服務項目，包括醫療補助（Medicaid）、聯邦醫療保險（Medicare）和學生貸款服務。行業順風是州和聯邦政府越來越多地將複雜的行政任務外包。他們的護城河在於長期的合規記錄和競爭對手無法輕易複製的專有技術平台。
+主要風險:
+  改變政府項目資金的政治轉變或合同流失。
+---
+排名: 14
+代碼: SXI
+公司: Standex International Corp.
+產業: 工業
+市值: ~$2.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 18x  |  本益成長比: 1.20
+  - 負債權益比: 0.18
+  - 自由現金流殖利率: 6.8%
+投資論點:
+  一家多元化的工業製造商，為電子、能源和醫療市場生產高度工程化的部件。他們的護城河在於他們在磁簧開關和專業液壓等利基市場的領導地位，在這些市場中他們面臨極少的競爭。由於其類似集團的結構，他們被忽視了，這掩蓋了其各個業務部門的高利潤率。
+主要風險:
+  其積極收購策略帶來的整合風險或週期性工業需求。
+---
+排名: 15
+代碼: CR
+公司: Crane NXT Co.
+產業: 科技
+市值: ~$3.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 15x  |  本益成長比: 1.07
+  - 負債權益比: 0.48
+  - 自由現金流殖利率: 7.2%
+投資論點:
+  為現金、貨幣和高價值品牌保護提供安全和驗證技術。他們的護城河在於全球紙幣和安全交易中使用的專有微光學技術和軟體。他們被忽視為傳統的現金處理業務，忽視了他們在數字品牌保護和自動支付系統方面的成長。
+主要風險:
+  全球現金使用量長期下降。
+---
+排名: 16
+代碼: QLYS
+公司: Qualys Inc.
+產業: 科技
+市值: ~$5.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 22x  |  本益成長比: 1.38
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  基於雲的安全和合規解決方案的先驅，專注於漏洞管理。他們的護城河在於單一、集成的代理架構，可提供跨公司整個 IT 基礎設施的實時可見性。儘管保持了行業領先的運營利潤率和現金流，但他們在偏好高成長、無利潤的網絡安全同行的市場中被忽視。
+主要風險:
+  來自大型綜合安全平台提供商的激烈競爭。
+---
+排名: 17
+代碼: WSO
+公司: Watsco Inc.
+產業: 工業
+市值: ~$19.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 21x  |  本益成長比: 1.40
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  北美最大的暖通空調（HVAC）和製冷設備分銷商。他們的護城河在於擁有 600 多個網點的廣泛網絡，以及與 Carrier 等領先 HVAC 製造商的獨家分銷協議。他們被忽視是因為分銷被視為低利潤業務，忽視了其巨大的定價權和連鎖收購策略。
+主要風險:
+  住宅裝修支出放緩或供應鏈瓶頸。
+---
+排名: 18
+代碼: LANC
+公司: Lancaster Colony Corp.
+產業: 主要消費品
+市值: ~$5.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 19x  |  本益成長比: 1.36
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  一家特色食品製造商，專注於自有品牌和授權餐廳品牌（例如 Olive Garden、Buffalo Wild Wings）。他們的護城河在於與主要連鎖超市和食品服務提供商的深度融合，這些渠道依賴於他們的定制配方能力。他們被忽視為低成長的食品股，錯過了其持續的利潤率擴張和堡壘般的資產負債表。
+主要風險:
+  大豆油和糖等食品原材料投入的快速通膨。
+---
+排名: 19
+代碼: NEU
+公司: NewMarket Corp.
+產業: 材料
+市值: ~$5.6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 5%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 13x  |  本益成長比: 1.30
+  - 負債權益比: 0.65
+  - 自由現金流殖利率: 8.0%
+投資論點:
+  用於潤滑油和燃料的石油添加劑的全球開發商和製造商。他們的護城河在於高度集中的寡頭壟斷市場，由於複雜的化學配方和監管批准，進入壁壘極高。由於電動汽車的潛在威脅，他們被忽視了，忽視了混合動力和工業應用中對高性能流體的長期需求。
+主要風險:
+  全球向純電池電動汽車的轉型速度快於預期。
+---
+排名: 20
+代碼: CHE
+公司: Chemed Corp.
+產業: 醫療保健
+市值: ~$9.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 17x  |  本益成長比: 1.42
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  運營 VITAS Healthcare（全國最大的臨終關懷提供商）和 Roto-Rooter（最大的管道和排水管清潔服務）。他們的護城河在於在兩個高度分散、抗衰退的產業中佔據主導規模。他們被忽視是因為這種奇特的業務組合，這掩蓋了這兩個板塊高度可預測、產生現金的本質。
+主要風險:
+  臨終關懷的聯邦醫療保險報銷率變化或熟練管道工的勞動力短缺。
+---
+排名: 21
+代碼: AWI
+公司: Armstrong World Industries Inc.
+產業: 工業
+市值: ~$6.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 15x  |  本益成長比: 1.36
+  - 負債權益比: 0.70
+  - 自由現金流殖利率: 7.0%
+投資論點:
+  商業和住宅天花板及懸掛系統的領先製造商。他們的護城河在於在北美佔據主導市場份額，以及將國外競爭對手拒之門外的獨家分銷網絡。他們被忽視是因為他們與商業建築緊密相連，忽視了高利潤翻新和聲學升級項目的穩定流動。
+主要風險:
+  商業辦公空間利用率長期低迷。
+---
+排名: 22
+代碼: LECO
+公司: Lincoln Electric Holdings Inc.
+產業: 工業
+市值: ~$12.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 17x  |  本益成長比: 1.42
+  - 負債權益比: 0.45
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  電弧焊和切割設備以及越來越多的自動化焊接系統的全球領導者。他們的護城河在於傳奇的品牌聲譽和龐大的全球分銷網絡。他們被忽視為傳統工業公司，錯過了他們在機器人自動化和新型高速電動汽車充電器製造方面的成長。
+主要風險:
+  全球重工業和基礎設施支出放緩。
+---
+排名: 23
+代碼: POWI
+公司: Power Integrations Inc.
+產業: 科技
+市值: ~$4.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 22x  |  本益成長比: 1.38
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  設計用於電源轉換的高壓模擬集成電路。他們的護城河在於其專有的氮化鎵（GaN）技術，該技術允許更小、更節能的電源。他們被忽視是因為他們是半導體領域較小的參與者，儘管他們是全球推動節能的關鍵受益者。
+主要風險:
+  來自大型模擬晶片製造商的激烈競爭或週期性半導體低迷。
+---
+排名: 24
+代碼: GFL
+公司: GFL Environmental Inc.
+產業: 工業
+市值: ~$16.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 18x  |  本益成長比: 1.20
+  - 負債權益比: 1.10
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  北美第四大固體廢物管理公司。他們的護城河在於廢物收集的高度防禦性，結合長期的市政合同和擁有的垃圾填埋場資產。他們被忽視是因為其較高的槓桿率，這些資金曾用於資助快速收購，而現在這些收購正在產生巨大的自由現金流。
+主要風險:
+  高利率增加了其債務再融資的成本。
+---
+排名: 25
+代碼: TTC
+公司: The Toro Company
+產業: 工業
+市值: ~$9.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 15x  |  本益成長比: 1.36
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 6.2%
+投資論點:
+  草坪維護、景觀和智慧灌溉設備的領先製造商。他們的護城河在於備受推崇的品牌組合（Toro、Ditch Witch）以及在專業高爾夫球場和運動場維護中的主導地位。他們被忽視為季節性消費股，忽視了其高利潤的專業和地下建設板塊。
+主要風險:
+  影響季節性需求的惡劣天氣模式或原材料成本上升。
+---
+排名: 26
+代碼: MIDD
+公司: The Middleby Corp.
+產業: 工業
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 14x  |  本益成長比: 1.17
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  商業餐飲服務設備的全球領導者，專注於廚房自動化和節能烹飪技術。他們的護城河在於行業標準品牌組合以及與全球主要連鎖餐廳的深厚關係。由於短期餐廳資本支出週期，他們被忽視了，忽視了廚房中節省勞動力的自動化的長期需求。
+主要風險:
+  全球餐飲業擴張長期放緩。
+---
+排名: 27
+代碼: HIFS
+公司: Hingham Institution for Savings
+產業: 金融
+市值: ~$0.6B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 12x  |  本益成長比: 1.20
+  - 負債權益比: 0.12
+  - 自由現金流殖利率: 8.0%
+投資論點:
+  一家高度保守、家族管理的銀行，專門從事波士頓和華盛頓特區的商業房地產貸款。他們的護城河在於行業領先的效率比和極低的歷史貸款違約率。他們被忽視是因為他們不參與高風險的投資銀行業務或快速擴張，而是專注於複合賬面價值。
+主要風險:
+  其核心地區商業房地產市場的嚴重低迷。
+---
+排名: 28
+代碼: SCL
+公司: Stepan Company
+產業: 材料
+市值: ~$2.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 14x  |  本益成長比: 1.27
+  - 負債權益比: 0.35
+  - 自由現金流殖利率: 7.2%
+投資論點:
+  用於清潔產品的表面活性劑和用於保溫材料的聚氨酯多元醇的領先製造商。他們的護城河在於他們深度融入主要消費品和建築公司的供應鏈。他們被忽視為週期性化學品公司，錯過了高價值特種配方帶來的穩定利潤率改善。
+主要風險:
+  石化原料價格的波動。
+---
+排名: 29
+代碼: CCJ
+公司: Cameco Corp.
+產業: 能源
+市值: ~$24.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 25%
+  - 本益比（預估）: 28x  |  本益成長比: 1.12
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  全球最大的鈾生產商之一，對全球向清潔核能轉型至關重要。他們的護城河在於擁有加拿大全球最高品位、最低成本的鈾礦。儘管全球鈾供應存在巨大的結構性赤字，但歷史上避開核能的 ESG 投資者忽視了他們。
+主要風險:
+  重大的核事故抑制了全球對核能的支持。
+---
+排名: 30
+代碼: HELE
+公司: Helen of Troy Ltd.
+產業: 非必需消費品
+市值: ~$1.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 4%
+  - 每股盈餘成長（預估）: 9%
+  - 本益比（預估）: 10x  |  本益成長比: 1.11
+  - 負債權益比: 0.55
+  - 自由現金流殖利率: 11.0%
+投資論點:
+  一家消費品公司，擁有一系列知名品牌（OXO、Hydro Flask、PUR）。他們的護城河在於在日常家用產品類別中擁有強大的品牌權益，這些產品具有溢價定價能力。他們被忽視為遭受重創的零售股，呈現出具有高自由現金流生成能力的極具吸引力的深層價值轉機機會。
+主要風險:
+  未能成功執行其運營重組和品牌振興計劃。
+---
+
+== 選股方法論 ==
+篩選流程旨在過濾掉高波動性、動能驅動的股票以及超大型市值市場龍頭，轉而專注於具有持久競爭優勢的高品質中小型股（市值介於 5 億至 500 億美元之間）。我們優先選擇營收與盈餘持續成長、資產負債表強健（低負債權益比），且相較於其成長潛力估值具吸引力（PEG < 1.5）的公司。引導我們選股的關鍵結構性主題包括：美國電網現代化、城市水務基礎設施升級、老年醫療保健的人口結構紅利、工業自動化以及全球核能復興。透過專注於具有高客戶轉換成本和必需產品的利基市場領導者，此觀察名單識別出被市場忽視的優質複利企業，這些企業有能力提供卓越的長期風險調整後報酬。
