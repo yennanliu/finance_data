@@ -15,124 +15,118 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-09-01
 
 ## 🏢 公司概覽
-威騰電子（Western Digital Corporation，NASDAQ: WDC）是全球領先的資料儲存解決方案供應商，核心業務橫跨大容量傳統硬碟（HDD）與快閃記憶體（NAND Flash / SSD）。隨著人工智慧（AI）算力與大模型資料庫對高頻寬、高密度儲存架構的需求爆發，WDC 於雲端超大規模資料中心（Hyperscalers）與企業級伺服器儲存市場佔據關鍵戰略地位。
+威騰電子（Western Digital Corporation，NASDAQ: WDC）是全球領先的數據儲存技術與解決方案供應商，核心業務橫跨企業級機械硬碟（HDD）與基於 NAND Flash 相關儲存解決方案（包含 SanDisk 業務體系）。隨著生成式 AI、雲端超大規模資料中心（Hyperscale Data Centers）以及高效能運算對海量儲存與高速存取需求的爆炸性增長，WDC 在 AI 儲存架構中佔據了關鍵的供應鏈樞紐地位。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期圍繞 Western Digital（WDC）的市場資訊呈現「長期 AI 儲存紅利確立」與「短期高檔獲利了結震盪」並存的格局。
+威騰電子（WDC）近期在資本市場展現了極高的關注度與顯著的波動性。受惠於全球生成式 AI 基礎設施對大容量與高速儲存設備的強勁拉動，WDC 股價在 2026 年展現驚人爆發力，年內累計漲幅一度超過 470%，最新股價報收於 450.44 美元。然而，在經歷歷史性的主升段行情後，市場近期出現高檔震盪與獲利了結賣壓，過去一個月內股價自高點回調約 13%。
 
-從產業基本面來看，AI 資料儲存需求進入高速增長期，帶動 WDC 今年以來股價累計飆升逾 470%。Nvidia 揭露高達 2,790 億美元的供應商承諾，加上市場對記憶體供不應求的預期，直接引爆包含 WDC、Micron（MU）、Seagate（STX）及 SanDisk（SNDK）在內的記憶體與儲存族群集體大漲，推動 DRAM 與相關儲存板塊實現堅實突破。市場分析亦指出，在潛在 AI 儲存協議談判的推動下，WDC 股價可能存在高達 49% 的低估空間，甚至有機構預期其在記憶體短缺浪潮下未來 3 年具備大幅上漲潛力。此外，前總統川普公開讚揚記憶體大廠的言論亦為美系儲存供應鏈提供了題材動能。
+基本面與產業鏈方面，AI 浪潮帶來的外溢效益持續擴大。NVIDIA 最新披露高達 2,790 億美元的供應商承諾，不僅帶動美光（Micron）等記憶體指標股受到政商高層高度讚譽，亦直接確立了整體儲存與記憶體板塊的長期成長動能。與此同時，Zacks 與多家研調機構均指出，包括 WDC、SanDisk 在內的儲存巨頭將直接受惠於伺服器出貨放量與 DRAM/NAND 產業週期的全面復甦。
 
-然而，在經歷極致暴漲後，籌碼面出現顯著分歧。WDC 近期自歷史高點一度大幅拉回 45%，單月跌幅達 13%，且在 8 月 31 日單日下跌 3.05%。市場回檔主因包括：主要股東計劃於 2026 年進行持股出售帶來的流動性壓力、科技股整體避險情緒升溫，以及投資人對儲存週期估值是否過度透支的獲利了結賣壓。整體而言，WDC 處於 AI 基本面爆發與技術性大幅洗盤的關鍵交會點。
+儘管 WDC 先前公布了大幅超越市場預期的強勁財報，但股價在財報公布後卻因前期漲幅過大而出現回吐；此外，公司高層 Cynthia Tregillis 近期出售價值約 69.6 萬美元的持股，亦引發部分投資人對內部人動向的關注。不過，Simply Wall St 及相關估值分析指出，在 AI 儲存潛在大型合作案與獲利爆發力的支撐下，WDC 股價在經歷本次劇烈拉回後仍具備吸引力，部分分析甚至認為其潛在低估幅度高達 49%。整體而言，市場目前正處於「短期獲利回吐消化」與「中長期產業超級循環啟動」的多空交織階段。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **AI 儲存基礎架構需求重估（Valuation Re-rating）**：WDC 年初至今上漲超過 470%，顯示市場已將儲存板塊定位從傳統「低本益比週期股」轉換為「AI 算力基礎設施核心受惠者」。AI 大模型訓練與推理對近線儲存（Nearline HDD）與高速 SSD 的剛性需求，正在推升產業結構性定價能力。
-- **Nvidia 供應鏈承諾外溢效應**：Nvidia 揭露 2,790 億美元的供應商採購承諾，驗證了全球算力擴張並未降溫，儲存與記憶體作為 GPU 協同運作不可或缺的環節，直接帶動板塊資金回流，確立 DRAM 與快閃記憶體突破行情。
-- **高位技術性修正與估值消化**：股價自高點顯著拉回 45% 及單月下挫 13%，反映前期漲幅過大後的籌碼沉澱過程。這類健康的回檔有助於舒緩過熱指標，並為中長線機構資金創造更具吸引力的重新進場點。
-- **潛在重大 AI 儲存合作協議的溢價空間**：市場傳出 WDC 正在進行重大 AI 儲存商業談判，分析認為其潛在價值修復空間達 49%，若合約正式落地，將成為下半年營收與利潤率上修的最強催化劑。
-- **內部人/大股東售股計畫之籌碼干擾**：股東申報 2026 年減持計畫，引發短期市場對籌碼鬆動的擔憂，導致 8 月 31 日單日收跌 3.05%，短期內股價或將受制於大額減持心理預期。
-- **地緣政治與政策面題材加持**：美國政界（如川普等）高度關注美系記憶體與儲存自主供應鏈，對本土晶片與儲存巨頭的正面表態，為美系大廠 WDC 與 MU 增添政策性防禦與溢價支撐。
+- **AI 儲存超級循環確立，產業鏈外溢效應顯著**：NVIDIA 釋出高達 2,790 億美元的供應商承諾，印證了 AI 伺服器對高頻寬記憶體與大容量儲存的剛性需求。WDC 作為儲存核心供應商，中長期營收動能無虞。
+- **年內大漲 470% 後的高檔換手與健康回檔**：WDC 股價年內漲幅驚人，近一個月回調 13% 屬於典型的高檔獲利了結與浮額清洗，並非基本面惡化所致，反而降低了短線過熱風險。
+- **財報超預期卻遭拋售，市場預期門檻提高**：先前財報「利多出盡」式的回跌，反映市場對估值的嚴苛檢驗。未來推動股價進一步創高的核心催化劑，將取決於 AI 專用儲存訂單的實質營收轉化率。
+- **記憶體與 NAND 週期步入強勁復甦區間**：Seeking Alpha 與產業分析強調 SanDisk 週期反轉與 DRAM 復甦不可忽視，儲存產業正從過去的供需失衡低谷轉向定價權回升的上升通道。
+- **估值修復潛力依然龐大**：多家機構分析模型顯示，計入 AI 儲存專案與盈利預估上修後，WDC 股價在回調後仍顯便宜，潛在低估空間最高達 49%，提供具備安全邊際的切入機會。
+- **內部人減持規模有限，實質影響偏向情緒面**：高層 Cynthia Tregillis 減持約 69.6 萬美元持股，相較於公司龐大市值而言金額極小，研判為例行性資產配置，不影響營運中長期向上趨勢。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-08-31 | Western Digital (NASDAQ: WDC) shareholder plans 2026 stock sale — Stock Titan
-- 2026-08-31 | Western Digital Corp Stock (WDC) Moved Down by 3.05% on Aug 31: Drivers Behind the Movement — TradingKey
-- 2026-08-30 | Why WDC, MU, STX, SNDK Stocks Rallied Hard Today And Lifted DRAM To ‘Solid Breakout’ — Stocktwits
+- 2026-09-01 | SanDisk: Don't Underestimate The Cycle — Seeking Alpha
+- 2026-09-01 | DRAM: Final Call Before The Recovery Takes Off Without You — Seeking Alpha
 - 2026-08-29 | Western Digital Stock Is Up Over 470% This Year. Can the AI Storage Boom Continue? — TIKR.com
+- 2026-08-28 | Broadcom: I Am Hedging Before Q3; You Should Too — Seeking Alpha
+- 2026-08-28 | Western Digital Just Dropped 13% in a Month. Is It Time to Sell? — Yahoo Finance
 - 2026-08-28 | Trump Calls Micron One of the World’s “Hottest” Companies a Day After Nvidia Disclosed $279 Billion in Supplier Commitments — Yahoo Finance
-- 2026-08-28 | Western Digital Just Dropped 13% in a Month. Is It Time to Sell? — 24/7 Wall St. (Bing News)
 - 2026-08-28 | 4 High-Flying Memory & Storage Giants to Gain More Amid NVDA's Solid Q2 — Yahoo Finance
 - 2026-08-28 | Zacks Industry Outlook Western Digital, Sandisk and Super Micro Computer — Yahoo Finance
-- 2026-08-27 | AI, chip stocks mixed after Nvidia's stellar earnings results — Seeking Alpha
-- 2026-08-26 | Western Digital stock is down sharply: Why the bull case still looks strong — MSN (Bing News)
-- 2026-08-25 | Prediction: This Memory Stock Will Soar 165% in 3 Years (Hint: It's not Micron or Sandisk) — MSN (Bing News)
-- 2026-08-24 | What's going on with Western Digital stock Monday? — MSN (Bing News)
-- 2026-08-17 | Why Western Digital Stock Popped Today — MSN (Bing News)
+- 2026-08-28 | Western Digital’s Cynthia Tregillis sells $696,279 in WDC stock — investing.com
+- 2026-08-26 | Western Digital (WDC) Stock Still Looks Cheap After Its Sharp Pullback — simplywall.st
 - 2026-08-06 | Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance
+- 2026-08-06 | Why Western Digital Stock Is Tumbling Despite A Big Earnings Beat — Investor's Business Daily
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. AI 儲存爆發推升年漲幅逾 470%，面臨高檔劇烈回檔（45% 修正）
-- **核心內容**：WDC 受惠於 AI 儲存超級週期，今年累計漲幅突破 470%，但近期自高點大幅拉回 45%，單月跌幅 13%。
-- **營運與財務影響**：股價的巨大漲幅來自於 AI 伺服器對高容量近線 HDD 與企業級 SSD 的強勁拉貨，使得毛利率與平均售價（ASP）顯著優於傳統週期水平。45% 的技術性回檔並非基本面崩壞，而是獲利盤湧出與市場對短期儲存定價是否見頂的重新定價。
-- **投資啟示**：高 Beta 屬性在多頭市場提供極佳彈性，但在估值重整期波動加劇。中長線看多邏輯（AI 儲存剛需、結構性供需緊俏）依然穩固。
+### 1. 股價年漲 470% 後月跌 13%：AI 儲存動能的持續性驗證
+- **新聞核心**：WDC 股價今年累計上漲超過 470%，但近一個月出現 13% 的顯著回檔，市場正激烈爭論 AI 儲存熱潮能否延續（來源：TIKR.com、Yahoo Finance）。
+- **營運與財務影響**：股價暴漲反映了市場對 AI 儲存架構升級的強烈樂觀預期。由於大模型訓練與推論需要海量數據儲存支援，WDC 產品線需求持續緊俏。短期 13% 的拉回主要來自機構法人的部位調整與獲利落袋，並不代表基本面轉折。
+- **投資啟示**：高漲幅後的價格震盪能有效沉澱籌碼。只要下游雲端服務商（CSP）的資本支出未見縮減，技術性拉回反倒為中長線買盤提供更具吸引力的風險報酬比。
 
-### 2. Nvidia 供應鏈承諾（$2,790 億）與儲存族群集體突破
-- **核心內容**：Nvidia 公布龐大供應商承諾，隨後 WDC、MU、STX、SNDK 等記憶體儲存股強勢上攻，推動記憶體板塊呈現突破行情。
-- **營運與財務影響**：Nvidia 的資本支出指引消除了市場對「AI 算力擴張放緩」的疑慮。GPU 叢集的擴展必然伴隨海量資料儲存與檢索需求，直接確保了 WDC 在 2026-2027 年的訂單能見度。
-- **投資啟示**：儲存族群與算力巨頭（NVDA）呈現高度正相關連動，族群性集體突破確認了資金正大規模回流硬體基礎設施供應鏈。
+### 2. NVIDIA 披露 2,790 億美元供應商承諾，記憶體與儲存板塊全面受益
+- **新聞核心**：NVIDIA 披露高達 2,790 億美元的供應鏈採購承諾，帶動美光（Micron）及整體記憶體/儲存板塊巨頭受到市場強烈追捧（來源：Yahoo Finance）。
+- **營運與財務影響**：AI 晶片出貨的指數級成長，必然伴隨等比例甚至超額的儲存硬體配置。NVIDIA 的龐大供應鏈承諾直接消除了市場對 AI 基礎設施投資可能放緩的疑慮，為 WDC 在企業級儲存產品的報價與出貨量提供了極強的能見度。
+- **投資啟示**：儲存產業已從傳統的 PC/消費性電子週期，轉型為由 AI 伺服器主導的結構性增長。WDC 在產業鏈中處於寡占地位，將持續享受量價齊揚的紅利。
 
-### 3. AI 儲存重大協議洽談與 49% 潛在估值修復
-- **核心內容**：市場傳出 WDC 正與大型科技客戶洽談 AI 專用儲存架構協議，分析評估其存在 49% 的低估空間。
-- **營運與財務影響**：傳統儲存採購多為分散式季度合約，若能鎖定長期高利潤的 AI 專用儲存長期供貨協議（LTA），將大幅降低週期波動，提升現金流能見度與市場賦予的本益比倍數。
-- **投資啟示**：該項協議是 WDC 走出回檔陰霾、重啟主升段行情的關鍵基本面催化劑。
+### 3. 財報超預期後的非理性回檔與 49% 潛在低估空間
+- **新聞核心**：WDC 先前公布了顯著優於預期的季度業績，但股價隨後逆勢大跌；然而，分析指出在 AI 儲存合作案推進下，WDC 潛在低估幅度達 49%（來源：Investor's Business Daily、Yahoo Finance、simplywall.st）。
+- **營運與財務影響**：業績大好卻伴隨股價下跌，主要係因市場前期定價過於完美，短期買盤力竭導致獲利了結。然而，隨著獲利預測進一步上調，以及 AI 專案商業談判持續發酵，WDC 的本益比與本淨比在回檔後顯著降溫，大幅提升了評價吸引力。
+- **投資啟示**：市場情緒往往在短期過度反應。當基本面超預期與股價回檔產生背離，且多項估值模型顯示低估達 49% 時，通常預示著中線買點的浮現。
 
-### 4. 股東 2026 年減持計畫公布與單日下挫 3.05%
-- **核心內容**：公告顯示重要股東已規劃於 2026 年出售 WDC 股份，引發 8 月 31 日股價回跌 3.05%。
-- **營運與財務影響**：股東於股價大漲數倍後進行資產配置再平衡屬常見現象，不直接影響日常營運或現金流，但在心理層面上對多頭追價信心構成短期壓制。
-- **投資啟示**：短期需觀察減持規模與市場吸收籌碼的能力，股價在消化拋壓期間可能呈現區間震盪整理。
+### 4. SanDisk 與 DRAM 週期全面啟動，產業步入上升軌道
+- **新聞核心**：產業最新研究指出，切勿低估 SanDisk 與 DRAM 儲存週期的爆發力，產業正處於全面復甦的起點（來源：Seeking Alpha、Zacks）。
+- **營運與財務影響**：儲存產業具有強烈的資本支出與庫存循環特徵。過去幾季的減產效應已帶動供需結構反轉，NAND Flash 價格與毛利率持續改善，WDC 旗下的 Flash 與 SanDisk 業務利潤率有望迎來持續數季的擴張。
+- **投資啟示**：週期性反轉疊加 AI 結構性增長，形成了罕見的「雙重順風」（Dual Tailwinds），將顯著增強 WDC 未來 1–2 年的自由現金流創造能力。
+
+### 5. 內部人減持交易分析
+- **新聞核心**：WDC 高層 Cynthia Tregillis 近期出售約 696,279 美元的公司股票（來源：investing.com）。
+- **營運與財務影響**：高層在股價年內大漲 470% 後進行部分變現屬於常見的個人財務規劃，減持金額不足 70 萬美元，相對於 WDC 數百億美元級別的市值規模微不足道，並未顯露公司內部營運出現隱憂的跡象。
+- **投資啟示**：投資人不宜過度解讀單一高管的小額減持，核心焦點仍應放在整體產業供需指標與大客戶訂單動能。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏多（Neutral to Bullish）**
+**整體市場情緒：🟢 正面（中長線多頭架構未變，短線處於健康整理）**
 
-| 評估面向 | 影響因素 | 影響程度 |
-| :--- | :--- | :---: |
-| 🟢 正面因素 | AI 儲存剛性需求、Nvidia 供應商承諾驗證產業高景氣、潛在 AI 儲存大單談判（49% 估值潛力）、記憶體短缺支撐定價 | **強** |
-| 🔴 負面因素 | 年初至今飆漲 470% 後的高檔獲利了結賣壓、自高點回檔 45% 帶來的技術面破損、股東 2026 減持計畫壓制短期買盤 | **中** |
-
-**綜合研判**：基本面與產業景氣指標極為強勁，但籌碼面與技術面處於大漲後的劇烈震盪洗盤期。多空交戰激烈，整體情緒呈現中性偏樂觀，靜待籌碼沉澱。
+| 維度 | 評估因素 | 影響程度 |
+| :--- | :--- | :--- |
+| **正面因素** | • NVIDIA 釋出 2,790 億美元龐大供應鏈承諾，產業能見度極高<br>• DRAM 與 NAND 儲存週期全面轉向復甦階段<br>• 估值分析顯示拉回後仍具備高達 49% 的低估空間<br>• 年內漲幅達 470%，確立超級強勢股市場地位 | 🟢 強烈正向 |
+| **負面/審慎因素** | • 過去一個月股價回跌 13%，短線面臨均線反壓與套牢籌碼<br>• 財報公布後曾出現利多出盡賣壓，市場預期標準顯著拉高<br>• 高層出現小額內部人減持，略微壓抑短線投機情緒 | 🟡 輕度負向 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **高估值與大幅波動風險（High）**：在年漲幅超過 470% 後，市場對任何利空消息極為敏感，近期自高點拉回 45% 即顯示其極高波動度，短期追高風險較大。
-- 🟡 **大股東減持與籌碼鬆動風險（Medium）**：2026 年股東減持計畫可能持續對盤面形成上方心理賣壓，若減持節奏過快可能拉長築底時間。
-- 🟡 **儲存產業週期過渡風險（Medium）**：市場擔憂高儲存定價是否引發下游客戶延遲提貨或過度下單（Overbooking）後的去庫存效應。
-- 🟢 **宏觀科技股避險賣壓（Low/Medium）**：美股科技類股若因總體經濟或利率預期出現集體回調，高 Beta 特性的 WDC 易承受連帶下挫壓力。
+- 🔴 **高基期與短期籌碼波動風險**：股價今年以來已飆升逾 470%，市場持股成本差異巨大。若大盤科技股出現系統性拉回，WDC 短線可能面臨較劇烈的波動幅度與獲利了結賣壓。
+- 🟡 **儲存產業歷史週期反轉風險**：儘管目前處於復甦上升階段，但儲存產業具有資本密集與供需迅速轉變的特徵。需密切追蹤同業產能擴充節奏，防範後續供過於求風險。
+- 🟡 **下游 CSP 資本支出節奏變更**：市場對 AI 儲存的增長預期極高，若超大規模雲端服務商對基礎設施的採購進度稍有放緩，可能導致估值出現短期修正。
+- 🟢 **內部人持股異動情緒干擾**：高管減持可能在短線引發散戶投資人的跟風疑慮，但對實質營運層面影響甚微。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **AI 儲存商業談判實質進展**：關注市場傳聞之 AI 儲存大型合約是否正式簽署，以及合約金額與交付時程。
-2. **籌碼沉澱與支撐位確認**：觀察股價在 450 美元關卡及近期回檔低點的支撐力道，確認大股東售股消息是否已被市場充分消化。
-3. **記憶體現貨與合約價趨勢**：追蹤 NAND Flash 與 HDD 企業級產品之定價走勢，確認記憶體短缺題材能否持續轉化為下季財報利潤。
-4. **同業族群（MU、STX、SNDK）聯動效應**：關注整體儲存族群突破行情的延續性，確認板塊資金輪動方向。
+1. **股價月線與整數關卡支撐力道**：觀察 WDC 股價在 450 美元附近的整理情況，確認 13% 回檔後能否形成有效底部。
+2. **AI 儲存商業協議進展**：關注市場傳出之大型 AI 儲存專案與合作談判的實質落地細節與合約規模。
+3. **同業財報與產業指引反饋**：留意 Broadcom（AVGO）、Micron（MU）等半導體與儲存供應鏈同業的最新季度財務指引，作為評估整體 AI 硬體需求的關鍵風向標。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Western Digital (NASDAQ: WDC) shareholder plans 2026 stock sale — Stock Titan (2026-08-31)
-2. Western Digital Corp Stock (WDC) Moved Down by 3.05% on Aug 31: Drivers Behind the Movement — TradingKey (2026-08-31)
-3. Why WDC, MU, STX, SNDK Stocks Rallied Hard Today And Lifted DRAM To ‘Solid Breakout’ — Stocktwits (2026-08-30)
-4. Western Digital Stock Is Up Over 470% This Year. Can the AI Storage Boom Continue? — TIKR.com (2026-08-29)
-5. Broadcom: I Am Hedging Before Q3; You Should Too (NASDAQ:AVGO) — Seeking Alpha (2026-08-28)
-6. 17 Ideal 'Safer' Buyable August Dogs Dug Up After 10 Years — Seeking Alpha (2026-08-28)
-7. Trump Calls Micron One of the World’s “Hottest” Companies a Day After Nvidia Disclosed $279 Billion in Supplier Commitments — Yahoo Finance (2026-08-28)
-8. Western Digital Just Dropped 13% in a Month. Is It Time to Sell? — 24/7 Wall St. (2026-08-28)
-9. 4 High-Flying Memory & Storage Giants to Gain More Amid NVDA's Solid Q2 — Yahoo Finance (2026-08-28)
-10. Zacks Industry Outlook Western Digital, Sandisk and Super Micro Computer — Yahoo Finance (2026-08-28)
-11. AI, chip stocks mixed after Nvidia's stellar earnings results — Seeking Alpha (2026-08-27)
-12. Prediction: Micron Could Be the Most Important AI Stock After Nvidia — Yahoo Finance (2026-08-27)
-13. Nvidia’s Q2 Secret: You're Blinded By The AI Hype (NASDAQ:NVDA) — Seeking Alpha (2026-08-27)
-14. Western Digital stock is down sharply: Why the bull case still looks strong — MSN (2026-08-26)
-15. Prediction: This Memory Stock Will Soar 165% in 3 Years (Hint: It's not Micron or Sandisk) — MSN (2026-08-25)
-16. What's going on with Western Digital stock Monday? — MSN (2026-08-24)
-17. Why Western Digital Stock Popped Today — MSN (2026-08-17)
-18. Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance (2026-08-06)
+1. SanDisk: Don't Underestimate The Cycle — Seeking Alpha (2026-09-01)
+2. DRAM: Final Call Before The Recovery Takes Off Without You — Seeking Alpha (2026-09-01)
+3. Western Digital Stock Is Up Over 470% This Year. Can the AI Storage Boom Continue? — TIKR.com (2026-08-29)
+4. Broadcom: I Am Hedging Before Q3; You Should Too — Seeking Alpha (2026-08-28)
+5. Western Digital Just Dropped 13% in a Month. Is It Time to Sell? — Yahoo Finance (2026-08-28)
+6. Trump Calls Micron One of the World’s “Hottest” Companies a Day After Nvidia Disclosed $279 Billion in Supplier Commitments — Yahoo Finance (2026-08-28)
+7. 4 High-Flying Memory & Storage Giants to Gain More Amid NVDA's Solid Q2 — Yahoo Finance (2026-08-28)
+8. Zacks Industry Outlook Western Digital, Sandisk and Super Micro Computer — Yahoo Finance (2026-08-28)
+9. Western Digital’s Cynthia Tregillis sells $696,279 in WDC stock — investing.com (2026-08-28)
+10. Western Digital (WDC) Stock Still Looks Cheap After Its Sharp Pullback — simplywall.st (2026-08-26)
+11. Western Digital (WDC) Stock May Be 49% Undervalued After AI Storage Deal Talks — Yahoo Finance (2026-08-06)
+12. Why Western Digital Stock Is Tumbling Despite A Big Earnings Beat — Investor's Business Daily (2026-08-06)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估風險並自負盈虧。*
