@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import importlib.util
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -29,7 +28,6 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 SITE = ROOT / "site"
 SRC_STOCK = ROOT / "ai_gen_report" / "stock"
-FENCE = re.compile(r"```mermaid\n(.*?)```", re.DOTALL)
 # On CI runners headless chromium must launch with --no-sandbox; the workflow
 # writes a puppeteer config and points PUPPETEER_CONFIG at it.
 _PUPPETEER = os.environ.get("PUPPETEER_CONFIG", "")
@@ -123,7 +121,10 @@ def main() -> None:
         src = find_source(ticker, doc.name)
         if src is None:
             continue
-        for raw in FENCE.findall(src.read_text(encoding="utf-8", errors="ignore")):
+        # Same fence matcher the sanitizer and the docs builder use, so this
+        # gate can never scan for a diagram shape they no longer recognise.
+        for raw in bd._MERMAID_FENCE_RE.findall(
+                src.read_text(encoding="utf-8", errors="ignore")):
             total += 1
             san = bd.sanitize_mermaid(raw)
             raw_ok = renders(mmdc, raw)

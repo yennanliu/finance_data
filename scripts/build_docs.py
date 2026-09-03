@@ -125,6 +125,24 @@ def by_date_desc(files: list[Path]) -> list[Path]:
     return sorted(files, key=lambda f: (_file_date(f) or date.min, f.name), reverse=True)
 
 
+# Report category is carried in the filename prefix that generate_analysis.py
+# writes (see ANALYSIS_TYPES' filename_prefix). Naming the rule once keeps the
+# per-ticker page and the top-level index from ever disagreeing about which
+# section a report belongs in.
+TECHNICAL_PREFIX = "technical_"
+FUNDAMENTAL_PREFIX = "fundamental_"
+
+
+def split_by_type(md_files: list[Path]) -> "tuple[list[Path], list[Path], list[Path]]":
+    """Split report files into (technical, fundamental, other), newest-first."""
+    return (
+        by_date_desc([f for f in md_files if f.name.startswith(TECHNICAL_PREFIX)]),
+        by_date_desc([f for f in md_files if f.name.startswith(FUNDAMENTAL_PREFIX)]),
+        by_date_desc([f for f in md_files
+                      if not f.name.startswith((TECHNICAL_PREFIX, FUNDAMENTAL_PREFIX))]),
+    )
+
+
 def report_label(f: Path) -> str:
     """Human-friendly label for a dated report file: 'YYYY-MM-DD · Provider'.
 
@@ -609,12 +627,36 @@ def kline_payload_bars() -> int:
     return KLINE_VISIBLE_BARS + kline_as_of_allowance() + KLINE_LOOKBACK_BARS
 
 
+# ── Price-store read cache ───────────────────────────────────────────────────
+# One build re-reads the same ticker CSV from many places: the hero chart, every
+# dated technical report page (~1,600 of them), the current-price lookup, the
+# published-keys probe and the Price Data pages — each ~2,500 rows, twice over
+# for the EN and ZH trees. Parsing is pure and the file does not change during a
+# build, so cache on the file's identity (path + mtime + size) rather than the
+# key alone: a rewritten store still re-reads, which keeps tests that
+# monkeypatch PRICES_DIR honest.
+_STORE_CACHE: "dict[tuple, list[dict]]" = {}
+
+
+def store_bars(key: str) -> "list[dict]":
+    """`prices.load_store` for this build, memoised. Never mutate the result."""
+    path = prices.store_path(key, PRICES_DIR)
+    try:
+        st = path.stat()
+        ident = (str(path), st.st_mtime_ns, st.st_size)
+    except OSError:  # missing store — load_store returns [] for it anyway
+        ident = (str(path), None, None)
+    if ident not in _STORE_CACHE:
+        _STORE_CACHE[ident] = prices.load_store(key, PRICES_DIR)
+    return _STORE_CACHE[ident]
+
+
 def kline_bars(ticker: str) -> "list[dict]":
     """Bars for a ticker's chart payload, oldest→newest ([] when unavailable).
 
     Reads the store live off the module global so tests can monkeypatch it.
     """
-    bars = prices.load_store(ticker, PRICES_DIR)
+    bars = store_bars(ticker)
     if not bars:
         return []
     return prices.window(bars, days=KLINE_VISIBLE_BARS + kline_as_of_allowance(),
@@ -706,7 +748,7 @@ def report_chart_block(ticker: str, report: Path) -> str:
     about; `../kline.json` because report bodies are served one directory below
     the ticker index that hosts the payload.
     """
-    if not report.name.startswith("technical_"):
+    if not report.name.startswith(TECHNICAL_PREFIX):
         return ""
     d = _file_date(report)
     return kline_block(ticker, src="../kline.json",
@@ -738,7 +780,7 @@ _PCT_RE = re.compile(r"(\d{1,3}(?:\.\d+)?)\s*%")
 
 def _current_price(ticker: str) -> "tuple[float, str] | None":
     """Latest close and its date from the price store, or None."""
-    bars = prices.load_store(ticker, PRICES_DIR)
+    bars = store_bars(ticker)
     if not bars:
         return None
     last = bars[-1]
@@ -1218,9 +1260,7 @@ def build_reports(lang: str = "en"):
         write_kline_payload(ticker, dst_dir)
 
         # Split md files by report type, newest-first so the latest is on top.
-        technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
-        fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
-        other_md = by_date_desc([f for f in md_files if not f.name.startswith(("technical_", "fundamental_"))])
+        technical_md, fundamental_md, other_md = split_by_type(md_files)
         html_files = by_date_desc(html_files)
 
         # EN: copy report files; ZH: skip copies — link to EN pages instead
@@ -1391,9 +1431,7 @@ def build_reports(lang: str = "en"):
         if not (md_files or html_files):
             continue
 
-        technical_md = by_date_desc([f for f in md_files if f.name.startswith("technical_")])
-        fundamental_md = by_date_desc([f for f in md_files if f.name.startswith("fundamental_")])
-        other_md = by_date_desc([f for f in md_files if not f.name.startswith(("technical_", "fundamental_"))])
+        technical_md, fundamental_md, other_md = split_by_type(md_files)
         html_files = by_date_desc(html_files)
 
         top_lines += [
@@ -1976,7 +2014,7 @@ def published_price_keys() -> "list[str]":
     update_prices.py run leaves a header-only CSV behind, and listing it here
     would point every report page at a page that was never written.
     """
-    keys = [k for k in price_keys() if prices.load_store(k, PRICES_DIR)]
+    keys = [k for k in price_keys() if store_bars(k)]
     return [p.name for p in _sample_dirs([Path(k) for k in keys])]
 
 
@@ -2136,7 +2174,7 @@ def build_prices(lang: str = "en"):
     manifest: "list[dict]" = []
 
     for key in keys:
-        bars = prices.load_store(key, PRICES_DIR)
+        bars = store_bars(key)
         stats = price_analytics.summary(bars)
         if not stats:
             continue
