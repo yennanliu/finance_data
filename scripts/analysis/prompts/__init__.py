@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from ..config import ANALYSIS_TYPES
+
 _PROMPTS_DIR = Path(__file__).parent
 _CACHE: dict[str, str] = {}
 
@@ -33,21 +35,9 @@ def load_prompt(name: str) -> str:
     return content
 
 
-# Map analysis types to their prompt file names
-_PROMPT_FILES = {
-    "fundamental-analysis": "fundamental",
-    "technical-analysis": "technical",
-    "stock-eval": "stock_eval",
-    "economics-analysis": "economics",
-    "portfolio-review": "portfolio",
-    "sector-analysis": "sector",
-    "earnings-call-analysis": "earnings_call",
-    "insider-trading": "insider_trading",
-    "institutional-ownership": "institutional",
-    "report-generator": "report_generator",
-    "financial-report-analyst": "financial_report_analyst",
-    "stock-valuation": "stock_valuation",
-}
+# Derived from ANALYSIS_TYPES so the two can never disagree: declaring a new
+# analysis type there is all it takes to make its prompt loadable here.
+_PROMPT_FILES = {k: v["prompt_file"] for k, v in ANALYSIS_TYPES.items()}
 
 
 class PromptMap:

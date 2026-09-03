@@ -43,7 +43,7 @@ The codebase generates AI-powered investment research reports and publishes them
 ```
 scripts/generate_analysis.py
   → scripts/analysis/utils/data_fetch.py   (yfinance + web scrapers → OHLCV, financials)
-  → scripts/analysis/utils/context.py      (assembles data into LLM-ready context, 12 branches)
+  → scripts/analysis/context/__init__.py   (assembles data into LLM-ready context, 12 branches)
   → scripts/analysis/prompts/*.txt          (prompt templates, one per analysis type)
   → scripts/analysis/utils/llm.py          (Claude or OpenAI API call)
   → ai_gen_report/fundamental/<ticker>/<type>_<date>.md   (fundamental-analysis)
@@ -57,7 +57,7 @@ scripts/generate_analysis.py
 - `scripts/analysis/config/__init__.py` — `ANALYSIS_TYPES` dict (12 types), model/token defaults
 - `scripts/analysis/config/providers.py` — per-provider defaults (Claude: 8k tokens, OpenAI: 16k) plus `FALLBACK_CHAIN` + `resolve_chain()`: the ordered provider pool the generators try (currently gemini → openai; edit the list to add levels)
 - `scripts/analysis/utils/llm.py` — `run_with_fallback()` runs an ordered `(provider, model)` chain, returning the first success; context is fetched once and reused across fallback attempts
-- `scripts/analysis/utils/context.py` — 12-branch context assembler; touch when adding analysis types
+- `scripts/analysis/context/__init__.py` — 12-branch context assembler; touch when adding analysis types (`utils/context.py` is a back-compat shim re-exporting it)
 - `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides
 - `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
 - `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid); powers the **Price Data** section (`docs/prices/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
@@ -65,9 +65,9 @@ scripts/generate_analysis.py
 - `.github/workflows/daily_analysis.yml` — cron that fires 42 jobs/day (21 tickers × 2 types)
 
 ### Adding a new analysis type
-1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`
-2. Create prompt at `scripts/analysis/prompts/<type>.txt` (placeholders: `{ticker}`, `{financial_context}`, `{today}`)
-3. Add context-building branch in `scripts/analysis/utils/context.py`
+1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`, including its `prompt_file` (the template's basename — `PROMPT_MAP` is derived from this field, so there is no second map to edit)
+2. Create prompt at `scripts/analysis/prompts/<prompt_file>.txt` (placeholders: `{ticker}`, `{financial_context}`, `{today}`)
+3. Add context-building branch in `scripts/analysis/context/__init__.py`
 4. Test: `python scripts/generate_analysis.py AAPL --analysis-type <type>`
 
 ### Adding a new ticker to daily schedule

@@ -118,10 +118,8 @@ def main() -> None:
             continue
 
         symbol = prices.to_yf_symbol(key)
-        if args.dry_run:
-            status, detail = _dry_run_one(key, symbol, args.years, store_dir)
-        else:
-            status, detail = prices.update(key, symbol, args.years, store_dir)
+        status, detail = prices.update(key, symbol, args.years, store_dir,
+                                       dry_run=args.dry_run)
 
         counts[status] = counts.get(status, 0) + 1
         print(f"  {GLYPH.get(status, status)}  {key:<10} ({symbol:<10}) {detail}")
@@ -136,32 +134,6 @@ def main() -> None:
                      for k in ("created", "appended", "restated", "unchanged"))
     if tickers and not progressed:
         sys.exit(1)
-
-
-def _dry_run_one(key: str, symbol: str, years: int, store_dir: Path):
-    """Same decisions as prices.update() but without touching the disk."""
-    old = prices.load_store(key, store_dir)
-    try:
-        new = prices.fetch_history(symbol, years)
-    except Exception as e:
-        return "failed", f"fetch error: {e}"
-    if not new:
-        return "failed", "no data"
-    reason = prices.gate(new, old)
-    if reason:
-        return "skipped", reason
-
-    merged = prices.trim(prices.upsert(old, new), years)
-    current = prices.store_path(key, store_dir)
-    text = prices.serialise(merged)
-    if current.exists() and current.read_text(encoding="utf-8") == text:
-        return "unchanged", f"{len(merged)} bars"
-    if not old:
-        return "created", f"would write {len(merged)} bars"
-    changed = prices._restated_count(old, new)
-    if changed:
-        return "restated", f"would rewrite {changed} existing bars ({len(merged)} total)"
-    return "appended", f"would write {len(merged) - len(old)} new bars"
 
 
 if __name__ == "__main__":

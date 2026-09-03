@@ -48,7 +48,6 @@ FIELDS = ("date", "open", "high", "low", "close", "volume", "div", "split")
 HEADER = ",".join(FIELDS)
 
 PRICE_FIELDS = ("open", "high", "low", "close")
-EVENT_FIELDS = ("div", "split")
 
 
 # ── Serialisation ────────────────────────────────────────────────────────────
@@ -331,11 +330,15 @@ def gate(new: list[dict] | None, old: list[dict]) -> str | None:
 
 # ── Update one ticker ────────────────────────────────────────────────────────
 def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
-           store_dir: Path | None = None) -> tuple[str, str]:
+           store_dir: Path | None = None, dry_run: bool = False) -> tuple[str, str]:
     """Refresh one ticker's store. Returns ``(status, detail)``.
 
     status is one of ``appended`` (or ``created``), ``restated``, ``unchanged``,
     ``skipped`` (gate rejected), ``failed`` (fetch error / no data).
+
+    ``dry_run`` reaches every verdict identically but writes nothing — the
+    status logic lives here only, so ``--dry-run`` can never drift from what a
+    real run would do. Only the detail wording differs ("would write …").
     """
     if symbol is None:
         symbol = to_yf_symbol(key)
@@ -353,18 +356,28 @@ def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
         return "skipped", reason
 
     merged = trim(upsert(old, new), years)
-    if not write_store(key, merged, store_dir):
+    if dry_run:
+        p = store_path(key, store_dir)
+        wrote = not (p.exists()
+                     and p.read_text(encoding="utf-8") == serialise(merged))
+    else:
+        wrote = write_store(key, merged, store_dir)
+    if not wrote:
         return "unchanged", f"{len(merged)} bars"
 
     if not old:
-        return "created", f"{len(merged)} bars"
+        return "created", (f"would write {len(merged)} bars" if dry_run
+                           else f"{len(merged)} bars")
     # Any stored bar whose values were replaced means upstream restated history
     # (a split, a dividend re-adjustment, a correction) — worth calling out,
     # because it is also the one case where the commit diff is huge.
     changed = _restated_count(old, new)
     if changed:
-        return "restated", f"{changed} existing bars rewritten, {len(merged)} total"
-    return "appended", f"{len(merged)} bars"
+        return "restated", (
+            f"would rewrite {changed} existing bars ({len(merged)} total)" if dry_run
+            else f"{changed} existing bars rewritten, {len(merged)} total")
+    return "appended", (f"would write {len(merged) - len(old)} new bars" if dry_run
+                        else f"{len(merged)} bars")
 
 
 def _restated_count(old: list[dict], new: list[dict]) -> int:
