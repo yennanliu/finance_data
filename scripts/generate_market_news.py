@@ -27,8 +27,6 @@ from analysis.config.providers import resolve_chain
 from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
 from analysis.publish import GENERATED_BY, frontmatter
 
-DEFAULT_PROVIDER = "gemini"
-DEFAULT_MODEL = "gemini-3.7-flash"
 DEFAULT_TOKENS = 12000
 
 # Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
