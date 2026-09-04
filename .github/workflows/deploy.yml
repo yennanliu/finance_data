@@ -12,6 +12,8 @@ on:
     paths:
       - "mkdocs.yml"
       - "scripts/build_docs.py"
+      - ".github/actions/build-site/**"
+      - ".github/actions/python-env/**"
       - ".github/workflows/deploy.yml"
       - "docs/overrides/**"
       - "docs/stylesheets/**"
@@ -47,41 +49,19 @@ jobs:
   build:
     name: Build MkDocs Site
     runs-on: ubuntu-latest
+    timeout-minutes: 60      # a full build is ~752 MB / tens of thousands of pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         # Shallow checkout (default fetch-depth: 1). The previous full-history
         # clone (fetch-depth: 0) was for a git-revision-date plugin that is not
-        # installed — it only cost time cloning ~2.3 GB of binary history.
+        # installed — it only cost time cloning ~1 GB of binary history.
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install MkDocs & plugins
-        run: |
-          pip install --upgrade pip
-          pip install \
-            mkdocs-material==9.5.* \
-            mkdocs-awesome-pages-plugin \
-            mkdocs-minify-plugin \
-            Pillow \
-            cairosvg
-
-      - name: Generate docs content
-        run: python scripts/build_docs.py
-
-      - name: Inject build date into templates
-        run: |
-          BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
-          sed -i "s/__BUILD_DATE__/${BUILD_DATE}/g" docs/overrides/main.html
-          sed -i "s/__BUILD_DATE__/${BUILD_DATE}/g" docs/overrides/home.html
-          echo "Build date set to: ${BUILD_DATE}"
-
-      - name: Build MkDocs site
-        run: mkdocs build --clean --strict
+      # Installs the toolchain, generates content, stamps the build date and
+      # runs `mkdocs build --strict`. Shared with sample_build.yml so the smoke
+      # build always exercises the same plugin set this deploy installs.
+      - name: Build site
+        uses: ./.github/actions/build-site
 
       # Publish the OKF knowledge bundle + llms.txt verbatim (raw markdown,
       # unrendered) so AI agents can fetch them at /okf/... and /llms.txt.
@@ -108,6 +88,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    timeout-minutes: 45      # must exceed the deploy-pages timeout below
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

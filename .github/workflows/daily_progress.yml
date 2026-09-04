@@ -13,12 +13,17 @@ jobs:
   summarize:
     name: Generate Progress Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # This is the one job that genuinely reads history (git log --since
+          # below), but it only looks back 12 hours. The bots commit ~100 times
+          # a day, so 500 commits is a wide margin — and far cheaper than the
+          # full-history clone this used to do against a ~1 GB pack.
+          fetch-depth: 500
 
       - name: Generate progress file
         run: |
@@ -54,23 +59,12 @@ jobs:
 
           cat "$OUT"
 
+      - name: Resolve commit date
+        id: meta
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
       - name: Commit and push progress file
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add progress/
-
-          if git diff --cached --quiet; then
-            echo "No new reports today."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            git commit -m "chore: daily progress summary ${DATE}"
-
-            echo "📥 Pulling latest changes from remote..."
-            git pull --rebase origin main
-
-            echo "📤 Pushing changes to remote..."
-            git push
-            echo "✅ Progress file committed."
-          fi
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: progress
+          message: "chore: daily progress summary ${{ steps.meta.outputs.date }}"

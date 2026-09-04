@@ -1,0 +1,62 @@
+name: Build MkDocs site
+description: >
+  Install the MkDocs toolchain, generate docs content, stamp the build date
+  into the templates, and build the site with --strict. Shared by the
+  production deploy and the sample smoke build so the smoke build is
+  guaranteed to exercise the same plugin set production installs.
+
+inputs:
+  python-version:
+    description: Python version for the build.
+    required: false
+    default: "3.11"
+  date-suffix:
+    description: >
+      Appended to the injected build date — the sample build passes "(SAMPLE)"
+      so a smoke-built page is never mistaken for the published site.
+    required: false
+    default: ""
+  build-args:
+    description: Extra arguments for scripts/build_docs.py.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Install MkDocs & plugins
+      uses: ./.github/actions/python-env
+      with:
+        python-version: ${{ inputs.python-version }}
+        packages: >-
+          mkdocs-material==9.5.*
+          mkdocs-awesome-pages-plugin
+          mkdocs-minify-plugin
+          Pillow
+          cairosvg
+
+    - name: Generate docs content
+      shell: bash
+      env:
+        BUILD_ARGS: ${{ inputs.build-args }}
+      run: |
+        set -euo pipefail
+        # BUILD_ARGS is a deliberately word-split argument list.
+        # shellcheck disable=SC2086
+        python scripts/build_docs.py $BUILD_ARGS
+
+    - name: Inject build date into templates
+      shell: bash
+      env:
+        DATE_SUFFIX: ${{ inputs.date-suffix }}
+      run: |
+        set -euo pipefail
+        BUILD_DATE="$(date -u +'%Y-%m-%d %H:%M UTC')${DATE_SUFFIX:+ $DATE_SUFFIX}"
+        for template in docs/overrides/main.html docs/overrides/home.html; do
+          sed -i "s/__BUILD_DATE__/${BUILD_DATE}/g" "$template"
+        done
+        echo "Build date set to: ${BUILD_DATE}"
+
+    - name: Build MkDocs site
+      shell: bash
+      run: mkdocs build --clean --strict

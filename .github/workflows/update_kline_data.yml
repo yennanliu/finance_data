@@ -43,38 +43,31 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # Shallow: the store is read from the working tree, not history.
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: pip install "yfinance>=0.2"
+          packages: yfinance>=0.2
 
       - name: Update price store
+        env:
+          TICKERS: ${{ github.event.inputs.tickers }}
         run: |
-          TICKERS="${{ github.event.inputs.tickers }}"
+          set -euo pipefail
+          # TICKERS is a deliberately word-split list of tickers.
+          # shellcheck disable=SC2086
           python scripts/update_prices.py $TICKERS
 
-      - name: Commit and push data
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/prices/
+      - name: Resolve commit date
+        id: meta
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-          if git diff --cached --quiet; then
-            echo "No price changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            # Line counts make an unexpected full-file rewrite obvious in the log
-            # — an ordinary night is one appended line per ticker.
-            git diff --cached --stat -- data/prices/ | tail -1
-            git commit -m "chore: refresh price data ${DATE}"
-            git pull --rebase origin main
-            git push
-            echo "✅ Price data committed and pushed."
-          fi
+      # The shared action logs a `git diff --cached --stat` summary line, which
+      # makes an unexpected full-file rewrite obvious — an ordinary night is one
+      # appended line per ticker.
+      - name: Commit and push data
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: data/prices
+          message: "chore: refresh price data ${{ steps.meta.outputs.date }}"

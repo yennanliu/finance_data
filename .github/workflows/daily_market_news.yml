@@ -1,45 +1,11 @@
 name: Daily Market News
 run-name: "Daily Market News ${{ github.event.inputs.ticker || github.event.schedule }}"
 
-# ── Schedules (UTC → UTC+8) ──────────────────────────────────────────────────
-#   17:00 → 01:00  0050
-#   17:10 → 01:10  2330.tw
-#   17:20 → 01:20  TSLA
-#   17:30 → 01:30  PL
-#   17:40 → 01:40  GRAB
-#   17:50 → 01:50  TSM
-#   18:00 → 02:00  GOOG
-#   18:10 → 02:10  AMZN
-#   18:20 → 02:20  MSFT
-#   18:30 → 02:30  SOFI
-#   18:40 → 02:40  PLTR
-#   18:50 → 02:50  RKLB
-#   19:00 → 03:00  ONDS
-#   19:10 → 03:10  AVAV
-#   19:20 → 03:20  KTOS
-#   19:30 → 03:30  META
-#   19:40 → 03:40  AMD
-#   19:50 → 03:50  NVDA
-#   20:00 → 04:00  NU
-#   20:10 → 04:10  VST
-#   20:20 → 04:20  ORCL
-#   20:30 → 04:30  6206.tw  飛捷
-#   20:40 → 04:40  3008.tw  大立光
-#   20:50 → 04:50  4766.tw  南寶
-#   21:00 → 05:00  6643.tw  M31
-#   21:10 → 05:10  2317.tw  鴻海
-#   21:20 → 05:20  SPCX
-#   21:30 → 05:30  MU
-#   21:40 → 05:40  SKHY
-#   21:50 → 05:50  WDC
-#   22:00 → 06:00  SNDK
-#   22:10 → 06:10  MRVL
-#   22:20 → 06:20  SOXQ
-#   22:30 → 06:30  SOXX
-#   22:40 → 06:40  WQTM
-#   22:50 → 06:50  VTI
-#   23:00 → 07:00  QQQ
-#   23:10 → 07:10  ROBO
+# One cron slot per ticker, staggered 10 minutes apart. The ticker for each slot
+# is named in the inline comment beside the cron and resolved at runtime by the
+# "Resolve parameters" step below — `github.event.schedule` is the only thing a
+# scheduled run knows about itself. Times are UTC; Taipei is UTC+8.
+
 on:
   schedule:
     - cron: "0 17 * * *"     # 0050
@@ -63,11 +29,11 @@ on:
     - cron: "0 20 * * *"     # NU
     - cron: "10 20 * * *"    # VST
     - cron: "20 20 * * *"    # ORCL
-    - cron: "30 20 * * *"    # 6206.tw
-    - cron: "40 20 * * *"    # 3008.tw
-    - cron: "50 20 * * *"    # 4766.tw
-    - cron: "0 21 * * *"     # 6643.tw
-    - cron: "10 21 * * *"    # 2317.tw
+    - cron: "30 20 * * *"    # 6206.tw  飛捷
+    - cron: "40 20 * * *"    # 3008.tw  大立光
+    - cron: "50 20 * * *"    # 4766.tw  南寶
+    - cron: "0 21 * * *"     # 6643.tw  M31
+    - cron: "10 21 * * *"    # 2317.tw  鴻海
     - cron: "20 21 * * *"    # SPCX
     - cron: "30 21 * * *"    # MU
     - cron: "40 21 * * *"    # SKHY
@@ -97,10 +63,14 @@ on:
           - openai
           - claude
       model:
-        description: "Model ID"
+        description: "Model ID (ignored if it does not belong to the chosen provider)"
         required: false
         default: "gemini-3.7-flash"
         type: choice
+        # Kept in the same grouping/order as daily_analysis.yml and
+        # advanced_analysis.yml: workflow_dispatch choices cannot be shared
+        # between files, so the next model addition should be a copy-paste
+        # rather than a three-way merge.
         options:
           # OpenAI models
           - gpt-5.6-luna
@@ -144,46 +114,49 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      # News runs deliberately differ from the report generators' defaults in
+      # analysis/config (gemini-3.8-flash / 32000 tokens), so those values are
+      # owned here rather than inherited.
       DEFAULT_PROVIDER: gemini
       DEFAULT_MODEL: gemini-3.7-flash
       DEFAULT_MAX_TOKENS: "20000"
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
+        # Shallow: nothing here reads history, and the pack is ~1 GB, so a full
+        # clone cost ~37 pointless deep fetches a day.
+
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
-          fetch-depth: 0
+          packages: >-
+            anthropic>=0.40.0
+            openai>=1.0.0
+            google-genai>=1.0.0
+            yfinance>=0.2.40
 
-      # ── 2. Python ─────────────────────────────────────────────────
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      # ── 3. Dependencies ───────────────────────────────────────────
-      - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 yfinance>=0.2.40
-
-      # ── 4. Resolve parameters ─────────────────────────────────────
-      #   workflow_dispatch → use user inputs
-      #   scheduled crons   → map ticker via case; provider/model from job env defaults
       - name: Resolve parameters
         id: params
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          IN_TICKER: ${{ github.event.inputs.ticker }}
+          IN_PROVIDER: ${{ github.event.inputs.provider }}
+          IN_MODEL: ${{ github.event.inputs.model }}
+          IN_MAX_TOKENS: ${{ github.event.inputs.max_tokens }}
         run: |
-          EVENT="${{ github.event_name }}"
-          SCHEDULE="${{ github.event.schedule }}"
+          set -euo pipefail
 
           if [ "$EVENT" = "workflow_dispatch" ]; then
-            TICKER="${{ github.event.inputs.ticker }}"
-            PROVIDER="${{ github.event.inputs.provider }}"
-            MODEL="${{ github.event.inputs.model }}"
-            MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
+            TICKER="${IN_TICKER:-TSLA}"
+            PROVIDER="${IN_PROVIDER:-$DEFAULT_PROVIDER}"
+            MODEL="${IN_MODEL:-$DEFAULT_MODEL}"
+            MAX_TOKENS="${IN_MAX_TOKENS:-$DEFAULT_MAX_TOKENS}"
           else
-            # Schedule → set only ticker; provider/model use job-level defaults
+            PROVIDER="$DEFAULT_PROVIDER"
+            MODEL="$DEFAULT_MODEL"
+            MAX_TOKENS="$DEFAULT_MAX_TOKENS"
             case "$SCHEDULE" in
               "0 17 * * *")   TICKER="0050" ;;
               "10 17 * * *")  TICKER="2330.tw" ;;
@@ -223,46 +196,34 @@ jobs:
               "50 22 * * *")  TICKER="VTI" ;;
               "0 23 * * *")   TICKER="QQQ" ;;
               "10 23 * * *")  TICKER="ROBO" ;;
-              *)              TICKER="TSLA" ;;
+              # No silent default. A cron with no arm here used to fall through
+              # to a TSLA report — an unnoticed duplicate rather than a visible
+              # failure. Fail loudly so the gap gets fixed.
+              *)
+                echo "::error::No ticker mapped for cron '${SCHEDULE}' — add an arm to this case statement."
+                exit 1
+                ;;
             esac
           fi
 
-          TICKER="${TICKER:-TSLA}"
-          PROVIDER="${PROVIDER:-${DEFAULT_PROVIDER}}"
-          MODEL="${MODEL:-${DEFAULT_MODEL}}"
-          MAX_TOKENS="${MAX_TOKENS:-${DEFAULT_MAX_TOKENS}}"
-
-          # Auto-correct model when it doesn't match the chosen provider
-          case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.7-flash" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
-            claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
-          esac
-
-          TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
-          TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
-          DATE_TIME=$(date -u +"%Y-%m-%d")
-          OUTPUT_DIR="ai_gen_report/market_news/${TICKER_LOWER}"
-          OUTPUT_FILE="market_news_${DATE_TIME}_${PROVIDER}.md"
-
-          echo "ticker=${TICKER_UPPER}"      >> "$GITHUB_OUTPUT"
-          echo "provider=${PROVIDER}"        >> "$GITHUB_OUTPUT"
-          echo "model=${MODEL}"              >> "$GITHUB_OUTPUT"
-          echo "max_tokens=${MAX_TOKENS}"    >> "$GITHUB_OUTPUT"
-          echo "output_dir=${OUTPUT_DIR}"    >> "$GITHUB_OUTPUT"
-          echo "output_file=${OUTPUT_FILE}"  >> "$GITHUB_OUTPUT"
+          {
+            echo "ticker=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')"
+            echo "provider=${PROVIDER}"
+            echo "model=${MODEL}"
+            echo "max_tokens=${MAX_TOKENS}"
+            echo "date=$(date -u +%Y-%m-%d)"
+          } >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
-          echo "  Event:       ${EVENT}"
-          echo "  Schedule:    ${SCHEDULE:-n/a}"
-          echo "  Ticker:      ${TICKER_UPPER}"
-          echo "  Provider:    ${PROVIDER}"
-          echo "  Model:       ${MODEL}"
-          echo "  Max tokens:  ${MAX_TOKENS}"
-          echo "  Output dir:  ${OUTPUT_DIR}"
-          echo "  Output file: ${OUTPUT_FILE}"
+          echo "  Event:      ${EVENT}"
+          echo "  Schedule:   ${SCHEDULE:-n/a}"
+          echo "  Ticker:     ${TICKER}"
+          echo "  Provider:   ${PROVIDER}"
+          echo "  Model:      ${MODEL}"
+          echo "  Max tokens: ${MAX_TOKENS}"
 
-      # ── 5. Verify API key secrets for the whole fallback chain ───
+      # Checks the key for the primary provider AND every fallback level, so a
+      # fallback attempt never runs without its key.
       - name: Check provider API key secrets
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -270,31 +231,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PROVIDER: ${{ steps.params.outputs.provider }}
           MODEL: ${{ steps.params.outputs.model }}
-        run: |
-          # Validate the secret for EVERY provider the generator might use — the
-          # primary and each fallback level — resolved from the same chain, so a
-          # fallback attempt never runs without its key.
-          PYTHONPATH=scripts python - <<'PY'
-          import os, sys
-          from analysis.config.providers import resolve_chain
-          keys = {
-              "openai": ("OPENAI_API_KEY", "OPEN_KEY_API"),
-              "gemini": ("GEMINI_API_KEY", "GEMINI_API_KEY"),
-              "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"),
-          }
-          chain = resolve_chain(os.environ.get("PROVIDER") or None, os.environ.get("MODEL") or None)
-          missing = []
-          for provider, _ in chain:
-              env, secret = keys[provider]
-              if os.environ.get(env):
-                  print(f"OK {provider}: {secret} is set")
-              else:
-                  print(f"::error::{secret} secret is not set (required for '{provider}' in the fallback chain)")
-                  missing.append(secret)
-          sys.exit(1 if missing else 0)
-          PY
+        run: python scripts/check_provider_keys.py
 
-      # ── 6. Generate news report ───────────────────────────────────
+      # Neither --output-dir nor --output-file is passed. The script already
+      # defaults to ai_gen_report/market_news/<ticker>/ and names the file
+      # market_news_<date>_<provider>.md using the provider that ACTUALLY
+      # served the report. Forcing the filename from here used to stamp it with
+      # the *requested* provider, so a gemini→openai fallback produced a file
+      # labelled gemini that disagreed with its own front matter.
       - name: Generate market news report
         timeout-minutes: 20
         env:
@@ -302,39 +246,20 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TICKER: ${{ steps.params.outputs.ticker }}
-          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
-          OUTPUT_FILE: ${{ steps.params.outputs.output_file }}
           PROVIDER: ${{ steps.params.outputs.provider }}
           MODEL: ${{ steps.params.outputs.model }}
           MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
         run: |
           python scripts/generate_market_news.py \
             "$TICKER" \
-            --output-dir  "$OUTPUT_DIR" \
-            --output-file "$OUTPUT_FILE" \
-            --provider    "$PROVIDER" \
-            --model       "$MODEL" \
-            --max-tokens  "$MAX_TOKENS"
+            --provider   "$PROVIDER" \
+            --model      "$MODEL" \
+            --max-tokens "$MAX_TOKENS"
 
-      # ── 7. Commit & push ──────────────────────────────────────────
       - name: Commit and push report
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add "${{ steps.params.outputs.output_dir }}/"
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            TICKER="${{ steps.params.outputs.ticker }}"
-            git commit -m "chore: auto-fetch ${TICKER} market-news ${DATE}"
-
-            echo "📥 Pulling latest changes from remote..."
-            git pull --rebase origin main
-
-            echo "📤 Pushing changes to remote..."
-            git push
-            echo "✅ News report committed and pushed."
-          fi
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: ai_gen_report
+          message: >-
+            chore: auto-fetch ${{ steps.params.outputs.ticker }} market-news
+            ${{ steps.params.outputs.date }}
