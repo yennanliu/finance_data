@@ -45,7 +45,7 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 ### Recent Updates
 
-- **Multi-provider LLM support** — generate with Claude, OpenAI, or Google Gemini (Gemini `gemini-2.5-flash` is now the daily-CI default); see `scripts/analysis/config/providers.py`
+- **Multi-provider LLM support** — generate with Claude, OpenAI, or Google Gemini (Gemini `gemini-3.8-flash` is now the daily-CI default); see `scripts/analysis/config/providers.py`
 - **Site size cut 3.1 GB → 503 MB (-84%)** — search-index trimming, pruned navigation, WebP screenshots, GitHub-raw PDF links, 120-day retention, and a single nightly deploy. Full write-up: [部署效能調校全紀錄](https://yennj12.js.org/yennj12_blog_V4/posts/mkdocs-site-size-deploy-perf-tuning-zh/)
 - **Responsive content** — tables, charts, and articles render cleanly across iOS / Android / web
 - **Advanced analysis pipeline** — earnings-call, insider-trading, institutional-ownership, and interactive HTML reports via `advanced_analysis.yml`

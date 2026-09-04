@@ -5,7 +5,7 @@ Configuration constants for analysis generation.
 from datetime import date
 
 TODAY = date.today().isoformat()
-DEFAULT_MODEL = "gemini-3.7-flash"
+DEFAULT_MODEL = "gemini-3.8-flash"
 DEFAULT_TOKENS = 32000
 
 # One entry per analysis type — the single place a new type is declared.
