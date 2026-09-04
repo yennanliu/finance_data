@@ -3,7 +3,7 @@
 import pytest
 from scripts.analysis.config import ANALYSIS_TYPES, TODAY
 from scripts.analysis.config.providers import (
-    PROVIDER_DEFAULTS, FALLBACK_CHAIN, resolve_chain,
+    PROVIDER_DEFAULTS, FALLBACK_CHAIN, resolve_chain, resolve_model,
 )
 
 
@@ -86,6 +86,55 @@ def test_resolve_chain_rejects_model_without_provider():
     than silently paired with the default lead provider."""
     with pytest.raises(ValueError):
         resolve_chain(None, "gpt-4o")
+
+
+def test_every_provider_declares_a_model_prefix_its_default_matches():
+    """The prefix is what resolve_model uses to tell a provider's models apart,
+    so a provider whose own default fails its prefix would repair correct input
+    into a loop."""
+    for provider, defaults in PROVIDER_DEFAULTS.items():
+        prefix = defaults["model_prefix"]
+        assert defaults["default_model"].startswith(prefix), \
+            f"{provider}: default_model does not match its own model_prefix"
+
+
+def test_resolve_model_keeps_a_model_belonging_to_the_provider():
+    assert resolve_model("gemini", "gemini-2.5-pro") == "gemini-2.5-pro"
+    assert resolve_model("openai", "gpt-5.6-sol") == "gpt-5.6-sol"
+    assert resolve_model("claude", "claude-opus-4-6") == "claude-opus-4-6"
+
+
+def test_resolve_model_replaces_a_model_from_the_wrong_provider():
+    """A stale dropdown selection (gpt-4o picked alongside provider: gemini)
+    must not reach an SDK that cannot serve it."""
+    assert resolve_model("gemini", "gpt-4o") == PROVIDER_DEFAULTS["gemini"]["default_model"]
+    assert resolve_model("openai", "gemini-3.8-flash") == "gpt-4o"
+    assert resolve_model("claude", "gpt-4o") == PROVIDER_DEFAULTS["claude"]["default_model"]
+
+
+def test_resolve_model_falls_back_when_no_model_given():
+    for provider, defaults in PROVIDER_DEFAULTS.items():
+        assert resolve_model(provider) == defaults["default_model"]
+        assert resolve_model(provider, None) == defaults["default_model"]
+        assert resolve_model(provider, "") == defaults["default_model"]
+
+
+def test_resolve_chain_repairs_a_mismatched_primary_pair():
+    """The repair the report workflows used to do in a bash `case` block now
+    happens once, here, for every entry point."""
+    attempts = resolve_chain("gemini", "gpt-4o")
+    assert attempts[0] == ("gemini", PROVIDER_DEFAULTS["gemini"]["default_model"])
+
+
+def test_resolve_chain_never_pairs_a_provider_with_a_foreign_model():
+    """Whatever the override, every attempt in the chain must be servable."""
+    for provider in PROVIDER_DEFAULTS:
+        for model in ("gpt-4o", "gemini-3.8-flash", "claude-sonnet-4-6", None):
+            for attempt_provider, attempt_model in resolve_chain(provider, model):
+                prefix = PROVIDER_DEFAULTS[attempt_provider]["model_prefix"]
+                assert attempt_model.startswith(prefix), \
+                    f"resolve_chain({provider!r}, {model!r}) produced " \
+                    f"({attempt_provider}, {attempt_model})"
 
 
 def test_today_is_valid_date():
