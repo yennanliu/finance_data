@@ -62,7 +62,8 @@ scripts/generate_analysis.py
 - `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
 - `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid); powers the **Price Data** section (`docs/prices/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
-- `.github/workflows/daily_analysis.yml` — cron that fires 42 jobs/day (21 tickers × 2 types)
+- `.github/workflows/daily_analysis.yml` — 61 cron slots/day (36 fundamental + 25 technical), one ticker per slot
+- `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + pip install), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
 
 ### Adding a new analysis type
 1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`, including its `prompt_file` (the template's basename — `PROMPT_MAP` is derived from this field, so there is no second map to edit)
@@ -71,8 +72,9 @@ scripts/generate_analysis.py
 4. Test: `python scripts/generate_analysis.py AAPL --analysis-type <type>`
 
 ### Adding a new ticker to daily schedule
-1. Edit `scripts/.ticker_schedule.json`
-2. Add cron entries in `.github/workflows/daily_analysis.yml`
+1. Edit `scripts/.ticker_schedule.json` (drives the price store's ticker universe)
+2. Add a `cron:` entry **and** a matching `case` arm in `.github/workflows/daily_analysis.yml` — a scheduled run only knows its cron string, so the arm is what maps it to a ticker. Same for `daily_market_news.yml`
+3. `pytest tests/test_workflows.py` — fails if a cron has no arm (or an arm no cron); an unmapped cron also fails the run itself rather than silently publishing a duplicate TSLA report
 
 ## Report output
 - Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)
