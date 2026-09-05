@@ -1,7 +1,8 @@
 """Per-provider configuration for LLM models and token limits.
 
 This module is the single source of truth for:
-  * ``PROVIDER_DEFAULTS`` — the default model / token budget for each provider.
+  * ``PROVIDER_DEFAULTS`` — the default model / token budget / accepted
+    model-id prefixes for each provider.
   * ``FALLBACK_CHAIN``    — the ordered provider pool the report generators try,
     stopping at the first success. Reorder or extend this list to change
     fallback behaviour (e.g. add a third level, or slot a new provider in the
@@ -11,7 +12,7 @@ This module is the single source of truth for:
 # ``default_tokens`` documents each provider's per-report output budget. Only
 # ``default_model`` is read by code (see ``resolve_chain``); the budget actually
 # handed to the API comes from ``--max-tokens`` (default ``config.DEFAULT_TOKENS``
-# = 32000) or, in CI, ``.ticker_schedule.json``. So keep these numbers truthful
+# = 32000), which CI passes explicitly. So keep these numbers truthful
 # about what the paired model can really emit rather than aspirational:
 #
 #   * A full fundamental report (7000-10000 字, 11 chapters, Ch.8 DCF arithmetic)
@@ -26,15 +27,26 @@ PROVIDER_DEFAULTS = {
     "claude": {
         "default_model": "claude-sonnet-4-6",
         "default_tokens": 32000,
+        "model_prefixes": ("claude-",),
     },
     "openai": {
         # 16000, not 32000: gpt-4o cannot exceed 16,384 output tokens.
         "default_model": "gpt-4o",
         "default_tokens": 16000,
+        # Not every OpenAI id starts with "gpt-": the reasoning families ship
+        # as o1/o3/o4-mini. A single "gpt-" prefix made resolve_model treat
+        # `--model o3` as a wrong-provider id and hand back gpt-4o instead —
+        # a silent swap that stamps the report with a model nobody chose.
+        # (o-series ids now reach run_openai as asked; that call still sends
+        # max_tokens/temperature, which those models reject, so an o-series
+        # run fails loudly at the API. Supporting them for real means
+        # max_completion_tokens + no temperature override in run_openai.)
+        "model_prefixes": ("gpt-", "o1", "o3", "o4"),
     },
     "gemini": {
         "default_model": "gemini-3.8-flash",
         "default_tokens": 32000,
+        "model_prefixes": ("gemini-",),
     },
 }
 
@@ -45,13 +57,32 @@ PROVIDER_DEFAULTS = {
 FALLBACK_CHAIN = ["gemini", "openai"]
 
 
+def resolve_model(provider, model=None):
+    """Return the model id to use for ``provider``.
+
+    ``model`` wins when it actually belongs to ``provider`` (matched against
+    the provider's ``model_prefixes``); a foreign or empty id falls back to that
+    provider's ``default_model``. This is what keeps a stale dropdown selection
+    — say ``gpt-4o`` picked alongside ``provider: gemini`` — from being handed
+    to an SDK that cannot serve it.
+
+    Lives here rather than in each caller because ``PROVIDER_DEFAULTS`` is the
+    only place that knows which ids belong to which provider.
+    """
+    config = PROVIDER_DEFAULTS[provider]
+    if model and model.startswith(config["model_prefixes"]):
+        return model
+    return config["default_model"]
+
+
 def resolve_chain(primary_provider=None, primary_model=None):
     """Resolve the ordered list of ``(provider, model)`` attempts to try.
 
     ``primary_provider`` (optional) leads the chain — an explicit ``--provider``
     override; when omitted the chain starts at ``FALLBACK_CHAIN[0]``.
-    ``primary_model`` (optional) overrides the model of that first attempt only;
-    every other provider uses its ``PROVIDER_DEFAULTS`` model.
+    ``primary_model`` (optional) overrides the model of that first attempt only,
+    and only when it belongs to that provider (see ``resolve_model``); every
+    other provider uses its ``PROVIDER_DEFAULTS`` model.
 
     A model without a provider is rejected: applying it to the default lead
     provider would silently pair, say, ``gpt-4o`` with Gemini. Pass both.
@@ -74,9 +105,8 @@ def resolve_chain(primary_provider=None, primary_model=None):
         if provider in seen or provider not in PROVIDER_DEFAULTS:
             continue
         seen.add(provider)
-        if provider == primary_provider and primary_model:
-            model = primary_model
-        else:
-            model = PROVIDER_DEFAULTS[provider]["default_model"]
+        model = resolve_model(
+            provider, primary_model if provider == primary_provider else None
+        )
         attempts.append((provider, model))
     return attempts

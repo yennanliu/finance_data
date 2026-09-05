@@ -1,0 +1,42 @@
+name: Set up Python environment
+description: >
+  Set up Python with the pip cache enabled and install the given packages.
+  Centralises the setup-python + pip install pair that every job in this repo
+  repeats, and quotes requirement specifiers correctly (see below).
+
+inputs:
+  python-version:
+    description: Python version for actions/setup-python.
+    required: false
+    default: "3.11"
+  packages:
+    description: >
+      Requirement specifiers, space- or newline-separated
+      (e.g. "yfinance>=0.2.40 openai>=1.0.0"). Leave empty for a job whose
+      scripts are pure-stdlib.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: pip
+
+    - name: Install ${{ inputs.packages }}
+      if: inputs.packages != ''
+      shell: bash
+      env:
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        set -euo pipefail
+        python -m pip install --upgrade pip
+        # Piped through xargs rather than interpolated into the command line:
+        # unquoted `pip install pytest>=7.0` makes the shell read `>=7.0` as a
+        # redirect, so the package installs UNPINNED and the runner grows a
+        # junk file named `=7.0`. xargs hands each specifier to pip as one
+        # argv entry, with no redirection or globbing.
+        printf '%s\n' "$PACKAGES" | xargs --no-run-if-empty python -m pip install

@@ -1,6 +1,6 @@
 name: Cleanup Refusal Posts
 
-# ── Schedule & Manual Trigger ─────────────────────────────────────
+# Deletes reports whose body is an LLM refusal rather than an analysis.
 on:
   schedule:
     # Daily at 2:00 AM UTC (10:00 AM Taipei)
@@ -48,200 +48,195 @@ jobs:
       # ── 1. Checkout ────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # Shallow: the search reads the working tree, not history.
 
       # ── 2. Resolve parameters ─────────────────────────────────
+      # All four inputs are resolved to outputs exactly once here, so no later
+      # step has to restate a `|| 'false'` default in an `if:` or an echo.
       - name: Resolve parameters
         id: params
+        env:
+          IN_PATTERN: ${{ github.event.inputs.search_pattern }}
+          IN_DIRECTORY: ${{ github.event.inputs.search_directory }}
+          IN_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          IN_AUTO_COMMIT: ${{ github.event.inputs.auto_commit }}
         run: |
-          PATTERN="${{ github.event.inputs.search_pattern }}"
-          PATTERN="${PATTERN:-抱歉，我無法完成這項請求。}"
+          set -euo pipefail
+          PATTERN="${IN_PATTERN:-抱歉，我無法完成這項請求。}"
+          DIRECTORY="${IN_DIRECTORY:-.}"
+          DRY_RUN="${IN_DRY_RUN:-false}"
+          AUTO_COMMIT="${IN_AUTO_COMMIT:-true}"
 
-          DIRECTORY="${{ github.event.inputs.search_directory }}"
-          DIRECTORY="${DIRECTORY:-.}"
-
-          echo "search_pattern=$PATTERN" >> $GITHUB_OUTPUT
-          echo "search_directory=$DIRECTORY" >> $GITHUB_OUTPUT
+          {
+            echo "search_pattern=${PATTERN}"
+            echo "search_directory=${DIRECTORY}"
+            echo "dry_run=${DRY_RUN}"
+            echo "auto_commit=${AUTO_COMMIT}"
+          } >> "$GITHUB_OUTPUT"
 
           echo "📋 Cleanup Configuration:"
-          echo "  Pattern: $PATTERN"
-          echo "  Directory: $DIRECTORY"
-          echo "  Dry-run: ${{ github.event.inputs.dry_run || 'false' }}"
-          echo "  Auto-commit: ${{ github.event.inputs.auto_commit || 'true' }}"
+          echo "  Pattern:     ${PATTERN}"
+          echo "  Directory:   ${DIRECTORY}"
+          echo "  Dry-run:     ${DRY_RUN}"
+          echo "  Auto-commit: ${AUTO_COMMIT}"
 
-      # ── 3. Find and delete refusal files ───────────────────────
+      # ── 3. Find matching files ─────────────────────────────────
       - name: Find files with refusal message
         id: find
+        env:
+          PATTERN: ${{ steps.params.outputs.search_pattern }}
+          DIRECTORY: ${{ steps.params.outputs.search_directory }}
         run: |
+          set -euo pipefail
           echo "🔍 Searching for refusal message..."
-          echo ""
 
-          # Find all files containing the refusal message
-          REFUSAL_FILES=$(grep -r "${{ steps.params.outputs.search_pattern }}" "${{ steps.params.outputs.search_directory }}" \
+          LIST="$RUNNER_TEMP/refusal_files.txt"
+          # Quoted: an unquoted pattern was word-split, so a refusal message
+          # containing a space searched for the wrong thing.
+          grep -r "$PATTERN" "$DIRECTORY" \
             --include="*.md" \
             --include="*.html" \
             --exclude-dir=.git \
             --exclude-dir=.github \
             --exclude-dir=.venv \
             --exclude-dir=node_modules \
-            -l 2>/dev/null || true)
+            -l > "$LIST" 2>/dev/null || true
 
-          if [ -z "$REFUSAL_FILES" ]; then
+          if [ ! -s "$LIST" ]; then
             echo "✅ No files with refusal message found."
-            echo "files_found=false" >> $GITHUB_OUTPUT
+            echo "files_found=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           echo "Found files with refusal message:"
-          echo "$REFUSAL_FILES" | while read file; do
-            echo "  ❌ $file"
-          done
+          sed 's/^/  ❌ /' "$LIST"
 
-          # Save to output for next step
-          echo "$REFUSAL_FILES" > /tmp/refusal_files.txt
-          echo "files_found=true" >> $GITHUB_OUTPUT
-          echo "file_count=$(echo "$REFUSAL_FILES" | wc -l)" >> $GITHUB_OUTPUT
+          {
+            echo "files_found=true"
+            echo "file_count=$(wc -l < "$LIST" | tr -d ' ')"
+            echo "list=${LIST}"
+          } >> "$GITHUB_OUTPUT"
 
-      # ── 3. Delete files (unless dry-run) ────────────────────────
+      # ── 4. Delete files (unless dry-run) ───────────────────────
       - name: Delete refusal files
         if: steps.find.outputs.files_found == 'true'
         env:
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          DRY_RUN: ${{ steps.params.outputs.dry_run }}
+          LIST: ${{ steps.find.outputs.list }}
         run: |
+          set -euo pipefail
           if [ "$DRY_RUN" = "true" ]; then
-            echo "🏜️  DRY RUN MODE - No files will be deleted"
-            echo ""
-            echo "Files that would be deleted:"
-            cat /tmp/refusal_files.txt | while read file; do
-              echo "  [WOULD DELETE] $file"
-            done
+            echo "🏜️  DRY RUN MODE — no files will be deleted"
+            sed 's/^/  [WOULD DELETE] /' "$LIST"
             exit 0
           fi
 
           echo "🗑️  Deleting files with refusal message..."
-          echo ""
-
-          cat /tmp/refusal_files.txt | while read file; do
+          # -r: a path containing a backslash would otherwise be mangled.
+          while IFS= read -r file; do
             if [ -f "$file" ]; then
               rm -f "$file"
               echo "  ✓ Deleted: $file"
             fi
-          done
+          done < "$LIST"
 
-          echo ""
           echo "✅ Cleanup complete"
 
-      # ── 4. Commit and push changes ─────────────────────────────
-      - name: Commit and push changes
-        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.auto_commit != 'false'
+      # ── 5. Build the commit message ────────────────────────────
+      # Assembled here as a multi-line step output rather than as a stack of
+      # `git commit -m` arguments inside a `run: |` block. That construction
+      # once had its continuation lines land at column 0, which closed the
+      # block scalar and made the whole workflow unparseable — it failed at 0s
+      # on every trigger and never ran. A step output cannot break that way.
+      - name: Build commit message
+        id: msg
+        if: >
+          steps.find.outputs.files_found == 'true' &&
+          steps.params.outputs.dry_run != 'true' &&
+          steps.params.outputs.auto_commit != 'false'
+        env:
+          PATTERN: ${{ steps.params.outputs.search_pattern }}
+          DIRECTORY: ${{ steps.params.outputs.search_directory }}
+          FILE_COUNT: ${{ steps.find.outputs.file_count }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+          {
+            echo "message<<COMMIT_MSG_EOF"
+            echo "chore: cleanup ${FILE_COUNT} files with refusal message"
+            echo ""
+            echo "Automated cleanup: removed files containing pattern"
+            echo ""
+            echo "- Pattern: ${PATTERN}"
+            echo "- Directory: ${DIRECTORY}"
+            echo "- File count: ${FILE_COUNT}"
+            echo "- Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+            echo ""
+            echo "[skip ci]"
+            echo "COMMIT_MSG_EOF"
+          } >> "$GITHUB_OUTPUT"
 
-          # Check if there are changes
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
+      # ── 6. Commit and push ─────────────────────────────────────
+      - name: Commit and push changes
+        if: >
+          steps.find.outputs.files_found == 'true' &&
+          steps.params.outputs.dry_run != 'true' &&
+          steps.params.outputs.auto_commit != 'false'
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: "."
+          # -u, not --all: this job only ever *removes* tracked files, so
+          # --all could sweep in an unrelated untracked stray.
+          add-flags: "-u"
+          message: ${{ steps.msg.outputs.message }}
 
-          # Stage deleted files. -u (tracked only) rather than -A: this job only
-          # ever removes tracked files, so -A could sweep in unrelated strays.
-          git add -u
-
-          # Commit
-          FILE_COUNT=${{ steps.find.outputs.file_count }}
-          PATTERN="${{ steps.params.outputs.search_pattern }}"
-          DIRECTORY="${{ steps.params.outputs.search_directory }}"
-
-          # NOTE: every line here must stay indented inside the `run: |` block.
-          # This message used to be a single -m whose continuation lines sat at
-          # column 0, which closed the block scalar and made the whole workflow
-          # unparseable — it failed at 0s on every trigger and never ran.
-          TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
-          BODY=$(printf -- '- Pattern: %s\n- Directory: %s\n- File count: %s\n- Timestamp: %s' \
-            "$PATTERN" "$DIRECTORY" "$FILE_COUNT" "$TIMESTAMP")
-
-          git commit \
-            -m "chore: cleanup $FILE_COUNT files with refusal message" \
-            -m "Automated cleanup: removed files containing pattern" \
-            -m "$BODY" \
-            -m "[skip ci]"
-
-          # Push to the branch this run is actually on, not a hardcoded "main".
-          #
-          # `git push origin main` pushes the local *main ref*, which on a
-          # workflow_dispatch from a feature branch does not exist — the run
-          # dies with "src refspec main does not match any" and the cleanup is
-          # lost. Note the fix is NOT `HEAD:main`: that succeeds, and pushes
-          # every unreviewed commit on the feature branch straight onto main.
-          # Pushing HEAD to the current ref keeps a dispatched run on its own
-          # branch, and is identical to the old behaviour for the scheduled run
-          # (where GITHUB_REF_NAME is "main").
-          #
-          # This cron (0 2 * * *) collides with daily_analysis (MU fundamental)
-          # and qa_report_quality, so retry around a rebase.
-          BRANCH="${GITHUB_REF_NAME}"
-          echo "📤 Pushing changes to ${BRANCH}..."
-          pushed=""
-          for i in 1 2 3 4 5; do
-            if git push origin "HEAD:${BRANCH}"; then
-              echo "✅ Changes pushed to ${BRANCH}"
-              pushed=yes
-              break
-            fi
-            echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
-            sleep 10
-            git pull --rebase origin "${BRANCH}"
-          done
-
-          if [ -z "$pushed" ]; then
-            echo "::error::Push failed after 5 attempts — cleanup was NOT persisted."
-            exit 1
-          fi
-
-      # ── Skip auto-commit notice
+      # ── 7. Notices & summary ───────────────────────────────────
       - name: Auto-commit disabled notice
-        if: steps.find.outputs.files_found == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.auto_commit == 'false'
+        if: >
+          steps.find.outputs.files_found == 'true' &&
+          steps.params.outputs.dry_run != 'true' &&
+          steps.params.outputs.auto_commit == 'false'
+        env:
+          LIST: ${{ steps.find.outputs.list }}
         run: |
           echo "⚠️  Auto-commit is disabled"
-          echo ""
           echo "Files have been deleted but NOT committed:"
-          cat /tmp/refusal_files.txt
-          echo ""
+          cat "$LIST"
           echo "To commit manually, run:"
-          echo "  git add -A && git commit -m 'chore: cleanup files' && git push"
+          echo "  git add -u && git commit -m 'chore: cleanup files' && git push"
 
-      # ── 5. Summary ─────────────────────────────────────────────
       - name: Job summary
         if: always()
+        env:
+          FILES_FOUND: ${{ steps.find.outputs.files_found }}
+          FILE_COUNT: ${{ steps.find.outputs.file_count }}
+          PATTERN: ${{ steps.params.outputs.search_pattern }}
+          DIRECTORY: ${{ steps.params.outputs.search_directory }}
+          DRY_RUN: ${{ steps.params.outputs.dry_run }}
+          AUTO_COMMIT: ${{ steps.params.outputs.auto_commit }}
         run: |
-          echo "## Cleanup Job Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ steps.find.outputs.files_found }}" = "true" ]; then
-            echo "**Status:** ✅ Files found and processed" >> $GITHUB_STEP_SUMMARY
-            echo "**Count:** ${{ steps.find.outputs.file_count }} files" >> $GITHUB_STEP_SUMMARY
-
-            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-              echo "**Mode:** 🏜️ Dry-run (no deletion)" >> $GITHUB_STEP_SUMMARY
-            else
-              if [ "${{ github.event.inputs.auto_commit }}" = "false" ]; then
-                echo "**Mode:** 🗑️ Files deleted (manual commit required)" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "## Cleanup Job Summary"
+            echo ""
+            if [ "$FILES_FOUND" = "true" ]; then
+              echo "**Status:** ✅ Files found and processed"
+              echo "**Count:** ${FILE_COUNT} files"
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "**Mode:** 🏜️ Dry-run (no deletion)"
+              elif [ "$AUTO_COMMIT" = "false" ]; then
+                echo "**Mode:** 🗑️ Files deleted (manual commit required)"
               else
-                echo "**Mode:** 🗑️ Cleanup executed & committed" >> $GITHUB_STEP_SUMMARY
+                echo "**Mode:** 🗑️ Cleanup executed & committed"
               fi
+            else
+              echo "**Status:** ✅ No matching files found"
+              echo "**Action:** None required"
             fi
-          else
-            echo "**Status:** ✅ No matching files found" >> $GITHUB_STEP_SUMMARY
-            echo "**Action:** None required" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
-          echo "**Search Pattern:** \`${{ steps.params.outputs.search_pattern }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Search Directory:** \`${{ steps.params.outputs.search_directory }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Dry-run:** ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Auto-commit:** ${{ github.event.inputs.auto_commit || 'true' }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Schedule:** Daily at 2:00 AM UTC (when triggered automatically)" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "### Configuration"
+            echo "**Search Pattern:** \`${PATTERN}\`"
+            echo "**Search Directory:** \`${DIRECTORY}\`"
+            echo "**Dry-run:** ${DRY_RUN}"
+            echo "**Auto-commit:** ${AUTO_COMMIT}"
+            echo ""
+            echo "**Schedule:** Daily at 2:00 AM UTC (when triggered automatically)"
+          } >> "$GITHUB_STEP_SUMMARY"

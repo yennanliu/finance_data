@@ -1,0 +1,89 @@
+name: Commit and push
+description: >
+  Stage the given paths as github-actions[bot], commit if anything changed, and
+  push with rebase-and-retry. Replaces the commit/push tail that was
+  hand-rolled in nine workflows, in three subtly different variants.
+
+inputs:
+  paths:
+    description: >
+      Space- or newline-separated pathspecs to stage (e.g. "ai_gen_report
+      data/prices"). Every path must exist — a typo should fail the run loudly
+      rather than silently commit nothing.
+    required: true
+  message:
+    description: >
+      Commit message. May be multi-line: the first line is the subject and the
+      rest becomes the body (that is how a trailer such as "[skip ci]" is
+      passed).
+    required: true
+  add-flags:
+    description: >
+      Flags for `git add`. The default `--all` stages new, modified and deleted
+      files under `paths`. Pass `-u` for a job that only ever *removes* tracked
+      files, so unrelated untracked strays cannot be swept in.
+    required: false
+    default: "--all"
+  attempts:
+    description: Push attempts before failing the step.
+    required: false
+    default: "5"
+
+runs:
+  using: composite
+  steps:
+    - name: Commit and push
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+        MESSAGE: ${{ inputs.message }}
+        ADD_FLAGS: ${{ inputs.add-flags }}
+        ATTEMPTS: ${{ inputs.attempts }}
+      run: |
+        set -euo pipefail
+
+        git config user.name  "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # PATHS and ADD_FLAGS are deliberately word-split into a pathspec list.
+        # shellcheck disable=SC2086
+        git add $ADD_FLAGS -- $PATHS
+
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+          exit 0
+        fi
+
+        # One summary line. Makes an unexpected full-file rewrite obvious in the
+        # log — an ordinary run touches a handful of files.
+        git diff --cached --stat | tail -1
+
+        git commit -m "$MESSAGE"
+
+        # Push to the ref this run is actually on, never a hardcoded "main".
+        #
+        # `git push origin main` pushes the local *main ref*, which on a
+        # workflow_dispatch from a feature branch does not exist — the run dies
+        # with "src refspec main does not match any" and the work is lost. The
+        # fix is NOT `HEAD:main` either: that succeeds, and pushes every
+        # unreviewed commit on the feature branch straight onto main. Pushing
+        # HEAD to the *current* ref keeps a dispatched run on its own branch and
+        # is identical to the old behaviour for scheduled runs, where
+        # GITHUB_REF_NAME is already "main".
+        BRANCH="$GITHUB_REF_NAME"
+
+        # Retry around a rebase: ~100 scheduled jobs a day commit to this same
+        # branch, so a first push losing the race is routine rather than
+        # exceptional. Without the retry the loser silently drops its output.
+        for i in $(seq 1 "$ATTEMPTS"); do
+          if git push origin "HEAD:${BRANCH}"; then
+            echo "✅ Committed and pushed to ${BRANCH}."
+            exit 0
+          fi
+          echo "⚠️ Push failed (attempt ${i}/${ATTEMPTS}), rebasing and retrying in 10s..."
+          sleep 10
+          git pull --rebase origin "$BRANCH"
+        done
+
+        echo "::error::Push failed after ${ATTEMPTS} attempts — changes were NOT persisted."
+        exit 1

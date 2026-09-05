@@ -16,20 +16,22 @@ jobs:
   quality-check:
     name: Check Report Quality
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0    # full history so the commit step can pull --rebase
+        # Shallow: the audit reads the working tree, not history, and the commit
+        # step only adds a commit on top of the fetched tip.
 
+      # No packages: check_report_quality.py, check_mermaid.py and prune_qa.py
+      # are pure-stdlib (verified by running the checker with nothing
+      # installed). This replaced `pip install -e ".[dev]" || pip install
+      # yfinance` — the editable install always failed for want of a
+      # build-system backend, so the fallback was the only thing that ever ran,
+      # and even that was never imported.
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install -e ".[dev]" --quiet || pip install yfinance --quiet
+        uses: ./.github/actions/python-env
 
       - name: Run quality checker
         run: |
@@ -77,34 +79,12 @@ jobs:
           \`\`\`
           EOF
 
+      - name: Resolve commit date
+        id: meta
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
       - name: Commit QA results
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A qa/          # -A so pruned files are staged as deletions
-          # Only commit if there are changes
-          if git diff --staged --quiet; then
-            echo "No changes in QA output — skipping commit."
-          else
-            TODAY=$(date -u +%Y-%m-%d)
-            git commit -m "chore: auto-generate QA quality report ${TODAY}"
-
-            # This cron (0 2 * * *) collides with daily_analysis (MU fundamental)
-            # and cleanup_refusals, so a bare push loses the race outright.
-            pushed=""
-            for i in 1 2 3 4 5; do
-              if git push; then
-                echo "✅ QA results pushed."
-                pushed=yes
-                break
-              fi
-              echo "⚠️ Push failed (attempt $i/5), rebasing and retrying in 10s..."
-              sleep 10
-              git pull --rebase origin main
-            done
-
-            if [ -z "$pushed" ]; then
-              echo "::error::Push failed after 5 attempts — QA results were NOT persisted."
-              exit 1
-            fi
-          fi
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: qa
+          message: "chore: auto-generate QA quality report ${{ steps.meta.outputs.date }}"

@@ -24,6 +24,8 @@ on:
       - "mkdocs.yml"
       - "scripts/build_docs.py"
       - "scripts/validate_sample_site.py"
+      - ".github/actions/build-site/**"
+      - ".github/actions/python-env/**"
       - ".github/workflows/sample_build.yml"
       - "docs/overrides/**"
       - "docs/stylesheets/**"
@@ -41,6 +43,7 @@ jobs:
   sample-build:
     name: Build & validate sample site
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       SAMPLE_BUILD: "1"
       SAMPLE_TICKERS: ${{ github.event.inputs.tickers || 'aapl,msft,nvda' }}
@@ -49,35 +52,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install MkDocs & plugins
-        run: |
-          pip install --upgrade pip
-          pip install \
-            mkdocs-material==9.5.* \
-            mkdocs-awesome-pages-plugin \
-            mkdocs-minify-plugin \
-            Pillow \
-            cairosvg
-
-      # Build WITHOUT mmdc on PATH so Mermaid blocks stay as fences (matching the
+      # Same composite action deploy.yml uses, so this smoke build is
+      # guaranteed to install the plugin set production installs. Runs BEFORE
+      # mmdc is on PATH so Mermaid blocks stay as fences (matching the
       # production client-side render) and the validator can check them itself.
-      - name: Generate sample docs content
-        run: python scripts/build_docs.py --clean
-
-      - name: Inject build date into templates
-        run: |
-          BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
-          sed -i "s/__BUILD_DATE__/${BUILD_DATE} (SAMPLE)/g" docs/overrides/main.html
-          sed -i "s/__BUILD_DATE__/${BUILD_DATE} (SAMPLE)/g" docs/overrides/home.html
-
-      - name: Build MkDocs site (strict)
-        run: mkdocs build --clean --strict
+      - name: Build sample site
+        uses: ./.github/actions/build-site
+        with:
+          date-suffix: "(SAMPLE)"
+          build-args: "--clean"
 
       - name: Set up Node & Mermaid CLI (for validation)
         uses: actions/setup-node@v4

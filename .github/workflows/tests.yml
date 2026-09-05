@@ -7,16 +7,21 @@ name: Tests
 on:
   push:
     branches: ["**"]
+    # Kept identical to the pull_request list below. GitHub's workflow parser
+    # does not officially support YAML anchors, so this stays duplicated rather
+    # than risk the trigger silently never matching.
     paths:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
+      - ".github/actions/python-env/**"
       - ".github/workflows/tests.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
+      - ".github/actions/python-env/**"
       - ".github/workflows/tests.yml"
   workflow_dispatch:
 
@@ -32,6 +37,7 @@ jobs:
   pytest:
     name: pytest (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -41,25 +47,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
-
-      - name: Install dependencies
-        # Explicit install (not `pip install -e .`) — there is no build-system
-        # backend declared, and the suite only needs the runtime deps + pytest.
-        # Imports resolve via [tool.pytest.ini_options] pythonpath, no install.
-        # selenium / webdriver-manager / playwright are intentionally omitted:
-        # those code paths are mocked and never imported by the tests.
-        run: |
-          python -m pip install --upgrade pip
-          pip install \
-            pytest>=7.0 pytest-mock>=3.0 \
-            anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 \
-            yfinance>=0.2.40 \
-            beautifulsoup4>=4.14.2 requests>=2.32.5
+          # Explicit install (not `pip install -e .`) — there is no build-system
+          # backend declared, and the suite only needs the runtime deps + pytest.
+          # Imports resolve via [tool.pytest.ini_options] pythonpath, no install.
+          # selenium / webdriver-manager / playwright are intentionally omitted:
+          # those code paths are mocked and never imported by the tests.
+          packages: >-
+            pytest>=7.0
+            pytest-mock>=3.0
+            anthropic>=0.40.0
+            openai>=1.0.0
+            google-genai>=1.0.0
+            yfinance>=0.2.40
+            beautifulsoup4>=4.14.2
+            requests>=2.32.5
 
       - name: Run test suite
         run: python -m pytest tests/ -v

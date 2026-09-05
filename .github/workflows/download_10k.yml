@@ -38,20 +38,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # Shallow: the incremental skip-check reads 10-k/ from the working tree.
 
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
           python-version: "3.13"
-          cache: pip
+          packages: >-
+            requests
+            playwright
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests playwright
-          python -m playwright install --with-deps chromium
+      - name: Install Chromium for Playwright
+        run: python -m playwright install --with-deps chromium
 
       - name: Download report(s)
         env:
@@ -73,23 +71,20 @@ jobs:
             done
           fi
 
-      - name: Commit and push new reports
+      - name: Resolve commit message
+        id: meta
         env:
           TICKER: ${{ github.event.inputs.ticker }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add 10-k/
-          if git diff --cached --quiet; then
-            echo "No new reports."
+          set -euo pipefail
+          if [ -n "$TICKER" ]; then
+            echo "message=chore: download $TICKER 10-K reports" >> "$GITHUB_OUTPUT"
           else
-            if [ -n "$TICKER" ]; then
-              MSG="chore: download $TICKER 10-K reports"
-            else
-              MSG="chore: monthly 10-K refresh from SEC EDGAR"
-            fi
-            git commit -m "$MSG"
-            git pull --rebase origin main
-            git push
-            echo "Committed and pushed."
+            echo "message=chore: monthly 10-K refresh from SEC EDGAR" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Commit and push new reports
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: 10-k
+          message: ${{ steps.meta.outputs.message }}

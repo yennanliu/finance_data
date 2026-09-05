@@ -38,10 +38,14 @@ on:
           - openai
           - claude
       model:
-        description: "Model ID"
+        description: "Model ID (ignored if it does not belong to the chosen provider)"
         required: false
         default: "gemini-3.8-flash"
         type: choice
+        # Kept in the same grouping/order as daily_analysis.yml and
+        # daily_market_news.yml: workflow_dispatch choices cannot be shared
+        # between files, so the next model addition should be a copy-paste
+        # rather than a three-way merge.
         options:
           # OpenAI models
           - gpt-5.6-luna
@@ -50,20 +54,21 @@ on:
           - gpt-4o
           - gpt-4o-mini
           - gpt-4-turbo
-          # Claude models
-          - claude-sonnet-4-6
-          - claude-opus-4-6
-          - claude-haiku-4-5-20251001
-          # Gemini models
+          # Gemini 3.x models (latest)
           - gemini-3.8-flash
           - gemini-3.7-flash
           - gemini-3.6-flash
           - gemini-3.5-flash
           - gemini-3.1-pro-preview
           - gemini-3.1-flash-lite
-          - gemini-2.5-pro
+          # Gemini 2.5 models (stable)
           - gemini-2.5-flash
+          - gemini-2.5-pro
           - gemini-2.5-flash-lite
+          # Claude models
+          - claude-sonnet-4-6
+          - claude-opus-4-6
+          - claude-haiku-4-5-20251001
       max_tokens:
         description: "Max output tokens"
         required: false
@@ -86,78 +91,46 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
+        # Shallow: nothing here reads history, and the pack is ~1 GB.
+
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
-          fetch-depth: 0
+          packages: >-
+            anthropic>=0.40.0
+            openai>=1.0.0
+            google-genai>=1.0.0
+            yfinance>=0.2.40
 
-      # ── 2. Python ──────────────────────────────────────────────────────────
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      # ── 3. Dependencies ────────────────────────────────────────────────────
-      - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install anthropic>=0.40.0 openai>=1.0.0 google-genai>=1.0.0 yfinance>=0.2.40
-
-      # ── 4. Resolve parameters ──────────────────────────────────────────────
       - name: Resolve analysis parameters
         id: params
+        env:
+          IN_TICKER: ${{ github.event.inputs.ticker }}
+          IN_ANALYSIS_TYPE: ${{ github.event.inputs.analysis_type }}
         run: |
-          TICKER="${{ github.event.inputs.ticker }}"
-          ANALYSIS_TYPE="${{ github.event.inputs.analysis_type }}"
-          PROVIDER="${{ github.event.inputs.provider }}"
-          MODEL="${{ github.event.inputs.model }}"
-          MAX_TOKENS="${{ github.event.inputs.max_tokens }}"
-          TRANSCRIPT_URL="${{ github.event.inputs.transcript_url }}"
+          set -euo pipefail
+          TICKER="$(echo "${IN_TICKER:-AAPL}" | tr '[:lower:]' '[:upper:]')"
 
-          TICKER="${TICKER:-AAPL}"
-          ANALYSIS_TYPE="${ANALYSIS_TYPE:-earnings-call-analysis}"
-          PROVIDER="${PROVIDER:-gemini}"
-          MODEL="${MODEL:-gemini-3.8-flash}"
-          MAX_TOKENS="${MAX_TOKENS:-20000}"
-
-          # Auto-correct model when it doesn't match the chosen provider
-          case "$PROVIDER" in
-            gemini) [[ "$MODEL" != gemini-* ]] && MODEL="gemini-3.8-flash" ;;
-            openai) [[ "$MODEL" != gpt-*    ]] && MODEL="gpt-4o" ;;
-            claude) [[ "$MODEL" != claude-* ]] && MODEL="claude-sonnet-4-6" ;;
-          esac
-
-          TICKER_UPPER=$(echo "$TICKER" | tr '[:lower:]' '[:upper:]')
-          TICKER_LOWER=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
-          OUTPUT_DIR="ai_gen_report/stock/${TICKER_LOWER}"
-
-          echo "ticker=${TICKER_UPPER}"          >> "$GITHUB_OUTPUT"
-          echo "analysis_type=${ANALYSIS_TYPE}"  >> "$GITHUB_OUTPUT"
-          echo "provider=${PROVIDER}"            >> "$GITHUB_OUTPUT"
-          echo "model=${MODEL}"                  >> "$GITHUB_OUTPUT"
-          echo "max_tokens=${MAX_TOKENS}"         >> "$GITHUB_OUTPUT"
-          echo "output_dir=${OUTPUT_DIR}"         >> "$GITHUB_OUTPUT"
-          echo "transcript_url=${TRANSCRIPT_URL}" >> "$GITHUB_OUTPUT"
+          {
+            echo "ticker=${TICKER}"
+            echo "analysis_type=${IN_ANALYSIS_TYPE:-earnings-call-analysis}"
+            echo "date=$(date -u +%Y-%m-%d)"
+          } >> "$GITHUB_OUTPUT"
 
           echo "=== Parameters ==="
-          echo "  Ticker:        ${TICKER_UPPER}"
-          echo "  Analysis type: ${ANALYSIS_TYPE}"
-          echo "  Provider:      ${PROVIDER}"
-          echo "  Model:         ${MODEL}"
-          echo "  Max tokens:    ${MAX_TOKENS}"
-          echo "  Output dir:    ${OUTPUT_DIR}"
-          echo "  Transcript URL:${TRANSCRIPT_URL:-none}"
+          echo "  Ticker:        ${TICKER}"
+          echo "  Analysis type: ${IN_ANALYSIS_TYPE:-earnings-call-analysis}"
 
-      # ── 5. Fetch transcript (optional, earnings-call only) ─────────────────
       - name: Fetch transcript content (if URL provided)
         id: transcript
         if: >
           github.event.inputs.analysis_type == 'earnings-call-analysis' &&
           github.event.inputs.transcript_url != ''
+        env:
+          URL: ${{ github.event.inputs.transcript_url }}
         run: |
-          URL="${{ steps.params.outputs.transcript_url }}"
           echo "Fetching transcript from: ${URL}"
           TRANSCRIPT=$(curl -fsSL --max-time 30 "$URL" \
             | python3 -c "
@@ -171,48 +144,31 @@ jobs:
           " 2>/dev/null || echo "")
 
           if [ -n "$TRANSCRIPT" ]; then
-            echo "transcript_content<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$TRANSCRIPT"             >> "$GITHUB_OUTPUT"
-            echo "EOF"                     >> "$GITHUB_OUTPUT"
+            {
+              echo "transcript_content<<EOF"
+              echo "$TRANSCRIPT"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
             echo "✅ Transcript fetched (${#TRANSCRIPT} chars)"
           else
-            echo "transcript_content="     >> "$GITHUB_OUTPUT"
+            echo "transcript_content=" >> "$GITHUB_OUTPUT"
             echo "⚠️  Could not fetch transcript, falling back to Yahoo Finance data."
           fi
 
-      # ── 6. Verify API key secrets for the whole fallback chain ─────────────
+      # Checks the key for the primary provider AND every fallback level, so a
+      # fallback attempt never runs without its key.
       - name: Check provider API key secrets
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          PROVIDER: ${{ steps.params.outputs.provider }}
-          MODEL: ${{ steps.params.outputs.model }}
-        run: |
-          # Validate the secret for EVERY provider the generator might use — the
-          # primary and each fallback level — resolved from the same chain, so a
-          # fallback attempt never runs without its key.
-          PYTHONPATH=scripts python - <<'PY'
-          import os, sys
-          from analysis.config.providers import resolve_chain
-          keys = {
-              "openai": ("OPENAI_API_KEY", "OPEN_KEY_API"),
-              "gemini": ("GEMINI_API_KEY", "GEMINI_API_KEY"),
-              "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"),
-          }
-          chain = resolve_chain(os.environ.get("PROVIDER") or None, os.environ.get("MODEL") or None)
-          missing = []
-          for provider, _ in chain:
-              env, secret = keys[provider]
-              if os.environ.get(env):
-                  print(f"OK {provider}: {secret} is set")
-              else:
-                  print(f"::error::{secret} secret is not set (required for '{provider}' in the fallback chain)")
-                  missing.append(secret)
-          sys.exit(1 if missing else 0)
-          PY
+          PROVIDER: ${{ github.event.inputs.provider }}
+          MODEL: ${{ github.event.inputs.model }}
+        run: python scripts/check_provider_keys.py
 
-      # ── 7. Generate report ─────────────────────────────────────────────────
+      # --output-dir is deliberately not passed: every analysis type handled
+      # here lands in ai_gen_report/stock/<ticker>/, which is exactly what
+      # generate_analysis.py defaults to.
       - name: Generate analysis report
         timeout-minutes: 20
         env:
@@ -222,39 +178,22 @@ jobs:
           TRANSCRIPT_CONTENT: ${{ steps.transcript.outputs.transcript_content }}
           TICKER: ${{ steps.params.outputs.ticker }}
           ANALYSIS_TYPE: ${{ steps.params.outputs.analysis_type }}
-          OUTPUT_DIR: ${{ steps.params.outputs.output_dir }}
-          PROVIDER: ${{ steps.params.outputs.provider }}
-          MODEL: ${{ steps.params.outputs.model }}
-          MAX_TOKENS: ${{ steps.params.outputs.max_tokens }}
+          PROVIDER: ${{ github.event.inputs.provider }}
+          MODEL: ${{ github.event.inputs.model }}
+          MAX_TOKENS: ${{ github.event.inputs.max_tokens }}
         run: |
-          python scripts/generate_analysis.py \
-            "$TICKER" \
-            --analysis-type "$ANALYSIS_TYPE" \
-            --output-dir    "$OUTPUT_DIR" \
-            --provider      "$PROVIDER" \
-            --model         "$MODEL" \
-            --max-tokens    "$MAX_TOKENS"
+          set -euo pipefail
+          ARGS=(--analysis-type "$ANALYSIS_TYPE")
+          [ -n "$PROVIDER" ]   && ARGS+=(--provider "$PROVIDER")
+          [ -n "$MODEL" ]      && ARGS+=(--model "$MODEL")
+          [ -n "$MAX_TOKENS" ] && ARGS+=(--max-tokens "$MAX_TOKENS")
+          python scripts/generate_analysis.py "$TICKER" "${ARGS[@]}"
 
-      # ── 8. Commit & push ───────────────────────────────────────────────────
       - name: Commit and push report
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          echo "📥 Pulling latest changes from remote..."
-          git pull --rebase origin main
-
-          git add "${{ steps.params.outputs.output_dir }}/"
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            TICKER="${{ steps.params.outputs.ticker }}"
-            ATYPE="${{ steps.params.outputs.analysis_type }}"
-            git commit -m "chore: auto-generate ${TICKER} ${ATYPE} ${DATE}"
-
-            echo "📤 Pushing changes to remote..."
-            git push
-            echo "✅ Report committed and pushed."
-          fi
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: ai_gen_report
+          message: >-
+            chore: auto-generate ${{ steps.params.outputs.ticker }}
+            ${{ steps.params.outputs.analysis_type }}
+            ${{ steps.params.outputs.date }}

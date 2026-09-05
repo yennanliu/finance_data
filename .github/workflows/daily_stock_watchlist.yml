@@ -48,21 +48,21 @@ jobs:
     name: Generate Fundamental Stock Watchlist
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # Defaults for the scheduled run, which supplies no inputs. Matches the
+      # job-env pattern used by daily_market_news.yml.
+      DEFAULT_MODEL: gemini-3.5-flash
+      DEFAULT_MAX_TOKENS: "16000"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # Shallow: nothing here reads history.
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
         with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: pip install google-genai>=1.0.0
+          packages: google-genai>=1.0.0
 
       - name: Check API key
         env:
@@ -77,25 +77,20 @@ jobs:
       - name: Generate watchlist
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          IN_MODEL: ${{ github.event.inputs.model }}
+          IN_MAX_TOKENS: ${{ github.event.inputs.max_tokens }}
         run: |
-          MODEL="${{ github.event.inputs.model || 'gemini-3.5-flash' }}"
-          MAX_TOKENS="${{ github.event.inputs.max_tokens || '16000' }}"
+          set -euo pipefail
           python scripts/generate_stock_watchlist.py \
-            --model "$MODEL" \
-            --max-tokens "$MAX_TOKENS"
+            --model      "${IN_MODEL:-$DEFAULT_MODEL}" \
+            --max-tokens "${IN_MAX_TOKENS:-$DEFAULT_MAX_TOKENS}"
+
+      - name: Resolve commit date
+        id: meta
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push watchlist
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ws/
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            DATE=$(date -u +"%Y-%m-%d")
-            git commit -m "chore: auto-generate stock watchlist ${DATE}"
-            git pull --rebase origin main
-            git push
-            echo "✅ Watchlist committed and pushed."
-          fi
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: ws
+          message: "chore: auto-generate stock watchlist ${{ steps.meta.outputs.date }}"
