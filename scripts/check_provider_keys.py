@@ -40,6 +40,11 @@ PROVIDER_KEYS = {
 
 
 def main() -> int:
+    """Check every provider in the resolved chain has its API key set.
+
+    Returns 0 when all of them do, 1 otherwise (each miss printed as an
+    ``::error::`` annotation naming the secret and the provider that needs it).
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--provider",

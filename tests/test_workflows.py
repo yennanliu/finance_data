@@ -23,13 +23,31 @@ SCHEDULED_FANOUT = ["daily_analysis.yml", "daily_market_news.yml"]
 
 CRON_RE = re.compile(r'^\s*- cron:\s*"([^"]+)"', re.MULTILINE)
 CASE_ARM_RE = re.compile(r'^\s*"([^"]+)"\)\s+TICKER=', re.MULTILINE)
+# The whole right-hand side of an arm, i.e. what the slot actually generates:
+# TICKER alone is not it — daily_analysis maps each ticker twice, once per
+# ANALYSIS_TYPE.
+CASE_TARGET_RE = re.compile(
+    r'^\s*"([^"]+)"\)\s+(TICKER=.*?)\s*;;\s*$', re.MULTILINE
+)
 
 
 def _read(name):
+    """Return the text of a workflow file under .github/workflows/."""
     return (WORKFLOWS / name).read_text(encoding="utf-8")
 
 
+def _targets(name):
+    """Map each cron to its normalised case-arm assignment (whitespace in the
+    arms is column alignment, so it must not make two equal targets differ)."""
+    return {
+        cron: " ".join(rhs.split())
+        for cron, rhs in CASE_TARGET_RE.findall(_read(name))
+    }
+
+
 def test_workflow_dir_exists():
+    """Guard the path these tests parse: an empty glob would make every other
+    assertion here vacuously pass."""
     assert WORKFLOWS.is_dir(), f"missing {WORKFLOWS}"
     assert list(WORKFLOWS.glob("*.yml")), "no workflows found"
 
@@ -74,6 +92,34 @@ def test_cron_slots_are_unique(name):
     crons = CRON_RE.findall(_read(name))
     duplicates = sorted({c for c in crons if crons.count(c) > 1})
     assert not duplicates, f"{name}: duplicate cron entries: {duplicates}"
+
+
+@pytest.mark.parametrize("name", SCHEDULED_FANOUT)
+def test_every_cron_slot_generates_a_distinct_report(name):
+    """Unique crons are not enough: two slots can both resolve to the same
+    ticker (and, in daily_analysis, the same analysis type). That publishes one
+    report twice and — since the schedule is written by hand, one line per
+    ticker — usually means the ticker the second line meant to add is missing
+    entirely. Compares the whole assignment, not TICKER alone: daily_analysis
+    maps every ticker twice on purpose, once per ANALYSIS_TYPE."""
+    targets = _targets(name)
+    arms = set(CASE_ARM_RE.findall(_read(name)))
+
+    assert targets, f"{name}: no case-arm targets parsed"
+    assert set(targets) == arms, (
+        f"{name}: {sorted(arms - set(targets))} arm(s) did not parse as a "
+        f"single-line `TICKER=... ;;` assignment; update CASE_TARGET_RE"
+    )
+
+    by_target = {}
+    for cron, target in targets.items():
+        by_target.setdefault(target, []).append(cron)
+    collisions = {t: c for t, c in sorted(by_target.items()) if len(c) > 1}
+    assert not collisions, (
+        f"{name}: {len(collisions)} target(s) are scheduled by more than one "
+        f"cron, so that report is generated twice and whichever ticker the "
+        f"duplicate line meant to schedule is never run: {collisions}"
+    )
 
 
 @pytest.mark.parametrize("name", SCHEDULED_FANOUT)

@@ -1,8 +1,8 @@
 """Per-provider configuration for LLM models and token limits.
 
 This module is the single source of truth for:
-  * ``PROVIDER_DEFAULTS`` — the default model / token budget / model-id prefix
-    for each provider.
+  * ``PROVIDER_DEFAULTS`` — the default model / token budget / accepted
+    model-id prefixes for each provider.
   * ``FALLBACK_CHAIN``    — the ordered provider pool the report generators try,
     stopping at the first success. Reorder or extend this list to change
     fallback behaviour (e.g. add a third level, or slot a new provider in the
@@ -27,18 +27,26 @@ PROVIDER_DEFAULTS = {
     "claude": {
         "default_model": "claude-sonnet-4-6",
         "default_tokens": 32000,
-        "model_prefix": "claude-",
+        "model_prefixes": ("claude-",),
     },
     "openai": {
         # 16000, not 32000: gpt-4o cannot exceed 16,384 output tokens.
         "default_model": "gpt-4o",
         "default_tokens": 16000,
-        "model_prefix": "gpt-",
+        # Not every OpenAI id starts with "gpt-": the reasoning families ship
+        # as o1/o3/o4-mini. A single "gpt-" prefix made resolve_model treat
+        # `--model o3` as a wrong-provider id and hand back gpt-4o instead —
+        # a silent swap that stamps the report with a model nobody chose.
+        # (o-series ids now reach run_openai as asked; that call still sends
+        # max_tokens/temperature, which those models reject, so an o-series
+        # run fails loudly at the API. Supporting them for real means
+        # max_completion_tokens + no temperature override in run_openai.)
+        "model_prefixes": ("gpt-", "o1", "o3", "o4"),
     },
     "gemini": {
         "default_model": "gemini-3.8-flash",
         "default_tokens": 32000,
-        "model_prefix": "gemini-",
+        "model_prefixes": ("gemini-",),
     },
 }
 
@@ -52,8 +60,8 @@ FALLBACK_CHAIN = ["gemini", "openai"]
 def resolve_model(provider, model=None):
     """Return the model id to use for ``provider``.
 
-    ``model`` wins when it actually belongs to ``provider`` (matched on the
-    provider's ``model_prefix``); a mismatched or empty id falls back to that
+    ``model`` wins when it actually belongs to ``provider`` (matched against
+    the provider's ``model_prefixes``); a foreign or empty id falls back to that
     provider's ``default_model``. This is what keeps a stale dropdown selection
     — say ``gpt-4o`` picked alongside ``provider: gemini`` — from being handed
     to an SDK that cannot serve it.
@@ -62,7 +70,7 @@ def resolve_model(provider, model=None):
     only place that knows which ids belong to which provider.
     """
     config = PROVIDER_DEFAULTS[provider]
-    if model and model.startswith(config["model_prefix"]):
+    if model and model.startswith(config["model_prefixes"]):
         return model
     return config["default_model"]
 

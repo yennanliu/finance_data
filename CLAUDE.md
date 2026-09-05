@@ -74,7 +74,7 @@ scripts/generate_analysis.py
 ### Adding a new ticker to daily schedule
 1. Edit `scripts/.ticker_schedule.json` (drives the price store's ticker universe)
 2. Add a `cron:` entry **and** a matching `case` arm in `.github/workflows/daily_analysis.yml` — a scheduled run only knows its cron string, so the arm is what maps it to a ticker. Same for `daily_market_news.yml`
-3. `pytest tests/test_workflows.py` — fails if a cron has no arm (or an arm no cron); an unmapped cron also fails the run itself rather than silently publishing a duplicate TSLA report
+3. `pytest tests/test_workflows.py` — fails if a cron has no arm (or an arm no cron), or if two crons resolve to the same ticker+analysis type; an unmapped cron also fails the run itself rather than silently publishing a duplicate TSLA report
 
 ## Report output
 - Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)

@@ -22,6 +22,7 @@ def _clear_keys(monkeypatch):
 
 
 def _run(argv, monkeypatch):
+    """Invoke the script's ``main()`` with ``argv`` and return its exit code."""
     monkeypatch.setattr("sys.argv", ["check_provider_keys.py", *argv])
     return main()
 
@@ -33,12 +34,14 @@ def test_every_provider_has_a_key_mapping():
 
 
 def test_passes_when_the_whole_chain_has_keys(monkeypatch):
+    """Every level of the chain has its key, so the check clears the run."""
     monkeypatch.setenv("GEMINI_API_KEY", "x")
     monkeypatch.setenv("OPENAI_API_KEY", "y")
     assert _run(["--provider", "gemini", "--model", "gemini-3.8-flash"], monkeypatch) == 0
 
 
 def test_fails_when_no_keys_are_set(monkeypatch):
+    """No key anywhere: fail before the install/fetch steps, not after."""
     assert _run(["--provider", "gemini"], monkeypatch) == 1
 
 
@@ -51,6 +54,7 @@ def test_fails_when_only_the_primary_has_a_key(monkeypatch):
 
 
 def test_fails_when_only_the_fallback_has_a_key(monkeypatch):
+    """The mirror case: the primary's own key missing is just as fatal."""
     monkeypatch.setenv("OPENAI_API_KEY", "y")
     assert _run(["--provider", "gemini"], monkeypatch) == 1
 
@@ -103,6 +107,8 @@ def test_missing_secret_is_reported_by_its_repo_name(capsys, monkeypatch):
 
 
 def test_error_annotations_name_the_provider(capsys, monkeypatch):
+    """Each ::error:: says which chain level needs the secret, so the run
+    summary is actionable without opening the log."""
     _run(["--provider", "gemini"], monkeypatch)
     out = capsys.readouterr().out
     assert "::error::" in out
@@ -111,4 +117,5 @@ def test_error_annotations_name_the_provider(capsys, monkeypatch):
 
 
 def test_module_exposes_main_for_the_cli(monkeypatch):
+    """The workflows call the module as a script; keep main() importable."""
     assert callable(check_provider_keys.main)
