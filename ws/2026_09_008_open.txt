@@ -1,0 +1,976 @@
+Generated: 2026-09-08 00:04 UTC
+Model: gemini-3.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+---
+Rank: 1
+Ticker: AIT
+Company: Applied Industrial Technologies, Inc.
+Sector: Industrials
+Market Cap: ~$8.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 18.0x  |  PEG: 1.50
+  - Debt/Equity: 0.20
+  - FCF Yield: 5.5%
+Investment Thesis:
+  AIT is a leading distributor of industrial motion control and fluid power technologies, perfectly positioned to benefit from the multi-year US manufacturing reshoring trend. The company has successfully transitioned from a simple parts distributor to an advanced automation solutions integrator, which commands higher margins. Its highly fragmented end-markets and deep technical expertise create high customer switching costs and a strong competitive moat.
+Key Risk:
+  A severe or prolonged domestic industrial recession would temporarily depress demand for factory automation and replacement parts.
+---
+Rank: 2
+Ticker: MEDP
+Company: Medpace Holdings, Inc.
+Sector: Healthcare
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 24.0x  |  PEG: 1.33
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Medpace is a scientifically-driven, full-service contract research organization (CRO) focusing on small-to-mid-sized biotech companies. Its organic-only growth strategy avoids integration risks, resulting in superior execution and industry-leading operating margins. With a debt-free balance sheet and robust cash generation, Medpace is highly insulated from macro shocks and poised to capture outsourced clinical trial demand.
+Key Risk:
+  Funding freezes or capital constraints in the early-stage biotech sector could lead to project cancellations or delays.
+---
+Rank: 3
+Ticker: SSD
+Company: Simpson Manufacturing Co., Inc.
+Sector: Industrials
+Market Cap: ~$8.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 19.5x  |  PEG: 1.30
+  - Debt/Equity: 0.10
+  - FCF Yield: 5.0%
+Investment Thesis:
+  Simpson is the gold standard in structural connectors, anchors, and fastening systems used in wood and concrete construction. Its products are deeply embedded in municipal building codes, creating an incredibly strong regulatory moat that competitors cannot easily replicate. The structural shift toward climate-resilient building standards provides a long-term volume and pricing tailwind.
+Key Risk:
+  A sharp downturn in residential and commercial construction starts would directly impact short-term volume growth.
+---
+Rank: 4
+Ticker: ENSG
+Company: The Ensign Group, Inc.
+Sector: Healthcare
+Market Cap: ~$7.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 21.0x  |  PEG: 1.40
+  - Debt/Equity: 0.60
+  - FCF Yield: 6.0%
+Investment Thesis:
+  Ensign is a premier operator of skilled nursing and transitional care facilities, utilizing a highly decentralized operational model. The company excels at acquiring underperforming facilities and rapidly improving their clinical outcomes and occupancy rates. An aging US demographic provides a secular tailwind, while Ensign's real estate ownership adds substantial asset backing.
+Key Risk:
+  Changes in Medicare/Medicaid reimbursement rates or sudden nursing labor shortages could compress operating margins.
+---
+Rank: 5
+Ticker: EXPO
+Company: Exponent, Inc.
+Sector: Industrials
+Market Cap: ~$5.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 22.0x  |  PEG: 1.47
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.5%
+Investment Thesis:
+  Exponent is a premium scientific and engineering consulting firm specializing in accident investigation and product failure analysis. Its reputation for objective, high-stakes litigation support creates a powerful brand moat and exceptional pricing power. Operating with zero debt and high return on equity, the company is a defensive compounder that benefits from rising product complexity and regulatory scrutiny.
+Key Risk:
+  The company's growth is constrained by its ability to recruit and retain highly specialized, PhD-level technical talent.
+---
+Rank: 6
+Ticker: UFPI
+Company: UFP Industries, Inc.
+Sector: Materials
+Market Cap: ~$7.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 11%
+  - P/E (fwd): 13.0x  |  PEG: 1.18
+  - Debt/Equity: 0.10
+  - FCF Yield: 7.5%
+Investment Thesis:
+  UFP Industries has transformed from a commodity lumber distributor into a high-margin engineered wood and packaging solutions provider. The company's industrial packaging and site-built construction components segments are highly profitable and less cyclical than raw lumber. A pristine balance sheet with minimal debt allows for continuous opportunistic acquisitions in a fragmented market.
+Key Risk:
+  Extreme volatility in lumber commodity prices can cause short-term inventory write-downs and margin fluctuations.
+---
+Rank: 7
+Ticker: PCTY
+Company: Paylocity Holding Corporation
+Sector: Technology
+Market Cap: ~$10.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 16%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 23.0x  |  PEG: 1.28
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.2%
+Investment Thesis:
+  Paylocity provides cloud-based payroll and human capital management (HCM) software to mid-market enterprises. Its comprehensive product suite and focus on employee engagement tools drive high customer retention and recurring revenue. Unlike cash-burning SaaS peers, Paylocity is highly profitable, carries zero debt, and generates significant interest income on client funds held in escrow.
+Key Risk:
+  Intense competition from larger HCM players like ADP and Paychex could lead to pricing pressure in the mid-market segment.
+---
+Rank: 8
+Ticker: FIX
+Company: Comfort Systems USA, Inc.
+Sector: Industrials
+Market Cap: ~$14.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 18%
+  - EPS Growth (forward): 22%
+  - P/E (fwd): 24.0x  |  PEG: 1.09
+  - Debt/Equity: 0.10
+  - FCF Yield: 6.2%
+Investment Thesis:
+  Comfort Systems is a leading provider of commercial and industrial HVAC, mechanical, and electrical contracting services. The company is a prime beneficiary of the boom in complex, high-tech construction, including semiconductor fabs, battery plants, and data centers. Its localized execution model combined with national scale creates a strong competitive advantage in bidding for large-scale projects.
+Key Risk:
+  A sudden slowdown in tech-related capital expenditure or a shortage of skilled trade labor could limit project execution speed.
+---
+Rank: 9
+Ticker: LSTR
+Company: Landstar System, Inc.
+Sector: Industrials
+Market Cap: ~$6.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18.0x  |  PEG: 1.38
+  - Debt/Equity: 0.00
+  - FCF Yield: 5.8%
+Investment Thesis:
+  Landstar operates an asset-light, agent-based transportation logistics network that insulates it from the heavy capital expenditures of traditional trucking. The company's variable-cost model allows it to maintain profitability and high free cash flow even during freight market downturns. Its massive network of independent agents and capacity providers creates a powerful, self-reinforcing network effect.
+Key Risk:
+  Prolonged weakness in the global supply chain and domestic freight rates can limit near-term revenue growth.
+---
+Rank: 10
+Ticker: ATR
+Company: AptarGroup, Inc.
+Sector: Materials
+Market Cap: ~$10.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 19.0x  |  PEG: 1.36
+  - Debt/Equity: 0.40
+  - FCF Yield: 5.0%
+Investment Thesis:
+  AptarGroup is a global leader in drug delivery, consumer product dispensing, and active packaging solutions. Its proprietary nasal spray and inhalation devices are integrated into FDA-approved drug formulations, creating incredibly high switching costs and regulatory barriers. The steady expansion of its high-margin pharma segment drives consistent margin expansion and resilient cash flows.
+Key Risk:
+  Delays in customer drug approvals or regulatory changes in plastic packaging materials could impact volume growth.
+---
+Rank: 11
+Ticker: LECO
+Company: Lincoln Electric Holdings, Inc.
+Sector: Industrials
+Market Cap: ~$12.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 18.0x  |  PEG: 1.38
+  - Debt/Equity: 0.50
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Lincoln Electric is the global leader in design and manufacture of arc welding and cutting equipment. The company's proprietary consumables and automation systems create a highly recurring revenue stream. Lincoln is uniquely positioned to capture growth from infrastructure spending, heavy industrial manufacturing, and the emerging automation of welding tasks.
+Key Risk:
+  Rising raw material costs, particularly steel and copper, could temporarily squeeze gross margins if pricing power lags.
+---
+Rank: 12
+Ticker: GFF
+Company: Griffon Corporation
+Sector: Industrials
+Market Cap: ~$3.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 12.0x  |  PEG: 0.80
+  - Debt/Equity: 1.20
+  - FCF Yield: 9.0%
+Investment Thesis:
+  Griffon operates in residential garage doors (Clopay) and specialty consumer/professional tools. The garage door segment possesses a dominant market share and enjoys high margins due to a shift toward premium, insulated, and wind-rated products. Management is highly focused on shareholder value, aggressively buying back shares and optimizing the capital structure.
+Key Risk:
+  The company carries higher leverage than peers, making it sensitive to interest rate fluctuations and credit market conditions.
+---
+Rank: 13
+Ticker: HAE
+Company: Haemonetics Corporation
+Sector: Healthcare
+Market Cap: ~$4.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 18.0x  |  PEG: 1.13
+  - Debt/Equity: 0.50
+  - FCF Yield: 6.0%
+Investment Thesis:
+  Haemonetics provides hematology products and services, with a dominant position in plasma collection technology. Its NexSys PCS device has revolutionized the plasma collection industry, driving efficiency and lower costs for collectors while locking in long-term consumable contracts. Growth is further supported by the expansion of its vascular closure and hospital product portfolios.
+Key Risk:
+  A slowdown in global plasma collection volumes or aggressive competitive pricing from rivals could impact margins.
+---
+Rank: 14
+Ticker: NDSN
+Company: Nordson Corporation
+Sector: Industrials
+Market Cap: ~$14.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 21.0x  |  PEG: 1.40
+  - Debt/Equity: 0.30
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Nordson designs and manufactures precision dispensing equipment used in consumer, electronics, and medical end-markets. Its systems are critical to customers' production lines but represent a fraction of total manufacturing costs, granting Nordson immense pricing power. Highly recurring parts and consumables revenue accounts for over half of total sales, stabilizing cash flows.
+Key Risk:
+  Cyclical downturns in the global electronics and semiconductor manufacturing sectors can lead to deferred capital equipment orders.
+---
+Rank: 15
+Ticker: STE
+Company: STERIS plc
+Sector: Healthcare
+Market Cap: ~$22.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 20.0x  |  PEG: 1.43
+  - Debt/Equity: 0.40
+  - FCF Yield: 5.2%
+Investment Thesis:
+  Steris is a global leader in infection prevention, sterilization, and surgical technologies. The company's sterilization services are non-discretionary and legally mandated for medical device manufacturers and hospitals, creating an exceptionally resilient, recurring revenue stream. High regulatory barriers and capital intensity prevent new entrants from easily challenging its market position.
+Key Risk:
+  Any regulatory issues or operational shutdowns at its major sterilization facilities could disrupt customer supply chains and harm reputation.
+---
+Rank: 16
+Ticker: WSO
+Company: Watsco, Inc.
+Sector: Industrials
+Market Cap: ~$18.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 23.0x  |  PEG: 1.64
+  - Debt/Equity: 0.10
+  - FCF Yield: 4.5%
+Investment Thesis:
+  Watsco is the largest distributor of HVAC equipment and parts in North America. Its massive scale allows it to offer unparalleled product availability and digital tools to local contractors, creating strong customer loyalty. The non-discretionary nature of replacement HVAC units (which comprise 80% of sales) ensures highly stable, recession-resistant cash flows.
+Key Risk:
+  Unseasonably cool summer weather across key southern US markets can significantly reduce replacement demand.
+---
+Rank: 17
+Ticker: MIDD
+Company: The Middleby Corporation
+Sector: Industrials
+Market Cap: ~$6.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 14.0x  |  PEG: 1.08
+  - Debt/Equity: 0.40
+  - FCF Yield: 7.0%
+Investment Thesis:
+  Middleby is a global leader in commercial food service, food processing, and residential kitchen equipment. The company's focus on labor-saving, energy-efficient, and automated cooking technologies addresses the chronic labor shortages facing the restaurant industry. A proven track record of acquiring and integrating niche brands provides a reliable engine for long-term compounding.
+Key Risk:
+  A sharp reduction in capital expenditures by major global restaurant chains could slow down short-term equipment sales.
+---
+Rank: 18
+Ticker: TREX
+Company: Trex Company, Inc.
+Sector: Materials
+Market Cap: ~$7.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 22.0x  |  PEG: 1.38
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Trex is the leading manufacturer of high-performance, low-maintenance wood-alternative decking and railing. The company is capitalizing on the long-term structural shift from traditional wood to composite materials, which currently represent only a fraction of the total market. Trex's superior brand equity, extensive distribution network, and high-margin profile support strong cash generation.
+Key Risk:
+  A severe housing market downturn or a sharp drop in consumer discretionary spending on home improvement could hurt demand.
+---
+Rank: 19
+Ticker: CHE
+Company: Chemed Corporation
+Sector: Healthcare
+Market Cap: ~$8.9B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 19.0x  |  PEG: 1.46
+  - Debt/Equity: 0.10
+  - FCF Yield: 5.5%
+Investment Thesis:
+  Chemed operates two highly distinct, market-leading businesses: VITAS Healthcare (hospice care) and Roto-Rooter (plumbing and drain cleaning). Both segments are highly recession-resistant and generate consistent, non-discretionary demand. The company's strong cash generation is consistently returned to shareholders through aggressive share repurchases and growing dividends.
+Key Risk:
+  VITAS is highly dependent on Medicare reimbursement rates, and any unfavorable changes in government funding could impact margins.
+---
+Rank: 20
+Ticker: MSA
+Company: MSA Safety Incorporated
+Sector: Industrials
+Market Cap: ~$7.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 10%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 21.0x  |  PEG: 1.50
+  - Debt/Equity: 0.50
+  - FCF Yield: 5.0%
+Investment Thesis:
+  MSA Safety develops and manufactures sophisticated safety products, including self-contained breathing apparatuses, gas detection systems, and industrial head protection. Its products are highly regulated and mission-critical, ensuring steady replacement cycles and high customer retention. The company's continuous innovation in connected safety technologies provides a strong competitive edge.
+Key Risk:
+  Budget constraints at municipal fire departments or industrial facilities could delay large-scale safety equipment upgrades.
+---
+Rank: 21
+Ticker: ITT
+Company: ITT Inc.
+Sector: Industrials
+Market Cap: ~$11.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 11%
+  - EPS Growth (forward): 15%
+  - P/E (fwd): 19.0x  |  PEG: 1.27
+  - Debt/Equity: 0.20
+  - FCF Yield: 5.8%
+Investment Thesis:
+  ITT is a diversified manufacturer of highly engineered critical components for the energy, transportation, and industrial markets. Its Motion Technologies segment (brake pads) holds a leading global position and benefits from secular growth in electric vehicles. ITT's strong balance sheet, high returns on invested capital, and operational efficiency drive consistent earnings outperformance.
+Key Risk:
+  Cyclical downturns in global automotive production or capital spending in the oil and gas sector could impact demand.
+---
+Rank: 22
+Ticker: IEX
+Company: IDEX Corporation
+Sector: Industrials
+Market Cap: ~$16.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 8%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 21.0x  |  PEG: 1.50
+  - Debt/Equity: 0.30
+  - FCF Yield: 4.5%
+Investment Thesis:
+  IDEX specializes in applied solutions, including highly engineered pumps, flow meters, and other fluidics systems. The company operates in highly niche markets where its products are critical to the performance of the customer's overall system, allowing for high pricing power. Its decentralized operating model and disciplined M&A strategy have historically delivered superior returns.
+Key Risk:
+  Integration challenges from larger acquisitions or a slowdown in global industrial production could weigh on growth.
+---
+Rank: 23
+Ticker: CR
+Company: Crane NXT, Co.
+Sector: Technology
+Market Cap: ~$3.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 9%
+  - EPS Growth (forward): 14%
+  - P/E (fwd): 15.0x  |  PEG: 1.07
+  - Debt/Equity: 0.60
+  - FCF Yield: 7.5%
+Investment Thesis:
+  Crane NXT provides industrial technology solutions, specializing in payment validation, authentication, and security technologies. The company has a near-monopoly in high-security banknote authentication and is expanding into digital security and product authentication. Its high-margin, cash-generative profile is overlooked due to its recent spin-off status and niche focus.
+Key Risk:
+  A rapid global transition toward a completely cashless society could reduce demand for physical currency validation systems.
+---
+Rank: 24
+Ticker: QLYS
+Company: Qualys, Inc.
+Sector: Technology
+Market Cap: ~$4.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 16%
+  - P/E (fwd): 21.0x  |  PEG: 1.31
+  - Debt/Equity: 0.00
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Qualys is a pioneer in cloud-based security and compliance solutions, offering an integrated platform that helps organizations secure their IT infrastructure. The company boasts industry-leading operating margins and generates exceptional free cash flow due to its highly efficient single-agent architecture. Carrying zero debt and valued at a discount to high-flying peers, Qualys is a highly defensive tech play.
+Key Risk:
+  Intense competition in the vulnerability management space from larger, consolidated cybersecurity platforms could slow growth.
+---
+Rank: 25
+Ticker: FND
+Company: Floor & Decor Holdings, Inc.
+Sector: Consumer Cyclical
+Market Cap: ~$11.5B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 14%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 25.0x  |  PEG: 1.39
+  - Debt/Equity: 0.40
+  - FCF Yield: 4.0%
+Investment Thesis:
+  Floor & Decor is a multi-channel specialty retailer of hard-surface flooring, operating a unique warehouse-format model. Its massive store footprint and direct-sourcing model allow it to offer unbeatable prices and selection, creating a strong moat against online and local competitors. The company has a long runway for store expansion across the US, driving multi-year growth.
+Key Risk:
+  A severe downturn in the housing market or high interest rates that freeze home sales could temporarily reduce flooring demand.
+---
+Rank: 26
+Ticker: RBC
+Company: Regal Rexnord Corporation
+Sector: Industrials
+Market Cap: ~$8.2B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 13%
+  - P/E (fwd): 13.0x  |  PEG: 1.00
+  - Debt/Equity: 0.80
+  - FCF Yield: 8.0%
+Investment Thesis:
+  Regal Rexnord is a leading manufacturer of electric motors, power transmission components, and electronic controls. The company is capturing significant synergies from its recent merger with Altra Industrial Motion, which is driving substantial margin expansion. Its products are vital components in warehouse automation, aerospace, and energy-efficient HVAC systems.
+Key Risk:
+  The company's elevated debt levels following recent acquisitions require disciplined debt paydown to avoid interest expense drag.
+---
+Rank: 27
+Ticker: HXL
+Company: Hexcel Corporation
+Sector: Industrials
+Market Cap: ~$5.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 12%
+  - EPS Growth (forward): 18%
+  - P/E (fwd): 20.0x  |  PEG: 1.11
+  - Debt/Equity: 0.50
+  - FCF Yield: 5.2%
+Investment Thesis:
+  Hexcel is a leading producer of advanced carbon fiber composites for commercial aerospace, space, and defense markets. The multi-year backlog of commercial aircraft orders at Boeing and Airbus provides highly visible, long-term demand for Hexcel's lightweight materials. Its proprietary manufacturing processes and strict aerospace certifications create an exceptionally high barrier to entry.
+Key Risk:
+  Production delays or quality control issues at major commercial aircraft manufacturers could delay composite deliveries.
+---
+Rank: 28
+Ticker: SUM
+Company: Summit Materials, Inc.
+Sector: Materials
+Market Cap: ~$5.4B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 15%
+  - EPS Growth (forward): 20%
+  - P/E (fwd): 18.0x  |  PEG: 0.90
+  - Debt/Equity: 0.90
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Summit Materials is a leading vertically integrated construction materials company, providing aggregates, cement, and ready-mix concrete. Its localized asset base and high weight-to-value ratio of aggregates create a natural geographic monopoly in its key markets. The company is a prime beneficiary of federal infrastructure funding and private non-residential construction.
+Key Risk:
+  High interest rates could slow down private commercial and residential development, offset only partially by public infrastructure.
+---
+Rank: 29
+Ticker: LANC
+Company: Lancaster Colony Corporation
+Sector: Consumer Defensive
+Market Cap: ~$5.1B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 7%
+  - EPS Growth (forward): 12%
+  - P/E (fwd): 20.0x  |  PEG: 1.67
+  - Debt/Equity: 0.00
+  - FCF Yield: 4.8%
+Investment Thesis:
+  Lancaster Colony is a specialty food manufacturer focusing on high-margin retail dressings, dips, and bakery products. The company's licensing agreements with major restaurant brands (e.g., Chick-fil-A, Olive Garden) drive highly profitable, capital-light retail sales. Carrying zero debt and possessing a 60+ year history of consecutive dividend increases, it is an exceptionally stable compounder.
+Key Risk:
+  Severe inflation in key agricultural commodities (oil, eggs, dairy) could temporarily compress gross margins if price increases lag.
+---
+Rank: 30
+Ticker: SNA
+Company: Snap-on Incorporated
+Sector: Industrials
+Market Cap: ~$14.8B
+Key Metrics (estimated):
+  - Revenue Growth (YoY): 6%
+  - EPS Growth (forward): 10%
+  - P/E (fwd): 15.0x  |  PEG: 1.50
+  - Debt/Equity: 0.20
+  - FCF Yield: 6.5%
+Investment Thesis:
+  Snap-on manufactures premium tools and diagnostic equipment for professional technicians, primarily in the automotive repair sector. Its mobile van franchise model creates a highly personal, direct-to-customer sales channel that competitors cannot easily replicate. High brand loyalty, a highly profitable captive finance arm, and consistent free cash flow make it a resilient value compounder.
+Key Risk:
+  A rapid shift toward electric vehicles, which require fewer mechanical repairs, could slowly reduce demand for traditional hand tools.
+---
+
+== SELECTION METHODOLOGY ==
+The screening process for this watchlist was designed to filter out highly speculative, overhyped, and overvalued equities, focusing instead on high-quality, under-the-radar compounders. First, we excluded all companies in the S&P 500 top-50 by market cap and eliminated stocks with elevated social media sentiment or extreme momentum indicators to avoid "meme" dynamics. We then applied strict fundamental filters: positive free cash flow, manageable leverage (Debt/Equity < 1.5, with a preference for net cash balance sheets), and a forward PEG ratio ideally below 1.5. The final selection was weighted toward companies with clear structural tailwinds—such as US manufacturing reshoring, infrastructure spending, climate-resilient building codes, and demographic shifts—combined with strong competitive moats like high switching costs, regulatory barriers, or localized monopolies.
+
+== 繁體中文版 (TRADITIONAL CHINESE TRANSLATION) ==
+
+---
+排名: 1
+代碼: AIT
+公司: Applied Industrial Technologies, Inc.
+產業: 工業
+市值: ~$8.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.50
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  AIT 是工業運動控制和流體動力技術的領先分銷商，完美受益於美國製造業回流的多年度趨勢。該公司已成功從單純的零件分銷商轉型為先進自動化解決方案的整合商，從而獲得更高的利潤率。其高度分散的終端市場和深厚的技術專業知識創造了極高的客戶轉換成本和強大的競爭護城河。
+主要風險:
+  國內工業出現嚴重或長期的衰退將暫時抑制對工廠自動化和更換零件的需求。
+---
+排名: 2
+代碼: MEDP
+公司: Medpace Holdings, Inc.
+產業: 醫療保健
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 24.0x  |  本益成長比: 1.33
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Medpace 是一家以科學為導向、提供全方位服務的合約研究組織（CRO），專注於中小型生物技術公司。其僅限有機增長的策略避免了整合風險，從而實現了卓越的執行力和業界領先的營運利潤率。憑藉無負債的資產負債表和強勁的現金生成能力，Medpace 對宏觀衝擊具有高度免疫力，並有望捕捉外包臨床試驗的需求。
+主要風險:
+  早期生物技術領域的資金凍結或資本受限可能導致項目取消或延遲。
+---
+排名: 3
+代碼: SSD
+公司: Simpson Manufacturing Co., Inc.
+產業: 工業
+市值: ~$8.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 19.5x  |  本益成長比: 1.30
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  Simpson 是用於木材和混凝土建築的結構連接器、錨栓和緊固系統的金標準。其產品深深植根於地方建築規範中，創造了競爭對手難以複製的極強監管護城河。向氣候適應型建築標準的結構性轉變提供了長期的銷量和定價順風。
+主要風險:
+  住宅和商業建築開工量急劇下滑將直接影響短期銷量增長。
+---
+排名: 4
+代碼: ENSG
+公司: The Ensign Group, Inc.
+產業: 醫療保健
+市值: ~$7.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.40
+  - 負債權益比: 0.60
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  Ensign 是一家領先的專業護理和過渡期照護機構運營商，採用高度去中心化的運營模式。該公司擅長收購運營不佳的機構，並迅速改善其臨床效果和入住率。美國人口老齡化提供了長期趨勢支持，而 Ensign 擁有的房地產則提供了實質性的資產支持。
+主要風險:
+  聯邦醫療保險/醫療補助（Medicare/Medicaid）報銷率的變化或突然的護理勞動力短缺可能會壓縮營運利潤率。
+---
+排名: 5
+代碼: EXPO
+公司: Exponent, Inc.
+產業: 工業
+市值: ~$5.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 22.0x  |  本益成長比: 1.47
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  Exponent 是一家頂尖的科學與工程諮詢公司，專門從事事故調查和產品失效分析。其在客觀、高風險訴訟支持方面的聲譽創造了強大的品牌護城河和卓越的定價權。該公司在零負債和高股東權益報酬率下運營，是一家受益於產品複雜性上升和監管審查加強的防禦型複利企業。
+主要風險:
+  公司的增長受限於其招聘和留住高度專業、博士級技術人才的能力。
+---
+排名: 6
+代碼: UFPI
+公司: UFP Industries, Inc.
+產業: 材料
+市值: ~$7.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 11%
+  - 本益比（預估）: 13.0x  |  本益成長比: 1.18
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  UFP Industries 已從一家大宗木材分銷商轉型為高利潤的工程木材和包裝解決方案提供商。該公司的工業包裝和現場建築組件業務利潤豐厚，且週期性低於原木。乾淨且負債極低的資產負債表使其能夠在分散的市場中持續進行機會性收購。
+主要風險:
+  木材大宗商品價格的極端波動可能會導致短期庫存減值和利潤率波動。
+---
+排名: 7
+代碼: PCTY
+公司: Paylocity Holding Corporation
+產業: 技術
+市值: ~$10.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 16%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 23.0x  |  本益成長比: 1.28
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  Paylocity 為中型企業提供基於雲端的薪資和人力資本管理（HCM）軟體。其全面的產品組合和對員工參與工具的關注推動了高客戶留存率和經常性收入。與消耗資金的 SaaS 同行不同，Paylocity 利潤豐厚、無負債，並從託管的客戶資金中產生可觀的利息收入。
+主要風險:
+  來自 ADP 和 Paychex 等大型 HCM 廠商的激烈競爭可能會給中端市場帶來定價壓力。
+---
+排名: 8
+代碼: FIX
+公司: Comfort Systems USA, Inc.
+產業: 工業
+市值: ~$14.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 18%
+  - 每股盈餘成長（預估）: 22%
+  - 本益比（預估）: 24.0x  |  本益成長比: 1.09
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 6.2%
+投資論點:
+  Comfort Systems 是商業和工業 HVAC、機械和電氣承包服務的領先提供商。該公司是複雜高科技建設繁榮的首要受益者，包括半導體晶圓廠、電池廠和數據中心。其本地化執行模式與全國規模相結合，在競標大型項目時創造了強大的競爭優勢。
+Key Risk:
+  科技相關資本支出的突然放緩或熟練技術工人的短缺可能會限制項目的執行速度。
+---
+排名: 9
+代碼: LSTR
+公司: Landstar System, Inc.
+產業: 工業
+市值: ~$6.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  Landstar 運營一個輕資產、基於代理人的運輸物流網絡，使其免受傳統卡車運輸沉重資本支出的影響。其可變成本模型使其即使在貨運市場低迷時期也能保持盈利能力和高自由現金流。其由獨立代理人和運力提供者組成的龐大網絡創造了強大且自我強化的網絡效應。
+主要風險:
+  全球供應鏈和國內貨運費率的長期疲軟可能會限制近期的營收增長。
+---
+排名: 10
+代碼: ATR
+公司: AptarGroup, Inc.
+產業: 材料
+市值: ~$10.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 19.0x  |  本益成長比: 1.36
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  AptarGroup 是藥物遞送、消費品分配和活性包裝解決方案的全球領導者。其專有的鼻腔噴霧和吸入裝置已整合到經 FDA 批准的藥物配方中，創造了極高的轉換成本和監管壁壘。其高利潤醫藥業務的穩定擴張推動了持續的利潤率擴張和彈性的現金流。
+主要風險:
+  客戶藥物批准的延遲或塑料包裝材料的監管變化可能會影響銷量增長。
+---
+排名: 11
+代碼: LECO
+公司: Lincoln Electric Holdings, Inc.
+產業: 工業
+市值: ~$12.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Lincoln Electric 是弧焊和切割設備設計與製造的全球領導者。該公司專有的消耗品和自動化系統創造了高度經常性的收入流。Lincoln 處於獨特地位，能夠捕捉基礎設施支出、重工業製造以及新興焊接任務自動化帶來的增長。
+主要風險:
+  原材料成本（特別是鋼和銅）的上漲如果定價權滯後，可能會暫時擠壓毛利率。
+---
+排名: 12
+代碼: GFF
+公司: Griffon Corporation
+產業: 工業
+市值: ~$3.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 12.0x  |  本益成長比: 0.80
+  - 負債權益比: 1.20
+  - 自由現金流殖利率: 9.0%
+投資論點:
+  Griffon 經營住宅車庫門（Clopay）以及專業消費與專業工具。由於市場向高端、隔熱和防風等級產品轉變，其車庫門業務擁有主導性的市場份額並享有高利潤率。管理層高度專注於股東價值，積極回購股份並優化資本結構。
+主要風險:
+  該公司的槓桿率高於同行，使其對利率波動和信貸市場狀況較為敏感。
+---
+排名: 13
+代碼: HAE
+公司: Haemonetics Corporation
+產業: 醫療保健
+市值: ~$4.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 18.0x  |  本益成長比: 1.13
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 6.0%
+投資論點:
+  Haemonetics 提供血液學產品和服務，在血漿採集技術方面擁有主導地位。其 NexSys PCS 設備徹底改變了血漿採集行業，為採集機構提高了效率並降低了成本，同時鎖定了長期消耗品合同。其血管閉合和醫院產品組合的擴張進一步支持了增長。
+主要風險:
+  全球血漿採集量的放緩或競爭對手激進的定價可能會影響利潤率。
+---
+排名: 14
+代碼: NDSN
+公司: Nordson Corporation
+產業: 工業
+市值: ~$14.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.40
+  - 負債權益比: 0.30
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Nordson 設計和製造用於消費品、電子和醫療終端市場的精密點膠設備。其系統對客戶的生產線至關重要，但僅佔總製造成本的一小部分，這賦予了 Nordson 巨大的定價權。高度經常性的零件和消耗品收入佔總銷售額的一半以上，穩定了現金流。
+主要風險:
+  全球電子和半導體製造行業的週期性低迷可能會導致資本設備訂單延期。
+---
+排名: 15
+代碼: STE
+公司: STERIS plc
+產業: 醫療保健
+市值: ~$22.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.43
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  Steris 是感染預防、滅菌和手術技術領域的全球領導者。該公司的滅菌服務是強制性的，且法律規定醫療器械製造商和醫院必須執行，從而創造了極具彈性的經常性收入流。高監管壁壘和資本密集度使新進入者難以輕易挑戰其市場地位。
+主要風險:
+  其主要滅菌設施的任何監管問題或運營停工都可能中斷客戶的供應鏈並損害聲譽。
+---
+排名: 16
+代碼: WSO
+公司: Watsco, Inc.
+產業: 工業
+市值: ~$18.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 23.0x  |  本益成長比: 1.64
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  Watsco 是北美最大的 HVAC（暖通空調）設備和零件分銷商。其龐大的規模使其能夠為當地承包商提供無與倫比的產品供應和數字化工具，從而建立強大的客戶忠誠度。更換 HVAC 設備的非選擇性本質（佔銷售額的 80%）確保了高度穩定、抗衰退的現金流。
+主要風險:
+  美國南部主要市場異常涼爽的夏季氣候可能會顯著減少更換需求。
+---
+排名: 17
+代碼: MIDD
+公司: The Middleby Corporation
+產業: 工業
+市值: ~$6.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 14.0x  |  本益成長比: 1.08
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 7.0%
+投資論點:
+  Middleby 是商業餐飲服務、食品加工和家用廚房設備的全球領導者。該公司專注於省力、節能和自動化的烹飪技術，解決了餐飲業面臨的長期勞動力短缺問題。在收購和整合利基品牌方面經證實的良好記錄為長期複利提供了可靠的引擎。
+主要風險:
+  全球主要連鎖餐廳大幅減少資本支出可能會減緩短期設備銷售。
+---
+排名: 18
+代碼: TREX
+公司: Trex Company, Inc.
+產業: 材料
+市值: ~$7.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 22.0x  |  本益成長比: 1.38
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Trex 是高性能、低維護木材替代甲板和欄杆的領先製造商。該公司正利用從傳統木材向複合材料轉變的長期結構性趨勢，目前複合材料僅佔總市場的一小部分。Trex 卓越的品牌資產、廣泛的分銷網絡和高利潤率支持了強勁的現金生成。
+主要風險:
+  房地產市場嚴重低迷或消費者在房屋改善方面的非必需性支出大幅下降可能會損害需求。
+---
+排名: 19
+代碼: CHE
+公司: Chemed Corporation
+產業: 醫療保健
+市值: ~$8.9B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 19.0x  |  本益成長比: 1.46
+  - 負債權益比: 0.10
+  - 自由現金流殖利率: 5.5%
+投資論點:
+  Chemed 運營兩家高度獨特且處於市場領先地位的業務：VITAS Healthcare（安寧療護）和 Roto-Rooter（管道和排水管清理）。這兩個板塊都具有高度的抗衰退性，並產生持續的、非選擇性的需求。該公司強勁的現金生成通過積極的股份回購和增長的股息持續回饋給股東。
+主要風險:
+  VITAS 高度依賴聯邦醫療保險的報銷率，政府資金的任何不利變化都可能影響利潤率。
+---
+排名: 20
+代碼: MSA
+公司: MSA Safety Incorporated
+產業: 工業
+市值: ~$7.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 10%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.50
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 5.0%
+投資論點:
+  MSA Safety 開發和製造先進的安全產品，包括自給式呼吸器、氣體檢測系統和工業頭部防護。其產品受到高度監管且任務艱巨，確保了穩定的更換週期和高客戶留存率。該公司在互聯安全技術方面的持續創新提供了強大的競爭優勢。
+主要風險:
+  地方消防部門或工業設施的預算限制可能會延遲大規模安全設備的升級。
+---
+排名: 21
+代碼: ITT
+公司: ITT Inc.
+產業: 工業
+市值: ~$11.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 11%
+  - 每股盈餘成長（預估）: 15%
+  - 本益比（預估）: 19.0x  |  本益成長比: 1.27
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 5.8%
+投資論點:
+  ITT 是一家為能源、交通和工業市場提供高度工程化關鍵組件的多樣化製造商。其運動技術部門（煞車片）保持著全球領先地位，並受益於電動汽車的長期增長。ITT 強勁的資產負債表、高投資資本回報率和運營效率推動了持續超出預期的業績表現。
+主要風險:
+  全球汽車產量的週期性低迷或石油和天然氣行業的資本支出減少可能會影響需求。
+---
+排名: 22
+代碼: IEX
+公司: IDEX Corporation
+產業: 工業
+市值: ~$16.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 8%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.50
+  - 負債權益比: 0.30
+  - 自由現金流殖利率: 4.5%
+投資論點:
+  IDEX 專注於應用解決方案，包括高度工程化的泵、流量計和其他流體系統。該公司在高度利基的市場中運營，其產品對客戶整體系統的性能至關重要，從而實現了高定價權。其去中心化的運營模式和紀律嚴明的併購策略在歷史上帶來了卓越的回報。
+主要風險:
+  大型收購帶來的整合挑戰或全球工業生產放緩可能會拖累增長。
+---
+排名: 23
+代碼: CR
+公司: Crane NXT, Co.
+產業: 技術
+市值: ~$3.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 9%
+  - 每股盈餘成長（預估）: 14%
+  - 本益比（預估）: 15.0x  |  本益成長比: 1.07
+  - 負債權益比: 0.60
+  - 自由現金流殖利率: 7.5%
+投資論點:
+  Crane NXT 提供工業技術解決方案，專注於支付驗證、認證和安全技術。該公司在高度安全的紙幣認證領域擁有近乎壟斷的地位，並正向數字安全和產品認證領域擴張。由於其近期分拆的狀態和利基定位，其高利潤、高現金生成的特徵被市場忽視。
+主要風險:
+  全球向完全無現金社會的快速過渡可能會減少對實體貨幣驗證系統的需求。
+---
+排名: 24
+代碼: QLYS
+公司: Qualys, Inc.
+產業: 技術
+市值: ~$4.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 16%
+  - 本益比（預估）: 21.0x  |  本益成長比: 1.31
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Qualys 是基於雲端的安全和合規解決方案的先驅，提供集成平台幫助組織保護其 IT 基礎設施。由於其高效的單一代理架構，該公司擁有行業領先的營運利潤率並產生卓越的自由現金流。Qualys 零負債且估值低於高估值的同行，是一個高度防禦性的科技標的。
+主要風險:
+  來自更大、更整合的網絡安全平台在漏洞管理領域的激烈競爭可能會放緩增長。
+---
+排名: 25
+代碼: FND
+公司: Floor & Decor Holdings, Inc.
+產業: 選擇性消費品
+市值: ~$11.5B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 14%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 25.0x  |  本益成長比: 1.39
+  - 負債權益比: 0.40
+  - 自由現金流殖利率: 4.0%
+投資論點:
+  Floor & Decor 是一家硬質表面地板的多渠道專業零售商，運營獨特的倉庫式模式。其龐大的店面足跡和直接採購模式使其能夠提供無法比擬的價格和選擇，創造了對抗線上和本地競爭對手的強大護城河。該公司在全美範圍內有著長期的店面擴張空間，推動了多年的增長。
+主要風險:
+  房地產市場嚴重低迷或高利率導致房屋銷售凍結，可能會暫時減少地板需求。
+---
+排名: 26
+代碼: RBC
+公司: Regal Rexnord Corporation
+產業: 工業
+市值: ~$8.2B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 13%
+  - 本益比（預估）: 13.0x  |  本益成長比: 1.00
+  - 負債權益比: 0.80
+  - 自由現金流殖利率: 8.0%
+投資論點:
+  Regal Rexnord 是電機、動力傳輸組件和電子控制器的領先製造商。該公司正從近期與 Altra Industrial Motion 的合併中獲得顯著的協同效應，這推動了實質性的利潤率擴張。其產品是倉庫自動化、航空航天和節能 HVAC 系統中的關鍵組件。
+主要風險:
+  近期收購後該公司債務水平上升，需要紀律嚴明地償還債務以避免利息支出拖累。
+---
+排名: 27
+代碼: HXL
+公司: Hexcel Corporation
+產業: 工業
+市值: ~$5.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 12%
+  - 每股盈餘成長（預估）: 18%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.11
+  - 負債權益比: 0.50
+  - 自由現金流殖利率: 5.2%
+投資論點:
+  Hexcel 是用於商業航空、太空和國防市場的先進碳纖維複合材料的領先生產商。波音和空客商業飛機訂單的多年度積壓為 Hexcel 的輕量化材料提供了高度可見的長期需求。其專有的製造工藝和嚴格的航空航天認證創造了極高的准入門檻。
+主要風險:
+  主要商業飛機製造商的生產延遲或質量控制問題可能會延遲複合材料的交付。
+---
+排名: 28
+代碼: SUM
+公司: Summit Materials, Inc.
+產業: 材料
+市值: ~$5.4B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 15%
+  - 每股盈餘成長（預估）: 20%
+  - 本益比（預估）: 18.0x  |  本益成長比: 0.90
+  - 負債權益比: 0.90
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Summit Materials 是一家領先的垂直整合建築材料公司，提供骨料、水泥和預拌混凝土。其本地化的資產基礎和骨料的高重量價值比在其關鍵市場創造了天然的地理壟斷。該公司是聯邦基礎設施資金和私人非住宅建設的首要受益者。
+主要風險:
+  高利率可能會放緩私人商業和住宅開發，而公共基礎設施只能部分抵消這一影響。
+---
+排名: 29
+代碼: LANC
+公司: Lancaster Colony Corporation
+產業: 民生消費品
+市值: ~$5.1B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 7%
+  - 每股盈餘成長（預估）: 12%
+  - 本益比（預估）: 20.0x  |  本益成長比: 1.67
+  - 負債權益比: 0.00
+  - 自由現金流殖利率: 4.8%
+投資論點:
+  Lancaster Colony 是一家專注於高利潤零售醬料、沾醬和烘焙產品的特色食品製造商。該公司與主要餐飲品牌（如 Chick-fil-A、Olive Garden）的授權協議推動了高利潤、輕資產的零售銷售。該公司零負債，且擁有連續 60 年以上增加股息的歷史，是一個極其穩定的複利標的。
+主要風險:
+  主要農業大宗商品（油、蛋、乳製品）的嚴重通脹如果價格上漲滯後，可能會暫時壓縮毛利率。
+---
+排名: 30
+代碼: SNA
+公司: Snap-on Incorporated
+產業: 工業
+市值: ~$14.8B
+關鍵指標（估算）:
+  - 營收成長（年增率）: 6%
+  - 每股盈餘成長（預估）: 10%
+  - 本益比（預估）: 15.0x  |  本益成長比: 1.50
+  - 負債權益比: 0.20
+  - 自由現金流殖利率: 6.5%
+投資論點:
+  Snap-on 為專業技術人員（主要在汽車維修領域）製造高端工具和診斷設備。其移動廂式貨車特許經營模式創造了高度個性化、直達客戶的銷售渠道，競爭對手難以複製。高品牌忠誠度、利潤豐厚的專屬金融部門以及持續的自由現金流使其成為具有彈性的價值複利標的。
+主要風險:
+  向電動汽車的快速轉變（電動車需要較少的機械維修）可能會緩慢減少對傳統手動工具的需求。
+---
+
+== 選股方法論 ==
+本觀察名單的篩選過程旨在過濾掉高投機性、過度炒作和估值過高的股票，轉而關注高質量、不被市場關注的複利型企業。首先，我們排除了市值前 50 名的標普 500 指數成分股，並剔除了社交媒體熱度高或具有極端動能指標的股票，以避免「迷因」效應。接著，我們應用了嚴格的基本面篩選：正的自由現金流、可控的槓桿率（負債權益比 < 1.5，並偏好淨現金資產負債表），以及預估本益成長比（PEG）理想情況下低於 1.5。最終的選擇偏向於那些擁有明確結構性順風（如美國製造業回流、基礎設施支出、氣候適應型建築規範和人口結構轉變）並結合強大競爭護城河（如高轉換成本、監管壁壘或區域壟斷）的公司。
