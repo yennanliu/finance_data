@@ -2,10 +2,10 @@
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-09-11 |
+| Last run | 2026-09-12 |
 | Bad reports found | 1 |
-| CSV | [bad_reports_2026-09-11.csv](bad_reports_2026-09-11.csv) |
-| Full summary | [summary_2026-09-11.txt](summary_2026-09-11.txt) |
+| CSV | [bad_reports_2026-09-12.csv](bad_reports_2026-09-12.csv) |
+| Full summary | [summary_2026-09-12.txt](summary_2026-09-12.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -13,14 +13,14 @@
 ```
 
 ============================================================
-Total scanned : 4230
+Total scanned : 4291
 Bad reports   : 1  (0.0%)
 
 Issue breakdown:
   REFUSAL                  1
 
 Top 10 tickers by bad-report count:
-  nbis            1 / 140  bad
+  nbis            1 / 142  bad
 
-CSV written → qa/bad_reports_2026-09-11.csv
+CSV written → qa/bad_reports_2026-09-12.csv
 ```
