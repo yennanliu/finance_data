@@ -266,10 +266,53 @@ def test_a_later_concept_supplies_a_period_the_first_one_could_not():
 
 
 # ── Provenance / dedupe ──────────────────────────────────────────────────────
-def test_the_latest_filing_wins_for_a_restated_period():
-    points = [fact("2025-01-01", "2025-03-31", 100.0, filed="2025-05-01"),
-              fact("2025-01-01", "2025-03-31", 110.0, filed="2026-04-30")]
-    assert F._latest(points)["val"] == 110.0
+def test_a_prompt_amendment_still_wins_over_a_year_later_comparative():
+    """The rule is "closest filing after the period", not "the original".
+
+    A 10-Q/A filed two weeks after the original corrects that period and is
+    still far closer to it than next year's comparative, so genuine near-term
+    corrections are picked up while stale re-transcriptions are not.
+    """
+    points = [fact("2025-01-01", "2025-03-31", 100.0,
+                   form="10-Q", filed="2025-05-01"),
+              fact("2025-01-01", "2025-03-31", 110.0,
+                   form="10-Q/A", filed="2025-05-15"),
+              fact("2025-01-01", "2025-03-31", 999.0,
+                   form="10-Q", filed="2026-04-30")]
+    assert F._latest(points)["val"] == 100.0
+    # …and with the original absent, the amendment beats the comparative.
+    assert F._latest(points[1:])["val"] == 110.0
+
+
+def test_the_original_filing_beats_a_later_comparative():
+    """Later is not better.
+
+    ONDS tags Q1 2025 diluted shares as 105,004,818 in the original 10-Q and as
+    105,005 in the comparative column of the next year's 10-Q, having dropped a
+    factor of 1000. Preferring the latest filing picks the broken figure.
+    """
+    points = [fact("2025-01-01", "2025-03-31", 105_004_818, filed="2025-05-15"),
+              fact("2025-01-01", "2025-03-31", 105_005, filed="2026-05-15")]
+    assert F._latest(points)["val"] == 105_004_818
+
+
+def test_share_counts_that_jump_by_a_thousandfold_are_dropped():
+    """ONDS's FY2025 10-K carries the scale error in the annual figure itself.
+
+    There is no correct alternative in the payload, so the value is dropped and
+    the market cap goes absent — which is honest. Publishing it would not be.
+    """
+    counts = {"2025-03-31": 105_004_818.0, "2025-06-30": 150_652_998.0,
+              "2025-09-30": 259_909_415.0, "2025-12-31": 221_769.0}
+    kept = F._plausible_share_counts(counts)
+    assert "2025-12-31" not in kept
+    assert len(kept) == 3
+
+
+def test_ordinary_share_growth_survives_the_plausibility_guard():
+    counts = {"2024-03-31": 100e6, "2024-06-30": 130e6,
+              "2024-09-30": 180e6, "2024-12-31": 260e6}
+    assert F._plausible_share_counts(counts) == counts
 
 
 def test_a_periodic_report_beats_a_later_proxy_statement():

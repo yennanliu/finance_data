@@ -275,6 +275,20 @@ NON_CUMULATIVE = ("shares_diluted",)
 # SalesRevenueNet does, with a cleanly reported Q4 the first concept lacked.
 NON_NEGATIVE = ("revenue", "shares_diluted", "rnd_expense", "sga_expense", "capex")
 
+# Largest quarter-on-quarter change a share count can plausibly make. A money
+# figure that is mis-scaled by a factor of 1000 trips the gate (gross profit
+# would exceed revenue); a share count has no such relationship to check
+# against, and it feeds market cap, so a scale error there puts a valuation
+# three orders of magnitude out on the page.
+#
+# ONDS's FY2025 10-K tags diluted shares as 221,769 where the quarters run
+# 105.0M / 150.7M / 259.9M — the filer dropped a factor of 1000 in the annual
+# figure itself, so there is no correct alternative in the payload to prefer.
+# Dropping the value leaves the market cap absent, which is honest; publishing
+# it would not be. A genuine reverse split is the one legitimate way to trip
+# this, and omitting a quarter is the better error.
+MAX_SHARE_COUNT_STEP = 10.0
+
 
 # ── XBRL extraction ──────────────────────────────────────────────────────────
 def _days(start: str, end: str) -> int:
@@ -289,16 +303,33 @@ _PERIODIC_FORMS = ("10-K", "10-Q", "20-F", "40-F", "6-K", "8-K")
 
 
 def _latest(points: list[dict]):
-    """The authoritative point for one period — dedupes amendments/restatements.
+    """The authoritative point for one period.
 
-    Periodic report first, then latest filed. Measured on AMZN: up to four
-    points per (concept, period), because later filings repeat earlier periods
-    as comparatives.
+    Measured on AMZN: up to four points per (concept, period), because every
+    later filing repeats earlier periods as comparatives. The one to trust is
+    the filing in which the period *is* the reporting period — the closest
+    filing after the period end — not the most recent one to mention it.
+
+    Later is not better. ONDS tags Q1 2025 diluted shares as 105,004,818 in the
+    original 10-Q and as 105,005 in the comparative column of the next year's
+    10-Q, having dropped a factor of 1000. Preferring the latest filing picks
+    the broken figure and puts a market cap three orders of magnitude too small
+    on the page; preferring the original picks the right one.
+
+    The trade-off is that a genuine restatement in a later filing is not picked
+    up while the original filing still covers the period — which is the "as
+    first reported" convention, and the safer default when the alternative is
+    trusting whichever transcription happened most recently.
     """
     def rank(p):
         form = p.get("form", "")
         periodic = any(form.startswith(f) for f in _PERIODIC_FORMS)
-        return (periodic, p.get("filed", ""), p.get("accn", ""))
+        filed, end = p.get("filed", ""), p.get("end", "")
+        # Negative so that `max` prefers the smallest gap; a filing dated before
+        # the period end (a forecast or an error) sorts worst.
+        gap = -abs((date.fromisoformat(filed) - date.fromisoformat(end)).days) \
+            if filed and end else -99999
+        return (periodic, gap, p.get("accn", ""))
 
     return max(points, key=rank)
 
@@ -390,6 +421,25 @@ def discrete_quarters(facts: dict, fy_start: str, fy_end: str,
     return out
 
 
+def _plausible_share_counts(counts: dict) -> dict:
+    """Drop share counts that jump by more than :data:`MAX_SHARE_COUNT_STEP`.
+
+    Anchored on the running median rather than the previous value, so one bad
+    figure cannot drag the rest of the series out with it.
+    """
+    kept: dict = {}
+    for end in sorted(counts):
+        value = counts[end]
+        if kept and value > 0:
+            ordered = sorted(kept.values())
+            median = ordered[len(ordered) // 2]
+            ratio = value / median if median else 0
+            if ratio > MAX_SHARE_COUNT_STEP or ratio < 1 / MAX_SHARE_COUNT_STEP:
+                continue
+        kept[end] = value
+    return kept
+
+
 def resolve(facts_json: dict) -> list[dict]:
     """Turn a companyfacts payload into store rows, oldest→newest."""
     gaap = (facts_json.get("facts") or {}).get("us-gaap") or {}
@@ -416,6 +466,8 @@ def resolve(facts_json: dict) -> list[dict]:
                                              cumulative, non_negative)
                 for end, val in quarters.items():
                     values[metric].setdefault(end, val)
+
+    values["shares_diluted"] = _plausible_share_counts(values["shares_diluted"])
 
     # Instant metrics: balance-sheet figures are as-of a date, no reconstruction.
     for metric, concepts in INSTANT_CONCEPTS.items():
