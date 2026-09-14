@@ -235,17 +235,30 @@ export async function renderPriceChart(attrs, payload, opts = {}) {
   return renderIn(PRICE_CHARTS_JS, "pchart", attrs, payload, opts);
 }
 
+/**
+ * Several `.pchart` nodes in one scan — the shape a real page has, and the only
+ * way to observe how many fetches a page actually makes.
+ */
+export async function renderPriceCharts(attrsList, payload, opts = {}) {
+  return renderIn(PRICE_CHARTS_JS, "pchart", attrsList, payload, opts);
+}
+
 
 async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
   const log = newLog();
 
-  const node = new El("div");
-  node.className = cls;
-  Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+  const attrsList = Array.isArray(attrs) ? attrs : [attrs];
+  const nodes = attrsList.map((a) => {
+    const el = new El("div");
+    el.className = cls;
+    Object.entries(a).forEach(([k, v]) => el.setAttribute(k, v));
+    return el;
+  });
+  const node = nodes[0];
 
   const body = new El("body");
   body.setAttribute("data-md-color-scheme", opts.dark ? "slate" : "default");
-  body.appendChild(node);
+  nodes.forEach((n) => body.appendChild(n));
 
   const document = {
     body,
@@ -255,6 +268,7 @@ async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
   };
 
   let fetchCalledWith = null;
+  const fetchCalls = [];
   const sandbox = {
     window: { LightweightCharts: makeLC(log) },
     document,
@@ -263,6 +277,7 @@ async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
     MutationObserver: class { observe() {} },
     fetch: (src) => {
       fetchCalledWith = src;
+      fetchCalls.push(src);
       return Promise.resolve({ ok: true, json: () => Promise.resolve(payload) });
     },
     console,
@@ -276,6 +291,6 @@ async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
 
   document._ready();            // the widget's DOMContentLoaded entry point
   await new Promise((r) => setImmediate(r));  // let the fetch promise settle
-  return { node, log, fetchCalledWith };
+  return { node, nodes, log, fetchCalledWith, fetchCalls };
 }
 

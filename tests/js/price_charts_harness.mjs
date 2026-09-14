@@ -15,7 +15,7 @@
  * Exit code 0 = all assertions passed; the summary prints either way.
  */
 
-import { renderPriceChart } from "./dom_shim.mjs";
+import { renderPriceChart, renderPriceCharts } from "./dom_shim.mjs";
 
 // ── assertions ───────────────────────────────────────────────────────────────
 let passed = 0;
@@ -308,6 +308,39 @@ const fd = fundamentals();
   eq("regression: a lone series still draws one area", log.areas.length, 1);
   check("regression: a lone series keeps the readout, not a legend",
         !!node.querySelector(".pchart__readout") && !node.querySelector(".pchart__key"));
+}
+
+// 13. one payload fetch per page, not one per chart
+{
+  // A Financials page carries sixteen widgets over one fundamentals.json, and a
+  // report page four. fetch() does not coalesce concurrent requests for a URL,
+  // so without sharing the promise the page asks for the same 57 KB file once
+  // per chart.
+  const attrs = [
+    { "data-src": "fundamentals.json", "data-series": "revenue",
+      "data-kind": "bars", "data-title": "Revenue" },
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins" },
+    { "data-src": "fundamentals.json", "data-series": "net",
+      "data-kind": "area", "data-title": "Net" },
+  ];
+  const { log, fetchCalls } = await renderPriceCharts(attrs, structuredClone(fd));
+
+  eq("shared payload: one fetch for three charts", fetchCalls.length, 1);
+  eq("shared payload: every chart still drew", log.series.length, 5);
+}
+
+{
+  // Two different payloads on one page must still be fetched separately.
+  const both = Object.assign(structuredClone(fd), structuredClone(data));
+  const { fetchCalls } = await renderPriceCharts([
+    { "data-src": "fundamentals.json", "data-series": "revenue",
+      "data-kind": "bars", "data-title": "Revenue" },
+    { "data-src": "analytics.json", "data-series": "drawdown",
+      "data-kind": "area", "data-title": "Drawdown" },
+  ], both);
+  eq("distinct payloads are fetched separately",
+     [...fetchCalls].sort(), ["analytics.json", "fundamentals.json"]);
 }
 
 // ── summary ─────────────────────────────────────────────────────────────────

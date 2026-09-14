@@ -450,6 +450,12 @@ LANG_TEXT = {
             "figures — arithmetic on reported numbers, not an estimate. A blank cell "
             "means the company does not tag that concept."
         ),
+        "f_snapshot": "💵 Financials (TTM)",
+        "f_snapshot_note": (
+            "Trailing twelve months from the company's own SEC filings, as of "
+            "{period} ({form}). Valuation multiples use the close on that date."
+        ),
+        "f_see_all": "All financial charts",
         "f_disclaimer": (
             "Figures come from SEC XBRL filings and are provided as-is for research and "
             "educational use. Concept mapping across filers is imperfect and restatements "
@@ -670,6 +676,12 @@ LANG_TEXT = {
             "且通常不單獨標記第四季，因此單季數字係以相鄰累計數相減還原——"
             "此為對已申報數字的算術運算，並非估計值。空白表示該公司未標記該科目。"
         ),
+        "f_snapshot": "💵 財報摘要（近四季）",
+        "f_snapshot_note": (
+            "取自該公司向 SEC 申報之文件，截至 {period}（{form}）。"
+            "估值倍數以該日收盤價計算。"
+        ),
+        "f_see_all": "查看完整財報圖表",
         "f_disclaimer": (
             "數據來自 SEC XBRL 申報文件，僅供研究與教育用途。跨發行人之科目對應並不完美，"
             "且未追蹤財報重編；引用任何數字前請與原始申報文件核對。"
@@ -1123,6 +1135,82 @@ def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
     return "\n".join(lines)
 
 
+# ── Financials snapshot on the report page ───────────────────────────────────
+# The Financials section carries sixteen charts; putting them all here would
+# bury the reports this page exists to index. What earns its place is the
+# trailing-twelve-month line and the three charts that answer "is this company
+# growing, is it profitable, and what is the market paying" — the rest stays one
+# click away.
+#
+# Both the table and the charts read the payload build_fundamentals() already
+# writes at ../../fundamentals/<ticker>/fundamentals.json, so nothing is
+# duplicated and the two sections can never disagree. That relative path
+# resolves correctly in both language trees, because the payload is written into
+# each of them.
+FUND_SNAPSHOT_SRC = "../../fundamentals/{ticker}/fundamentals.json"
+
+
+def fundamentals_snapshot_block(ticker: str, lang: str) -> str:
+    """Compact TTM table + three headline charts, or "" when there is no store.
+
+    Returns markdown rather than appending to a list so the caller can treat it
+    the same way it treats target_price_block().
+    """
+    rows = fundamental_rows(ticker)
+    if not rows:
+        return ""
+    stats = fundamental_analytics.summary(rows, store_bars(ticker))
+    if not stats:
+        return ""
+
+    margins = stats.get("margins_ttm") or {}
+    returns = stats.get("returns_ttm") or {}
+    mult = stats.get("multiples_ttm") or {}
+    src = FUND_SNAPSHOT_SRC.format(ticker=ticker)
+
+    def chart(**kw):
+        return pchart_block(src=src, **kw)
+
+    out = [
+        f"### {t(lang, 'f_snapshot')}",
+        "",
+        f"| {t(lang, 'f_revenue')} ({t(lang, 'f_ttm')}) | {t(lang, 'f_yoy')} "
+        f"| {t(lang, 'f_row_gross_margin')} | {t(lang, 'f_row_net_margin')} "
+        f"| ROE | {t(lang, 'f_pe')} | {t(lang, 'f_fcf')} |",
+        "|---|---|---|---|---|---|---|",
+        "| " + " | ".join([
+            f"**{_money(stats.get('revenue_ttm'))}**",
+            _pct_cell(stats.get("revenue_yoy")),
+            _pct_plain(margins.get("gross")),
+            _pct_plain(margins.get("net")),
+            _pct_plain(returns.get("roe")),
+            _mult(mult.get("pe")),
+            _money(stats.get("fcf_ttm")),
+        ]) + " |",
+        "",
+        t(lang, "f_snapshot_note").format(period=stats["last_period"],
+                                          form=stats["last_form"]),
+        "",
+        chart(series="revenue,revenue_yoy", kind="bars+line",
+              title=t(lang, "f_revenue"), color="green,blue",
+              labels=f"{t(lang, 'f_revenue')},{t(lang, 'f_yoy')}",
+              fmt="money", unit="", fmt2="percent"),
+        "",
+        chart(series="margin_gross,margin_operating,margin_net", kind="multiline",
+              title=t(lang, "f_margins"), color="blue,amber,green",
+              labels=f"{t(lang, 'f_gross_margin')},"
+                     f"{t(lang, 'f_operating_margin')},{t(lang, 'f_net_margin')}"),
+        "",
+        chart(series="pe", kind="area", title=t(lang, "f_pe"),
+              color="blue", unit="×"),
+        "",
+        f"[:material-finance: {t(lang, 'f_see_all')}]"
+        f"(../../fundamentals/{ticker}/index.md){{.report-link}}",
+        "",
+    ]
+    return "\n".join(out)
+
+
 # ── Mermaid pre-rendering ─────────────────────────────────────────────────────
 _MMDC = shutil.which("mmdc")  # None if not installed
 _MERMAID_CACHE_FILE = ROOT / ".mermaid_cache.json"
@@ -1478,12 +1566,6 @@ def build_reports(lang: str = "en"):
             if ticker in priced_keys:
                 lines += [f"[:material-chart-line: {t(lang, 'p_more_charts')}]"
                           f"(../../prices/{ticker}/index.md){{.report-link}}", ""]
-            # Reported fundamentals live in their own section rather than on
-            # this page: sixteen charts here would bury the reports the page
-            # exists to index.
-            if ticker in fundamental_link_keys:
-                lines += [f"[:material-finance: {t(lang, 'f_more')}]"
-                          f"(../../fundamentals/{ticker}/index.md){{.report-link}}", ""]
         # Price-target & implied-return table directly under the chart, sourced
         # from the latest fundamental report's scenario targets.
         target_tbl = target_price_block(
@@ -1491,6 +1573,15 @@ def build_reports(lang: str = "en"):
         )
         if target_tbl:
             lines += [target_tbl]
+
+        # Reported fundamentals: a trailing-twelve-month line and the three
+        # charts worth reading at a glance, with the other thirteen one click
+        # away. Guarded on the section having published a page for this ticker,
+        # since the block links to it and --strict rejects a dangling link.
+        if ticker in fundamental_link_keys:
+            snapshot = fundamentals_snapshot_block(ticker, lang)
+            if snapshot:
+                lines += [snapshot]
         lines += [
             "---",
             "",

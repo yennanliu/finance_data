@@ -1119,3 +1119,73 @@ def test_pchart_block_emits_multi_series_attributes():
     assert 'data-labels="Revenue,YoY"' in block
     assert 'data-format="money"' in block
     assert 'data-format2="percent"' in block
+
+
+# ── Financials snapshot on the report page ───────────────────────────────────
+def test_snapshot_renders_the_ttm_line_and_three_charts(monkeypatch, tmp_path):
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [
+        {"date": "2025-12-30", "close": 50.0}])
+
+    block = bd.fundamentals_snapshot_block("nvda", "en")
+
+    assert "Financials (TTM)" in block
+    # Exactly the three headline charts — the other thirteen stay one click away.
+    assert block.count('class="pchart"') == 3
+    for series in ("revenue,revenue_yoy",
+                   "margin_gross,margin_operating,margin_net",
+                   "pe"):
+        assert f'data-series="{series}"' in block, series
+    assert "[:material-finance: All financial charts]" in block
+
+
+def test_snapshot_reads_the_financials_sections_payload(monkeypatch, tmp_path):
+    """No second copy of the payload: the block points at the one
+    build_fundamentals() already writes, so the two can never disagree.
+
+    The path is relative to the report page's directory URL
+    (/reports/<ticker>/), which resolves the same way in the ZH tree because the
+    payload is written into both.
+    """
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+    block = bd.fundamentals_snapshot_block("nvda", "en")
+    assert 'data-src="../../fundamentals/nvda/fundamentals.json"' in block
+    assert block.count('data-src="../../fundamentals/nvda/fundamentals.json"') == 3
+
+
+def test_snapshot_is_empty_without_a_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "nope")
+    bd._FUND_ROWS_CACHE.clear()
+    assert bd.fundamentals_snapshot_block("tsm", "en") == ""
+
+
+def test_snapshot_is_empty_when_the_store_has_too_few_periods(monkeypatch, tmp_path):
+    """A TTM figure needs four quarters; three would understate the year."""
+    _fund_store(monkeypatch, tmp_path, "sndk", periods=2)
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+    block = bd.fundamentals_snapshot_block("sndk", "en")
+    # summary() still returns, but every TTM cell is absent rather than wrong.
+    assert "—" in block
+
+
+def test_snapshot_localises(monkeypatch, tmp_path):
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+    assert "財報摘要" in bd.fundamentals_snapshot_block("nvda", "zh")
+
+
+def test_snapshot_shows_a_dash_not_a_zero_for_an_untagged_line(monkeypatch, tmp_path):
+    """AMZN tags no quarterly gross profit; 0% would assert something false."""
+    _fund_store(monkeypatch, tmp_path, "amzn")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+    rows = bd.fundamental_rows("amzn")
+    for r in rows:
+        r["gross_profit"] = None
+    block = bd.fundamentals_snapshot_block("amzn", "en")
+    body = block.split("|---|---|---|---|---|---|---|")[1].strip().splitlines()[0]
+    cells = [c.strip() for c in body.strip("|").split("|")]
+    revenue, yoy, gross, net = cells[0], cells[1], cells[2], cells[3]
+    assert gross == "—", cells          # untagged, so absent…
+    assert net == "10.00%", cells       # …while the lines it does tag still read
+    assert "$" in revenue and "%" in yoy
