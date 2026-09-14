@@ -180,6 +180,136 @@ const data = payload();
         node.querySelector(".pchart__msg").textContent);
 }
 
+// ── the Financials shapes ───────────────────────────────────────────────────
+/** The shape scripts/build_docs.py::fundamentals_payload writes. */
+function fundamentals() {
+  const revenue = [], revenue_yoy = [], gross = [], operating = [], net = [];
+  for (let i = 0; i < 12; i++) {
+    const t = `202${3 + Math.floor(i / 4)}-${String((i % 4) * 3 + 3).padStart(2, "0")}-30`;
+    revenue.push({ t, v: 1e9 * (i + 1) });
+    revenue_yoy.push({ t, v: 10 + i });
+    gross.push({ t, v: 70 - i });
+    operating.push({ t, v: 40 - i });
+    net.push({ t, v: 30 - i });
+  }
+  return { ticker: "NVDA", revenue, revenue_yoy, gross, operating, net };
+}
+
+const fd = fundamentals();
+
+// 7. bars+line: two series, two axes — money on the right, growth on the left
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "revenue,revenue_yoy",
+      "data-kind": "bars+line", "data-title": "Revenue",
+      "data-color": "green,blue", "data-labels": "Revenue,YoY",
+      "data-format": "money", "data-unit": "" },
+    structuredClone(fd));
+
+  eq("bars+line: one bar series and one line series",
+     [log.bars.length, log.lines.length], [1, 1]);
+  eq("bars+line: the bar series carries the money figure",
+     log.bars[0].data[0], { time: "2023-03-30", value: 1e9 });
+  eq("bars+line: money on the right axis, growth on the left",
+     [log.bars[0].options.priceScaleId, log.lines[0].options.priceScaleId],
+     ["right", "left"]);
+  check("bars+line: the left axis is made visible",
+        log.chartOptions.leftPriceScale.visible === true);
+  // Twelve-digit axis labels are unreadable, so money abbreviates.
+  eq("bars+line: money axis abbreviates",
+     log.bars[0].options.priceFormat.formatter(1.234e9), "$1.23B");
+  eq("bars+line: percent axis keeps its unit",
+     log.lines[0].options.priceFormat.formatter(21), "21.00%");
+  const keys = node.querySelectorAll(".pchart__key");
+  eq("bars+line: a legend entry per series", keys.length, 2);
+  check("bars+line: legend uses the given labels",
+        keys[0].textContent.includes("Revenue") && keys[1].textContent.includes("YoY"));
+}
+
+// 8. multiline: the three margins share one axis
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins",
+      "data-color": "blue,amber,green", "data-labels": "Gross,Operating,Net" },
+    structuredClone(fd));
+
+  eq("multiline: three line series, no bars", [log.lines.length, log.bars.length], [3, 0]);
+  eq("multiline: each series reads its own key",
+     log.lines.map((s) => s.data[0].value), [70, 40, 30]);
+  eq("multiline: all on one axis",
+     log.lines.map((s) => s.options.priceScaleId), ["right", "right", "right"]);
+  check("multiline: no left axis when nothing asks for one",
+        log.chartOptions.leftPriceScale.visible === false);
+  eq("multiline: three legend entries", node.querySelectorAll(".pchart__key").length, 3);
+}
+
+// 9. crosshair updates every legend entry, not just the first
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins",
+      "data-labels": "Gross,Operating,Net" },
+    structuredClone(fd));
+
+  log.crosshairHandler({ seriesData: new Map([
+    [log.lines[0], { value: 65 }], [log.lines[1], { value: 35 }],
+    [log.lines[2], { value: 25 }],
+  ]) });
+  eq("crosshair: every legend entry shows its own hovered value",
+     node.querySelectorAll(".pchart__key").map((k) => k.textContent),
+     ["Gross 65.00%", "Operating 35.00%", "Net 25.00%"]);
+}
+
+// 10. stacked: drawn largest-first so the smaller series paints on top
+{
+  const stacked = structuredClone(fd);
+  // Python emits cumulative values; here `gross` stands in for the total.
+  const { log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "net,gross",
+      "data-kind": "stacked", "data-title": "Operating expenses",
+      "data-format": "money" },
+    stacked);
+
+  eq("stacked: both series are bars", [log.bars.length, log.lines.length], [2, 0]);
+  // Reversed: the cumulative total is added first, the component second.
+  eq("stacked: the larger series is drawn first",
+     [log.bars[0].data[0].value, log.bars[1].data[0].value], [70, 30]);
+}
+
+// 11. a partially-missing multi-series chart still draws what it has
+{
+  const partial = structuredClone(fd);
+  delete partial.operating;           // AMZN tags no gross profit, for instance
+  const { log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins" },
+    partial);
+  eq("partial payload: draws the series that exist", log.lines.length, 2);
+}
+
+{
+  const none = structuredClone(fd);
+  none.gross = []; none.operating = []; none.net = [];
+  const { node } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins" },
+    none);
+  check("no series at all: renders a message, not an empty chart",
+        node.classList.contains("is-empty"), node.className);
+}
+
+// 12. single-series widgets are unchanged by all of the above
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "analytics.json", "data-series": "drawdown",
+      "data-kind": "area", "data-title": "Drawdown", "data-color": "red" },
+    structuredClone(data));
+  eq("regression: a lone series still draws one area", log.areas.length, 1);
+  check("regression: a lone series keeps the readout, not a legend",
+        !!node.querySelector(".pchart__readout") && !node.querySelector(".pchart__key"));
+}
+
 // ── summary ─────────────────────────────────────────────────────────────────
 console.log(`${passed} passed, ${failures.length} failed`);
 failures.forEach((f) => console.log(`  ✗ ${f}`));

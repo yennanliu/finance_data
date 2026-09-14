@@ -181,7 +181,12 @@ export function makeLC(log) {
       log.container = el;
       return {
         addCandlestickSeries(o) { const s = series("candle"); s.applyOptions(o); log.candle = s; return s; },
-        addHistogramSeries(o) { const s = series("volume"); s.applyOptions(o); log.volume = s; return s; },
+        // `log.volume` is the K線 widget's single volume pane; `log.bars` is
+        // the list a Financials chart builds, which can hold several.
+        addHistogramSeries(o) {
+          const s = series("volume"); s.applyOptions(o);
+          log.volume = s; log.bars.push(s); return s;
+        },
         addLineSeries(o) { const s = series("line"); s.applyOptions(o); log.lines.push(s); return s; },
         // Only price-charts.js draws areas (the drawdown chart); logged
         // separately so a harness can tell an area from a line at a glance.
@@ -204,7 +209,7 @@ export function makeLC(log) {
 /** A fresh draw log; every field the fake LC and the harnesses read. */
 function newLog() {
   return {
-    series: [], lines: [], areas: [], appliedOptions: [], visibleRanges: [],
+    series: [], lines: [], areas: [], bars: [], appliedOptions: [], visibleRanges: [],
     chartOptions: null, candle: null, volume: null, removed: false,
     fitContent: false,
   };

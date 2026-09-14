@@ -36,6 +36,38 @@
 }
 .pchart__readout b { color: var(--fp-text, #fafafa); }
 
+/* Legend for a multi-series chart (margins, ROE/ROA/ROIC, revenue + growth).
+   Wraps rather than overflowing: three labels each gain a value on hover, and
+   at phone width that no longer fits on one line beside the title. */
+.pchart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem 0.7rem;
+  font-size: 0.74rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+
+.pchart__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.pchart__key i {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 2px;
+  flex: none;
+}
+
+.pchart__key b {
+  font-weight: 600;
+  color: var(--fp-text, #fafafa);
+}
+
 .pchart__canvas { height: 240px; }
 
 .pchart__msg {

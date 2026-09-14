@@ -9,14 +9,28 @@
  * split keeps the numbers testable in pytest and keeps the payload small: each
  * page fetches one analytics.json holding pre-computed {t, v} points.
  *
+ * It also serves the Financials pages, whose series come from
+ * fundamental_analytics.py — the same contract, more shapes.
+ *
  * A widget is any element with class `pchart` carrying:
- *   data-src     — URL to analytics.json, relative to the page
- *   data-series  — key inside that JSON ("drawdown" | "volatility" | "histogram")
- *   data-kind    — "area" | "line" | "histogram"
+ *   data-src     — URL to the JSON payload, relative to the page
+ *   data-series  — key inside that JSON, or a comma-separated list of keys to
+ *                  draw several series on one chart
+ *   data-kind    — "line" | "area" | "histogram" | "bars" | "bars+line"
+ *                  | "multiline" | "stacked"
  *   data-title   — heading shown above the chart
  * and optionally:
- *   data-unit    — suffix for values in the readout (default "%")
- *   data-color   — "red" | "amber" | "blue" (default "blue")
+ *   data-unit    — suffix for values on the right axis (default "%")
+ *   data-unit2   — suffix for values on the left axis (default "%")
+ *   data-color   — palette name, or one per series (default "blue")
+ *   data-labels  — legend label per series (default: the series key)
+ *   data-format  — "plain" | "percent" | "money" for the right axis
+ *   data-format2 — same, for the left axis (default "percent")
+ *
+ * "bars+line" puts the first series on the right axis as bars and the rest on
+ * the left as lines — a revenue bar and its growth rate cannot share a scale.
+ * "stacked" expects Python to have emitted cumulative values, because
+ * Lightweight Charts does not stack.
  *
  * The markup is injected by scripts/build_docs.py. Like the K線 widget, we
  * (re)scan on every MkDocs Material `document$` emission and re-theme on a
@@ -79,17 +93,50 @@
           days: "days", sessions: "sessions" };
   }
 
+  function csv(value, fallback) {
+    var s = (value === null || value === undefined ? "" : value).trim();
+    if (!s) return fallback ? [fallback] : [];
+    return s.split(",").map(function (x) { return x.trim(); });
+  }
+
   function readOpts(node) {
     // data-unit is read with an explicit null check, not `||`: an empty
     // data-unit means "this series has no unit", which `||` would turn into "%".
     var unit = node.getAttribute("data-unit");
     return {
-      series: (node.getAttribute("data-series") || "").trim(),
+      // A comma-separated list draws several series on one chart; a bare name
+      // still means one, so every existing widget reads the same as before.
+      series: csv(node.getAttribute("data-series")),
       kind: (node.getAttribute("data-kind") || "line").trim(),
       title: (node.getAttribute("data-title") || "").trim(),
       unit: unit === null ? "%" : unit,
-      color: (node.getAttribute("data-color") || "blue").trim(),
+      unit2: node.getAttribute("data-unit2") || "%",
+      color: csv(node.getAttribute("data-color"), "blue"),
+      // How to render an axis value: money abbreviates to $1.2B, percent and
+      // plain print two decimals. Financial figures run to twelve digits, so
+      // the default axis labels would be unreadable.
+      format: (node.getAttribute("data-format") || "plain").trim(),
+      format2: (node.getAttribute("data-format2") || "percent").trim(),
+      labels: csv(node.getAttribute("data-labels")),
     };
+  }
+
+  // ── value formatting ─────────────────────────────────────────────────────
+  function fmtMoney(n) {
+    if (n == null || isNaN(n)) return "—";
+    var abs = Math.abs(n), sign = n < 0 ? "-" : "";
+    var units = [[1e12, "T"], [1e9, "B"], [1e6, "M"], [1e3, "K"]];
+    for (var i = 0; i < units.length; i++) {
+      if (abs >= units[i][0]) {
+        return sign + "$" + (abs / units[i][0]).toFixed(2) + units[i][1];
+      }
+    }
+    return sign + "$" + abs.toFixed(2);
+  }
+
+  function formatter(kind, unit) {
+    if (kind === "money") return fmtMoney;
+    return function (n) { return fmtNum(n, unit); };
   }
 
   // ── histogram: plain DOM bars ────────────────────────────────────────────
@@ -133,24 +180,87 @@
   }
 
   // ── time series: Lightweight Charts ──────────────────────────────────────
-  function buildSeries(node, points, opts, L) {
+  // One builder for every time-based kind. `datasets` is one entry per series:
+  //   {points, color, shape: "line"|"area"|"bars", axis: "right"|"left", label}
+  // Which is a deliberate flattening — a bars+line combo and a three-line
+  // margin chart differ only in the shapes and axes their series ask for.
+  function plan(opts, payload) {
+    var kind = opts.kind;
+    var names = opts.series;
+    var out = [];
+    for (var i = 0; i < names.length; i++) {
+      var points = payload[names[i]] || [];
+      var shape, axis;
+      if (kind === "bars" || kind === "stacked") {
+        shape = "bars";
+        axis = "right";
+      } else if (kind === "bars+line") {
+        // The bar series carries the money figure and the line its growth rate,
+        // so they cannot share a scale — billions and percent on one axis makes
+        // the percent a flat line at zero.
+        shape = i === 0 ? "bars" : "line";
+        axis = i === 0 ? "right" : "left";
+      } else {
+        shape = kind === "area" ? "area" : "line";
+        axis = "right";
+      }
+      out.push({
+        name: names[i],
+        points: points,
+        color: opts.color[i] || opts.color[opts.color.length - 1] || "blue",
+        label: opts.labels[i] || names[i],
+        shape: shape,
+        axis: axis,
+      });
+    }
+    // Stacked bars are drawn largest-first so the smaller series paints over
+    // the larger one: Lightweight Charts has no stacking, and Python already
+    // emits cumulative values for exactly this reason.
+    if (kind === "stacked") out.reverse();
+    return out;
+  }
+
+  function buildSeries(node, payload, opts, L) {
     var LC = window.LightweightCharts;
-    if (!LC || points.length < 2) {
+    var datasets = plan(opts, payload).filter(function (d) {
+      return d.points && d.points.length;
+    });
+    var drawable = datasets.filter(function (d) { return d.points.length >= 2; });
+    if (!LC || !drawable.length) {
       node.classList.add("is-empty");
       node.innerHTML = '<div class="pchart__msg">' + L.unavailable + "</div>";
       return null;
     }
 
     var pal = palette();
-    var color = seriesColor(pal, opts.color);
-    var last = points[points.length - 1];
+    var hasLeft = datasets.some(function (d) { return d.axis === "left"; });
+    var fmtRight = formatter(opts.format, opts.unit);
+    var fmtLeft = formatter(opts.format2, opts.unit2);
+
+    // A multi-series chart names its series in the header; a single one keeps
+    // the latest-value readout it has always had.
+    var legend = datasets.length > 1
+      ? datasets.map(function (d) {
+          // The label is carried as an attribute so the crosshair handler can
+          // rebuild "Gross 65.00%" without having to re-derive it from text it
+          // has already overwritten.
+          // The value lives in its own <b> so the crosshair can rewrite it
+          // without taking the colour swatch with it.
+          return '<span class="pchart__key" data-series="' + d.name + '"' +
+            ' data-label="' + d.label + '">' +
+            '<i style="background:' + seriesColor(pal, d.color) + '"></i>' +
+            "<b>" + d.label + "</b></span>";
+        }).join("")
+      : "";
+    var last = datasets[0].points[datasets[0].points.length - 1];
 
     node.innerHTML =
       '<div class="pchart__head">' +
         '<span class="pchart__title">' + opts.title + "</span>" +
-        '<span class="pchart__readout">' + L.latest + " " +
-          '<b>' + fmtNum(last.v, opts.unit) + "</b>" +
-        "</span>" +
+        (legend
+          ? '<span class="pchart__legend">' + legend + "</span>"
+          : '<span class="pchart__readout">' + L.latest + " " +
+            "<b>" + fmtRight(last.v) + "</b></span>") +
       "</div>" +
       '<div class="pchart__canvas"></div>';
 
@@ -164,7 +274,15 @@
         fontSize: 11,
       },
       grid: { vertLines: { color: pal.grid }, horzLines: { color: pal.grid } },
-      rightPriceScale: { borderColor: pal.border, scaleMargins: { top: 0.1, bottom: 0.08 } },
+      rightPriceScale: {
+        borderColor: pal.border,
+        scaleMargins: { top: 0.1, bottom: 0.08 },
+      },
+      leftPriceScale: {
+        visible: hasLeft,
+        borderColor: pal.border,
+        scaleMargins: { top: 0.1, bottom: 0.08 },
+      },
       timeScale: { borderColor: pal.border, fixLeftEdge: true, fixRightEdge: true },
       crosshair: {
         mode: LC.CrosshairMode.Normal,
@@ -172,47 +290,79 @@
         horzLine: { color: pal.crosshair, width: 1, style: LC.LineStyle.Dashed, labelBackgroundColor: pal.text },
       },
       handleScale: { axisPressedMouseMove: false },
-      localization: { priceFormatter: function (p) { return p.toFixed(0) + (opts.unit || ""); } },
     });
 
-    var series = opts.kind === "area"
-      ? chart.addAreaSeries({
+    var made = datasets.map(function (d) {
+      var color = seriesColor(pal, d.color);
+      var fmt = d.axis === "left" ? fmtLeft : fmtRight;
+      var common = {
+        priceScaleId: d.axis,
+        priceLineVisible: false,
+        lastValueVisible: false,
+        priceFormat: { type: "custom", formatter: fmt },
+      };
+      var s;
+      if (d.shape === "bars") {
+        s = chart.addHistogramSeries(Object.assign({ color: color }, common));
+      } else if (d.shape === "area") {
+        s = chart.addAreaSeries(Object.assign({
           lineColor: color, lineWidth: 2,
           topColor: alpha(color, "44"), bottomColor: alpha(color, "05"),
-          priceLineVisible: false, lastValueVisible: false,
-        })
-      : chart.addLineSeries({
+        }, common));
+      } else {
+        s = chart.addLineSeries(Object.assign({
           color: color, lineWidth: 2,
-          priceLineVisible: false, lastValueVisible: false,
-        });
-    series.setData(points.map(function (p) { return { time: p.t, value: p.v }; }));
+        }, common));
+      }
+      s.setData(d.points.map(function (p) { return { time: p.t, value: p.v }; }));
+      return { series: s, def: d, fmt: fmt };
+    });
     chart.timeScale().fitContent();
 
-    // Crosshair readout — falls back to the latest point off-chart, so the
-    // header never goes blank when the pointer leaves.
+    // Crosshair readout. With one series the header shows its value; with
+    // several, each legend entry picks up its own — so a margin chart reads
+    // all three at the hovered quarter rather than making you guess.
+    var keys = {};
+    node.querySelectorAll(".pchart__key").forEach(function (el) {
+      keys[el.getAttribute("data-series")] = el;
+    });
     chart.subscribeCrosshairMove(function (param) {
-      var v = param && param.seriesData ? param.seriesData.get(series) : null;
-      readout.textContent = fmtNum(v ? v.value : last.v, opts.unit);
+      made.forEach(function (m) {
+        var hit = param && param.seriesData ? param.seriesData.get(m.series) : null;
+        var pts = m.def.points;
+        var v = hit ? hit.value : (pts.length ? pts[pts.length - 1].v : null);
+        if (readout && m === made[0]) readout.textContent = m.fmt(v);
+        var key = keys[m.def.name];
+        if (key) {
+          key.querySelector("b").textContent =
+            key.getAttribute("data-label") + " " + m.fmt(v);
+        }
+      });
     });
 
     return {
       node: node,
       retheme: function () {
         var p = palette();
-        var c = seriesColor(p, opts.color);
         chart.applyOptions({
           layout: { textColor: p.text },
           grid: { vertLines: { color: p.grid }, horzLines: { color: p.grid } },
           rightPriceScale: { borderColor: p.border },
+          leftPriceScale: { borderColor: p.border },
           timeScale: { borderColor: p.border },
           crosshair: {
             vertLine: { color: p.crosshair, labelBackgroundColor: p.text },
             horzLine: { color: p.crosshair, labelBackgroundColor: p.text },
           },
         });
-        series.applyOptions(opts.kind === "area"
-          ? { lineColor: c, topColor: alpha(c, "44"), bottomColor: alpha(c, "05") }
-          : { color: c });
+        made.forEach(function (m) {
+          var c = seriesColor(p, m.def.color);
+          m.series.applyOptions(m.def.shape === "area"
+            ? { lineColor: c, topColor: alpha(c, "44"), bottomColor: alpha(c, "05") }
+            : { color: c });
+          var key = keys[m.def.name];
+          if (key) key.querySelector("i").style.background = c;
+        });
       },
       destroy: function () { chart.remove(); },
     };
@@ -232,15 +382,17 @@
       var src = node.getAttribute("data-src");
       var opts = readOpts(node);
       var L = labels();
-      if (!src || !opts.series) return;
+      if (!src || !opts.series.length) return;
       node.innerHTML = '<div class="pchart__msg">' + L.loading + "</div>";
       fetch(src)
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) {
-          var payload = (data && data[opts.series]) || [];
+          // The histogram still takes one named series; every time-based kind
+          // takes the whole payload and picks its own out of it, so a chart can
+          // draw several.
           var ctrl = opts.kind === "histogram"
-            ? buildHistogram(node, payload, opts, L)
-            : buildSeries(node, payload, opts, L);
+            ? buildHistogram(node, (data && data[opts.series[0]]) || [], opts, L)
+            : buildSeries(node, data || {}, opts, L);
           if (ctrl) live.push(ctrl);
         })
         .catch(function () {
