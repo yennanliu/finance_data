@@ -381,6 +381,23 @@
       return false;
     });
 
+    // Every widget on a page usually reads the same payload — sixteen of them
+    // on a Financials page, four on a report page — and fetch() does not
+    // coalesce concurrent requests for one URL. Share the promise instead, so
+    // a page makes one request per distinct src rather than one per chart.
+    // Scoped to this scan: all widgets on a page are initialised in this loop,
+    // and a navigation starts a fresh scan with a fresh payload.
+    var pending = {};
+    function payloadFor(src) {
+      if (!pending[src]) {
+        pending[src] = fetch(src).then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        });
+      }
+      return pending[src];
+    }
+
     var nodes = document.querySelectorAll(".pchart:not([data-pchart-ready])");
     nodes.forEach(function (node) {
       node.setAttribute("data-pchart-ready", "1");
@@ -389,8 +406,7 @@
       var L = labels();
       if (!src || !opts.series.length) return;
       node.innerHTML = '<div class="pchart__msg">' + L.loading + "</div>";
-      fetch(src)
-        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      payloadFor(src)
         .then(function (data) {
           // The histogram still takes one named series; every time-based kind
           // takes the whole payload and picks its own out of it, so a chart can
