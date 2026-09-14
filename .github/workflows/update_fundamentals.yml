@@ -1,0 +1,76 @@
+name: Update Fundamentals Data
+
+# Maintains data/fundamentals/<ticker>.csv — the committed store of reported
+# quarterly financial statements, sourced from SEC's XBRL companyfacts API
+# (scripts/update_fundamentals.py, design notes in docs/FUNDAMENTALS_STORE_EVAL.md).
+#
+# The chart payloads pages fetch are *derived* from this store, joined against
+# data/prices/, by scripts/build_docs.py at docs-build time. Neither the
+# payloads nor the derived ratios are committed.
+#
+# Weekly, not nightly. Fundamentals move once a quarter: a daily run would make
+# 38 pointless requests a day and commit nothing on ~87 days out of 90. Sunday
+# is early enough that any Friday filing is published in the same week, and the
+# run lands before the 04:00 UTC deploy so a new quarter reaches the site in the
+# same publish cycle.
+#
+# Coverage is narrower than the price store's and deliberately so: only SEC
+# registrants filing US-GAAP have XBRL facts to read. ETFs have no financial
+# statements, and TSM / GRAB / NU / NBIS file IFRS. Both are logged as `skipped`
+# and neither fails the job.
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"   # 03:00 UTC Sunday — before the 04:00 deploy
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Space-separated tickers to refresh (empty = full universe)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "update-fundamentals"
+  cancel-in-progress: false
+
+jobs:
+  update-fundamentals:
+    name: Fetch XBRL facts and commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Shallow: the store is read from the working tree, not history.
+
+      - name: Set up Python
+        uses: ./.github/actions/python-env
+        # No packages: the fetch is stdlib urllib and the read path is stdlib
+        # too, so this job needs nothing beyond the interpreter.
+
+      - name: Update fundamentals store
+        env:
+          TICKERS: ${{ github.event.inputs.tickers }}
+        run: |
+          set -euo pipefail
+          # TICKERS is a deliberately word-split list of tickers.
+          # shellcheck disable=SC2086
+          PYTHONPATH=scripts python scripts/update_fundamentals.py $TICKERS
+
+      - name: Resolve commit date
+        id: meta
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      # The shared action logs a `git diff --cached --stat` summary, which makes
+      # an unexpected full-file rewrite obvious — an ordinary week commits
+      # nothing at all, and an earnings week appends one row per reporting
+      # ticker.
+      - name: Commit and push data
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: data/fundamentals
+          message: "chore: refresh fundamentals data ${{ steps.meta.outputs.date }}"
