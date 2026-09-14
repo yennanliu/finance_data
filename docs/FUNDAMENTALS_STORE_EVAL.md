@@ -1,6 +1,7 @@
 # Financial Metrics on the Company Page — Feasibility Survey
 
-**Question:** the per-ticker page (e.g. [`/reports/amzn/`](reports/amzn/index.md))
+**Question:** the per-ticker page (e.g.
+[`/reports/amzn/`](https://yennj12.js.org/finance_data/reports/amzn/))
 today shows a hero k-line chart, a scenario price-target table and a list of
 generated reports. [Growin's financial-metrics
 page](https://www.growin.ai/zh/my/analysis/NVDA/financial-metrics) shows
@@ -26,10 +27,17 @@ financial statements at all. Any approach has to answer for those 14.
 
 **Surveyed:** 2026-09-14 · every number below is a real measurement against the
 live SEC API or the working tree at commit `d9744b0bc`.
-**Status:** survey only. No code changed. If accepted, the build plan belongs in
-a sibling `FUNDAMENTALS_STORE_DESIGN.md`, the way
-[`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md) preceded
-[`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md).
+**Status:** accepted and built. Phases 1–6 of §9 ship in
+`scripts/analysis/data/fundamentals.py`,
+`scripts/analysis/data/fundamental_analytics.py`,
+`scripts/update_fundamentals.py`, `.github/workflows/update_fundamentals.yml`
+and the Financials section in `scripts/build_docs.py`. That is the **C** half of
+Approach D; phase 7 (the yfinance maintenance path, which adds TSM / GRAB / NU /
+NBIS / 2330.TW) is still outstanding, so coverage stands at the 24 tickers §4
+predicted. This document is kept as the evaluation that preceded the work, the
+way [`CHART_UNIFICATION_EVAL.md`](CHART_UNIFICATION_EVAL.md) preceded
+[`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md); see §13 for what building it
+actually turned up.
 
 ---
 
@@ -163,9 +171,14 @@ Measured on AMZN (CIK 0001018724):
 | Date span | 2007-12-31 → 2026-06-30 |
 
 Each fact carries `{start, end, val, accn, fy, fp, form, filed, frame}` — which
-means we get the fiscal-period label (`fy`/`fp`) *for free*, and can dedupe
-restatements by `filed`. That matters: AVGO's fiscal quarters end on dates like
-`2026-08-02`, so a calendar-derived label would be wrong.
+looks like it hands us the fiscal-period label (`fy`/`fp`) for free, and a way
+to dedupe restatements by `filed`. That matters: AVGO's fiscal quarters end on
+dates like `2026-08-02`, so a calendar-derived label would be wrong.
+
+> **Both of those turned out to be false, and expensively so.** `fy`/`fp` label
+> the *filing*, not the period, and the latest filing is not the most reliable
+> one. See §13.2 — this paragraph is left as written to show what the API
+> appears to promise.
 
 **Four warts, all real, all surmountable:**
 
@@ -665,3 +678,83 @@ data at all because the price store already exists.
 The work is real but bounded, and it concentrates in one place: a curated XBRL
 concept mapping with tests behind it. The two things to *not* do are parsing
 numbers out of LLM prose (§8A) and chasing segment disaggregation (§4.5).
+
+---
+
+## 13. What building it actually turned up
+
+The survey above was written before any code existed. This section records what
+the implementation found, because none of it was visible from the API docs and
+all of it would cost real time to rediscover.
+
+### 13.1 The estimates held
+
+| Predicted | Actual |
+|---|---|
+| ~22 US filers covered | **24** (AVAV, IONQ, UBER also qualified) |
+| ~260 KB of CSV | **208 KB** |
+| 13 Tier-1 + 5 Tier-2 charts | **16 shipped**, incl. all five multiples |
+| 5–8 days for Approach C | close, once the traps below were paid for |
+
+### 13.2 Four traps in `companyfacts`, each found by validating against a filing
+
+**`fy`/`fp` label the filing, not the period.** A single NVDA 10-Q filed
+2024-11-20 emits four `Revenues` facts *all* tagged `fy=2025, fp=Q3`: the
+current quarter, the current year-to-date, and both prior-year comparatives.
+Keying on those fields silently mixes periods — the first working version put
+FY2024's quarters under FY2025 and produced a Q4 revenue of **−$11.85B**.
+`start`/`end` identify a period; nothing else does.
+
+**Almost everything is cumulative.** Cash-flow items are *only* ever tagged
+year-to-date (3/6/9/12-month spans from the fiscal year start), and income items
+stop tagging Q4 discretely because the 10-K reports the full year. Differencing
+consecutive year-to-date facts recovers both, which means §5.3's separate "I7 —
+derived Q4" invariant was the wrong shape: Q4 is just the last difference, not a
+special case. A weighted-average share count is the exception — it is not a
+flow, and differencing NVDA's 24.61 / 24.57 / 24.54 / 24.51B yields −0.03B.
+
+**A 10-K sometimes tags a concept more narrowly than the 10-Qs did.** WDC FY2023
+runs 3.74 → 6.84 → 9.65 → **6.26**B on one concept, so the final difference is
+−$3.39B of revenue. Refusing a negative value for a metric that cannot be
+negative lets the next concept in the chain claim the period — which is how KTOS
+FY2011 recovers a clean Q4 from `SalesRevenueNet` after `Revenues` fails.
+
+**Later is not better.** ONDS tags Q1 2025 diluted shares as 105,004,818 in the
+original 10-Q and as **105,005** in the comparative column of the next year's
+10-Q, having dropped a factor of 1000. "Latest filed wins" picks the broken
+figure. Fact selection now prefers the filing closest to the period end — the
+one in which the period *is* the reporting period — which is the "as first
+reported" convention. ONDS's FY2025 10-K carries the same scale error in the
+annual figure itself, so share counts additionally pass a plausibility guard and
+the market cap goes absent rather than wrong.
+
+### 13.3 Two more found in review
+
+**Positional quarter labels.** Numbering a fiscal year's recovered quarters
+`Q1…Qn` by list position relabels a year whose early quarters were never
+recovered: ONDS's `2015-12-31` came out as Q2 of a December fiscal year. The
+label is now the distance from the fiscal-year start.
+
+**Positional year-on-year lookback.** Stepping back four rows only lands a year
+earlier in a gapless store, and the store has gaps — a quarter no concept covers
+is simply absent. PLTR's 2020-12-31 sat four rows after 2019-09-30, 458 days
+back, and AVAV had four more. The dates are now checked rather than assumed.
+
+### 13.4 What the concept mapping cost
+
+The survey called this "the single largest piece of work", and it was — but it
+stayed bounded. Eighteen metrics, each an ordered chain of two to five
+candidates, resolved per period rather than per company. The chains earn their
+keep on the ASC 606 changeover: MSFT's revenue runs `Revenues` (2007–10) →
+`SalesRevenueNet` (2009–18) → `RevenueFromContractWithCustomer…` (2016–26), and
+a single tag yields 14 quarters where the chain yields the full run.
+
+Validated against independently known annual figures — NVDA FY2025 $130.50B,
+MSFT FY2025 $281.72B, AMZN FY2024 $637.96B, AVGO FY2024 $51.57B — all within
+0.01%.
+
+### 13.5 Still open
+
+Phase 7 (§9): the yfinance maintenance path, which adds TSM, GRAB, NU, NBIS and
+2330.TW and completes Approach D. Tier 3 (analyst surprise) and Tier 4 (segment
+revenue) remain deliberately out of scope, for the reasons in §4.5 and §8.

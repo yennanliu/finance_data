@@ -27,8 +27,15 @@ Every helper here propagates absence rather than substituting a number.
 
 from __future__ import annotations
 
+from datetime import date
+
 # Quarters in a trailing-twelve-month window.
 TTM_QUARTERS = 4
+
+# How far apart two period ends may be and still count as a year. Fiscal years
+# run 52 or 53 weeks and quarter ends drift, so this is deliberately loose — it
+# exists to catch a *gap*, not to police a few days of calendar slack.
+YEAR_APART_DAYS = (330, 400)
 
 # Metrics that accumulate over a year and so can be summed into a TTM figure.
 # A balance-sheet level (assets, equity, debt, cash) is a point in time and a
@@ -143,9 +150,20 @@ def yoy_growth(rows: "list[dict]", metric: str) -> "list[dict]":
     quarter, so seasonality does not read as growth. A sign change makes the
     percentage meaningless (a swing from loss to profit is not "+340%"), so
     those points are omitted.
+
+    Stepping back four rows only lands a year earlier in a gapless store, and
+    the store has gaps: ``resolve`` writes a row only for a period some revenue
+    concept covers, so a quarter nobody tagged is simply absent. PLTR's
+    2020-12-31 sits four rows after 2019-09-30 — 458 days, not a year — and
+    AVAV has four more like it. The dates are checked rather than assumed.
     """
     out: "list[dict]" = []
+    lo, hi = YEAR_APART_DAYS
     for i in range(TTM_QUARTERS, len(rows)):
+        apart = (date.fromisoformat(rows[i]["period_end"])
+                 - date.fromisoformat(rows[i - TTM_QUARTERS]["period_end"])).days
+        if not lo <= apart <= hi:
+            continue
         now, then = _get(rows[i], metric), _get(rows[i - TTM_QUARTERS], metric)
         if now is None or then is None or then <= 0:
             continue

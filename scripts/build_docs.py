@@ -2781,7 +2781,7 @@ def fundamentals_index_page(rows: "list[str]", count: int, download_base: str,
         f"- :material-code-json: [`index.json`]({json_href}) — "
         f"{t(lang, 'f_json_desc')}",
         "",
-        f"| # | {t(lang, 'sector')} | {t(lang, 'f_period')} "
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'f_period')} "
         f"| {t(lang, 'f_revenue')} ({t(lang, 'f_ttm')}) | {t(lang, 'f_yoy')} "
         f"| {t(lang, 'f_row_net_margin')} | ROE | {t(lang, 'f_pe')} "
         f"| {t(lang, 'f_periods')} | CSV |",
@@ -2867,7 +2867,7 @@ def fundamentals_ticker_page(key: str, meta: dict, stats: dict,
         # component paints over the cumulative total rather than under it.
         chart(series="opex_rnd,opex_total", kind="stacked",
               title=t(lang, "f_opex"), color="amber,blue",
-              labels=f"{t(lang, 'f_rnd')},{t(lang, 'f_sga')}",
+              labels=f"{t(lang, 'f_rnd')},{t(lang, 'f_opex')}",
               fmt="money", unit=""),
         "",
         chart(series="ocf,fcf", kind="multiline",

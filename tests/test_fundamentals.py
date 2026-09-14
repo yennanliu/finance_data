@@ -245,6 +245,36 @@ def test_a_shrinking_revenue_chain_yields_no_quarter_rather_than_a_negative_one(
     assert q["2023-03-31"] == pytest.approx(2.803e9)
 
 
+def test_quarter_labels_come_from_the_fiscal_year_start_not_list_position():
+    """ONDS's 2015-12-31 came out as Q2 of a December fiscal year.
+
+    Its year-to-date chain begins mid-year, so only the later quarters are
+    recovered; numbering them by position in the surviving list relabels the
+    fourth quarter as the second.
+    """
+    gaap = {"Revenues": {"units": {"USD": [
+        # Only Q3 and Q4 are recoverable: no Q1 or Q2 fact exists.
+        fact("2015-01-01", "2015-09-30", 3.0, filed="2015-11-01"),
+        fact("2015-07-01", "2015-09-30", 1.0, filed="2015-11-01"),
+        fact("2015-01-01", "2015-12-31", 4.5, form="10-K", filed="2016-03-01"),
+    ]}}}
+    rows = F.resolve({"facts": {"us-gaap": gaap}})
+    labels = {r["period_end"]: r["fp"] for r in rows}
+    assert labels["2015-09-30"] == "Q3"
+    assert labels["2015-12-31"] == "Q4"
+
+
+def test_a_full_year_still_labels_its_quarters_in_order():
+    gaap = {"Revenues": {"units": {"USD": [
+        fact("2025-01-01", "2025-03-31", 1.0),
+        fact("2025-01-01", "2025-06-30", 3.0),
+        fact("2025-01-01", "2025-09-30", 6.0),
+        fact("2025-01-01", "2025-12-31", 10.0, form="10-K"),
+    ]}}}
+    rows = F.resolve({"facts": {"us-gaap": gaap}})
+    assert [r["fp"] for r in rows] == ["Q1", "Q2", "Q3", "Q4"]
+
+
 def test_a_later_concept_supplies_a_period_the_first_one_could_not():
     """KTOS FY2011: `Revenues` gives a bad Q4, `SalesRevenueNet` a clean one."""
     gaap = {
@@ -422,10 +452,16 @@ def test_update_leaves_the_store_untouched_when_the_gate_trips(tmp_path, monkeyp
     F.update("nvda", "1", store_dir=tmp_path)
     before = F.store_path("nvda", tmp_path).read_bytes()
 
+    # The bad payload needs an annual span too, or `resolve` finds no fiscal
+    # year, returns no rows, and `update` skips before `gate` ever runs — the
+    # assertion would then pass without exercising the gate at all.
     monkeypatch.setattr(F, "fetch_facts",
                         lambda cik: {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [
-                            fact("2025-01-01", "2025-03-31", -1e9)]}}}}})
-    assert F.update("nvda", "1", store_dir=tmp_path)[0] == "skipped"
+                            fact("2025-01-01", "2025-03-31", -1e9),
+                            fact("2025-01-01", "2025-12-31", -4e9, form="10-K"),
+                        ]}}}}})
+    status, detail = F.update("nvda", "1", store_dir=tmp_path)
+    assert status == "skipped" and "negative revenue" in detail, detail
     assert F.store_path("nvda", tmp_path).read_bytes() == before
 
 

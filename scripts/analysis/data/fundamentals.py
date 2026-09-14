@@ -494,12 +494,18 @@ def resolve(facts_json: dict) -> list[dict]:
         ends = sorted({e for e in values["revenue"] if fy_start < e <= fy_end})
         if not ends:
             continue
-        for i, end in enumerate(ends[-4:], start=1):
+        for end in ends[-4:]:
+            # Quarter index measured from the fiscal-year start, not from this
+            # list's position. A year whose early quarters were never recovered
+            # — the year-to-date chain often begins mid-year — would otherwise
+            # relabel its survivors Q1 onward: ONDS's 2015-12-31 came out as Q2
+            # of a December fiscal year, which is its fourth quarter.
+            quarter = min(4, max(1, round(_days(fy_start, end) / 91.0)))
             form, filed = provenance.get(end, ("", ""))
             row = {
                 "period_end": end,
                 "fy": int(fy_end[:4]),
-                "fp": f"Q{i}",
+                "fp": f"Q{quarter}",
                 "form": form,
                 "filed": filed,
             }

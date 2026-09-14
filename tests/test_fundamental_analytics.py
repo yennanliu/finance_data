@@ -96,6 +96,29 @@ def test_yoy_compares_against_the_same_quarter_a_year_earlier():
     assert FA.yoy_growth(rows, "revenue") == [{"t": "2026-03-31", "v": 50.0}]
 
 
+def test_yoy_skips_a_point_whose_base_is_not_actually_a_year_back():
+    """Stepping back four rows only lands a year earlier in a gapless store.
+
+    PLTR's 2020-12-31 sits four rows after 2019-09-30 — 458 days apart — and
+    AVAV has four more like it. Before the date check those published a growth
+    rate computed against the wrong base, with nothing on the page to show it.
+    """
+    rows = four_quarters()
+    del rows[1]                                    # a quarter nobody tagged
+    rows += [row("2026-03-31", 2026, "Q1", revenue=150.0)]
+    # 2026-03-31 is now four rows after 2025-03-31 + one gap, so the base is
+    # further back than a year and the point must be dropped.
+    assert FA.yoy_growth(rows, "revenue") == []
+
+
+def test_yoy_tolerates_a_fiscal_calendar_that_drifts_a_few_days():
+    """Fiscal years run 52 or 53 weeks, so quarter ends move; the guard exists
+    to catch a missing quarter, not to police calendar slack."""
+    ends = ["2024-06-29", "2024-09-28", "2024-12-28", "2025-03-29", "2025-06-28"]
+    rows = [row(e, 2025, "Q1", revenue=100.0 + i) for i, e in enumerate(ends)]
+    assert [p["t"] for p in FA.yoy_growth(rows, "revenue")] == ["2025-06-28"]
+
+
 def test_yoy_omits_a_point_whose_base_was_a_loss():
     """A swing from loss to profit is not a percentage."""
     rows = four_quarters()

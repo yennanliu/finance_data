@@ -216,6 +216,11 @@
     // Stacked bars are drawn largest-first so the smaller series paints over
     // the larger one: Lightweight Charts has no stacking, and Python already
     // emits cumulative values for exactly this reason.
+    //
+    // Because the values are cumulative, the readout for the outer series is
+    // the running total, not that band's own contribution — so the caller must
+    // label it as the total. Labelling it after the top component would make
+    // the crosshair report R&D + SG&A as SG&A.
     if (kind === "stacked") out.reverse();
     return out;
   }
