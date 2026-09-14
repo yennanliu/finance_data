@@ -982,3 +982,140 @@ def test_nav_drops_investor_day_and_adds_prices(monkeypatch, tmp_path):
     nav = (tmp_path / "docs" / ".pages").read_text(encoding="utf-8")
     assert "  - prices\n" in nav
     assert "investor_day" not in nav
+
+
+# ── Financials section ───────────────────────────────────────────────────────
+def _fund_store(monkeypatch, tmp_path, *keys, periods=8):
+    """A fundamentals store with `periods` quarters per key."""
+    from analysis.data import fundamentals as F
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path)
+    bd._FUND_ROWS_CACHE.clear()
+    ends = [f"202{4 + i // 4}-{(i % 4) * 3 + 3:02d}-30" for i in range(periods)]
+    for key in keys:
+        rows = []
+        for i, end in enumerate(ends):
+            r = {"period_end": end, "fy": 2024 + i // 4, "fp": f"Q{i % 4 + 1}",
+                 "form": "10-Q", "filed": end}
+            for m in F.METRICS:
+                r[m] = None
+            r.update(revenue=100.0 * (i + 1), gross_profit=50.0 * (i + 1),
+                     operating_income=20.0 * (i + 1), net_income=10.0 * (i + 1),
+                     eps_diluted=1.0 * (i + 1), shares_diluted=10.0,
+                     ocf=30.0 * (i + 1), capex=5.0 * (i + 1),
+                     total_assets=1000.0, total_equity=500.0,
+                     rnd_expense=8.0, sga_expense=12.0,
+                     cash_and_equiv=100.0, long_term_debt=200.0)
+            rows.append(r)
+        F.write_store(key, rows, tmp_path)
+    return ends
+
+
+def test_fundamental_keys_lists_the_store(monkeypatch, tmp_path):
+    _fund_store(monkeypatch, tmp_path, "nvda", "amzn")
+    assert bd.fundamental_keys() == ["amzn", "nvda"]
+
+
+def test_fundamental_keys_empty_when_the_store_is_absent(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "nope")
+    assert bd.fundamental_keys() == []
+
+
+def test_published_fundamental_keys_drops_stores_with_no_rows(monkeypatch, tmp_path):
+    """A header-only CSV gets no page, so listing it would point every report
+    page at a page that was never written."""
+    from analysis.data import fundamentals as F
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    (tmp_path / "empty.csv").write_text(F.HEADER + "\n", encoding="utf-8")
+    bd._FUND_ROWS_CACHE.clear()
+    assert bd.fundamental_keys() == ["empty", "nvda"]
+    assert bd.published_fundamental_keys() == ["nvda"]
+
+
+def test_published_fundamental_keys_follows_the_sample_allowlist(monkeypatch, tmp_path):
+    _fund_store(monkeypatch, tmp_path, "aaa", "bbb", "ccc")
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", True)
+    monkeypatch.setattr(bd, "SAMPLE_LIMIT", 3)
+    monkeypatch.setattr(bd, "SAMPLE_TICKERS", ["ccc"])
+    assert bd.published_fundamental_keys() == ["ccc"]
+
+
+def test_fundamentals_payload_carries_every_series_the_page_draws(monkeypatch, tmp_path):
+    """Each chart names its series in the markup; a key the payload lacks is a
+    chart that silently renders as 'unavailable'."""
+    import json
+    import re
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    rows = bd.fundamental_rows("nvda")
+    bars = [{"date": r["period_end"], "close": 50.0} for r in rows]
+    monkeypatch.setattr(bd, "store_bars", lambda key: bars)
+    payload = json.loads(bd.fundamentals_payload("nvda", rows, bars))
+
+    stats = bd.fundamental_analytics.summary(rows, bars)
+    page = "\n".join(bd.fundamentals_ticker_page(
+        "nvda", bd.get_meta("nvda"), stats, rows, "nvda.csv", "en"))
+    wanted = set()
+    for attr in re.findall(r'data-series="([^"]+)"', page):
+        wanted.update(s.strip() for s in attr.split(","))
+    missing = sorted(w for w in wanted if w not in payload)
+    assert not missing, missing
+
+
+def test_fundamentals_payload_omits_a_metric_the_filer_never_tags(monkeypatch, tmp_path):
+    import json
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    rows = bd.fundamental_rows("nvda")
+    for r in rows:
+        r["gross_profit"] = None
+    payload = json.loads(bd.fundamentals_payload("nvda", rows, []))
+    assert payload["gross_profit"] == []
+    assert payload["margin_gross"] == []
+    assert payload["revenue"], "an untagged metric must not empty the others"
+
+
+def test_build_fundamentals_writes_a_page_and_payload_per_ticker(monkeypatch, tmp_path):
+    docs = tmp_path / "docs"
+    monkeypatch.setattr(bd, "DOCS", docs)
+    monkeypatch.setattr(bd, "ROOT", tmp_path)  # write() logs paths relative to ROOT
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", False)
+    _fund_store(monkeypatch, tmp_path / "store", "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+
+    bd.build_fundamentals(lang="en")
+
+    assert (docs / "fundamentals" / "index.md").exists()
+    assert (docs / "fundamentals" / "index.json").exists()
+    assert (docs / "fundamentals" / "nvda" / "index.md").exists()
+    assert (docs / "fundamentals" / "nvda" / "fundamentals.json").exists()
+    assert (docs / "fundamentals" / "nvda" / "nvda.csv").exists()
+
+
+def test_build_fundamentals_without_a_store_writes_only_a_placeholder(monkeypatch, tmp_path):
+    docs = tmp_path / "docs"
+    monkeypatch.setattr(bd, "DOCS", docs)
+    monkeypatch.setattr(bd, "ROOT", tmp_path)  # write() logs paths relative to ROOT
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "nope")
+    bd._FUND_ROWS_CACHE.clear()
+    bd.build_fundamentals(lang="en")
+    body = (docs / "fundamentals" / "index.md").read_text(encoding="utf-8")
+    assert "No fundamentals data found." in body
+
+
+def test_pchart_block_omits_unset_optional_attributes():
+    """A single-series widget must emit the markup it always has, or every
+    existing Price Data chart changes shape for no reason."""
+    block = bd.pchart_block(src="analytics.json", series="drawdown",
+                            kind="area", title="Drawdown", color="red")
+    assert "data-labels" not in block
+    assert "data-format" not in block
+    assert 'data-series="drawdown"' in block
+
+
+def test_pchart_block_emits_multi_series_attributes():
+    block = bd.pchart_block(src="fundamentals.json", series="revenue,revenue_yoy",
+                            kind="bars+line", title="Revenue",
+                            color="green,blue", labels="Revenue,YoY",
+                            fmt="money", unit="", fmt2="percent")
+    assert 'data-series="revenue,revenue_yoy"' in block
+    assert 'data-labels="Revenue,YoY"' in block
+    assert 'data-format="money"' in block
+    assert 'data-format2="percent"' in block
