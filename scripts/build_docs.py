@@ -1210,6 +1210,7 @@ def fundamentals_snapshot_block(ticker: str, lang: str) -> str:
     ]
     return "\n".join(out)
 
+
 # ── Mermaid pre-rendering ─────────────────────────────────────────────────────
 _MMDC = shutil.which("mmdc")  # None if not installed
 _MERMAID_CACHE_FILE = ROOT / ".mermaid_cache.json"

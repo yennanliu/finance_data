@@ -387,7 +387,9 @@
     // a page makes one request per distinct src rather than one per chart.
     // Scoped to this scan: all widgets on a page are initialised in this loop,
     // and a navigation starts a fresh scan with a fresh payload.
-    var pending = {};
+    // Null-prototype: the keys are URLs from the page, and a plain object would
+    // hand back Object.prototype.constructor for a src named "constructor".
+    var pending = Object.create(null);
     function payloadFor(src) {
       if (!pending[src]) {
         pending[src] = fetch(src).then(function (r) {
