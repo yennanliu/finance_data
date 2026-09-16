@@ -788,12 +788,18 @@ def test_fix_static_chart_embed_noop_without_images():
     assert bd.fix_static_chart_embed("# Title\n") == "# Title\n"
 
 
-# ── Price Data section ───────────────────────────────────────────────────────
+# ── Market Data section ──────────────────────────────────────────────────────
 
-def _store(monkeypatch, tmp_path, *keys, bars=40):
-    """A temp price store holding `keys`, each with a rising `bars`-day series."""
+def _store(monkeypatch, tmp_path, *keys, bars=40, start=date(2026, 1, 1)):
+    """A temp price store holding `keys`, each with a rising `bars`-day series.
+
+    Points FUNDAMENTALS_DIR at nothing: published_price_keys() goes through
+    market_data_keys(), which unions both stores, so leaving the real
+    data/fundamentals/ in play would make these assertions depend on it.
+    """
     monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
-    start = date(2026, 1, 1)
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "__no_fundamentals__")
+    bd._FUND_ROWS_CACHE.clear()
     for key in keys:
         series = [{"date": (start + timedelta(days=i)).isoformat(),
                    "open": 100.0 + i, "high": 101.0 + i, "low": 99.0 + i,
@@ -822,8 +828,8 @@ def test_published_price_keys_honours_sample_mode(monkeypatch, tmp_path):
 
 def test_published_price_keys_drops_stores_with_no_bars(monkeypatch, tmp_path):
     """A ticker added to data/prices/ before the first update_prices.py run leaves
-    a header-only CSV. build_prices() writes no page for it, so listing it here
-    would point every report page at a page that doesn't exist."""
+    a header-only CSV. build_market_data() writes no page for it, so listing it
+    here would point every report page at a page that doesn't exist."""
     _store(monkeypatch, tmp_path, "nvda")
     (tmp_path / "empty.csv").write_text("date,open,high,low,close,volume,div,split\n",
                                         encoding="utf-8")
@@ -892,64 +898,162 @@ def test_heat_class_scales_with_magnitude_and_sign():
     assert bd._heat_class(None) == ""
 
 
-def test_build_prices_writes_pages_payloads_and_downloads(monkeypatch, tmp_path):
-    _store(monkeypatch, tmp_path / "store", "nvda", "amd")
+def _both_stores(monkeypatch, tmp_path, *keys, bars=800, periods=8):
+    """Both committed stores, holding the same tickers — the shape a real
+    Market Data page is built from.
+
+    The price series starts before the first reported quarter and runs past the
+    last, because every valuation multiple joins a fundamentals row to the close
+    on the day that period ended: a price store that misses those dates yields
+    no P/E at all.
+    """
+    _store(monkeypatch, tmp_path / "prices", *keys, bars=bars,
+           start=date(2024, 1, 1))
+    _fund_store(monkeypatch, tmp_path / "fundamentals", *keys, periods=periods)
+    # Each fixture blanks the *other* store so its own assertions are
+    # deterministic; asking for both means putting both back.
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "prices")
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "fundamentals")
+    bd._FUND_ROWS_CACHE.clear()
+
+
+def test_build_market_data_writes_pages_payloads_and_downloads(monkeypatch, tmp_path):
+    _both_stores(monkeypatch, tmp_path, "nvda", "amd")
     monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
     monkeypatch.setattr(bd, "ROOT", tmp_path)
-    bd.build_prices(lang="en")
+    bd.build_market_data(lang="en")
 
-    out = tmp_path / "docs" / "prices"
+    out = tmp_path / "docs" / "data"
     assert (out / "index.md").exists()
-    assert (out / "all_prices.zip").exists()
+    assert (out / "market_data.zip").exists()
     for key in ("nvda", "amd"):
         assert (out / key / "index.md").exists()
         assert (out / key / "prices.json").exists()
         assert (out / key / "analytics.json").exists()
-        # The raw CSV is the point of the section — it must land next to the page.
+        assert (out / key / "fundamentals.json").exists()
+        # The raw CSVs are the point of the section — both land next to the page,
+        # under names that keep the ticker and say which table they are.
         assert (out / key / f"{key}.csv").exists()
+        assert (out / key / f"{key}_financials.csv").exists()
 
     index = (out / "index.md").read_text(encoding="utf-8")
     # Index links reach one directory down; the ticker page links alongside.
-    assert "[CSV](nvda/nvda.csv)" in index
+    assert "[Prices](nvda/nvda.csv)" in index
+    assert "[Financials](nvda/nvda_financials.csv)" in index
     # Pages are linked as .md so mkdocs --strict can verify the target.
     assert "[NVDA](nvda/index.md)" in index
-    assert "[**nvda.csv**](nvda.csv)" in (out / "nvda" / "index.md").read_text(encoding="utf-8")
+
+    page = (out / "nvda" / "index.md").read_text(encoding="utf-8")
+    assert "[**nvda.csv**](nvda.csv)" in page
+    assert "[**nvda_financials.csv**](nvda_financials.csv)" in page
 
     manifest = json.loads((out / "index.json").read_text(encoding="utf-8"))
     assert manifest["count"] == 2
-    assert manifest["columns"] == list(prices.FIELDS)
+    assert manifest["price_columns"] == list(prices.FIELDS)
     assert {t["ticker"] for t in manifest["tickers"]} == {"NVDA", "AMD"}
 
 
-def test_build_prices_zip_is_deterministic(monkeypatch, tmp_path):
-    """Non-deterministic bytes would rewrite a multi-MB file on every build."""
-    _store(monkeypatch, tmp_path / "store", "nvda")
-    first = bd._price_zip_bytes(["nvda"])
-    assert bd._price_zip_bytes(["nvda"]) == first
-
-
-def test_build_prices_zh_links_to_the_english_downloads(monkeypatch, tmp_path):
-    """Downloads are language-neutral, so ZH points at the EN copy rather than
-    duplicating several megabytes of CSV."""
-    _store(monkeypatch, tmp_path / "store", "nvda")
-    monkeypatch.setattr(bd, "DOCS_ZH", tmp_path / "docs" / "zh")
-    monkeypatch.setattr(bd, "ROOT", tmp_path)
-    bd.build_prices(lang="zh")
-
-    out = tmp_path / "docs" / "zh" / "prices"
-    assert not (out / "nvda" / "nvda.csv").exists()
-    assert not (out / "all_prices.zip").exists()
-    # …but the chart payloads are local, so the ZH page renders under mkdocs serve.
-    assert (out / "nvda" / "prices.json").exists()
-    assert f"{bd.SITE_BASE}/prices/nvda/nvda.csv" in (out / "nvda" / "index.md").read_text(encoding="utf-8")
-
-
-def test_build_prices_handles_an_empty_store(monkeypatch, tmp_path):
-    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "empty")
+def test_market_data_page_is_one_page_of_tabs(monkeypatch, tmp_path):
+    """The merge's whole point: price and fundamentals for one ticker on one
+    page, rather than two pages cross-linking at each other."""
+    _both_stores(monkeypatch, tmp_path, "nvda")
     monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
     monkeypatch.setattr(bd, "ROOT", tmp_path)
-    bd.build_prices(lang="en")
-    assert "No price data found." in (tmp_path / "docs" / "prices" / "index.md").read_text(encoding="utf-8")
+    bd.build_market_data(lang="en")
+
+    page = (tmp_path / "docs" / "data" / "nvda" / "index.md").read_text(encoding="utf-8")
+    for tab in ("Overview", "Price", "Financials", "Valuation", "Data & glossary"):
+        assert f'=== "{tab}"' in page, tab
+    # Both halves' charts are on it.
+    assert 'data-src="analytics.json"' in page
+    assert 'data-src="fundamentals.json"' in page
+
+
+def test_market_data_page_drops_the_tabs_it_has_no_store_for(monkeypatch, tmp_path):
+    """An ETF has prices and no SEC filings; the page shows what it has rather
+    than four charts reading 'unavailable'."""
+    _store(monkeypatch, tmp_path / "prices", "spy")
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_market_data(lang="en")
+
+    page = (tmp_path / "docs" / "data" / "spy" / "index.md").read_text(encoding="utf-8")
+    assert '=== "Price"' in page
+    assert '=== "Financials"' not in page
+    assert '=== "Valuation"' not in page
+    assert "price data only" in page
+
+
+def test_market_data_keys_unions_both_stores(monkeypatch, tmp_path):
+    """A ticker in either store gets a page; sampling happens once, over the
+    union, so the two halves can never cover different names."""
+    _store(monkeypatch, tmp_path / "prices", "nvda", "spy")
+    _fund_store(monkeypatch, tmp_path / "fundamentals", "nvda", "amzn")
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "prices")
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "fundamentals")
+    bd._FUND_ROWS_CACHE.clear()
+    assert bd.market_data_keys() == ["amzn", "nvda", "spy"]
+
+
+def test_market_data_zip_is_deterministic(monkeypatch, tmp_path):
+    """Non-deterministic bytes would rewrite a multi-MB file on every build."""
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    first = bd._store_zip_bytes(["nvda"], ["nvda"])
+    assert bd._store_zip_bytes(["nvda"], ["nvda"]) == first
+    # Namespaced, because a ticker has a CSV in each store.
+    import io
+    import zipfile
+    names = zipfile.ZipFile(io.BytesIO(first)).namelist()
+    assert names == ["prices/nvda.csv", "fundamentals/nvda.csv"]
+
+
+def test_build_market_data_zh_links_to_the_english_downloads(monkeypatch, tmp_path):
+    """Downloads are language-neutral, so ZH points at the EN copy rather than
+    duplicating several megabytes of CSV."""
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "DOCS_ZH", tmp_path / "docs" / "zh")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_market_data(lang="zh")
+
+    out = tmp_path / "docs" / "zh" / "data"
+    assert not (out / "nvda" / "nvda.csv").exists()
+    assert not (out / "market_data.zip").exists()
+    # …but the chart payloads are local, so the ZH page renders under mkdocs serve.
+    assert (out / "nvda" / "prices.json").exists()
+    assert (out / "nvda" / "fundamentals.json").exists()
+    body = (out / "nvda" / "index.md").read_text(encoding="utf-8")
+    assert f"{bd.SITE_BASE}/data/nvda/nvda.csv" in body
+    assert f"{bd.SITE_BASE}/data/nvda/nvda_financials.csv" in body
+
+
+def test_build_market_data_handles_an_empty_store(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "empty")
+    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "empty")
+    bd._FUND_ROWS_CACHE.clear()
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_market_data(lang="en")
+    assert "No market data found." in (
+        tmp_path / "docs" / "data" / "index.md").read_text(encoding="utf-8")
+
+
+def test_legacy_urls_still_resolve(monkeypatch, tmp_path):
+    """/prices/<t>/ and /fundamentals/<t>/ were linked from outside the site
+    before the merge, so each keeps a stub that forwards to the merged page."""
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_legacy_redirects(lang="en")
+
+    docs = tmp_path / "docs"
+    for legacy in ("prices", "fundamentals"):
+        stub = (docs / legacy / "nvda" / "index.md").read_text(encoding="utf-8")
+        assert 'http-equiv="refresh"' in stub
+        assert "../../data/nvda/" in stub
+        # A crawler that does not act on a meta refresh still gets a link.
+        assert "(../../data/nvda/index.md)" in stub
+        # The stubs answer old links; they are not a second copy of the nav.
+        assert "hide: true" in (docs / legacy / ".pages").read_text(encoding="utf-8")
 
 
 def test_monthly_heatmap_is_newest_year_first(monkeypatch, tmp_path):
@@ -975,20 +1079,29 @@ def test_kline_block_omits_ranges_when_not_asked(monkeypatch, tmp_path):
     assert "data-ranges" not in bd.kline_block("nvda")
 
 
-def test_nav_drops_investor_day_and_adds_prices(monkeypatch, tmp_path):
+def test_nav_drops_investor_day_and_carries_one_market_data_tab(monkeypatch, tmp_path):
+    """One tab, not two: /prices/ and /fundamentals/ survive only as redirect
+    stubs, and build_legacy_redirects() hides them from the nav."""
     monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
     monkeypatch.setattr(bd, "ROOT", tmp_path)
     bd.build_nav_pages(lang="en")
     nav = (tmp_path / "docs" / ".pages").read_text(encoding="utf-8")
-    assert "  - prices\n" in nav
+    assert "  - data\n" in nav
+    assert "  - prices\n" not in nav
+    assert "  - fundamentals\n" not in nav
     assert "investor_day" not in nav
 
 
 # ── Financials section ───────────────────────────────────────────────────────
 def _fund_store(monkeypatch, tmp_path, *keys, periods=8):
-    """A fundamentals store with `periods` quarters per key."""
+    """A fundamentals store with `periods` quarters per key.
+
+    Points PRICES_DIR at nothing, for the mirror of the reason _store() points
+    FUNDAMENTALS_DIR at nothing.
+    """
     from analysis.data import fundamentals as F
     monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path)
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "__no_prices__")
     bd._FUND_ROWS_CACHE.clear()
     ends = [f"202{4 + i // 4}-{(i % 4) * 3 + 3:02d}-30" for i in range(periods)]
     for key in keys:
@@ -1039,24 +1152,37 @@ def test_published_fundamental_keys_follows_the_sample_allowlist(monkeypatch, tm
     assert bd.published_fundamental_keys() == ["ccc"]
 
 
-def test_fundamentals_payload_carries_every_series_the_page_draws(monkeypatch, tmp_path):
-    """Each chart names its series in the markup; a key the payload lacks is a
-    chart that silently renders as 'unavailable'."""
-    import json
-    import re
-    _fund_store(monkeypatch, tmp_path, "nvda")
-    rows = bd.fundamental_rows("nvda")
-    bars = [{"date": r["period_end"], "close": 50.0} for r in rows]
-    monkeypatch.setattr(bd, "store_bars", lambda key: bars)
-    payload = json.loads(bd.fundamentals_payload("nvda", rows, bars))
+def test_every_chart_on_the_page_resolves_against_its_payload(monkeypatch, tmp_path):
+    """Each chart names its payload and its series in the markup; a key the
+    payload lacks is a chart that silently renders as 'unavailable'.
 
-    stats = bd.fundamental_analytics.summary(rows, bars)
-    page = "\n".join(bd.fundamentals_ticker_page(
-        "nvda", bd.get_meta("nvda"), stats, rows, "nvda.csv", "en"))
-    wanted = set()
-    for attr in re.findall(r'data-series="([^"]+)"', page):
-        wanted.update(s.strip() for s in attr.split(","))
-    missing = sorted(w for w in wanted if w not in payload)
+    The merged page draws from two payloads, so each widget is checked against
+    the one its own data-src names — which is also what catches a chart pointed
+    at the wrong file.
+    """
+    import re
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    rows = bd.fundamental_rows("nvda")
+    bars = bd.store_bars("nvda")
+    payloads = {
+        "fundamentals.json": bd.fundamentals_payload_dict("nvda", rows, bars),
+        "analytics.json": bd.analytics_payload_dict("nvda", bars),
+    }
+
+    page = "\n".join(bd.market_data_ticker_page(
+        "nvda", bd.get_meta("nvda"), bd.price_analytics.summary(bars),
+        bd.fundamental_analytics.summary(rows, bars), bars,
+        payloads["analytics.json"], payloads["fundamentals.json"],
+        "nvda.csv", "nvda_financials.csv", "en"))
+
+    widgets = re.findall(r'data-src="([^"]+)"[^>]*data-series="([^"]+)"', page)
+    assert widgets, "the page drew no charts at all"
+    missing = sorted(
+        (src, name)
+        for src, attr in widgets
+        for name in (x.strip() for x in attr.split(","))
+        if name not in payloads[src]
+    )
     assert not missing, missing
 
 
@@ -1072,42 +1198,74 @@ def test_fundamentals_payload_omits_a_metric_the_filer_never_tags(monkeypatch, t
     assert payload["revenue"], "an untagged metric must not empty the others"
 
 
-def test_build_fundamentals_writes_a_page_and_payload_per_ticker(monkeypatch, tmp_path):
+def test_market_data_page_for_a_ticker_with_filings_and_no_prices(monkeypatch, tmp_path):
+    """The mirror of the ETF case: statements but no OHLCV, so no price half and
+    no valuation, since every multiple needs a share price."""
     docs = tmp_path / "docs"
     monkeypatch.setattr(bd, "DOCS", docs)
     monkeypatch.setattr(bd, "ROOT", tmp_path)  # write() logs paths relative to ROOT
     monkeypatch.setattr(bd, "SAMPLE_BUILD", False)
     _fund_store(monkeypatch, tmp_path / "store", "nvda")
-    monkeypatch.setattr(bd, "store_bars", lambda key: [])
 
-    bd.build_fundamentals(lang="en")
+    bd.build_market_data(lang="en")
 
-    assert (docs / "fundamentals" / "index.md").exists()
-    assert (docs / "fundamentals" / "index.json").exists()
-    assert (docs / "fundamentals" / "nvda" / "index.md").exists()
-    assert (docs / "fundamentals" / "nvda" / "fundamentals.json").exists()
-    assert (docs / "fundamentals" / "nvda" / "nvda.csv").exists()
+    assert (docs / "data" / "index.md").exists()
+    assert (docs / "data" / "index.json").exists()
+    assert (docs / "data" / "nvda" / "fundamentals.json").exists()
+    assert (docs / "data" / "nvda" / "nvda_financials.csv").exists()
+    page = (docs / "data" / "nvda" / "index.md").read_text(encoding="utf-8")
+    assert '=== "Financials"' in page
+    assert '=== "Price"' not in page
+    assert '=== "Valuation"' not in page
 
 
-def test_build_fundamentals_without_a_store_writes_only_a_placeholder(monkeypatch, tmp_path):
-    docs = tmp_path / "docs"
-    monkeypatch.setattr(bd, "DOCS", docs)
-    monkeypatch.setattr(bd, "ROOT", tmp_path)  # write() logs paths relative to ROOT
-    monkeypatch.setattr(bd, "FUNDAMENTALS_DIR", tmp_path / "nope")
-    bd._FUND_ROWS_CACHE.clear()
-    bd.build_fundamentals(lang="en")
-    body = (docs / "fundamentals" / "index.md").read_text(encoding="utf-8")
-    assert "No fundamentals data found." in body
+def test_valuation_charts_carry_their_own_historical_average(monkeypatch, tmp_path):
+    """A P/E reads differently against a 26x average than a 40x one, so each
+    multiple is drawn with its own mean as a dashed line — computed in Python
+    over exactly the points the chart draws."""
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    rows = bd.fundamental_rows("nvda")
+    bars = bd.store_bars("nvda")
+    payload = bd.fundamentals_payload_dict("nvda", rows, bars)
+    block = "\n".join(bd._valuation_tab(payload, "en"))
+
+    expected = bd.price_analytics.series_average(payload["pe"])
+    assert expected is not None
+    assert f'data-ref="{expected:g}"' in block
 
 
 def test_pchart_block_omits_unset_optional_attributes():
     """A single-series widget must emit the markup it always has, or every
-    existing Price Data chart changes shape for no reason."""
+    existing chart changes shape for no reason."""
     block = bd.pchart_block(src="analytics.json", series="drawdown",
                             kind="area", title="Drawdown", color="red")
     assert "data-labels" not in block
     assert "data-format" not in block
+    assert "data-note" not in block
+    assert "data-ref" not in block
     assert 'data-series="drawdown"' in block
+
+
+def test_pchart_block_emits_the_explainer_and_axis_captions():
+    """Lightweight Charts prints axis values but has no axis titles, and a P/E
+    river is unreadable without one line saying what a P/E band is."""
+    block = bd.pchart_block(src="fundamentals.json", series="pe", kind="area",
+                            title="P/E", unit="×", note="Price over earnings.",
+                            ylabel="× (multiple)", xlabel="Fiscal quarter",
+                            ref=26.4, ref_label="avg")
+    assert 'data-note="Price over earnings."' in block
+    assert 'data-ylabel="× (multiple)"' in block
+    assert 'data-xlabel="Fiscal quarter"' in block
+    assert 'data-ref="26.4"' in block
+    assert 'data-ref-label="avg"' in block
+
+
+def test_glossary_defines_the_terms_the_charts_use():
+    """Every abbreviation the page prints has an entry, in both languages."""
+    for lang in ("en", "zh"):
+        body = "\n".join(bd.glossary_block(lang))
+        for term in ("TTM", "ROE", "ROIC", "P/E", "EV/EBITDA"):
+            assert term in body, (lang, term)
 
 
 def test_pchart_block_emits_multi_series_attributes():
@@ -1139,9 +1297,9 @@ def test_snapshot_renders_the_ttm_line_and_three_charts(monkeypatch, tmp_path):
     assert "[:material-finance: All financial charts]" in block
 
 
-def test_snapshot_reads_the_financials_sections_payload(monkeypatch, tmp_path):
+def test_snapshot_reads_the_market_data_sections_payload(monkeypatch, tmp_path):
     """No second copy of the payload: the block points at the one
-    build_fundamentals() already writes, so the two can never disagree.
+    build_market_data() already writes, so the two can never disagree.
 
     The path is relative to the report page's directory URL
     (/reports/<ticker>/), which resolves the same way in the ZH tree because the
@@ -1150,8 +1308,8 @@ def test_snapshot_reads_the_financials_sections_payload(monkeypatch, tmp_path):
     _fund_store(monkeypatch, tmp_path, "nvda")
     monkeypatch.setattr(bd, "store_bars", lambda key: [])
     block = bd.fundamentals_snapshot_block("nvda", "en")
-    assert 'data-src="../../fundamentals/nvda/fundamentals.json"' in block
-    assert block.count('data-src="../../fundamentals/nvda/fundamentals.json"') == 3
+    assert 'data-src="../../data/nvda/fundamentals.json"' in block
+    assert block.count('data-src="../../data/nvda/fundamentals.json"') == 3
 
 
 def test_snapshot_is_empty_without_a_store(monkeypatch, tmp_path):

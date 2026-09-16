@@ -303,10 +303,10 @@ If a 5Y/MAX range is ever wanted, derive a tiered payload — daily bars for the
 recent ~2y, weekly beyond — which keeps the file ~40 KB at any depth. Out of
 scope now; the store makes it a build-time change only.
 
-### 4b. Price Data payloads (added 2026-08)
+### 4b. Market Data payloads (added 2026-08, merged 2026-09)
 
-The report pages get the windowed payload above. The **Price Data** section
-(`docs/prices/`, §12) needs the whole store, so it writes two more files per
+The report pages get the windowed payload above. The **Market Data** section
+(`docs/data/`, §12) needs the whole store, so it writes two more files per
 ticker — untracked, same as `kline.json`:
 
 | File | Shape | Size |
@@ -315,7 +315,7 @@ ticker — untracked, same as `kline.json`:
 | `analytics.json` | `{summary, drawdown[], volatility[], histogram[]}` | ~150 KB |
 
 `prices.json` reuses the `kline.json` schema deliberately: one widget then serves
-both a 360-bar report chart and a ten-year Price Data chart, the only difference
+both a 360-bar report chart and a ten-year Market Data chart, the only difference
 being `data-ranges="30,180,360,756,2520"`. This is the tiered-payload idea's
 cheap alternative — 180 KB uncompressed is acceptable on a page whose whole
 purpose is the price data, where it would not be on 3,500 report pages.
@@ -328,8 +328,8 @@ be tested, so the page and the download can never disagree. It is also what keep
 
 Both files are written into the EN *and* ZH trees (~24 MB total) so the charts
 work under `mkdocs serve` in either language. The bulky language-neutral
-downloads — the raw CSVs and `all_prices.zip` — are written once into the EN tree
-and linked absolutely from ZH.
+downloads — the raw CSVs and `market_data.zip` — are written once into the EN
+tree and linked absolutely from ZH.
 
 `ai_gen_report/kline/` is deleted and `.gitignore` gains `docs/reports/` coverage
 already (it's ignored today), so the derived JSON is untracked by construction.
@@ -636,31 +636,67 @@ Phase-scoped and cheap:
 
 ---
 
-## 12. The Price Data section (added 2026-08)
+## 12. The Market Data section (added 2026-08, merged with Financials 2026-09)
 
 Phases 1–5 made the store the single source of truth for every chart, but only
 as an implementation detail — nothing on the site exposed the data itself. This
 section publishes it.
 
+It shipped as **Price Data** (`docs/prices/`) and gained a sibling **Financials**
+section (`docs/fundamentals/`) over the same tickers. Two sections describing one
+company from two angles meant two nav tabs, two overview tables and two pages per
+ticker with a cross-link readers had to bounce along — so they were merged into
+one **Market Data** section in 2026-09.
+
 ### What it produces
 
 ```text
-docs/prices/
-  index.md          overview table: last close, 1D/1M/YTD/1Y, 52W band, avg volume,
-                    coverage span and a CSV link for every ticker in the store
+docs/data/
+  index.md          overview table: last close, 1M/YTD/1Y, 52W band, TTM revenue,
+                    revenue growth, net margin, ROE, P/E, and both CSV links
   index.json        the same, machine-readable (plus absolute URLs to each file)
-  all_prices.zip    every CSV in one deterministic archive
+  market_data.zip   every CSV from both stores, namespaced, in one deterministic archive
   <key>/
-    index.md        candles (30D…10Y) · returns · key stats · drawdown ·
-                    rolling volatility · return histogram · monthly heatmap · downloads
-    prices.json     full-history OHLCV payload  (§4b)
-    analytics.json  pre-computed derived series (§4b)
-    <key>.csv       the raw store file, verbatim
+    index.md              five tabs — Overview (candles 30D…10Y, returns, key stats,
+                          TTM figures) · Price (drawdown, rolling volatility, return
+                          histogram, monthly heatmap) · Financials (statements,
+                          margins, returns on capital) · Valuation (P/E, P/S, P/B,
+                          EV/Sales, EV/EBITDA, P/E bands) · Data & glossary
+    prices.json           full-history OHLCV payload  (§4b)
+    analytics.json        pre-computed derived series (§4b)
+    fundamentals.json     every financial series the charts draw
+    <key>.csv             the raw price store file, verbatim
+    <key>_financials.csv  the raw fundamentals store file, verbatim
 ```
 
-Built by `build_docs.build_prices()`, mirrored into `docs/zh/prices/` with
+A ticker with only one of the two stores (an ETF has prices and no SEC filings;
+an IFRS filer has neither US-GAAP XBRL nor, sometimes, a price key) gets only the
+tabs it has data for, rather than four charts reading "unavailable".
+
+Built by `build_docs.build_market_data()`, mirrored into `docs/zh/data/` with
 localised prose. It sits in the nav between **AI Gen Reports** and **Market
-News**; each report ticker page links across to its own price page.
+News**; each report ticker page links across to its own Market Data page.
+`build_legacy_redirects()` leaves a stub at every pre-merge
+`/prices/<key>/` and `/fundamentals/<key>/` URL — a meta refresh plus a plain
+link, hidden from the nav — so links made before the merge still resolve.
+
+### Reading the charts without prior vocabulary
+
+Every chart card carries three things the original section left implicit: a
+one-line explainer ("Price ÷ trailing-twelve-month earnings per share…"), a
+caption on each axis (Lightweight Charts prints axis *values* but has no concept
+of an axis title, so they are DOM text either side of the canvas), and the span
+covered — which doubles as the crosshair's date readout. The valuation multiples
+and the rolling-volatility line additionally carry a dashed line at the series'
+own historical average, because a P/E of 32× reads differently against a 26×
+ten-year average than against a 40× one. That average comes from
+`price_analytics.series_average()`, so it is asserted in pytest like every other
+number on the page.
+
+Twenty-odd charts on one page would be a wall if they were stacked, hence the
+tabs; `price-charts.js` builds each chart only when it scrolls into view, which
+also keeps a chart inside a collapsed tab from being laid out against a
+zero-width container.
 
 ### Why the maths is in Python
 

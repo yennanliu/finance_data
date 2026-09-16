@@ -1,8 +1,7 @@
 nav:
   - index.md
   - reports
-  - prices
-  - fundamentals
+  - data
   - market_news
   - notebooks
   - sec

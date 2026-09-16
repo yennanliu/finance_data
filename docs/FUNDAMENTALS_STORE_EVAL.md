@@ -1,5 +1,14 @@
 # Financial Metrics on the Company Page — Feasibility Survey
 
+!!! note "Superseded in part (2026-09)"
+
+    This is the survey that led to `data/fundamentals/` and the **Financials**
+    section. The store and the analytics it describes are current; the *section*
+    is not. Financials and Price Data were merged into one **Market Data**
+    section at `docs/data/` — see `PRICE_STORE_DESIGN.md` §12 for what is built
+    today. Paths below that read `docs/fundamentals/` now read `docs/data/`.
+
+
 **Question:** the per-ticker page (e.g.
 [`/reports/amzn/`](https://yennj12.js.org/finance_data/reports/amzn/))
 today shows a hero k-line chart, a scenario price-target table and a list of

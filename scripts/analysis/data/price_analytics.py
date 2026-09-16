@@ -297,10 +297,24 @@ def summary(bars: "list[dict]") -> "dict | None":
     }
 
 
+def series_average(points: "list[dict]") -> "float | None":
+    """Mean of any {t, v} series, or None when there is nothing to average.
+
+    The charts draw this as a dashed reference line, which is what turns a bare
+    number into a reading: a P/E of 32x means one thing against a 26x ten-year
+    average and quite another against a 40x one. It lives here for the same
+    reason the rest of the arithmetic does — so pytest can assert on the number
+    the page actually shows. Generic in {t, v}, so the fundamentals series use
+    it too.
+    """
+    vals = [p["v"] for p in points if p.get("v") is not None]
+    return round(sum(vals) / len(vals), 3) if vals else None
+
+
 __all__ = [
     "TRADING_DAYS", "TRADING_DAYS_PER_YEAR", "VOL_WINDOW", "HIST_EDGES",
     "closes", "period_return", "ytd_return", "high_low",
     "drawdown_series", "max_drawdown", "daily_returns",
     "annualised_volatility", "volatility_series", "cagr",
-    "return_histogram", "monthly_returns", "summary",
+    "return_histogram", "monthly_returns", "series_average", "summary",
 ]
