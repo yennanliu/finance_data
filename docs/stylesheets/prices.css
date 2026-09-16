@@ -361,8 +361,19 @@
   box-shadow: 0 1px 2px var(--fp-accent-glow, rgba(0, 0, 0, 0.04));
 }
 
-/* Keyboard focus has to stay visible on top of the fill. */
-.md-typeset .tabcue + .tabbed-set > input:focus-visible ~ .tabbed-labels > label {
+/* Keyboard focus has to stay visible on top of the fill — and only on the tab
+   that actually has it. The inputs are one radio group, so arrowing through
+   them moves focus between tabs; an unpaired `input:focus-visible ~ label`
+   would outline all of them at once and say nothing about where you are.
+   Hence the same positional pairing the checked state uses. */
+.md-typeset .tabcue + .tabbed-set > input:nth-child(1):focus-visible ~ .tabbed-labels > :nth-child(1),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(2):focus-visible ~ .tabbed-labels > :nth-child(2),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(3):focus-visible ~ .tabbed-labels > :nth-child(3),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(4):focus-visible ~ .tabbed-labels > :nth-child(4),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(5):focus-visible ~ .tabbed-labels > :nth-child(5),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(6):focus-visible ~ .tabbed-labels > :nth-child(6),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(7):focus-visible ~ .tabbed-labels > :nth-child(7),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(8):focus-visible ~ .tabbed-labels > :nth-child(8) {
   outline: 2px solid var(--md-accent-fg-color);
   outline-offset: 2px;
 }
