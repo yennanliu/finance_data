@@ -110,6 +110,15 @@ function matches(el, sel) {
   return el.tagName === sel.toUpperCase();
 }
 
+/** The handful of entities the widgets emit. innerHTML in a browser decodes
+ *  these before the value is ever queried, so the shim has to as well —
+ *  otherwise an escaped aria-label reads back as "&lt; -10%". */
+const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", "#39": "'" };
+function decodeEntities(s) {
+  return String(s).replace(/&(#?\w+);/g, (m, name) =>
+    Object.prototype.hasOwnProperty.call(ENTITIES, name) ? ENTITIES[name] : m);
+}
+
 const VOID_TAGS = new Set(["br", "hr", "img", "input", "meta", "link"]);
 const TAG_RE = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:\s+[^\s=>]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*(\/?)>/g;
 const ATTR_RE = /([^\s=]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
@@ -123,7 +132,7 @@ function parseHTML(html) {
   TAG_RE.lastIndex = 0;
   while ((m = TAG_RE.exec(html)) !== null) {
     const text = html.slice(cursor, m.index);
-    if (text.trim() && stack.length) stack[stack.length - 1]._text += text;
+    if (text.trim() && stack.length) stack[stack.length - 1]._text += decodeEntities(text);
     cursor = m.index + m[0].length;
 
     const [, closing, tag, attrText, selfClose] = m;
@@ -145,7 +154,7 @@ function parseHTML(html) {
     while ((a = ATTR_RE.exec(attrText || "")) !== null) {
       const key = a[1];
       if (!key) continue;
-      const val = a[2] ?? a[3] ?? a[4] ?? "";
+      const val = decodeEntities(a[2] ?? a[3] ?? a[4] ?? "");
       if (key === "class") el.className = val;
       else el.attrs[key] = val;
     }
@@ -155,7 +164,7 @@ function parseHTML(html) {
     if (!selfClose && !VOID_TAGS.has(tag.toLowerCase())) stack.push(el);
   }
   const tail = html.slice(cursor);
-  if (tail.trim() && stack.length) stack[stack.length - 1]._text += tail;
+  if (tail.trim() && stack.length) stack[stack.length - 1]._text += decodeEntities(tail);
   return roots;
 }
 
@@ -169,6 +178,13 @@ export function makeLC(log) {
       setData(d) { this.data = d; },
       applyOptions(o) { Object.assign(this.options, o); },
       priceScale() { return { applyOptions() {} }; },
+      // price-charts.js draws a Python-computed average as a dashed reference
+      // line; the harness asserts on what it was asked to draw.
+      createPriceLine(o) {
+        (this.priceLines ||= []).push(o);
+        log.priceLines.push(o);
+        return { applyOptions() {}, options: () => o };
+      },
     };
     log.series.push(s);
     return s;
@@ -209,7 +225,8 @@ export function makeLC(log) {
 /** A fresh draw log; every field the fake LC and the harnesses read. */
 function newLog() {
   return {
-    series: [], lines: [], areas: [], bars: [], appliedOptions: [], visibleRanges: [],
+    series: [], lines: [], areas: [], bars: [], priceLines: [],
+    appliedOptions: [], visibleRanges: [],
     chartOptions: null, candle: null, volume: null, removed: false,
     fitContent: false,
   };
@@ -275,6 +292,16 @@ async function renderIn(scriptPath, cls, attrs, payload, opts = {}) {
     location: { pathname: opts.zh ? "/finance_data/zh/reports/amd/" : "/finance_data/reports/amd/" },
     getComputedStyle: () => ({ getPropertyValue: () => "", fontFamily: "system-ui" }),
     MutationObserver: class { observe() {} },
+    // price-charts.js builds a chart when it scrolls into view, so that a
+    // widget inside a collapsed tab is not laid out against a zero-width
+    // container. In the shim everything is on screen: the observer fires
+    // straight away, and the widget builds exactly as it does in a browser.
+    IntersectionObserver: class {
+      constructor(fn) { this.fn = fn; }
+      observe(el) { this.fn([{ target: el, isIntersecting: true }], this); }
+      unobserve() {}
+      disconnect() {}
+    },
     fetch: (src) => {
       fetchCalledWith = src;
       fetchCalls.push(src);

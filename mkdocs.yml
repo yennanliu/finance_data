@@ -160,6 +160,10 @@ extra_javascript:
   # The library must load before kline-chart.js (order is preserved).
   - javascripts/lightweight-charts.standalone.production.js
   - javascripts/kline-chart.js
-  # Derived-analytics charts (drawdown / volatility / return distribution) on
-  # the Price Data pages — shares the same charting library.
+  # Derived-analytics charts (drawdown / volatility / return distribution,
+  # statements, margins, valuation multiples) on the Market Data pages —
+  # shares the same charting library.
   - javascripts/price-charts.js
+  # The Market Data pages put their charts in content tabs; the TOC still lists
+  # every heading, so an anchor into a collapsed tab has to open it first.
+  - javascripts/tab-anchors.js

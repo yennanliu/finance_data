@@ -202,3 +202,27 @@ def test_summary_survives_a_one_bar_store():
     assert s["volatility_1y"] is None
     assert s["cagr"] is None
     assert s["avg_volume_30d"] == 1_000_000
+
+
+# ── series_average ───────────────────────────────────────────────────────────
+# The dashed reference line a valuation chart draws against itself. It lives in
+# Python for the same reason the rest does: the browser draws the number, it
+# does not compute it.
+def test_series_average_is_the_mean_of_the_points_drawn():
+    points = [{"t": "2026-01-01", "v": 10.0}, {"t": "2026-01-02", "v": 20.0},
+              {"t": "2026-01-03", "v": 30.0}]
+    assert pa.series_average(points) == pytest.approx(20.0)
+
+
+def test_series_average_skips_periods_with_no_value():
+    """A quarter the filer never tagged must not be averaged in as a zero."""
+    points = [{"t": "2026-01-01", "v": 10.0}, {"t": "2026-01-02", "v": None},
+              {"t": "2026-01-03", "v": 20.0}]
+    assert pa.series_average(points) == pytest.approx(15.0)
+
+
+def test_series_average_is_none_when_there_is_nothing_to_average():
+    """None, not 0: a chart with no points draws no reference line rather than
+    one sitting on the axis."""
+    assert pa.series_average([]) is None
+    assert pa.series_average([{"t": "2026-01-01", "v": None}]) is None

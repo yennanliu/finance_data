@@ -70,25 +70,40 @@ def main() -> None:
         fail("no report pages in site/reports/ — sample build produced nothing")
     print(f"✅ site built: {len(html_pages)} HTML pages, {len(report_pages)} report indexes")
 
-    # 1b. Price Data section ────────────────────────────────────────────────
+    # 1b. Market Data section ───────────────────────────────────────────────
     # The charts and the download links are useless if MkDocs didn't carry the
-    # derived payloads and the raw CSV through to site/ — and a missing static
+    # derived payloads and the raw CSVs through to site/ — and a missing static
     # file is exactly the kind of failure --strict does not catch.
-    prices_dir = SITE / "prices"
-    if not (prices_dir / "index.html").exists():
-        fail("site/prices/index.html missing — the Price Data section did not build")
-    ticker_dirs = [d for d in prices_dir.iterdir() if d.is_dir()]
+    data_dir = SITE / "data"
+    if not (data_dir / "index.html").exists():
+        fail("site/data/index.html missing — the Market Data section did not build")
+    ticker_dirs = [d for d in data_dir.iterdir() if d.is_dir()]
     if not ticker_dirs:
-        fail("no per-ticker pages under site/prices/")
+        fail("no per-ticker pages under site/data/")
+    # A ticker may carry only one of the two stores (an ETF has prices and no
+    # SEC filings), so each half is checked only where its page half exists.
     for d in ticker_dirs:
-        for artefact in ("index.html", "prices.json", "analytics.json", f"{d.name}.csv"):
-            if not (d / artefact).exists():
-                fail(f"site/prices/{d.name}/{artefact} missing")
-    if not (prices_dir / "all_prices.zip").exists():
-        fail("site/prices/all_prices.zip missing — bulk download would 404")
-    if not (prices_dir / "index.json").exists():
-        fail("site/prices/index.json missing — the manifest would 404")
-    print(f"✅ price data: {len(ticker_dirs)} tickers with charts, payloads and CSV")
+        if not (d / "index.html").exists():
+            fail(f"site/data/{d.name}/index.html missing")
+        if (d / "prices.json").exists():
+            for artefact in ("analytics.json", f"{d.name}.csv"):
+                if not (d / artefact).exists():
+                    fail(f"site/data/{d.name}/{artefact} missing")
+        if (d / "fundamentals.json").exists():
+            if not (d / f"{d.name}_financials.csv").exists():
+                fail(f"site/data/{d.name}/{d.name}_financials.csv missing")
+        if not ((d / "prices.json").exists() or (d / "fundamentals.json").exists()):
+            fail(f"site/data/{d.name}/ has neither payload — the page has no charts")
+    if not (data_dir / "market_data.zip").exists():
+        fail("site/data/market_data.zip missing — bulk download would 404")
+    if not (data_dir / "index.json").exists():
+        fail("site/data/index.json missing — the manifest would 404")
+    # The pre-merge URLs were linked from outside the site, so the stubs that
+    # keep them resolving are part of the contract, not a nicety.
+    for legacy in ("prices", "fundamentals"):
+        if not (SITE / legacy / "index.html").exists():
+            fail(f"site/{legacy}/index.html missing — the pre-merge URL would 404")
+    print(f"✅ market data: {len(ticker_dirs)} tickers with charts, payloads and CSVs")
 
     # 2. Mermaid zero-regression gate ───────────────────────────────────────
     mmdc = shutil.which("mmdc")

@@ -1,7 +1,7 @@
 /*
  * price_charts_harness.mjs — assertions over docs/javascripts/price-charts.js
  * ==========================================================================
- * The renderer for the Price Data section's derived charts. All the arithmetic
+ * The renderer for the Market Data section's derived charts. All the arithmetic
  * lives in Python (tests/test_price_analytics.py covers it), so what is left to
  * verify here is the wiring: that each widget fetches its payload, picks the
  * right series out of it, draws the right *kind* of chart, and degrades to a
@@ -341,6 +341,107 @@ const fd = fundamentals();
   ], both);
   eq("distinct payloads are fetched separately",
      [...fetchCalls].sort(), ["analytics.json", "fundamentals.json"]);
+}
+
+// ── chart chrome: the explainer, the axis captions, the reference line ──────
+// Lightweight Charts prints axis *values* but has no concept of an axis title,
+// and a P/E river is unreadable by anyone who does not already know what a P/E
+// band is. build_docs.py supplies both as data-attributes; these assert the
+// widget actually draws them.
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross",
+      "data-kind": "area", "data-title": "P/E", "data-unit": "\u00d7",
+      "data-note": "Price over trailing earnings.",
+      "data-ylabel": "\u00d7 (multiple)", "data-xlabel": "Fiscal quarter",
+      "data-ref": "26.4", "data-ref-label": "avg" },
+    structuredClone(fd));
+
+  eq("chrome: the explainer is rendered under the title",
+     node.querySelector(".pchart__note").textContent,
+     "Price over trailing earnings.");
+  eq("chrome: the right axis is captioned",
+     node.querySelector(".pchart__ylab--right").textContent, "\u00d7 (multiple)");
+  eq("chrome: the time axis is captioned",
+     node.querySelector(".pchart__xlab").textContent, "Fiscal quarter");
+  // The span is the x-axis spelled out: what range the picture covers.
+  eq("chrome: the footer states the span covered",
+     node.querySelector(".pchart__span").textContent,
+     `${fd.gross[0].t} \u2192 ${fd.gross[fd.gross.length - 1].t}`);
+  check("chrome: the date axis is left visible",
+        log.chartOptions.timeScale.visible === true);
+
+  eq("chrome: one reference line, at the value Python computed",
+     log.priceLines.map((l) => l.price), [26.4]);
+  check("chrome: the reference line is labelled",
+        log.priceLines[0].title.startsWith("avg "), log.priceLines[0].title);
+}
+
+{
+  // No data-ref means no line — a chart with nothing to compare against must
+  // not sprout a zero baseline.
+  const { log } = await renderPriceChart(
+    { "data-src": "analytics.json", "data-series": "drawdown",
+      "data-kind": "area", "data-title": "Drawdown" },
+    structuredClone(data));
+  eq("chrome: no reference line unless one was asked for", log.priceLines.length, 0);
+}
+
+{
+  // A two-axis chart captions both sides, and says so only when a left axis
+  // exists at all.
+  const { node } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "revenue,revenue_yoy",
+      "data-kind": "bars+line", "data-title": "Revenue",
+      "data-format": "money", "data-unit": "", "data-labels": "Revenue,YoY",
+      "data-ylabel": "USD", "data-ylabel2": "YoY growth %" },
+    structuredClone(fd));
+  eq("chrome: both axes captioned on a two-axis chart",
+     [node.querySelector(".pchart__ylab--left").textContent,
+      node.querySelector(".pchart__ylab--right").textContent],
+     ["YoY growth %", "USD"]);
+}
+
+{
+  // The caption falls back to the unit when the page names no axis, so a chart
+  // is never left with an unlabelled scale.
+  const { node } = await renderPriceChart(
+    { "data-src": "analytics.json", "data-series": "volatility",
+      "data-kind": "line", "data-title": "Volatility" },
+    structuredClone(data));
+  eq("chrome: the unit stands in for an unnamed axis",
+     node.querySelector(".pchart__ylab--right").textContent, "%");
+}
+
+// The legend used to name the series and nothing else until you hovered, which
+// left a five-line P/E-band legend saying nothing at all on arrival.
+{
+  const { node } = await renderPriceChart(
+    { "data-src": "fundamentals.json", "data-series": "gross,operating,net",
+      "data-kind": "multiline", "data-title": "Margins",
+      "data-labels": "Gross,Operating,Net" },
+    structuredClone(fd));
+  eq("legend: seeded with each series' latest value, before any hover",
+     node.querySelectorAll(".pchart__key").map((k) => k.textContent),
+     ["Gross 59.00%", "Operating 29.00%", "Net 19.00%"]);
+}
+
+// The crosshair spells the hovered date out in the footer, and puts the span
+// back when the pointer leaves.
+{
+  const { node, log } = await renderPriceChart(
+    { "data-src": "analytics.json", "data-series": "volatility",
+      "data-kind": "line", "data-title": "Volatility",
+      "data-xlabel": "Trading session" },
+    structuredClone(data));
+
+  const span = node.querySelector(".pchart__span").textContent;
+  log.crosshairHandler({ time: "2026-01-17", seriesData: new Map() });
+  eq("crosshair: the footer reports the hovered date",
+     node.querySelector(".pchart__span").textContent, "2026-01-17");
+  log.crosshairHandler({ seriesData: new Map() });
+  eq("crosshair: leaving the chart restores the covered span",
+     node.querySelector(".pchart__span").textContent, span);
 }
 
 // ── summary ─────────────────────────────────────────────────────────────────

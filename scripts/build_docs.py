@@ -13,7 +13,8 @@ Generates the `docs/` directory content from source files:
   • 10-q/                      → docs/sec/10q.md   (index only, PDFs not copied)
   • 13-f/                      → docs/sec/13f.md
   • investor_day/              → docs/investor_day/
-  • data/prices/               → docs/prices/<ticker>/  (charts + CSV download)
+  • data/prices/ + data/fundamentals/
+                               → docs/data/<ticker>/  (charts + CSV downloads)
   • README.md                  → enriches docs/index.md
 
 Run locally:   python scripts/build_docs.py
@@ -305,19 +306,7 @@ LANG_TEXT = {
         "download_scripts": "Download Scripts",
         "scripts_desc": "Python and Bash tools for batch-downloading SEC filings",
         # ── Price Data section ──
-        "prices": "Price Data",
-        "prices_desc": "{n} tickers · up to {years} years of daily OHLCV",
-        "prices_intro": (
-            "Every chart on this site is drawn from one committed dataset: a CSV per ticker "
-            "under `data/prices/`, refreshed nightly from Yahoo Finance and capped at "
-            "ten years of daily bars. This page publishes that dataset — browse the derived "
-            "charts per ticker, or download the raw files and run your own analysis."
-        ),
-        "p_no_data": "No price data found.",
         "p_download": "📥 Download",
-        "p_zip": "all_prices.zip",
-        "p_zip_desc": "every ticker's CSV in one archive ({n} files)",
-        "p_manifest_desc": "machine-readable summary of every ticker (last close, returns, volatility, file URLs)",
         "p_per_ticker_desc": "Per-ticker CSV links are in the table below, and on each ticker's page.",
         "p_columns": "CSV columns",
         "p_columns_desc": (
@@ -329,8 +318,6 @@ LANG_TEXT = {
         "p_last": "Last",
         "p_52w_range": "52W Range",
         "p_avg_vol": "Avg Vol (30D)",
-        "p_history": "History",
-        "p_price_history": "Price History",
         "p_bars": "Bars",
         "p_returns": "📈 Returns",
         "p_key_stats": "📊 Key Statistics",
@@ -346,19 +333,8 @@ LANG_TEXT = {
         "p_vol_1y": "Annualised volatility (1Y)",
         "p_cagr": "CAGR (stored history)",
         "p_drawdown": "📉 Drawdown from Peak",
-        "p_drawdown_desc": (
-            "How far the close sits below its running all-time high. The depth and the "
-            "width of each trough say more about holding this name than any single return figure."
-        ),
         "p_volatility": "🌡️ Rolling Volatility",
-        "p_volatility_desc": (
-            "Annualised standard deviation of daily returns over a rolling {window}-session window."
-        ),
         "p_distribution": "🎲 Daily Return Distribution",
-        "p_distribution_desc": (
-            "How the daily moves are spread. Fat tails on either side mean the average "
-            "return is a poor description of a typical day."
-        ),
         "p_monthly": "🗓️ Monthly Returns",
         "p_monthly_desc": (
             "Calendar-month returns; the year column chains its months, so it only "
@@ -369,24 +345,12 @@ LANG_TEXT = {
         "p_csv_desc": "raw daily OHLCV, {n:,} rows",
         "p_prices_json_desc": "the full history in the JSON shape the candlestick chart consumes",
         "p_analytics_json_desc": "pre-computed drawdown, rolling volatility and return histogram",
-        "p_back_to_index": "← Back to Price Data",
-        "p_more_charts": "Full price history, drawdown & CSV download",
         "p_disclaimer": (
             "Price data is sourced from Yahoo Finance and provided as-is for research and "
             "educational use. It is not verified against an official exchange feed and must "
             "not be relied on for trading decisions."
         ),
         # ── Financials section ──
-        "fundamentals": "Financials",
-        "fundamentals_desc": "{n} tickers · reported quarterly statements",
-        "fundamentals_intro": (
-            "Reported quarterly financial statements, taken from each company's own SEC "
-            "filings via the XBRL `companyfacts` API and committed as a CSV per ticker "
-            "under `data/fundamentals/`. Every ratio and multiple on these pages is "
-            "derived from that store — joined against `data/prices/` where a share price "
-            "is needed — and recomputed on each build rather than stored."
-        ),
-        "f_no_data": "No fundamentals data found.",
         "f_coverage": "Coverage",
         "f_coverage_desc": (
             "Only SEC registrants filing US-GAAP have XBRL facts to read, so ETFs, "
@@ -426,13 +390,7 @@ LANG_TEXT = {
         "f_ev_sales": "EV/Sales",
         "f_ev_ebitda": "EV/EBITDA",
         "f_pe_bands": "P/E Bands",
-        "f_pe_bands_desc": (
-            "Monthly close against what it would have been at this ticker's own "
-            "historical price/earnings multiples. The bands say what the market has "
-            "paid for these earnings before, not what they are worth."
-        ),
         "f_price": "Price",
-        "f_period": "Period",
         "f_periods": "Periods",
         "f_latest_quarter": "Latest quarter",
         "f_ttm": "TTM",
@@ -441,8 +399,6 @@ LANG_TEXT = {
         "f_source_filing": "Source filing",
         "f_csv_desc": "reported quarterly statements, {n} periods",
         "f_json_desc": "every derived series the charts on this page consume",
-        "f_back_to_index": "← Back to Financials",
-        "f_more": "Financial statements, margins & valuation multiples",
         "f_quarterly_note": (
             "Figures are per fiscal quarter. Filers report cash flow and many income "
             "items year-to-date and stop tagging the fourth quarter separately, so a "
@@ -461,6 +417,187 @@ LANG_TEXT = {
             "educational use. Concept mapping across filers is imperfect and restatements "
             "are not tracked; verify against the filing itself before relying on any number."
         ),
+        # ── Market Data: the merged Price + Financials section ──
+        "md": "Market Data",
+        "md_desc": "{n} tickers · daily prices and reported quarterly statements",
+        "md_intro": (
+            "Price and fundamentals for the same company, on one page. Both come from "
+            "committed datasets in this repository — daily OHLCV under `data/prices/`, "
+            "refreshed nightly from Yahoo Finance, and reported quarterly statements "
+            "under `data/fundamentals/`, taken from each company's own SEC filings via "
+            "the XBRL `companyfacts` API. Every chart and every ratio below is derived "
+            "from those two files at build time, so the picture and the download can "
+            "never disagree."
+        ),
+        "md_no_data": "No market data found.",
+        "md_tab_overview": "🧭 Overview",
+        "md_tab_price": "📈 Price",
+        "md_tab_financials": "💰 Financials",
+        "md_tab_valuation": "⚖️ Valuation",
+        "md_tab_data": "📥 Data & glossary",
+        "md_tabs_hint": (
+            "<b>{n} tabs</b> — the rest of this page is behind them. "
+            "Click to switch between price history, financial statements, "
+            "valuation and the raw data."
+        ),
+        "md_back_to_index": "← Back to Market Data",
+        "md_more": "Full price history, financial statements & CSV downloads",
+        "md_price_only": "No SEC fundamentals for this ticker — price data only.",
+        "md_price_missing": "No price store for this ticker — financial statements only.",
+        "md_moved": "This page has moved",
+        "md_moved_body": "Price Data and Financials are now one **Market Data** section.",
+        "md_open": "Open the Market Data page",
+        "md_file_prices": "Prices",
+        "md_file_financials": "Financials",
+        "md_zip": "market_data.zip",
+        "md_zip_desc": "every ticker's price and financials CSV in one archive ({n} tickers)",
+        "md_manifest_desc": (
+            "machine-readable summary of every ticker — last close, returns, "
+            "volatility, TTM revenue, margins, multiples and file URLs"
+        ),
+        # Axis captions. Lightweight Charts prints the axis values but has no
+        # concept of an axis title, so these are drawn as DOM text beside the
+        # canvas — the "what am I looking at" the charts were missing.
+        "ax_quarter": "Fiscal quarter",
+        "ax_session": "Trading session",
+        "ax_month": "Month",
+        "ax_return_bucket": "Daily return bucket",
+        "ax_usd": "USD",
+        "ax_usd_share": "USD per share",
+        "ax_pct": "% of revenue",
+        "ax_pct_plain": "%",
+        "ax_growth": "YoY growth %",
+        "ax_annualised": "Annualised %",
+        "ax_multiple": "× (multiple)",
+        "ax_sessions": "Sessions",
+        "ax_drawdown": "% below peak",
+        # ── What each chart means ──
+        "f_revenue_note": (
+            "Total sales booked in each fiscal quarter (bars, left-to-right in time) "
+            "against the same quarter a year earlier (line). The year-on-year line "
+            "strips out seasonality, which a quarter-on-quarter comparison cannot."
+        ),
+        "f_operating_income_note": (
+            "Profit from running the business — revenue less cost of sales and operating "
+            "expenses, before interest and tax. This is the line that says whether the "
+            "core operation makes money."
+        ),
+        "f_net_income_note": (
+            "The bottom line: what is left for shareholders after every cost, including "
+            "interest, tax and one-offs. It moves around more than operating income "
+            "because one-offs land here."
+        ),
+        "f_eps_note": (
+            "Net income divided by the share count, assuming every option and "
+            "convertible is exercised. Buybacks lift it without the business earning "
+            "more; issuance dilutes it without the business earning less."
+        ),
+        "f_opex_note": (
+            "What the company spends to run and grow itself, split into research & "
+            "development and selling, general & administrative. The bands stack, so the "
+            "outer edge is the combined total."
+        ),
+        "f_cash_flow_note": (
+            "Cash actually generated by operations, and what survives after capital "
+            "spending (free cash flow = operating cash flow − capex). Profit is an "
+            "opinion; cash flow is closer to a fact."
+        ),
+        "f_cash_debt_note": (
+            "Cash and short-term investments against total borrowings. Cash above debt "
+            "is a net-cash balance sheet — the company could repay everything tomorrow."
+        ),
+        "f_margins_note": (
+            "How much of each revenue dollar survives: after the direct cost of the "
+            "product (gross), after the cost of running the company (operating), and "
+            "after everything including tax (net). Computed on trailing twelve months."
+        ),
+        "f_returns_note": (
+            "How hard the capital works. ROE = profit ÷ shareholders' equity, ROA = "
+            "profit ÷ all assets, ROIC = after-tax operating profit ÷ the debt and "
+            "equity actually invested. ROIC is the one that ignores how the business "
+            "was financed."
+        ),
+        "f_ros_note": (
+            "Operating profit as a share of revenue — the same idea as operating margin, "
+            "kept alongside the return series for comparison."
+        ),
+        "f_pe_note": (
+            "Price ÷ trailing-twelve-month earnings per share: how many dollars the "
+            "market pays for one dollar of annual profit. 20× means it would take twenty "
+            "years of today's earnings to repay today's price. High means the market "
+            "expects growth — or that earnings are temporarily depressed."
+        ),
+        "f_ps_note": (
+            "Price ÷ trailing-twelve-month revenue per share. The multiple of last "
+            "resort for a company that has sales but no profit yet, since it says "
+            "nothing about whether those sales ever convert to cash."
+        ),
+        "f_pb_note": (
+            "Price ÷ book value per share, where book value is assets minus "
+            "liabilities. Meaningful for banks and asset-heavy businesses; close to "
+            "meaningless where the real assets are brands and code, which the balance "
+            "sheet never records."
+        ),
+        "f_ev_sales_note": (
+            "Enterprise value ÷ revenue. Enterprise value is market cap plus debt minus "
+            "cash — what it would cost to buy the whole business outright — so unlike "
+            "P/S it is not flattered by a large cash pile."
+        ),
+        "f_ev_ebitda_note": (
+            "Enterprise value ÷ earnings before interest, tax, depreciation and "
+            "amortisation. The standard acquisition yardstick, because it compares "
+            "companies before their financing and accounting choices diverge."
+        ),
+        "p_drawdown_note": (
+            "How far the close sits below its own running all-time high. Zero means a "
+            "new high; −40% means you would need a 67% gain just to get back to even."
+        ),
+        "p_volatility_note": (
+            "The standard deviation of daily returns over the last {window} sessions, "
+            "scaled to a year. 30% roughly means a one-in-three chance of ending the "
+            "year more than 30% away from where it started."
+        ),
+        "p_distribution_note": (
+            "How many sessions landed in each daily-move bucket. Fat tails on either "
+            "side mean the average day is a poor description of a typical day."
+        ),
+        "f_pe_bands_note": (
+            "The monthly close (blue) against what the price would have been at this "
+            "ticker's own historical P/E levels. Above the top band the market is "
+            "paying more for these earnings than it ever has; below the bottom band, "
+            "less. The bands say what has been paid, not what it is worth."
+        ),
+        # ── Glossary ──
+        "g_title": "📖 How to read these charts",
+        "g_intro": (
+            "Every term used on this page, in one place. Ratios are computed on "
+            "trailing twelve months (the last four reported quarters) unless stated "
+            "otherwise, so a single seasonal quarter never distorts them."
+        ),
+        "g_term": "Term",
+        "g_means": "What it means",
+        "g_rows": [
+            ("TTM", "Trailing twelve months — the last four reported quarters added together. Used instead of a single quarter so seasonality and one-off quarters do not distort a ratio."),
+            ("YoY", "Year-on-year: this quarter against the same quarter a year earlier."),
+            ("Gross margin", "Revenue less the direct cost of the product, as a share of revenue. What the product itself earns before any company overhead."),
+            ("Operating margin", "Operating profit as a share of revenue — after R&D and SG&A, before interest and tax."),
+            ("Net margin", "Net profit as a share of revenue, after everything including tax."),
+            ("EPS (diluted)", "Net income per share, assuming every option and convertible is exercised."),
+            ("FCF", "Free cash flow: operating cash flow minus capital expenditure. The cash left over for dividends, buybacks and debt repayment."),
+            ("ROE", "Return on equity: profit ÷ shareholders' equity. Flattered by debt, since borrowing shrinks the denominator."),
+            ("ROA", "Return on assets: profit ÷ total assets. Unflattered by debt, and correspondingly lower."),
+            ("ROIC", "Return on invested capital: after-tax operating profit ÷ (debt + equity). The cleanest read on whether the business earns more than its capital costs."),
+            ("P/E", "Price ÷ earnings per share. Dollars paid for one dollar of annual profit. Undefined when earnings are negative."),
+            ("P/S", "Price ÷ revenue per share. Used where there is no profit to divide by."),
+            ("P/B", "Price ÷ book value per share (assets − liabilities). Informative for banks; close to meaningless for software."),
+            ("EV", "Enterprise value: market cap + total debt − cash. What buying the whole business outright would cost."),
+            ("EV/EBITDA", "Enterprise value ÷ earnings before interest, tax, depreciation and amortisation. Compares companies before financing and accounting choices diverge."),
+            ("Drawdown", "How far below its own running all-time high the price sits, in percent."),
+            ("Volatility", "Standard deviation of daily returns, annualised. A measure of how far the price typically wanders, not of which direction."),
+            ("CAGR", "Compound annual growth rate: the single yearly rate that turns the first close into the last."),
+            ("Max drawdown", "The deepest peak-to-trough fall in the stored history — the worst loss a buy-and-hold holder would have sat through."),
+        ],
+        "g_avg": "avg",
     },
     "zh": {
         "last_updated": "最後更新",
@@ -541,18 +678,7 @@ LANG_TEXT = {
         "download_scripts": "下載腳本",
         "scripts_desc": "用於批量下載 SEC 文件的 Python 和 Bash 工具",
         # ── Price Data section ──
-        "prices": "股價資料",
-        "prices_desc": "{n} 檔標的 · 最多 {years} 年的每日 OHLCV",
-        "prices_intro": (
-            "本站所有圖表都來自同一份資料集：`data/prices/` 下每檔標的一個 CSV，"
-            "每晚自 Yahoo Finance 更新，保留最多十年的日線資料。"
-            "本頁將這份資料集公開 — 可瀏覽每檔標的的衍生圖表，也可直接下載原始檔案自行分析。"
-        ),
-        "p_no_data": "查無股價資料。",
         "p_download": "📥 下載",
-        "p_zip": "all_prices.zip",
-        "p_zip_desc": "所有標的的 CSV 打包下載（共 {n} 個檔案）",
-        "p_manifest_desc": "機器可讀的彙總資料（最新收盤、報酬率、波動率、檔案網址）",
         "p_per_ticker_desc": "個別標的的 CSV 連結請見下方表格，或各標的頁面。",
         "p_columns": "CSV 欄位",
         "p_columns_desc": (
@@ -564,8 +690,6 @@ LANG_TEXT = {
         "p_last": "最新價",
         "p_52w_range": "52 週區間",
         "p_avg_vol": "30 日均量",
-        "p_history": "資料期間",
-        "p_price_history": "股價歷史",
         "p_bars": "資料筆數",
         "p_returns": "📈 報酬率",
         "p_key_stats": "📊 關鍵統計",
@@ -581,16 +705,8 @@ LANG_TEXT = {
         "p_vol_1y": "年化波動率（1 年）",
         "p_cagr": "年化報酬率 CAGR（資料期間）",
         "p_drawdown": "📉 距高點回撤",
-        "p_drawdown_desc": (
-            "收盤價低於歷史高點的幅度。回撤的深度與持續時間，"
-            "比單一報酬率數字更能說明持有這檔標的的實際體感。"
-        ),
         "p_volatility": "🌡️ 滾動波動率",
-        "p_volatility_desc": "以滾動 {window} 個交易日計算的日報酬標準差（年化）。",
         "p_distribution": "🎲 日報酬分布",
-        "p_distribution_desc": (
-            "日漲跌幅的分布狀況。兩側若出現厚尾，代表平均報酬並不足以描述「一般的一天」。"
-        ),
         "p_monthly": "🗓️ 月報酬",
         "p_monthly_desc": (
             "各日曆月份的報酬率；年度欄位由各月份連乘而得，"
@@ -601,21 +717,11 @@ LANG_TEXT = {
         "p_csv_desc": "原始每日 OHLCV，共 {n:,} 列",
         "p_prices_json_desc": "K線圖使用的完整歷史 JSON",
         "p_analytics_json_desc": "預先計算的回撤、滾動波動率與報酬分布",
-        "p_back_to_index": "← 返回股價資料",
-        "p_more_charts": "完整股價歷史、回撤圖與 CSV 下載",
         "p_disclaimer": (
             "股價資料來自 Yahoo Finance，僅供研究與教育用途，未與官方交易所行情核對，"
             "不得作為交易決策依據。"
         ),
         # ── Financials section ──
-        "fundamentals": "財報數據",
-        "fundamentals_desc": "{n} 檔標的 · 已申報之季度財務報表",
-        "fundamentals_intro": (
-            "各公司向美國證管會（SEC）申報之季度財務報表，透過 XBRL `companyfacts` API 取得，"
-            "並以每檔一份 CSV 提交於 `data/fundamentals/`。本區所有比率與估值倍數皆由該資料集"
-            "推導而得（需股價者則與 `data/prices/` 合併計算），於每次建置時重新計算而非另行儲存。"
-        ),
-        "f_no_data": "查無財報資料。",
         "f_coverage": "資料涵蓋範圍",
         "f_coverage_desc": (
             "僅有向 SEC 申報且採用 US-GAAP 的發行人具備可讀取的 XBRL 資料，"
@@ -655,12 +761,7 @@ LANG_TEXT = {
         "f_ev_sales": "EV/Sales",
         "f_ev_ebitda": "EV/EBITDA",
         "f_pe_bands": "本益比河流圖",
-        "f_pe_bands_desc": (
-            "月均收盤價，對照該檔標的自身歷史本益比水準所對應的價格區間。"
-            "此區間代表市場過去願意為這些盈餘付出的價格，而非其應有價值。"
-        ),
         "f_price": "股價",
-        "f_period": "期間",
         "f_periods": "期數",
         "f_latest_quarter": "最新一季",
         "f_ttm": "近四季",
@@ -669,8 +770,6 @@ LANG_TEXT = {
         "f_source_filing": "來源文件",
         "f_csv_desc": "已申報之季度財務報表，共 {n} 期",
         "f_json_desc": "本頁圖表所使用之全部推導序列",
-        "f_back_to_index": "← 返回財報數據",
-        "f_more": "財務報表、三率與估值倍數",
         "f_quarterly_note": (
             "數字以會計季度為單位。發行人之現金流量與多項損益項目係以年初至今累計方式申報，"
             "且通常不單獨標記第四季，因此單季數字係以相鄰累計數相減還原——"
@@ -686,6 +785,159 @@ LANG_TEXT = {
             "數據來自 SEC XBRL 申報文件，僅供研究與教育用途。跨發行人之科目對應並不完美，"
             "且未追蹤財報重編；引用任何數字前請與原始申報文件核對。"
         ),
+        # ── Market Data: the merged Price + Financials section ──
+        "md": "市場數據",
+        "md_desc": "{n} 檔標的 · 每日股價與已申報之季度財務報表",
+        "md_intro": (
+            "同一家公司的股價與財報，整合於同一頁。兩者皆取自本專案已提交的資料集——"
+            "`data/prices/` 下的每日 OHLCV（每晚自 Yahoo Finance 更新），"
+            "以及 `data/fundamentals/` 下、透過 XBRL `companyfacts` API 取得的季度財務報表。"
+            "以下所有圖表與比率皆於建置時由這兩份檔案推導，因此圖表與下載檔永遠一致。"
+        ),
+        "md_no_data": "查無市場數據。",
+        "md_tab_overview": "🧭 總覽",
+        "md_tab_price": "📈 股價",
+        "md_tab_financials": "💰 財報",
+        "md_tab_valuation": "⚖️ 估值",
+        "md_tab_data": "📥 資料與名詞",
+        "md_tabs_hint": (
+            "<b>共 {n} 個分頁</b>——本頁其餘內容都在其中，"
+            "點擊即可在股價走勢、財務報表、估值與原始資料之間切換。"
+        ),
+        "md_back_to_index": "← 返回市場數據",
+        "md_more": "完整股價歷史、財務報表與 CSV 下載",
+        "md_price_only": "此標的無 SEC 財報資料，僅提供股價數據。",
+        "md_price_missing": "此標的無股價資料，僅提供財務報表。",
+        "md_moved": "本頁已搬移",
+        "md_moved_body": "「股價資料」與「財報數據」已合併為 **市場數據** 專區。",
+        "md_open": "前往市場數據頁面",
+        "md_file_prices": "股價",
+        "md_file_financials": "財報",
+        "md_zip": "market_data.zip",
+        "md_zip_desc": "所有標的之股價與財報 CSV 合併封存（共 {n} 檔）",
+        "md_manifest_desc": (
+            "每檔標的之機器可讀摘要——最新收盤價、報酬率、波動度、"
+            "近四季營收、利潤率、估值倍數與檔案網址"
+        ),
+        "ax_quarter": "財報季度",
+        "ax_session": "交易日",
+        "ax_month": "月份",
+        "ax_return_bucket": "單日漲跌幅區間",
+        "ax_usd": "美元",
+        "ax_usd_share": "美元／股",
+        "ax_pct": "占營收比重 %",
+        "ax_pct_plain": "%",
+        "ax_growth": "年增率 %",
+        "ax_annualised": "年化 %",
+        "ax_multiple": "× 倍數",
+        "ax_sessions": "交易日數",
+        "ax_drawdown": "距高點 %",
+        "f_revenue_note": (
+            "每一會計季度認列的總營收（柱狀，由左至右為時間），"
+            "以及與去年同季相比的年增率（折線）。年增率可排除季節性影響，這是季對季比較做不到的。"
+        ),
+        "f_operating_income_note": (
+            "本業經營所產生的獲利——營收扣除銷貨成本與營業費用，但尚未計入利息與稅負。"
+            "這條線決定了核心業務本身是否賺錢。"
+        ),
+        "f_net_income_note": (
+            "最終獲利：扣除包含利息、稅負與一次性項目在內的所有成本後，歸屬股東的金額。"
+            "由於一次性項目落在這一層，其波動通常大於營業利益。"
+        ),
+        "f_eps_note": (
+            "淨利除以股數，並假設所有選擇權與可轉債均已行使。"
+            "庫藏股會在公司沒有多賺的情況下推升此數字；增資則會在公司沒有少賺的情況下稀釋它。"
+        ),
+        "f_opex_note": (
+            "維持營運與成長所投入的費用，分為研發費用與管銷費用。"
+            "兩段為堆疊呈現，因此外緣代表兩者合計。"
+        ),
+        "f_cash_flow_note": (
+            "營運實際產生的現金，以及扣除資本支出後所剩下的部分"
+            "（自由現金流量 = 營運現金流量 − 資本支出）。獲利是一種看法，現金流則更接近事實。"
+        ),
+        "f_cash_debt_note": (
+            "現金及短期投資與總借款的對比。現金高於債務即為淨現金狀態——公司明天就能全數償還。"
+        ),
+        "f_margins_note": (
+            "每一元營收最後留下多少：扣除產品直接成本後（毛利率）、"
+            "扣除營運成本後（營業利益率）、以及扣除包含稅負在內的一切之後（淨利率）。以近四季計算。"
+        ),
+        "f_returns_note": (
+            "資本的運用效率。ROE = 獲利 ÷ 股東權益，ROA = 獲利 ÷ 總資產，"
+            "ROIC = 稅後營業利益 ÷ 實際投入的債權與股權。ROIC 是唯一不受融資方式影響的指標。"
+        ),
+        "f_ros_note": (
+            "營業利益占營收的比重——與營業利益率同義，"
+            "此處與經營報酬率並列以便對照。"
+        ),
+        "f_pe_note": (
+            "股價 ÷ 近四季每股盈餘：市場為每一元年度獲利所支付的價格。"
+            "20× 表示以今日盈餘水準需二十年才能回收今日股價。"
+            "數值偏高代表市場預期成長——或代表盈餘暫時受壓抑。"
+        ),
+        "f_ps_note": (
+            "股價 ÷ 近四季每股營收。對於有營收但尚無獲利的公司，這是不得已的估值方式，"
+            "因為它完全無法說明這些營收是否終將轉化為現金。"
+        ),
+        "f_pb_note": (
+            "股價 ÷ 每股淨值（資產減負債）。對銀行與重資產業具參考價值；"
+            "對於真正資產是品牌與程式碼、而資產負債表從不記錄的公司則近乎無意義。"
+        ),
+        "f_ev_sales_note": (
+            "企業價值 ÷ 營收。企業價值 = 市值 + 負債 − 現金，即買下整間公司的代價，"
+            "因此不像股價營收比會被大量現金部位美化。"
+        ),
+        "f_ev_ebitda_note": (
+            "企業價值 ÷ 稅息折舊攤銷前獲利。併購評價的標準尺度，"
+            "因為它在各公司融資與會計選擇分歧之前就完成比較。"
+        ),
+        "p_drawdown_note": (
+            "收盤價距離其自身歷史新高的幅度。0 代表創新高；"
+            "−40% 則代表需要上漲 67% 才能回到原點。"
+        ),
+        "p_volatility_note": (
+            "近 {window} 個交易日之日報酬標準差，年化後表示。"
+            "30% 大致代表約三分之一的機率，一年後價格會偏離起點超過 30%。"
+        ),
+        "p_distribution_note": (
+            "各單日漲跌幅區間的交易日數。兩側的厚尾代表「平均的一天」"
+            "並不能代表「典型的一天」。"
+        ),
+        "f_pe_bands_note": (
+            "月收盤價（藍線）對照該檔標的自身歷史本益比水準所對應的價格。"
+            "高於最上緣代表市場為這些盈餘付出的價格高於以往；低於最下緣則相反。"
+            "河流圖說明的是市場付過多少，而非其應有價值。"
+        ),
+        "g_title": "📖 圖表與名詞說明",
+        "g_intro": (
+            "本頁所使用的名詞彙整於此。除另有說明外，所有比率皆以近四季"
+            "（最近四個已申報季度）計算，因此單一季節性季度不會造成失真。"
+        ),
+        "g_term": "名詞",
+        "g_means": "意義",
+        "g_rows": [
+            ("TTM（近四季）", "最近四個已申報季度的合計。改用近四季而非單季，可避免季節性與一次性項目扭曲比率。"),
+            ("YoY（年增率）", "本季與去年同季相比。"),
+            ("毛利率", "營收扣除產品直接成本後占營收的比重，即產品本身在分攤公司管銷前所賺取的部分。"),
+            ("營業利益率", "營業利益占營收的比重——已扣除研發與管銷費用，尚未計入利息與稅負。"),
+            ("淨利率", "淨利占營收的比重，已扣除包含稅負在內的所有項目。"),
+            ("稀釋每股盈餘", "假設所有選擇權與可轉債均已行使後的每股淨利。"),
+            ("自由現金流量", "營運現金流量減資本支出，即可用於股利、庫藏股與償債的現金。"),
+            ("ROE（股東權益報酬率）", "獲利 ÷ 股東權益。舉債會縮小分母，因而美化此數字。"),
+            ("ROA（資產報酬率）", "獲利 ÷ 總資產。不受舉債美化，數值因此較低。"),
+            ("ROIC（投入資本報酬率）", "稅後營業利益 ÷（負債 + 股東權益）。判斷本業報酬是否高於資金成本最乾淨的指標。"),
+            ("本益比 P/E", "股價 ÷ 每股盈餘，即為每一元年度獲利所付出的價格。盈餘為負時無意義。"),
+            ("股價營收比 P/S", "股價 ÷ 每股營收。適用於尚無獲利可供相除的公司。"),
+            ("股價淨值比 P/B", "股價 ÷ 每股淨值（資產 − 負債）。對銀行具參考價值，對軟體業則近乎無意義。"),
+            ("企業價值 EV", "市值 + 總負債 − 現金，即買下整間公司的代價。"),
+            ("EV/EBITDA", "企業價值 ÷ 稅息折舊攤銷前獲利，可在融資與會計選擇分歧前完成跨公司比較。"),
+            ("回撤 Drawdown", "股價距離其自身歷史新高的百分比。"),
+            ("波動度 Volatility", "日報酬標準差之年化值。衡量價格通常擺盪的幅度，而非方向。"),
+            ("年化報酬率 CAGR", "將期初收盤價變為期末收盤價所需的單一年度複合成長率。"),
+            ("最大回撤", "資料期間內最深的高點至低點跌幅——長期持有者實際承受過的最大虧損。"),
+        ],
+        "g_avg": "平均",
     }
 }
 
@@ -1136,18 +1388,17 @@ def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
 
 
 # ── Financials snapshot on the report page ───────────────────────────────────
-# The Financials section carries sixteen charts; putting them all here would
+# The Market Data page carries twenty-odd charts; putting them all here would
 # bury the reports this page exists to index. What earns its place is the
 # trailing-twelve-month line and the three charts that answer "is this company
 # growing, is it profitable, and what is the market paying" — the rest stays one
 # click away.
 #
-# Both the table and the charts read the payload build_fundamentals() already
-# writes at ../../fundamentals/<ticker>/fundamentals.json, so nothing is
-# duplicated and the two sections can never disagree. That relative path
-# resolves correctly in both language trees, because the payload is written into
-# each of them.
-FUND_SNAPSHOT_SRC = "../../fundamentals/{ticker}/fundamentals.json"
+# Both the table and the charts read the payload build_market_data() already
+# writes at ../../data/<ticker>/fundamentals.json, so nothing is duplicated and
+# the two sections can never disagree. That relative path resolves correctly in
+# both language trees, because the payload is written into each of them.
+FUND_SNAPSHOT_SRC = "../../data/{ticker}/fundamentals.json"
 
 
 def fundamentals_snapshot_block(ticker: str, lang: str) -> str:
@@ -1194,18 +1445,23 @@ def fundamentals_snapshot_block(ticker: str, lang: str) -> str:
         chart(series="revenue,revenue_yoy", kind="bars+line",
               title=t(lang, "f_revenue"), color="green,blue",
               labels=f"{t(lang, 'f_revenue')},{t(lang, 'f_yoy')}",
-              fmt="money", unit="", fmt2="percent"),
+              fmt="money", unit="", fmt2="percent",
+              note=t(lang, "f_revenue_note"), ylabel=t(lang, "ax_usd"),
+              ylabel2=t(lang, "ax_growth"), xlabel=t(lang, "ax_quarter")),
         "",
         chart(series="margin_gross,margin_operating,margin_net", kind="multiline",
               title=t(lang, "f_margins"), color="blue,amber,green",
               labels=f"{t(lang, 'f_gross_margin')},"
-                     f"{t(lang, 'f_operating_margin')},{t(lang, 'f_net_margin')}"),
+                     f"{t(lang, 'f_operating_margin')},{t(lang, 'f_net_margin')}",
+              note=t(lang, "f_margins_note"), ylabel=t(lang, "ax_pct"),
+              xlabel=t(lang, "ax_quarter")),
         "",
         chart(series="pe", kind="area", title=t(lang, "f_pe"),
-              color="blue", unit="×"),
+              color="blue", unit="×", note=t(lang, "f_pe_note"),
+              ylabel=t(lang, "ax_multiple"), xlabel=t(lang, "ax_quarter")),
         "",
         f"[:material-finance: {t(lang, 'f_see_all')}]"
-        f"(../../fundamentals/{ticker}/index.md){{.report-link}}",
+        f"(../../{MD_DIR}/{ticker}/index.md){{.report-link}}",
         "",
     ]
     return "\n".join(out)
@@ -1300,7 +1556,8 @@ def ensure(path: Path):
 
 def clean_generated(path: Path):
     """Remove generated sub-dirs, leave hand-crafted files."""
-    for sub in ["reports", "prices", "fundamentals", "market_news", "notebooks", "sec", "investor_day"]:
+    for sub in ["reports", "data", "prices", "fundamentals", "market_news",
+                "notebooks", "sec", "investor_day"]:
         target = path / sub
         if target.exists():
             shutil.rmtree(target)
@@ -1466,10 +1723,9 @@ def build_reports(lang: str = "en"):
         return
 
     tickers = _sample_dirs(merged_ticker_dirs())
-    # Computed once: build_prices() / build_fundamentals() publish exactly
-    # these, and each ticker page links across to its own only if it is among
-    # them — a sample build publishes a few tickers and --strict would reject a
-    # dangling link.
+    # Computed once: build_market_data() publishes exactly these, and each
+    # ticker page links across to its own only if it is among them — a sample
+    # build publishes a few tickers and --strict would reject a dangling link.
     priced_keys = set(published_price_keys())
     fundamental_link_keys = set(published_fundamental_keys())
 
@@ -1560,12 +1816,13 @@ def build_reports(lang: str = "en"):
         if chart:
             lines += [chart, ""]
             # The hero chart only shows the last ~18 months; point readers at the
-            # Price Data page for the full store, the derived charts and the CSV.
-            # Guarded on the page actually existing — a sample build publishes
-            # only a few tickers and --strict would reject a dangling link.
+            # Market Data page for the full store, the derived charts and the
+            # CSVs. Guarded on the page actually existing — a sample build
+            # publishes only a few tickers and --strict would reject a dangling
+            # link.
             if ticker in priced_keys:
-                lines += [f"[:material-chart-line: {t(lang, 'p_more_charts')}]"
-                          f"(../../prices/{ticker}/index.md){{.report-link}}", ""]
+                lines += [f"[:material-chart-line: {t(lang, 'md_more')}]"
+                          f"(../../{MD_DIR}/{ticker}/index.md){{.report-link}}", ""]
         # Price-target & implied-return table directly under the chart, sourced
         # from the latest fundamental report's scenario targets.
         target_tbl = target_price_block(
@@ -2255,21 +2512,13 @@ def price_keys() -> "list[str]":
 
 
 def published_price_keys() -> "list[str]":
-    """The keys build_prices() actually publishes (sample-capped).
+    """Published tickers whose Market Data page has a price half.
 
-    Report pages consult this before linking across, so the two sections can
-    never disagree about which tickers have a Price Data page. Selection goes
-    through _sample_dirs (via the same virtual-Path trick merged_ticker_dirs
-    uses) so a sample build honours SAMPLE_TICKERS and covers the *same* names
-    the report pages do, instead of the first three alphabetically.
-
-    Stores that parse to no bars are dropped, because build_prices() writes no
-    page for them: a ticker added to data/prices/ before the first
-    update_prices.py run leaves a header-only CSV behind, and listing it here
-    would point every report page at a page that was never written.
+    Report pages consult this before linking across, so the sections can never
+    disagree about which tickers have a page. The sampling lives in
+    market_data_keys() so both halves of a sample build cover the same names.
     """
-    keys = [k for k in price_keys() if store_bars(k)]
-    return [p.name for p in _sample_dirs([Path(k) for k in keys])]
+    return [k for k in market_data_keys() if store_bars(k)]
 
 
 def full_price_payload(key: str, bars: "list[dict]") -> str:
@@ -2293,21 +2542,26 @@ def full_price_payload(key: str, bars: "list[dict]") -> str:
     }, separators=(",", ":"))
 
 
-def analytics_payload(key: str, bars: "list[dict]") -> str:
+def analytics_payload_dict(key: str, bars: "list[dict]") -> dict:
     """Pre-computed series for price-charts.js, plus the summary as metadata.
 
     The browser does no maths: it fetches this and draws. Keeping the
     computation in Python is what lets pytest assert on the numbers the site
-    actually shows.
+    actually shows — and lets the page builder read the same series back, so a
+    chart's average line is the average of the points it is drawn over.
     """
-    return json.dumps({
+    return {
         "ticker": key.upper(),
         "updated": bars[-1]["date"],
         "summary": price_analytics.summary(bars),
         "drawdown": price_analytics.drawdown_series(bars),
         "volatility": price_analytics.volatility_series(bars),
         "histogram": price_analytics.return_histogram(bars),
-    }, separators=(",", ":"))
+    }
+
+
+def analytics_payload(key: str, bars: "list[dict]") -> str:
+    return json.dumps(analytics_payload_dict(key, bars), separators=(",", ":"))
 
 
 def _pct_cell(v: "float | None", digits: int = 2) -> str:
@@ -2385,25 +2639,44 @@ def monthly_heatmap(bars: "list[dict]", lang: str) -> "list[str]":
 def pchart_block(*, src: str, series: str, kind: str, title: str,
                  color: str = "blue", unit: str = "%",
                  labels: str = "", fmt: str = "", fmt2: str = "",
-                 unit2: str = "") -> str:
+                 unit2: str = "", note: str = "", ylabel: str = "",
+                 ylabel2: str = "", xlabel: str = "",
+                 ref: "float | None" = None, ref_label: str = "") -> str:
     """Raw-HTML div for one derived-analytics chart (see price-charts.js).
 
     ``series``, ``color`` and ``labels`` may each be a comma-separated list to
     draw several series on one chart. The optional attributes are emitted only
     when set, so a single-series widget renders the same markup it always has.
+
+    ``note`` is the one line saying what the chart means, and ``ylabel`` /
+    ``ylabel2`` / ``xlabel`` name the axes: Lightweight Charts prints axis
+    *values* but has no concept of an axis title, and a P/E river with neither
+    is only readable by someone who already knows what a P/E band is.
+
+    ``ref`` draws a dashed horizontal reference line — a historical average,
+    say. The value is computed here rather than in the browser, for the same
+    reason every other number is.
     """
     attrs = [f'data-src="{src}"', f'data-series="{series}"',
              f'data-kind="{kind}"', f'data-title="{title}"',
              f'data-color="{color}"', f'data-unit="{unit}"']
     for name, value in (("data-labels", labels), ("data-format", fmt),
-                        ("data-format2", fmt2), ("data-unit2", unit2)):
+                        ("data-format2", fmt2), ("data-unit2", unit2),
+                        ("data-note", note), ("data-ylabel", ylabel),
+                        ("data-ylabel2", ylabel2), ("data-xlabel", xlabel),
+                        ("data-ref", "" if ref is None else f"{ref:g}"),
+                        ("data-ref-label", ref_label)):
         if value != "":
             attrs.append(f'{name}="{value}"')
     return f'<div class="pchart" {" ".join(attrs)}></div>'
 
 
-def _price_zip_bytes(keys: "list[str]") -> bytes:
-    """Every published CSV in one deterministic archive.
+def _store_zip_bytes(price_keys_: "list[str]",
+                     fundamental_keys_: "list[str]") -> bytes:
+    """Every published CSV, both stores, in one deterministic archive.
+
+    Members are namespaced prices/ and fundamentals/ because a ticker has a CSV
+    in each and they are different tables.
 
     Fixed timestamps (and sorted members) so re-running the build produces
     byte-identical output — otherwise the incremental check would rewrite a
@@ -2411,235 +2684,18 @@ def _price_zip_bytes(keys: "list[str]") -> bytes:
     """
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
-        for key in keys:
-            src = PRICES_DIR / f"{key}.csv"
-            if not src.exists():
-                continue
-            info = zipfile.ZipInfo(f"prices/{key}.csv", date_time=(1980, 1, 1, 0, 0, 0))
-            info.compress_type = zipfile.ZIP_DEFLATED
-            zf.writestr(info, src.read_bytes())
+        for folder, root, keys in (("prices", PRICES_DIR, price_keys_),
+                                   ("fundamentals", FUNDAMENTALS_DIR,
+                                    fundamental_keys_)):
+            for key in keys:
+                src = root / f"{key}.csv"
+                if not src.exists():
+                    continue
+                info = zipfile.ZipInfo(f"{folder}/{key}.csv",
+                                       date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                zf.writestr(info, src.read_bytes())
     return buf.getvalue()
-
-
-def build_prices(lang: str = "en"):
-    docs_root = get_docs_root(lang)
-    DST_PRICES = docs_root / "prices"
-    ensure(DST_PRICES)
-
-    keys = published_price_keys()
-    if not keys:
-        write(DST_PRICES / "index.md",
-              f"# {t(lang, 'prices')}\n\n{t(lang, 'p_no_data')}\n")
-        return
-
-    # Downloads are language-neutral: written once into the EN tree, linked
-    # absolutely from ZH — the same rule the ZH report index already follows.
-    download_base = "" if lang == "en" else f"{SITE_BASE}/prices/"
-
-    rows: "list[str]" = []
-    manifest: "list[dict]" = []
-
-    for key in keys:
-        bars = store_bars(key)
-        stats = price_analytics.summary(bars)
-        if not stats:
-            continue
-        meta = get_meta(key)
-        dst_dir = DST_PRICES / key
-        ensure(dst_dir)
-
-        # Chart payloads are written into *both* language trees so the pages work
-        # under `mkdocs serve` in either tree; only the bulky raw CSV is shared.
-        write(dst_dir / "prices.json", full_price_payload(key, bars))
-        write(dst_dir / "analytics.json", analytics_payload(key, bars))
-        csv_name = f"{key}.csv"
-        if lang == "en":
-            copy_file(PRICES_DIR / csv_name, dst_dir / csv_name)
-        # Two links to the same file: the ticker page sits next to it, the index
-        # one level up. ZH gets the absolute EN path in both cases.
-        csv_href = (f"{download_base}{key}/{csv_name}" if download_base else csv_name)
-        csv_href_index = (f"{download_base}{key}/{csv_name}" if download_base
-                          else f"{key}/{csv_name}")
-
-        write(dst_dir / "index.md",
-              "\n".join(price_ticker_page(key, meta, stats, bars, csv_href, lang)))
-
-        rows.append(
-            # Link the .md, not the directory: MkDocs resolves it to the
-            # directory URL and --strict can verify the target exists.
-            f"| {meta['flag']} [{key.upper()}]({key}/index.md) | {meta['name']} "
-            f"| {_num(stats['last_close'])} "
-            f"| {_pct_cell(stats['returns']['1d'])} "
-            f"| {_pct_cell(stats['returns']['1m'])} "
-            f"| {_pct_cell(stats['ytd'])} "
-            f"| {_pct_cell(stats['returns']['1y'])} "
-            f"| {_num(stats['low_52w'])} – {_num(stats['high_52w'])} "
-            f"| {_compact_volume(stats['avg_volume_30d'])} "
-            f"| {stats['first_date']} → {stats['last_date']} "
-            f"| [CSV]({csv_href_index}) |"
-        )
-        manifest.append({"ticker": key.upper(), "key": key,
-                         "csv": f"{SITE_BASE}/prices/{key}/{csv_name}",
-                         "prices_json": f"{SITE_BASE}/prices/{key}/prices.json",
-                         "analytics_json": f"{SITE_BASE}/prices/{key}/analytics.json",
-                         **stats})
-
-    if lang == "en":
-        # One-click bulk download, and a machine-readable manifest so the data is
-        # usable from a script without scraping the page.
-        write_bytes(DST_PRICES / "all_prices.zip", _price_zip_bytes(keys))
-        write(DST_PRICES / "index.json",
-              json.dumps({"updated": TODAY, "count": len(manifest),
-                          "columns": list(prices.FIELDS), "tickers": manifest},
-                         separators=(",", ":")))
-
-    write(DST_PRICES / "index.md",
-          "\n".join(price_index_page(rows, len(manifest), download_base, lang)))
-
-
-def price_index_page(rows: "list[str]", count: int, download_base: str,
-                     lang: str) -> "list[str]":
-    """The Price Data landing page: what the dataset is, how to get it, and a
-    sortable-by-eye overview of every ticker in it."""
-    zip_href = f"{download_base}all_prices.zip" if download_base else "all_prices.zip"
-    json_href = f"{download_base}index.json" if download_base else "index.json"
-    return [
-        f"# 💹 {t(lang, 'prices')}",
-        "",
-        f"> {t(lang, 'prices_desc').format(n=count, years=prices.KEEP_YEARS)}  "
-        f"|  **{t(lang, 'last_updated')}:** {TODAY}",
-        "",
-        t(lang, "prices_intro"),
-        "",
-        f"## {t(lang, 'p_download')}",
-        "",
-        f"- :material-folder-zip: [**{t(lang, 'p_zip')}**]({zip_href}) — "
-        f"{t(lang, 'p_zip_desc').format(n=count)}",
-        f"- :material-code-json: [**`index.json`**]({json_href}) — "
-        f"{t(lang, 'p_manifest_desc')}",
-        f"- {t(lang, 'p_per_ticker_desc')}",
-        "",
-        f"### {t(lang, 'p_columns')}",
-        "",
-        "```",
-        ",".join(prices.FIELDS),
-        "```",
-        "",
-        t(lang, "p_columns_desc"),
-        "",
-        "```python",
-        "import pandas as pd",
-        "",
-        f'url = "https://yennanliu.github.io{SITE_BASE}/prices/nvda/nvda.csv"',
-        'df = pd.read_csv(url, parse_dates=["date"]).set_index("date")',
-        'df["close"].pct_change().std() * (252 ** 0.5)  # annualised volatility',
-        "```",
-        "",
-        f"## {t(lang, 'p_coverage')}",
-        "",
-        '<div class="ptable" markdown="1">',
-        "",
-        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'p_last')} "
-        f"| 1D | 1M | YTD | 1Y | {t(lang, 'p_52w_range')} | {t(lang, 'p_avg_vol')} "
-        f"| {t(lang, 'p_history')} | CSV |",
-        "|---|---|---|---|---|---|---|---|---|---|---|",
-        *rows,
-        "",
-        "</div>",
-        "",
-        f"!!! warning \"{t(lang, 'disclaimer')}\"",
-        "",
-        f"    {t(lang, 'p_disclaimer')}",
-        "",
-    ]
-
-
-def price_ticker_page(key: str, meta: dict, stats: dict, bars: "list[dict]",
-                      csv_href: str, lang: str) -> "list[str]":
-    """One ticker's Price Data page: candles, derived charts, stats, download."""
-    ret = stats["returns"]
-    # get_meta falls back to the bare ticker for names it doesn't carry; without
-    # this the heading would read "SKHY (SKHY)".
-    title = (key.upper() if meta["name"] == key.upper()
-             else f"{meta['name']} ({key.upper()})")
-    lines = [
-        f"# {meta['flag']} {title} — {t(lang, 'p_price_history')}",
-        "",
-        f"> **{t(lang, 'sector')}:** {meta['sector']}  |  "
-        f"**{t(lang, 'p_bars')}:** {stats['bars']:,}  |  "
-        f"{stats['first_date']} → {stats['last_date']}",
-        "",
-        kline_block(key, src="prices.json", ma=PRICE_PAGE_MA, ranges=PRICE_PAGE_RANGES),
-        "",
-        f"## {t(lang, 'p_returns')}",
-        "",
-        "| 1D | 1W | 1M | 3M | 6M | YTD | 1Y | 3Y | 5Y |",
-        "|---|---|---|---|---|---|---|---|---|",
-        "| " + " | ".join([
-            _pct_cell(ret["1d"]), _pct_cell(ret["1w"]), _pct_cell(ret["1m"]),
-            _pct_cell(ret["3m"]), _pct_cell(ret["6m"]), _pct_cell(stats["ytd"]),
-            _pct_cell(ret["1y"]), _pct_cell(ret["3y"]), _pct_cell(ret["5y"]),
-        ]) + " |",
-        "",
-        f"## {t(lang, 'p_key_stats')}",
-        "",
-        f"| {t(lang, 'p_metric')} | {t(lang, 'p_value')} |",
-        "|---|---|",
-        f"| {t(lang, 'p_last_close')} | **{_num(stats['last_close'])}** ({stats['last_date']}) |",
-        f"| {t(lang, 'p_52w_high')} | {_num(stats['high_52w'])} |",
-        f"| {t(lang, 'p_52w_low')} | {_num(stats['low_52w'])} |",
-        f"| {t(lang, 'p_from_high')} | {_pct_cell(stats['from_52w_high'])} |",
-        f"| {t(lang, 'p_range_pos')} | {_pct_plain(stats['range_position'], 0)} |",
-        f"| {t(lang, 'p_ath')} | {_num(stats['all_time_high'])} |",
-        f"| {t(lang, 'p_max_dd')} | {_pct_cell(stats['max_drawdown'])} "
-        f"({stats['max_drawdown_date']}) |",
-        f"| {t(lang, 'p_vol_1y')} | {_pct_plain(stats['volatility_1y'])} |",
-        f"| {t(lang, 'p_cagr')} | {_pct_cell(stats['cagr'])} |",
-        f"| {t(lang, 'p_avg_vol')} | {_compact_volume(stats['avg_volume_30d'])} |",
-        "",
-        f"## {t(lang, 'p_drawdown')}",
-        "",
-        t(lang, "p_drawdown_desc"),
-        "",
-        pchart_block(src="analytics.json", series="drawdown", kind="area",
-                     title=t(lang, "p_drawdown"), color="red"),
-        "",
-        f"## {t(lang, 'p_volatility')}",
-        "",
-        t(lang, "p_volatility_desc").format(window=price_analytics.VOL_WINDOW),
-        "",
-        pchart_block(src="analytics.json", series="volatility", kind="line",
-                     title=t(lang, "p_volatility"), color="amber"),
-        "",
-        f"## {t(lang, 'p_distribution')}",
-        "",
-        t(lang, "p_distribution_desc"),
-        "",
-        pchart_block(src="analytics.json", series="histogram", kind="histogram",
-                     title=t(lang, "p_distribution"), color="blue"),
-        "",
-        f"## {t(lang, 'p_monthly')}",
-        "",
-        t(lang, "p_monthly_desc"),
-        "",
-    ]
-    lines += monthly_heatmap(bars, lang)
-    lines += [
-        f"## {t(lang, 'p_download')}",
-        "",
-        f"- :material-file-delimited: [**{key}.csv**]({csv_href}) — "
-        f"{t(lang, 'p_csv_desc').format(n=stats['bars'])}",
-        "- :material-code-json: [`prices.json`](prices.json) — "
-        f"{t(lang, 'p_prices_json_desc')}",
-        "- :material-code-json: [`analytics.json`](analytics.json) — "
-        f"{t(lang, 'p_analytics_json_desc')}",
-        "",
-        f"[{t(lang, 'p_back_to_index')}](../index.md)",
-        "",
-    ]
-    return lines
-
-
 
 
 # ── 7b. Financials ───────────────────────────────────────────────────────────
@@ -2655,19 +2711,12 @@ def fundamental_keys() -> "list[str]":
 
 
 def published_fundamental_keys() -> "list[str]":
-    """The keys build_fundamentals() actually publishes (sample-capped).
+    """Published tickers whose Market Data page has a financials half.
 
-    Report pages consult this before linking across, so the two sections can
-    never disagree about which tickers have a Financials page. Selection goes
-    through _sample_dirs — via the same virtual-Path trick published_price_keys
-    uses, since that helper reads `.name` off directory entries — so a sample
-    build honours SAMPLE_TICKERS and covers the same names the report pages do.
-
-    Stores that parse to no rows are dropped, because build_fundamentals()
-    writes no page for them.
+    Report pages consult this before linking across; the sampling lives in
+    market_data_keys() so a sample build covers the same names throughout.
     """
-    keys = [k for k in fundamental_keys() if fundamental_rows(k)]
-    return [p.name for p in _sample_dirs([Path(k) for k in keys])]
+    return [k for k in market_data_keys() if fundamental_rows(k)]
 
 
 _FUND_ROWS_CACHE: "dict[str, list[dict]]" = {}
@@ -2696,8 +2745,12 @@ def _derived_series(rows: "list[dict]", fn, key: str) -> "list[dict]":
     return out
 
 
-def fundamentals_payload(key: str, rows: "list[dict]", bars: "list[dict]") -> str:
-    """Every series the Financials page draws, in one JSON file.
+def fundamentals_payload_dict(key: str, rows: "list[dict]",
+                              bars: "list[dict]") -> dict:
+    """Every series the financial charts draw, in one payload.
+
+    Returned as a dict so the page builder can read the same series back — the
+    dashed average on a P/E chart is the average of exactly the points drawn.
 
     Ratios are computed on trailing-twelve-month figures rather than on single
     quarters: a margin is meaningful either way, but a P/E built on one
@@ -2764,7 +2817,12 @@ def fundamentals_payload(key: str, rows: "list[dict]", bars: "list[dict]") -> st
             payload[f"pe_band_{i}"] = bands["bands"][str(level)]
         payload["pe_levels"] = bands["levels"]
 
-    return json.dumps(payload, separators=(",", ":"), default=float)
+    return payload
+
+
+def fundamentals_payload(key: str, rows: "list[dict]", bars: "list[dict]") -> str:
+    return json.dumps(fundamentals_payload_dict(key, rows, bars),
+                      separators=(",", ":"), default=float)
 
 
 def _money(v: "float | None") -> str:
@@ -2784,259 +2842,673 @@ def _mult(v: "float | None") -> str:
     return "—" if v is None else f"{v:,.1f}×"
 
 
-def build_fundamentals(lang: str = "en"):
-    docs_root = get_docs_root(lang)
-    DST = docs_root / "fundamentals"
-    ensure(DST)
+# ── 6b. docs/data → the merged Market Data section ───────────────────────────
+# Price Data and Financials used to be two sections describing the same company
+# from two angles: two nav tabs, two overview tables, two pages per ticker, and
+# a cross-link between them that readers had to bounce along. They are one
+# section now — one page per ticker, tabbed, reading from both committed stores.
+#
+# The old URLs still resolve: build_legacy_redirects() leaves a stub at each of
+# /prices/<ticker>/ and /fundamentals/<ticker>/ pointing at the merged page.
+#
+# Every number is still derived at build time by price_analytics.py and
+# fundamental_analytics.py, so the page and the downloads can never disagree,
+# and the arithmetic stays covered by tests/test_price_analytics.py and
+# tests/test_fundamental_analytics.py.
 
-    keys = published_fundamental_keys()
-    if not keys:
-        write(DST / "index.md",
-              f"# {t(lang, 'fundamentals')}\n\n{t(lang, 'f_no_data')}\n")
-        return
-
-    # Downloads are language-neutral: written once into the EN tree and linked
-    # absolutely from ZH, the same rule the Price Data section follows.
-    download_base = "" if lang == "en" else f"{SITE_BASE}/fundamentals/"
-
-    rows_out: "list[str]" = []
-    manifest: "list[dict]" = []
-
-    for key in keys:
-        rows = fundamental_rows(key)
-        stats = fundamental_analytics.summary(rows, store_bars(key))
-        if not stats:
-            continue
-        meta = get_meta(key)
-        dst_dir = DST / key
-        ensure(dst_dir)
-
-        write(dst_dir / "fundamentals.json",
-              fundamentals_payload(key, rows, store_bars(key)))
-        csv_name = f"{key}.csv"
-        if lang == "en":
-            copy_file(FUNDAMENTALS_DIR / csv_name, dst_dir / csv_name)
-        csv_href = (f"{download_base}{key}/{csv_name}" if download_base else csv_name)
-        csv_href_index = (f"{download_base}{key}/{csv_name}" if download_base
-                          else f"{key}/{csv_name}")
-
-        write(dst_dir / "index.md", "\n".join(
-            fundamentals_ticker_page(key, meta, stats, rows, csv_href, lang)))
-
-        margins = stats.get("margins_ttm") or {}
-        returns = stats.get("returns_ttm") or {}
-        mult = stats.get("multiples_ttm") or {}
-        rows_out.append(
-            f"| {meta['flag']} [{key.upper()}]({key}/index.md) | {meta['name']} "
-            f"| {stats['last_period']} ({stats['last_fy']} {stats['last_fp']}) "
-            f"| {_money(stats.get('revenue_ttm'))} "
-            f"| {_pct_cell(stats.get('revenue_yoy'))} "
-            f"| {_pct_plain(margins.get('net'))} "
-            f"| {_pct_plain(returns.get('roe'))} "
-            f"| {_mult(mult.get('pe'))} "
-            f"| {stats['periods']} "
-            f"| [CSV]({csv_href_index}) |"
-        )
-        manifest.append({"ticker": key.upper(), "key": key,
-                         "csv": f"{SITE_BASE}/fundamentals/{key}/{csv_name}",
-                         "json": f"{SITE_BASE}/fundamentals/{key}/fundamentals.json",
-                         **stats})
-
-    if lang == "en":
-        write(DST / "index.json",
-              json.dumps({"updated": TODAY, "count": len(manifest),
-                          "columns": list(fundamentals.FIELDS),
-                          "tickers": manifest},
-                         separators=(",", ":"), default=float))
-
-    write(DST / "index.md",
-          "\n".join(fundamentals_index_page(rows_out, len(manifest),
-                                            download_base, lang)))
+MD_DIR = "data"          # docs/<MD_DIR>/ — the merged section's directory
+LEGACY_DIRS = ("prices", "fundamentals")
 
 
-def fundamentals_index_page(rows: "list[str]", count: int, download_base: str,
-                            lang: str) -> "list[str]":
-    """The Financials landing page: what the dataset is, and every ticker in it."""
-    json_href = f"{download_base}index.json" if download_base else "index.json"
+def market_data_keys() -> "list[str]":
+    """Every ticker the merged section publishes: one with a usable price store,
+    a usable fundamentals store, or both.
+
+    Sampling happens here and nowhere else, so a sample build covers the same
+    names in both halves of a page. Drawing the price and fundamentals samples
+    separately — which is what the two sections used to do — could pick two
+    different sets of tickers and leave a page half-built.
+
+    Stores that parse to nothing are dropped: a ticker added to data/prices/
+    before the first update_prices.py run leaves a header-only CSV behind, and
+    listing it would publish a page with no chart on it.
+    """
+    keys = sorted({k for k in price_keys() if store_bars(k)}
+                  | {k for k in fundamental_keys() if fundamental_rows(k)})
+    return [p.name for p in _sample_dirs([Path(k) for k in keys])]
+
+
+def _tab(title: str, body: "list[str]") -> "list[str]":
+    """One Material content tab (pymdownx.tabbed, alternate_style).
+
+    Body lines are indented four spaces to become the tab's content; blank lines
+    are left genuinely blank, because an indented blank line inside a tab reads
+    as a code block to Python-Markdown.
+    """
+    out = [f'=== "{title}"', ""]
+    out += [("    " + line) if line.strip() else "" for line in body]
+    out.append("")
+    return out
+
+
+def glossary_block(lang: str) -> "list[str]":
+    """The 'what does P/E even mean' table, as a collapsed details block.
+
+    Every chart card carries its own one-line explainer; this is the same
+    material gathered in one place for a reader who wants the whole vocabulary
+    rather than the one term in front of them.
+    """
+    rows = (LANG_TEXT.get(lang, LANG_TEXT["en"]).get("g_rows")
+            or LANG_TEXT["en"]["g_rows"])
+    out = [f'??? info "{t(lang, "g_title")}"',
+           "",
+           f"    {t(lang, 'g_intro')}",
+           "",
+           f"    | {t(lang, 'g_term')} | {t(lang, 'g_means')} |",
+           "    |---|---|"]
+    out += [f"    | **{term}** | {desc} |" for term, desc in rows]
+    out.append("")
+    return out
+
+
+def _avg(points: "list[dict] | None") -> "float | None":
+    """The dashed reference line a valuation chart draws against itself."""
+    return price_analytics.series_average(points or [])
+
+
+def _disclaimer_block(lang: str, key: str) -> "list[str]":
+    return [f'!!! warning "{t(lang, "disclaimer")}"', "", f"    {t(lang, key)}", ""]
+
+
+# ── the five tabs ────────────────────────────────────────────────────────────
+def _overview_tab(key: str, stats: "dict | None", fstats: "dict | None",
+                  lang: str) -> "list[str]":
+    """Candles, headline returns and the trailing-twelve-month figures — what a
+    reader wants before deciding which of the other tabs to open."""
+    body: "list[str]" = []
+    chart = kline_block(key, src="prices.json", ma=PRICE_PAGE_MA,
+                        ranges=PRICE_PAGE_RANGES)
+    if chart:
+        body += [chart, ""]
+
+    if stats:
+        ret = stats["returns"]
+        body += [
+            f"### {t(lang, 'p_returns')}",
+            "",
+            "| 1D | 1W | 1M | 3M | 6M | YTD | 1Y | 3Y | 5Y |",
+            "|---|---|---|---|---|---|---|---|---|",
+            "| " + " | ".join([
+                _pct_cell(ret["1d"]), _pct_cell(ret["1w"]), _pct_cell(ret["1m"]),
+                _pct_cell(ret["3m"]), _pct_cell(ret["6m"]), _pct_cell(stats["ytd"]),
+                _pct_cell(ret["1y"]), _pct_cell(ret["3y"]), _pct_cell(ret["5y"]),
+            ]) + " |",
+            "",
+            f"### {t(lang, 'p_key_stats')}",
+            "",
+            f"| {t(lang, 'p_metric')} | {t(lang, 'p_value')} |",
+            "|---|---|",
+            f"| {t(lang, 'p_last_close')} | **{_num(stats['last_close'])}** "
+            f"({stats['last_date']}) |",
+            f"| {t(lang, 'p_52w_high')} | {_num(stats['high_52w'])} |",
+            f"| {t(lang, 'p_52w_low')} | {_num(stats['low_52w'])} |",
+            f"| {t(lang, 'p_from_high')} | {_pct_cell(stats['from_52w_high'])} |",
+            f"| {t(lang, 'p_range_pos')} | {_pct_plain(stats['range_position'], 0)} |",
+            f"| {t(lang, 'p_ath')} | {_num(stats['all_time_high'])} |",
+            f"| {t(lang, 'p_max_dd')} | {_pct_cell(stats['max_drawdown'])} "
+            f"({stats['max_drawdown_date']}) |",
+            f"| {t(lang, 'p_vol_1y')} | {_pct_plain(stats['volatility_1y'])} |",
+            f"| {t(lang, 'p_cagr')} | {_pct_cell(stats['cagr'])} |",
+            f"| {t(lang, 'p_avg_vol')} | {_compact_volume(stats['avg_volume_30d'])} |",
+            "",
+        ]
+
+    if fstats:
+        margins = fstats.get("margins_ttm") or {}
+        returns = fstats.get("returns_ttm") or {}
+        mult = fstats.get("multiples_ttm") or {}
+        body += [
+            f"### {t(lang, 'f_key_figures')}",
+            "",
+            f"| {t(lang, 'p_metric')} | {t(lang, 'f_latest_quarter')} "
+            f"| {t(lang, 'f_ttm')} |",
+            "|---|---|---|",
+            f"| {t(lang, 'f_revenue')} | {_money(fstats.get('revenue_q'))} "
+            f"| **{_money(fstats.get('revenue_ttm'))}** |",
+            f"| {t(lang, 'f_net_income')} | {_money(fstats.get('net_income_q'))} "
+            f"| {_money(fstats.get('net_income_ttm'))} |",
+            f"| {t(lang, 'f_eps_diluted')} | — | {_num(fstats.get('eps_ttm'))} |",
+            f"| {t(lang, 'f_fcf')} | — | {_money(fstats.get('fcf_ttm'))} |",
+            f"| {t(lang, 'f_row_gross_margin')} | — "
+            f"| {_pct_plain(margins.get('gross'))} |",
+            f"| {t(lang, 'f_row_operating_margin')} | — "
+            f"| {_pct_plain(margins.get('operating'))} |",
+            f"| {t(lang, 'f_row_net_margin')} | — "
+            f"| {_pct_plain(margins.get('net'))} |",
+            f"| ROE | — | {_pct_plain(returns.get('roe'))} |",
+            f"| {t(lang, 'f_pe')} | — | {_mult(mult.get('pe'))} |",
+            "",
+            t(lang, "f_quarterly_note"),
+            "",
+        ]
+    elif stats:
+        body += [t(lang, "md_price_only"), ""]
+    if not stats:
+        body += [t(lang, "md_price_missing"), ""]
+
+    return body
+
+
+def _price_tab(bars: "list[dict]", analytics: dict, lang: str) -> "list[str]":
+    """The three charts you cannot draw from candles alone, plus seasonality."""
+    src = "analytics.json"
+    body = [
+        f"### {t(lang, 'p_drawdown')}",
+        "",
+        pchart_block(src=src, series="drawdown", kind="area",
+                     title=t(lang, "p_drawdown"), color="red",
+                     note=t(lang, "p_drawdown_note"),
+                     ylabel=t(lang, "ax_drawdown"), xlabel=t(lang, "ax_session")),
+        "",
+        f"### {t(lang, 'p_volatility')}",
+        "",
+        pchart_block(src=src, series="volatility", kind="line",
+                     title=t(lang, "p_volatility"), color="amber",
+                     note=t(lang, "p_volatility_note").format(
+                         window=price_analytics.VOL_WINDOW),
+                     ylabel=t(lang, "ax_annualised"),
+                     xlabel=t(lang, "ax_session"),
+                     ref=_avg(analytics.get("volatility")),
+                     ref_label=t(lang, "g_avg")),
+        "",
+        f"### {t(lang, 'p_distribution')}",
+        "",
+        pchart_block(src=src, series="histogram", kind="histogram",
+                     title=t(lang, "p_distribution"), color="blue",
+                     note=t(lang, "p_distribution_note"),
+                     ylabel=t(lang, "ax_sessions"),
+                     xlabel=t(lang, "ax_return_bucket")),
+        "",
+        f"### {t(lang, 'p_monthly')}",
+        "",
+        t(lang, "p_monthly_desc"),
+        "",
+    ]
+    body += monthly_heatmap(bars, lang)
+    return body
+
+
+def _financials_tab(lang: str) -> "list[str]":
+    """Statements and profitability. Every card names its axes and says in one
+    line what it is showing, so the page reads without prior vocabulary."""
+    src = "fundamentals.json"
+    quarter, usd, pct = (t(lang, "ax_quarter"), t(lang, "ax_usd"),
+                         t(lang, "ax_pct"))
+    growth = t(lang, "ax_growth")
+
+    def money_and_growth(series, title, note, colors):
+        return pchart_block(
+            src=src, series=series, kind="bars+line", title=title, color=colors,
+            labels=f"{title},{t(lang, 'f_yoy')}", fmt="money", unit="",
+            fmt2="percent", note=note, ylabel=usd, ylabel2=growth,
+            xlabel=quarter)
+
     return [
-        f"# {t(lang, 'fundamentals')}",
+        f"### {t(lang, 'f_statements')}",
         "",
-        f"> {t(lang, 'fundamentals_desc').format(n=count)}",
+        money_and_growth("revenue,revenue_yoy", t(lang, "f_revenue"),
+                         t(lang, "f_revenue_note"), "green,blue"),
         "",
-        t(lang, "fundamentals_intro"),
+        money_and_growth("operating_income,operating_income_yoy",
+                         t(lang, "f_operating_income"),
+                         t(lang, "f_operating_income_note"), "amber,blue"),
         "",
-        f"!!! info \"{t(lang, 'f_coverage')}\"",
+        money_and_growth("net_income,net_income_yoy", t(lang, "f_net_income"),
+                         t(lang, "f_net_income_note"), "blue,amber"),
         "",
-        f"    {t(lang, 'f_coverage_desc')}",
+        pchart_block(src=src, series="eps_diluted,eps_diluted_yoy",
+                     kind="bars+line", title=t(lang, "f_eps_diluted"),
+                     color="amber,blue",
+                     labels=f"{t(lang, 'f_eps_diluted')},{t(lang, 'f_yoy')}",
+                     fmt="plain", unit="", fmt2="percent",
+                     note=t(lang, "f_eps_note"),
+                     ylabel=t(lang, "ax_usd_share"), ylabel2=growth,
+                     xlabel=quarter),
         "",
-        f"- :material-code-json: [`index.json`]({json_href}) — "
-        f"{t(lang, 'f_json_desc')}",
+        # Smallest series first: the JS draws a stack largest-first so the
+        # component paints over the cumulative total rather than under it.
+        pchart_block(src=src, series="opex_rnd,opex_total", kind="stacked",
+                     title=t(lang, "f_opex"), color="amber,blue",
+                     labels=f"{t(lang, 'f_rnd')},{t(lang, 'f_opex')}",
+                     fmt="money", unit="", note=t(lang, "f_opex_note"),
+                     ylabel=usd, xlabel=quarter),
         "",
-        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'f_period')} "
-        f"| {t(lang, 'f_revenue')} ({t(lang, 'f_ttm')}) | {t(lang, 'f_yoy')} "
-        f"| {t(lang, 'f_row_net_margin')} | ROE | {t(lang, 'f_pe')} "
-        f"| {t(lang, 'f_periods')} | CSV |",
-        "|---|---|---|---|---|---|---|---|---|---|",
-        *rows,
+        pchart_block(src=src, series="ocf,fcf", kind="multiline",
+                     title=t(lang, "f_cash_flow"), color="green,blue",
+                     labels=f"{t(lang, 'f_ocf')},{t(lang, 'f_fcf')}",
+                     fmt="money", unit="", note=t(lang, "f_cash_flow_note"),
+                     ylabel=usd, xlabel=quarter),
         "",
-        t(lang, "f_quarterly_note"),
+        pchart_block(src=src, series="cash,debt", kind="multiline",
+                     title=t(lang, "f_cash_debt"), color="blue,red",
+                     labels=f"{t(lang, 'f_cash')},{t(lang, 'f_debt')}",
+                     fmt="money", unit="", note=t(lang, "f_cash_debt_note"),
+                     ylabel=usd, xlabel=quarter),
         "",
-        f"!!! warning \"{t(lang, 'disclaimer')}\"",
+        f"### {t(lang, 'f_profitability')}",
         "",
-        f"    {t(lang, 'f_disclaimer')}",
+        pchart_block(src=src, series="margin_gross,margin_operating,margin_net",
+                     kind="multiline", title=t(lang, "f_margins"),
+                     color="blue,amber,green",
+                     labels=f"{t(lang, 'f_gross_margin')},"
+                            f"{t(lang, 'f_operating_margin')},"
+                            f"{t(lang, 'f_net_margin')}",
+                     note=t(lang, "f_margins_note"), ylabel=pct,
+                     xlabel=quarter),
+        "",
+        pchart_block(src=src, series="roe,roa,roic", kind="multiline",
+                     title=t(lang, "f_returns"), color="blue,amber,green",
+                     labels="ROE,ROA,ROIC", note=t(lang, "f_returns_note"),
+                     ylabel=t(lang, "ax_pct_plain"), xlabel=quarter),
+        "",
+        pchart_block(src=src, series="ros", kind="area", title=t(lang, "f_ros"),
+                     color="green", note=t(lang, "f_ros_note"),
+                     ylabel=pct, xlabel=quarter),
         "",
     ]
 
 
-def fundamentals_ticker_page(key: str, meta: dict, stats: dict,
-                             rows: "list[dict]", csv_href: str,
-                             lang: str) -> "list[str]":
-    """One ticker's Financials page: statements, profitability, valuation."""
-    title = (key.upper() if meta["name"] == key.upper()
-             else f"{meta['name']} ({key.upper()})")
+def _valuation_tab(payload: dict, lang: str) -> "list[str]":
+    """The multiples, each drawn against its own historical average.
+
+    A P/E of 32x reads differently against a 26x ten-year average than against a
+    40x one, so every multiple carries that average as a dashed line. The number
+    is computed in Python (price_analytics.series_average) like everything else.
+    """
     src = "fundamentals.json"
-    margins = stats.get("margins_ttm") or {}
-    returns = stats.get("returns_ttm") or {}
-    mult = stats.get("multiples_ttm") or {}
+    quarter = t(lang, "ax_quarter")
+    mult_axis = t(lang, "ax_multiple")
+    avg = t(lang, "g_avg")
 
-    def chart(**kw):
-        return pchart_block(src=src, **kw)
+    def multiple(series, title, note, color):
+        return pchart_block(src=src, series=series, kind="area", title=title,
+                            color=color, unit="×", note=note,
+                            ylabel=mult_axis, xlabel=quarter,
+                            ref=_avg(payload.get(series)), ref_label=avg)
 
-    lines = [
-        f"# {meta['flag']} {title} — {t(lang, 'fundamentals')}",
+    body = [
+        f"### {t(lang, 'f_valuation')}",
         "",
-        f"> **{t(lang, 'sector')}:** {meta['sector']}  |  "
-        f"**{t(lang, 'f_periods')}:** {stats['periods']}  |  "
-        f"{stats['first_period']} → {stats['last_period']}  |  "
-        f"**{t(lang, 'f_source_filing')}:** {stats['last_form']} "
-        f"({t(lang, 'f_filed')} {stats['last_filed']})",
+        multiple("pe", t(lang, "f_pe"), t(lang, "f_pe_note"), "blue"),
         "",
-        f"## {t(lang, 'f_key_figures')}",
+        multiple("ps", t(lang, "f_ps"), t(lang, "f_ps_note"), "green"),
         "",
-        f"| {t(lang, 'p_metric')} | {t(lang, 'f_latest_quarter')} "
-        f"| {t(lang, 'f_ttm')} |",
-        "|---|---|---|",
-        f"| {t(lang, 'f_revenue')} | {_money(stats.get('revenue_q'))} "
-        f"| **{_money(stats.get('revenue_ttm'))}** |",
-        f"| {t(lang, 'f_net_income')} | {_money(stats.get('net_income_q'))} "
-        f"| {_money(stats.get('net_income_ttm'))} |",
-        f"| {t(lang, 'f_eps_diluted')} | — | {_num(stats.get('eps_ttm'))} |",
-        f"| {t(lang, 'f_fcf')} | — | {_money(stats.get('fcf_ttm'))} |",
-        f"| {t(lang, 'f_row_gross_margin')} | — "
-        f"| {_pct_plain(margins.get('gross'))} |",
-        f"| {t(lang, 'f_row_operating_margin')} | — "
-        f"| {_pct_plain(margins.get('operating'))} |",
-        f"| {t(lang, 'f_row_net_margin')} | — | {_pct_plain(margins.get('net'))} |",
-        f"| ROE | — | {_pct_plain(returns.get('roe'))} |",
-        f"| {t(lang, 'f_pe')} | — | {_mult(mult.get('pe'))} |",
+        multiple("pb", t(lang, "f_pb"), t(lang, "f_pb_note"), "amber"),
         "",
-        t(lang, "f_quarterly_note"),
+        multiple("ev_sales", t(lang, "f_ev_sales"),
+                 t(lang, "f_ev_sales_note"), "blue"),
         "",
-        f"## {t(lang, 'f_statements')}",
-        "",
-        chart(series="revenue,revenue_yoy", kind="bars+line",
-              title=t(lang, "f_revenue"), color="green,blue",
-              labels=f"{t(lang, 'f_revenue')},{t(lang, 'f_yoy')}",
-              fmt="money", unit="", fmt2="percent"),
-        "",
-        chart(series="operating_income,operating_income_yoy", kind="bars+line",
-              title=t(lang, "f_operating_income"), color="amber,blue",
-              labels=f"{t(lang, 'f_operating_income')},{t(lang, 'f_yoy')}",
-              fmt="money", unit="", fmt2="percent"),
-        "",
-        chart(series="net_income,net_income_yoy", kind="bars+line",
-              title=t(lang, "f_net_income"), color="blue,amber",
-              labels=f"{t(lang, 'f_net_income')},{t(lang, 'f_yoy')}",
-              fmt="money", unit="", fmt2="percent"),
-        "",
-        chart(series="eps_diluted,eps_diluted_yoy", kind="bars+line",
-              title=t(lang, "f_eps_diluted"), color="amber,blue",
-              labels=f"{t(lang, 'f_eps_diluted')},{t(lang, 'f_yoy')}",
-              fmt="plain", unit="", fmt2="percent"),
-        "",
-        # Smallest series first: the JS draws a stack largest-first so the
-        # component paints over the cumulative total rather than under it.
-        chart(series="opex_rnd,opex_total", kind="stacked",
-              title=t(lang, "f_opex"), color="amber,blue",
-              labels=f"{t(lang, 'f_rnd')},{t(lang, 'f_opex')}",
-              fmt="money", unit=""),
-        "",
-        chart(series="ocf,fcf", kind="multiline",
-              title=t(lang, "f_cash_flow"), color="green,blue",
-              labels=f"{t(lang, 'f_ocf')},{t(lang, 'f_fcf')}",
-              fmt="money", unit=""),
-        "",
-        chart(series="cash,debt", kind="multiline",
-              title=t(lang, "f_cash_debt"), color="blue,red",
-              labels=f"{t(lang, 'f_cash')},{t(lang, 'f_debt')}",
-              fmt="money", unit=""),
-        "",
-        f"## {t(lang, 'f_profitability')}",
-        "",
-        chart(series="margin_gross,margin_operating,margin_net", kind="multiline",
-              title=t(lang, "f_margins"), color="blue,amber,green",
-              labels=f"{t(lang, 'f_gross_margin')},"
-                     f"{t(lang, 'f_operating_margin')},{t(lang, 'f_net_margin')}"),
-        "",
-        chart(series="roe,roa,roic", kind="multiline",
-              title=t(lang, "f_returns"), color="blue,amber,green",
-              labels="ROE,ROA,ROIC"),
-        "",
-        chart(series="ros", kind="area", title=t(lang, "f_ros"), color="green"),
-        "",
-        f"## {t(lang, 'f_valuation')}",
-        "",
-        chart(series="pe", kind="area", title=t(lang, "f_pe"),
-              color="blue", unit="×"),
-        "",
-        chart(series="ps", kind="area", title=t(lang, "f_ps"),
-              color="green", unit="×"),
-        "",
-        chart(series="pb", kind="area", title=t(lang, "f_pb"),
-              color="amber", unit="×"),
-        "",
-        chart(series="ev_sales", kind="area", title=t(lang, "f_ev_sales"),
-              color="blue", unit="×"),
-        "",
-        chart(series="ev_ebitda", kind="area", title=t(lang, "f_ev_ebitda"),
-              color="amber", unit="×"),
+        multiple("ev_ebitda", t(lang, "f_ev_ebitda"),
+                 t(lang, "f_ev_ebitda_note"), "amber"),
         "",
     ]
 
     # The P/E river only exists for a ticker with enough positive-earnings
     # history to rank, so it is emitted conditionally rather than as an empty box.
-    bands = fundamental_analytics.pe_bands(rows, store_bars(key))
-    if bands:
-        names = ["pe_price"] + [f"pe_band_{i}" for i in range(len(bands["levels"]))]
-        labels = [t(lang, "f_price")] + [f"{lv:g}×" for lv in bands["levels"]]
-        colours = ["blue"] + ["green", "amber", "red", "green", "amber"][:len(bands["levels"])]
-        lines += [
+    levels = payload.get("pe_levels") or []
+    if levels:
+        names = ["pe_price"] + [f"pe_band_{i}" for i in range(len(levels))]
+        band_labels = [t(lang, "f_price")] + [f"{lv:g}×" for lv in levels]
+        colours = ["blue"] + ["green", "teal", "amber", "violet",
+                              "red"][:len(levels)]
+        body += [
             f"### {t(lang, 'f_pe_bands')}",
             "",
-            t(lang, "f_pe_bands_desc"),
-            "",
-            chart(series=",".join(names), kind="multiline",
-                  title=t(lang, "f_pe_bands"), color=",".join(colours),
-                  labels=",".join(labels), fmt="money", unit=""),
+            pchart_block(src=src, series=",".join(names), kind="multiline",
+                         title=t(lang, "f_pe_bands"), color=",".join(colours),
+                         labels=",".join(band_labels), fmt="money", unit="",
+                         note=t(lang, "f_pe_bands_note"),
+                         ylabel=t(lang, "ax_usd"), xlabel=t(lang, "ax_month")),
             "",
         ]
+    return body
 
-    lines += [
+
+def _data_tab(key: str, stats: "dict | None", fstats: "dict | None",
+              price_csv_href: str, fund_csv_href: str, lang: str) -> "list[str]":
+    """Downloads for both stores, the glossary, and the disclaimers."""
+    body = [f"### {t(lang, 'p_download')}", ""]
+    if stats:
+        body += [
+            f"- :material-file-delimited: [**{key}.csv**]({price_csv_href}) — "
+            f"{t(lang, 'p_csv_desc').format(n=stats['bars'])}",
+            "- :material-code-json: [`prices.json`](prices.json) — "
+            f"{t(lang, 'p_prices_json_desc')}",
+            "- :material-code-json: [`analytics.json`](analytics.json) — "
+            f"{t(lang, 'p_analytics_json_desc')}",
+        ]
+    if fstats:
+        body += [
+            f"- :material-file-delimited: [**{key}_financials.csv**]"
+            f"({fund_csv_href}) — "
+            f"{t(lang, 'f_csv_desc').format(n=fstats['periods'])}",
+            f"- :material-code-json: [`fundamentals.json`](fundamentals.json) — "
+            f"{t(lang, 'f_json_desc')}",
+        ]
+    body.append("")
+    body += glossary_block(lang)
+    body += _disclaimer_block(lang, "p_disclaimer")
+    if fstats:
+        body += _disclaimer_block(lang, "f_disclaimer")
+    return body
+
+
+def market_data_ticker_page(key: str, meta: dict, stats: "dict | None",
+                            fstats: "dict | None", bars: "list[dict]",
+                            analytics: dict, payload: dict,
+                            price_csv_href: str, fund_csv_href: str,
+                            lang: str) -> "list[str]":
+    """One ticker's Market Data page: price and fundamentals, five tabs.
+
+    Twenty-odd charts on one page would be a wall if they were stacked; tabs let
+    a reader take the half they came for. price-charts.js builds each chart as
+    it scrolls into view, so the collapsed tabs cost nothing until opened.
+    """
+    # get_meta falls back to the bare ticker for names it doesn't carry; without
+    # this the heading would read "SKHY (SKHY)".
+    title = (key.upper() if meta["name"] == key.upper()
+             else f"{meta['name']} ({key.upper()})")
+
+    facts = [f"**{t(lang, 'sector')}:** {meta['sector']}"]
+    if stats:
+        facts.append(f"**{t(lang, 'p_bars')}:** {stats['bars']:,} "
+                     f"({stats['first_date']} → {stats['last_date']})")
+    if fstats:
+        facts.append(f"**{t(lang, 'f_periods')}:** {fstats['periods']} "
+                     f"({fstats['first_period']} → {fstats['last_period']})")
+        facts.append(f"**{t(lang, 'f_source_filing')}:** {fstats['last_form']} "
+                     f"({t(lang, 'f_filed')} {fstats['last_filed']})")
+
+    tabs: "list[tuple[str, list[str]]]" = [
+        (t(lang, "md_tab_overview"), _overview_tab(key, stats, fstats, lang)),
+    ]
+    if stats:
+        tabs.append((t(lang, "md_tab_price"),
+                     _price_tab(bars, analytics, lang)))
+    if fstats:
+        tabs.append((t(lang, "md_tab_financials"), _financials_tab(lang)))
+        # Every multiple needs a share price, so the valuation tab is only
+        # meaningful when both stores are present.
+        if stats:
+            tabs.append((t(lang, "md_tab_valuation"),
+                         _valuation_tab(payload, lang)))
+    tabs.append((t(lang, "md_tab_data"),
+                 _data_tab(key, stats, fstats, price_csv_href,
+                           fund_csv_href, lang)))
+
+    lines = [
+        f"# {meta['flag']} {title} — {t(lang, 'md')}",
+        "",
+        "> " + "  |  ".join(facts),
+        "",
+        # A label for the tab bar, and the hook prices.css hangs the segmented
+        # styling off: it is scoped to `.tabcue + .tabbed-set`, so the site's
+        # other content tabs keep the theme's own look. It has to be the tab
+        # set's immediately-preceding sibling, hence no blank-line-separated
+        # prose between the two.
+        f'<div class="tabcue">{t(lang, "md_tabs_hint").format(n=len(tabs))}</div>',
+    ]
+    for tab_title, body in tabs:
+        lines += _tab(tab_title, body)
+
+    lines += [f"[{t(lang, 'md_back_to_index')}](../index.md)", ""]
+    return lines
+
+
+def market_data_index_page(rows: "list[str]", count: int, download_base: str,
+                           lang: str) -> "list[str]":
+    """The Market Data landing page: what the datasets are, how to get them, and
+    one row per ticker carrying both a price and a fundamentals read."""
+    zip_href = f"{download_base}market_data.zip" if download_base else "market_data.zip"
+    json_href = f"{download_base}index.json" if download_base else "index.json"
+    return [
+        f"# 💹 {t(lang, 'md')}",
+        "",
+        f"> {t(lang, 'md_desc').format(n=count)}  "
+        f"|  **{t(lang, 'last_updated')}:** {TODAY}",
+        "",
+        t(lang, "md_intro"),
+        "",
+        f"!!! info \"{t(lang, 'f_coverage')}\"",
+        "",
+        f"    {t(lang, 'f_coverage_desc')}",
+        "",
         f"## {t(lang, 'p_download')}",
         "",
-        f"- :material-file-delimited: [**{key}.csv**]({csv_href}) — "
-        f"{t(lang, 'f_csv_desc').format(n=stats['periods'])}",
-        f"- :material-code-json: [`fundamentals.json`]({src}) — "
-        f"{t(lang, 'f_json_desc')}",
+        f"- :material-folder-zip: [**{t(lang, 'md_zip')}**]({zip_href}) — "
+        f"{t(lang, 'md_zip_desc').format(n=count)}",
+        f"- :material-code-json: [**`index.json`**]({json_href}) — "
+        f"{t(lang, 'md_manifest_desc')}",
+        f"- {t(lang, 'p_per_ticker_desc')}",
         "",
+        f"### {t(lang, 'p_columns')}",
+        "",
+        "```",
+        ",".join(prices.FIELDS),
+        "```",
+        "",
+        t(lang, "p_columns_desc"),
+        "",
+        "```python",
+        "import pandas as pd",
+        "",
+        f'url = "https://yennanliu.github.io{SITE_BASE}/{MD_DIR}/nvda/nvda.csv"',
+        'df = pd.read_csv(url, parse_dates=["date"]).set_index("date")',
+        'df["close"].pct_change().std() * (252 ** 0.5)  # annualised volatility',
+        "```",
+        "",
+        f"## {t(lang, 'p_coverage')}",
+        "",
+        '<div class="ptable" markdown="1">',
+        "",
+        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'p_last')} "
+        f"| 1M | YTD | 1Y | {t(lang, 'p_52w_range')} "
+        f"| {t(lang, 'f_revenue')} ({t(lang, 'f_ttm')}) | {t(lang, 'f_yoy')} "
+        f"| {t(lang, 'f_row_net_margin')} | ROE | {t(lang, 'f_pe')} "
+        f"| {t(lang, 'files')} |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        *rows,
+        "",
+        "</div>",
+        "",
+        *glossary_block(lang),
         f"!!! warning \"{t(lang, 'disclaimer')}\"",
+        "",
+        f"    {t(lang, 'p_disclaimer')}",
         "",
         f"    {t(lang, 'f_disclaimer')}",
         "",
-        f"[{t(lang, 'f_back_to_index')}](../index.md)",
+    ]
+
+
+def build_market_data(lang: str = "en"):
+    docs_root = get_docs_root(lang)
+    DST = docs_root / MD_DIR
+    ensure(DST)
+
+    keys = market_data_keys()
+    if not keys:
+        write(DST / "index.md",
+              f"# {t(lang, 'md')}\n\n{t(lang, 'md_no_data')}\n")
+        return
+
+    # Downloads are language-neutral: written once into the EN tree, linked
+    # absolutely from ZH — the same rule the ZH report index already follows.
+    download_base = "" if lang == "en" else f"{SITE_BASE}/{MD_DIR}/"
+
+    index_rows: "list[str]" = []
+    manifest: "list[dict]" = []
+    zipped_price: "list[str]" = []
+    zipped_fund: "list[str]" = []
+
+    for key in keys:
+        bars = store_bars(key)
+        rows = fundamental_rows(key)
+        stats = price_analytics.summary(bars) if bars else None
+        fstats = fundamental_analytics.summary(rows, bars) if rows else None
+        if not stats and not fstats:
+            continue
+
+        meta = get_meta(key)
+        dst_dir = DST / key
+        ensure(dst_dir)
+
+        # Chart payloads are written into *both* language trees so the pages
+        # work under `mkdocs serve` in either tree; only the bulky raw CSVs are
+        # shared, and live in the EN tree.
+        analytics: dict = {}
+        payload: dict = {}
+        price_csv = f"{key}.csv"
+        fund_csv = f"{key}_financials.csv"
+
+        if stats:
+            analytics = analytics_payload_dict(key, bars)
+            write(dst_dir / "prices.json", full_price_payload(key, bars))
+            write(dst_dir / "analytics.json",
+                  json.dumps(analytics, separators=(",", ":")))
+            if lang == "en":
+                copy_file(PRICES_DIR / price_csv, dst_dir / price_csv)
+            zipped_price.append(key)
+
+        if fstats:
+            payload = fundamentals_payload_dict(key, rows, bars)
+            write(dst_dir / "fundamentals.json",
+                  json.dumps(payload, separators=(",", ":"), default=float))
+            if lang == "en":
+                # Renamed on the way in: two CSVs sit side by side in this
+                # directory now, and "<ticker>.csv" is the price one.
+                copy_file(FUNDAMENTALS_DIR / f"{key}.csv", dst_dir / fund_csv)
+            zipped_fund.append(key)
+
+        # Two links to the same file: the ticker page sits next to it, the index
+        # one level up. ZH gets the absolute EN path in both cases.
+        def href(name: str) -> str:
+            return f"{download_base}{key}/{name}" if download_base else name
+
+        def href_index(name: str) -> str:
+            return (f"{download_base}{key}/{name}" if download_base
+                    else f"{key}/{name}")
+
+        write(dst_dir / "index.md", "\n".join(market_data_ticker_page(
+            key, meta, stats, fstats, bars, analytics, payload,
+            href(price_csv), href(fund_csv), lang)))
+
+        ret = (stats or {}).get("returns") or {}
+        margins = (fstats or {}).get("margins_ttm") or {}
+        returns = (fstats or {}).get("returns_ttm") or {}
+        multiples = (fstats or {}).get("multiples_ttm") or {}
+        files = []
+        if stats:
+            files.append(f"[{t(lang, 'md_file_prices')}]({href_index(price_csv)})")
+        if fstats:
+            files.append(
+                f"[{t(lang, 'md_file_financials')}]({href_index(fund_csv)})")
+        index_rows.append(
+            # Link the .md, not the directory: MkDocs resolves it to the
+            # directory URL and --strict can verify the target exists.
+            f"| {meta['flag']} [{key.upper()}]({key}/index.md) | {meta['name']} "
+            f"| {_num((stats or {}).get('last_close'))} "
+            f"| {_pct_cell(ret.get('1m'))} "
+            f"| {_pct_cell((stats or {}).get('ytd'))} "
+            f"| {_pct_cell(ret.get('1y'))} "
+            f"| {_num((stats or {}).get('low_52w'))} – "
+            f"{_num((stats or {}).get('high_52w'))} "
+            f"| {_money((fstats or {}).get('revenue_ttm'))} "
+            f"| {_pct_cell((fstats or {}).get('revenue_yoy'))} "
+            f"| {_pct_plain(margins.get('net'))} "
+            f"| {_pct_plain(returns.get('roe'))} "
+            f"| {_mult(multiples.get('pe'))} "
+            f"| {' · '.join(files) or '—'} |"
+        )
+
+        entry = {"ticker": key.upper(), "key": key,
+                 "page": f"{SITE_BASE}/{MD_DIR}/{key}/"}
+        if stats:
+            entry.update({
+                "csv": f"{SITE_BASE}/{MD_DIR}/{key}/{price_csv}",
+                "prices_json": f"{SITE_BASE}/{MD_DIR}/{key}/prices.json",
+                "analytics_json": f"{SITE_BASE}/{MD_DIR}/{key}/analytics.json",
+                **stats})
+        if fstats:
+            entry.update({
+                "fundamentals_csv": f"{SITE_BASE}/{MD_DIR}/{key}/{fund_csv}",
+                "fundamentals_json":
+                    f"{SITE_BASE}/{MD_DIR}/{key}/fundamentals.json",
+                **fstats})
+        manifest.append(entry)
+
+    if lang == "en":
+        # One-click bulk download, and a machine-readable manifest so the data is
+        # usable from a script without scraping the page.
+        write_bytes(DST / "market_data.zip",
+                    _store_zip_bytes(zipped_price, zipped_fund))
+        write(DST / "index.json",
+              json.dumps({"updated": TODAY, "count": len(manifest),
+                          "price_columns": list(prices.FIELDS),
+                          "fundamentals_columns": list(fundamentals.FIELDS),
+                          "tickers": manifest},
+                         separators=(",", ":"), default=float))
+
+    write(DST / "index.md",
+          "\n".join(market_data_index_page(index_rows, len(manifest),
+                                           download_base, lang)))
+
+
+# ── 6c. redirects for the two sections this one replaced ─────────────────────
+def build_legacy_redirects(lang: str = "en"):
+    """Leave a stub at every /prices/<t>/ and /fundamentals/<t>/ URL.
+
+    Those pages were linked from elsewhere on the web before the merge, so they
+    keep resolving: a meta refresh for a browser, and a plain link for anything
+    that does not follow one. `hide: true` keeps the stubs out of the nav — they
+    are an obligation to old links, not a section.
+    """
+    docs_root = get_docs_root(lang)
+    keys = market_data_keys()
+    for legacy in LEGACY_DIRS:
+        base = docs_root / legacy
+        ensure(base)
+        write(base / ".pages", "hide: true\nnav:\n  - index.md\n  - ...\n")
+        write(base / "index.md",
+              "\n".join(_redirect_page(t(lang, "md"), "../data/", lang)))
+        for key in keys:
+            ensure(base / key)
+            write(base / key / ".pages", f'title: "{key.upper()}"\nhide: true\n')
+            write(base / key / "index.md", "\n".join(
+                _redirect_page(key.upper(), f"../../{MD_DIR}/{key}/", lang)))
+
+
+def _redirect_page(label: str, target: str, lang: str) -> "list[str]":
+    """A stub page: meta refresh, plus the link spelled out for anything that
+    does not act on one (a crawler, a reader with JS off, a `curl`)."""
+    return [
+        "---",
+        f"title: {label}",
+        "search:",
+        "  exclude: true",
+        "---",
+        "",
+        f'<meta http-equiv="refresh" content="0; url={target}">',
+        "",
+        f"# {t(lang, 'md_moved')}",
+        "",
+        t(lang, "md_moved_body"),
+        "",
+        f"[:material-arrow-right: {t(lang, 'md_open')}]({target}index.md)"
+        "{.report-link}",
         "",
     ]
-    return lines
+
 
 # ── 7. scripts.md ─────────────────────────────────────────────────────────────
 def build_scripts_page(lang: str = "en"):
@@ -3116,8 +3588,7 @@ def build_nav_pages(lang: str = "en"):
         "nav:",
         "  - index.md",
         "  - reports",
-        "  - prices",
-        "  - fundamentals",
+        "  - data",
         "  - market_news",
         "  - notebooks",
         "  - sec",
@@ -3126,7 +3597,7 @@ def build_nav_pages(lang: str = "en"):
     ]))
 
     DST_REPORTS = docs_root / "reports"
-    DST_PRICES = docs_root / "prices"
+    DST_MARKET_DATA = docs_root / MD_DIR
     DST_MARKET_NEWS = docs_root / "market_news"
     DST_NOTEBOOKS = docs_root / "notebooks"
     DST_SEC = docs_root / "sec"
@@ -3137,24 +3608,17 @@ def build_nav_pages(lang: str = "en"):
             pages_file = subdir / ".pages"
             write(pages_file, "nav:\n  - index.md\n  - ...\n")
 
-    # Price Data section: localised nav title, index first then the tickers.
-    if DST_PRICES.exists():
-        write(DST_PRICES / ".pages",
-              f"title: {t(lang, 'prices')}\nnav:\n  - index.md\n  - ...\n")
-        for ticker_dir in DST_PRICES.iterdir():
+    # Market Data section: localised nav title, index first then the tickers.
+    # The /prices/ and /fundamentals/ trees it replaced still exist as redirect
+    # stubs; build_legacy_redirects() writes their .pages with `hide: true`, so
+    # they stay out of the nav rather than doubling every ticker in it.
+    if DST_MARKET_DATA.exists():
+        write(DST_MARKET_DATA / ".pages",
+              f"title: {t(lang, 'md')}\nnav:\n  - index.md\n  - ...\n")
+        for ticker_dir in DST_MARKET_DATA.iterdir():
             if ticker_dir.is_dir():
                 # Quoted for the same reason as the report dirs: an all-digit
                 # ticker ("0050") would otherwise parse as a YAML int.
-                write(ticker_dir / ".pages", f'title: "{ticker_dir.name.upper()}"\n')
-
-    # Financials section: same shape as Price Data — localised title, index
-    # first, then one entry per ticker.
-    DST_FUNDAMENTALS = docs_root / "fundamentals"
-    if DST_FUNDAMENTALS.exists():
-        write(DST_FUNDAMENTALS / ".pages",
-              f"title: {t(lang, 'fundamentals')}\nnav:\n  - index.md\n  - ...\n")
-        for ticker_dir in DST_FUNDAMENTALS.iterdir():
-            if ticker_dir.is_dir():
                 write(ticker_dir / ".pages", f'title: "{ticker_dir.name.upper()}"\n')
 
     # Reports section: rename the nav tab from "Reports" → "AI Gen Reports"
@@ -3247,7 +3711,8 @@ def main():
     # Clean previously generated dirs (full rebuild only)
     if not _INCREMENTAL:
         for lang_dir in [DOCS, DOCS_ZH]:
-            for subdir in ["reports", "prices", "fundamentals", "market_news", "notebooks", "sec", "investor_day"]:
+            for subdir in ["reports", "data", "prices", "fundamentals",
+                           "market_news", "notebooks", "sec", "investor_day"]:
                 path = lang_dir / subdir
                 if path.exists():
                     shutil.rmtree(path)
@@ -3277,11 +3742,11 @@ def main():
     print("\n[EN 6/10] Building investor_day pages...")
     build_investor_day(lang="en")
 
-    print("\n[EN 7/10] Building price data pages...")
-    build_prices(lang="en")
+    print("\n[EN 7/10] Building market data pages (prices + financials)...")
+    build_market_data(lang="en")
 
-    print("\n[EN 8/10] Building financials pages...")
-    build_fundamentals(lang="en")
+    print("\n[EN 8/10] Writing redirects for the pre-merge URLs...")
+    build_legacy_redirects(lang="en")
 
     print("\n[EN 9/10] Building scripts page...")
     build_scripts_page(lang="en")
@@ -3314,11 +3779,11 @@ def main():
     print("\n[ZH 6/10] Building investor_day pages...")
     build_investor_day(lang="zh")
 
-    print("\n[ZH 7/10] Building price data pages...")
-    build_prices(lang="zh")
+    print("\n[ZH 7/10] Building market data pages (prices + financials)...")
+    build_market_data(lang="zh")
 
-    print("\n[ZH 8/10] Building financials pages...")
-    build_fundamentals(lang="zh")
+    print("\n[ZH 8/10] Writing redirects for the pre-merge URLs...")
+    build_legacy_redirects(lang="zh")
 
     print("\n[ZH 9/10] Building scripts page...")
     build_scripts_page(lang="zh")
