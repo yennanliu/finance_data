@@ -430,11 +430,16 @@ LANG_TEXT = {
             "never disagree."
         ),
         "md_no_data": "No market data found.",
-        "md_tab_overview": "Overview",
-        "md_tab_price": "Price",
-        "md_tab_financials": "Financials",
-        "md_tab_valuation": "Valuation",
-        "md_tab_data": "Data & glossary",
+        "md_tab_overview": "🧭 Overview",
+        "md_tab_price": "📈 Price",
+        "md_tab_financials": "💰 Financials",
+        "md_tab_valuation": "⚖️ Valuation",
+        "md_tab_data": "📥 Data & glossary",
+        "md_tabs_hint": (
+            "<b>{n} tabs</b> — the rest of this page is behind them. "
+            "Click to switch between price history, financial statements, "
+            "valuation and the raw data."
+        ),
         "md_back_to_index": "← Back to Market Data",
         "md_more": "Full price history, financial statements & CSV downloads",
         "md_price_only": "No SEC fundamentals for this ticker — price data only.",
@@ -790,11 +795,15 @@ LANG_TEXT = {
             "以下所有圖表與比率皆於建置時由這兩份檔案推導，因此圖表與下載檔永遠一致。"
         ),
         "md_no_data": "查無市場數據。",
-        "md_tab_overview": "總覽",
-        "md_tab_price": "股價",
-        "md_tab_financials": "財報",
-        "md_tab_valuation": "估值",
-        "md_tab_data": "資料與名詞",
+        "md_tab_overview": "🧭 總覽",
+        "md_tab_price": "📈 股價",
+        "md_tab_financials": "💰 財報",
+        "md_tab_valuation": "⚖️ 估值",
+        "md_tab_data": "📥 資料與名詞",
+        "md_tabs_hint": (
+            "<b>共 {n} 個分頁</b>——本頁其餘內容都在其中，"
+            "點擊即可在股價走勢、財務報表、估值與原始資料之間切換。"
+        ),
         "md_back_to_index": "← 返回市場數據",
         "md_more": "完整股價歷史、財務報表與 CSV 下載",
         "md_price_only": "此標的無 SEC 財報資料，僅提供股價數據。",
@@ -3220,28 +3229,37 @@ def market_data_ticker_page(key: str, meta: dict, stats: "dict | None",
         facts.append(f"**{t(lang, 'f_source_filing')}:** {fstats['last_form']} "
                      f"({t(lang, 'f_filed')} {fstats['last_filed']})")
 
+    tabs: "list[tuple[str, list[str]]]" = [
+        (t(lang, "md_tab_overview"), _overview_tab(key, stats, fstats, lang)),
+    ]
+    if stats:
+        tabs.append((t(lang, "md_tab_price"),
+                     _price_tab(bars, analytics, lang)))
+    if fstats:
+        tabs.append((t(lang, "md_tab_financials"), _financials_tab(lang)))
+        # Every multiple needs a share price, so the valuation tab is only
+        # meaningful when both stores are present.
+        if stats:
+            tabs.append((t(lang, "md_tab_valuation"),
+                         _valuation_tab(payload, lang)))
+    tabs.append((t(lang, "md_tab_data"),
+                 _data_tab(key, stats, fstats, price_csv_href,
+                           fund_csv_href, lang)))
+
     lines = [
         f"# {meta['flag']} {title} — {t(lang, 'md')}",
         "",
         "> " + "  |  ".join(facts),
         "",
+        # A label for the tab bar, and the hook prices.css hangs the segmented
+        # styling off: it is scoped to `.tabcue + .tabbed-set`, so the site's
+        # other content tabs keep the theme's own look. It has to be the tab
+        # set's immediately-preceding sibling, hence no blank-line-separated
+        # prose between the two.
+        f'<div class="tabcue">{t(lang, "md_tabs_hint").format(n=len(tabs))}</div>',
     ]
-
-    lines += _tab(t(lang, "md_tab_overview"),
-                  _overview_tab(key, stats, fstats, lang))
-    if stats:
-        lines += _tab(t(lang, "md_tab_price"),
-                      _price_tab(bars, analytics, lang))
-    if fstats:
-        lines += _tab(t(lang, "md_tab_financials"), _financials_tab(lang))
-        # Every multiple needs a share price, so the valuation tab is only
-        # meaningful when both stores are present.
-        if stats:
-            lines += _tab(t(lang, "md_tab_valuation"),
-                          _valuation_tab(payload, lang))
-    lines += _tab(t(lang, "md_tab_data"),
-                  _data_tab(key, stats, fstats, price_csv_href,
-                            fund_csv_href, lang))
+    for tab_title, body in tabs:
+        lines += _tab(tab_title, body)
 
     lines += [f"[{t(lang, 'md_back_to_index')}](../index.md)", ""]
     return lines

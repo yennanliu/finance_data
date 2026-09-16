@@ -267,3 +267,111 @@
 /* A tab's panel carries its own padding in Material; the cards inside already
    have theirs, so trim the doubled gap at the top of a panel. */
 .md-typeset .tabbed-block > :first-child { margin-top: 0.4rem; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Market Data tab bar
+   The default content-tab style is a row of underlined words, which reads as
+   running text rather than as a control — on a page whose other four fifths
+   live behind those words, that is most of the page hidden in plain sight. So
+   the bar is drawn as a segmented control: a bordered track, a filled pill on
+   the active tab, and a hover state on the rest.
+
+   Scoped to the `.tabcue` hint build_docs.py emits immediately before the set,
+   so the site's other content tabs (market news, the home page) keep the
+   theme's own styling.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* The label for the control. Says how many tabs there are, because a segmented
+   bar that overflows on a phone can hide its last option off-screen. */
+.md-typeset .tabcue {
+  margin: 1.2rem 0 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--fp-text-muted, #71717a);
+}
+
+.md-typeset .tabcue b {
+  color: var(--fp-text, #fafafa);
+  font-weight: 700;
+}
+
+/* ── the track ── */
+.md-typeset .tabcue + .tabbed-set > .tabbed-labels {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  margin: 0 0 0.9rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 12px;
+  background: var(--fp-bg-alt, #111113);
+  /* The theme draws the underline rule as an inset shadow and slides an
+     indicator with a ::before; a pill bar wants neither. */
+  box-shadow: none;
+  /* …and fades its own edges with a mask to hint at horizontal scroll. That
+     fade would eat the track's border and the first pill, and the cue line
+     above already says how many tabs there are. */
+  -webkit-mask-image: none;
+  mask-image: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.md-typeset .tabcue + .tabbed-set > .tabbed-labels::-webkit-scrollbar {
+  display: none;
+}
+
+.md-typeset .tabcue + .tabbed-set > .tabbed-labels::before { display: none; }
+
+/* ── the segments ── */
+.md-typeset .tabcue + .tabbed-set > .tabbed-labels > label {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  border: 0;
+  border-radius: 9px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--fp-text-secondary, #a1a1aa);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.md-typeset .tabcue + .tabbed-set > .tabbed-labels > label:hover {
+  background: var(--fp-bg-card-hover, #1c1c21);
+  color: var(--fp-text, #fafafa);
+}
+
+/* ── the active segment ──
+   A filled pill in the site's accent-button colours: near-black on light,
+   near-white on dark. Colour alone would not carry it for a reader who cannot
+   see the hue, so the fill does the work, not the text colour. */
+.md-typeset .tabcue + .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > :nth-child(1),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > :nth-child(2),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > :nth-child(3),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > :nth-child(4),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > :nth-child(5),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(6):checked ~ .tabbed-labels > :nth-child(6),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(7):checked ~ .tabbed-labels > :nth-child(7),
+.md-typeset .tabcue + .tabbed-set > input:nth-child(8):checked ~ .tabbed-labels > :nth-child(8) {
+  background: var(--fp-btn-accent-bg, #fafafa);
+  color: var(--fp-btn-accent-fg, #09090b);
+  box-shadow: 0 1px 2px var(--fp-accent-glow, rgba(0, 0, 0, 0.04));
+}
+
+/* Keyboard focus has to stay visible on top of the fill. */
+.md-typeset .tabcue + .tabbed-set > input:focus-visible ~ .tabbed-labels > label {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+/* At phone width the bar scrolls; shrink the segments so more than two fit
+   before it has to. */
+@media screen and (max-width: 45em) {
+  .md-typeset .tabcue + .tabbed-set > .tabbed-labels > label {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.72rem;
+  }
+}

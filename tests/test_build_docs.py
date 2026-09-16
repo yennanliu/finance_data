@@ -962,11 +962,16 @@ def test_market_data_page_is_one_page_of_tabs(monkeypatch, tmp_path):
     bd.build_market_data(lang="en")
 
     page = (tmp_path / "docs" / "data" / "nvda" / "index.md").read_text(encoding="utf-8")
-    for tab in ("Overview", "Price", "Financials", "Valuation", "Data & glossary"):
-        assert f'=== "{tab}"' in page, tab
+    for key in ("md_tab_overview", "md_tab_price", "md_tab_financials",
+                "md_tab_valuation", "md_tab_data"):
+        assert f'=== "{bd.t("en", key)}"' in page, key
     # Both halves' charts are on it.
     assert 'data-src="analytics.json"' in page
     assert 'data-src="fundamentals.json"' in page
+    # The tab bar is styled off this hook and must sit immediately before the
+    # set, so the count in it has to match the tabs actually emitted.
+    assert '<div class="tabcue">' in page
+    assert "<b>5 tabs</b>" in page
 
 
 def test_market_data_page_drops_the_tabs_it_has_no_store_for(monkeypatch, tmp_path):
@@ -978,10 +983,12 @@ def test_market_data_page_drops_the_tabs_it_has_no_store_for(monkeypatch, tmp_pa
     bd.build_market_data(lang="en")
 
     page = (tmp_path / "docs" / "data" / "spy" / "index.md").read_text(encoding="utf-8")
-    assert '=== "Price"' in page
-    assert '=== "Financials"' not in page
-    assert '=== "Valuation"' not in page
+    assert f'=== "{bd.t("en", "md_tab_price")}"' in page
+    assert f'=== "{bd.t("en", "md_tab_financials")}"' not in page
+    assert f'=== "{bd.t("en", "md_tab_valuation")}"' not in page
     assert "price data only" in page
+    # The hint counts what was emitted, not a fixed five.
+    assert "<b>3 tabs</b>" in page
 
 
 def test_market_data_keys_unions_both_stores(monkeypatch, tmp_path):
@@ -1214,9 +1221,10 @@ def test_market_data_page_for_a_ticker_with_filings_and_no_prices(monkeypatch, t
     assert (docs / "data" / "nvda" / "fundamentals.json").exists()
     assert (docs / "data" / "nvda" / "nvda_financials.csv").exists()
     page = (docs / "data" / "nvda" / "index.md").read_text(encoding="utf-8")
-    assert '=== "Financials"' in page
-    assert '=== "Price"' not in page
-    assert '=== "Valuation"' not in page
+    assert f'=== "{bd.t("en", "md_tab_financials")}"' in page
+    assert f'=== "{bd.t("en", "md_tab_price")}"' not in page
+    assert f'=== "{bd.t("en", "md_tab_valuation")}"' not in page
+    assert "<b>3 tabs</b>" in page
 
 
 def test_valuation_charts_carry_their_own_historical_average(monkeypatch, tmp_path):
