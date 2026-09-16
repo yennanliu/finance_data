@@ -60,7 +60,7 @@ scripts/generate_analysis.py
 - `scripts/analysis/context/__init__.py` — 12-branch context assembler; touch when adding analysis types (`utils/context.py` is a back-compat shim re-exporting it)
 - `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides
 - `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
-- `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid); powers the **Price Data** section (`docs/prices/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
+- `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid, series averages); with `fundamental_analytics.py` it powers the **Market Data** section (`docs/data/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
 - `.github/workflows/daily_analysis.yml` — 61 cron slots/day (36 fundamental + 25 technical), one ticker per slot
 - `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + pip install), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
@@ -79,7 +79,9 @@ scripts/generate_analysis.py
 ## Report output
 - Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)
 - `build_docs.py` merges all three per ticker and copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
-- `build_docs.py` also publishes `data/prices/` as `docs/prices/` — an overview table plus a page per ticker (candles, drawdown, volatility, return distribution, monthly heatmap) with CSV / JSON / ZIP downloads
+- `build_docs.py` also publishes `data/prices/` **and** `data/fundamentals/` together as `docs/data/` (**Market Data**) — an overview table plus one tabbed page per ticker: Overview (candles, returns, TTM figures) · Price (drawdown, volatility, return distribution, monthly heatmap) · Financials (statements, margins, returns on capital) · Valuation (P/E, P/S, P/B, EV multiples, P/E bands) · Data & glossary (both CSVs, JSON payloads, term definitions)
+- Every chart card carries a one-line explainer, captioned x/y axes and — for the valuation multiples and rolling volatility — a dashed line at the series' own historical average (`price_analytics.series_average`, computed in Python, never in JS)
+- The pre-merge URLs `docs/prices/<ticker>/` and `docs/fundamentals/<ticker>/` still exist as redirect stubs (`build_legacy_redirects()`), hidden from the nav via `.pages` `hide: true`
 - `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
 - `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
 

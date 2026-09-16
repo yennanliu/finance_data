@@ -42,10 +42,12 @@ generate_analysis.py
 ### Price analytics (`data/price_analytics.py`)
 - Pure-stdlib statistics derived from the store: period returns, 52-week band,
   drawdown, rolling volatility, daily-return histogram, monthly-return grid.
-- Consumed by `build_docs.py` to render the **Price Data** section
-  (`docs/prices/`), which publishes the store as a browsable + downloadable
-  dataset: a page per ticker with candles, drawdown, volatility and seasonality
-  charts, plus the raw CSV, a bulk ZIP and a JSON manifest.
+- Consumed by `build_docs.py`, alongside `fundamental_analytics.py`, to render
+  the **Market Data** section (`docs/data/`), which publishes both committed
+  stores as one browsable + downloadable dataset: a tabbed page per ticker
+  (Overview / Price / Financials / Valuation / Data), plus both raw CSVs, a bulk
+  ZIP and a JSON manifest. It replaced the separate Price Data and Financials
+  sections, whose URLs survive as redirect stubs.
 - The browser does no maths — `docs/javascripts/price-charts.js` only draws the
   pre-computed series, which is what keeps the site's numbers testable in pytest.
 

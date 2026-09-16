@@ -68,7 +68,76 @@
   color: var(--fp-text, #fafafa);
 }
 
-.pchart__canvas { height: 240px; }
+/* ── the explainer line ──
+   A P/E river is only readable by someone who already knows what P/E is. One
+   sentence under the title is what turns each card into something you can read
+   cold, so it sits inside the card rather than in the page prose above it. */
+/* The margin is repeated at .md-typeset specificity: the theme styles bare <p>
+   inside the content area, and this line lives there. */
+.pchart__note,
+.md-typeset .pchart__note {
+  margin: 0 0 0.6rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--fp-text-muted, #71717a);
+}
+
+/* ── plot area, flanked by its axis captions ──
+   Lightweight Charts prints the axis *values* but has no concept of an axis
+   title, so the captions are DOM text either side of the canvas.
+
+   Centred, not stretched: a caption's length is its *height* in vertical
+   writing mode, and a stretched item would let a long one set the plot's
+   height. The canvas keeps its own 240px either way. */
+.pchart__plot {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pchart__canvas {
+  height: 240px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pchart__ylab {
+  flex: none;
+  writing-mode: vertical-rl;
+  /* Clipped to the plot's own height rather than 100%, which in a centred flex
+     row would resolve against a height this element is itself setting. */
+  max-height: 240px;
+  overflow: hidden;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fp-text-muted, #71717a);
+}
+/* Left-hand captions read bottom-to-top, right-hand ones top-to-bottom —
+   the convention on a two-axis financial chart. */
+.pchart__ylab--left { transform: rotate(180deg); }
+
+/* ── footer: what the time axis is counting, and the span covered ──
+   The span doubles as the crosshair's date readout, so hovering spells the
+   x-axis value out instead of making you eyeball it off a tick. */
+.pchart__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+
+.pchart__xlab {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pchart__span { white-space: nowrap; }
 
 .pchart__msg {
   padding: 2rem 0;
@@ -89,6 +158,10 @@
   align-items: flex-end;
   gap: 2px;
   height: 200px;
+  /* It is itself a flex item of .pchart__plot, alongside the y-axis caption;
+     without this the bars size to their content instead of the card width. */
+  flex: 1 1 auto;
+  min-width: 0;
   padding-bottom: 1.6rem; /* room for the bucket labels below the baseline */
   position: relative;
 }
@@ -114,6 +187,18 @@
 .pchart__hbar.is-up   .pchart__hbar-fill { background: var(--fp-green, #22c55e); }
 .pchart__hbar:hover .pchart__hbar-fill { opacity: 0.75; }
 
+/* The count above each bar is the y-axis this chart does not draw. Hidden on
+   a phone, where the bars are a few pixels wide and the numbers would collide;
+   the accessible name still carries the exact reading. */
+.pchart__hbar-count {
+  font-size: 0.58rem;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 0.15rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+
 .pchart__hbar-label {
   position: absolute;
   bottom: -1.5rem;
@@ -129,8 +214,12 @@
 /* Bucket labels collide well before the bars do on a phone; the hover title
    still carries the exact range. */
 @media screen and (max-width: 60em) {
-  .pchart__hbar-label { display: none; }
+  .pchart__hbar-label,
+  .pchart__hbar-count { display: none; }
   .pchart__hist { padding-bottom: 0; }
+  /* A rotated caption costs more width than it earns at phone size, where the
+     footer caption and the card title already say what the axes are. */
+  .pchart__ylab { display: none; }
 }
 
 /* ── monthly-return heatmap ── */
@@ -166,3 +255,15 @@
 .md-typeset .ptable table { font-variant-numeric: tabular-nums; }
 .md-typeset .pos { color: var(--fp-green, #16a34a); font-weight: 600; }
 .md-typeset .neg { color: var(--fp-red, #dc2626); font-weight: 600; }
+
+/* ── chart cards inside a content tab ──
+   pymdownx.tabbed indents its content four spaces, which puts it past the point
+   where md_in_html recognises a raw-HTML block — so every chart widget inside a
+   tab is emitted wrapped in a <p>, which the HTML parser then splits, leaving an
+   empty paragraph in front of each card. Collapse those rather than let them add
+   a stray gap above every chart. */
+.md-typeset .tabbed-block > p:empty { display: none; }
+
+/* A tab's panel carries its own padding in Material; the cards inside already
+   have theirs, so trim the doubled gap at the top of a panel. */
+.md-typeset .tabbed-block > :first-child { margin-top: 0.4rem; }
