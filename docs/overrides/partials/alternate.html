@@ -1,0 +1,60 @@
+{#-
+  Language switcher, page-aware.
+
+  Material's stock partial points every entry at the *site root* configured in
+  extra.alternate[].link, so switching language from /data/amzn/ landed on the
+  ZH home page instead of /zh/data/amzn/ — the counterpart page existed and was
+  fully translated, but there was no way to reach it from the page you were on.
+
+  The ZH tree mirrors this site's *index* pages only: build_docs.py writes one
+  localised index.md per section and per ticker, and leaves the dated report and
+  news leaves English-only: reports/<ticker>/index.md is translated, the
+  reports/<ticker>/<report>.md it links to is not. Mapping a URL with no ZH copy
+  would trade a mildly wrong destination for a 404, so the counterpart is
+  computed only for pages known to have one and everything else keeps the
+  configured root link.
+-#}
+
+{#- Pages that exist in both trees but are not index.md. Kept explicit rather
+    than pattern-matched: the list is short and a wrong guess here 404s. -#}
+{% set both_trees = ["scripts.md", "sec/10k.md", "sec/10q.md",
+                     "sec/13f.md", "sec/6k.md"] %}
+
+{% set url = (page.url if page and page.url else "") %}
+{% set mirrored = page and (page.is_index or page.file.src_uri in both_trees
+                            or page.file.src_uri.startswith("zh/")) %}
+
+{#- The same page in each tree. "zh/" is stripped rather than replaced so a
+    ticker that happens to contain the substring is left alone. -#}
+{% if url.startswith("zh/") %}
+  {% set en_url = url[3:] %}
+  {% set zh_url = url %}
+{% else %}
+  {% set en_url = url %}
+  {% set zh_url = "zh/" ~ url %}
+{% endif %}
+
+<div class="md-header__option">
+  <div class="md-select">
+    {% set icon = config.theme.icon.alternate or "material/translate" %}
+    <button class="md-header__button md-icon" aria-label="{{ lang.t('select.language') }}">
+      {% include ".icons/" ~ icon ~ ".svg" %}
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        {% for alt in config.extra.alternate %}
+          {% if mirrored %}
+            {% set target = (zh_url if alt.lang.startswith("zh") else en_url) | url %}
+          {% else %}
+            {% set target = alt.link | url %}
+          {% endif %}
+          <li class="md-select__item">
+            <a href="{{ target }}" hreflang="{{ alt.lang }}" class="md-select__link">
+              {{ alt.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

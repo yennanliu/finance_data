@@ -1099,6 +1099,49 @@ def test_nav_drops_investor_day_and_carries_one_market_data_tab(monkeypatch, tmp
     assert "investor_day" not in nav
 
 
+def test_en_nav_carries_the_zh_tree(monkeypatch, tmp_path):
+    """Without `- zh` on the EN root, awesome-pages drops docs/zh/ from the nav
+    entirely — a `nav:` with no `...` is exhaustive. Every ZH page then renders
+    the *English* tab row, and each of those tabs links back into the English
+    tree, so the translated ZH sections are built but unreachable."""
+    monkeypatch.setattr(bd, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_nav_pages(lang="en")
+    nav = (tmp_path / "docs" / ".pages").read_text(encoding="utf-8")
+    assert "  - zh\n" in nav
+    # A title on the EN root would rename the whole site, not a section.
+    assert not nav.startswith("title:")
+
+
+def test_zh_nav_is_titled_and_does_not_nest_itself(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "DOCS_ZH", tmp_path / "docs" / "zh")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    bd.build_nav_pages(lang="zh")
+    nav = (tmp_path / "docs" / "zh" / ".pages").read_text(encoding="utf-8")
+    assert nav.startswith(f"title: {bd.t('zh', 'lang_name')}\n")
+    assert "  - data\n" in nav
+    # The ZH root must not list itself, or the tab row recurses.
+    assert "  - zh\n" not in nav
+
+
+def test_section_nav_titles_are_localised(monkeypatch, tmp_path):
+    """The tab row reads these .pages titles. Without them awesome-pages falls
+    back to the directory name and the ZH tabs read "Sec", "Download Scripts"."""
+    monkeypatch.setattr(bd, "DOCS_ZH", tmp_path / "docs" / "zh")
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    zh = tmp_path / "docs" / "zh"
+    for sub in ["sec", "investor_day", "data", "reports", "market_news"]:
+        (zh / sub).mkdir(parents=True)
+    bd.build_nav_pages(lang="zh")
+
+    assert f"title: {bd.t('zh', 'sec_filings')}" in (zh / "sec" / ".pages").read_text(encoding="utf-8")
+    assert f"title: {bd.t('zh', 'investor_day')}" in (zh / "investor_day" / ".pages").read_text(encoding="utf-8")
+    assert f"title: {bd.t('zh', 'md')}" in (zh / "data" / ".pages").read_text(encoding="utf-8")
+    # scripts.md has an English-only body, so the nav titles the entry itself.
+    nav = (zh / ".pages").read_text(encoding="utf-8")
+    assert f"  - {bd.t('zh', 'download_scripts')}: scripts.md\n" in nav
+
+
 # ── Financials section ───────────────────────────────────────────────────────
 def _fund_store(monkeypatch, tmp_path, *keys, periods=8):
     """A fundamentals store with `periods` quarters per key.
