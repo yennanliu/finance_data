@@ -227,6 +227,8 @@ def ticker_files(ticker: str) -> list[Path]:
 # ── Language-specific text ────────────────────────────────────────────────────
 LANG_TEXT = {
     "en": {
+        # Name of this language, as the nav tab and language switcher label it.
+        "lang_name": "English",
         "last_updated": "Last updated",
         "last_built": "Last built",
         "sector": "Sector",
@@ -600,6 +602,7 @@ LANG_TEXT = {
         "g_avg": "avg",
     },
     "zh": {
+        "lang_name": "繁體中文",
         "last_updated": "最後更新",
         "last_built": "最後建置",
         "sector": "產業",
@@ -3584,15 +3587,33 @@ def build_nav_pages(lang: str = "en"):
     root_pages = docs_root / ".pages"
     # investor_day is deliberately absent: the section is still built and its
     # pages stay reachable by URL, but it no longer occupies a top-level tab.
-    write(root_pages, "\n".join([
-        "nav:",
+    #
+    # `zh` is listed on the EN root so the Traditional Chinese tree is part of
+    # the nav at all. Without it awesome-pages drops docs/zh/ entirely (a `nav:`
+    # with no `...` is exhaustive), every ZH page inherited the *English* tab
+    # row, and the localised titles written below were never rendered — the ZH
+    # Market Data pages existed but nothing on the site linked to them.
+    # overrides/partials/tabs.html reads this subtree to build the ZH tab row.
+    nav_sections = [
         "  - index.md",
         "  - reports",
         "  - data",
         "  - market_news",
         "  - notebooks",
         "  - sec",
-        "  - scripts.md",
+        # Titled explicitly: the page body is English-only, so on the ZH tree
+        # its H1 would otherwise put "Download Scripts" in the Chinese tab row.
+        f"  - {t(lang, 'download_scripts')}: scripts.md",
+    ]
+    if lang == "en":
+        nav_sections.append("  - zh")
+    write(root_pages, "\n".join([
+        # A translated tree is a nav section, and carries its own language as
+        # the section title. On the EN root — which *is* the site root — a
+        # `title:` would rename the whole site instead.
+        *([f"title: {t(lang, 'lang_name')}"] if lang != "en" else []),
+        "nav:",
+        *nav_sections,
         "",
     ]))
 
@@ -3603,10 +3624,14 @@ def build_nav_pages(lang: str = "en"):
     DST_SEC = docs_root / "sec"
     DST_INV_DAY = docs_root / "investor_day"
 
-    for subdir in [DST_SEC, DST_INV_DAY]:
+    # Titled, not just ordered: without a `title:` awesome-pages falls back to
+    # the directory name and the tab reads "Sec" in both languages.
+    for subdir, title_key in [(DST_SEC, "sec_filings"),
+                              (DST_INV_DAY, "investor_day")]:
         if subdir.exists():
             pages_file = subdir / ".pages"
-            write(pages_file, "nav:\n  - index.md\n  - ...\n")
+            write(pages_file,
+                  f"title: {t(lang, title_key)}\nnav:\n  - index.md\n  - ...\n")
 
     # Market Data section: localised nav title, index first then the tickers.
     # The /prices/ and /fundamentals/ trees it replaced still exist as redirect

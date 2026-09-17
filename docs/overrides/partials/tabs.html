@@ -1,0 +1,45 @@
+{#-
+  Tab row, language-aware.
+
+  Material always renders the *top level* of the nav as the tab row. This site
+  is a single MkDocs build with the Traditional Chinese tree living under
+  docs/zh/, so every ZH page used to show the English tabs — and each of them
+  linked back into the English tree. The ZH sections were fully built and fully
+  translated, but nothing on a ZH page led to them.
+
+  So: on a ZH page, render the children of the `zh` nav section as the tab row.
+  The titles come from the .pages files build_nav_pages() already writes, which
+  keeps the labels in one place (LANG_TEXT) instead of hardcoded here.
+-#}
+{% import "partials/tabs-item.html" as item with context %}
+
+{#- The language subtree, found by URL rather than by title so renaming the
+    tab in LANG_TEXT cannot silently break the lookup. -#}
+{% set ns = namespace(lang_section = none) %}
+{% for nav_item in nav.items %}
+  {% if nav_item.children and nav_item.children | first and
+        (nav_item.children | first).url and
+        (nav_item.children | first).url.startswith("zh/") %}
+    {% set ns.lang_section = nav_item %}
+  {% endif %}
+{% endfor %}
+
+{% set on_zh = page and page.url and page.url.startswith("zh/") %}
+{% set tab_items = ns.lang_section.children
+     if (on_zh and ns.lang_section) else nav.items %}
+
+<nav class="md-tabs" aria-label="{{ lang.t('tabs') }}" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      {% for nav_item in tab_items %}
+        {#- The language subtree is a container, not a destination: it is in the
+            nav so its sections get localised titles and a ZH sidebar, but the
+            header's language switcher is what moves between trees, so it never
+            occupies a tab of its own. -#}
+        {% if nav_item != ns.lang_section %}
+          {{ item.render(nav_item) }}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</nav>

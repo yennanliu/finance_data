@@ -85,6 +85,15 @@ scripts/generate_analysis.py
 - `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
 - `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
 
+## Bilingual site (EN + `zh/`)
+The site is **one** MkDocs build: `docs/` is English and `docs/zh/` is Traditional Chinese, so `theme.language` is `en` everywhere and nothing about the ZH tree is automatic.
+- All UI copy lives in `LANG_TEXT` in `scripts/build_docs.py` (`t(lang, key)`); both halves must carry every key. Chart labels rendered by JS are localised separately in `docs/javascripts/price-charts.js` and `kline-chart.js`, which detect `/zh/` from the URL
+- `build_nav_pages()` lists `- zh` on the **EN** root `.pages`. Without it awesome-pages drops `docs/zh/` from the nav entirely (a `nav:` with no `...` is exhaustive) and every ZH page silently renders the *English* tab row, linking back into the English tree
+- Three theme overrides in `docs/overrides/partials/` make navigation language-aware, and are written against the `mkdocs-material==9.5.*` pin in `.github/actions/build-site/action.yml`:
+  - `tabs.html` / `nav.html` — on a ZH page, render the `zh` subtree as the tab row and sidebar, so both trees render identically. The subtree is found by URL prefix, not by title, so renaming it in `LANG_TEXT` cannot break the lookup
+  - `alternate.html` — maps the language switcher to *the same page* in the other tree instead of the site root. The ZH tree mirrors **index pages only** (dated report/news leaves are English-only), so the mapping is applied to `page.is_index` pages and falls back to the configured root link otherwise — a wrong guess here 404s
+- The ZH tree therefore needs no separate deploy; `build_docs.py` writes both and `mkdocs build --strict` ships them together
+
 ## QA audit
 - `.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC: `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`, then regenerates `qa/README.md`
 - `scripts/prune_qa.py --keep 10` keeps only the 10 most recent run dates in `qa/`; the workflow runs it before committing
