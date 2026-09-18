@@ -41,18 +41,16 @@ jobs:
         # Shallow: the audit reads the working tree, not history, and the commit
         # step only adds a commit on top of the fetched tip.
 
-      # `openai` is here only for the stage-2 LLM review below. Stage 1
-      # (check_report_quality.py, check_mermaid.py, prune_qa.py) remains
-      # pure-stdlib and does not import it, so those steps still run even if
-      # the install or the review is skipped.
-      # This whole step once read `pip install -e ".[dev]" || pip install
-      # yfinance` — the editable install always failed for want of a
-      # build-system backend, so the fallback was the only thing that ever ran,
-      # and even that was never imported.
+      # No packages: stage 1 (check_report_quality.py, check_mermaid.py,
+      # prune_qa.py) is pure-stdlib. `openai` is installed later, immediately
+      # before stage 2, so a PyPI hiccup cannot take down the free,
+      # deterministic audit — stage 2 must never sit on stage 1's critical path.
+      # This step once read `pip install -e ".[dev]" || pip install yfinance` —
+      # the editable install always failed for want of a build-system backend,
+      # so the fallback was the only thing that ever ran, and even that was
+      # never imported.
       - name: Set up Python
         uses: ./.github/actions/python-env
-        with:
-          packages: openai>=1.0.0
 
       - name: Resolve run parameters
         id: params
@@ -92,6 +90,7 @@ jobs:
       # conclusion contradicting its own evidence, simplified-Chinese leakage.
       # Additive — stage 1 above stays the primary, free, deterministic gate.
       - name: Verify reviewer API key
+        id: key
         if: steps.params.outputs.llm_review == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
@@ -100,17 +99,35 @@ jobs:
           # Not check_provider_keys.py: that resolves the *generation* fallback
           # chain, so it would also demand GEMINI_API_KEY, which this job never
           # uses. The reviewer needs exactly one key.
+          #
+          # Annotates but does not exit 1. A missing secret is a stage-2
+          # configuration problem; failing the job would throw away the stage-1
+          # audit that already ran and leave nothing committed. The ::error::
+          # still surfaces on the run summary.
           if [ -z "${OPENAI_API_KEY}" ]; then
-            echo "::error::OPEN_KEY_API secret is not set (required by the stage-2 LLM review)"
-            exit 1
+            echo "::error::OPEN_KEY_API secret is not set — skipping the stage-2 LLM review"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "OK: OPEN_KEY_API is set"
           fi
-          echo "OK: OPEN_KEY_API is set"
+
+      - name: Install reviewer dependencies
+        id: deps
+        if: steps.key.outputs.ok == 'true'
+        continue-on-error: true    # a PyPI hiccup must not fail the stage-1 audit
+        uses: ./.github/actions/python-env
+        with:
+          packages: openai>=1.0.0
 
       - name: LLM report review (stage 2 — OpenAI)
-        # Non-blocking: the script exits 0 even when reports are graded "fail",
+        id: review
+        # Non-blocking twice over: the script exits 0 even when reports are
+        # graded "fail", and continue-on-error covers the process itself dying,
         # so a bad night still produces a committed audit trail instead of a
         # red run with no artifacts.
-        if: steps.params.outputs.llm_review == 'true'
+        if: steps.key.outputs.ok == 'true' && steps.deps.outcome == 'success'
+        continue-on-error: true
         env:
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           TODAY: ${{ steps.params.outputs.date }}
@@ -127,12 +144,24 @@ jobs:
             --summary \
             | tee "qa/llm_review_${TODAY}.txt"
 
+      - name: Note a skipped or failed stage 2
+        if: steps.params.outputs.llm_review == 'true' && steps.review.outcome != 'success'
+        run: |
+          echo "::warning::Stage 2 (LLM review) did not complete — \
+          key=${{ steps.key.outputs.ok }} deps=${{ steps.deps.outcome }} \
+          review=${{ steps.review.outcome }}. Stage 1 results are unaffected."
+
       - name: Prune old QA artifacts (keep 10 most recent runs)
         run: python scripts/prune_qa.py --keep 10
 
       - name: Generate QA index markdown
         env:
           TODAY: ${{ steps.params.outputs.date }}
+          # Whether *this* run produced a stage-2 result. Without it, a
+          # same-day rerun with llm_review=false would find the earlier run's
+          # committed llm_review_${TODAY}.txt still in the checkout and
+          # republish it as part of the current audit.
+          STAGE2_OK: ${{ steps.review.outcome == 'success' }}
         run: |
           set -euo pipefail
           SUMMARY="qa/summary_${TODAY}.txt"
@@ -167,8 +196,9 @@ jobs:
           EOF
 
           # Stage 2 is optional (skippable via workflow_dispatch), so its
-          # section is appended only when the run actually produced one.
-          if [ -f "$LLM_SUMMARY" ]; then
+          # section is appended only when *this* run produced one — the file
+          # test alone would happily republish a previous same-day result.
+          if [ "$STAGE2_OK" = "true" ] && [ -f "$LLM_SUMMARY" ]; then
             cat >> "qa/README.md" << EOF
 
           ## Stage 2 — LLM review (\`scripts/review_report_quality.py\`)
@@ -187,11 +217,11 @@ jobs:
           \`\`\`
           EOF
           else
-            echo "No stage-2 summary at $LLM_SUMMARY — LLM review was skipped."
+            echo "Stage 2 not published this run (stage2_ok=${STAGE2_OK}, summary present: $([ -f "$LLM_SUMMARY" ] && echo yes || echo no))."
           fi
 
           # Referenced so a missing CSV alongside a present summary is loud.
-          [ ! -f "$LLM_SUMMARY" ] || [ -f "$LLM_CSV" ] || {
+          [ "$STAGE2_OK" != "true" ] || [ ! -f "$LLM_SUMMARY" ] || [ -f "$LLM_CSV" ] || {
             echo "::warning::$LLM_SUMMARY exists but $LLM_CSV does not"; }
 
       - name: Commit QA results
