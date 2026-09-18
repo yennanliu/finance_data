@@ -120,3 +120,8 @@ Notes on stage 2:
 - A larger model has **not** been compared yet; `llm_review_limit` makes that cheap. On current evidence the boilerplate looks more like a prompt/scoring-rubric problem than raw model capability
 - Stage 2 also covers `ai_gen_report/market_news/`, which stage 1 currently does not (see `DEFAULT_ROOTS` in each)
 - Prompt/rubric: `scripts/analysis/prompts/qa_review.txt` (escape literal JSON braces as `{{` `}}` — the template is `.format()`ed)
+- **The rubric names three things that are explicitly NOT defects**, each traced to a wrong verdict in the third live run. Don't reintroduce them:
+  1. **Missing source citations.** Reports are generated from a financial-data context that never appears in the report body, so they structurally cannot cite figures inline. 38 of that run's 54 grounded fails complained about this — an unsatisfiable criterion the original rubric asked for verbatim (「具體數字是否有來源脈絡」). `data_integrity` now judges whether a *number is credible*, not whether a citation is present
+  2. **The report's own derived valuations.** 加權合理價值 / DCF 內在價值 / 目標價 / MOS are sourced to the report's own model, usually with assumptions shown in its DCF chapter — `amd`'s 「加權合理價值 $619.64」 is derived in its Ch.8, yet was failed as 來源不明. Criticise the *assumptions* instead
+  3. **Self-flagged data anomalies.** `soxq` was failed for a 31.0% dividend yield that its own report had already identified as distorted and restated at 1.15%. That is good practice and now scores up, not down
+- The rubric also states the evidence rule that `verdict_is_grounded()` enforces (low scores need a traceable quote), so a verdict is never quarantined for breaking a rule it was not given

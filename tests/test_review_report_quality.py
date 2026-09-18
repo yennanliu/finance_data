@@ -888,3 +888,88 @@ def test_fail_on_fail_still_trips_on_a_grounded_fail(tmp_path):
         code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
                          "--summary", "--fail-on-fail"])
     assert code == 1
+
+
+# ── rubric content (PR #68) ──────────────────────────────────────────────────
+# The third live run's 54 grounded fails were audited against the reports:
+# 38 complained that input figures lack a cited source, which the pipeline can
+# never provide (the data context is not reproduced in the report body); 3
+# complained that the report's *own* DCF outputs were unsourced (amd's
+# "加權合理價值 $619.64" is derived in its Ch.8); and soxq was failed for a
+# data anomaly the report itself had correctly flagged and restated. All three
+# were rubric defects, so the rubric now rules them out explicitly. These
+# tests stop the rules being dropped by a later edit.
+
+def _rubric() -> str:
+    from analysis.prompts import load_prompt
+    return load_prompt("qa_review")
+
+
+def test_missing_sources_is_explicitly_not_a_defect():
+    """38 of 54 grounded fails cited this; the reports structurally cannot
+    satisfy it, so it inflated every fail count."""
+    text = _rubric()
+    assert "未提供來源" in text
+    assert "不是缺陷" in text
+
+
+def test_self_derived_valuations_count_as_sourced():
+    """amd's 加權合理價值 $619.64 is computed in its own DCF chapter, so
+    'source unknown' was simply false."""
+    text = _rubric()
+    assert "加權合理價值" in text
+    assert "報告自身的估值模型" in text
+
+
+def test_self_flagged_anomalies_are_credited_not_penalised():
+    """soxq flagged its own distorted 31.0% yield and restated it at 1.15%;
+    the judge failed it for the honesty."""
+    text = _rubric()
+    assert "自行標註的數據異常" in text
+    assert "良好實務" in text
+
+
+def test_low_scores_must_carry_traceable_evidence():
+    """States the rule the grounding filter already enforces, so a row is not
+    quarantined for breaking a rule it was never told."""
+    text = _rubric()
+    assert "證據要求" in text
+    assert "ungrounded" in text
+
+
+def test_placeholder_claims_must_be_confirmed_first():
+    """msft and wqtm were both flagged for placeholders that were absent or
+    near-absent (wqtm: N/A x1, TBD x0)."""
+    assert "再寫進 issues" in _rubric()
+
+
+def test_the_unsatisfiable_criterion_is_gone():
+    """The original line asked whether every figure carried source context."""
+    assert "具體數字是否有來源脈絡，而非憑空出現" not in _rubric()
+
+
+def test_genuine_fabrication_is_still_a_fail():
+    """The rubric must not become permissive: mu's implausible figures are
+    exactly what this stage is for."""
+    text = _rubric()
+    assert "捏造" in text
+    assert "1-2 分" in text
+
+
+def test_rubric_still_renders_with_every_placeholder():
+    from analysis.prompts import load_prompt
+    rendered = load_prompt("qa_review").format(
+        ticker="AAPL", analysis_type="fundamental_analysis",
+        date="2026-09-17", provider="gemini", report="BODY")
+    for placeholder in ("{ticker}", "{report}", "{provider}",
+                        "{analysis_type}", "{date}"):
+        assert placeholder not in rendered
+    assert '"verdict"' in rendered      # JSON schema survived {{ }} escaping
+    assert '"data_integrity"' in rendered
+
+
+def test_rubric_overhead_stays_small_next_to_the_report():
+    """The prompt is prepended to every ~27k-token report, so its own size is
+    a per-report cost multiplied by ~117 reports a night."""
+    overhead = len(_rubric()) - len("{report}")
+    assert overhead < 6000, f"rubric grew to {overhead} chars"
