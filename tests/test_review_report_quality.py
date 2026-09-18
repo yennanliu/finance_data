@@ -1,0 +1,579 @@
+"""Tests for the LLM-judge QA stage (scripts/review_report_quality.py).
+
+Fully offline: every provider call is mocked at the ``analysis.llm`` runner
+boundary, matching the rest of the suite. No API keys required.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import date
+from unittest.mock import patch
+
+import pytest
+
+import review_report_quality as rrq
+
+pytestmark = pytest.mark.unit
+
+FM = "---\ntitle: x\ndate: 2026-09-17\nprovider: gemini\n---\n\n"
+
+
+def _write(tmp_path, ticker, filename, body=None):
+    d = tmp_path / ticker
+    d.mkdir(parents=True, exist_ok=True)
+    p = d / filename
+    p.write_text(body if body is not None else FM + "## 分析\n內容。\n", encoding="utf-8")
+    return p
+
+
+def _verdict_json(**over):
+    payload = {
+        "verdict": "pass",
+        "score": 4,
+        "dimensions": {k: 4 for k in rrq.DIMENSIONS},
+        "issues": [],
+        "rationale": "整體品質良好。",
+    }
+    payload.update(over)
+    return json.dumps(payload, ensure_ascii=False)
+
+
+# ── prepare_report_text ──────────────────────────────────────────────────────
+
+def test_short_report_passes_through_unchanged():
+    text = "報告內容" * 10
+    assert rrq.prepare_report_text(text, max_chars=1000) == text
+
+
+def test_long_report_elides_the_middle_and_keeps_both_ends():
+    text = "頭" * 500 + "中" * 4000 + "尾" * 500
+    out = rrq.prepare_report_text(text, max_chars=2000)
+
+    assert len(out) <= 2000
+    assert rrq._ELISION_MARKER in out
+    # Both ends survive: the tail matters because dropping it would make every
+    # long report look truncated to the completeness check.
+    assert out.startswith("頭")
+    assert out.endswith("尾")
+
+
+# ── parse_verdict ────────────────────────────────────────────────────────────
+
+def test_parses_plain_json():
+    parsed = rrq.parse_verdict(_verdict_json())
+    assert parsed["verdict"] == "pass"
+    assert parsed["score"] == 4
+    assert parsed["dimensions"]["depth"] == 4
+
+
+def test_parses_json_wrapped_in_a_code_fence():
+    parsed = rrq.parse_verdict(f"```json\n{_verdict_json(verdict='fail')}\n```")
+    assert parsed["verdict"] == "fail"
+
+
+def test_parses_json_surrounded_by_prose():
+    raw = f"好的，以下是審稿結果：\n{_verdict_json(verdict='warn')}\n希望有幫助。"
+    assert rrq.parse_verdict(raw)["verdict"] == "warn"
+
+
+def test_unknown_verdict_is_normalised_not_raised():
+    parsed = rrq.parse_verdict(_verdict_json(verdict="excellent"))
+    assert parsed["verdict"] == "unknown"
+
+
+def test_scores_are_clamped_into_range():
+    parsed = rrq.parse_verdict(_verdict_json(score=99, dimensions={"depth": -3}))
+    assert parsed["score"] == 5
+    assert parsed["dimensions"]["depth"] == 1
+
+
+def test_missing_overall_score_falls_back_to_the_dimension_floor():
+    """The rubric says any dimension at 1 is a fail, so the floor is the
+    conservative reading when the model omits the overall score."""
+    raw = json.dumps({"verdict": "pass", "dimensions": {"depth": 4, "language": 2}})
+    assert rrq.parse_verdict(raw)["score"] == 2
+
+
+def test_issues_string_is_coerced_to_a_list_and_capped():
+    assert rrq.parse_verdict(_verdict_json(issues="單一問題"))["issues"] == ["單一問題"]
+    many = rrq.parse_verdict(_verdict_json(issues=[f"問題{i}" for i in range(9)]))
+    assert len(many["issues"]) == 5
+
+
+def test_newlines_are_stripped_so_csv_rows_stay_on_one_line():
+    parsed = rrq.parse_verdict(_verdict_json(rationale="第一行\n第二行"))
+    assert "\n" not in parsed["rationale"]
+
+
+@pytest.mark.parametrize("raw", ["", "完全不是 JSON", "抱歉，我無法審核。", None])
+def test_unparseable_response_raises_valueerror(raw):
+    with pytest.raises(ValueError):
+        rrq.parse_verdict(raw)
+
+
+# ── review_one ───────────────────────────────────────────────────────────────
+
+def test_review_one_returns_the_parsed_verdict(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.verdict == "pass"
+    assert result.ticker == "aapl"
+    assert result.report_provider == "gemini"
+    assert result.reviewer_provider == "openai"
+    assert m.call_count == 1
+
+
+def test_review_one_disables_refusal_retry(tmp_path):
+    """The refusal-override prefix tells the model to WRITE a report; handing
+    that to a grader would make it produce analysis instead of a verdict."""
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert m.call_args.kwargs["refusal_retry"] is False
+    assert m.call_args.kwargs["temperature"] == 0.0
+
+
+def test_provider_error_becomes_an_error_row_not_an_exception(tmp_path):
+    """One failed call must not abort a 100-report nightly run."""
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", side_effect=RuntimeError("502 upstream")):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.verdict == "ERROR"
+    assert "502 upstream" in result.rationale
+
+
+def test_unparseable_response_becomes_a_parse_error_row(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value="not json at all"):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.verdict == "PARSE_ERROR"
+
+
+def test_cross_provider_is_validated_before_any_api_call(monkeypatch, tmp_path):
+    """One clear config error beats a hundred identical ERROR rows and the
+    tokens spent producing them."""
+    for env in rrq.PROVIDER_ENV.values():
+        monkeypatch.delenv(env, raising=False)
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_openai.md")
+
+    with patch.object(rrq, "run_openai") as m:
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--cross-provider", "--summary"])
+
+    assert code == 1
+    assert m.call_count == 0
+
+
+def test_cross_provider_passes_validation_when_an_alternative_key_exists(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    assert rrq.validate_cross_provider("openai") is None
+
+
+def test_validate_cross_provider_names_the_secrets_to_set(monkeypatch):
+    for env in rrq.PROVIDER_ENV.values():
+        monkeypatch.delenv(env, raising=False)
+    msg = rrq.validate_cross_provider("openai")
+    assert "GEMINI_API_KEY" in msg and "ANTHROPIC_API_KEY" in msg
+
+
+# ── reviewer model follows the provider ──────────────────────────────────────
+
+def test_model_override_applies_only_to_the_configured_provider():
+    """A --cross-provider switch must not inherit the lead provider's model id:
+    Gemini handed "gpt-4o-mini" fails every call."""
+    assert rrq.reviewer_model_for("openai", "openai", "gpt-4o") == "gpt-4o"
+    assert rrq.reviewer_model_for("gemini", "openai", "gpt-4o") == rrq.REVIEWER_MODELS["gemini"]
+
+
+def test_every_provider_has_a_reviewer_model():
+    assert set(rrq.REVIEWER_MODELS) == set(rrq.PROVIDER_ENV)
+
+
+def test_cross_provider_switch_uses_the_new_providers_model(monkeypatch, tmp_path):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_openai.md")
+
+    with patch.object(rrq, "run_gemini", return_value=_verdict_json()) as gem:
+        rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                  "--cross-provider", "--summary"])
+
+    assert gem.call_args.kwargs["model"] == rrq.REVIEWER_MODELS["gemini"]
+
+
+def test_review_one_dispatches_to_the_requested_provider(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_openai.md")
+    with patch.object(rrq, "run_gemini", return_value=_verdict_json()) as gem, \
+            patch.object(rrq, "run_openai") as oai:
+        result = rrq.review_one(p, provider="gemini", model="gemini-3.8-flash")
+
+    assert gem.call_count == 1
+    assert oai.call_count == 0
+    assert result.reviewer_provider == "gemini"
+
+
+def test_prompt_renders_without_stray_braces(tmp_path):
+    """qa_review.txt escapes its JSON braces as {{ }}; a regression there would
+    raise KeyError/IndexError at .format() time on every single report."""
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    prompt = m.call_args.args[1]
+    assert "aapl" in prompt
+    assert "{ticker}" not in prompt
+    assert "{report}" not in prompt
+    assert '"verdict"' in prompt  # the literal JSON schema survived escaping
+
+
+# ── pick_reviewer ────────────────────────────────────────────────────────────
+
+def test_cross_provider_off_always_uses_the_configured_reviewer():
+    assert rrq.pick_reviewer("openai", "openai", cross_provider=False) == "openai"
+
+
+def test_cross_provider_avoids_self_grading(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    assert rrq.pick_reviewer("openai", "openai", cross_provider=True) == "gemini"
+
+
+def test_cross_provider_keeps_the_reviewer_when_report_provider_differs():
+    assert rrq.pick_reviewer("gemini", "openai", cross_provider=True) == "openai"
+
+
+def test_cross_provider_refuses_rather_than_self_grading(monkeypatch):
+    """Silently self-grading would do the opposite of what --cross-provider
+    asks while still reporting a verdict, so there is no reviewer to return."""
+    for env in rrq.PROVIDER_ENV.values():
+        monkeypatch.delenv(env, raising=False)
+    assert rrq.pick_reviewer("openai", "openai", cross_provider=True) is None
+
+
+# ── date window ──────────────────────────────────────────────────────────────
+
+def test_recent_days_spans_the_generation_cycle():
+    """Report-gen crons run 17:00-03:00 UTC, so one cycle carries two date
+    stamps; a 1-day window would silently skip the 17:00-23:00 batch."""
+    assert rrq.recent_days(2, today=date(2026, 9, 18)) == ["2026-09-18", "2026-09-17"]
+
+
+def test_recent_days_crosses_a_month_boundary():
+    assert rrq.recent_days(2, today=date(2026, 3, 1))[1] == "2026-02-28"
+
+
+def test_select_reports_filters_to_the_window(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-18_gemini.md")
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-01_gemini.md")
+
+    picked = rrq.select_reports([tmp_path], days=["2026-09-18", "2026-09-17"],
+                                since=None, until=None, ticker=None, limit=None)
+    names = [p.name for p in picked]
+
+    assert len(names) == 2
+    assert not any("2026-09-01" in n for n in names)
+
+
+def test_select_reports_with_no_window_takes_everything(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-18_gemini.md")
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-01-01_gemini.md")
+
+    picked = rrq.select_reports([tmp_path], days=None, since=None, until=None,
+                                ticker=None, limit=None)
+    assert len(picked) == 2
+
+
+def test_limit_caps_the_number_of_reports(tmp_path):
+    for n in range(5):
+        _write(tmp_path, "aapl", f"fundamental_analysis_2026-09-1{n}_gemini.md")
+
+    picked = rrq.select_reports([tmp_path], days=None, since=None, until=None,
+                                ticker=None, limit=2)
+    assert len(picked) == 2
+
+
+def test_missing_root_is_skipped_not_fatal(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-18_gemini.md")
+    picked = rrq.select_reports([tmp_path, tmp_path / "nope"], days=None,
+                                since=None, until=None, ticker=None, limit=None)
+    assert len(picked) == 1
+
+
+# ── CSV output ───────────────────────────────────────────────────────────────
+
+def _result(**over):
+    base = dict(
+        path="p", ticker="aapl", analysis_type="fundamental_analysis",
+        date="2026-09-17", report_provider="gemini", reviewer_provider="openai",
+        reviewer_model="gpt-4o-mini", verdict="pass", score=4,
+        dimensions={k: 4 for k in rrq.DIMENSIONS}, issues=[], rationale="ok",
+    )
+    base.update(over)
+    return rrq.ReviewResult(**base)
+
+
+def test_csv_row_matches_the_header_width():
+    assert len(_result().csv_row()) == len(rrq.CSV_HEADER)
+
+
+def test_csv_writes_only_problem_rows_by_default(tmp_path):
+    out = tmp_path / "r.csv"
+    results = [_result(verdict="pass"), _result(verdict="fail"),
+               _result(verdict="warn"), _result(verdict="ERROR")]
+
+    written = rrq.write_csv(results, str(out), bad_only=True)
+
+    assert written == 3  # fail + warn + ERROR, pass excluded
+    assert out.read_text(encoding="utf-8").count("\n") == 4  # header + 3
+
+
+def test_csv_all_writes_every_row(tmp_path):
+    out = tmp_path / "r.csv"
+    assert rrq.write_csv([_result(), _result()], str(out), bad_only=False) == 2
+
+
+def test_issues_are_joined_into_one_cell(tmp_path):
+    row = _result(issues=["問題甲", "問題乙"]).csv_row()
+    assert "問題甲 | 問題乙" in row
+
+
+# ── main / exit codes ────────────────────────────────────────────────────────
+
+def test_dry_run_makes_no_api_calls(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai") as m:
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17", "--dry-run"])
+
+    assert code == 0
+    assert m.call_count == 0
+
+
+def test_main_exits_zero_even_when_reports_fail(tmp_path):
+    """Non-blocking by default, like check_mermaid.py — QA reports, it does not
+    gate the nightly commit."""
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json(verdict="fail", score=1)):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17", "--summary"])
+    assert code == 0
+
+
+def test_fail_on_fail_opts_into_a_nonzero_exit(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json(verdict="fail", score=1)):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--summary", "--fail-on-fail"])
+    assert code == 1
+
+
+def test_fail_on_fail_still_exits_zero_when_all_pass(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--summary", "--fail-on-fail"])
+    assert code == 0
+
+
+def test_empty_selection_still_writes_a_csv_with_a_header(tmp_path):
+    """The workflow's README step counts CSV lines, so a no-report night must
+    still leave a well-formed file rather than none."""
+    out = tmp_path / "r.csv"
+    code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                     "--csv", str(out)])
+
+    assert code == 0
+    assert out.read_text(encoding="utf-8").strip() == ",".join(rrq.CSV_HEADER)
+
+
+def test_main_writes_csv_end_to_end(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    out = tmp_path / "r.csv"
+    with patch.object(rrq, "run_openai", return_value=_verdict_json(verdict="fail", score=1)):
+        rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                  "--csv", str(out), "--summary"])
+
+    body = out.read_text(encoding="utf-8")
+    assert "fail" in body
+    assert "aapl" in body
+
+
+# ── JSON shape validation (PR #65 review) ────────────────────────────────────
+# Syntactically valid JSON says nothing about field types. Each of these used
+# to raise from inside parse_verdict with an exception review_one did not
+# catch, aborting the whole nightly batch.
+
+@pytest.mark.parametrize("payload", [
+    {"verdict": "pass", "dimensions": ["a", "b"]},      # was AttributeError
+    {"verdict": "pass", "dimensions": "good"},
+    {"verdict": "pass", "dimensions": 5},
+    {"verdict": "pass", "issues": 5},                   # was TypeError
+    {"verdict": "pass", "issues": {"a": 1}},
+    {"verdict": "pass", "rationale": {"text": "x"}},
+])
+def test_wrong_field_shapes_raise_valueerror(payload):
+    with pytest.raises(ValueError):
+        rrq.parse_verdict(json.dumps(payload))
+
+
+@pytest.mark.parametrize("payload", [
+    {"verdict": "pass", "dimensions": ["a"]},
+    {"verdict": "pass", "issues": 5},
+])
+def test_wrong_field_shapes_become_parse_error_rows_not_crashes(tmp_path, payload):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=json.dumps(payload)):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+    assert result.verdict == "PARSE_ERROR"
+
+
+def test_a_batch_survives_a_malformed_response_in_the_middle(tmp_path):
+    """The whole point of the ERROR/PARSE_ERROR rows: one bad response must
+    not cost the other 99 reports."""
+    for n in (5, 6, 7):
+        _write(tmp_path, "aapl", f"fundamental_analysis_2026-09-1{n}_gemini.md")
+
+    responses = [_verdict_json(), json.dumps({"dimensions": [1]}), _verdict_json()]
+    with patch.object(rrq, "run_openai", side_effect=responses):
+        code = rrq.main(["--root", str(tmp_path), "--date", "all", "--summary",
+                         "--csv", str(tmp_path / "r.csv"), "--csv-all"])
+
+    assert code == 0
+    body = (tmp_path / "r.csv").read_text(encoding="utf-8")
+    assert body.count("PARSE_ERROR") == 1
+    assert body.count("pass") == 2
+
+
+def test_empty_dimensions_object_is_accepted():
+    assert rrq.parse_verdict(json.dumps({"verdict": "pass", "score": 4,
+                                         "dimensions": {}}))["dimensions"] == {}
+
+
+# ── verdict enforcement (PR #65 review) ──────────────────────────────────────
+
+def test_a_pass_verdict_is_downgraded_when_a_dimension_fails():
+    """verdict="pass" with data_integrity=1 would otherwise be filtered out of
+    the problem CSV and never trip --fail-on-fail — exactly the case the
+    reviewer exists to catch."""
+    parsed = rrq.parse_verdict(_verdict_json(
+        verdict="pass", score=5, dimensions={**{k: 5 for k in rrq.DIMENSIONS},
+                                             "data_integrity": 1}))
+    assert parsed["verdict"] == "fail"
+
+
+def test_a_pass_verdict_is_downgraded_on_a_low_overall_score():
+    assert rrq.parse_verdict(_verdict_json(verdict="pass", score=2))["verdict"] == "fail"
+
+
+def test_score_three_is_downgraded_to_warn():
+    assert rrq.parse_verdict(_verdict_json(verdict="pass", score=3))["verdict"] == "warn"
+
+
+def test_weak_data_integrity_fails_even_with_a_good_overall_score():
+    parsed = rrq.parse_verdict(_verdict_json(
+        verdict="pass", score=4, dimensions={"data_integrity": 2, "depth": 5}))
+    assert parsed["verdict"] == "fail"
+
+
+def test_a_harsher_model_verdict_is_never_upgraded():
+    """The model may be stricter than its own scores; it may not be laxer."""
+    assert rrq.parse_verdict(_verdict_json(verdict="fail", score=5))["verdict"] == "fail"
+    assert rrq.parse_verdict(_verdict_json(verdict="warn", score=5))["verdict"] == "warn"
+
+
+def test_a_clean_pass_is_left_alone():
+    assert rrq.parse_verdict(_verdict_json(
+        verdict="pass", score=5,
+        dimensions={k: 5 for k in rrq.DIMENSIONS}))["verdict"] == "pass"
+
+
+def test_verdict_is_untouched_when_there_are_no_scores_to_judge():
+    assert rrq.parse_verdict(json.dumps({"verdict": "pass"}))["verdict"] == "pass"
+
+
+def test_a_downgraded_verdict_reaches_the_csv_and_the_exit_code(tmp_path):
+    """End-to-end: enforcement has to survive into the artifacts, not just the
+    parser's return value."""
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    out = tmp_path / "r.csv"
+    contradictory = _verdict_json(verdict="pass", score=5,
+                                  dimensions={"data_integrity": 1})
+
+    with patch.object(rrq, "run_openai", return_value=contradictory):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--csv", str(out), "--summary", "--fail-on-fail"])
+
+    assert code == 1
+    assert "fail" in out.read_text(encoding="utf-8")
+
+
+# ── is_bad covers everything needing attention ───────────────────────────────
+
+@pytest.mark.parametrize("verdict,bad", [
+    ("pass", False), ("warn", True), ("fail", True),
+    ("unknown", True), ("ERROR", True), ("PARSE_ERROR", True),
+])
+def test_is_bad_is_everything_but_a_clean_pass(verdict, bad):
+    assert _result(verdict=verdict).is_bad() is bad
+
+
+def test_an_unknown_verdict_is_not_filtered_out_of_the_csv(tmp_path):
+    out = tmp_path / "r.csv"
+    assert rrq.write_csv([_result(verdict="unknown")], str(out), bad_only=True) == 1
+
+
+# ── limit guard (PR #65 review) ──────────────────────────────────────────────
+
+def test_limit_zero_means_zero_reports_not_all_of_them(tmp_path):
+    """`--limit 0` is falsy; treating it as "no limit" reviewed the whole
+    corpus and billed for it."""
+    for n in range(5):
+        _write(tmp_path, "aapl", f"fundamental_analysis_2026-09-1{n}_gemini.md")
+
+    picked = rrq.select_reports([tmp_path], days=None, since=None, until=None,
+                                ticker=None, limit=0)
+    assert picked == []
+
+
+def test_limit_zero_makes_no_api_calls(tmp_path):
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai") as m:
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--limit", "0", "--summary"])
+    assert code == 0
+    assert m.call_count == 0
+
+
+# ── prompt-injection hardening (PR #65 review) ───────────────────────────────
+
+def test_the_system_message_marks_report_content_as_untrusted():
+    """Reports are model output built partly from scraped news/RSS text, so an
+    attacker-controlled headline can reach this prompt. The delimiters aid
+    clarity; this instruction is the actual boundary."""
+    msg = rrq.REVIEWER_SYSTEM_MESSAGE
+    assert "<report_data>" in msg
+    assert "不可信" in msg
+    assert "忽略" in msg
+
+
+def test_the_report_is_wrapped_in_named_delimiters(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    prompt = m.call_args.args[1]
+    assert "<report_data>" in prompt and "</report_data>" in prompt
+    assert prompt.index("<report_data>") < prompt.index("</report_data>")
+
+
+def test_the_hardened_system_message_is_sent_to_every_provider(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    runners = {"run_openai": "openai", "run_gemini": "gemini", "run_claude": "claude"}
+    for runner, provider in runners.items():
+        with patch.object(rrq, runner, return_value=_verdict_json()) as m:
+            rrq.review_one(p, provider=provider,
+                           model=rrq.REVIEWER_MODELS[provider])
+        assert m.call_args.args[2] == rrq.REVIEWER_SYSTEM_MESSAGE, runner

@@ -95,5 +95,24 @@ The site is **one** MkDocs build: `docs/` is English and `docs/zh/` is Tradition
 - The ZH tree therefore needs no separate deploy; `build_docs.py` writes both and `mkdocs build --strict` ships them together
 
 ## QA audit
-- `.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC: `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`, then regenerates `qa/README.md`
-- `scripts/prune_qa.py --keep 10` keeps only the 10 most recent run dates in `qa/`; the workflow runs it before committing
+`.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC in **two stages**:
+
+1. **Rule-based (free, deterministic, pure-stdlib)** — `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`. Detection logic lives in `scripts/analysis/validate/__init__.py`. This is the primary gate; it catches mechanical failures (empty, refusal, truncated, placeholders, bad Mermaid)
+2. **LLM review (OpenAI, costs tokens)** — `review_report_quality.py` → `qa/llm_review_<date>.csv` + `.txt`. Grades what regex cannot see: fabricated numbers, shallow analysis, conclusion-vs-evidence contradictions, simplified-Chinese leakage. Scores 5 dimensions 1–5 and returns `pass`/`warn`/`fail`
+
+Then `prune_qa.py --keep 10` trims `qa/` to the 10 most recent run dates (it prunes *any* dated file, so new artifact types need no change there), and the workflow regenerates `qa/README.md` and commits.
+
+Notes on stage 2:
+- **Reviewer models are deliberately separate from the generation chain.** `REVIEWER_MODELS` in `review_report_quality.py`, not `resolve_chain()` — otherwise changing the generator's OpenAI model would silently re-point the auditor. One entry per provider (a `--cross-provider` switch must not hand Gemini an OpenAI model id), each a cheap model because cost is driven by *input* volume, not the ~300-token verdict. `--model` applies only to `--provider`
+- **Rolling 2-day window** (`--days 2`), not "today": report-gen crons run 17:00–03:00 UTC, so one generation cycle straddles midnight and lands under two date stamps. A 1-day window silently skips the 17:00–23:00 batch (the majority of output)
+- **Non-blocking** — exits 0 even on `fail` verdicts, so a bad night still commits an audit trail. `--fail-on-fail` opts into exit 1
+- Per-report provider errors and unparseable responses become `ERROR` / `PARSE_ERROR` rows rather than aborting the run
+- `refusal_retry=False` is mandatory: the refusal-override prefix in `analysis/utils/llm.py` instructs the model to *write a report*, which would turn the grader into a generator
+- `--cross-provider` never lets a provider grade a report it generated (`parse_file` reads the generating provider from frontmatter). If no other provider has a key it exits 1 up front rather than silently self-grading
+- **Stage 2 never sits on stage 1's critical path.** `openai` is installed *after* stage 1 runs, and the install / key check / review steps are all gated and `continue-on-error` — a missing secret or PyPI hiccup annotates the run but still commits the stage-1 audit
+- **The report under review is untrusted input.** It is model output built partly from scraped news/RSS text, so an attacker-controlled headline can reach the judge. `REVIEWER_SYSTEM_MESSAGE` instructs the grader to ignore instructions inside `<report_data>`; the delimiters alone are not the boundary
+- **The model's verdict is reconciled against its own scores** (`_enforce_verdict`), only ever downgraded. A `pass` alongside `data_integrity=1` would otherwise be filtered out of the problem CSV and never trip `--fail-on-fail`
+- Malformed JSON *shapes* (a list under `dimensions`, a number under `issues`) raise `ValueError` → `PARSE_ERROR` row. `review_one`'s handler is deliberately broad: no single bad response may abort a 100-report batch
+- Skippable/tunable from the GitHub UI via the `llm_review`, `llm_review_model` and `llm_review_days` dispatch inputs
+- Stage 2 also covers `ai_gen_report/market_news/`, which stage 1 currently does not (see `DEFAULT_ROOTS` in each)
+- Prompt/rubric: `scripts/analysis/prompts/qa_review.txt` (escape literal JSON braces as `{{` `}}` — the template is `.format()`ed)
