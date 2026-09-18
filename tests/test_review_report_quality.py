@@ -706,3 +706,185 @@ def test_limit_caps_the_api_calls_end_to_end(tmp_path):
                   "--summary"])
 
     assert m.call_count == 2
+
+
+# ── grounding filter ─────────────────────────────────────────────────────────
+# Two live gpt-4o-mini runs agreed closely on scores, so the judge is
+# reproducible — but ~25 rows per run scored 1 on all five dimensions with
+# template prose and no citations, and at least one was checkably false. These
+# tests pin the split between that boilerplate and the genuinely grounded rows.
+
+ALL_ONES = {k: 1 for k in rrq.DIMENSIONS}
+MIXED = {"data_integrity": 2, "completeness": 3, "depth": 2,
+         "consistency": 3, "language": 4}
+
+
+def test_cited_figures_ignores_bare_small_numbers():
+    """"1" and "5" occur in every report, so matching them would call any
+    complaint grounded."""
+    assert rrq.cited_figures(["第 1 章有 5 個問題"]) == []
+
+
+def test_cited_figures_picks_up_decimals_and_long_integers():
+    figures = rrq.cited_figures(["TTM 營收 $90.27B（YoY +345.7%）", "成長 454%"])
+    assert "90.27" in figures
+    assert "345.7" in figures
+    assert "454" in figures
+
+
+def test_cited_figures_deduplicates_preserving_order():
+    assert rrq.cited_figures(["41.31 then 41.31 then 89.10"]) == ["41.31", "89.10"]
+
+
+def test_a_pass_needs_no_evidence():
+    assert rrq.verdict_is_grounded("pass", ALL_ONES, [], "報告內容") is True
+
+
+@pytest.mark.parametrize("verdict", ["ERROR", "PARSE_ERROR", "unknown"])
+def test_non_complaint_verdicts_are_not_held_to_the_bar(verdict):
+    assert rrq.verdict_is_grounded(verdict, {}, [], "") is True
+
+
+def test_all_ones_with_no_citation_is_ungrounded():
+    """The boilerplate signature: bottom scores across the board, template
+    prose, nothing checkable."""
+    issues = ["報告中出現多處捏造數據，例如對於營收和利潤率的數字缺乏來源脈絡。"]
+    assert rrq.verdict_is_grounded("fail", ALL_ONES, issues, "報告內容") is False
+
+
+def test_all_ones_is_kept_when_it_quotes_a_real_figure():
+    """About 6 of 25 all-ones rows did cite a real number; those are real
+    findings and must survive."""
+    issues = ["TTM 營收達 $90.27B 不符合實際情況。"]
+    report = "本季 TTM 營收 $90.27B，成長強勁。"
+    assert rrq.verdict_is_grounded("fail", ALL_ONES, issues, report) is True
+
+
+def test_all_ones_quoting_a_figure_absent_from_the_report_is_ungrounded():
+    issues = ["營收 $12.34B 無法查證。"]
+    assert rrq.verdict_is_grounded("fail", ALL_ONES, issues, "營收 $99.99B") is False
+
+
+def test_a_graded_verdict_is_kept_even_without_citations():
+    """2/3/2/3/4 is a considered judgement; only the degenerate pattern is
+    filtered, so prose-only reasoning at mixed scores stays."""
+    issues = ["分析深度不足，多處僅重述數據。"]
+    assert rrq.verdict_is_grounded("fail", MIXED, issues, "報告內容") is True
+
+
+def test_partial_dimensions_are_not_treated_as_all_ones():
+    """A single reported dimension at 1 is not the all-five pattern."""
+    assert rrq.verdict_is_grounded("fail", {"depth": 1}, ["深度不足"], "x") is True
+
+
+# ── the two real cases from the live runs ────────────────────────────────────
+
+def test_the_real_msft_false_positive_is_quarantined():
+    """msft was flagged for "$XXX"/"N/A" placeholders that appear nowhere in
+    its 79 KB report, at 1s across all five dimensions."""
+    issues = ["報告中出現多處未填值的佔位符，如「$XXX」、「N/A」等。"]
+    report = "## 1. 營收分析\nFY26 營收 $331.84B，ROIC 29.58%。\n"
+    assert rrq.verdict_is_grounded("fail", ALL_ONES, issues, report) is False
+
+
+def test_the_real_mu_catch_survives():
+    """mu's "$90.27B" TTM revenue is a genuine fabrication (actual ≈ $37B)
+    that the rule-based stage passed clean — the whole point of stage 2."""
+    issues = ["報告中出現多處捏造數據，例如 TTM 營收達 $90.27B（YoY +345.7%）不符合實際情況。"]
+    report = "TTM 營收 $90.27B  (100.0%)，YoY +345.7%。"
+    assert rrq.verdict_is_grounded("fail", ALL_ONES, issues, report) is True
+
+
+# ── plumbing: result, CSV, summary, exit code ────────────────────────────────
+
+def test_review_one_marks_a_boilerplate_verdict_ungrounded(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
+                             issues=["報告中出現多處捏造數據。"])
+    with patch.object(rrq, "run_openai", return_value=response):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.verdict == "fail"
+    assert result.grounded is False
+    assert result.is_bad() is True                  # still in the CSV
+    assert result.counts_against_quality() is False  # but not in the counts
+
+
+def test_review_one_marks_a_cited_verdict_grounded(tmp_path):
+    body = FM + "## 分析\nTTM 營收 $90.27B，成長強勁。\n"
+    p = _write(tmp_path, "mu", "fundamental_analysis_2026-09-17_gemini.md", body)
+    response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
+                             issues=["TTM 營收 $90.27B 不符合實際情況。"])
+    with patch.object(rrq, "run_openai", return_value=response):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.grounded is True
+    assert result.counts_against_quality() is True
+
+
+def test_grounding_uses_the_full_report_not_the_elided_copy(tmp_path):
+    """A figure quoted from a section that was elided before sending is still
+    a real citation."""
+    body = FM + "頭" * 200 + "\n關鍵數字 4321.99\n" + "尾" * 200
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md", body)
+    response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
+                             issues=["數字 4321.99 無法查證。"])
+
+    with patch.object(rrq, "MAX_REPORT_CHARS", 120), \
+            patch.object(rrq, "run_openai", return_value=response) as m:
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert "4321.99" not in m.call_args.args[1]   # elided out of the prompt
+    assert result.grounded is True                # but still grounded
+
+
+def test_csv_has_a_grounded_column_matching_the_header():
+    row = _result(grounded=False).csv_row()
+    assert len(row) == len(rrq.CSV_HEADER)
+    assert row[rrq.CSV_HEADER.index("grounded")] == "no"
+    assert _result(grounded=True).csv_row()[rrq.CSV_HEADER.index("grounded")] == "yes"
+
+
+def test_ungrounded_rows_stay_in_the_csv_for_auditing(tmp_path):
+    out = tmp_path / "r.csv"
+    assert rrq.write_csv([_result(verdict="fail", grounded=False)],
+                         str(out), bad_only=True) == 1
+
+
+def test_summary_counts_only_grounded_verdicts(capsys):
+    results = [_result(verdict="fail", grounded=True),
+               _result(verdict="fail", grounded=False),
+               _result(verdict="fail", grounded=False)]
+    rrq.print_summary(results)
+    out = capsys.readouterr().out
+
+    assert "Reports reviewed : 3" in out
+    assert "Ungrounded       : 2" in out
+    assert "Verdict breakdown (1 grounded)" in out
+
+
+def test_summary_omits_the_ungrounded_line_when_there_are_none(capsys):
+    rrq.print_summary([_result(verdict="pass", grounded=True)])
+    assert "Ungrounded" not in capsys.readouterr().out
+
+
+def test_fail_on_fail_ignores_an_ungrounded_fail(tmp_path):
+    """A bad review must not fail a build; only a bad report may."""
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
+                             issues=["報告中出現多處捏造數據。"])
+    with patch.object(rrq, "run_openai", return_value=response):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--summary", "--fail-on-fail"])
+    assert code == 0
+
+
+def test_fail_on_fail_still_trips_on_a_grounded_fail(tmp_path):
+    body = FM + "## 分析\nTTM 營收 $90.27B。\n"
+    _write(tmp_path, "mu", "fundamental_analysis_2026-09-17_gemini.md", body)
+    response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
+                             issues=["TTM 營收 $90.27B 不符合實際情況。"])
+    with patch.object(rrq, "run_openai", return_value=response):
+        code = rrq.main(["--root", str(tmp_path), "--date", "2026-09-17",
+                         "--summary", "--fail-on-fail"])
+    assert code == 1

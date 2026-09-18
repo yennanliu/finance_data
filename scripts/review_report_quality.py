@@ -179,12 +179,21 @@ class ReviewResult:
     dimensions: dict = field(default_factory=dict)
     issues: List[str] = field(default_factory=list)
     rationale: str = ""
+    grounded: bool = True
 
     def is_bad(self) -> bool:
         """Anything that is not a clean pass. Covers 'unknown' and the
         ERROR/PARSE_ERROR rows too, so nothing needing attention is filtered
         out of the default CSV."""
         return self.verdict != "pass"
+
+    def counts_against_quality(self) -> bool:
+        """Whether this row should drive the headline numbers and exit code.
+
+        An ungrounded complaint is not evidence of a bad report, only of a bad
+        review, so it is kept in the CSV but left out of the verdict counts.
+        """
+        return self.is_bad() and self.grounded
 
     def csv_row(self) -> list:
         d = self.dimensions
@@ -193,6 +202,7 @@ class ReviewResult:
             self.report_provider, self.reviewer_provider, self.reviewer_model,
             self.verdict, self.score,
             *[d.get(k, "") for k in DIMENSIONS],
+            "yes" if self.grounded else "no",
             " | ".join(self.issues),
             self.rationale,
         ]
@@ -201,17 +211,73 @@ class ReviewResult:
 CSV_HEADER = [
     "path", "ticker", "analysis_type", "date",
     "report_provider", "reviewer_provider", "reviewer_model",
-    "verdict", "score", *DIMENSIONS, "issues", "rationale",
+    "verdict", "score", *DIMENSIONS, "grounded", "issues", "rationale",
 ]
 
 
+# ── grounding: does a complaint point at anything real? ──────────────────────
+# Two live gpt-4o-mini runs agreed closely on the scores (34/12/71 then
+# 36/6/75 over the same 117 reports, per-dimension means within 0.04), so the
+# judge is reproducible. But ~25 rows per run scored 1 on *all five*
+# dimensions with near-identical template prose across unrelated tickers, and
+# at least one was checkably false: msft was flagged for "$XXX"/"N/A"
+# placeholders that appear nowhere in its 79 KB. Meanwhile the non-degenerate
+# rows were substantially grounded — 29 of 56 quoted figures that really are
+# in the report, including mu's fabricated "$90.27B" TTM revenue (actual
+# ≈ $37B) that the rule-based stage passed clean.
+#
+# So the useful signal is separable from the boilerplate, and "all dimensions
+# are 1 and nothing is quoted" is what separates them.
+
+# 3+ digits or a decimal point: bare "1"/"5" occur in every report, so
+# matching them would call any complaint grounded.
+_FIGURE_RE = re.compile(r"\d+\.\d+|\d{3,}")
+
+
+def cited_figures(issues: List[str]) -> List[str]:
+    """Numeric tokens the issue text quotes (the checkable part of a claim)."""
+    seen, out = set(), []
+    for figure in _FIGURE_RE.findall(" ".join(issues)):
+        if figure not in seen:
+            seen.add(figure)
+            out.append(figure)
+    return out
+
+
+def verdict_is_grounded(verdict: str, dimensions: dict, issues: List[str],
+                        report_text: str) -> bool:
+    """Whether a complaint is backed by something traceable to the report.
+
+    A ``pass`` needs no evidence, and only the degenerate all-ones pattern is
+    held to this bar — a row that scored, say, 2/3/2/3/4 is a considered
+    judgement even when it argues in prose, so it is kept either way. An
+    all-ones row that *does* quote a real figure is also kept (about 6 of 25
+    did), which is why this tests both conditions rather than dropping every
+    all-ones row outright.
+    """
+    if verdict not in ("warn", "fail"):
+        return True
+    all_ones = (
+        len(dimensions) == len(DIMENSIONS)
+        and all(v == 1 for v in dimensions.values())
+    )
+    if not all_ones:
+        return True
+    return any(figure in report_text for figure in cited_figures(issues))
+
+
 # ── report text preparation ──────────────────────────────────────────────────
-def prepare_report_text(text: str, max_chars: int = MAX_REPORT_CHARS) -> str:
+def prepare_report_text(text: str, max_chars: Optional[int] = None) -> str:
     """Return ``text`` bounded to ``max_chars``, eliding the middle if needed.
 
     Head and tail are both preserved (60/40) so the judge can still assess the
     conclusion and spot a genuinely truncated ending.
+
+    ``max_chars`` defaults to MAX_REPORT_CHARS at *call* time: as a bound
+    default (``max_chars=MAX_REPORT_CHARS``) the constant was captured at
+    import, so overriding the module attribute silently had no effect.
     """
+    max_chars = MAX_REPORT_CHARS if max_chars is None else max_chars
     if len(text) <= max_chars:
         return text
     budget = max_chars - len(_ELISION_MARKER)
@@ -408,7 +474,12 @@ def review_one(path: Path, *, provider: str, model: str,
                             rationale=f"{type(e).__name__}: {e}: "
                                       f"{(response or '')[:160]!r}")
 
-    return ReviewResult(**base, **parsed)
+    # Grounded against the full report text, not the (possibly elided) copy
+    # sent to the model: a figure quoted from the part that was elided is
+    # still a real citation.
+    grounded = verdict_is_grounded(
+        parsed["verdict"], parsed["dimensions"], parsed["issues"], text)
+    return ReviewResult(**base, **parsed, grounded=grounded)
 
 
 def pick_reviewer(report_provider: str, configured: str,
@@ -508,20 +579,28 @@ def print_summary(results: List[ReviewResult], out=None) -> None:
     # the stream that existed at import, so the summary would bypass any later
     # stdout redirection — including the tee the workflow relies on.
     out = sys.stdout if out is None else out
-    verdicts = Counter(r.verdict for r in results)
-    scored = [r.score for r in results if r.score]
+    ungrounded = [r for r in results if not r.grounded]
+    counted = [r for r in results if r.grounded]
+    verdicts = Counter(r.verdict for r in counted)
+    scored = [r.score for r in counted if r.score]
 
     print(f"\n{'=' * 60}", file=out)
     print(f"Reports reviewed : {len(results)}", file=out)
+    if ungrounded:
+        # Stated before the breakdown so the numbers below are never read as
+        # covering every report.
+        print(f"Ungrounded       : {len(ungrounded)}  "
+              f"(all-ones scores citing nothing from the report — "
+              f"in the CSV, excluded below)", file=out)
     if scored:
         print(f"Mean score       : {sum(scored) / len(scored):.2f} / 5", file=out)
-    print("\nVerdict breakdown:", file=out)
+    print(f"\nVerdict breakdown ({len(counted)} grounded):", file=out)
     for verdict in (*VERDICTS, "unknown", "PARSE_ERROR", "ERROR"):
         if verdicts.get(verdict):
             print(f"  {verdict:<14} {verdicts[verdict]:>5}", file=out)
 
     per_dim = {
-        k: [r.dimensions[k] for r in results if k in r.dimensions]
+        k: [r.dimensions[k] for r in counted if k in r.dimensions]
         for k in DIMENSIONS
     }
     if any(per_dim.values()):
@@ -530,13 +609,19 @@ def print_summary(results: List[ReviewResult], out=None) -> None:
             if vals:
                 print(f"  {k:<16} {sum(vals) / len(vals):.2f}", file=out)
 
-    failures = [r for r in results if r.verdict == "fail"]
+    failures = [r for r in counted if r.verdict == "fail"]
     if failures:
         print(f"\nFailed review ({len(failures)}):", file=out)
         for r in failures[:20]:
             first = r.issues[0] if r.issues else r.rationale
             print(f"  {r.ticker:<12} {r.analysis_type:<28} {r.path}", file=out)
             print(f"      → {first[:110]}", file=out)
+
+    if ungrounded:
+        print(f"\nUngrounded verdicts ({len(ungrounded)}) — reviewer noise, "
+              f"not report defects:", file=out)
+        for r in ungrounded[:20]:
+            print(f"  {r.ticker:<12} {r.verdict:<6} {r.path}", file=out)
 
 
 def write_csv(results: List[ReviewResult], csv_path: str, bad_only: bool) -> int:
@@ -673,7 +758,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         written = write_csv(results, args.csv, bad_only=not args.csv_all)
         print(f"\nCSV written → {args.csv} ({written} row(s))")
 
-    if args.fail_on_fail and any(r.verdict == "fail" for r in results):
+    # counts_against_quality, not verdict == "fail": an ungrounded complaint
+    # says the review was bad, not the report, and must not fail a build.
+    if args.fail_on_fail and any(
+            r.verdict == "fail" and r.grounded for r in results):
         return 1
     return 0
 
