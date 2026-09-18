@@ -25,6 +25,11 @@ on:
         required: false
         default: "2"
         type: string
+      llm_review_limit:
+        description: "Cap the reports reviewed (blank = no cap). Selection is sorted, so the same cap picks the same reports — use it to compare two models on identical input."
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
@@ -58,6 +63,7 @@ jobs:
           IN_LLM_REVIEW: ${{ github.event.inputs.llm_review }}
           IN_MODEL: ${{ github.event.inputs.llm_review_model }}
           IN_DAYS: ${{ github.event.inputs.llm_review_days }}
+          IN_LIMIT: ${{ github.event.inputs.llm_review_limit }}
         run: |
           set -euo pipefail
           # Scheduled runs send no inputs, so each default is restated once
@@ -67,6 +73,7 @@ jobs:
             echo "llm_review=${IN_LLM_REVIEW:-true}"
             echo "days=${IN_DAYS:-2}"
             echo "model=${IN_MODEL:-}"
+            echo "limit=${IN_LIMIT:-}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Run quality checker (stage 1 — deterministic, no API calls)
@@ -133,13 +140,21 @@ jobs:
           TODAY: ${{ steps.params.outputs.date }}
           DAYS: ${{ steps.params.outputs.days }}
           MODEL: ${{ steps.params.outputs.model }}
+          LIMIT: ${{ steps.params.outputs.limit }}
         run: |
           set -euo pipefail
           # --days 2, not 1: report-gen crons run 17:00-03:00 UTC, so one
           # generation cycle straddles midnight and carries two date stamps.
+          #
+          # Only the summary reaches the tee'd artifact: the script moves the
+          # analysis package's INFO logging to stderr, because that logger
+          # writes to stdout and would otherwise fill the committed
+          # qa/llm_review_*.txt (and the README that embeds it) with ~400
+          # lines of per-call noise.
           python scripts/review_report_quality.py \
             --days "${DAYS}" \
             ${MODEL:+--model "${MODEL}"} \
+            ${LIMIT:+--limit "${LIMIT}"} \
             --csv "qa/llm_review_${TODAY}.csv" \
             --summary \
             | tee "qa/llm_review_${TODAY}.txt"

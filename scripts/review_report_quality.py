@@ -38,6 +38,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import logging
 import os
 import re
 import sys
@@ -52,6 +53,45 @@ sys.path.insert(0, str(Path(__file__).parent))
 from analysis.llm import run_claude, run_openai, run_gemini  # noqa: E402
 from analysis.prompts import load_prompt  # noqa: E402
 from analysis.validate import DATE_RE, collect_reports, parse_file  # noqa: E402
+
+
+def route_library_logs_to_stderr() -> int:
+    """Move the analysis package's log handlers from stdout to stderr.
+
+    ``analysis.utils.logging_utils.setup_logger`` attaches its StreamHandler to
+    **stdout**, and the QA workflow pipes this script's stdout through ``tee``
+    into a published artifact. Left alone, ``qa/llm_review_<date>.txt`` is ~400
+    lines of per-call INFO noise with the summary buried at the end — and the
+    workflow embeds that file into ``qa/README.md``, which grew by 432 lines of
+    log spam on the first live run.
+
+    Fixed here rather than in the shared logger because this is the only script
+    whose stdout is captured as data; every other CLI wants its logs on stdout
+    as ordinary CI output. Returns the number of handlers moved (for tests).
+
+    Anything that is not already stderr is moved, rather than only handlers
+    whose stream ``is sys.stdout``: the handler is bound at import time, so an
+    identity check misses a handler holding a *different* stdout object than
+    the one currently installed (which is exactly what happens under pytest's
+    capture, and would happen behind any stdout redirection).
+
+    Only ``analysis.*`` loggers are touched — not the root logger, whose
+    handlers belong to whoever configured them — and FileHandler is excluded
+    because it subclasses StreamHandler and its stream is a real file.
+    """
+    moved = 0
+    names = [n for n in list(logging.Logger.manager.loggerDict) if "analysis" in n]
+    for name in names:
+        for handler in getattr(logging.getLogger(name), "handlers", []):
+            if not isinstance(handler, logging.StreamHandler):
+                continue
+            if isinstance(handler, logging.FileHandler):
+                continue
+            if getattr(handler, "stream", None) is sys.stderr:
+                continue
+            handler.setStream(sys.stderr)
+            moved += 1
+    return moved
 
 # ── reviewer configuration ───────────────────────────────────────────────────
 # The judge emits ~300 tokens, so its own output cap is irrelevant to cost —
@@ -463,7 +503,11 @@ def select_reports(roots: List[Path], *, days: Optional[List[str]],
 
 
 # ── reporting ────────────────────────────────────────────────────────────────
-def print_summary(results: List[ReviewResult], out=sys.stdout) -> None:
+def print_summary(results: List[ReviewResult], out=None) -> None:
+    # Resolved at call time, not bound as a default: `out=sys.stdout` captures
+    # the stream that existed at import, so the summary would bypass any later
+    # stdout redirection — including the tee the workflow relies on.
+    out = sys.stdout if out is None else out
     verdicts = Counter(r.verdict for r in results)
     scored = [r.score for r in results if r.score]
 
@@ -552,6 +596,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[List[str]] = None) -> int:
     args = build_parser().parse_args(argv)
+
+    # Before anything logs: stdout is this script's data channel (the workflow
+    # tees it into a committed artifact), so the library's INFO output belongs
+    # on stderr.
+    route_library_logs_to_stderr()
 
     if args.date == "all":
         days = None
