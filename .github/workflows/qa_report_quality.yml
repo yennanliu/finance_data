@@ -8,6 +8,23 @@ on:
   schedule:
     - cron: "0 2 * * *"     # 02:00 UTC = 10:00 Taipei (after all report-gen jobs)
   workflow_dispatch:          # allow manual trigger from GitHub UI
+    inputs:
+      llm_review:
+        description: "Run the stage-2 LLM review (costs API tokens)"
+        required: false
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      llm_review_model:
+        description: "Reviewer model (blank = script default, a mini-class model)"
+        required: false
+        default: ""
+        type: string
+      llm_review_days:
+        description: "How many UTC days back to review (2 covers one 17:00-03:00 gen cycle)"
+        required: false
+        default: "2"
+        type: string
 
 permissions:
   contents: write
@@ -24,16 +41,37 @@ jobs:
         # Shallow: the audit reads the working tree, not history, and the commit
         # step only adds a commit on top of the fetched tip.
 
-      # No packages: check_report_quality.py, check_mermaid.py and prune_qa.py
-      # are pure-stdlib (verified by running the checker with nothing
-      # installed). This replaced `pip install -e ".[dev]" || pip install
+      # `openai` is here only for the stage-2 LLM review below. Stage 1
+      # (check_report_quality.py, check_mermaid.py, prune_qa.py) remains
+      # pure-stdlib and does not import it, so those steps still run even if
+      # the install or the review is skipped.
+      # This whole step once read `pip install -e ".[dev]" || pip install
       # yfinance` — the editable install always failed for want of a
       # build-system backend, so the fallback was the only thing that ever ran,
       # and even that was never imported.
       - name: Set up Python
         uses: ./.github/actions/python-env
+        with:
+          packages: openai>=1.0.0
 
-      - name: Run quality checker
+      - name: Resolve run parameters
+        id: params
+        env:
+          IN_LLM_REVIEW: ${{ github.event.inputs.llm_review }}
+          IN_MODEL: ${{ github.event.inputs.llm_review_model }}
+          IN_DAYS: ${{ github.event.inputs.llm_review_days }}
+        run: |
+          set -euo pipefail
+          # Scheduled runs send no inputs, so each default is restated once
+          # here rather than as a `|| 'x'` in every later step.
+          {
+            echo "date=$(date -u +%Y-%m-%d)"
+            echo "llm_review=${IN_LLM_REVIEW:-true}"
+            echo "days=${IN_DAYS:-2}"
+            echo "model=${IN_MODEL:-}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run quality checker (stage 1 — deterministic, no API calls)
         run: |
           TODAY=$(date -u +%Y-%m-%d)
           mkdir -p qa
@@ -49,20 +87,69 @@ jobs:
         # slipped through un-sanitized — see scripts/analysis/utils/mermaid.py.
         run: python scripts/check_mermaid.py --root ai_gen_report
 
+      # ── Stage 2: LLM review (OpenAI) ──────────────────────────────────────
+      # Grades what regex cannot: fabricated numbers, shallow analysis, a
+      # conclusion contradicting its own evidence, simplified-Chinese leakage.
+      # Additive — stage 1 above stays the primary, free, deterministic gate.
+      - name: Verify reviewer API key
+        if: steps.params.outputs.llm_review == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+        run: |
+          set -euo pipefail
+          # Not check_provider_keys.py: that resolves the *generation* fallback
+          # chain, so it would also demand GEMINI_API_KEY, which this job never
+          # uses. The reviewer needs exactly one key.
+          if [ -z "${OPENAI_API_KEY}" ]; then
+            echo "::error::OPEN_KEY_API secret is not set (required by the stage-2 LLM review)"
+            exit 1
+          fi
+          echo "OK: OPEN_KEY_API is set"
+
+      - name: LLM report review (stage 2 — OpenAI)
+        # Non-blocking: the script exits 0 even when reports are graded "fail",
+        # so a bad night still produces a committed audit trail instead of a
+        # red run with no artifacts.
+        if: steps.params.outputs.llm_review == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
+          TODAY: ${{ steps.params.outputs.date }}
+          DAYS: ${{ steps.params.outputs.days }}
+          MODEL: ${{ steps.params.outputs.model }}
+        run: |
+          set -euo pipefail
+          # --days 2, not 1: report-gen crons run 17:00-03:00 UTC, so one
+          # generation cycle straddles midnight and carries two date stamps.
+          python scripts/review_report_quality.py \
+            --days "${DAYS}" \
+            ${MODEL:+--model "${MODEL}"} \
+            --csv "qa/llm_review_${TODAY}.csv" \
+            --summary \
+            | tee "qa/llm_review_${TODAY}.txt"
+
       - name: Prune old QA artifacts (keep 10 most recent runs)
         run: python scripts/prune_qa.py --keep 10
 
       - name: Generate QA index markdown
+        env:
+          TODAY: ${{ steps.params.outputs.date }}
         run: |
-          TODAY=$(date -u +%Y-%m-%d)
+          set -euo pipefail
           SUMMARY="qa/summary_${TODAY}.txt"
           CSV="qa/bad_reports_${TODAY}.csv"
+          LLM_SUMMARY="qa/llm_review_${TODAY}.txt"
+          LLM_CSV="qa/llm_review_${TODAY}.csv"
 
           # Count bad reports from CSV (subtract header line)
           BAD_COUNT=$(( $(wc -l < "$CSV") - 1 ))
 
           cat > "qa/README.md" << EOF
           # Report Quality Audit
+
+          Two stages, in order. Stage 1 is deterministic and free; stage 2 asks
+          an LLM to judge what regex cannot see.
+
+          ## Stage 1 — rule-based scan (\`scripts/check_report_quality.py\`)
 
           | Field | Value |
           |-------|-------|
@@ -79,12 +166,36 @@ jobs:
           \`\`\`
           EOF
 
-      - name: Resolve commit date
-        id: meta
-        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          # Stage 2 is optional (skippable via workflow_dispatch), so its
+          # section is appended only when the run actually produced one.
+          if [ -f "$LLM_SUMMARY" ]; then
+            cat >> "qa/README.md" << EOF
+
+          ## Stage 2 — LLM review (\`scripts/review_report_quality.py\`)
+
+          Grades data integrity, completeness, depth, internal consistency and
+          language on a 1-5 scale over a rolling 2-day window (report-gen crons
+          run 17:00-03:00 UTC, so one cycle spans two date stamps).
+
+          | Field | Value |
+          |-------|-------|
+          | CSV | [llm_review_${TODAY}.csv](llm_review_${TODAY}.csv) |
+          | Full summary | [llm_review_${TODAY}.txt](llm_review_${TODAY}.txt) |
+
+          \`\`\`
+          $(cat "$LLM_SUMMARY")
+          \`\`\`
+          EOF
+          else
+            echo "No stage-2 summary at $LLM_SUMMARY — LLM review was skipped."
+          fi
+
+          # Referenced so a missing CSV alongside a present summary is loud.
+          [ ! -f "$LLM_SUMMARY" ] || [ -f "$LLM_CSV" ] || {
+            echo "::warning::$LLM_SUMMARY exists but $LLM_CSV does not"; }
 
       - name: Commit QA results
         uses: ./.github/actions/commit-and-push
         with:
           paths: qa
-          message: "chore: auto-generate QA quality report ${{ steps.meta.outputs.date }}"
+          message: "chore: auto-generate QA quality report ${{ steps.params.outputs.date }}"

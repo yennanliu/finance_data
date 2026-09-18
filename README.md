@@ -49,7 +49,7 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 - **Site size cut 3.1 GB → 503 MB (-84%)** — search-index trimming, pruned navigation, WebP screenshots, GitHub-raw PDF links, 120-day retention, and a single nightly deploy. Full write-up: [部署效能調校全紀錄](https://yennj12.js.org/yennj12_blog_V4/posts/mkdocs-site-size-deploy-perf-tuning-zh/)
 - **Responsive content** — tables, charts, and articles render cleanly across iOS / Android / web
 - **Advanced analysis pipeline** — earnings-call, insider-trading, institutional-ownership, and interactive HTML reports via `advanced_analysis.yml`
-- **Automated QA & housekeeping** — daily report-quality checks (`qa_report_quality.yml`), refusal-post cleanup (`cleanup_refusals.yml`), and daily progress summaries (`daily_progress.yml`)
+- **Automated QA & housekeeping** — daily two-stage report-quality audit (`qa_report_quality.yml`: a free rule-based scan plus an OpenAI LLM reviewer that grades data integrity, depth and internal consistency), refusal-post cleanup (`cleanup_refusals.yml`), and daily progress summaries (`daily_progress.yml`)
 - **Taiwan market coverage** — added TW-listed tickers (0050, 2330.TW)
 
 ---
@@ -158,7 +158,7 @@ finance_data/
 | `daily_market_news.yml` | Daily (staggered) | Fetches AI-curated market news per ticker |
 | `daily_stock_watchlist.yml` | 22:00 UTC (pre-market) | Builds a fundamental stock watchlist |
 | `advanced_analysis.yml` | Manual / dispatch | Earnings-call, insider-trading, 13-F, and interactive HTML reports |
-| `qa_report_quality.yml` | 02:00 UTC daily | Quality-checks the day's generated reports |
+| `qa_report_quality.yml` | 02:00 UTC daily | Quality-checks recent reports: rule-based scan + an OpenAI LLM review |
 | `cleanup_refusals.yml` | 02:00 UTC daily | Removes reports containing LLM refusal messages |
 | `daily_progress.yml` | 00:40 UTC daily | Generates a daily progress summary |
 | `download_10k.yml` | Manual / dispatch | Downloads SEC 10-K filings on demand |
