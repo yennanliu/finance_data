@@ -7,6 +7,8 @@ boundary, matching the rest of the suite. No API keys required.
 from __future__ import annotations
 
 import json
+import logging
+import sys
 from datetime import date
 from unittest.mock import patch
 
@@ -17,6 +19,45 @@ import review_report_quality as rrq
 pytestmark = pytest.mark.unit
 
 FM = "---\ntitle: x\ndate: 2026-09-17\nprovider: gemini\n---\n\n"
+
+
+def _library_stream_handlers():
+    """Every ``analysis.*`` StreamHandler that route_library_logs_to_stderr
+    would touch (FileHandler excluded, as it subclasses StreamHandler)."""
+    for name in list(logging.Logger.manager.loggerDict):
+        if "analysis" not in name:
+            continue
+        logger_obj = logging.getLogger(name)
+        for handler in getattr(logger_obj, "handlers", []):
+            if isinstance(handler, logging.StreamHandler) \
+                    and not isinstance(handler, logging.FileHandler):
+                yield logger_obj, handler
+
+
+@pytest.fixture(autouse=True)
+def _isolate_library_log_streams():
+    """Undo route_library_logs_to_stderr()'s global mutation after each test.
+
+    The routing rebinds handler streams process-wide. Left alone, a handler
+    still pointing at one test's captured stream raises
+    ValueError("I/O operation on closed file") from logging's flush in a later
+    test — an order-dependent failure, since the suite randomises order.
+    """
+    before = [(lg, h, h.stream) for lg, h in _library_stream_handlers()]
+    known = {id(h) for _, h, _ in before}
+
+    yield
+
+    for _, handler, stream in before:
+        # Direct assignment, not setStream(): setStream flushes the *current*
+        # stream before swapping, and by teardown that stream is the one
+        # pytest just closed — the flush itself would raise.
+        handler.stream = stream
+    # Handlers created *during* the test (setup_logger caches per name) would
+    # otherwise survive holding that test's stream.
+    for logger_obj, handler in list(_library_stream_handlers()):
+        if id(handler) not in known:
+            logger_obj.removeHandler(handler)
 
 
 def _write(tmp_path, ticker, filename, body=None):
@@ -577,3 +618,91 @@ def test_the_hardened_system_message_is_sent_to_every_provider(tmp_path):
             rrq.review_one(p, provider=provider,
                            model=rrq.REVIEWER_MODELS[provider])
         assert m.call_args.args[2] == rrq.REVIEWER_SYSTEM_MESSAGE, runner
+
+
+# ── stdout is a data channel, not a log channel ──────────────────────────────
+# The first live CI run wrote ~400 lines of per-call INFO logging into the
+# committed qa/llm_review_<date>.txt, because analysis.utils.logging_utils
+# attaches its handler to stdout and the workflow tees stdout into that file.
+# The workflow then embeds the file in qa/README.md, which grew by 432 lines.
+
+def test_library_log_handlers_are_moved_off_stdout():
+    import logging
+    from analysis.utils.logging_utils import setup_logger
+
+    logger = setup_logger("analysis.test.route", level=logging.INFO)
+    handler = logger.handlers[0]
+    handler.setStream(sys.stdout)          # the shipped default
+    assert handler.stream is sys.stdout
+
+    moved = rrq.route_library_logs_to_stderr()
+
+    assert moved >= 1
+    assert handler.stream is sys.stderr
+
+
+def test_routing_is_idempotent():
+    rrq.route_library_logs_to_stderr()
+    assert rrq.route_library_logs_to_stderr() == 0
+
+
+def test_the_llm_modules_own_logger_lands_on_stderr():
+    """The noisy one in practice: run_openai logs two INFO lines per report."""
+    import analysis.utils.llm as llm_mod
+
+    for h in llm_mod.logger.handlers:
+        if isinstance(h, logging.StreamHandler):
+            h.setStream(sys.stdout)
+
+    rrq.route_library_logs_to_stderr()
+
+    streams = [h.stream for h in llm_mod.logger.handlers
+               if isinstance(h, logging.StreamHandler)]
+    assert streams and all(s is sys.stderr for s in streams)
+
+
+def test_stdout_carries_only_the_summary_not_library_logs(tmp_path, capsys):
+    """End-to-end guard on the artifact's contents: what the workflow tees
+    must be the summary alone."""
+    _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+
+    def _logging_runner(ticker, prompt, system_message, **kw):
+        # Stand in for run_openai's real per-call INFO logging.
+        logging.getLogger("analysis.utils.llm").info(
+            "Response: input=26000, output=249, total=26249, chars=409")
+        return _verdict_json()
+
+    with patch.object(rrq, "run_openai", side_effect=_logging_runner):
+        rrq.main(["--root", str(tmp_path), "--date", "2026-09-17", "--summary"])
+
+    out = capsys.readouterr().out
+    assert "Reports reviewed" in out          # the summary is present
+    assert "[INFO" not in out                 # the noise is not
+    assert "total=26249" not in out
+
+
+# ── --limit plumbing for cheap model comparisons ─────────────────────────────
+
+def test_limit_selection_is_deterministic_across_runs(tmp_path):
+    """Two runs with the same cap must grade the same reports, or a
+    model-vs-model comparison is not like-for-like."""
+    for t in ("msft", "aapl", "nvda", "goog"):
+        _write(tmp_path, t, "fundamental_analysis_2026-09-17_gemini.md")
+
+    kwargs = dict(days=None, since=None, until=None, ticker=None, limit=2)
+    first = rrq.select_reports([tmp_path], **kwargs)
+    second = rrq.select_reports([tmp_path], **kwargs)
+
+    assert first == second
+    assert len(first) == 2
+
+
+def test_limit_caps_the_api_calls_end_to_end(tmp_path):
+    for n in range(5):
+        _write(tmp_path, "aapl", f"fundamental_analysis_2026-09-1{n}_gemini.md")
+
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        rrq.main(["--root", str(tmp_path), "--date", "all", "--limit", "2",
+                  "--summary"])
+
+    assert m.call_count == 2
