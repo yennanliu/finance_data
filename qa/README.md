@@ -43,379 +43,28 @@ run 17:00-03:00 UTC, so one cycle spans two date stamps).
 | Full summary | [llm_review_2026-09-18.txt](llm_review_2026-09-18.txt) |
 
 ```
-01:36:33 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:37 [INFO   ] Response: input=26000, output=249, total=26249, chars=409
-01:36:37 [INFO   ] Token usage is 249/1200 (20%) - report could be more detailed
-01:36:37 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:40 [INFO   ] Response: input=27473, output=241, total=27714, chars=404
-01:36:40 [INFO   ] Token usage is 241/1200 (20%) - report could be more detailed
-01:36:40 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:46 [INFO   ] Response: input=26873, output=280, total=27153, chars=456
-01:36:46 [INFO   ] Token usage is 280/1200 (23%) - report could be more detailed
-01:36:46 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:49 [INFO   ] Response: input=27546, output=265, total=27811, chars=427
-01:36:49 [INFO   ] Token usage is 265/1200 (22%) - report could be more detailed
-01:36:49 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:52 [INFO   ] Response: input=28708, output=254, total=28962, chars=421
-01:36:52 [INFO   ] Token usage is 254/1200 (21%) - report could be more detailed
-01:36:52 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:55 [INFO   ] Response: input=27550, output=250, total=27800, chars=413
-01:36:55 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:36:55 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:36:58 [INFO   ] Response: input=29877, output=267, total=30144, chars=429
-01:36:58 [INFO   ] Token usage is 267/1200 (22%) - report could be more detailed
-01:36:58 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:01 [INFO   ] Response: input=28314, output=252, total=28566, chars=415
-01:37:01 [INFO   ] Token usage is 252/1200 (21%) - report could be more detailed
-01:37:01 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:04 [INFO   ] Response: input=27078, output=268, total=27346, chars=438
-01:37:04 [INFO   ] Token usage is 268/1200 (22%) - report could be more detailed
-01:37:04 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:07 [INFO   ] Response: input=28084, output=292, total=28376, chars=464
-01:37:07 [INFO   ] Token usage is 292/1200 (24%) - report could be more detailed
-01:37:07 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:09 [INFO   ] Response: input=27832, output=147, total=27979, chars=279
-01:37:09 [INFO   ] Token usage is 147/1200 (12%) - report could be more detailed
-01:37:09 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:12 [INFO   ] Response: input=28319, output=262, total=28581, chars=424
-01:37:12 [INFO   ] Token usage is 262/1200 (21%) - report could be more detailed
-01:37:12 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:15 [INFO   ] Response: input=26743, output=275, total=27018, chars=452
-01:37:15 [INFO   ] Token usage is 275/1200 (22%) - report could be more detailed
-01:37:15 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:18 [INFO   ] Response: input=27539, output=269, total=27808, chars=448
-01:37:18 [INFO   ] Token usage is 269/1200 (22%) - report could be more detailed
-01:37:18 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:21 [INFO   ] Response: input=26767, output=231, total=26998, chars=400
-01:37:21 [INFO   ] Token usage is 231/1200 (19%) - report could be more detailed
-01:37:21 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:23 [INFO   ] Response: input=25745, output=247, total=25992, chars=412
-01:37:23 [INFO   ] Token usage is 247/1200 (20%) - report could be more detailed
-01:37:23 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:30 [INFO   ] Response: input=26633, output=250, total=26883, chars=411
-01:37:30 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:37:30 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:36 [INFO   ] Response: input=26382, output=243, total=26625, chars=410
-01:37:36 [INFO   ] Token usage is 243/1200 (20%) - report could be more detailed
-01:37:36 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:42 [INFO   ] Response: input=27645, output=238, total=27883, chars=402
-01:37:42 [INFO   ] Token usage is 238/1200 (19%) - report could be more detailed
-01:37:42 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:49 [INFO   ] Response: input=26731, output=276, total=27007, chars=444
-01:37:49 [INFO   ] Token usage is 276/1200 (23%) - report could be more detailed
-01:37:49 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:37:56 [INFO   ] Response: input=28045, output=253, total=28298, chars=419
-01:37:56 [INFO   ] Token usage is 253/1200 (21%) - report could be more detailed
-01:37:56 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:02 [INFO   ] Response: input=25382, output=248, total=25630, chars=413
-01:38:02 [INFO   ] Token usage is 248/1200 (20%) - report could be more detailed
-01:38:02 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:08 [INFO   ] Response: input=28714, output=250, total=28964, chars=422
-01:38:08 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:38:08 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:17 [INFO   ] Response: input=27370, output=296, total=27666, chars=473
-01:38:17 [INFO   ] Token usage is 296/1200 (24%) - report could be more detailed
-01:38:17 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:21 [INFO   ] Response: input=27939, output=247, total=28186, chars=411
-01:38:21 [INFO   ] Token usage is 247/1200 (20%) - report could be more detailed
-01:38:21 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:28 [INFO   ] Response: input=26975, output=245, total=27220, chars=417
-01:38:28 [INFO   ] Token usage is 245/1200 (20%) - report could be more detailed
-01:38:28 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:35 [INFO   ] Response: input=27658, output=239, total=27897, chars=406
-01:38:35 [INFO   ] Token usage is 239/1200 (19%) - report could be more detailed
-01:38:35 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:42 [INFO   ] Response: input=26528, output=250, total=26778, chars=418
-01:38:42 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:38:42 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:47 [INFO   ] Response: input=25434, output=237, total=25671, chars=403
-01:38:47 [INFO   ] Token usage is 237/1200 (19%) - report could be more detailed
-01:38:48 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:38:55 [INFO   ] Response: input=28305, output=236, total=28541, chars=408
-01:38:55 [INFO   ] Token usage is 236/1200 (19%) - report could be more detailed
-01:38:55 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:01 [INFO   ] Response: input=27968, output=271, total=28239, chars=434
-01:39:01 [INFO   ] Token usage is 271/1200 (22%) - report could be more detailed
-01:39:01 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:09 [INFO   ] Response: input=29464, output=249, total=29713, chars=414
-01:39:09 [INFO   ] Token usage is 249/1200 (20%) - report could be more detailed
-01:39:09 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:15 [INFO   ] Response: input=28242, output=270, total=28512, chars=435
-01:39:15 [INFO   ] Token usage is 270/1200 (22%) - report could be more detailed
-01:39:15 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:23 [INFO   ] Response: input=24531, output=318, total=24849, chars=508
-01:39:23 [INFO   ] Token usage is 318/1200 (26%) - report could be more detailed
-01:39:23 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:29 [INFO   ] Response: input=29389, output=247, total=29636, chars=414
-01:39:29 [INFO   ] Token usage is 247/1200 (20%) - report could be more detailed
-01:39:29 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:34 [INFO   ] Response: input=21852, output=254, total=22106, chars=419
-01:39:34 [INFO   ] Token usage is 254/1200 (21%) - report could be more detailed
-01:39:34 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:35 [INFO   ] Response: input=5491, output=132, total=5623, chars=263
-01:39:35 [INFO   ] Token usage is 132/1200 (11%) - report could be more detailed
-01:39:35 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:38 [INFO   ] Response: input=5290, output=246, total=5536, chars=413
-01:39:38 [INFO   ] Token usage is 246/1200 (20%) - report could be more detailed
-01:39:38 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:40 [INFO   ] Response: input=5976, output=163, total=6139, chars=294
-01:39:40 [INFO   ] Token usage is 163/1200 (13%) - report could be more detailed
-01:39:40 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:42 [INFO   ] Response: input=5355, output=252, total=5607, chars=406
-01:39:42 [INFO   ] Token usage is 252/1200 (21%) - report could be more detailed
-01:39:42 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:44 [INFO   ] Response: input=4682, output=126, total=4808, chars=253
-01:39:44 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:44 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:45 [INFO   ] Response: input=5127, output=127, total=5254, chars=257
-01:39:45 [INFO   ] Token usage is 127/1200 (10%) - report could be more detailed
-01:39:45 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:47 [INFO   ] Response: input=5359, output=139, total=5498, chars=268
-01:39:47 [INFO   ] Token usage is 139/1200 (11%) - report could be more detailed
-01:39:47 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:48 [INFO   ] Response: input=5768, output=126, total=5894, chars=253
-01:39:48 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:48 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:50 [INFO   ] Response: input=5925, output=126, total=6051, chars=253
-01:39:50 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:50 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:52 [INFO   ] Response: input=5323, output=126, total=5449, chars=253
-01:39:52 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:52 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:54 [INFO   ] Response: input=5683, output=135, total=5818, chars=263
-01:39:54 [INFO   ] Token usage is 135/1200 (11%) - report could be more detailed
-01:39:54 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:55 [INFO   ] Response: input=4517, output=126, total=4643, chars=253
-01:39:55 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:55 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:57 [INFO   ] Response: input=4531, output=126, total=4657, chars=253
-01:39:57 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:57 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:39:58 [INFO   ] Response: input=5501, output=126, total=5627, chars=253
-01:39:58 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:39:58 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:00 [INFO   ] Response: input=5314, output=130, total=5444, chars=261
-01:40:00 [INFO   ] Token usage is 130/1200 (10%) - report could be more detailed
-01:40:00 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:01 [INFO   ] Response: input=5552, output=126, total=5678, chars=253
-01:40:01 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:01 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:03 [INFO   ] Response: input=5757, output=145, total=5902, chars=273
-01:40:03 [INFO   ] Token usage is 145/1200 (12%) - report could be more detailed
-01:40:03 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:05 [INFO   ] Response: input=5215, output=258, total=5473, chars=429
-01:40:05 [INFO   ] Token usage is 258/1200 (21%) - report could be more detailed
-01:40:05 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:07 [INFO   ] Response: input=5825, output=126, total=5951, chars=253
-01:40:07 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:07 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:08 [INFO   ] Response: input=5642, output=131, total=5773, chars=259
-01:40:08 [INFO   ] Token usage is 131/1200 (10%) - report could be more detailed
-01:40:08 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:10 [INFO   ] Response: input=5135, output=264, total=5399, chars=429
-01:40:10 [INFO   ] Token usage is 264/1200 (22%) - report could be more detailed
-01:40:10 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:12 [INFO   ] Response: input=5696, output=126, total=5822, chars=253
-01:40:12 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:12 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:14 [INFO   ] Response: input=5070, output=126, total=5196, chars=253
-01:40:14 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:14 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:16 [INFO   ] Response: input=6214, output=185, total=6399, chars=353
-01:40:16 [INFO   ] Token usage is 185/1200 (15%) - report could be more detailed
-01:40:16 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:18 [INFO   ] Response: input=6029, output=126, total=6155, chars=253
-01:40:18 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:18 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:20 [INFO   ] Response: input=5715, output=230, total=5945, chars=418
-01:40:20 [INFO   ] Token usage is 230/1200 (19%) - report could be more detailed
-01:40:20 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:22 [INFO   ] Response: input=5636, output=126, total=5762, chars=253
-01:40:22 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:22 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:23 [INFO   ] Response: input=5322, output=126, total=5448, chars=253
-01:40:23 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:23 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:25 [INFO   ] Response: input=5333, output=211, total=5544, chars=385
-01:40:25 [INFO   ] Token usage is 211/1200 (17%) - report could be more detailed
-01:40:25 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:27 [INFO   ] Response: input=5704, output=126, total=5830, chars=253
-01:40:27 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:27 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:28 [INFO   ] Response: input=5918, output=126, total=6044, chars=253
-01:40:28 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:28 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:30 [INFO   ] Response: input=5333, output=126, total=5459, chars=253
-01:40:30 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:30 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:33 [INFO   ] Response: input=5794, output=297, total=6091, chars=477
-01:40:33 [INFO   ] Token usage is 297/1200 (24%) - report could be more detailed
-01:40:33 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:35 [INFO   ] Response: input=5615, output=230, total=5845, chars=409
-01:40:35 [INFO   ] Token usage is 230/1200 (19%) - report could be more detailed
-01:40:35 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:37 [INFO   ] Response: input=5909, output=135, total=6044, chars=267
-01:40:37 [INFO   ] Token usage is 135/1200 (11%) - report could be more detailed
-01:40:37 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:38 [INFO   ] Response: input=5873, output=130, total=6003, chars=261
-01:40:38 [INFO   ] Token usage is 130/1200 (10%) - report could be more detailed
-01:40:38 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:40 [INFO   ] Response: input=5711, output=209, total=5920, chars=361
-01:40:40 [INFO   ] Token usage is 209/1200 (17%) - report could be more detailed
-01:40:40 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:42 [INFO   ] Response: input=5458, output=126, total=5584, chars=253
-01:40:42 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:42 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:43 [INFO   ] Response: input=6078, output=139, total=6217, chars=267
-01:40:43 [INFO   ] Token usage is 139/1200 (11%) - report could be more detailed
-01:40:43 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:45 [INFO   ] Response: input=5824, output=126, total=5950, chars=253
-01:40:45 [INFO   ] Token usage is 126/1200 (10%) - report could be more detailed
-01:40:45 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:47 [INFO   ] Response: input=4987, output=145, total=5132, chars=272
-01:40:47 [INFO   ] Token usage is 145/1200 (12%) - report could be more detailed
-01:40:47 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:49 [INFO   ] Response: input=5476, output=276, total=5752, chars=456
-01:40:49 [INFO   ] Token usage is 276/1200 (23%) - report could be more detailed
-01:40:49 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:51 [INFO   ] Response: input=5533, output=268, total=5801, chars=445
-01:40:51 [INFO   ] Token usage is 268/1200 (22%) - report could be more detailed
-01:40:51 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:53 [INFO   ] Response: input=5090, output=133, total=5223, chars=261
-01:40:53 [INFO   ] Token usage is 133/1200 (11%) - report could be more detailed
-01:40:53 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:54 [INFO   ] Response: input=5174, output=136, total=5310, chars=268
-01:40:54 [INFO   ] Token usage is 136/1200 (11%) - report could be more detailed
-01:40:54 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:57 [INFO   ] Response: input=11921, output=230, total=12151, chars=387
-01:40:57 [INFO   ] Token usage is 230/1200 (19%) - report could be more detailed
-01:40:57 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:40:59 [INFO   ] Response: input=14199, output=300, total=14499, chars=470
-01:40:59 [INFO   ] Token usage is 300/1200 (25%) - report could be more detailed
-01:40:59 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:02 [INFO   ] Response: input=13658, output=265, total=13923, chars=439
-01:41:02 [INFO   ] Token usage is 265/1200 (22%) - report could be more detailed
-01:41:02 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:05 [INFO   ] Response: input=15254, output=263, total=15517, chars=430
-01:41:05 [INFO   ] Token usage is 263/1200 (21%) - report could be more detailed
-01:41:05 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:08 [INFO   ] Response: input=14643, output=283, total=14926, chars=455
-01:41:08 [INFO   ] Token usage is 283/1200 (23%) - report could be more detailed
-01:41:08 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:10 [INFO   ] Response: input=15364, output=263, total=15627, chars=442
-01:41:10 [INFO   ] Token usage is 263/1200 (21%) - report could be more detailed
-01:41:10 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:14 [INFO   ] Response: input=16462, output=281, total=16743, chars=459
-01:41:14 [INFO   ] Token usage is 281/1200 (23%) - report could be more detailed
-01:41:14 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:17 [INFO   ] Response: input=16433, output=250, total=16683, chars=419
-01:41:17 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:41:17 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:20 [INFO   ] Response: input=14162, output=273, total=14435, chars=442
-01:41:20 [INFO   ] Token usage is 273/1200 (22%) - report could be more detailed
-01:41:20 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:23 [INFO   ] Response: input=15755, output=247, total=16002, chars=410
-01:41:23 [INFO   ] Token usage is 247/1200 (20%) - report could be more detailed
-01:41:23 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:26 [INFO   ] Response: input=14580, output=248, total=14828, chars=417
-01:41:26 [INFO   ] Token usage is 248/1200 (20%) - report could be more detailed
-01:41:26 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:28 [INFO   ] Response: input=14055, output=259, total=14314, chars=433
-01:41:28 [INFO   ] Token usage is 259/1200 (21%) - report could be more detailed
-01:41:28 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:31 [INFO   ] Response: input=15043, output=241, total=15284, chars=402
-01:41:31 [INFO   ] Token usage is 241/1200 (20%) - report could be more detailed
-01:41:31 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:33 [INFO   ] Response: input=14391, output=262, total=14653, chars=425
-01:41:33 [INFO   ] Token usage is 262/1200 (21%) - report could be more detailed
-01:41:33 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:36 [INFO   ] Response: input=15880, output=274, total=16154, chars=443
-01:41:36 [INFO   ] Token usage is 274/1200 (22%) - report could be more detailed
-01:41:36 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:39 [INFO   ] Response: input=15330, output=250, total=15580, chars=430
-01:41:39 [INFO   ] Token usage is 250/1200 (20%) - report could be more detailed
-01:41:39 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:41 [INFO   ] Response: input=14337, output=261, total=14598, chars=432
-01:41:41 [INFO   ] Token usage is 261/1200 (21%) - report could be more detailed
-01:41:41 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:43 [INFO   ] Response: input=15073, output=253, total=15326, chars=426
-01:41:43 [INFO   ] Token usage is 253/1200 (21%) - report could be more detailed
-01:41:43 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:46 [INFO   ] Response: input=16081, output=251, total=16332, chars=418
-01:41:46 [INFO   ] Token usage is 251/1200 (20%) - report could be more detailed
-01:41:46 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:48 [INFO   ] Response: input=14733, output=260, total=14993, chars=426
-01:41:48 [INFO   ] Token usage is 260/1200 (21%) - report could be more detailed
-01:41:48 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:51 [INFO   ] Response: input=15199, output=253, total=15452, chars=424
-01:41:51 [INFO   ] Token usage is 253/1200 (21%) - report could be more detailed
-01:41:51 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:41:55 [INFO   ] Response: input=13397, output=260, total=13657, chars=432
-01:41:55 [INFO   ] Token usage is 260/1200 (21%) - report could be more detailed
-01:41:55 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:00 [INFO   ] Response: input=12805, output=316, total=13121, chars=506
-01:42:00 [INFO   ] Token usage is 316/1200 (26%) - report could be more detailed
-01:42:00 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:02 [INFO   ] Response: input=13601, output=137, total=13738, chars=264
-01:42:02 [INFO   ] Token usage is 137/1200 (11%) - report could be more detailed
-01:42:02 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:04 [INFO   ] Response: input=13713, output=262, total=13975, chars=431
-01:42:04 [INFO   ] Token usage is 262/1200 (21%) - report could be more detailed
-01:42:04 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:08 [INFO   ] Response: input=14711, output=276, total=14987, chars=442
-01:42:08 [INFO   ] Token usage is 276/1200 (23%) - report could be more detailed
-01:42:08 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:12 [INFO   ] Response: input=14350, output=303, total=14653, chars=493
-01:42:12 [INFO   ] Token usage is 303/1200 (25%) - report could be more detailed
-01:42:12 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:14 [INFO   ] Response: input=12207, output=254, total=12461, chars=416
-01:42:14 [INFO   ] Token usage is 254/1200 (21%) - report could be more detailed
-01:42:14 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:18 [INFO   ] Response: input=13419, output=294, total=13713, chars=477
-01:42:18 [INFO   ] Token usage is 294/1200 (24%) - report could be more detailed
-01:42:18 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:21 [INFO   ] Response: input=14074, output=261, total=14335, chars=436
-01:42:21 [INFO   ] Token usage is 261/1200 (21%) - report could be more detailed
-01:42:21 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:24 [INFO   ] Response: input=12370, output=263, total=12633, chars=430
-01:42:24 [INFO   ] Token usage is 263/1200 (21%) - report could be more detailed
-01:42:24 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:29 [INFO   ] Response: input=15432, output=294, total=15726, chars=469
-01:42:29 [INFO   ] Token usage is 294/1200 (24%) - report could be more detailed
-01:42:29 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:31 [INFO   ] Response: input=14202, output=285, total=14487, chars=448
-01:42:31 [INFO   ] Token usage is 285/1200 (23%) - report could be more detailed
-01:42:31 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:36 [INFO   ] Response: input=15128, output=272, total=15400, chars=449
-01:42:36 [INFO   ] Token usage is 272/1200 (22%) - report could be more detailed
-01:42:36 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:39 [INFO   ] Response: input=13252, output=278, total=13530, chars=449
-01:42:39 [INFO   ] Token usage is 278/1200 (23%) - report could be more detailed
-01:42:39 [INFO   ] OpenAI API call: model=gpt-4o-mini, max_tokens=1200
-01:42:42 [INFO   ] Response: input=15407, output=289, total=15696, chars=470
-01:42:42 [INFO   ] Token usage is 289/1200 (24%) - report could be more detailed
 
 ============================================================
 Reports reviewed : 117
 Mean score       : 2.46 / 5
 
 Verdict breakdown:
-  pass              34
-  warn              12
-  fail              71
+  pass              36
+  warn               6
+  fail              75
 
 Mean score by dimension:
-  data_integrity   2.76
-  completeness     3.06
-  depth            2.64
-  consistency      2.85
-  language         3.67
+  data_integrity   2.72
+  completeness     3.08
+  depth            2.62
+  consistency      2.84
+  language         3.70
 
-Failed review (71):
+Failed review (75):
   0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如對於未來營收的預測缺乏實質依據。
+      → 報告中出現多處捏造數據，例如對於營收成長率的預測缺乏實質依據。
   2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如營收、毛利率等數字無法查證。
+      → 報告中出現多處捏造數據，例如對於營收和毛利率的數字缺乏來源脈絡。
   amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-09-17_gemini.md
       → 報告中出現的數據如 'TTM 營收 $41.31B (YoY +50.1%)' 需有來源脈絡，否則無法確認其真實性。
   amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-09-17_gemini.md
@@ -423,35 +72,35 @@ Failed review (71):
   avav         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avav/fundamental_analysis_2026-09-17_gemini.md
       → 報告中出現多處未填值的佔位符，如 'N/A' 和 'TBD'。
   avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如營收增長率和利潤率的數字不合理且缺乏來源。
+      → 報告中出現的數據如TTM營收$89.10B（YoY +85.5%）缺乏來源脈絡。
   goog         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/goog/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現的數據缺乏明確來源，特別是對於營收和利潤率的具體數字。
+      → 報告中出現的數據如營收 YoY 成長率與其他數字未提供明確來源，缺乏數據誠信。
   grab         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/grab/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如營收年增率、淨現金等數字無法查證。
+      → 報告中出現多處捏造數據，例如營收年增率和利潤率的數字無法查證。
   intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-09-17_gemini.md
       → 報告中出現多處數據不一致，例如不同章節對於營收的描述存在矛盾。
   ktos         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/ktos/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處數據捏造與不合理的數字，例如營業利益率為 -0.2% 卻仍預測未來能達到 7.0%。
+      → 報告中出現多處數據捏造與不合理的數字，例如營業利益率為負且無法合理解釋。
+  meta         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/meta/fundamental_analysis_2026-09-17_gemini.md
+      → 報告中出現的數據如TTM營收228.25B的增長率與其他數據不一致，存在自我矛盾。
   mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-09-17_gemini.md
       → 報告中出現多處數據未標明來源，缺乏數據誠信。
   msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，無法查證的數字如 'FY26 營收 $331.84B' 和 'ROIC 29.58%'。
+      → 報告中出現多處未填值的佔位符，如「$XXX」、「N/A」等。
   mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現了多處不合理的數字，例如TTM營收達$90.27B（YoY +345.7%）不符合常理。
+      → 報告中出現多處捏造數據，例如 TTM 營收達 $90.27B（YoY +345.7%）不符合實際情況。
   nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如營收增長率 454% 的來源不明。
+      → 報告中出現的數據如營收增長率454%未提供來源，缺乏數據誠信。
   nu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如對於營收成長率的描述與實際數據不符。
+      → 報告中出現多處捏造數據，例如無法驗證的財務數字和來源。
   nvda         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nvda/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如營收成長率和利潤率的數字不合理。
+      → 報告中出現多處數據捏造，例如營收成長率和利潤率的數字不合理。
   onds         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處數據捏造，例如TTM營收爆發至$174.10M的數字缺乏來源。
+      → 報告中出現多處捏造數據，例如營收增長率 1235.4% 明顯不合理。
   orcl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/orcl/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處捏造數據，例如未提供來源的財務數據和評分。
+      → 報告中出現多處數據捏造與不合理的數字，例如營收成長率與利潤率的數據不一致。
   pl           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pl/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處未標明來源的數據，如營收增長率和毛利率等，缺乏數據誠信。
-  pltr         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pltr/fundamental_analysis_2026-09-17_gemini.md
-      → 報告中出現多處數據捏造，例如營收增長率和利潤率的數字無法與現實相符。
+      → 報告中出現多處未標明來源的具體數字，如營收增長率和毛利率等，缺乏數據誠信。
 
-CSV written → qa/llm_review_2026-09-18.csv (83 row(s))
+CSV written → qa/llm_review_2026-09-18.csv (81 row(s))
 ```
