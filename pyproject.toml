@@ -18,6 +18,10 @@ dependencies = [
 dev = [
     "pytest>=7.0",
     "pytest-mock>=3.0",
+    # tests/test_language_switcher.py renders docs/overrides/partials/ directly,
+    # so the theme overrides are covered without installing the whole MkDocs
+    # toolchain. Jinja2 is pure Python and is what MkDocs itself renders with.
+    "Jinja2>=3.1",
 ]
 
 [tool.pytest.ini_options]

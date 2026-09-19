@@ -56,9 +56,14 @@ jobs:
           # Imports resolve via [tool.pytest.ini_options] pythonpath, no install.
           # selenium / webdriver-manager / playwright are intentionally omitted:
           # those code paths are mocked and never imported by the tests.
+          # Jinja2 is here on its own, not via MkDocs: test_language_switcher.py
+          # renders the theme overrides in docs/overrides/partials/, and pulling
+          # the whole mkdocs-material toolchain in for one pure-Python renderer
+          # would cost more than the tests it unlocks.
           packages: >-
             pytest>=7.0
             pytest-mock>=3.0
+            Jinja2>=3.1
             anthropic>=0.40.0
             openai>=1.0.0
             google-genai>=1.0.0
