@@ -20,6 +20,14 @@ validation:
   nav:
     omitted_files: info
 
+# includes/abbreviations.md is a pymdownx.snippets source, auto-appended to every
+# page — not a page of its own. MkDocs built it as one anyway, publishing a
+# nav-less /includes/abbreviations/ whose only content was a <abbr> glossary and
+# whose directory had no index, so the language switcher had nothing to fall back
+# to. snippets reads it straight off disk, so excluding it costs nothing.
+exclude_docs: |
+  includes/
+
 # ── Theme ────────────────────────────────────────────────────────────────────
 theme:
   name: material
@@ -152,6 +160,8 @@ extra_css:
   - stylesheets/extra.css
   - stylesheets/kline.css
   - stylesheets/prices.css
+  # Hero, KPI tiles and scenario rail on the per-ticker report index.
+  - stylesheets/ticker.css
 
 extra_javascript:
   - javascripts/clickable-rows.js

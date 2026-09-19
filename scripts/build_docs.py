@@ -24,6 +24,7 @@ Run in CI:     automatically called before `mkdocs build`
 from __future__ import annotations
 
 import hashlib
+import html
 import io
 import json
 import math
@@ -328,6 +329,8 @@ LANG_TEXT = {
         "p_last_close": "Last close",
         "p_52w_high": "52-week high",
         "p_52w_low": "52-week low",
+        "p_of_range": "of range",
+        "p_vol_short": "Volatility (1Y)",
         "p_from_high": "From 52-week high",
         "p_range_pos": "Position in 52-week range",
         "p_ath": "Highest price on record",
@@ -701,6 +704,8 @@ LANG_TEXT = {
         "p_last_close": "最新收盤",
         "p_52w_high": "52 週高點",
         "p_52w_low": "52 週低點",
+        "p_of_range": "區間位置",
+        "p_vol_short": "波動率（1 年）",
         "p_from_high": "距 52 週高點",
         "p_range_pos": "於 52 週區間位置",
         "p_ath": "歷史最高價",
@@ -1176,6 +1181,124 @@ def report_chart_block(ticker: str, report: Path) -> str:
                        as_of=d.isoformat() if d else "", ma=REPORT_MA)
 
 
+# ── Ticker hero: identity, and the numbers checked before anything is read ───
+# A report index used to open with a gradient h1, a one-line blockquote, and
+# then 400px of candlestick chart. Everything a reader checks before deciding
+# whether to open a 40-page report — what it costs, what it has done this year,
+# where in its own 52-week band it is sitting — was a section away, on the
+# Market Data page. The hero lifts those onto the page the ticker's nav entry
+# actually points at.
+#
+# Every figure comes from price_analytics.summary() over the committed store —
+# the same call the Market Data pages make — so the two can never disagree, and
+# none of it is computed in JS (docs/PRICE_STORE_DESIGN.md §12). It is static
+# HTML, so it also renders with JS off, when the chart below it does not.
+
+def _esc(text) -> str:
+    """Escape interpolated text. Company names and sectors are repo data rather
+    than model output, but they land in raw HTML that Markdown will not clean up
+    on the way past."""
+    return html.escape(str(text), quote=True)
+
+
+def _tone(v: "float | None") -> str:
+    """The up/down modifier for a signed figure ('' when there is no figure)."""
+    return "" if v is None else (" is-up" if v >= 0 else " is-down")
+
+
+def _signed_pct(v: "float | None", digits: int = 2) -> str:
+    """A signed percentage with no colour of its own — the tile carries that as
+    a class, so this is _pct_cell's counterpart outside a Markdown table."""
+    return "—" if v is None else f"{v:+,.{digits}f}%"
+
+
+def _tkstat(label: str, value: str, *, sub: str = "", tone: str = "") -> str:
+    """One KPI tile. `value` is already-formatted markup; the rest is escaped."""
+    out = ['<div class="tkstat">',
+           f'<span class="tkstat__k">{_esc(label)}</span>',
+           f'<span class="tkstat__v{tone}">{value}</span>']
+    if sub:
+        out.append(f'<span class="tkstat__s">{_esc(sub)}</span>')
+    out.append("</div>")
+    return "".join(out)
+
+
+def _range_tile(stats: dict, lang: str) -> str:
+    """The 52-week band as a rail with the last close marked on it.
+
+    A high and a low are two numbers; where today sits between them is the
+    reading, and it is the one thing a row of numbers cannot show. The marker
+    offset is arithmetic over the store, so it is computed here and handed to
+    CSS as a percentage rather than derived in the browser.
+    """
+    lo, hi, pos = (stats.get("low_52w"), stats.get("high_52w"),
+                   stats.get("range_position"))
+    if lo is None or hi is None or pos is None:
+        return ""
+    pos = min(100.0, max(0.0, pos))
+    return (
+        '<div class="tkstat tkstat--wide">'
+        f'<span class="tkstat__k">{_esc(t(lang, "p_52w_range"))}</span>'
+        '<div class="tkrange" role="presentation">'
+        f'<span class="tkrange__dot" style="left:{pos:.1f}%"></span></div>'
+        '<div class="tkrange__ends">'
+        f'<span>{_num(lo)}</span>'
+        f'<span class="tkrange__pos">{_pct_plain(pos, 0)} '
+        f'{_esc(t(lang, "p_of_range"))}</span>'
+        f'<span>{_num(hi)}</span></div></div>'
+    )
+
+
+def ticker_hero_block(ticker: str, meta: dict, counts: "list[str]",
+                      lang: str) -> str:
+    """The identity chips and KPI tiles that open a ticker's report index.
+
+    Degrades in one step: a ticker with no OHLCV in the store still gets its
+    chips, just no tiles — the same rule the chart below already follows.
+    """
+    bars = store_bars(ticker)
+    stats = price_analytics.summary(bars) if bars else None
+
+    chips = [f'<span class="tkchip tkchip--sym">{_esc(ticker.upper())}</span>',
+             f'<span class="tkchip">{_esc(meta["sector"])}</span>']
+    if counts:
+        chips.append('<span class="tkchip tkchip--dim">'
+                     f'{_esc(" · ".join(counts))}</span>')
+    chips.append(f'<span class="tkchip tkchip--dim">'
+                 f'{_esc(t(lang, "last_updated"))} {TODAY}</span>')
+
+    tiles: "list[str]" = []
+    if stats:
+        ret = stats["returns"]
+        currency = prices.currency_for(prices.to_yf_symbol(ticker))
+        # Currency in the label rather than beside the date: the tile is a
+        # sixth of the content width, and "USD · 2026-09-17" wraps in it.
+        tiles.append(_tkstat(f'{t(lang, "p_last_close")} ({currency})',
+                             _num(stats["last_close"]), sub=stats["last_date"]))
+        # Labelled with the same bare period codes the Market Data returns table
+        # uses, which need no translating and read the same in both trees.
+        for label, value in (("1D", ret.get("1d")), ("1M", ret.get("1m")),
+                             ("YTD", stats.get("ytd")), ("1Y", ret.get("1y"))):
+            tiles.append(_tkstat(label, _signed_pct(value), tone=_tone(value)))
+        # The Market Data stat table has room for "Annualised volatility (1Y)";
+        # a tile in a six-across grid does not, and a clipped label is worse
+        # than a short one.
+        tiles.append(_tkstat(t(lang, "p_vol_short"),
+                             _pct_plain(stats.get("volatility_1y"), 1)))
+        tiles.append(_range_tile(stats, lang))
+
+    return "\n".join([
+        '<div class="tkhero">',
+        '  <div class="tkhero__id">',
+        f'    <span class="tkhero__mark">{_esc(meta["flag"])}</span>',
+        f'    <div class="tkhero__chips">{"".join(chips)}</div>',
+        '  </div>',
+        *([f'  <div class="tkstats">{"".join(t_ for t_ in tiles if t_)}</div>']
+          if tiles else []),
+        "</div>",
+    ])
+
+
 # ── Price-target scenario table (rendered directly under the hero chart) ──────
 # Fundamental reports carry a Bear/Base/Bull scenario table, but the layouts are
 # AI-generated and share almost nothing: column count/order/labels all vary, the
@@ -1339,6 +1462,62 @@ def _fmt_pct(v: float) -> str:
     return f"{v * 100:+.1f}%"
 
 
+def scenario_rail(scenarios: "list[dict]", current: float,
+                  weighted: float, lang: str) -> str:
+    """The bear/base/bull spread drawn on one axis, with today's price on it.
+
+    The table underneath already carries every number; what it cannot show is
+    the shape — whether the current price sits below the bear case or halfway to
+    the bull one, and how far apart the three cases actually are. Two reports
+    with identical +23.8% weighted upside can look completely different here.
+
+    All positions are percentages computed in Python. The scale is padded 8%
+    either side so a marker at an extreme still has a visible tick rather than
+    being clipped flush against the end of the track.
+    """
+    points = [s["target"] for s in scenarios] + [current, weighted]
+    lo, hi = min(points), max(points)
+    if hi <= lo:
+        return ""
+    pad = (hi - lo) * 0.08
+    lo, hi = lo - pad, hi + pad
+
+    def at(v: float) -> float:
+        return (v - lo) / (hi - lo) * 100
+
+    lbl = "zh" if lang == "zh" else "en"
+    band_l, band_r = at(min(s["target"] for s in scenarios)), at(
+        max(s["target"] for s in scenarios))
+    ticks = "".join(
+        f'<span class="tkrail__tick is-{s["key"]}" style="left:{at(s["target"]):.1f}%"></span>'
+        for s in scenarios)
+    keys = "".join(
+        f'<span class="tkrail__key is-{s["key"]}">{s["emoji"]} '
+        f'{_esc(s[lbl])} <b>{_fmt_money(s["target"])}</b></span>'
+        for s in scenarios)
+    return "\n".join([
+        '<div class="tkrail">',
+        '  <div class="tkrail__track">',
+        f'    <span class="tkrail__band" style="left:{band_l:.1f}%;'
+        f'width:{max(band_r - band_l, 0):.1f}%"></span>',
+        f'    {ticks}',
+        f'    <span class="tkrail__now" style="left:{at(current):.1f}%"></span>',
+        f'    <span class="tkrail__wt" style="left:{at(weighted):.1f}%"></span>',
+        '  </div>',
+        '  <div class="tkrail__legend">',
+        f'    {keys}',
+        f'    <span class="tkrail__key is-now">{_esc(t(lang, "pt_current"))} '
+        f'<b>{_fmt_money(current)}</b></span>',
+        f'    <span class="tkrail__key is-wt">'
+        f'{_esc(t(lang, "pt_weighted_target"))} '
+        f'<b>{_fmt_money(weighted)}</b> '
+        f'<i class="{"is-up" if weighted >= current else "is-down"}">'
+        f'{_fmt_pct(weighted / current - 1)}</i></span>',
+        '  </div>',
+        '</div>',
+    ])
+
+
 def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
     """Markdown for the price-target & implied-return table shown right under the
     hero chart. Scenario targets come from the latest fundamental report; the
@@ -1364,6 +1543,8 @@ def target_price_block(ticker: str, fund_md: "Path | None", lang: str) -> str:
     lbl = "zh" if lang == "zh" else "en"
     lines = [
         f"### {t(lang, 'price_target')}",
+        "",
+        scenario_rail(scenarios, current, weighted_target, lang),
         "",
         (f"| {t(lang, 'pt_scenario')} | {t(lang, 'pt_prob')} | {t(lang, 'pt_target')} "
          f"| {t(lang, 'pt_current')} | {t(lang, 'pt_return')} | {t(lang, 'pt_weighted')} |"),
@@ -1425,22 +1606,27 @@ def fundamentals_snapshot_block(ticker: str, lang: str) -> str:
     def chart(**kw):
         return pchart_block(src=src, **kw)
 
+    # Seven figures in a seven-column table is a table only in the technical
+    # sense: one row, no comparison down any column, and at phone width it
+    # became a horizontal scroll. The same seven read as tiles, which is what
+    # the hero above already established as this page's shape for "numbers at a
+    # glance", and they wrap instead of scrolling.
+    yoy = stats.get("revenue_yoy")
     out = [
         f"### {t(lang, 'f_snapshot')}",
         "",
-        f"| {t(lang, 'f_revenue')} ({t(lang, 'f_ttm')}) | {t(lang, 'f_yoy')} "
-        f"| {t(lang, 'f_row_gross_margin')} | {t(lang, 'f_row_net_margin')} "
-        f"| ROE | {t(lang, 'f_pe')} | {t(lang, 'f_fcf')} |",
-        "|---|---|---|---|---|---|---|",
-        "| " + " | ".join([
-            f"**{_money(stats.get('revenue_ttm'))}**",
-            _pct_cell(stats.get("revenue_yoy")),
-            _pct_plain(margins.get("gross")),
-            _pct_plain(margins.get("net")),
-            _pct_plain(returns.get("roe")),
-            _mult(mult.get("pe")),
-            _money(stats.get("fcf_ttm")),
-        ]) + " |",
+        '<div class="tkstats tkstats--fin">' + "".join([
+            _tkstat(f"{t(lang, 'f_revenue')} ({t(lang, 'f_ttm')})",
+                    _money(stats.get("revenue_ttm"))),
+            _tkstat(t(lang, "f_yoy"), _signed_pct(yoy), tone=_tone(yoy)),
+            _tkstat(t(lang, "f_row_gross_margin"),
+                    _pct_plain(margins.get("gross"))),
+            _tkstat(t(lang, "f_row_net_margin"),
+                    _pct_plain(margins.get("net"))),
+            _tkstat("ROE", _pct_plain(returns.get("roe"))),
+            _tkstat(t(lang, "f_pe"), _mult(mult.get("pe"))),
+            _tkstat(t(lang, "f_fcf"), _money(stats.get("fcf_ttm"))),
+        ]) + "</div>",
         "",
         t(lang, "f_snapshot_note").format(period=stats["last_period"],
                                           form=stats["last_form"]),
@@ -1807,11 +1993,22 @@ def build_reports(lang: str = "en"):
                     lines.append(f"    - [{report_label(f)}]({link_fn(f)}){{.report-link}}")
                 lines.append("")
 
-        # Generate per-ticker index.md
+        # Generate per-ticker index.md. How many of each report type exist —
+        # shown as a hero chip here and as a cell on the top-level index below.
+        counts = [c for c in [
+            f"📊 {len(fundamental_md)}" if fundamental_md else "",
+            f"📈 {len(technical_md)}" if technical_md else "",
+            f"🗂️ {len(other_md)}" if other_md else "",
+            f"🌐 {len(html_files)}" if html_files else "",
+        ] if c]
         lines = [
-            f"# {meta['flag']} {meta['name']} ({ticker.upper()})",
+            # No flag in the h1: extra.css paints h1 text through a clipped
+            # gradient, which a twemoji SVG ignores in favour of its own fill —
+            # so "✈️" rendered as a black plane on the dark scheme's near-black
+            # background. The hero carries it instead, on a card, at icon size.
+            f"# {meta['name']} ({ticker.upper()})",
             "",
-            f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
+            ticker_hero_block(ticker, meta, counts, lang),
             "",
         ]
         # TradingView-style candlestick chart (30D/180D/360D) as the page hero.
@@ -1898,12 +2095,9 @@ def build_reports(lang: str = "en"):
 
         write(dst_dir / "index.md", "\n".join(lines))
 
-        # Row for top-level index table
-        fund_badge = f"📊 {len(fundamental_md)}" if fundamental_md else ""
-        tech_badge = f"📈 {len(technical_md)}" if technical_md else ""
-        other_badge = f"🗂️ {len(other_md)}" if other_md else ""
-        html_badge = f"🌐 {len(html_files)}" if html_files else ""
-        badges = " &nbsp; ".join(b for b in [fund_badge, tech_badge, other_badge, html_badge] if b)
+        # Row for top-level index table — the same per-type counts the hero
+        # chip carries, spaced for a table cell instead of a chip.
+        badges = " &nbsp; ".join(counts)
         # Company name is redundant for tickers we have no metadata for (name
         # defaults to the ticker itself) — show a dash instead of repeating it.
         company = meta["name"] if meta["name"] != ticker.upper() else "—"
@@ -3179,11 +3373,21 @@ def _valuation_tab(payload: dict, lang: str) -> "list[str]":
 
 def _data_tab(key: str, stats: "dict | None", fstats: "dict | None",
               price_csv_href: str, fund_csv_href: str, lang: str) -> "list[str]":
-    """Downloads for both stores, the glossary, and the disclaimers."""
+    """Downloads for both stores, the glossary, and the disclaimers.
+
+    The two CSVs carry an explicit `download` attribute; the JSON payloads do
+    not. Both are served fine — the CSV URL returns 200 text/csv — but what a
+    browser *does* with that response is content-type roulette: JSON renders in
+    the built-in viewer, while `text/csv` navigates away from the page and
+    silently drops a file in the downloads folder, which reads as a dead link.
+    `download` makes the click unambiguously a save, under the store's own
+    filename rather than whatever the URL's last segment happens to be.
+    """
     body = [f"### {t(lang, 'p_download')}", ""]
     if stats:
         body += [
-            f"- :material-file-delimited: [**{key}.csv**]({price_csv_href}) — "
+            f"- :material-file-delimited: [**{key}.csv**]({price_csv_href})"
+            f'{{download="{key}.csv"}} — '
             f"{t(lang, 'p_csv_desc').format(n=stats['bars'])}",
             "- :material-code-json: [`prices.json`](prices.json) — "
             f"{t(lang, 'p_prices_json_desc')}",
@@ -3193,7 +3397,8 @@ def _data_tab(key: str, stats: "dict | None", fstats: "dict | None",
     if fstats:
         body += [
             f"- :material-file-delimited: [**{key}_financials.csv**]"
-            f"({fund_csv_href}) — "
+            f"({fund_csv_href})"
+            f'{{download="{key}_financials.csv"}} — '
             f"{t(lang, 'f_csv_desc').format(n=fstats['periods'])}",
             f"- :material-code-json: [`fundamentals.json`](fundamentals.json) — "
             f"{t(lang, 'f_json_desc')}",
@@ -3288,7 +3493,8 @@ def market_data_index_page(rows: "list[str]", count: int, download_base: str,
         "",
         f"## {t(lang, 'p_download')}",
         "",
-        f"- :material-folder-zip: [**{t(lang, 'md_zip')}**]({zip_href}) — "
+        f"- :material-folder-zip: [**{t(lang, 'md_zip')}**]({zip_href})"
+        f'{{download="market_data.zip"}} — '
         f"{t(lang, 'md_zip_desc').format(n=count)}",
         f"- :material-code-json: [**`index.json`**]({json_href}) — "
         f"{t(lang, 'md_manifest_desc')}",
@@ -3412,10 +3618,16 @@ def build_market_data(lang: str = "en"):
         multiples = (fstats or {}).get("multiples_ttm") or {}
         files = []
         if stats:
-            files.append(f"[{t(lang, 'md_file_prices')}]({href_index(price_csv)})")
+            # Same `download` reasoning as _data_tab(): these are files, and a
+            # table cell is the last place a reader wants a navigation that
+            # silently turns into one.
+            files.append(f"[{t(lang, 'md_file_prices')}]"
+                         f"({href_index(price_csv)})"
+                         f'{{download="{price_csv}"}}')
         if fstats:
-            files.append(
-                f"[{t(lang, 'md_file_financials')}]({href_index(fund_csv)})")
+            files.append(f"[{t(lang, 'md_file_financials')}]"
+                         f"({href_index(fund_csv)})"
+                         f'{{download="{fund_csv}"}}')
         index_rows.append(
             # Link the .md, not the directory: MkDocs resolves it to the
             # directory URL and --strict can verify the target exists.

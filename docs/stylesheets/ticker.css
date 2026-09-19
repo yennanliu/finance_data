@@ -1,0 +1,322 @@
+/* ===========================================================================
+   ticker.css — the report index for one ticker (docs/reports/<ticker>/)
+
+   Three blocks, all emitted as raw HTML by scripts/build_docs.py:
+
+     .tkhero   identity chips + KPI tiles, above the candlestick chart
+     .tkrail   the bear / base / bull spread drawn on one axis
+     .tkstats  the KPI tile grid, reused for the TTM financials row
+
+   Every number and every percentage offset in here is computed in Python and
+   arrives as text or an inline `left:` — nothing measures or derives anything
+   in the browser (docs/PRICE_STORE_DESIGN.md §12). Uses the site's --fp-*
+   tokens, so light and dark track automatically, and matches the card shape
+   kline.css and prices.css already established: 1px --fp-border, --fp-bg-card,
+   a large radius.
+   =========================================================================== */
+
+/* ── hero ─────────────────────────────────────────────────────────────────── */
+
+.md-typeset .tkhero {
+  margin: -1rem 0 1.75rem;          /* pulls up under the h1's own bottom margin */
+  padding: 1.1rem 1.25rem 1.2rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 140% at 0% 0%,
+                    var(--fp-accent-glow, rgba(255, 255, 255, .05)),
+                    transparent 62%),
+    var(--fp-bg-card, #16161a);
+}
+
+.md-typeset .tkhero__id {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* The company glyph. It used to live in the h1, where the gradient text-fill
+   left the twemoji SVG rendering its own black on a near-black background. */
+.md-typeset .tkhero__mark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  line-height: 1;
+  border: 1px solid var(--fp-border, #27272a);
+  background: var(--fp-bg-alt, #111113);
+}
+.md-typeset .tkhero__mark .twemoji {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.md-typeset .tkhero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.md-typeset .tkchip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--fp-badge-border, rgba(255, 255, 255, .15));
+  background: var(--fp-badge-bg, rgba(255, 255, 255, .04));
+  color: var(--fp-text-secondary, #a1a1aa);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* The ticker itself reads as a symbol, not as prose. */
+.md-typeset .tkchip--sym {
+  font-family: var(--md-code-font);
+  letter-spacing: 0.06em;
+  color: var(--fp-text, #fafafa);
+  border-color: var(--fp-text-muted, #71717a);
+}
+
+.md-typeset .tkchip--dim {
+  color: var(--fp-text-muted, #71717a);
+  font-weight: 500;
+}
+
+/* ── KPI tiles ────────────────────────────────────────────────────────────── */
+
+/* Six across, because six is what the hero has: price plus four periods plus
+   volatility, with the 52-week rail spanning underneath. auto-fit would reflow
+   to five and orphan the sixth on a line of its own. */
+.md-typeset .tkstats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+
+/* The TTM financials row: seven tiles, wider figures ("$1.98B", not "+4.43%"),
+   and standalone rather than nested in the hero card — so it packs rather than
+   counting, and carries its own margins instead of the hero's padding. */
+.md-typeset .tkstats--fin {
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  margin: 0 0 1.25rem;
+}
+
+.md-typeset .tkstat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem 0.65rem;
+  border: 1px solid var(--fp-border-dim, #1e1e22);
+  border-radius: 11px;
+  background: var(--fp-bg-alt, #111113);
+  min-width: 0;
+}
+
+.md-typeset .tkstat--wide {
+  grid-column: 1 / -1;
+}
+
+/* Wraps to a second line rather than ellipsing: "Volatility (1Y)" truncated to
+   "VOLATILITY (..." names nothing, and the tile has the vertical room. */
+.md-typeset .tkstat__k {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--fp-text-muted, #71717a);
+  overflow-wrap: break-word;
+}
+
+.md-typeset .tkstat__v {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--fp-text, #fafafa);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .tkstat__v.is-up { color: var(--fp-green, #22c55e); }
+.md-typeset .tkstat__v.is-down { color: var(--fp-red, #ef4444); }
+
+.md-typeset .tkstat__s {
+  font-size: 0.68rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 52-week range rail ───────────────────────────────────────────────────── */
+
+.md-typeset .tkrange {
+  position: relative;
+  height: 6px;
+  margin: 0.55rem 0 0.4rem;
+  border-radius: 999px;
+  background: linear-gradient(to right,
+              var(--fp-red, #ef4444), var(--fp-text-muted, #71717a),
+              var(--fp-green, #22c55e));
+  opacity: 0.85;
+}
+
+.md-typeset .tkrange__dot {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--fp-text, #fafafa);
+  border: 2px solid var(--fp-bg-card, #16161a);
+  box-shadow: 0 0 0 1px var(--fp-border, #27272a);
+}
+
+.md-typeset .tkrange__ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .tkrange__pos { color: var(--fp-text-secondary, #a1a1aa); }
+
+/* ── scenario rail (bear / base / bull) ───────────────────────────────────── */
+
+.md-typeset .tkrail {
+  margin: 0 0 1.4rem;
+  padding: 1.15rem 1.25rem 0.95rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 14px;
+  background: var(--fp-bg-card, #16161a);
+}
+
+/* The track's own colour has to read against the card it sits on, so it uses
+   --fp-border rather than --fp-bg-alt: on the dark scheme #111113 on #16161a is
+   invisible, and the part of the axis outside the bear→bull band is exactly
+   what shows how far today's price sits from the nearest case. */
+.md-typeset .tkrail__track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--fp-border, #27272a);
+}
+
+/* The bear→bull span: how wide the disagreement is. */
+.md-typeset .tkrail__band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: linear-gradient(to right,
+              var(--fp-red, #ef4444), var(--fp-yellow, #eab308),
+              var(--fp-green, #22c55e));
+  opacity: 0.35;
+}
+
+.md-typeset .tkrail__tick {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  border-radius: 1px;
+}
+.md-typeset .tkrail__tick.is-bear { background: var(--fp-red, #ef4444); }
+.md-typeset .tkrail__tick.is-base { background: var(--fp-yellow, #eab308); }
+.md-typeset .tkrail__tick.is-bull { background: var(--fp-green, #22c55e); }
+
+/* Today's price: a filled marker, because it is the one point that is a fact
+   rather than a forecast. */
+.md-typeset .tkrail__now {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--fp-text, #fafafa);
+  border: 2px solid var(--fp-bg-card, #16161a);
+  box-shadow: 0 0 0 1px var(--fp-border, #27272a);
+}
+
+/* The probability-weighted target: hollow, to read as derived. */
+.md-typeset .tkrail__wt {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--fp-bg-card, #16161a);
+  border: 2px solid var(--fp-text, #fafafa);
+}
+
+.md-typeset .tkrail__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--fp-text-muted, #71717a);
+}
+
+.md-typeset .tkrail__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .tkrail__key b {
+  font-weight: 700;
+  color: var(--fp-text, #fafafa);
+}
+.md-typeset .tkrail__key i {
+  font-style: normal;
+  font-weight: 600;
+}
+.md-typeset .tkrail__key i.is-up { color: var(--fp-green, #22c55e); }
+.md-typeset .tkrail__key i.is-down { color: var(--fp-red, #ef4444); }
+
+/* The two derived markers get the same swatch shape as the scenario ticks, so
+   the legend is readable without cross-referencing the prose. */
+.md-typeset .tkrail__key.is-now::before,
+.md-typeset .tkrail__key.is-wt::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--fp-text, #fafafa);
+}
+.md-typeset .tkrail__key.is-now::before { background: var(--fp-text, #fafafa); }
+
+/* ── narrow viewports ─────────────────────────────────────────────────────── */
+
+@media screen and (max-width: 59.9375em) {
+  .md-typeset .tkstats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .tkhero {
+    padding: 0.9rem 0.9rem 1rem;
+  }
+  .md-typeset .tkstats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md-typeset .tkstats--fin {
+    grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  }
+  .md-typeset .tkstat__v { font-size: 1rem; }
+  /* Three scenarios plus two derived markers do not fit on one phone line;
+     let the legend stack instead of clipping. */
+  .md-typeset .tkrail__legend { gap: 0.3rem 0.75rem; }
+}

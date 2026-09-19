@@ -9,10 +9,18 @@
   The ZH tree mirrors this site's *index* pages only: build_docs.py writes one
   localised index.md per section and per ticker, and leaves the dated report and
   news leaves English-only: reports/<ticker>/index.md is translated, the
-  reports/<ticker>/<report>.md it links to is not. Mapping a URL with no ZH copy
-  would trade a mildly wrong destination for a 404, so the counterpart is
-  computed only for pages known to have one and everything else keeps the
-  configured root link.
+  reports/<ticker>/<report>.md it links to is not.
+
+  Those leaves used to fall back to the configured site root, which is what the
+  reader sees as "the language button threw me back to the home page" — from
+  /reports/avav/fundamental_analysis_2026-09-18_gemini/ it was a four-click walk
+  back to where they started. They now fall back to the leaf's own *parent
+  index*, which is one directory up and always exists in both trees, so the
+  switch keeps the reader on the ticker (or news feed) they were reading
+  instead of on the ticker they were not. That invariant — every page without a
+  ZH twin of its own sits directly inside a directory that has one — is not a
+  guess; tests/test_build_docs.py::test_every_unmirrored_page_has_a_mirrored_parent
+  asserts it over a real build, because a wrong guess here 404s.
 -#}
 
 {#- Pages that exist in both trees but are not index.md. Kept explicit rather
@@ -20,19 +28,30 @@
 {% set both_trees = ["scripts.md", "sec/10k.md", "sec/10q.md",
                      "sec/13f.md", "sec/6k.md"] %}
 
-{% set url = (page.url if page and page.url else "") %}
+{#- MkDocs gives each tree's root index the url "." rather than "". Normalised
+    here so the root is the empty prefix every path below is built from — "."
+    would otherwise make the Chinese target "zh/." and lose its trailing
+    slash, costing a redirect. -#}
+{% set url = (page.url if page and page.url and page.url != "." else "") %}
 {% set mirrored = page and (page.is_index or page.file.src_uri in both_trees
                             or page.file.src_uri.startswith("zh/")) %}
 
 {#- The same page in each tree. "zh/" is stripped rather than replaced so a
     ticker that happens to contain the substring is left alone. -#}
-{% if url.startswith("zh/") %}
-  {% set en_url = url[3:] %}
-  {% set zh_url = url %}
-{% else %}
-  {% set en_url = url %}
-  {% set zh_url = "zh/" ~ url %}
+{% set base = url[3:] if url.startswith("zh/") else url %}
+
+{#- No twin of its own → the directory it lives in, which has one. Trailing
+    slash first: page.url is "reports/avav/<leaf>/" under use_directory_urls,
+    and dropping the last *segment* is what turns it into "reports/avav/". A
+    single segment ("ARCHITECTURE/") has no parent but the site root, which is
+    both trees' index — so it lands there rather than nowhere. -#}
+{% if not mirrored %}
+  {% set parts = base.strip("/").split("/") %}
+  {% set base = (parts[:-1] | join("/") ~ "/") if parts | length > 1 else "" %}
 {% endif %}
+
+{% set en_url = base %}
+{% set zh_url = "zh/" ~ base %}
 
 <div class="md-header__option">
   <div class="md-select">
@@ -43,7 +62,11 @@
     <div class="md-select__inner">
       <ul class="md-select__list">
         {% for alt in config.extra.alternate %}
-          {% if mirrored %}
+          {#- 404.html renders with no `page`: there is no "same page" to map,
+              and the `url` filter without one resolves "" against base_url to
+              the literal "/finance_data/." — valid, but the configured link
+              says the same thing without the stray dot segment. -#}
+          {% if page %}
             {% set target = (zh_url if alt.lang.startswith("zh") else en_url) | url %}
           {% else %}
             {% set target = alt.link | url %}

@@ -5,6 +5,7 @@ they're exercised by the CI build smoke. Here we pin the pure logic.
 """
 
 import json
+import re
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -1384,6 +1385,11 @@ def test_snapshot_localises(monkeypatch, tmp_path):
     assert "財報摘要" in bd.fundamentals_snapshot_block("nvda", "zh")
 
 
+def _tile_values(block: str) -> "list[str]":
+    """The KPI tile values, in order, out of a .tkstats grid."""
+    return re.findall(r'<span class="tkstat__v[^"]*">([^<]*)</span>', block)
+
+
 def test_snapshot_shows_a_dash_not_a_zero_for_an_untagged_line(monkeypatch, tmp_path):
     """AMZN tags no quarterly gross profit; 0% would assert something false."""
     _fund_store(monkeypatch, tmp_path, "amzn")
@@ -1392,9 +1398,244 @@ def test_snapshot_shows_a_dash_not_a_zero_for_an_untagged_line(monkeypatch, tmp_
     for r in rows:
         r["gross_profit"] = None
     block = bd.fundamentals_snapshot_block("amzn", "en")
-    body = block.split("|---|---|---|---|---|---|---|")[1].strip().splitlines()[0]
-    cells = [c.strip() for c in body.strip("|").split("|")]
-    revenue, yoy, gross, net = cells[0], cells[1], cells[2], cells[3]
-    assert gross == "—", cells          # untagged, so absent…
-    assert net == "10.00%", cells       # …while the lines it does tag still read
+    revenue, yoy, gross, net = _tile_values(block)[:4]
+    assert gross == "—", block          # untagged, so absent…
+    assert net == "10.00%", block       # …while the lines it does tag still read
     assert "$" in revenue and "%" in yoy
+
+
+def test_snapshot_ttm_figures_are_tiles_not_a_seven_column_table(monkeypatch,
+                                                                tmp_path):
+    """One row of seven columns is a table only in the technical sense: nothing
+    is being compared down any column, and it scrolled sideways on a phone."""
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [
+        {"date": "2025-12-30", "close": 50.0}])
+    block = bd.fundamentals_snapshot_block("nvda", "en")
+    assert 'class="tkstats tkstats--fin"' in block
+    assert len(_tile_values(block)) == 7
+    # The charts below it are still Markdown; only the figures moved.
+    assert "|---|" not in block
+
+
+def test_snapshot_tiles_carry_the_sign_as_a_class_not_a_glyph_colour(
+        monkeypatch, tmp_path):
+    """_pct_cell's coloured span is for table cells; a tile colours itself, so
+    the growth figure has to arrive signed and classed."""
+    _fund_store(monkeypatch, tmp_path, "nvda")
+    monkeypatch.setattr(bd, "store_bars", lambda key: [])
+    block = bd.fundamentals_snapshot_block("nvda", "en")
+    assert '<span class="tkstat__v is-up">+' in block
+    assert '<span class="pos">' not in block
+
+
+# ── EN ↔ ZH page mirroring ───────────────────────────────────────────────────
+# docs/overrides/partials/alternate.html maps the language switcher to the same
+# page in the other tree. Dated report/news leaves are English-only, so for
+# those it falls back one directory up — to the ticker index, which is
+# translated. That fallback is only safe while *every* page without a ZH twin
+# of its own sits directly inside a directory that has one; this pins it, so a
+# future section that nests its leaves two deep fails here rather than shipping
+# a 404 behind the language button.
+
+def test_every_unmirrored_page_has_a_mirrored_parent(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    news = tmp_path / "ai_gen_report" / "market_news"
+    for tk in ("aaa", "bbb"):
+        _mk_report(src_stock / tk,
+                   f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")
+        _mk_report(src_stock / tk,
+                   f"fundamental_analysis_{bd.TODAY}_gemini.md", "# f\n")
+        _mk_report(news / tk, f"market_news_{bd.TODAY}_openai.md", "# n\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock,
+                             limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", news)
+
+    for lang in ("en", "zh"):
+        bd.build_reports(lang=lang)
+        bd.build_market_news(lang=lang)
+
+    def tree(root: Path) -> set:
+        return {str(p.relative_to(root)) for p in root.rglob("*.md")
+                if "zh/" not in str(p.relative_to(root))}
+
+    en = tree(docs) - tree(docs / "zh")
+    zh = tree(docs / "zh")
+    assert en, "the fixture must produce English-only leaves to be meaningful"
+    for page in sorted(en):
+        parent = "/".join(page.split("/")[:-1])
+        twin = f"{parent}/index.md" if parent else "index.md"
+        assert twin in zh, (
+            f"{page} has no ZH twin and its parent {twin!r} has none either — "
+            "the language switcher would 404 or bounce to the site root"
+        )
+
+
+def test_lang_text_halves_carry_the_same_keys():
+    """t(lang, key) has no fallback: a key present in one half only renders as
+    a KeyError in whichever tree forgot it."""
+    en, zh = set(bd.LANG_TEXT["en"]), set(bd.LANG_TEXT["zh"])
+    assert en - zh == set(), f"missing from zh: {sorted(en - zh)}"
+    assert zh - en == set(), f"missing from en: {sorted(zh - en)}"
+
+
+# ── ticker hero & scenario rail ──────────────────────────────────────────────
+# Both are raw HTML built in Python, so what they contain — and where the
+# markers land on their axes — is checkable arithmetic rather than a look.
+
+def _hero(monkeypatch, tmp_path, ticker="amd", n=400, lang="en"):
+    _store_series(monkeypatch, tmp_path, ticker, n)
+    return bd.ticker_hero_block(ticker, bd.get_meta(ticker), ["📊 3"], lang)
+
+
+def test_hero_carries_the_identity_chips(monkeypatch, tmp_path):
+    block = _hero(monkeypatch, tmp_path)
+    assert '<span class="tkchip tkchip--sym">AMD</span>' in block
+    assert "Semiconductors" in block
+    assert "📊 3" in block
+    assert bd.TODAY in block
+
+
+def test_hero_carries_the_flag_the_h1_gave_up(monkeypatch, tmp_path):
+    """The flag moved out of the h1, where the clipped gradient painted the
+    twemoji its own black on a near-black background."""
+    block = _hero(monkeypatch, tmp_path)
+    flag = bd.get_meta("amd")["flag"]
+    assert f'<span class="tkhero__mark">{flag}</span>' in block
+
+
+def test_hero_tiles_are_the_six_the_grid_is_sized_for(monkeypatch, tmp_path):
+    block = _hero(monkeypatch, tmp_path)
+    labels = re.findall(r'<span class="tkstat__k">([^<]*)</span>', block)
+    assert labels == ["Last close (USD)", "1D", "1M", "YTD", "1Y",
+                      "Volatility (1Y)", "52W Range"]
+
+
+def test_hero_tiles_colour_by_sign(monkeypatch, tmp_path):
+    """_store_series climbs by $1/day, so every period return is positive."""
+    block = _hero(monkeypatch, tmp_path)
+    assert '<span class="tkstat__v is-down">' not in block
+    assert block.count('<span class="tkstat__v is-up">+') >= 3
+
+
+def test_hero_range_marker_is_a_clamped_percentage(monkeypatch, tmp_path):
+    block = _hero(monkeypatch, tmp_path)
+    (pos,) = re.findall(r'tkrange__dot" style="left:([\d.]+)%', block)
+    # A store that only ever rises closes just under its own 52-week high —
+    # the band's top is that day's intraday high, not its close.
+    assert 99.0 <= float(pos) <= 100.0
+
+
+def test_hero_range_marker_never_leaves_the_rail(monkeypatch, tmp_path):
+    """range_position is a ratio over the stored band, so a fresh split or a
+    bad bar can push it outside 0–100; the marker is clamped, not clipped."""
+    _store_series(monkeypatch, tmp_path, "amd", 10)
+    monkeypatch.setattr(bd.price_analytics, "summary", lambda bars: {
+        "last_close": 1.0, "last_date": "2026-01-01", "returns": {},
+        "ytd": None, "low_52w": 1.0, "high_52w": 2.0,
+        "range_position": 412.0, "volatility_1y": None})
+    block = bd.ticker_hero_block("amd", bd.get_meta("amd"), [], "en")
+    assert 'style="left:100.0%"' in block
+
+
+def test_hero_degrades_to_chips_when_the_store_is_empty(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path / "nope")
+    block = bd.ticker_hero_block("amd", bd.get_meta("amd"), [], "en")
+    assert "tkchip--sym" in block
+    assert "tkstats" not in block          # no empty grid, no zeroed tiles
+
+
+def test_hero_localises(monkeypatch, tmp_path):
+    block = _hero(monkeypatch, tmp_path, lang="zh")
+    assert "最新收盤" in block and "波動率" in block
+    assert "Last close" not in block
+
+
+_RAIL_SCENARIOS = [
+    {"key": "bear", "emoji": "🔴", "en": "Bear", "zh": "悲觀",
+     "target": 100.0, "prob": 0.25},
+    {"key": "base", "emoji": "🟡", "en": "Base", "zh": "基準",
+     "target": 200.0, "prob": 0.50},
+    {"key": "bull", "emoji": "🟢", "en": "Bull", "zh": "樂觀",
+     "target": 300.0, "prob": 0.25},
+]
+
+
+def _lefts(rail: str, cls: str) -> "list[float]":
+    return [float(v) for v in
+            re.findall(rf'{cls}[^"]*" style="left:([\d.]+)%', rail)]
+
+
+def test_rail_orders_the_three_cases_left_to_right():
+    rail = bd.scenario_rail(_RAIL_SCENARIOS, 150.0, 200.0, "en")
+    ticks = _lefts(rail, "tkrail__tick is-")
+    assert ticks == sorted(ticks)
+    assert len(ticks) == 3
+
+
+def test_rail_pads_the_scale_so_the_extremes_stay_visible():
+    """A bear case at the very left edge would render as half a tick."""
+    rail = bd.scenario_rail(_RAIL_SCENARIOS, 150.0, 200.0, "en")
+    ticks = _lefts(rail, "tkrail__tick is-")
+    assert 0 < ticks[0] < 10 and 90 < ticks[-1] < 100
+
+
+def test_rail_puts_todays_price_where_it_actually_sits():
+    """Current price below the bear case has to read as below it — that is the
+    whole reason the spread is drawn rather than tabulated."""
+    rail = bd.scenario_rail(_RAIL_SCENARIOS, 90.0, 200.0, "en")
+    (now,) = _lefts(rail, "tkrail__now")
+    bear = _lefts(rail, "tkrail__tick is-")[0]
+    assert now < bear
+
+
+def test_rail_marks_the_weighted_target_and_its_implied_return():
+    rail = bd.scenario_rail(_RAIL_SCENARIOS, 160.0, 200.0, "en")
+    assert '<i class="is-up">+25.0%</i>' in rail
+    rail_down = bd.scenario_rail(_RAIL_SCENARIOS, 250.0, 200.0, "en")
+    assert '<i class="is-down">-20.0%</i>' in rail_down
+
+
+def test_rail_is_empty_when_every_point_coincides():
+    """Nothing to draw, and a zero-width scale would divide by zero."""
+    flat = [dict(s, target=100.0) for s in _RAIL_SCENARIOS]
+    assert bd.scenario_rail(flat, 100.0, 100.0, "en") == ""
+
+
+def test_rail_localises_the_scenario_labels():
+    rail = bd.scenario_rail(_RAIL_SCENARIOS, 150.0, 200.0, "zh")
+    assert "悲觀" in rail and "樂觀" in rail
+    assert ">Bear<" not in rail
+
+
+def test_target_price_block_leads_with_the_rail(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "PRICES_DIR", tmp_path)
+    prices.write_store("nvda", [{"date": "2026-07-18", "open": 200, "high": 205,
+                                 "low": 199, "close": 202.81, "volume": 1,
+                                 "div": None, "split": None}], tmp_path)
+    block = bd.target_price_block("nvda", _write_md(tmp_path, _MD_EMOJI), "zh")
+    assert block.index("tkrail") < block.index("|---|")
+
+
+# ── CSV downloads ────────────────────────────────────────────────────────────
+
+def test_csv_links_are_downloads_not_navigations():
+    """Both files are served fine — the CSV URL returns 200 text/csv — but a
+    browser renders JSON in its viewer and *navigates away* for text/csv,
+    dropping a file silently. `download` makes the click unambiguous, and names
+    the saved file after the store rather than the URL's last segment."""
+    body = "\n".join(bd._data_tab(
+        "2330.tw", {"bars": 2434}, {"periods": 40},
+        "2330.tw.csv", "2330.tw_financials.csv", "en"))
+    assert '(2330.tw.csv){download="2330.tw.csv"}' in body
+    assert ('(2330.tw_financials.csv){download="2330.tw_financials.csv"}'
+            in body)
+    # The JSON payloads stay plain links: the browser shows them in place,
+    # which is the useful behaviour for a payload you want to peek at.
+    assert "prices.json){download" not in body
+    assert "fundamentals.json){download" not in body
+
+
+def test_zip_link_is_a_download():
+    page = "\n".join(bd.market_data_index_page([], 38, "", "en"))
+    assert '(market_data.zip){download="market_data.zip"}' in page

@@ -1479,3 +1479,17 @@ body,
     }
   }
 }
+
+/* ── h1 permalink ──
+   h1 paints its text through a clipped gradient (see "h1 — report title"
+   above). `background-clip: text` clips that gradient to *every* glyph in the
+   element, descendants included and regardless of their own colour or
+   opacity — so the theme's own `opacity: 0` could not hide the trailing "¶",
+   which rendered at the h1's 3.75rem and wrapped onto a line of its own on a
+   two-line title. Removing its box is what removes it from the clip.
+
+   Only h1 loses its permalink, and it is the one heading that does not need
+   one: its anchor is the page's own URL. h2/h3 keep theirs. */
+.md-typeset h1 > .headerlink {
+  display: none;
+}
