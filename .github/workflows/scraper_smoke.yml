@@ -1,9 +1,13 @@
 name: Scraper Smoke Test
 
-# Weekly live check that the annualreports.com 10-K scraper still parses the
-# site (PDF links + company name). Unlike tests.yml this DOES hit the network —
-# it exists to catch site-structure changes early, the kind that previously
-# broke download_10k_pdf.py.
+# Weekly live check of the two things that only break against the real world:
+#   * the annualreports.com 10-K scraper still parses the site (PDF links +
+#     company name) — the site-structure changes that broke download_10k_pdf.py
+#   * SEC EDGAR still answers a rolling one-year filing query with filings.
+#     That one also runs against the real *calendar*: the download jobs' window
+#     used to be a calendar year, which collapsed every New Year and made them
+#     fetch nothing while still going green.
+# Unlike tests.yml this DOES hit the network.
 
 on:
   schedule:
