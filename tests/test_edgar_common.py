@@ -6,6 +6,8 @@ annual and quarterly filings disagree about it, and getting it wrong silently
 drops filings (three 10-Qs in a year collapsing onto one name).
 """
 
+import sys
+
 import pytest
 
 import download_10k_edgar as k10
@@ -488,3 +490,73 @@ def test_the_two_clis_write_to_different_trees():
     """10-q/ is kept separate so tooling that indexes 10-k/ sees only annuals."""
     assert k10.SAVE_DIR.name == "10-k"
     assert q10.SAVE_DIR.name == "10-q"
+
+
+# ── failure propagation ──────────────────────────────────────────────────────
+# The CLIs are driven by a shell loop over every tracked ticker, which can only
+# tell a refreshed ticker from a stale one by the exit status.
+
+def test_download_filings_reports_a_partial_download_as_failure(monkeypatch, stub_fetch):
+    """"Done: 1/2" used to still return True, so a ticker whose filing failed to
+    download looked identical to one that refreshed cleanly."""
+    saved, tmp_path = stub_fetch
+    monkeypatch.setattr(ec, "get_filings", lambda *a: [
+        _filing("2026-08-04", "2026-06-30", "a"),
+        _filing("2026-05-05", "2026-03-31", "b"),
+    ])
+    # First filing downloads, second fails.
+    calls = []
+
+    def flaky(url, path):
+        calls.append(url)
+        if len(calls) == 1:
+            path.write_bytes(b"%PDF-1.4")
+            return True
+        return False
+
+    monkeypatch.setattr(ec, "download_as_pdf", flaky)
+    assert ec.download_filings(
+        "PLTR", tmp_path, q10.quarterly_filename, "10-Q", 1) is False
+
+
+def test_download_filings_still_succeeds_when_every_filing_lands(monkeypatch, stub_fetch):
+    """The tightened contract must not turn an ordinary clean run red."""
+    saved, tmp_path = stub_fetch
+    monkeypatch.setattr(ec, "get_filings", lambda *a: [
+        _filing("2026-08-04", "2026-06-30", "a"),
+        _filing("2026-05-05", "2026-03-31", "b"),
+    ])
+    assert ec.download_filings(
+        "PLTR", tmp_path, q10.quarterly_filename, "10-Q", 1) is True
+
+
+def test_skipped_existing_files_count_as_success(monkeypatch, stub_fetch):
+    """The incremental skip is the steady state — every ticker is fully skipped
+    on most runs. Counting a skip as a failure would make every scheduled run
+    red."""
+    saved, tmp_path = stub_fetch
+    monkeypatch.setattr(ec, "get_filings", lambda *a: [_filing("2026-08-04", "2026-06-30")])
+    company_dir = tmp_path / "PLTR"
+    company_dir.mkdir()
+    (company_dir / "PLTR_2026-06-30_10-Q.pdf").write_bytes(b"%PDF old")
+
+    assert ec.download_filings(
+        "PLTR", tmp_path, q10.quarterly_filename, "10-Q", 1) is True
+    assert saved == []
+
+
+@pytest.mark.parametrize("mod,fn", [(k10, "download_10k"), (q10, "download_10q")])
+def test_cli_main_exits_nonzero_on_failure(monkeypatch, mod, fn):
+    """The shell loop reads the exit status, not stdout."""
+    monkeypatch.setattr(mod, fn, lambda *a, **kw: False)
+    monkeypatch.setattr(sys, "argv", [fn, "NOPE"])
+    with pytest.raises(SystemExit) as exc:
+        mod.main()
+    assert exc.value.code == 1
+
+
+@pytest.mark.parametrize("mod,fn", [(k10, "download_10k"), (q10, "download_10q")])
+def test_cli_main_exits_zero_on_success(monkeypatch, mod, fn):
+    monkeypatch.setattr(mod, fn, lambda *a, **kw: True)
+    monkeypatch.setattr(sys, "argv", [fn, "AAPL"])
+    mod.main()  # no SystemExit

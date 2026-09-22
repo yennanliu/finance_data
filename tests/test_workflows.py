@@ -217,6 +217,57 @@ def test_filing_job_loops_over_its_own_corpus(name, corpus):
     )
 
 
+@pytest.mark.parametrize("name,corpus", sorted(FILING_JOBS.items()))
+def test_filing_job_does_not_swallow_downloader_failures(name, corpus):
+    """`python ... || true` made a failed ticker invisible: the loop carried on,
+    commit-and-push succeeded (nothing changed is not an error), and the run
+    went green while that ticker stayed stale. Collect the failures instead and
+    re-raise them after the commit."""
+    text = _read(name)
+    # Comments may legitimately name `|| true` (these two explain why it was
+    # removed); only real commands count.
+    offenders = [
+        line.strip() for line in text.splitlines()
+        if "|| true" in line and not line.lstrip().startswith("#")
+    ]
+    assert not offenders, (
+        f"{name}: `|| true` hides a downloader failure and lets the run finish "
+        f"green with a stale ticker; collect failed tickers and fail "
+        f"afterwards: {offenders}"
+    )
+    assert "|| failed=" in text, f"{name}: expected failed-ticker collection"
+    assert re.search(r"if:\s*steps\.download\.outputs\.failed\s*!=\s*''", text), (
+        f"{name}: no step re-raises the collected failures"
+    )
+
+
+@pytest.mark.parametrize("name,corpus", sorted(FILING_JOBS.items()))
+def test_failure_step_runs_after_the_commit(name, corpus):
+    """Order matters: a partial refresh is still worth committing. Failing
+    before commit-and-push would discard good filings because one ticker's
+    EDGAR request timed out."""
+    text = _read(name)
+    commit = text.index("uses: ./.github/actions/commit-and-push")
+    fail = text.index("Fail if any ticker could not be refreshed")
+    assert commit < fail, (
+        f"{name}: the failure step must come after commit-and-push, or a "
+        f"partial refresh is thrown away"
+    )
+
+
+@pytest.mark.parametrize("name,corpus", sorted(FILING_JOBS.items()))
+def test_failed_ticker_list_is_not_interpolated_into_the_shell(name, corpus):
+    """`ticker` is a workflow_dispatch input and flows into the failed list, so
+    `${{ }}` inside a run block would be a script-injection seam. Pass it
+    through env."""
+    text = _read(name)
+    assert "${{ steps.download.outputs.failed }}" in text, "expected the value to be passed at all"
+    for line in text.splitlines():
+        stripped = line.strip()
+        if "steps.download.outputs.failed" in stripped and stripped.startswith("echo"):
+            pytest.fail(f"{name}: failed list interpolated into a run script: {stripped!r}")
+
+
 def test_filing_jobs_do_not_share_a_concurrency_group():
     """Sharing one group makes the later job queue behind the earlier one for
     the length of a full refresh, and `cancel-in-progress: false` means it

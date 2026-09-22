@@ -61,7 +61,10 @@ def main():
     parser.add_argument("--limit", type=int,
                         help="Keep only the N most recent matching filings")
     args = parser.parse_args()
-    download_10q(args.ticker, args.years, args.form, args.limit)
+    # Exit non-zero on an unknown ticker or a partial download, so a caller
+    # looping over tickers can tell which ones actually refreshed.
+    if not download_10q(args.ticker, args.years, args.form, args.limit):
+        sys.exit(1)
 
 
 if __name__ == "__main__":

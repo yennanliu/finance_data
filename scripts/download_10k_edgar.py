@@ -46,7 +46,10 @@ def main():
     parser.add_argument("--form", default="10-K",
                         help="SEC form type (default: 10-K; use 20-F for foreign filers like TSM)")
     args = parser.parse_args()
-    download_10k(args.ticker, args.years, args.form)
+    # Exit non-zero on an unknown ticker or a partial download, so a caller
+    # looping over tickers can tell which ones actually refreshed.
+    if not download_10k(args.ticker, args.years, args.form):
+        sys.exit(1)
 
 
 if __name__ == "__main__":

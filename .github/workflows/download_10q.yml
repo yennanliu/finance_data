@@ -64,15 +64,23 @@ jobs:
         run: python -m playwright install --with-deps chromium
 
       - name: Download report(s)
+        id: download
         env:
           TICKER: ${{ github.event.inputs.ticker }}
           YEARS: ${{ github.event.inputs.years || '1' }}
           FORM: ${{ github.event.inputs.form || '10-Q' }}
         run: |
+          # Failures are collected rather than raised here, and re-raised after
+          # the commit step. Aborting on the first bad ticker would strand the
+          # other eighteen; ignoring it outright (the `|| true` this replaces)
+          # let the run go green while a ticker stayed silently stale.
+          failed=""
+
           if [ -n "$TICKER" ]; then
             # Manual single-ticker run. --form is honoured here only: an "all"
             # run must not force one company's 6-K onto every other ticker.
-            python scripts/download_10q_edgar.py "$TICKER" --years "$YEARS" --form "$FORM"
+            python scripts/download_10q_edgar.py "$TICKER" --years "$YEARS" --form "$FORM" \
+              || failed="$TICKER"
           else
             # Scheduled / manual "all" run: every ticker already tracked under
             # 10-q/ (self-maintaining — download a new company once and it is
@@ -80,10 +88,12 @@ jobs:
             for dir in 10-q/*/; do
               t="$(basename "$dir")"
               echo "::group::$t"
-              python scripts/download_10q_edgar.py "$t" --years "$YEARS" || true
+              python scripts/download_10q_edgar.py "$t" --years "$YEARS" || failed="$failed $t"
               echo "::endgroup::"
             done
           fi
+
+          echo "failed=${failed# }" >> "$GITHUB_OUTPUT"
 
       - name: Resolve commit message
         id: meta
@@ -102,3 +112,18 @@ jobs:
         with:
           paths: 10-q
           message: ${{ steps.meta.outputs.message }}
+
+      # Deliberately after the commit: whatever did download is still worth
+      # keeping, so the partial refresh is committed first and the run only
+      # then goes red. Reversing the order would throw away good filings
+      # because one ticker's EDGAR request timed out.
+      - name: Fail if any ticker could not be refreshed
+        if: steps.download.outputs.failed != ''
+        env:
+          # Via env, never `${{ }}` inside the script: `ticker` is a
+          # workflow_dispatch input and would otherwise be interpolated
+          # straight into the shell.
+          FAILED: ${{ steps.download.outputs.failed }}
+        run: |
+          echo "::error::10-Q refresh failed for: $FAILED"
+          exit 1

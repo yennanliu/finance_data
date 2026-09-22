@@ -164,8 +164,9 @@ def download_filings(ticker, save_dir, filename, form_type, years,
     is a catch-all — pass None and an ``empty_hint`` to point the user at the
     right flag instead.
 
-    Returns False only when the ticker is unknown to EDGAR; a valid ticker with
-    no matching filings is a successful no-op.
+    Returns False when the ticker is unknown to EDGAR, or when any matching
+    filing failed to download. A valid ticker with no matching filings is a
+    successful no-op: a company that has simply not filed yet is not an error.
     """
     print(f"Looking up {ticker} on SEC EDGAR...")
     cik = get_cik(ticker)
@@ -216,4 +217,8 @@ def download_filings(ticker, save_dir, filename, form_type, years,
             ok += 1
 
     print(f"\nDone: {ok}/{len(filings)} reports in {company_dir}")
-    return True
+    # False when any filing failed to download, so the caller (and, through
+    # main(), the CLI exit status) can tell a partial refresh from a complete
+    # one. Printing "Done: 2/3" and still exiting 0 let a scheduled run go
+    # green while a ticker stayed stale.
+    return ok == len(filings)
