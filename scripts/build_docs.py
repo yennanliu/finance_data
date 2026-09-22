@@ -2438,7 +2438,8 @@ FILING_SPECS = {
         "download_key": "download_desc_10q",
         "period_key": "period",
         "download_cmd": [
-            "# Latest quarterly for a ticker; existing files are skipped.",
+            "# Reports here are auto-refreshed monthly from SEC EDGAR via GitHub Actions.",
+            "# To fetch manually — latest quarterly for a ticker; existing files are skipped:",
             "python scripts/download_10q_edgar.py AAPL --limit 1",
             "",
             "# Foreign private issuers (e.g. TSM) file 6-K rather than 10-Q.",
