@@ -7,6 +7,7 @@ drops filings (three 10-Qs in a year collapsing onto one name).
 """
 
 import sys
+from datetime import datetime
 
 import pytest
 
@@ -47,6 +48,48 @@ def test_get_cik_normalizes_and_zero_pads(monkeypatch):
     assert ec.get_cik("NOPE") is None
 
 
+# ── _cutoff_date: the rolling window ─────────────────────────────────────────
+# The cutoff used to be a calendar year (``now().year - years + 1``). That made
+# the window shrink through the year and collapse at New Year, and the 10-Q job
+# runs on the 1st of every month, so its January run sat exactly on the hole.
+
+@pytest.mark.unit
+def test_cutoff_reaches_a_full_year_back_on_new_years_day():
+    """The regression. Under the old arithmetic a 1 January run with years=1
+    accepted only filings filed that same day or later, so every ticker came
+    back empty and the job went green having fetched nothing."""
+    cutoff = ec._cutoff_date(1, today=datetime(2027, 1, 1))
+    assert cutoff == "2026-01-01"
+    # A quarterly filed the previous November is inside a one-year window.
+    assert "2026-11-19" >= cutoff
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("today,years,expected", [
+    (datetime(2026, 9, 22), 1, "2025-09-22"),
+    (datetime(2026, 1, 1), 1, "2025-01-01"),
+    (datetime(2026, 12, 31), 1, "2025-12-31"),
+    (datetime(2026, 9, 22), 3, "2023-09-22"),
+])
+def test_cutoff_is_a_rolling_window_not_a_calendar_year(today, years, expected):
+    assert ec._cutoff_date(years, today=today) == expected
+
+
+@pytest.mark.unit
+def test_cutoff_handles_leap_day():
+    """29 February has no counterpart in a common year; replace() would raise."""
+    assert ec._cutoff_date(1, today=datetime(2028, 2, 29)) == "2027-02-28"
+
+
+@pytest.mark.unit
+def test_cutoff_window_length_does_not_depend_on_the_run_date():
+    """The old bug was really this: the window's length varied with the
+    calendar. Two runs a fortnight apart must look back equally far."""
+    a = ec._cutoff_date(1, today=datetime(2026, 12, 28))
+    b = ec._cutoff_date(1, today=datetime(2027, 1, 11))
+    assert (datetime.fromisoformat(b) - datetime.fromisoformat(a)).days == 14
+
+
 # ── _matching_filings: period extraction ─────────────────────────────────────
 
 @pytest.mark.unit
@@ -58,7 +101,7 @@ def test_matching_filings_captures_period():
         "accessionNumber": ["a"],
         "primaryDocument": ["d.htm"],
     }
-    (filing,) = ec._matching_filings(block, "10-Q", 2020)
+    (filing,) = ec._matching_filings(block, "10-Q", "2020-01-01")
     assert filing["period"] == "2026-06-30"
     assert filing["date"] == "2026-08-04"
 
@@ -74,7 +117,7 @@ def test_matching_filings_period_falls_back_to_filing_date():
         "accessionNumber": ["a", "b"],
         "primaryDocument": ["a.htm", "b.htm"],
     }
-    out = ec._matching_filings(block, "10-Q", 2020)
+    out = ec._matching_filings(block, "10-Q", "2020-01-01")
     assert out[0]["period"] == "2026-08-04"   # blank → filing date
     assert out[1]["period"] == "2026-03-31"
 
@@ -88,7 +131,7 @@ def test_matching_filings_period_survives_missing_report_date_column():
         "accessionNumber": ["a"],
         "primaryDocument": ["d.htm"],
     }
-    (filing,) = ec._matching_filings(block, "10-K", 2010)
+    (filing,) = ec._matching_filings(block, "10-K", "2010-01-01")
     assert filing["period"] == "2015-02-01"
 
 
@@ -101,7 +144,7 @@ def test_matching_filings_respects_form_and_cutoff():
         "accessionNumber": ["a", "b", "c"],
         "primaryDocument": ["a.htm", "b.htm", "c.htm"],
     }
-    out = ec._matching_filings(block, "10-K", 2020)
+    out = ec._matching_filings(block, "10-K", "2020-01-01")
     assert [f["accession"] for f in out] == ["a"]  # 10-Q dropped, pre-cutoff dropped
 
 
@@ -119,6 +162,30 @@ def test_get_filings_filters_by_form_and_sorts(monkeypatch):
     out = ec.get_filings("0000320193", "10-K", years=20)
     assert [f["date"] for f in out] == ["2023-02-01", "2022-02-01"]  # 10-Q excluded, sorted desc
     assert out[0]["accession"] == "a-2023"
+
+
+def test_get_filings_still_finds_last_years_quarterlies_in_january(monkeypatch):
+    """End-to-end form of the regression: a 1 January run with the 10-Q job's
+    default --years 1 must still see the quarterlies filed through the year
+    just ended. Under the calendar-year cutoff this returned []."""
+    payload = {"filings": {"recent": {
+        "form": ["10-Q", "10-Q", "10-Q"],
+        "filingDate": ["2026-11-19", "2026-08-26", "2026-05-20"],
+        "reportDate": ["2026-10-26", "2026-07-26", "2026-04-26"],
+        "accessionNumber": ["q3", "q2", "q1"],
+        "primaryDocument": ["q3.htm", "q2.htm", "q1.htm"],
+    }}}
+    monkeypatch.setattr(ec.requests, "get", lambda *a, **k: _Resp(payload))
+
+    class FrozenJanuary(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2027, 1, 1)
+
+    monkeypatch.setattr(ec, "datetime", FrozenJanuary)
+
+    out = ec.get_filings("0001045810", "10-Q", years=1)
+    assert [f["accession"] for f in out] == ["q3", "q2", "q1"]
 
 
 def test_get_filings_pages_into_archive_files(monkeypatch):

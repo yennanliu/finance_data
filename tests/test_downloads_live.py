@@ -10,10 +10,12 @@ workflow sets ``RUN_LIVE=1`` to run it on a cadence.
 """
 
 import os
+from datetime import date
 
 import pytest
 
 import download_10k_pdf as d10
+import edgar_common as ec
 
 pytestmark = pytest.mark.live
 
@@ -39,3 +41,40 @@ def test_annualreports_apple_page_still_parses():
     assert years == sorted(years, reverse=True)
     assert max(years) >= 2023, f"latest report year {max(years)} looks stale"
     assert all(u.startswith("https://www.annualreports.com") for _, u in links)
+
+
+# ── EDGAR rolling window ─────────────────────────────────────────────────────
+# The offline tests pin the arithmetic against a frozen clock. This one runs
+# against the real calendar and the real EDGAR, which is what actually caught
+# the class of bug these guard: a query that silently matches nothing makes the
+# download job go green having fetched zero filings, and nobody notices until
+# someone wonders why a ticker looks stale.
+
+@skip_unless_live
+def test_one_year_window_still_returns_quarterlies_today():
+    """Whatever today's date is, a --years 1 10-Q query for a large quarterly
+    filer must return filings. Under the old calendar-year cutoff this returned
+    nothing from 1 January until the first filing of the new year."""
+    cik = ec.get_cik("NVDA")
+    assert cik, "NVDA not found in EDGAR — ticker→CIK lookup may have changed"
+
+    filings = ec.get_filings(cik, "10-Q", years=1)
+    assert filings, (
+        "a one-year 10-Q window returned no filings for NVDA; the window is "
+        "almost certainly broken rather than the company having stopped filing"
+    )
+    # A quarterly filer produces ~3 10-Qs a year (the fourth quarter is folded
+    # into the 10-K), so a correct rolling year sees at least two.
+    assert len(filings) >= 2, f"only {len(filings)} 10-Q(s) in a rolling year: {filings}"
+
+    newest = max(f["date"] for f in filings)
+    cutoff = ec._cutoff_date(1)
+    assert newest >= cutoff, f"newest filing {newest} predates the cutoff {cutoff}"
+
+
+@skip_unless_live
+def test_cutoff_is_a_full_year_behind_today():
+    """Catches the window collapsing without needing EDGAR to have new data."""
+    cutoff = date.fromisoformat(ec._cutoff_date(1))
+    days = (date.today() - cutoff).days
+    assert 364 <= days <= 367, f"one-year window spans {days} days, not ~365"

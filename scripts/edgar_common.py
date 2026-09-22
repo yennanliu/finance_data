@@ -41,14 +41,35 @@ def get_cik(ticker):
     return None
 
 
+def _cutoff_date(years, today=None):
+    """The oldest filing date still inside a ``years``-long rolling window.
+
+    Deliberately a date, not a year. Comparing calendar years
+    (``now().year - years + 1``) makes the window shrink as the year goes on
+    and collapse at New Year: with ``years=1`` a run on 1 January accepts only
+    filings *filed that same day or later*, so every ticker came back empty.
+    The 10-Q job runs on the 1st of each month, which put its January run
+    exactly on that hole — it would have gone green having fetched nothing,
+    for months, until the first filing of the new year.
+    """
+    today = today or datetime.now()
+    try:
+        cutoff = today.replace(year=today.year - years)
+    except ValueError:
+        # 29 February has no counterpart in a common year.
+        cutoff = today.replace(year=today.year - years, month=2, day=28)
+    return cutoff.strftime("%Y-%m-%d")
+
+
 def _matching_filings(block, form_type, cutoff):
     """Pull the (date, period, accession, primary_doc) of every filing of
-    ``form_type`` filed in or after ``cutoff`` from one submissions block
-    (arrays keyed by column)."""
+    ``form_type`` filed in or after ``cutoff`` (an ISO ``YYYY-MM-DD`` date,
+    which sorts lexicographically) from one submissions block (arrays keyed
+    by column)."""
     out = []
     periods = block.get("reportDate", [])
     for i, form in enumerate(block.get("form", [])):
-        if form == form_type and int(block["filingDate"][i][:4]) >= cutoff:
+        if form == form_type and block["filingDate"][i] >= cutoff:
             # reportDate is the period the filing covers. It is occasionally
             # blank, in which case the filing date is the best stand-in.
             period = periods[i] if i < len(periods) and periods[i] else block["filingDate"][i]
@@ -65,7 +86,7 @@ def get_filings(cik, form_type, years):
     r = requests.get(f"{DATA_URL}/submissions/CIK{cik}.json", headers=HEADERS, timeout=30)
     r.raise_for_status()
     filings = r.json()["filings"]
-    cutoff = datetime.now().year - years + 1
+    cutoff = _cutoff_date(years)
 
     results = _matching_filings(filings["recent"], form_type, cutoff)
 
@@ -73,7 +94,7 @@ def get_filings(cik, form_type, years):
     # META) page older filings into separate archive files. Fetch those too when
     # the requested window reaches back beyond what "recent" covers.
     recent_dates = [d for d in filings["recent"].get("filingDate", []) if d]
-    oldest_recent = int(min(recent_dates)[:4]) if recent_dates else cutoff
+    oldest_recent = min(recent_dates) if recent_dates else cutoff
     if oldest_recent > cutoff:
         for extra in filings.get("files", []):
             time.sleep(0.2)
