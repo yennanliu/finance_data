@@ -168,3 +168,65 @@ def test_pip_installs_go_through_the_shared_action():
         "use ./.github/actions/python-env (its `packages:` input) instead of a "
         f"raw `pip install` in a run block: {offenders}"
     )
+
+
+# ── EDGAR filing downloaders (download_10k.yml / download_10q.yml) ────────────
+# These two do not fan out over cron slots; they loop over the ticker
+# directories already present under 10-k/ and 10-q/, so their invariants are
+# about that loop rather than about cron/case pairing.
+
+FILING_JOBS = {
+    "download_10k.yml": "10-k",
+    "download_10q.yml": "10-q",
+}
+
+REPO_ROOT = WORKFLOWS.parent.parent
+
+
+@pytest.mark.parametrize("name,corpus", sorted(FILING_JOBS.items()))
+def test_ticker_directories_are_uppercase(name, corpus):
+    """The loop passes each directory name straight to the downloader, which
+    saves under `ticker.upper()`. A lowercase directory therefore round-trips
+    to a *different* path: `10-q/pl/` was real, and on Linux CI (unlike a
+    case-insensitive macOS checkout, where the bug is invisible) the job would
+    have created a second `10-q/PL/`, re-downloading every filing into it and
+    listing the company twice on the built site."""
+    root = REPO_ROOT / corpus
+    assert root.is_dir(), f"missing {root}"
+
+    offenders = sorted(
+        p.name for p in root.iterdir() if p.is_dir() and p.name != p.name.upper()
+    )
+    assert not offenders, (
+        f"{corpus}/ holds lowercase ticker director(ies) {offenders}; "
+        f"{name} would create an uppercase duplicate alongside each on Linux"
+    )
+
+
+@pytest.mark.parametrize("name,corpus", sorted(FILING_JOBS.items()))
+def test_filing_job_loops_over_its_own_corpus(name, corpus):
+    """Each job must glob the directory it commits. Copy-pasting the 10-K job
+    without retargeting the glob would refresh annual reports and then commit
+    an empty 10-q/ — a green run that silently downloads nothing new."""
+    text = _read(name)
+    assert f"for dir in {corpus}/*/" in text, (
+        f"{name}: expected a `for dir in {corpus}/*/` loop over its own corpus"
+    )
+    assert re.search(rf"^\s*paths:\s*{re.escape(corpus)}\s*$", text, re.MULTILINE), (
+        f"{name}: commit-and-push must stage `{corpus}`"
+    )
+
+
+def test_filing_jobs_do_not_share_a_concurrency_group():
+    """Sharing one group makes the later job queue behind the earlier one for
+    the length of a full refresh, and `cancel-in-progress: false` means it
+    waits rather than replacing it."""
+    groups = {}
+    for name in FILING_JOBS:
+        m = re.search(r"^concurrency:\n(?:\s*#.*\n)*\s*group:\s*(\S+)",
+                      _read(name), re.MULTILINE)
+        assert m, f"{name}: no concurrency group declared"
+        groups.setdefault(m.group(1), []).append(name)
+
+    clashes = {g: n for g, n in sorted(groups.items()) if len(n) > 1}
+    assert not clashes, f"filing jobs share a concurrency group: {clashes}"

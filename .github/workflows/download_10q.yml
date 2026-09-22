@@ -1,0 +1,104 @@
+name: Download 10-Q Reports
+
+# Companion to download_10k.yml. Pulls quarterly reports from SEC EDGAR
+# (always current). Two ways to run:
+#   * Scheduled (1st of each month): refresh every ticker already under 10-q/.
+#   * Manual: leave "ticker" blank to refresh ALL, or set it to one ticker.
+# Updates are incremental — existing report files are skipped, only missing
+# filings are downloaded and committed.
+#
+# Unlike the 10-K job there is no automatic foreign-filer fallback: a foreign
+# private issuer files 6-K, which is a catch-all covering monthly revenue,
+# dividend notices and AGM results, so the most recent one is rarely the
+# quarterly report. Fetch those deliberately with the "form" input.
+
+on:
+  schedule:
+    - cron: "0 9 1 * *" # 1st of each month, 09:00 UTC (2h after the 10-K job)
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: "Single ticker to fetch (leave blank to refresh ALL stocks under 10-q/)"
+        required: false
+        type: string
+      years:
+        description: "How many recent years to fetch"
+        required: false
+        default: "1"
+        type: string
+      form:
+        description: "SEC form type (single-ticker runs only; use 6-K for foreign filers like TSM)"
+        required: false
+        default: "10-Q"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  # Its own group, not the 10-K job's: the two touch different directories and
+  # must never queue behind one another.
+  group: download-10q
+  cancel-in-progress: false
+
+jobs:
+  download-10q:
+    name: Download 10-Q report(s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Shallow: the incremental skip-check reads 10-q/ from the working tree.
+
+      - name: Set up Python and dependencies
+        uses: ./.github/actions/python-env
+        with:
+          python-version: "3.13"
+          packages: >-
+            requests
+            playwright
+
+      - name: Install Chromium for Playwright
+        run: python -m playwright install --with-deps chromium
+
+      - name: Download report(s)
+        env:
+          TICKER: ${{ github.event.inputs.ticker }}
+          YEARS: ${{ github.event.inputs.years || '1' }}
+          FORM: ${{ github.event.inputs.form || '10-Q' }}
+        run: |
+          if [ -n "$TICKER" ]; then
+            # Manual single-ticker run. --form is honoured here only: an "all"
+            # run must not force one company's 6-K onto every other ticker.
+            python scripts/download_10q_edgar.py "$TICKER" --years "$YEARS" --form "$FORM"
+          else
+            # Scheduled / manual "all" run: every ticker already tracked under
+            # 10-q/ (self-maintaining — download a new company once and it is
+            # refreshed from then on). Existing report files are skipped.
+            for dir in 10-q/*/; do
+              t="$(basename "$dir")"
+              echo "::group::$t"
+              python scripts/download_10q_edgar.py "$t" --years "$YEARS" || true
+              echo "::endgroup::"
+            done
+          fi
+
+      - name: Resolve commit message
+        id: meta
+        env:
+          TICKER: ${{ github.event.inputs.ticker }}
+        run: |
+          set -euo pipefail
+          if [ -n "$TICKER" ]; then
+            echo "message=chore: download $TICKER 10-Q reports" >> "$GITHUB_OUTPUT"
+          else
+            echo "message=chore: monthly 10-Q refresh from SEC EDGAR" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push new reports
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: 10-q
+          message: ${{ steps.meta.outputs.message }}
