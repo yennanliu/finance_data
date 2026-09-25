@@ -1,48 +1,3 @@
-# Report Quality Audit
-
-Two stages, in order. Stage 1 is deterministic and free; stage 2 asks
-an LLM to judge what regex cannot see.
-
-## Stage 1 — rule-based scan (`scripts/check_report_quality.py`)
-
-| Field | Value |
-|-------|-------|
-| Last run | 2026-09-25 |
-| Bad reports found | 2 |
-| CSV | [bad_reports_2026-09-25.csv](bad_reports_2026-09-25.csv) |
-| Full summary | [summary_2026-09-25.txt](summary_2026-09-25.txt) |
-| Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
-
-## Latest Summary
-
-```
-
-============================================================
-Total scanned : 5085
-Bad reports   : 2  (0.0%)
-
-Issue breakdown:
-  REFUSAL                  2
-
-Top 10 tickers by bad-report count:
-  nbis            1 / 168  bad
-  wdc             1 / 76   bad
-
-CSV written → qa/bad_reports_2026-09-25.csv
-```
-
-## Stage 2 — LLM review (`scripts/review_report_quality.py`)
-
-Grades data integrity, completeness, depth, internal consistency and
-language on a 1-5 scale over a rolling 2-day window (report-gen crons
-run 17:00-03:00 UTC, so one cycle spans two date stamps).
-
-| Field | Value |
-|-------|-------|
-| CSV | [llm_review_2026-09-25.csv](llm_review_2026-09-25.csv) |
-| Full summary | [llm_review_2026-09-25.txt](llm_review_2026-09-25.txt) |
-
-```
 
 ============================================================
 Reports reviewed : 132
@@ -107,4 +62,3 @@ Ungrounded verdicts (1) — reviewer noise, not report defects:
   pl           fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/pl/technical_analysis_2026-09-24_gemini.md
 
 CSV written → qa/llm_review_2026-09-25.csv (109 row(s))
-```
