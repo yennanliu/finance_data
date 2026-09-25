@@ -75,12 +75,30 @@ class Scripted:
 
 # ── fake SDK installers ──────────────────────────────────────────────────────
 
+class _FakeStream:
+    """Context manager standing in for ``client.messages.stream(...)``."""
+
+    def __init__(self, response):
+        self._response = response
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def get_final_message(self):
+        return self._response
+
+
 def install_anthropic(monkeypatch, create):
+    """``create`` is scripted per request; run_claude reaches it via stream()."""
     mod = types.ModuleType("anthropic")
 
     class Anthropic:
         def __init__(self, api_key=None):
-            self.messages = types.SimpleNamespace(create=create)
+            self.messages = types.SimpleNamespace(
+                stream=lambda **kw: _FakeStream(create(**kw)))
 
     mod.RateLimitError = _RateLimit
     mod.Anthropic = Anthropic
@@ -145,11 +163,11 @@ def test_is_refusal_false_without_pattern():
     assert _is_refusal("short normal answer") is False
 
 
-def test_refusal_override_escalates():
-    first = _refusal_override_prefix("AAPL", 1)
-    third = _refusal_override_prefix("AAPL", 3)
-    assert "AAPL" in first
-    assert "最高優先指令" in third  # stronger wording kicks in at attempt >= 3
+def test_refusal_override_restates_task_with_etf_framing():
+    prefix = _refusal_override_prefix("VTI", 3)
+    assert "VTI" in prefix
+    assert "ETF" in prefix and "費用率" in prefix
+    assert prefix == _refusal_override_prefix("VTI", 1)  # no escalating scold
 
 
 def test_repeated_heading_detects_duplicate():
@@ -189,6 +207,17 @@ def test_claude_happy_path(monkeypatch):
     assert len(create.calls) == 1
 
 
+def test_claude_sends_system_message_and_large_budget(monkeypatch):
+    """32k is the CI default; the real SDK refuses that without streaming."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    create = Scripted(FakeAnthropicResponse(LONG_OK))
+    install_anthropic(monkeypatch, create)
+    call_claude("VTI", "ctx", "fundamental-analysis", "claude-x", 32000)
+    assert create.calls[0]["max_tokens"] == 32000
+    assert "ETF" in create.calls[0]["system"]
+    assert "{ticker}" not in create.calls[0]["system"]
+
+
 def test_claude_retries_on_rate_limit(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
     create = Scripted(_RateLimit(), FakeAnthropicResponse(LONG_OK))
@@ -207,7 +236,7 @@ def test_claude_retries_on_refusal_then_succeeds(monkeypatch):
     assert len(create.calls) == 2
     # the retry call carries a temperature + an override-prefixed prompt
     assert "temperature" in create.calls[1]
-    assert "覆寫" in create.calls[1]["messages"][0]["content"]
+    assert "完整分析" in create.calls[1]["messages"][0]["content"]
 
 
 # ── OpenAI ───────────────────────────────────────────────────────────────────
