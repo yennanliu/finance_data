@@ -14,41 +14,38 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-09-29
 
----
-
 ## 🏢 公司概覽
-飛捷科技股份有限公司（Flytech Technology Co., Ltd.，股票代碼：6206.TW）為全球領先的端點銷售系統（POS, Point of Sale）、工業電腦（IPC）、資訊服務站（Kiosk）以及醫療照護終端運算設備的設計與製造商（ODM/OEM）。公司深耕商用智能硬體架構，產品涵蓋零售、餐飲、智慧醫療、物流自動化及邊緣工控等場景。截至 2026 年 9 月 29 日，飛捷科技最新市場收盤價為 **139.0 TWD**。
+飛捷科技股份有限公司（Flytech Technology Co., Ltd.，股票代碼：6206.TW）為全球領先的端點銷售系統（POS）、自助服務機（Kiosk）、醫療用電腦與工業級平板電腦（Panel PC）硬體設計與製造商。公司深耕智慧零售、餐飲旅宿、醫療照護及工業自動化等垂直應用領域，以高度客製化設計（ODM/OEM）及高品質硬體整合能力見長，營收結構以海外歐美成熟市場為主力。最新收盤價為 143.0 TWD。
 
 ---
 
 ## 📝 新聞摘要總覽
-本次彙整之市場資訊與新聞數據顯示，圍繞 6206.TW（飛捷科技）的市場焦點主要集中於兩大層面：**總體總體經濟利率環境之變動**以及**工業電腦（IPC）與商業 POS 產業鏈的橫向競爭對比**。
+本次監測期間之市場資訊主要聚焦於全球總體經濟利率環境變化，以及工業電腦（IPC）與零售端點設備同業板塊之比價效應。從最新市場數據顯示，全球債券市場呈現高檔震盪格局，其中美國 10 年期公債殖利率報 5.1915%（+0.57%），日本 10 年期公債殖利率報 3.1060%（+0.94%），德國 10 年期公債殖利率報 3.6001%（-0.30%），英國 10 年期公債殖利率報 5.3687%（-0.30%）。美日長天期公債殖利率維持偏高水位，反映全球資金成本居高不下，對歐美企業之資本支出（CAPEX）及終端零售餐飲硬體換機週期構成總體經濟層面的折現壓力。
 
-在總體環境方面，路透社（Reuters）2026 年 9 月 24 日之市場數據顯示，全球長天期公債殖利率呈現顯著分化與高檔震盪。美國 10 年期公債殖利率上揚至 5.1915%（+0.57%），日本 10 年期國債殖利率攀升至 3.1060%（+0.94%），而德國與英國 10 年期公債殖利率則分別回落至 3.6001% 及 5.3687%。高利率環境持續對歐美企業客戶之資本支出（CapEx）決策施加壓力，對於高度仰賴歐美零售與餐飲品牌硬體設備汰換週期的 POS 與 IPC 硬體出口商而言，終端需求採購週期可能面臨拉長。
+在產業同業動態方面，相關資訊連結了工業電腦與邊緣運算同業（如宸曜 6922.TWO、研揚相關生態系、捷波 6161.TWO、安勤 3479.TWO、凌華 6166.TW、威強電 3022.TW）以及國際 POS 巨頭東芝泰格（Toshiba Tec, 6588.T）。當前 IPC 產業整體聚焦於邊緣 AI 運算整合與自助化服務終端需求，各家廠商在智慧零售、工業自動化與醫療專案上展開差異化競爭。
 
-在產業族群與市場關注度層面，市場監測數據顯示飛捷科技與台灣及全球工業運算同業（如宸曜 6922.TWO、凌華 6166.TW、安勤 3479.TWO、威強電 3022.TW，以及日本 POS 巨頭 Toshiba Tec 6588.T）持續維持高度的板塊聯動性。隨著工業物聯網（AIoT）與邊緣運算（Edge AI）應用的加速落地，市場對工控與智慧終端硬體供應商的關注度逐步提升。然而，受限於專案型訂單的驗證週期與歐美通膨後的消費修復速度，硬體代工族群在 139.0 TWD 股價水位下，面臨本益比擴張與獲利實質增長的再平衡階段。
+整體而言，飛捷（6206.TW）目前個股基本面直接新聞流相對平穩，股價收在 143.0 TWD，市場定價主要受到全球總體經濟高利率環境對成長股估值之壓抑，以及同業估值中樞與現金股利殖利率之支撐。投資人需密切關注歐美終端零售與餐飲客戶之資本支出預算恢復節奏。
 
 ---
 
 ## 💡 關鍵洞察
-
-- **全球長天期殖利率居高不下壓抑終端資本支出**：美國 10 年期公債殖利率維持在 5.1915%、日債攀升至 3.1060%，高融資成本環境迫使歐美連鎖餐飲、大型零售商延後門市 POS 與智慧 Kiosk 系統的大規模硬體翻新計畫，對專案型出貨動能構成實質阻力。
-- **邊緣運算與工業電腦板塊估值效應發酵**：同業如宸曜（6922.TWO）與凌華（6166.TW）等在工業物聯網與邊緣 AI 領域的能見度提升，帶動整體 IPC 族群的評價重估，飛捷科技若能加速在邊緣運算與智慧醫療終端的滲透，將有助於維持產品毛利率結構。
-- **國際競爭對手動態與供應鏈轉移**：日本 Toshiba Tec（6588.T）等傳統 POS 巨頭持續面臨軟硬整合轉型壓力，這為台灣具備靈活客製化與高性價比設計能力的 ODM 廠商（如飛捷）提供了搶佔中高階商用 POS 與自助服務機台市場份額的結構性機會。
-- **匯率與跨國營收敞口風險**：日圓債券殖利率上行與英德公債殖利率走低反映全球貨幣政策分歧，飛捷產品以外銷歐美為主，外幣資產計價與匯率波動對毛利率及業外匯兌損益將產生直接影響。
-- **股價處於 139.0 TWD 水位之估值支撐力檢驗**：在缺乏短線爆發性題材刺激下，當前 139.0 TWD 股價表現高度依賴穩健的現金股利殖利率與訂單能見度，投資人需密切觀察接單能見度（B/B Ratio）是否維持在健康水準。
+- **全球公債殖利率維持高檔，壓抑科技硬體估值倍數**：美國 10 年期公債殖利率達 5.1915%、日本達 3.1060%，高無風險利率環境提高股權折現率（WACC），對具穩健現金流之硬體製造商本益比擴張帶來一定估值上限壓抑。
+- **工業電腦（IPC）產業板塊聯動效應顯著**：同業包含宸曜（6922.TWO）、凌華（6166.TW）、安勤（3479.TWO）及威強電（3022.TW）的市場評價共同構建了台灣 IPC 板塊估值區間，飛捷在 POS 與 Kiosk 領域的毛利與獲利表現成為板塊防禦型配置指標。
+- **國際競爭者動態與市佔格局維持穩定**：日本零售解決方案龍頭 Toshiba Tec（6588.T）長期為全球 POS 領域指標，飛捷憑藉靈活的 ODM 客製化能力與供應鏈彈性，在歐美二線品牌及系統整合商（SI）通路持續維持穩固壁壘。
+- **企業資本支出遞延風險與自動化升級需求拉鋸**：高融資成本使部分歐美零售餐飲業者延後非必要硬體更新，但缺工與人力成本上升又加速了自助結帳機（Self-Checkout Kiosk）的剛性需求，兩者相互抵銷形成結構性平衡。
+- **匯率與利差結構對外銷毛利之潛在影響**：歐美與亞洲利差持續擴大，主要外幣（美元、歐元）走勢牽動飛捷等外銷導向硬體廠的匯兌損益與報價競爭力。
 
 ---
 
 ## 📰 近期新聞總覽
-
-- 2026-09-24 | 6206.TW - | Stock Price & Latest News | Reuters — Bing News
+- 2026-09-24 | 6206.TW - | Stock Price & Latest News — Reuters
 - 2025-05-29 | Edgewise Therapeutics: Upcoming DMD Trial Data May Disappoint (NASDAQ:EWTX) — Seeking Alpha
 - 2025-02-24 | Mainstreet Equity: Under The Radar For Far Too Long (TSX:MEQ:CA) — Seeking Alpha
 - 2025-01-11 | Neousys Technology Inc. (6922.TWO) stock price, news, quote and history — Yahoo Finance Singapore
 - 2023-11-10 | Lidar Quarterly Insights: Q3 2023 Update — Seeking Alpha
 - 2023-10-09 | Coca-Cola: Debt Levels Reduced, Attractive Multiple, Upgrade From Hold To Buy (NYSE:KO) — Seeking Alpha
-- 2018-08-12 | Toshiba Tec Corporation (6588.T) stock price, news, quote and history — Yahoo Finance UK
+- 2018-08-12 | Toshiba Tec Corporation (6588.T) stock price, news, quote and history — uk.finance.yahoo.com
+- 2017-07-12 | Jetway Information Co., Ltd. (6161.TWO) stock price, news, quote and history — Yahoo Finance Singapore
 - 2017-06-27 | Avalue Technology Incorporation (3479.TWO) stock price, news, quote and history — Yahoo Finance Singapore
 - 2017-06-12 | Flytech Technology Co., Ltd. (6206.TW) stock price, news, quote and history — Yahoo Finance Singapore
 - 2017-05-23 | Adlink Technology Inc. (6166.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada
@@ -60,74 +57,75 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 
 ## 🔍 重點新聞深度分析
 
-### 1. 全球主權債券殖利率上揚對科技硬體股之總體衝擊 (2026-09-24 - Reuters)
-- **新聞摘要**：路透社最新報價顯示，日本 10 年期公債殖利率達 3.1060%（+0.94%），美國 10 年期國債殖利率上升至 5.1915%（+0.57%），英國 10 年期國債為 5.3687%，德國 10 年期國債為 3.6001%。
-- **營運與財務影響分析**：
-  美國長天期利率維持在 5% 以上的高位，直接加劇了全球企業融資成本。商用 POS 與工業電腦主要仰賴企業資本支出（CapEx）採購，當融資成本高昂時，零售商、飯店業及醫療院所會傾向延長現有設備的使用年限，減少或推遲新機台建置專案，進而對飛捷的 ODM 出貨增速造成壓制。
-- **股價與估值啟示**：無風險利率居高不下壓縮整體科技股本益比空間，飛捷科技目前股價報 139.0 TWD，市場給予的估值倍數將面臨更嚴格的現金流折現（DCF）檢驗。
+### 1. 全球債券殖利率攀升與總體經濟環境變化 (2026-09-24)
+- **新聞核心內容**：路透數據顯示，日本 10 年期國債殖利率上升至 3.1060%（+0.94%），美國 10 年期國債殖利率維持在 5.1915%（+0.57%）之高位；歐洲方面，德國 10 年期國債殖利率報 3.6001%，英國 10 年期國債殖利率報 5.3687%。
+- **營運與財務影響**：美國與英國 10 年期殖利率突破 5%，代表全球終端企業融資借貸成本處於高檔。飛捷的主要客戶為歐美系統整合商（SI）與大型通路商，高利率環境可能拉長終端零售與餐飲客戶硬體設備換機決策時間。然而，穩健的資產負債表有助於飛捷在此環境中維持營運韌性。
+- **股價意涵**：無風險利率維持在 5% 以上，將提高權益資產的折現率門檻，對成長型科技股帶來評價壓力；但對於獲利穩健、具現金殖利率支撐的價值型硬體股而言，下檔具備防禦性支撐。
 
-### 2. 工業電腦與邊緣運算同業（宸曜 6922.TWO）板塊比價效應 (2025-01-11 - Yahoo Finance)
-- **新聞摘要**：市場追蹤工業運算同業宸曜科技（Neousys, 6922.TWO）之交易行情與基本面數據。
-- **營運與財務影響分析**：
-  宸曜科技專注於強固型邊緣 AI 運算系統，其在機器視覺、自動駕駛與智慧工廠的佈局帶動了工業電腦族群的市場關注。飛捷科技近年亦積極由傳統 POS 延伸至 Panel PC、工業自動化終端及邊緣控制系統。同業的業務擴展有助於驗證邊緣運算硬體市場的成長潛力，亦為飛捷的高毛利工控產品線提供了良好的產品對標方向。
-- **投資啟示**：若飛捷能展現出在邊緣運算與工業平板領域的營收佔比提升，將有助於擺脫純 POS 硬體製造商的單一標籤，享有更具防禦性的毛利率結構。
+---
 
-### 3. 全球商用 POS 競爭格局：Toshiba Tec (6588.T) 產業競合 (2018-08-12 - Yahoo Finance)
-- **新聞摘要**：全球 POS 龍頭日商東芝泰格（Toshiba Tec, 6588.T）之市場追蹤與歷史營運數據。
-- **營運與財務影響分析**：
-  Toshiba Tec 作為全球零售 POS 與物流解決方案的重要領導者，其營運模式兼具品牌與系統整合。然而，國際品牌大廠面臨營運成本較高與組織調整壓力，這給予台灣硬體製造商如飛捷科技爭取歐美二線品牌代工或大型零售專案切入的良機。飛捷以高度客製化（JDM/ODM）及彈性供應鏈見長，在自助結帳（Self-checkout）機台及智慧 Kiosk 市場具備與國際巨頭爭取訂單的成本優勢。
+### 2. 工業電腦與邊緣運算同業（宸曜 6922.TWO）板塊比價效應 (2025-01-11)
+- **新聞核心內容**：工業級邊緣運算平台廠宸曜科技（6922.TWO）受到市場關注，展現市場對工業電腦特定利基領域之定價偏好。
+- **營運與財務影響**：工業電腦族群近年朝向邊緣 AI（Edge AI）與智慧視覺發展。宸曜主攻強固型邊緣運算，而飛捷則深耕智慧零售 POS、Panel PC 與醫療邊緣設備。雖然細分市場有所差異，但同業評價上升有助於帶動整體 IPC 板塊的市場能見度。
+- **股價意涵**：若 IPC 族群整體受惠於邊緣運算與工業自動化題材，飛捷作為老牌績優硬體廠，其在智慧門市升級（Smart Retail）與嵌入式電腦領域的佈局亦具備估值重估潛力。
 
-### 4. 台系工控族群（凌華 6166.TW、安勤 3479.TWO、威強電 3022.TW）板塊效應 (2016-2017 - Yahoo Finance)
-- **新聞摘要**：台灣工業電腦與物聯網同業之歷史行情及營運追蹤。
-- **營運與財務影響分析**：
-  台灣工業電腦供應鏈具備高度聚落效應。凌華（Adlink）、安勤（Avalue）、威強電（IEI）等同業在醫療、交通、零售與博弈等垂直市場各有專長。飛捷在 POS 與 Kiosk 硬體領域具備龍頭規模經濟，透過供應鏈零組件採購議價能力，能維持相對穩健的毛利率表現。此族群長期具備高配息、低負債特質，在市場震盪期間具備較佳的下檔防禦性。
+---
+
+### 3. 全球零售解決方案指標 Toshiba Tec (6588.T) 產業競爭格局 (2018-08-12)
+- **新聞核心內容**：國際 POS 與零售硬體龍頭日本 Toshiba Tec（6588.T）長期為全球零售自動化與收銀設備之市場標竿。
+- **營運與財務影響**：Toshiba Tec 掌握全球一線大型零售連鎖通路，而飛捷則透過彈性客製化（ODM）服務全球中大型客戶與軟體系統商。兩者在全球市場呈現差異化競爭。國際巨頭的營運週期通常領先反映全球零售業自動化與自助結帳（Self-checkout）的升級趨勢。
+- **股價意涵**：全球智慧零售硬體升級需求為結構性趨勢，飛捷在維持毛利率與彈性製造優勢下，能持續在國際市場中獲取穩健市佔。
+
+---
+
+### 4. 台灣 IPC 族群生態系（安勤、凌華、威強電、捷波）聯動分析
+- **新聞核心內容**：歷史資訊涵蓋安勤（3479.TWO）、凌華（6166.TW）、威強電（3022.TW）、捷波（6161.TWO）等台灣主要 IPC 廠商之市場資訊。
+- **營運與財務影響**：台灣工業電腦產業具備完整的供應鏈生態與研發彈性，具備高客製化、小量多樣與高毛利特質。飛捷在 POS、Kiosk 及 Panel PC 的毛利率長年維持在業界前段班，垂直整合製造能力提供穩定的獲利基礎。
+- **股價意涵**：IPC 族群股價常呈現板塊集體輪動，飛捷目前收盤價 143.0 TWD，在整體工業電腦族群中屬於具備獲利支撐與防禦特質之標的。
 
 ---
 
 ## 📊 市場情緒評估
+**整體市場情緒：🟡 中性 (Neutral)**
 
-| 評估面向 | 狀態 / 評級 | 核心說明 |
+| 評估維度 | 評級 | 關鍵依據 |
 | :--- | :---: | :--- |
-| **總體總體經濟環境** | 🔴 負面 | 美國 10 年期公債殖利率達 5.1915%，高利率壓抑企業資本支出。 |
-| **產業發展趨勢** | 🟢 正面 | 智慧零售、邊緣 AI 與自動化自助結帳需求維持長期結構性增長。 |
-| **同業競爭與族群效應**| 🟡 中性 | 工控族群估值持平，市場等待實質專案訂單放量信號。 |
-| **整體市場情緒評級** | **🟡 中性偏謹慎** | 短線受制於高利率環境與總經不確定性，但長期硬體轉型基本面仍具支撐。 |
+| **總體總體環境** | 🔴 偏負面 | 美國 10 年期公債殖利率達 5.1915%，全球資金成本高企，對企業資本支出帶來遞延壓力。 |
+| **產業結構需求** | 🟢 偏正面 | 智慧零售、自助化 Kiosk 與醫療工業面板等剛性需求持續支撐長期出貨。 |
+| **同業板塊氛圍** | 🟡 中性 | IPC 族群個別公司受不同垂直領域影響，估值分化，整體板塊維持防禦性區間震盪。 |
+| **公司個股層面** | 🟡 中性 | 股價目前收在 143.0 TWD，近期無重大負面事件，維持基本面主導之平穩走勢。 |
 
 ---
 
 ## ⚠️ 主要風險因素
-
-- 🔴 **高利率壓抑企業資本支出風險**：美國 10 年期國債殖利率達 5.1915%，歐美零售、餐飲客戶若削減硬體設備預算或推遲 POS/Kiosk 更新專案，將直接影響飛捷代工訂單出貨動能。
-- 🟡 **外匯市場劇烈波動風險**：國際利率政策分歧（日債殖利率升至 3.1060%、美債居高不下），導致美元、日圓與新台幣匯率波動加劇，可能對外銷營收認列與業外損益造成擾動。
-- 🟡 **終端市場競爭與毛利受壓**：商用 POS 硬體技術成熟，若中國及新興市場代工廠商發動價格戰，可能削弱標準型產品之毛利率。
-- 🟢 **關鍵零組件供應鏈與交期風險**：工控級晶片與面板面板供需目前相對平穩，短期內斷料風險偏低，但仍需注意客製化零組件之庫存管理。
+- 🔴 **全球高利率環境壓抑資本支出**：歐美市場長期公債殖利率超過 5%，若終端零售、餐飲客戶縮減或遞延 IT 硬體升級預算，將直接衝擊飛捷出貨動能。
+- 🟡 **匯率波動風險**：飛捷以外銷為導向，營收主要以美元、歐元計價，匯率劇烈波動將直接影響毛利率表現與業外匯兌損益。
+- 🟡 **零組件成本與供應鏈競爭**：工業級顯示面板、處理器等關鍵零組件價格波動，以及同業在特定區域市場之價格競爭，可能對毛利率形成潛在挑戰。
 
 ---
 
 ## 🔮 短期關注重點
-
-1. **歐美終端零售與餐飲業資本支出動態**：觀察 2026 年第四季歐美傳統消費旺季前夕，品牌客戶對 POS、Kiosk 設備拉貨的續航力。
-2. **邊緣運算與智慧醫療新產品出貨佔比**：檢視高毛利的醫療照護終端（Medical Panel PC）與邊緣控制器是否能有效抵銷傳統 POS 產品的成長放緩。
-3. **全球總體利率走勢與外匯避險成效**：持續追蹤美債 10 年期殖利率是否突破當前 5.19% 區間，以及新台幣兌美元匯率變動對公司季度毛利率的影響。
-4. **同業財報指引與訂單能見度**：留意工控族群（如宸曜、凌華等）發布之接單出貨比（B/B Ratio）指標，以掌握整體 IPC 產業景氣拐點。
+- **月度營收公告與接單能見度**：關注未來 1–4 週內公布的最新單月營收表現，確認歐美 POS 與 Kiosk 出貨動能是否符合季節性水準。
+- **全球央行利率路徑與公債殖利率變化**：持續追蹤美債 10 年期殖利率是否進一步上行或自 5.19% 水平回落，此為科技硬體板塊評價回升之關鍵催化劑。
+- **工業電腦板塊法說會與同業展望**：留意同業（如凌華、安勤、宸曜）法說會釋出之智慧零售與邊緣運算訂單展望，作為評估飛捷產業週期位置的參考指標。
 
 ---
 
 ## 📌 新聞來源索引
-
-1. `6206.TW - | Stock Price & Latest News | Reuters` — Bing News (2026-09-24)
-2. `Edgewise Therapeutics: Upcoming DMD Trial Data May Disappoint (NASDAQ:EWTX)` — Seeking Alpha (2025-05-29)
-3. `Mainstreet Equity: Under The Radar For Far Too Long (TSX:MEQ:CA)` — Seeking Alpha (2025-02-24)
-4. `Neousys Technology Inc. (6922.TWO) stock price, news, quote and history` — Yahoo Finance Singapore (2025-01-11)
-5. `Lidar Quarterly Insights: Q3 2023 Update` — Seeking Alpha (2023-11-10)
-6. `Coca-Cola: Debt Levels Reduced, Attractive Multiple, Upgrade From Hold To Buy (NYSE:KO)` — Seeking Alpha (2023-10-09)
-7. `Toshiba Tec Corporation (6588.T) stock price, news, quote and history` — Yahoo Finance UK (2018-08-12)
-8. `Avalue Technology Incorporation (3479.TWO) stock price, news, quote and history` — Yahoo Finance Singapore (2017-06-27)
-9. `Flytech Technology Co., Ltd. (6206.TW) stock price, news, quote and history` — Yahoo Finance Singapore (2017-06-12)
-10. `Adlink Technology Inc. (6166.TW) Stock Price, News, Quote & History` — Yahoo! Finance Canada (2017-05-23)
-11. `Flytech Technology Co., Ltd. (6206.TW) Stock Price, News, Quote & History` — Yahoo Finance (2016-07-16)
-12. `GeoVision Inc. (3356.TW) Stock Price, News, Quote & History` — Yahoo Finance (2016-07-16)
-13. `IEI Integration Corp. (3022.TW) Stock Price, News, Quote & History` — Yahoo Finance (2016-07-15)
+1. 6206.TW - | Stock Price & Latest News — Reuters (2026-09-24)
+2. Edgewise Therapeutics: Upcoming DMD Trial Data May Disappoint (NASDAQ:EWTX) — Seeking Alpha (2025-05-29)
+3. Mainstreet Equity: Under The Radar For Far Too Long (TSX:MEQ:CA) — Seeking Alpha (2025-02-24)
+4. Neousys Technology Inc. (6922.TWO) stock price, news, quote and history — Yahoo Finance Singapore (2025-01-11)
+5. Lidar Quarterly Insights: Q3 2023 Update — Seeking Alpha (2023-11-10)
+6. Coca-Cola: Debt Levels Reduced, Attractive Multiple, Upgrade From Hold To Buy (NYSE:KO) — Seeking Alpha (2023-10-09)
+7. Toshiba Tec Corporation (6588.T) stock price, news, quote and history — uk.finance.yahoo.com (2018-08-12)
+8. Jetway Information Co., Ltd. (6161.TWO) stock price, news, quote and history — Yahoo Finance Singapore (2017-07-12)
+9. Avalue Technology Incorporation (3479.TWO) stock price, news, quote and history — Yahoo Finance Singapore (2017-06-27)
+10. Flytech Technology Co., Ltd. (6206.TW) stock price, news, quote and history — Yahoo Finance Singapore (2017-06-12)
+11. Adlink Technology Inc. (6166.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada (2017-05-23)
+12. Flytech Technology Co., Ltd. (6206.TW) Stock Price, News, Quote & History — Yahoo Finance (2016-07-16)
+13. GeoVision Inc. (3356.TW) Stock Price, News, Quote & History — Yahoo Finance (2016-07-16)
+14. IEI Integration Corp. (3022.TW) Stock Price, News, Quote & History — Yahoo Finance (2016-07-15)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估風險並自負投資損益。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
