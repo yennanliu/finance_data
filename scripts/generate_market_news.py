@@ -287,10 +287,15 @@ _GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁�
 8. **新聞誠信**：只分析實際提供的新聞，不捏造或推測不存在的新聞標題與事件"""
 
 
+_CLAUDE_SYSTEM_MESSAGE = """你是一位美股財經新聞分析師，為自動化研究網站撰寫繁體中文的新聞分析報告。
+
+只分析實際提供的新聞；不要推測或補寫未提供的新聞標題與事件，標題為「未命名」或「N/A」的條目直接略過。新聞量少時，把現有重點新聞分析透即可。數字只引用新聞中可確認的值，不要輸出 "$XXX"、"N/A"、"TBD" 之類的佔位符。"""
+
+
 def call_claude(prompt: str, model: str, max_tokens: int) -> str:
-    """Generate a market-news report via Claude (no refusal retry, no system msg)."""
-    return run_claude("", prompt, None, model=model, max_tokens=max_tokens,
-                      refusal_retry=False)
+    """Generate a market-news report via Claude (news system msg, no refusal retry)."""
+    return run_claude("", prompt, _CLAUDE_SYSTEM_MESSAGE, model=model,
+                      max_tokens=max_tokens, refusal_retry=False)
 
 
 def call_openai(prompt: str, model: str, max_tokens: int) -> str:
