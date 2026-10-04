@@ -18,6 +18,8 @@ docs/sec/
 docs/investor_day/
 docs/scripts.md
 docs/includes/
+# Landing-page payload derived from the stores by build_docs.py
+docs/hub.json
 
 # Generated Traditional Chinese docs (except index.md)
 docs/zh/reports/

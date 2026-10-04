@@ -1,0 +1,594 @@
+/* ===========================================================================
+   hub.css — section indexes, report meta bar, breadcrumbs, reading progress
+
+   Everything here is emitted as raw HTML by scripts/build_docs.py or by
+   overrides/main.html, with every figure already formatted in Python:
+
+     .hub-stats / .hub-stat    headline counts on a section index
+     .hub-notice               the disclaimer as one quiet line
+     .hub-toolbar / .hub-filter the filter box above a card grid (hub.js)
+     .hub-grid / .hub-card     one card per ticker
+     .rmeta                    the chip bar + older/newer stepper on a report
+     .crumbs                   the linked breadcrumb trail (main.html)
+     .rp-progress              the reading-progress bar (hub.js)
+
+   Uses the --fp-* tokens from extra.css so light and dark track together and
+   keeps the card grammar kline.css / prices.css / ticker.css established:
+   1px --fp-border, --fp-bg-card, a large radius.
+   =========================================================================== */
+
+:root {
+  --hub-radius: 14px;
+  --hub-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --hub-glow: rgba(34, 197, 94, 0.10);
+  --hub-mono: var(--md-code-font, ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace);
+}
+[data-md-color-scheme="default"] {
+  --hub-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+  --hub-glow: rgba(22, 163, 74, 0.10);
+}
+
+/* ── lead + legend ─────────────────────────────────────────────────────────── */
+
+.md-typeset .hub-lead {
+  font-size: 1.05rem;
+  color: var(--fp-text-secondary, #a1a1aa);
+  margin: -0.75rem 0 1.5rem;
+}
+.md-typeset .hub-lead strong { color: var(--fp-text, #fafafa); }
+
+.md-typeset .hub-legend {
+  font-size: 0.8rem;
+  color: var(--fp-text-muted, #71717a);
+  margin: -0.25rem 0 1rem;
+}
+
+/* ── stats strip ───────────────────────────────────────────────────────────── */
+
+.md-typeset .hub-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1px;
+  margin: 0 0 1.25rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: var(--hub-radius);
+  overflow: hidden;
+  background: var(--fp-border, #27272a);
+}
+
+.md-typeset .hub-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 1.15rem 0.95rem;
+  background:
+    radial-gradient(120% 120% at 0% 0%, var(--fp-accent-glow, rgba(255, 255, 255, .05)), transparent 60%),
+    var(--fp-bg-card, #16161a);
+  min-width: 0;
+}
+
+/* Material's root font-size is 20px, so 1.35rem is 27px — large enough to
+   read as a headline figure, small enough that an ISO date stays on one line
+   in a quarter-width tile. */
+.md-typeset .hub-stat__v {
+  font-family: var(--hub-mono);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--fp-text, #fafafa);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.md-typeset .hub-stat__k {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fp-text-muted, #71717a);
+}
+
+.md-typeset .hub-stat__s {
+  font-size: 0.72rem;
+  color: var(--fp-text-muted, #71717a);
+}
+
+/* ── disclaimer line ───────────────────────────────────────────────────────── */
+
+.md-typeset .hub-notice {
+  margin: 0 0 2rem;
+  padding: 0.55rem 0.9rem;
+  border-left: 2px solid var(--fp-yellow, #eab308);
+  border-radius: 0 8px 8px 0;
+  background: var(--fp-bg-alt, #111113);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--fp-text-muted, #71717a);
+}
+.md-typeset .hub-notice b {
+  color: var(--fp-text-secondary, #a1a1aa);
+  margin-right: 0.35rem;
+}
+
+/* ── toolbar + filter ──────────────────────────────────────────────────────── */
+
+.md-typeset .hub-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.md-typeset .hub-filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 18rem;
+  max-width: 28rem;
+}
+
+.md-typeset .hub-filter__icon {
+  position: absolute;
+  left: 0.8rem;
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: var(--fp-text-muted, #71717a);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.md-typeset .hub-filter__input {
+  width: 100%;
+  padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 10px;
+  background: var(--fp-bg-card, #16161a);
+  color: var(--fp-text, #fafafa);
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.md-typeset .hub-filter__input::placeholder { color: var(--fp-text-muted, #71717a); }
+.md-typeset .hub-filter__input:focus {
+  border-color: var(--fp-green, #22c55e);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+.md-typeset .hub-toolbar__meta {
+  font-family: var(--hub-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .hub-toolbar__meta b { color: var(--fp-text, #fafafa); font-weight: 700; }
+
+.md-typeset .hub-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--fp-text-muted, #71717a);
+  border: 1px dashed var(--fp-border, #27272a);
+  border-radius: var(--hub-radius);
+}
+
+/* ── card grid ─────────────────────────────────────────────────────────────── */
+
+.md-typeset .hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+}
+
+.md-typeset .hub-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.95rem 1rem 0.9rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: var(--hub-radius);
+  background: var(--fp-bg-card, #16161a);
+  transition: border-color .18s, transform .18s, box-shadow .18s, background .18s;
+}
+
+/* The filter (hub.js) hides a card by setting the `hidden` attribute, whose
+   UA style `display: none` the `display: flex` above would otherwise beat. */
+.md-typeset .hub-card[hidden] { display: none; }
+
+.md-typeset .hub-card:hover,
+.md-typeset .hub-card:focus-within {
+  border-color: var(--fp-green, #22c55e);
+  background: var(--fp-bg-card-hover, #1c1c21);
+  box-shadow: var(--hub-shadow), 0 0 0 1px var(--hub-glow);
+  transform: translateY(-2px);
+}
+
+/* The card's own link is stretched over the whole card; the per-type badges
+   sit above it (z-index) so they stay independently clickable. */
+.md-typeset .hub-card__link {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+}
+.md-typeset .hub-card__link:focus-visible {
+  outline: 2px solid var(--fp-green, #22c55e);
+  outline-offset: 2px;
+}
+
+.md-typeset .hub-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.md-typeset .hub-card__mark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  line-height: 1;
+  border: 1px solid var(--fp-border, #27272a);
+  background: var(--fp-bg-alt, #111113);
+}
+.md-typeset .hub-card__mark .twemoji { width: 1.15rem; height: 1.15rem; }
+
+.md-typeset .hub-card__id {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.md-typeset .hub-card__sym {
+  font-family: var(--hub-mono);
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  color: var(--fp-text, #fafafa);
+}
+
+.md-typeset .hub-card__name {
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--fp-text-secondary, #a1a1aa);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.md-typeset .hub-card__chg {
+  flex: none;
+  font-family: var(--hub-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: var(--fp-bg-alt, #111113);
+  color: var(--fp-text-secondary, #a1a1aa);
+}
+.md-typeset .hub-card__chg.is-up { color: var(--fp-green, #22c55e); }
+.md-typeset .hub-card__chg.is-down { color: var(--fp-red, #ef4444); }
+
+.md-typeset .hub-card__sector {
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  color: var(--fp-text-muted, #71717a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.md-typeset .hub-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--fp-border-dim, #1e1e22);
+}
+
+.md-typeset .hub-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.md-typeset .hub-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--fp-border, #27272a);
+  background: var(--fp-bg-alt, #111113);
+  font-family: var(--hub-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fp-text-secondary, #a1a1aa) !important;
+  text-decoration: none !important;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.md-typeset .hub-badge .twemoji { width: 0.9rem; height: 0.9rem; }
+.md-typeset a.hub-badge:hover {
+  border-color: var(--fp-green, #22c55e);
+  color: var(--fp-text, #fafafa) !important;
+  background: var(--hub-glow);
+}
+
+.md-typeset .hub-card__latest {
+  flex: none;
+  font-family: var(--hub-mono);
+  font-size: 0.7rem;
+  color: var(--fp-text-muted, #71717a);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.md-typeset .hub-card__latest i {
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  margin-right: 0.1rem;
+}
+
+/* ── report meta bar ───────────────────────────────────────────────────────── */
+
+/* The theme floats an "edit this page" button at the top right of the
+   content, where it would sit on the bar's newer/older stepper. On these pages
+   the button is also meaningless: the source is a generated mirror under docs/
+   that is not in the repository. */
+.md-content__inner:has(> .rmeta) > .md-content__button { display: none; }
+
+.md-typeset .rmeta {
+  margin: 0 0 1.75rem;
+  padding: 0.85rem 1rem 0.9rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: var(--hub-radius);
+  background:
+    radial-gradient(120% 140% at 100% 0%, var(--fp-accent-glow, rgba(255, 255, 255, .05)), transparent 60%),
+    var(--fp-bg-card, #16161a);
+}
+
+.md-typeset .rmeta__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+}
+
+.md-typeset .rmeta__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  color: var(--fp-text, #fafafa) !important;
+  text-decoration: none !important;
+}
+.md-typeset .rmeta__back:hover .rmeta__backlabel { color: var(--fp-text, #fafafa); }
+
+.md-typeset .rmeta__mark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  line-height: 1;
+  border: 1px solid var(--fp-border, #27272a);
+  background: var(--fp-bg-alt, #111113);
+}
+.md-typeset .rmeta__mark .twemoji { width: 1.1rem; height: 1.1rem; }
+
+.md-typeset .rmeta__sym {
+  font-family: var(--hub-mono);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.md-typeset .rmeta__backlabel {
+  font-size: 0.8rem;
+  color: var(--fp-text-muted, #71717a);
+  transition: color .15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.md-typeset .rmeta__backlabel::before {
+  content: "·";
+  margin-right: 0.5rem;
+}
+
+.md-typeset .rmeta__nav {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.md-typeset .rmeta__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--fp-border, #27272a);
+  border-radius: 8px;
+  background: var(--fp-bg-alt, #111113);
+  font-size: 0.78rem;
+  color: var(--fp-text-secondary, #a1a1aa) !important;
+  text-decoration: none !important;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.md-typeset .rmeta__step b {
+  font-family: var(--hub-mono);
+  font-weight: 700;
+  color: var(--fp-text, #fafafa);
+}
+.md-typeset a.rmeta__step:hover {
+  border-color: var(--fp-green, #22c55e);
+  color: var(--fp-text, #fafafa) !important;
+  background: var(--hub-glow);
+}
+.md-typeset .rmeta__step.is-off {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.md-typeset .rmeta__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.md-typeset .rmeta__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--fp-badge-border, rgba(255, 255, 255, .15));
+  background: var(--fp-badge-bg, rgba(255, 255, 255, .04));
+  font-family: var(--hub-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fp-text-secondary, #a1a1aa);
+  white-space: nowrap;
+  max-width: 100%;
+}
+.md-typeset .rmeta__chip i {
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fp-text-muted, #71717a);
+}
+.md-typeset .rmeta__chip--type {
+  border-color: var(--fp-green, #22c55e);
+  color: var(--fp-green, #22c55e);
+  background: var(--hub-glow);
+}
+.md-typeset .rmeta__chip--dim {
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--fp-text-muted, #71717a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── breadcrumbs ───────────────────────────────────────────────────────────── */
+
+.crumbs {
+  margin: 0 0 1.25rem;
+  font-family: var(--hub-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  color: var(--fp-text-muted, #71717a);
+}
+
+/* The leading rule the inner pages have always opened with. */
+.crumbs li:first-child::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background: var(--fp-green, #22c55e);
+}
+
+.crumbs li + li::before {
+  content: "/";
+  color: var(--fp-border, #27272a);
+}
+
+.crumbs a {
+  color: var(--fp-text-muted, #71717a);
+  text-decoration: none;
+  transition: color .15s;
+}
+.crumbs a:hover { color: var(--fp-text, #fafafa); }
+
+.crumbs li[aria-current] {
+  color: var(--fp-green, #22c55e);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* ── reading progress ──────────────────────────────────────────────────────── */
+
+.rp-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--fp-green, #22c55e), #86efac);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.rp-progress.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .hub-card,
+  .md-typeset .hub-card:hover { transform: none; transition: none; }
+}
+
+/* ── narrow viewports ─────────────────────────────────────────────────────── */
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .hub-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md-typeset .hub-stat { padding: 0.8rem 0.9rem; }
+  .md-typeset .hub-stat__v { font-size: 1.15rem; }
+  .md-typeset .hub-grid { grid-template-columns: 1fr; }
+  .md-typeset .hub-filter { max-width: none; }
+  .md-typeset .rmeta__backlabel { display: none; }
+  .md-typeset .rmeta__nav { width: 100%; }
+  .md-typeset .rmeta__step { flex: 1 1 0; justify-content: center; }
+}

@@ -162,6 +162,9 @@ extra_css:
   - stylesheets/prices.css
   # Hero, KPI tiles and scenario rail on the per-ticker report index.
   - stylesheets/ticker.css
+  # Section index cards and stats, the report meta bar, breadcrumbs and the
+  # reading-progress bar.
+  - stylesheets/hub.css
 
 extra_javascript:
   - javascripts/clickable-rows.js
@@ -177,3 +180,5 @@ extra_javascript:
   # The Market Data pages put their charts in content tabs; the TOC still lists
   # every heading, so an anchor into a collapsed tab has to open it first.
   - javascripts/tab-anchors.js
+  # Filter box on the section index card grids; reading progress on every page.
+  - javascripts/hub.js

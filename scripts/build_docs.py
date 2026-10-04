@@ -603,9 +603,57 @@ LANG_TEXT = {
             ("Max drawdown", "The deepest peak-to-trough fall in the stored history — the worst loss a buy-and-hold holder would have sat through."),
         ],
         "g_avg": "avg",
+        # ── Hub index pages, report meta bar ──
+        "hub_tickers": "Tickers covered",
+        "hub_reports": "Reports published",
+        "hub_types": "Report types",
+        "hub_briefs": "News briefs",
+        "hub_latest": "Latest",
+        "hub_window": "Rolling {days}-day window",
+        "hub_filter": "Filter by ticker, company or sector…",
+        "hub_filter_label": "Filter tickers",
+        "hub_no_match": "No ticker matches that filter.",
+        "hub_sorted": "Sorted by ticker",
+        "hub_open": "Open",
+        "hub_read_latest": "Read latest brief",
+        "hub_news_timeline": "Daily briefs",
+        "hub_news_timeline_desc": "One brief per trading day, newest first.",
+        "meta_back": "All {ticker} reports",
+        "meta_back_news": "All {ticker} briefs",
+        "meta_prev": "Older",
+        "meta_next": "Newer",
+        "meta_date": "Date",
+        "meta_model": "Model",
+        "meta_lang": "Language",
+        "meta_generated": "Generated",
+        "meta_nav_label": "Report navigation",
     },
     "zh": {
         "lang_name": "繁體中文",
+        # ── Hub index pages, report meta bar ──
+        "hub_tickers": "涵蓋標的",
+        "hub_reports": "已發布報告",
+        "hub_types": "報告類型",
+        "hub_briefs": "新聞摘要",
+        "hub_latest": "最新",
+        "hub_window": "滾動 {days} 天視窗",
+        "hub_filter": "以代號、公司或產業篩選…",
+        "hub_filter_label": "篩選標的",
+        "hub_no_match": "沒有符合條件的標的。",
+        "hub_sorted": "依代號排序",
+        "hub_open": "開啟",
+        "hub_read_latest": "閱讀最新摘要",
+        "hub_news_timeline": "每日摘要",
+        "hub_news_timeline_desc": "每個交易日一份，最新在前。",
+        "meta_back": "{ticker} 全部報告",
+        "meta_back_news": "{ticker} 全部新聞摘要",
+        "meta_prev": "較舊",
+        "meta_next": "較新",
+        "meta_date": "日期",
+        "meta_model": "模型",
+        "meta_lang": "語言",
+        "meta_generated": "生成",
+        "meta_nav_label": "報告導覽",
         "last_updated": "最後更新",
         "last_built": "最後建置",
         "sector": "產業",
@@ -1790,6 +1838,302 @@ def frontmatter_table(yaml_body: str) -> str:
     return "\n".join(["| | |", "|---|---|", *rows]) + "\n\n"
 
 
+def frontmatter_fields(yaml_body: str) -> dict:
+    """The top-level scalar `key: value` pairs of a front-matter block, with the
+    same skip rules as frontmatter_table (nested keys and comments are not
+    fields)."""
+    out: dict = {}
+    for line in yaml_body.splitlines():
+        if not line.strip() or line[:1] in (" ", "\t", "#"):
+            continue
+        key, sep, value = line.partition(":")
+        value = value.strip().strip('"').strip("'")
+        if sep and value:
+            out[key.strip()] = value
+    return out
+
+
+# ── Report meta bar ──────────────────────────────────────────────────────────
+# Every dated report page used to open with its raw front matter rendered as a
+# two-column table (title / date / ticker / analysis_type / provider / …): eight
+# rows of key names nobody reads before the report's own h1. The meta bar says
+# the same things as chips, links back to the ticker, and steps to the older /
+# newer report of the same type — the navigation the leaf pages never had.
+
+def report_type_key(f: Path) -> str:
+    """The analysis-type slug a dated report filename carries, e.g.
+    'fundamental_analysis' for fundamental_analysis_2026-10-03_gemini.md."""
+    m = _DATE_RE.search(f.stem)
+    key = (f.stem[:m.start()] if m else f.stem).strip("_-")
+    return key or "report"
+
+
+def report_type_label(f: Path, lang: str) -> str:
+    """Human label for a report's type, localised where the site already has
+    the string and title-cased from the slug otherwise."""
+    key = report_type_key(f)
+    if key in ("fundamental_analysis", "technical_analysis"):
+        # The section headings carry a leading emoji; the chip does not.
+        return t(lang, key).split(" ", 1)[-1]
+    if key == "market_news":
+        return t(lang, "market_news")
+    return key.replace("_", " ").replace("-", " ").title()
+
+
+def report_meta_block(ticker: str, meta: dict, f: Path, fields: dict, lang: str,
+                      *, prev: "Path | None" = None, nxt: "Path | None" = None) -> str:
+    """The chip bar + older/newer stepper that opens a dated report page.
+
+    Raw HTML, so every href is written against the page's *directory URL*
+    (`reports/<ticker>/<stem>/`): `../` is the ticker index and `../<stem>/` a
+    sibling report. MkDocs rewrites Markdown links but never raw-HTML ones.
+    `prev` is the older report of the same type, `nxt` the newer.
+    """
+    tk = ticker.upper()
+    d = _file_date(f)
+    provider = fields.get("provider") or report_label(f).split("·")[-1].strip()
+    model = fields.get("model", "")
+    engine = f"{provider} · {model}" if model and provider and model.lower() != provider.lower() else (model or provider)
+
+    def step(target: "Path | None", rel: str, label: str, newer: bool) -> str:
+        if target is None:
+            return f'<span class="rmeta__step is-off" aria-hidden="true">{"" if newer else "← "}{_esc(label)}{" →" if newer else ""}</span>'
+        when = _esc(report_label(target).split("·")[0].strip())
+        inner = (f'<b>{when}</b> {_esc(label)} →' if newer
+                 else f'← {_esc(label)} <b>{when}</b>')
+        return f'<a class="rmeta__step" href="../{_esc(target.stem)}/" rel="{rel}">{inner}</a>'
+
+    back_key = "meta_back_news" if report_type_key(f) == "market_news" else "meta_back"
+    chips = [f'<span class="rmeta__chip rmeta__chip--type">{_esc(report_type_label(f, lang))}</span>']
+    if d:
+        chips.append(f'<span class="rmeta__chip"><i>{_esc(t(lang, "meta_date"))}</i>{d.isoformat()}</span>')
+    if engine:
+        chips.append(f'<span class="rmeta__chip"><i>{_esc(t(lang, "meta_model"))}</i>{_esc(engine)}</span>')
+    if fields.get("language"):
+        chips.append(f'<span class="rmeta__chip"><i>{_esc(t(lang, "meta_lang"))}</i>{_esc(fields["language"])}</span>')
+    if fields.get("generated_by"):
+        chips.append(f'<span class="rmeta__chip rmeta__chip--dim" title="{_esc(t(lang, "meta_generated"))}">{_esc(fields["generated_by"])}</span>')
+
+    return "\n".join([
+        f'<nav class="rmeta" aria-label="{_esc(t(lang, "meta_nav_label"))}">',
+        '  <div class="rmeta__row">',
+        f'    <a class="rmeta__back" href="../"><span class="rmeta__mark">{_esc(meta["flag"])}</span>'
+        f'<span class="rmeta__sym">{_esc(tk)}</span>'
+        f'<span class="rmeta__backlabel">{_esc(t(lang, back_key).format(ticker=tk))}</span></a>',
+        '    <div class="rmeta__nav">',
+        f'      {step(prev, "prev", t(lang, "meta_prev"), newer=False)}',
+        f'      {step(nxt, "next", t(lang, "meta_next"), newer=True)}',
+        '    </div>',
+        '  </div>',
+        f'  <div class="rmeta__chips">{"".join(chips)}</div>',
+        '</nav>',
+    ])
+
+
+# ── Hub index pages (AI Gen Reports, Market News) ────────────────────────────
+# Both section indexes were one Markdown table — 38 rows of ticker / company /
+# sector / counts — under a warning admonition. These helpers turn them into a
+# stats strip, a filter box and a card grid. Everything is static HTML with the
+# figures computed here; the filter is progressive enhancement in hub.js.
+
+def hub_stats_block(items: "list[tuple[str, str, str]]") -> str:
+    """A row of (label, value, sub-line) tiles."""
+    tiles = []
+    for label, value, sub in items:
+        tiles.append(
+            '<div class="hub-stat">'
+            f'<span class="hub-stat__v">{_esc(value)}</span>'
+            f'<span class="hub-stat__k">{_esc(label)}</span>'
+            + (f'<span class="hub-stat__s">{_esc(sub)}</span>' if sub else "")
+            + '</div>'
+        )
+    return f'<div class="hub-stats">{"".join(tiles)}</div>'
+
+
+def hub_notice_block(lang: str) -> str:
+    """The disclaimer as one quiet line instead of a full warning admonition."""
+    return (f'<p class="hub-notice"><b>{_esc(t(lang, "disclaimer"))}</b> '
+            f'{_esc(t(lang, "disclaimer_text"))}</p>')
+
+
+def hub_filter_block(lang: str, count: int) -> str:
+    """The toolbar above a card grid: a filter box and a live count. hub.js
+    wires the input; without JS it is an inert search field."""
+    return "".join([
+        '<div class="hub-toolbar" data-hub-toolbar>',
+        '<label class="hub-filter">',
+        '<svg class="hub-filter__icon" viewBox="0 0 24 24" aria-hidden="true">'
+        '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+        f'<input type="search" class="hub-filter__input" data-hub-filter '
+        f'placeholder="{_esc(t(lang, "hub_filter"))}" '
+        f'aria-label="{_esc(t(lang, "hub_filter_label"))}" autocomplete="off" spellcheck="false">',
+        '</label>',
+        f'<span class="hub-toolbar__meta"><b data-hub-count>{count}</b> / {count} · '
+        f'{_esc(t(lang, "hub_sorted"))}</span>',
+        '</div>',
+    ])
+
+
+def hub_card(*, href: str, flag: str, ticker: str, name: str, sector: str,
+             badges: "list[tuple[str, str | None]]", latest: "str | None",
+             change: "float | None", lang: str) -> str:
+    """One ticker card. `badges` are (label, href-or-None); a badge with a href
+    opens the newest report of that type and sits above the card's own link."""
+    tk = ticker.upper()
+    # The ticker always; the name only when it is not just the ticker again.
+    search = " ".join([tk] + [s for s in (name, sector) if s and s != tk]).lower()
+    parts = [
+        f'<div class="hub-card" data-hub-item data-search="{_esc(search)}">',
+        f'<a class="hub-card__link" href="{_esc(href)}" aria-label="{_esc(t(lang, "hub_open"))} {_esc(tk)}"></a>',
+        '<div class="hub-card__head">',
+        f'<span class="hub-card__mark">{_esc(flag)}</span>',
+        f'<div class="hub-card__id"><span class="hub-card__sym">{_esc(tk)}</span>',
+    ]
+    if name and name != tk:
+        parts.append(f'<span class="hub-card__name">{_esc(name)}</span>')
+    parts.append('</div>')
+    if change is not None:
+        parts.append(f'<span class="hub-card__chg{_tone(change)}">{_signed_pct(change)}</span>')
+    parts.append('</div>')
+    parts.append(f'<div class="hub-card__sector">{_esc(sector)}</div>')
+    parts.append('<div class="hub-card__foot"><span class="hub-card__badges">')
+    for label, bhref in badges:
+        if bhref:
+            parts.append(f'<a class="hub-badge" href="{_esc(bhref)}">{_esc(label)}</a>')
+        else:
+            parts.append(f'<span class="hub-badge">{_esc(label)}</span>')
+    parts.append('</span>')
+    if latest:
+        parts.append(f'<span class="hub-card__latest"><i>{_esc(t(lang, "hub_latest"))}</i> {_esc(latest)}</span>')
+    parts.append('</div></div>')
+    return "".join(parts)
+
+
+def hub_grid_block(cards: "list[str]", lang: str) -> str:
+    return "\n".join([
+        '<div class="hub-grid" data-hub-grid>',
+        *cards,
+        '</div>',
+        f'<p class="hub-empty" data-hub-empty hidden>{_esc(t(lang, "hub_no_match"))}</p>',
+    ])
+
+
+def _ticker_change(ticker: str) -> "float | None":
+    """The 1-day return from the price store, or None for an unpriced ticker."""
+    bars = store_bars(ticker)
+    if not bars:
+        return None
+    stats = price_analytics.summary(bars)
+    return stats["returns"].get("1d") if stats else None
+
+
+def news_available(ticker: str) -> bool:
+    """Whether build_market_news() will publish a page for this ticker — the
+    same source, retention and sample rules it applies, so a cross-link from a
+    report page can never dangle."""
+    d = SRC_MARKET_NEWS / ticker.lower()
+    if not d.is_dir():
+        return False
+    allowed = {p.name.lower() for p in _sample_dirs(
+        sorted(p for p in SRC_MARKET_NEWS.iterdir() if p.is_dir()))}
+    if ticker.lower() not in allowed:
+        return False
+    return any(f.is_file() and f.name.startswith("market_news_") and f.suffix == ".md"
+               and within_retention(f) for f in d.iterdir())
+
+
+# ── Home page payload ────────────────────────────────────────────────────────
+# The landing page (overrides/home.html) is a template with no access to the
+# stores, so its market tape, headline counts, hero card and "latest reports"
+# used to be typed in by hand — and had drifted months behind the pipeline.
+# This payload is derived at build time from the same data every other page
+# reads and written next to the site root as hub.json; home.html hydrates from
+# it. Figures here are formatted in Python, like everywhere else on the site.
+
+HUB_LATEST_COUNT = 6
+
+
+def hub_payload() -> dict:
+    tape: "list[dict]" = []
+    reports: "list[dict]" = []
+    type_keys: set = set()
+    total = 0
+    for ticker_dir in _sample_dirs(merged_ticker_dirs()):
+        tk = ticker_dir.name.lower()
+        files = _sample([f for f in ticker_files(tk)
+                         if f.suffix == ".md" and within_retention(f)])
+        if not files:
+            continue
+        meta = get_meta(tk)
+        bars = store_bars(tk)
+        stats = price_analytics.summary(bars) if bars else None
+        chg = stats["returns"].get("1d") if stats else None
+        if stats:
+            tape.append({"sym": tk.upper(), "px": _num(stats["last_close"]),
+                         "chg": chg, "href": f"reports/{tk}/"})
+        for f in files:
+            total += 1
+            type_keys.add(report_type_key(f))
+            d = _file_date(f)
+            reports.append({
+                "ticker": tk.upper(), "name": meta["name"], "flag": meta["flag"],
+                "sector": meta["sector"], "type": report_type_key(f),
+                "date": d.isoformat() if d else "", "chg": chg,
+                "href": f"reports/{tk}/{f.stem}/", "_path": f, "_stats": stats,
+            })
+
+    reports.sort(key=lambda r: (r["date"], r["ticker"], r["_path"].name), reverse=True)
+    latest_day = reports[0]["date"] if reports else ""
+    per_day = sum(1 for r in reports if r["date"] == latest_day)
+
+    latest: "list[dict]" = []
+    for r in reports[:HUB_LATEST_COUNT]:
+        yaml_body, _ = split_frontmatter(r["_path"].read_text(encoding="utf-8", errors="ignore"))
+        fields = frontmatter_fields(yaml_body)
+        latest.append({k: v for k, v in r.items() if not k.startswith("_")}
+                      | {"type_label": report_type_label(r["_path"], "en"),
+                         "title": fields.get("title", ""),
+                         "model": fields.get("model", ""),
+                         "provider": fields.get("provider", "")})
+
+    hero = None
+    for r, enriched in zip(reports[:HUB_LATEST_COUNT], latest):
+        s = r["_stats"]
+        if not s:
+            continue
+        ret = s["returns"]
+        hero = enriched | {
+            "currency": prices.currency_for(prices.to_yf_symbol(r["ticker"].lower())),
+            "price": _num(s["last_close"]), "price_date": s["last_date"],
+            "chg_1d": ret.get("1d"), "chg_1m": ret.get("1m"),
+            "ytd": s.get("ytd"), "chg_1y": ret.get("1y"),
+            "vol_1y": s.get("volatility_1y"),
+            "low_52w": s.get("low_52w"), "high_52w": s.get("high_52w"),
+            "range_position": s.get("range_position"),
+        }
+        break
+
+    news_tickers = sum(1 for d in _sample_dirs(sorted(
+        p for p in SRC_MARKET_NEWS.iterdir() if p.is_dir()))
+        if news_available(d.name)) if SRC_MARKET_NEWS.exists() else 0
+
+    return {
+        "built": TODAY,
+        "retention_days": RETENTION_DAYS,
+        "stats": {"tickers": len({r["ticker"] for r in reports}),
+                  "reports": total, "per_day": per_day, "latest_day": latest_day,
+                  "types": len(type_keys), "news_tickers": news_tickers},
+        "tape": tape,
+        "latest": latest,
+        "hero": hero,
+    }
+
+
+def write_hub_payload() -> None:
+    payload = hub_payload()
+    write(DOCS / "hub.json", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+
+
 # ── Static chart embed ───────────────────────────────────────────────────────
 # `use_directory_urls` (MkDocs default) serves each report at <page>/index.html,
 # so a bare relative `<img src="chart.png">` resolves one directory too deep.
@@ -1839,11 +2183,13 @@ def strip_legacy_chart_embed(content: str) -> str:
     return content
 
 
-def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = ""):
+def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = "",
+              meta_block: str = ""):
     """Copy src → dst. For Markdown, merge `extra_meta` into the file's own
-    front matter (re-emitted as a header table), strip legacy baked-in charts,
-    optionally inject `chart_block` above the report body, repair chart embeds
-    and pre-render Mermaid; uses a content-equality incremental check so changed
+    front matter (re-emitted as a header table, or as `meta_block` — the report
+    meta bar — when one is given), strip legacy baked-in charts, optionally
+    inject `chart_block` above the report body, repair chart embeds and
+    pre-render Mermaid; uses a content-equality incremental check so changed
     `extra_meta` is always applied. Binary files use a cheap mtime check."""
     ensure(dst.parent)
     if src.suffix == ".md":
@@ -1859,9 +2205,10 @@ def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = "")
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
             merged = f"{extra_meta}\n{yaml_body}" if yaml_body else extra_meta
+            header = f"{meta_block}\n\n" if meta_block else frontmatter_table(yaml_body)
             content = (
                 f"---\n{merged}\n---\n\n"
-                + frontmatter_table(yaml_body)
+                + header
                 + (f"{chart_block}\n\n" if chart_block else "")
                 + body.lstrip("\n")
             )
@@ -1905,6 +2252,7 @@ def build_reports(lang: str = "en"):
     DST_REPORTS = docs_root / "reports"
     ensure(DST_REPORTS)
     report_index_rows: list[str] = []
+    index_totals: dict = {"reports": 0, "types": set(), "latest": None}
     nav_entries: list[str] = []
 
     if not any(root.exists() for root in report_roots()):
@@ -1955,10 +2303,28 @@ def build_reports(lang: str = "en"):
 
         # EN: copy report files; ZH: skip copies — link to EN pages instead
         if lang == "en":
+            # Older/newer neighbours are taken within one report type: stepping
+            # from a fundamental report should land on the previous fundamental
+            # report, not on whatever technical note came out the same morning.
+            by_type: "dict[str, list[Path]]" = {}
             for f in md_files:
+                by_type.setdefault(report_type_key(f), []).append(f)
+            neighbours: "dict[Path, tuple[Path | None, Path | None]]" = {}
+            for ordered in by_type.values():
+                ordered = by_date_desc(ordered)
+                for i, f in enumerate(ordered):
+                    newer = ordered[i - 1] if i > 0 else None
+                    older = ordered[i + 1] if i + 1 < len(ordered) else None
+                    neighbours[f] = (older, newer)
+            for f in md_files:
+                yaml_body, _ = split_frontmatter(f.read_text(encoding="utf-8", errors="ignore"))
+                older, newer = neighbours[f]
                 # Perf fix #1 — exclude report bodies from the search index
                 copy_file(f, dst_dir / f.name, extra_meta=SEARCH_EXCLUDE_META,
-                          chart_block=report_chart_block(ticker, f))
+                          chart_block=report_chart_block(ticker, f),
+                          meta_block=report_meta_block(
+                              ticker, meta, f, frontmatter_fields(yaml_body), lang,
+                              prev=older, nxt=newer))
             for f in html_files + other_files:
                 copy_file(f, dst_dir / f.name)
 
@@ -2023,6 +2389,12 @@ def build_reports(lang: str = "en"):
             if ticker in priced_keys:
                 lines += [f"[:material-chart-line: {t(lang, 'md_more')}]"
                           f"(../../{MD_DIR}/{ticker}/index.md){{.report-link}}", ""]
+        # The same ticker's daily news briefs live in their own section; one
+        # row here saves the trip back through the tab bar. Guarded on that
+        # page actually being built (source, retention and sample rules).
+        if news_available(ticker):
+            lines += [f"[:material-newspaper-variant-outline: {t(lang, 'market_news')} · {ticker.upper()}]"
+                      f"(../../market_news/{ticker}/index.md){{.report-link}}", ""]
         # Price-target & implied-return table directly under the chart, sourced
         # from the latest fundamental report's scenario targets.
         target_tbl = target_price_block(
@@ -2095,101 +2467,71 @@ def build_reports(lang: str = "en"):
 
         write(dst_dir / "index.md", "\n".join(lines))
 
-        # Row for top-level index table — the same per-type counts the hero
-        # chip carries, spaced for a table cell instead of a chip.
-        badges = " &nbsp; ".join(counts)
-        # Company name is redundant for tickers we have no metadata for (name
-        # defaults to the ticker itself) — show a dash instead of repeating it.
-        company = meta["name"] if meta["name"] != ticker.upper() else "—"
-        # Whole rows are clickable (javascripts/clickable-rows.js), so no
-        # separate "View" column is needed — the linked ticker doubles as it.
-        report_index_rows.append(
-            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
-            f"| {company} | {meta['sector']} | {badges} |"
-        )
+        # Card for the top-level index. Each per-type badge opens the newest
+        # report of that type directly; the card itself opens the ticker page.
+        # Raw HTML, so hrefs are written against the index's directory URL.
+        def latest_href(f: Path) -> str:
+            if lang == "zh":
+                return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
+            return f"{ticker}/{f.stem}/"
 
-    # Top-level reports/index.md
+        badges: "list[tuple[str, str | None]]" = []
+        if fundamental_md:
+            badges.append((f"📊 {len(fundamental_md)}", latest_href(fundamental_md[0])))
+        if technical_md:
+            badges.append((f"📈 {len(technical_md)}", latest_href(technical_md[0])))
+        if other_md:
+            badges.append((f"🗂️ {len(other_md)}", latest_href(other_md[0])))
+        if html_files:
+            badges.append((f"🌐 {len(html_files)}", None))
+        newest = by_date_desc(md_files)[0] if md_files else None
+        newest_date = _file_date(newest) if newest else None
+        report_index_rows.append(hub_card(
+            href=f"{ticker}/", flag=meta["flag"], ticker=ticker, name=meta["name"],
+            sector=meta["sector"], badges=badges,
+            latest=newest_date.isoformat() if newest_date else None,
+            change=_ticker_change(ticker), lang=lang,
+        ))
+        index_totals["reports"] += len(md_files) + len(html_files)
+        index_totals["types"].update(report_type_key(f) for f in md_files)
+        if newest_date and (index_totals["latest"] is None or newest_date > index_totals["latest"]):
+            index_totals["latest"] = newest_date
+
+    # Top-level reports/index.md: a stats strip, the disclaimer as one line,
+    # then a filterable card grid. The old page also repeated every ticker's
+    # full report list below the table — thousands of links the per-ticker
+    # pages already carry, and a table of contents 38 entries long.
+    n_tickers = len(report_index_rows)
+    latest = index_totals["latest"]
     top_lines = [
         f"# {t(lang, 'analysis_reports')}",
         "",
-        f"> {t(lang, 'ai_generated')}. {t(lang, 'last_built')}: **{TODAY}**",
+        f"{t(lang, 'ai_generated')}. {t(lang, 'last_built')}: **{TODAY}**",
+        "{: .hub-lead }",
         "",
-        f"!!! warning \"{t(lang, 'disclaimer')}\"",
-        f"    {t(lang, 'disclaimer_text')}",
+        hub_stats_block([
+            (t(lang, "hub_tickers"), str(n_tickers), ""),
+            (t(lang, "hub_reports"), f"{index_totals['reports']:,}",
+             t(lang, "hub_window").format(days=RETENTION_DAYS) if RETENTION_DAYS else ""),
+            (t(lang, "hub_types"), str(len(index_totals["types"])), ""),
+            (t(lang, "hub_latest"), latest.isoformat() if latest else "—", ""),
+        ]),
+        "",
+        hub_notice_block(lang),
         "",
         f"## {t(lang, 'report_index')}",
         "",
-        f"> 📊 = {t(lang, 'fundamental_analysis').replace('📊 ', '')}  &nbsp; "
-        f"📈 = {t(lang, 'technical_analysis').replace('📈 ', '')}  &nbsp; "
-        f"🗂️ = {t(lang, 'other_reports').replace('🗂️ ', '')}  &nbsp; "
-        f"🌐 = {t(lang, 'html_reports').replace('🌐 ', '')}",
+        f"📊 {t(lang, 'fundamental_analysis').replace('📊 ', '')} &nbsp;·&nbsp; "
+        f"📈 {t(lang, 'technical_analysis').replace('📈 ', '')} &nbsp;·&nbsp; "
+        f"🗂️ {t(lang, 'other_reports').replace('🗂️ ', '')} &nbsp;·&nbsp; "
+        f"🌐 {t(lang, 'html_reports').replace('🌐 ', '')}",
+        "{: .hub-legend }",
         "",
-        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | {t(lang, 'reports')} |",
-        "|--------|---------|--------|-------|",
-    ] + report_index_rows
-
-    # Per-ticker detail sections
-    for ticker_dir in tickers:
-        ticker = ticker_dir.name.lower()
-        meta = get_meta(ticker)
-        files = ticker_files(ticker)
-        # Cap identically to the copy loop above so sample builds stay link-consistent.
-        md_files   = _sample([f for f in files if f.suffix == ".md" and within_retention(f)])
-        html_files = _sample([f for f in files if f.suffix == ".html" and within_retention(f)])
-        if not (md_files or html_files):
-            continue
-
-        technical_md, fundamental_md, other_md = split_by_type(md_files)
-        html_files = by_date_desc(html_files)
-
-        top_lines += [
-            "",
-            f"---",
-            "",
-            f"## {meta['flag']} {ticker.upper()} — {meta['name']}",
-            "",
-            f"**{t(lang, 'sector')}:** {meta['sector']}",
-            "",
-        ]
-        def top_link(f: Path) -> str:
-            if lang == "zh":
-                return f"{SITE_BASE}/reports/{ticker}/{f.stem}/"
-            return f"{ticker}/{f.name}"
-
-        def emit_top_section(label_key: str, ordered: list[Path]):
-            """Newest-first list on the top-level index: newest RECENT_COUNT
-            shown, the rest collapsed."""
-            if not ordered:
-                return
-            top_lines.append(f"**{t(lang, label_key)}:**")
-            top_lines.append("")
-            for f in ordered[:RECENT_COUNT]:
-                top_lines.append(f"- [{report_label(f)}]({top_link(f)}){{.report-link}}")
-            top_lines.append("")
-            older = ordered[RECENT_COUNT:]
-            if older:
-                top_lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
-                top_lines.append("")
-                for f in older:
-                    top_lines.append(f"    - [{report_label(f)}]({top_link(f)}){{.report-link}}")
-                top_lines.append("")
-
-        emit_top_section("fundamental_analysis", fundamental_md)
-        emit_top_section("technical_analysis", technical_md)
-        emit_top_section("other_reports", other_md)
-        if html_files:
-            top_lines.append(f"**{t(lang, 'html_reports')}:**")
-            top_lines.append("")
-            for f in html_files:
-                # Same full-width row treatment as the md reports above. The
-                # `↗` marker that .report-link[target=_blank] adds replaces the
-                # inline open-in-new icon these rows used to carry.
-                label = report_label(f)
-                if lang == "zh":
-                    top_lines.append(f"- [{label}]({SITE_BASE}/reports/{ticker}/{f.name}){{.report-link target=_blank}}")
-                else:
-                    top_lines.append(f"- [{label}]({ticker}/{f.name}){{.report-link target=_blank}}")
-            top_lines.append("")
+        hub_filter_block(lang, n_tickers),
+        "",
+        hub_grid_block(report_index_rows, lang),
+        "",
+    ]
 
     write(DST_REPORTS / "index.md", "\n".join(top_lines))
 
@@ -2207,6 +2549,7 @@ def build_market_news(lang: str = "en"):
 
     ticker_dirs = _sample_dirs(sorted([d for d in SRC_MARKET_NEWS.iterdir() if d.is_dir()]))
     index_rows: list[str] = []
+    index_totals: dict = {"briefs": 0, "latest": None}
 
     for ticker_dir in ticker_dirs:
         ticker = ticker_dir.name.lower()
@@ -2224,13 +2567,19 @@ def build_market_news(lang: str = "en"):
         date_dirs = _sample(sorted([d for d in ticker_dir.iterdir() if d.is_dir() and within_retention(d)], reverse=True))
         news_files = []
 
-        for md_file in md_files:
+        ordered = by_date_desc(md_files)
+        for i, md_file in enumerate(ordered):
             # Extract date from filename: market_news_YYYY-MM-DD_openai.md
             parts = md_file.stem.split("_")  # ['market', 'news', 'YYYY-MM-DD', 'openai']
             date_str = parts[2] if len(parts) >= 3 else md_file.stem
             if lang == "en":
                 dst_file = dst_ticker_dir / md_file.name
-                copy_file(md_file, dst_file, extra_meta=SEARCH_EXCLUDE_META)
+                yaml_body, _ = split_frontmatter(md_file.read_text(encoding="utf-8", errors="ignore"))
+                copy_file(md_file, dst_file, extra_meta=SEARCH_EXCLUDE_META,
+                          meta_block=report_meta_block(
+                              ticker, meta, md_file, frontmatter_fields(yaml_body), lang,
+                              prev=ordered[i + 1] if i + 1 < len(ordered) else None,
+                              nxt=ordered[i - 1] if i > 0 else None))
                 news_files.append((date_str, dst_file.name, None))
             else:
                 # ZH: link to EN page, no copy
@@ -2250,49 +2599,87 @@ def build_market_news(lang: str = "en"):
 
         if not news_files:
             continue
+        # The dated-file briefs are newest-first already, but a ticker that also
+        # carries legacy <date>/README.md folders has those appended after them,
+        # so merge the two into one newest-first order before anything reads
+        # news_files[0] as "the latest".
+        news_files.sort(key=lambda row: row[0], reverse=True)
 
-        # Generate per-ticker index
+        # Per-ticker page: the same hero the report index opens with (chips
+        # plus KPI tiles, flag on a card rather than in the gradient h1), then
+        # the briefs as rows — newest first, older ones folded.
+        n_news = len(news_files)
         lines = [
-            f"# {meta['flag']} {meta['name']} ({ticker.upper()}) — {t(lang, 'market_news')}",
+            f"# {meta['name']} ({ticker.upper()}) — {t(lang, 'market_news')}",
             "",
-            f"> **{t(lang, 'sector')}:** {meta['sector']}  |  **{t(lang, 'last_updated')}:** {TODAY}",
+            ticker_hero_block(ticker, meta, [f"📰 {n_news}"], lang),
             "",
-            "---",
-            "",
-            f"## 📰 {t(lang, 'market_news')}",
-            "",
-            f"| {t(lang, 'last_updated')} | {t(lang, 'reports')} |",
-            "|------|--------|",
         ]
-        for date_str, filename, en_url in news_files:
-            link = en_url if en_url else filename
-            lines.append(f"| {date_str} | [{date_str}]({link}) |")
+        if (docs_root / "reports" / ticker / "index.md").exists():
+            lines += [f"[:material-file-chart-outline: {t(lang, 'analysis_reports')} · {ticker.upper()}]"
+                      f"(../../reports/{ticker}/index.md){{.report-link}}", ""]
+        lines += [
+            f"## 📰 {t(lang, 'hub_news_timeline')}",
+            "",
+            t(lang, "hub_news_timeline_desc"),
+            "",
+        ]
+
+        def news_row(date_str: str, filename: str, en_url: "str | None") -> str:
+            stem = Path(filename).stem
+            provider = stem[len(f"market_news_{date_str}"):].strip("_-").replace("_", " ").title()
+            label = f"{date_str} · {provider}" if provider else date_str
+            return f"- [{label}]({en_url if en_url else filename}){{.report-link}}"
+
+        for row in news_files[:RECENT_COUNT]:
+            lines.append(news_row(*row))
+        lines.append("")
+        older = news_files[RECENT_COUNT:]
+        if older:
+            lines.append(f'??? note "{t(lang, "show_older").format(n=len(older))}"')
+            lines.append("")
+            for row in older:
+                lines.append("    " + news_row(*row))
+            lines.append("")
 
         write(dst_ticker_dir / "index.md", "\n".join(lines))
 
-        # Row for top-level index
-        latest_date = news_files[0][0] if news_files else "—"
-        company = meta["name"] if meta["name"] != ticker.upper() else "—"
-        index_rows.append(
-            f"| {meta['flag']} **[{ticker.upper()}]({ticker}/index.md)** "
-            f"| {company} | {meta['sector']} "
-            f"| {len(news_files)} | {latest_date} |"
-        )
+        # Card for the top-level index; the badge opens the newest brief.
+        latest_date, latest_name, latest_en = news_files[0]
+        latest_href = latest_en if latest_en else f"{ticker}/{Path(latest_name).stem}/"
+        index_rows.append(hub_card(
+            href=f"{ticker}/", flag=meta["flag"], ticker=ticker, name=meta["name"],
+            sector=meta["sector"], badges=[(f"📰 {n_news}", latest_href)],
+            latest=latest_date, change=_ticker_change(ticker), lang=lang,
+        ))
+        index_totals["briefs"] += n_news
+        if index_totals["latest"] is None or latest_date > index_totals["latest"]:
+            index_totals["latest"] = latest_date
 
-    # Top-level market_news/index.md
+    # Top-level market_news/index.md — same shape as the reports index.
+    n_tickers = len(index_rows)
     top_lines = [
-        f"# 📰 {t(lang, 'market_news')}",
+        f"# {t(lang, 'market_news')}",
         "",
-        f"> {t(lang, 'market_news_desc')}. {t(lang, 'last_built')}: **{TODAY}**",
+        f"{t(lang, 'market_news_desc')}. {t(lang, 'last_built')}: **{TODAY}**",
+        "{: .hub-lead }",
         "",
-        f"!!! warning \"{t(lang, 'disclaimer')}\"",
-        f"    {t(lang, 'disclaimer_text')}",
+        hub_stats_block([
+            (t(lang, "hub_tickers"), str(n_tickers), ""),
+            (t(lang, "hub_briefs"), f"{index_totals['briefs']:,}",
+             t(lang, "hub_window").format(days=RETENTION_DAYS) if RETENTION_DAYS else ""),
+            (t(lang, "hub_latest"), index_totals["latest"] or "—", ""),
+        ]),
+        "",
+        hub_notice_block(lang),
         "",
         f"## {t(lang, 'company_index')}",
         "",
-        f"| {t(lang, 'ticker')} | {t(lang, 'company')} | {t(lang, 'sector')} | # {t(lang, 'reports')} | {t(lang, 'last_updated')} |",
-        "|--------|---------|--------|---------|--------|",
-    ] + index_rows
+        hub_filter_block(lang, n_tickers),
+        "",
+        hub_grid_block(index_rows, lang),
+        "",
+    ]
 
     write(DST_MARKET_NEWS / "index.md", "\n".join(top_lines))
 
@@ -3992,6 +4379,11 @@ def main():
     print("\n[EN 10/10] Writing .pages nav files & abbreviations...")
     build_nav_pages(lang="en")
     build_abbreviations(lang="en")
+
+    # One payload serves both landing pages (home.html fetches it relative to
+    # the site root), so it is written once, after the EN tree it describes.
+    print("\n[EN +] Writing the landing-page payload (docs/hub.json)...")
+    write_hub_payload()
 
     # Build Traditional Chinese version
     print(f"\n{'─'*70}")
