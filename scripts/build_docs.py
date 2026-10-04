@@ -2599,6 +2599,11 @@ def build_market_news(lang: str = "en"):
 
         if not news_files:
             continue
+        # The dated-file briefs are newest-first already, but a ticker that also
+        # carries legacy <date>/README.md folders has those appended after them,
+        # so merge the two into one newest-first order before anything reads
+        # news_files[0] as "the latest".
+        news_files.sort(key=lambda row: row[0], reverse=True)
 
         # Per-ticker page: the same hero the report index opens with (chips
         # plus KPI tiles, flag on a card rather than in the gradient h1), then

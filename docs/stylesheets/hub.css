@@ -200,6 +200,10 @@
   transition: border-color .18s, transform .18s, box-shadow .18s, background .18s;
 }
 
+/* The filter (hub.js) hides a card by setting the `hidden` attribute, whose
+   UA style `display: none` the `display: flex` above would otherwise beat. */
+.md-typeset .hub-card[hidden] { display: none; }
+
 .md-typeset .hub-card:hover,
 .md-typeset .hub-card:focus-within {
   border-color: var(--fp-green, #22c55e);

@@ -1861,3 +1861,31 @@ def test_hub_payload_without_reports_is_empty_but_valid(tmp_path, monkeypatch):
     payload = bd.hub_payload()
     assert payload["stats"]["tickers"] == 0 and payload["tape"] == []
     assert payload["latest"] == [] and payload["hero"] is None
+
+
+def test_build_market_news_merges_legacy_folders_newest_first(tmp_path, monkeypatch):
+    """A ticker with both dated files and legacy <date>/README.md folders must
+    still put the newest brief first, whichever layout it came from."""
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    news = tmp_path / "ai_gen_report" / "market_news"
+    older = (bd.TODAY_DATE - timedelta(days=3)).isoformat()
+    _mk_report(news / "aaa", f"market_news_{older}_gemini.md", "# old file\n")
+    _mk_report(news / "aaa" / bd.TODAY, "README.md", "# new legacy\n")   # newer, legacy layout
+    _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", news)
+
+    bd.build_market_news(lang="en")
+
+    docs = tmp_path / "docs"
+    top = (docs / "market_news" / "index.md").read_text(encoding="utf-8")
+    assert f'href="aaa/{bd.TODAY}/"' in top                   # badge → the legacy brief
+    assert f"<i>Latest</i> {bd.TODAY}" in top
+    page = (docs / "market_news" / "aaa" / "index.md").read_text(encoding="utf-8")
+    assert page.index(f"[{bd.TODAY}]") < page.index(f"[{older} · Gemini]")
+
+
+def test_hub_css_lets_the_filter_hide_cards():
+    """`.hub-card` is display:flex, which would beat the UA's display:none for
+    the `hidden` attribute hub.js sets — the rule below has to exist."""
+    css = (Path(__file__).resolve().parents[1] / "docs" / "stylesheets" / "hub.css").read_text(encoding="utf-8")
+    assert re.search(r"\.hub-card\[hidden\]\s*\{\s*display:\s*none;", css)
