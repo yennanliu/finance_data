@@ -232,7 +232,7 @@
 }
 
 .lp-rcard-bar {
-  background: #111113;
+  background: var(--fp-bg-alt);
   padding: 0.625rem 1rem;
   display: flex;
   align-items: center;
@@ -665,43 +665,81 @@
   .lp-cursor { animation: none; }
   .lp-live::before { animation: none; }
 }
+
+/* ─── Hydrated slots ─── */
+/* The tape and the hero card carry no numbers of their own: they are filled
+   from hub.json and stay hidden until it arrives, so nothing stale is shown. */
+.lp-ticker[hidden], .lp-rcard-wrap[hidden] { display: none; }
+
+.lp-tick { text-decoration: none !important; color: inherit; }
+.lp-tick:hover .lp-tick-sym { color: var(--fp-green); }
+
+.lp-rcard-type { display: flex; flex-wrap: wrap; gap: 0 0.4rem; }
+
+.lp-range {
+  margin: 1rem 0 0;
+}
+.lp-range-lbl {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fp-text-muted);
+  margin-bottom: 0.35rem;
+}
+.lp-range-rail {
+  position: relative;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--fp-red), var(--fp-text-muted), var(--fp-green));
+  opacity: 0.85;
+}
+.lp-range-dot {
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--fp-text);
+  border: 2px solid var(--fp-bg-card);
+  box-shadow: 0 0 0 1px var(--fp-border);
+  transition: left .4s ease;
+}
+.lp-range-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  color: var(--fp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-rp-sum {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lp-rp--all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9rem;
+  font-weight: 700;
+  color: var(--fp-text) !important;
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="lp-page">
+<div class="lp-page" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"} | tojson }}'>
 
-  <!-- ── Ticker strip ── -->
-  <div class="lp-ticker">
-    <div class="lp-ticker-track">
-      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
-      <!-- duplicate for seamless loop -->
-      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
-    </div>
+  <!-- ── Ticker strip (filled from hub.json) ── -->
+  <div class="lp-ticker" data-hub-tape hidden>
+    <div class="lp-ticker-track"></div>
   </div>
 
   <!-- ── Hero ── -->
@@ -713,62 +751,66 @@
           <div class="lp-eyebrow">Daily · Automated · Open Access</div>
           <h1 class="lp-h1">
             Deep research on<br>
-            <span class="lp-typewriter" id="lp-tw" data-phrases='["US equities.","RKLB — daily.","defense tech.","space stocks.","every morning.","12 lenses each."]'>US equities<span class="lp-cursor"></span></span>
+            <span class="lp-typewriter" id="lp-tw" data-phrases='["US equities.","Taiwan ETFs.","semiconductors.","defense tech.","every morning.","12 lenses each."]'>US equities<span class="lp-cursor"></span></span>
           </h1>
-          <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for 21 US equities, powered by Claude AI.</p>
+          <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for <b data-hub="tickers">dozens of</b> US and Taiwan tickers, written by frontier LLMs from live market data.</p>
           <div class="lp-actions">
             <a href="reports/" class="lp-btn-primary">Read Today's Reports</a>
             <a href="#lp-how" class="lp-btn-ghost">How it works →</a>
           </div>
-          <p class="lp-hero-note">42 analyses per day &nbsp;·&nbsp; 12 analysis types &nbsp;·&nbsp; No paywall</p>
+          <p class="lp-hero-note"><span data-hub="per_day">—</span> analyses in the latest run &nbsp;·&nbsp; <span data-hub="types">12</span> report types live &nbsp;·&nbsp; No paywall</p>
         </div>
 
-        <div class="lp-card-hide">
+        <div class="lp-card-hide lp-rcard-wrap" data-hub-hero hidden>
           <div class="lp-rcard">
             <div class="lp-rcard-bar">
               <div>
-                <div class="lp-rcard-ticker">RKLB <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· NASDAQ</span></div>
-                <div class="lp-rcard-type">Technical Analysis · Jun 23, 2026</div>
+                <div class="lp-rcard-ticker"><span data-hub-field="ticker">—</span> <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· <span data-hub-field="sector">—</span></span></div>
+                <div class="lp-rcard-type"><span data-hub-field="kind">—</span></div>
               </div>
               <div class="lp-live">Live</div>
             </div>
             <div class="lp-rcard-body">
-              <p class="lp-rcard-hl">Rocket Lab: Ascending Triangle Above 50-Day MA — Accumulation Pattern Confirmed</p>
+              <p class="lp-rcard-hl" data-hub-field="title">—</p>
               <div class="lp-metrics">
                 <div class="lp-metric">
                   <div class="lp-metric-lbl">Price</div>
-                  <div class="lp-metric-val">$23.41</div>
+                  <div class="lp-metric-val" data-hub-field="price">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">RSI 14</div>
-                  <div class="lp-metric-val g">61.4</div>
+                  <div class="lp-metric-lbl">1D</div>
+                  <div class="lp-metric-val" data-hub-field="1d">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">MACD</div>
-                  <div class="lp-metric-val g">↑ Bull</div>
+                  <div class="lp-metric-lbl">1M</div>
+                  <div class="lp-metric-val" data-hub-field="1m">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">50-Day MA</div>
-                  <div class="lp-metric-val a">$21.80</div>
+                  <div class="lp-metric-lbl">YTD</div>
+                  <div class="lp-metric-val" data-hub-field="ytd">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">Volume</div>
-                  <div class="lp-metric-val">+34% avg</div>
+                  <div class="lp-metric-lbl">1Y</div>
+                  <div class="lp-metric-val" data-hub-field="1y">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">Support</div>
-                  <div class="lp-metric-val">$21.40</div>
+                  <div class="lp-metric-lbl">Vol (1Y)</div>
+                  <div class="lp-metric-val a" data-hub-field="vol">—</div>
                 </div>
               </div>
-              <p class="lp-excerpt">"RKLB traces a textbook ascending triangle above the 50-day MA. Volume profile supports institutional accumulation ahead of the next launch campaign..."</p>
+              <div class="lp-range">
+                <div class="lp-range-lbl">52W Range</div>
+                <div class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></div>
+                <div class="lp-range-ends"><span data-hub-field="low">—</span><span data-hub-field="high">—</span></div>
+              </div>
             </div>
-            <div class="lp-rcard-foot">
+            <a class="lp-rcard-foot" data-hub-field="link" href="reports/" style="text-decoration:none">
               <div class="lp-tags">
-                <span class="lp-ctag">Technical</span>
-                <span class="lp-ctag">Space</span>
+                <span class="lp-ctag" data-hub-field="tag-type">—</span>
+                <span class="lp-ctag" data-hub-field="tag-sector">—</span>
               </div>
-              <span class="lp-model-label">claude-sonnet-4-6</span>
-            </div>
+              <span class="lp-model-label" data-hub-field="model">—</span>
+            </a>
           </div>
         </div>
 
@@ -782,16 +824,16 @@
     <div class="lp-con">
       <div class="lp-stats-inner">
         <div class="lp-stat">
-          <div class="lp-stat-num">2<span>1</span></div>
-          <p class="lp-stat-lbl">US equities tracked daily</p>
+          <div class="lp-stat-num" data-hub-num="tickers">—</div>
+          <p class="lp-stat-lbl">Tickers with published research</p>
         </div>
         <div class="lp-stat">
-          <div class="lp-stat-num">4<span>2</span></div>
-          <p class="lp-stat-lbl">Analyses generated per day</p>
+          <div class="lp-stat-num" data-hub-num="per_day">—</div>
+          <p class="lp-stat-lbl">Analyses in the latest daily run</p>
         </div>
         <div class="lp-stat">
-          <div class="lp-stat-num">1<span>2</span></div>
-          <p class="lp-stat-lbl">Analysis types available</p>
+          <div class="lp-stat-num" data-hub-num="types">—</div>
+          <p class="lp-stat-lbl">Report types in production</p>
         </div>
         <div class="lp-stat">
           <div class="lp-stat-num">0<span>$</span></div>
@@ -844,14 +886,14 @@
           </div>
           <div class="lp-step">
             <div class="lp-step-num">Step 02 &nbsp;·&nbsp; AI Analysis</div>
-            <p class="lp-step-title">Claude reads the numbers and writes the report</p>
-            <p class="lp-step-desc">The context goes to Claude Sonnet with a domain-specific prompt. The model runs full analysis, generates Mermaid charts, and produces structured markdown — no human in the loop.</p>
-            <pre class="lp-step-code">prompts/*.txt + context → llm.py → claude-sonnet-4-6</pre>
+            <p class="lp-step-title">A frontier model reads the numbers and writes the report</p>
+            <p class="lp-step-desc">The context goes to the configured model — Gemini by default, with OpenAI and Claude as fallbacks — under a domain-specific prompt. The model runs the full analysis, draws Mermaid charts, and produces structured markdown; a nightly QA pass grades the output.</p>
+            <pre class="lp-step-code">prompts/*.txt + context → llm.py → gemini | openai | claude</pre>
           </div>
           <div class="lp-step">
             <div class="lp-step-num">Step 03 &nbsp;·&nbsp; Publish</div>
-            <p class="lp-step-title">GitHub Actions deploys 42 reports every morning</p>
-            <p class="lp-step-desc">Cron-triggered GitHub Actions fire 42 analysis jobs per day. Reports land in the MkDocs site and publish to GitHub Pages within minutes of generation.</p>
+            <p class="lp-step-title">GitHub Actions publishes the whole run every morning</p>
+            <p class="lp-step-desc">Cron-triggered GitHub Actions run one analysis job per ticker and report type. Reports land in the MkDocs site and publish to GitHub Pages within minutes of generation.</p>
             <pre class="lp-step-code">daily_analysis.yml → MkDocs → GitHub Pages</pre>
           </div>
         </div>
@@ -867,49 +909,8 @@
       <h2 class="lp-sec-h">Today's reports</h2>
       <p class="lp-sec-sub">Generated this morning from live market data. Not cached. Not edited. These are the actual outputs from the pipeline.</p>
 
-      <div class="lp-reports">
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">RKLB</p>
-              <div class="lp-rp-co">Rocket Lab USA</div>
-            </div>
-            <span class="lp-rp-chg g">▲ +5.14%</span>
-          </div>
-          <p class="lp-rp-sum">Ascending triangle pattern holding above the 50-day MA. Volume accumulation and improving MACD suggest institutional positioning ahead of the next launch campaign.</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
-            <span class="lp-rp-date">Jun 23, 2026</span>
-          </div>
-        </a>
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">KTOS</p>
-              <div class="lp-rp-co">Kratos Defense</div>
-            </div>
-            <span class="lp-rp-chg g">▲ +2.31%</span>
-          </div>
-          <p class="lp-rp-sum">Defense contract backlog expanding. Drone program wins are accelerating revenue visibility into FY2027 with the margin expansion story intact and incrementally de-risked.</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
-            <span class="lp-rp-date">Jun 23, 2026</span>
-          </div>
-        </a>
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">AVAV</p>
-              <div class="lp-rp-co">AeroVironment</div>
-            </div>
-            <span class="lp-rp-chg r">▼ -0.55%</span>
-          </div>
-          <p class="lp-rp-sum">Near-term consolidation after a 40% YTD run. RSI cooling from overbought territory. Next catalyst: DOD procurement announcement expected Q3 — watch the $200 support level.</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">Technical</span></div>
-            <span class="lp-rp-date">Jun 23, 2026</span>
-          </div>
-        </a>
+      <div class="lp-reports" data-hub-latest>
+        <a href="reports/" class="lp-rp lp-rp--all">Browse all reports →</a>
       </div>
     </div>
   </section>
@@ -919,7 +920,7 @@
   <section class="lp-cta">
     <div class="lp-con">
       <h2 class="lp-cta-h">Research that runs<br>while you sleep.</h2>
-      <p class="lp-cta-sub">42 analyses published automatically every morning. Zero subscription. Zero paywall. Just open it.</p>
+      <p class="lp-cta-sub">Dozens of analyses published automatically every morning. Zero subscription. Zero paywall. Just open it.</p>
       <div class="lp-cta-acts">
         <a href="reports/" class="lp-btn-primary">Open the Research Hub ↗</a>
         <a href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener" class="lp-btn-outline">View on GitHub</a>
@@ -959,6 +960,123 @@
     }
 
     tick();
+  })();
+</script>
+
+<script>
+  // ── Landing-page hydration ──────────────────────────────────────────────
+  // The market tape, the headline counts, the hero card and "latest reports"
+  // are read from hub.json, which scripts/build_docs.py derives from the price
+  // store and the published report set at build time. Everything here only
+  // fills slots the static markup already has; if the fetch fails the page
+  // stays as rendered, with the tape and hero card hidden (never stale data).
+  (function () {
+    var root = document.querySelector(".lp-page");
+    if (!root || !window.fetch) return;
+    var src = root.getAttribute("data-hub-src");
+    var base = root.getAttribute("data-hub-base") || "";
+    var labels = {};
+    try { labels = JSON.parse(root.getAttribute("data-hub-labels") || "{}"); } catch (e) {}
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+    function pct(v, d) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(d == null ? 2 : d) + "%"; }
+    function arrow(v) { return v == null ? "" : (v >= 0 ? "▲ " : "▼ "); }
+    function toneCls(v) { return v == null ? "" : (v >= 0 ? "g" : "r"); }
+    function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
+    function set(scope, field, text) {
+      var el = scope.querySelector('[data-hub-field="' + field + '"]');
+      if (el) el.textContent = text == null || text === "" ? "—" : text;
+      return el;
+    }
+    function metric(scope, field, v) {
+      var el = set(scope, field, pct(v));
+      if (el) { el.classList.remove("g", "r"); if (toneCls(v)) el.classList.add(toneCls(v)); }
+    }
+
+    function hydrate(d) {
+      var stats = d.stats || {};
+
+      // 1. tape — duplicated once so the marquee loops seamlessly
+      var tape = root.querySelector("[data-hub-tape]");
+      if (tape && d.tape && d.tape.length) {
+        var html = d.tape.map(function (t) {
+          return '<a class="lp-tick" href="' + esc(base + t.href) + '">' +
+            '<span class="lp-tick-sym">' + esc(t.sym) + '</span>' +
+            '<span class="lp-tick-px">' + esc(t.px) + '</span>' +
+            (t.chg == null ? "" : '<span class="lp-tick-' + (t.chg >= 0 ? "up" : "dn") + '">' + arrow(t.chg) + pct(t.chg) + "</span>") +
+            '</a><span class="lp-tick-sep">·</span>';
+        }).join("");
+        tape.querySelector(".lp-ticker-track").innerHTML = html + html;
+        tape.hidden = false;
+      }
+
+      // 2. counts — plain slots, and the big stat digits (last digit accented)
+      Array.prototype.forEach.call(root.querySelectorAll("[data-hub]"), function (el) {
+        var v = stats[el.getAttribute("data-hub")];
+        if (v != null && v !== "") el.textContent = typeof v === "number" ? v.toLocaleString() : v;
+      });
+      Array.prototype.forEach.call(root.querySelectorAll("[data-hub-num]"), function (el) {
+        var v = stats[el.getAttribute("data-hub-num")];
+        if (v == null) return;
+        var s = String(v);
+        el.innerHTML = esc(s.slice(0, -1)) + "<span>" + esc(s.slice(-1)) + "</span>";
+      });
+
+      // 3. hero card — the newest report that has a priced ticker
+      var card = root.querySelector("[data-hub-hero]");
+      var h = d.hero;
+      if (card && h) {
+        set(card, "ticker", h.ticker);
+        set(card, "sector", h.sector);
+        set(card, "kind", typeLabel(h) + " · " + h.date);
+        set(card, "title", h.title || (h.ticker + " — " + typeLabel(h)));
+        set(card, "price", (h.currency ? h.currency + " " : "") + h.price);
+        metric(card, "1d", h.chg_1d);
+        metric(card, "1m", h.chg_1m);
+        metric(card, "ytd", h.ytd);
+        metric(card, "1y", h.chg_1y);
+        set(card, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
+        set(card, "low", h.low_52w == null ? "—" : Number(h.low_52w).toFixed(2));
+        set(card, "high", h.high_52w == null ? "—" : Number(h.high_52w).toFixed(2));
+        var dot = card.querySelector("[data-hub-field=\"pos\"]");
+        if (dot) dot.style.left = (h.range_position == null ? 50 : Math.max(0, Math.min(100, h.range_position))).toFixed(1) + "%";
+        set(card, "model", h.model || h.provider);
+        set(card, "tag-type", typeLabel(h));
+        set(card, "tag-sector", h.sector);
+        var link = card.querySelector('[data-hub-field="link"]');
+        if (link) link.setAttribute("href", base + h.href);
+        card.hidden = false;
+      }
+
+      // 4. latest reports
+      var grid = root.querySelector("[data-hub-latest]");
+      if (grid && d.latest && d.latest.length) {
+        grid.innerHTML = d.latest.slice(0, 6).map(function (r) {
+          return '<a href="' + esc(base + r.href) + '" class="lp-rp">' +
+            '<div class="lp-rp-top"><div>' +
+              '<p class="lp-rp-ticker">' + esc(r.ticker) + '</p>' +
+              '<div class="lp-rp-co">' + esc(r.name) + '</div>' +
+            '</div>' +
+            (r.chg == null ? "" : '<span class="lp-rp-chg ' + toneCls(r.chg) + '">' + arrow(r.chg) + pct(r.chg) + '</span>') +
+            '</div>' +
+            '<p class="lp-rp-sum">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</p>' +
+            '<div class="lp-rp-foot">' +
+              '<div class="lp-tags"><span class="lp-ctag">' + esc(typeLabel(r)) + '</span></div>' +
+              '<span class="lp-rp-date">' + esc(r.date) + (r.model ? " · " + esc(r.model) : "") + '</span>' +
+            '</div></a>';
+        }).join("");
+      }
+    }
+
+    if (!src) return;
+    fetch(src, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
+      .then(hydrate)
+      .catch(function () { /* static page stands; nothing stale is shown */ });
   })();
 </script>
 {% endblock %}

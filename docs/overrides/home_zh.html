@@ -4,39 +4,11 @@
    Only the visible content and the typewriter phrases are translated. #}
 
 {% block content %}
-<div class="lp-page">
+<div class="lp-page" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ {"fundamental_analysis": "基本面", "technical_analysis": "技術面", "market_news": "市場新聞"} | tojson }}'>
 
-  <!-- ── Ticker strip ── -->
-  <div class="lp-ticker">
-    <div class="lp-ticker-track">
-      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
-      <!-- duplicate for seamless loop -->
-      <span class="lp-tick"><span class="lp-tick-sym">RKLB</span><span class="lp-tick-px">23.41</span><span class="lp-tick-up">▲ +5.14%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">KTOS</span><span class="lp-tick-px">31.85</span><span class="lp-tick-up">▲ +2.31%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">NVDA</span><span class="lp-tick-px">138.42</span><span class="lp-tick-up">▲ +3.42%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">TSLA</span><span class="lp-tick-px">182.30</span><span class="lp-tick-dn">▼ -1.08%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AVAV</span><span class="lp-tick-px">207.54</span><span class="lp-tick-dn">▼ -0.55%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">ONDS</span><span class="lp-tick-px">3.21</span><span class="lp-tick-up">▲ +4.19%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AAPL</span><span class="lp-tick-px">212.18</span><span class="lp-tick-up">▲ +0.87%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">MSFT</span><span class="lp-tick-px">461.73</span><span class="lp-tick-up">▲ +1.23%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">META</span><span class="lp-tick-px">622.10</span><span class="lp-tick-up">▲ +2.67%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMZN</span><span class="lp-tick-px">213.44</span><span class="lp-tick-up">▲ +0.94%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">GOOGL</span><span class="lp-tick-px">184.25</span><span class="lp-tick-dn">▼ -0.32%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">AMD</span><span class="lp-tick-px">168.90</span><span class="lp-tick-up">▲ +1.78%</span></span><span class="lp-tick-sep">·</span>
-      <span class="lp-tick"><span class="lp-tick-sym">PLTR</span><span class="lp-tick-px">44.12</span><span class="lp-tick-up">▲ +2.05%</span></span><span class="lp-tick-sep">·</span>
-    </div>
+  <!-- ── Ticker strip (filled from hub.json) ── -->
+  <div class="lp-ticker" data-hub-tape hidden>
+    <div class="lp-ticker-track"></div>
   </div>
 
   <!-- ── Hero ── -->
@@ -48,63 +20,67 @@
           <div class="lp-eyebrow">每日 · 自動化 · 開放存取</div>
           <h1 class="lp-h1">
             深度研究<br>
-            <span class="lp-typewriter" id="lp-tw" data-phrases='["美股。","RKLB — 每日更新。","國防科技。","太空股。","每天清晨。","每檔 12 種視角。"]'>美股<span class="lp-cursor"></span></span>
+            <span class="lp-typewriter" id="lp-tw" data-phrases='["美股。","台股 ETF。","半導體。","國防科技。","每天清晨。","每檔 12 種視角。"]'>美股<span class="lp-cursor"></span></span>
           </h1>
-          <p class="lp-desc">機構等級的股票分析，每天清晨自動生成 — 涵蓋基本面、技術面、DCF 估值、10-K 摘要等，覆蓋 21 檔美股，由 Claude AI 驅動。</p>
+          <p class="lp-desc">機構等級的股票分析，每天清晨自動生成 — 涵蓋基本面、技術面、DCF 估值、10-K 摘要等，覆蓋 <b data-hub="tickers">數十</b> 檔美股與台股標的，由前沿大型語言模型依即時市場資料撰寫。</p>
           <div class="lp-actions">
             <a href="reports/" class="lp-btn-primary">閱讀今日報告</a>
             <a href="data/" class="lp-btn-ghost">市場數據</a>
             <a href="#lp-how" class="lp-btn-ghost">運作方式 →</a>
           </div>
-          <p class="lp-hero-note">每日 42 篇分析 &nbsp;·&nbsp; 12 種分析類型 &nbsp;·&nbsp; 無付費牆</p>
+          <p class="lp-hero-note">最新一輪 <span data-hub="per_day">—</span> 篇分析 &nbsp;·&nbsp; <span data-hub="types">12</span> 種報告類型 &nbsp;·&nbsp; 無付費牆</p>
         </div>
 
-        <div class="lp-card-hide">
+        <div class="lp-card-hide lp-rcard-wrap" data-hub-hero hidden>
           <div class="lp-rcard">
             <div class="lp-rcard-bar">
               <div>
-                <div class="lp-rcard-ticker">RKLB <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· NASDAQ</span></div>
-                <div class="lp-rcard-type">技術分析 · 2026 年 6 月 23 日</div>
+                <div class="lp-rcard-ticker"><span data-hub-field="ticker">—</span> <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· <span data-hub-field="sector">—</span></span></div>
+                <div class="lp-rcard-type"><span data-hub-field="kind">—</span></div>
               </div>
               <div class="lp-live">即時</div>
             </div>
             <div class="lp-rcard-body">
-              <p class="lp-rcard-hl">Rocket Lab：50 日均線上方的上升三角形 — 確認吸籌型態</p>
+              <p class="lp-rcard-hl" data-hub-field="title">—</p>
               <div class="lp-metrics">
                 <div class="lp-metric">
                   <div class="lp-metric-lbl">價格</div>
-                  <div class="lp-metric-val">$23.41</div>
+                  <div class="lp-metric-val" data-hub-field="price">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">RSI 14</div>
-                  <div class="lp-metric-val g">61.4</div>
+                  <div class="lp-metric-lbl">1D</div>
+                  <div class="lp-metric-val" data-hub-field="1d">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">MACD</div>
-                  <div class="lp-metric-val g">↑ 多頭</div>
+                  <div class="lp-metric-lbl">1M</div>
+                  <div class="lp-metric-val" data-hub-field="1m">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">50 日均線</div>
-                  <div class="lp-metric-val a">$21.80</div>
+                  <div class="lp-metric-lbl">YTD</div>
+                  <div class="lp-metric-val" data-hub-field="ytd">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">成交量</div>
-                  <div class="lp-metric-val">+34% 均量</div>
+                  <div class="lp-metric-lbl">1Y</div>
+                  <div class="lp-metric-val" data-hub-field="1y">—</div>
                 </div>
                 <div class="lp-metric">
-                  <div class="lp-metric-lbl">支撐</div>
-                  <div class="lp-metric-val">$21.40</div>
+                  <div class="lp-metric-lbl">波動率 (1Y)</div>
+                  <div class="lp-metric-val a" data-hub-field="vol">—</div>
                 </div>
               </div>
-              <p class="lp-excerpt">「RKLB 在 50 日均線上方走出教科書般的上升三角形。成交量結構支持機構在下一波發射任務前的吸籌動作……」</p>
+              <div class="lp-range">
+                <div class="lp-range-lbl">52 週區間</div>
+                <div class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></div>
+                <div class="lp-range-ends"><span data-hub-field="low">—</span><span data-hub-field="high">—</span></div>
+              </div>
             </div>
-            <div class="lp-rcard-foot">
+            <a class="lp-rcard-foot" data-hub-field="link" href="reports/" style="text-decoration:none">
               <div class="lp-tags">
-                <span class="lp-ctag">技術面</span>
-                <span class="lp-ctag">太空</span>
+                <span class="lp-ctag" data-hub-field="tag-type">—</span>
+                <span class="lp-ctag" data-hub-field="tag-sector">—</span>
               </div>
-              <span class="lp-model-label">claude-sonnet-4-6</span>
-            </div>
+              <span class="lp-model-label" data-hub-field="model">—</span>
+            </a>
           </div>
         </div>
 
@@ -118,16 +94,16 @@
     <div class="lp-con">
       <div class="lp-stats-inner">
         <div class="lp-stat">
-          <div class="lp-stat-num">2<span>1</span></div>
-          <p class="lp-stat-lbl">每日追蹤的美股檔數</p>
+          <div class="lp-stat-num" data-hub-num="tickers">—</div>
+          <p class="lp-stat-lbl">已發布研究的標的數</p>
         </div>
         <div class="lp-stat">
-          <div class="lp-stat-num">4<span>2</span></div>
-          <p class="lp-stat-lbl">每日生成的分析篇數</p>
+          <div class="lp-stat-num" data-hub-num="per_day">—</div>
+          <p class="lp-stat-lbl">最新一輪生成的分析篇數</p>
         </div>
         <div class="lp-stat">
-          <div class="lp-stat-num">1<span>2</span></div>
-          <p class="lp-stat-lbl">可用的分析類型</p>
+          <div class="lp-stat-num" data-hub-num="types">—</div>
+          <p class="lp-stat-lbl">運作中的報告類型</p>
         </div>
         <div class="lp-stat">
           <div class="lp-stat-num">0<span>$</span></div>
@@ -180,14 +156,14 @@
           </div>
           <div class="lp-step">
             <div class="lp-step-num">步驟 02 &nbsp;·&nbsp; AI 分析</div>
-            <p class="lp-step-title">Claude 讀懂數字並撰寫報告</p>
-            <p class="lp-step-desc">脈絡資料連同領域專屬的提示送入 Claude Sonnet。模型執行完整分析、生成 Mermaid 圖表，並產出結構化 Markdown — 全程無人介入。</p>
-            <pre class="lp-step-code">prompts/*.txt + context → llm.py → claude-sonnet-4-6</pre>
+            <p class="lp-step-title">前沿模型讀懂數字並撰寫報告</p>
+            <p class="lp-step-desc">脈絡資料連同領域專屬的提示送入設定的模型 — 預設為 Gemini，並以 OpenAI 與 Claude 作為備援。模型執行完整分析、生成 Mermaid 圖表，並產出結構化 Markdown；每晚另有 QA 流程為產出評分。</p>
+            <pre class="lp-step-code">prompts/*.txt + context → llm.py → gemini | openai | claude</pre>
           </div>
           <div class="lp-step">
             <div class="lp-step-num">步驟 03 &nbsp;·&nbsp; 發布</div>
-            <p class="lp-step-title">GitHub Actions 每天清晨部署 42 份報告</p>
-            <p class="lp-step-desc">由 Cron 觸發的 GitHub Actions 每天執行 42 個分析任務。報告寫入 MkDocs 網站，並在生成後數分鐘內發布至 GitHub Pages。</p>
+            <p class="lp-step-title">GitHub Actions 每天清晨發布整輪報告</p>
+            <p class="lp-step-desc">由 Cron 觸發的 GitHub Actions 為每個標的與報告類型各執行一個分析任務。報告寫入 MkDocs 網站，並在生成後數分鐘內發布至 GitHub Pages。</p>
             <pre class="lp-step-code">daily_analysis.yml → MkDocs → GitHub Pages</pre>
           </div>
         </div>
@@ -203,49 +179,8 @@
       <h2 class="lp-sec-h">今日報告</h2>
       <p class="lp-sec-sub">今晨從即時市場資料生成。未經快取，未經編輯。這些就是流程管線的實際產出。</p>
 
-      <div class="lp-reports">
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">RKLB</p>
-              <div class="lp-rp-co">Rocket Lab USA</div>
-            </div>
-            <span class="lp-rp-chg g">▲ +5.14%</span>
-          </div>
-          <p class="lp-rp-sum">上升三角形型態守穩於 50 日均線上方。成交量吸籌與轉強的 MACD 顯示機構在下一波發射任務前布局。</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">技術面</span></div>
-            <span class="lp-rp-date">2026 年 6 月 23 日</span>
-          </div>
-        </a>
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">KTOS</p>
-              <div class="lp-rp-co">Kratos Defense</div>
-            </div>
-            <span class="lp-rp-chg g">▲ +2.31%</span>
-          </div>
-          <p class="lp-rp-sum">國防合約在手訂單持續擴大。無人機專案接連得標，加速營收能見度延伸至 2027 財年，利潤率擴張的故事完好且逐步去風險化。</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">技術面</span></div>
-            <span class="lp-rp-date">2026 年 6 月 23 日</span>
-          </div>
-        </a>
-        <a href="reports/" class="lp-rp">
-          <div class="lp-rp-top">
-            <div>
-              <p class="lp-rp-ticker">AVAV</p>
-              <div class="lp-rp-co">AeroVironment</div>
-            </div>
-            <span class="lp-rp-chg r">▼ -0.55%</span>
-          </div>
-          <p class="lp-rp-sum">在年初至今上漲 40% 後進入近期盤整。RSI 自超買區降溫。下一個催化劑：預計第三季公布的國防部採購案 — 留意 $200 支撐位。</p>
-          <div class="lp-rp-foot">
-            <div class="lp-tags"><span class="lp-ctag">技術面</span></div>
-            <span class="lp-rp-date">2026 年 6 月 23 日</span>
-          </div>
-        </a>
+      <div class="lp-reports" data-hub-latest>
+        <a href="reports/" class="lp-rp lp-rp--all">瀏覽全部報告 →</a>
       </div>
     </div>
   </section>
@@ -255,7 +190,7 @@
   <section class="lp-cta">
     <div class="lp-con">
       <h2 class="lp-cta-h">在你沉睡時<br>運轉的研究。</h2>
-      <p class="lp-cta-sub">每天清晨自動發布 42 篇分析。零訂閱，零付費牆。打開即看。</p>
+      <p class="lp-cta-sub">每天清晨自動發布數十篇分析。零訂閱，零付費牆。打開即看。</p>
       <div class="lp-cta-acts">
         <a href="reports/" class="lp-btn-primary">開啟研究中心 ↗</a>
         <a href="data/" class="lp-btn-outline">瀏覽市場數據</a>

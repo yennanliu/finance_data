@@ -58,15 +58,41 @@
 {% endblock %}
 
 {% block content %}
-  {% if page.meta and page.meta.template == "home.html" %}
+  {% if page.meta and page.meta.template in ("home.html", "home_zh.html") %}
     {{ super() }}
   {% else %}
-    <div class="ip-page-header">
-      <div class="ip-breadcrumb">
-        {%- if page.parent %}{{ page.parent.title }} &nbsp;/&nbsp; {% endif %}{{ page.title }}
-      </div>
-      <div class="ip-divider"></div>
-    </div>
+    {#-
+      Breadcrumb trail. Material's own `navigation.path` is Insiders-only, so
+      the inner pages used to open with a flat "SECTION / PAGE" label that
+      linked nowhere. Every ancestor section here links to its index page
+      (navigation.indexes puts it among the children as `is_index`), so a
+      reader three levels deep can step back one level rather than through
+      the tab bar.
+
+      The Traditional Chinese tree is a nav section of its own under `zh`;
+      on a ZH page that section is skipped as a crumb and "Home" points at
+      the ZH root instead, so the trail never crosses languages.
+    -#}
+    {% set on_zh = page.url and page.url.startswith("zh/") %}
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="{{ base_url }}/{{ 'zh/' if on_zh else '' }}">{{ "首頁" if on_zh else "Home" }}</a></li>
+        {% for anc in page.ancestors | reverse %}
+          {% set idx = anc.children | selectattr("is_index") | first if anc.children else none %}
+          {#- The language root's index is the ZH home, already the first crumb. -#}
+          {% set is_lang_root = idx and idx.url == "zh/" %}
+          {% if not is_lang_root %}
+            {% if idx and idx.url and idx.url != page.url %}
+              <li><a href="{{ idx.url | url }}">{{ anc.title }}</a></li>
+            {% elif not idx or idx.url != page.url %}
+              <li><span>{{ anc.title }}</span></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        <li aria-current="page">{{ page.title }}</li>
+      </ol>
+    </nav>
+    <div class="ip-divider"></div>
     {{ super() }}
   {% endif %}
 {% endblock %}

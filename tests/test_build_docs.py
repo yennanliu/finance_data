@@ -1639,3 +1639,225 @@ def test_csv_links_are_downloads_not_navigations():
 def test_zip_link_is_a_download():
     page = "\n".join(bd.market_data_index_page([], 38, "", "en"))
     assert '(market_data.zip){download="market_data.zip"}' in page
+
+
+# ── report meta bar, hub cards, landing-page payload ─────────────────────────
+# All raw HTML built in Python (see hub.css); the assertions are on the links
+# and figures, which are arithmetic over the fixture rather than a look.
+
+_FM_FIELDS = (
+    'title: "AMD 基本面深度分析 2026-07-28"\n'
+    "date: 2026-07-28\n"
+    "ticker: AMD\n"
+    "analysis_type: fundamental-analysis\n"
+    "provider: gemini\n"
+    "model: gemini-2.5-flash\n"
+    "language: zh-TW\n"
+    "search:\n  exclude: true\n"
+)
+
+
+def test_frontmatter_fields_reads_scalars_only():
+    fields = bd.frontmatter_fields(_FM_FIELDS)
+    assert fields["title"] == "AMD 基本面深度分析 2026-07-28"  # quotes stripped
+    assert fields["model"] == "gemini-2.5-flash"
+    assert "exclude" not in fields and "search" not in fields
+
+
+def test_report_type_key_and_label():
+    f = Path("fundamental_analysis_2026-10-03_gemini.md")
+    assert bd.report_type_key(f) == "fundamental_analysis"
+    assert bd.report_type_label(f, "en") == "Fundamental Analysis"   # emoji dropped
+    assert bd.report_type_label(f, "zh") == "基本面分析"
+    assert bd.report_type_key(Path("stock_eval_2026-10-03_openai.md")) == "stock_eval"
+    assert bd.report_type_label(Path("stock_eval_2026-10-03_openai.md"), "en") == "Stock Eval"
+    assert bd.report_type_label(Path("market_news_2026-10-03_gemini.md"), "en") == "Market News"
+
+
+def test_report_meta_block_links_against_the_directory_url():
+    f = Path("fundamental_analysis_2026-07-28_gemini.md")
+    older = Path("fundamental_analysis_2026-07-27_gemini.md")
+    block = bd.report_meta_block("amd", bd.get_meta("amd"), f,
+                                 bd.frontmatter_fields(_FM_FIELDS), "en",
+                                 prev=older, nxt=None)
+    # Raw HTML: the page lives at reports/amd/<stem>/, so the ticker index is
+    # one level up and a sibling report is ../<stem>/.
+    assert 'href="../"' in block
+    assert 'href="../fundamental_analysis_2026-07-27_gemini/" rel="prev"' in block
+    assert "<b>2026-07-27</b>" in block
+    # No newer report: the step is rendered inert, not as a dangling link.
+    assert 'rel="next"' not in block
+    assert 'class="rmeta__step is-off"' in block
+    assert "Fundamental Analysis" in block
+    assert "gemini · gemini-2.5-flash" in block
+    assert "zh-TW" in block
+    assert "All AMD reports" in block
+
+
+def test_report_meta_block_zh_strings():
+    f = Path("technical_analysis_2026-07-28_gemini.md")
+    block = bd.report_meta_block("amd", bd.get_meta("amd"), f, {}, "zh")
+    assert "技術分析" in block
+    assert "AMD 全部報告" in block
+    assert "較舊" in block and "較新" in block
+
+
+def test_copy_file_uses_meta_block_instead_of_the_table(monkeypatch, tmp_path):
+    monkeypatch.setattr(bd, "ROOT", tmp_path)
+    src = tmp_path / "r.md"
+    src.write_text(_REPORT_FM, encoding="utf-8")
+    dst = tmp_path / "out" / "r.md"
+    bd.copy_file(src, dst, extra_meta=bd.SEARCH_EXCLUDE_META,
+                 meta_block='<nav class="rmeta">META</nav>')
+    out = dst.read_text(encoding="utf-8")
+    assert out.count("\n---\n") == 1
+    assert '<nav class="rmeta">META</nav>' in out
+    assert "| **ticker** |" not in out            # the table is gone
+    assert out.index("rmeta") < out.index("# AMD")  # bar sits above the report
+
+
+def test_hub_card_search_haystack_and_badges():
+    card = bd.hub_card(href="amd/", flag="🔴", ticker="amd", name="Advanced Micro Devices",
+                       sector="Semiconductors", badges=[("📊 3", "amd/fundamental_x/"), ("🌐 1", None)],
+                       latest="2026-07-28", change=2.5, lang="en")
+    assert 'data-search="amd advanced micro devices semiconductors"' in card
+    assert '<a class="hub-card__link" href="amd/"' in card
+    assert '<a class="hub-badge" href="amd/fundamental_x/">📊 3</a>' in card
+    assert '<span class="hub-badge">🌐 1</span>' in card          # no target → not a link
+    assert 'hub-card__chg is-up">+2.50%' in card
+    assert "2026-07-28" in card
+
+
+def test_hub_card_without_meta_or_price_degrades():
+    card = bd.hub_card(href="xyz/", flag="📊", ticker="xyz", name="XYZ", sector="Equity",
+                       badges=[], latest=None, change=None, lang="en")
+    assert "hub-card__name" not in card      # name == ticker: not repeated
+    assert "hub-card__chg" not in card       # unpriced: no change pill
+    assert "hub-card__latest" not in card
+
+
+def test_hub_filter_block_carries_the_count():
+    block = bd.hub_filter_block("en", 38)
+    assert "<b data-hub-count>38</b> / 38" in block
+    assert "data-hub-filter" in block
+
+
+def test_build_reports_index_is_a_card_grid_with_stats(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    for tk in ("aaa", "bbb"):
+        _mk_report(src_stock / tk, f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")
+        _mk_report(src_stock / tk, f"fundamental_analysis_{bd.TODAY}_gemini.md", "# f\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", tmp_path / "ai_gen_report" / "market_news")
+
+    bd.build_reports(lang="en")
+
+    index = (docs / "reports" / "index.md").read_text(encoding="utf-8")
+    assert "hub-stats" in index and "hub-grid" in index
+    assert 'href="aaa/"' in index and 'href="bbb/"' in index
+    assert f'href="aaa/fundamental_analysis_{bd.TODAY}_gemini/"' in index  # badge → newest
+    assert "!!! warning" not in index                 # disclaimer is the one-line notice
+    assert "hub-notice" in index
+    assert "## 🇹🇼" not in index and "**📊 Fundamental Analysis:**" not in index  # no per-ticker dump
+    # The report pages carry the meta bar with older/newer neighbours.
+    page = (docs / "reports" / "aaa" / f"fundamental_analysis_{bd.TODAY}_gemini.md").read_text(encoding="utf-8")
+    assert 'class="rmeta"' in page
+    assert 'rel="prev"' not in page and 'rel="next"' not in page   # one report per type
+
+
+def test_build_reports_index_zh_badges_point_at_the_en_pages(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    _mk_report(src_stock / "aaa", f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", tmp_path / "ai_gen_report" / "market_news")
+
+    bd.build_reports(lang="zh")
+
+    index = (docs / "zh" / "reports" / "index.md").read_text(encoding="utf-8")
+    assert f'href="{bd.SITE_BASE}/reports/aaa/technical_analysis_{bd.TODAY}_gemini/"' in index
+    assert 'href="aaa/"' in index   # the card itself stays in the ZH tree
+    assert "涵蓋標的" in index
+
+
+def test_build_market_news_pages(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    news = tmp_path / "ai_gen_report" / "market_news"
+    _mk_report(src_stock / "aaa", f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")
+    d1 = (bd.TODAY_DATE - timedelta(days=1)).isoformat()
+    _mk_report(news / "aaa", f"market_news_{bd.TODAY}_gemini.md",
+               "---\nprovider: gemini\nmodel: g\n---\n# n\n")
+    _mk_report(news / "aaa", f"market_news_{d1}_gemini.md", "# n\n")
+    docs = _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", news)
+
+    bd.build_reports(lang="en")
+    bd.build_market_news(lang="en")
+
+    # The report page links across to the news page, which exists.
+    ticker_page = (docs / "reports" / "aaa" / "index.md").read_text(encoding="utf-8")
+    assert "(../../market_news/aaa/index.md)" in ticker_page
+    news_index = (docs / "market_news" / "aaa" / "index.md").read_text(encoding="utf-8")
+    assert news_index.startswith("# AAA (AAA) — Market News")  # no flag in the h1
+    assert 'class="tkhero"' in news_index
+    assert "(../../reports/aaa/index.md)" in news_index
+    assert f"- [{bd.TODAY} · Gemini](market_news_{bd.TODAY}_gemini.md){{.report-link}}" in news_index
+    assert "| Last updated | Reports |" not in news_index     # the date/date table is gone
+    top = (docs / "market_news" / "index.md").read_text(encoding="utf-8")
+    assert "hub-grid" in top and f'href="aaa/market_news_{bd.TODAY}_gemini/"' in top
+    # Newest brief steps to the older one and has nothing newer.
+    newest = (docs / "market_news" / "aaa" / f"market_news_{bd.TODAY}_gemini.md").read_text(encoding="utf-8")
+    assert f'href="../market_news_{d1}_gemini/" rel="prev"' in newest
+    assert 'rel="next"' not in newest
+    assert "Market News" in newest
+
+
+def test_news_available_follows_retention_and_source(tmp_path, monkeypatch):
+    news = tmp_path / "ai_gen_report" / "market_news"
+    _mk_report(news / "aaa", f"market_news_{bd.TODAY}_gemini.md", "# n\n")
+    _mk_report(news / "old", "market_news_2000-01-01_gemini.md", "# n\n")
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", news)
+    monkeypatch.setattr(bd, "SAMPLE_BUILD", False)
+    monkeypatch.setattr(bd, "RETENTION_DAYS", 120)
+    assert bd.news_available("aaa") is True
+    assert bd.news_available("AAA") is True
+    assert bd.news_available("old") is False      # outside the window
+    assert bd.news_available("zzz") is False      # no directory
+
+
+def test_hub_payload_is_derived_from_the_stores(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    news = tmp_path / "ai_gen_report" / "market_news"
+    _mk_report(src_stock / "amd", f"fundamental_analysis_{bd.TODAY}_gemini.md",
+               "---\ntitle: \"AMD 基本面\"\nprovider: gemini\nmodel: g-1\n---\n# f\n")
+    _mk_report(src_stock / "amd", f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")
+    _mk_report(src_stock / "zzz", f"technical_analysis_{bd.TODAY}_gemini.md", "# t\n")  # unpriced
+    _mk_report(news / "amd", f"market_news_{bd.TODAY}_gemini.md", "# n\n")
+    _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", news)
+    _store_series(monkeypatch, tmp_path, "amd", 400)
+
+    payload = bd.hub_payload()
+
+    assert payload["stats"] == {"tickers": 2, "reports": 3, "per_day": 3,
+                                "latest_day": bd.TODAY, "types": 2, "news_tickers": 1}
+    assert [t["sym"] for t in payload["tape"]] == ["AMD"]      # only priced tickers
+    assert payload["tape"][0]["href"] == "reports/amd/"
+    assert len(payload["latest"]) == 3
+    assert all(not k.startswith("_") for r in payload["latest"] for k in r)
+    hero = payload["hero"]
+    assert hero["ticker"] == "AMD" and hero["price"] and hero["href"].startswith("reports/amd/")
+    assert hero["chg_1d"] is not None and "range_position" in hero
+    # The fundamental report's front matter reaches the card.
+    amd_f = next(r for r in payload["latest"] if r["type"] == "fundamental_analysis")
+    assert amd_f["title"] == "AMD 基本面" and amd_f["model"] == "g-1"
+    assert amd_f["type_label"] == "Fundamental Analysis"
+    json.dumps(payload)   # serialisable as written to hub.json
+
+
+def test_hub_payload_without_reports_is_empty_but_valid(tmp_path, monkeypatch):
+    src_stock = tmp_path / "ai_gen_report" / "stock"
+    _patch_sample_env(monkeypatch, tmp_path, src_stock, limit=5, tickers=[])
+    monkeypatch.setattr(bd, "SRC_MARKET_NEWS", tmp_path / "none")
+    payload = bd.hub_payload()
+    assert payload["stats"]["tickers"] == 0 and payload["tape"] == []
+    assert payload["latest"] == [] and payload["hero"] is None

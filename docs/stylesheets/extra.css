@@ -758,6 +758,7 @@
   margin-bottom: 2rem;
 }
 
+/* Legacy — the breadcrumb is now `.crumbs` (hub.css, overrides/main.html). */
 .ip-breadcrumb {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   font-size: 0.75rem;
@@ -987,15 +988,37 @@
    MkDocs Material — General Overrides for Inner Pages (continued)
    ══════════════════════════════════════════════════════════════ */
 
-/* Card grid improvements */
+/* Card grid (the "Latest Reports" quick-access cards on a ticker page) —
+   same surface grammar as the hub cards: --fp-border, --fp-bg-card, 14px. */
 .md-typeset .grid.cards > ul > li {
-  border-radius: 12px;
-  transition: box-shadow .2s, transform .2s, border-color .2s;
+  border: 1px solid var(--fp-border);
+  border-radius: 14px;
+  background: var(--fp-bg-card);
+  padding: 1rem 1.1rem;
+  transition: box-shadow .2s, transform .2s, border-color .2s, background .2s;
+}
+.md-typeset .grid.cards > ul > li > hr {
+  border-color: var(--fp-border-dim);
+  margin: 0.75rem 0;
+}
+.md-typeset .grid.cards > ul > li > p:first-child {
+  font-size: 1rem;
+  color: var(--fp-text);
 }
 .md-typeset .grid.cards > ul > li:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
   transform: translateY(-2px);
-  border-color: var(--md-typeset-a-color);
+  border-color: var(--fp-green);
+  background: var(--fp-bg-card-hover);
+}
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover {
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .10);
+}
+
+/* Inner-page h1: a touch tighter now that a meta bar or hero follows it. */
+.md-typeset h1 + .tkhero,
+.md-typeset h1 + .rmeta {
+  margin-top: -0.75rem;
 }
 
 /* ══════════════════════════════════════════════════════════════
