@@ -14,133 +14,135 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-10-06
 
+---
+
 ## 🏢 公司概覽
-輝達（NVIDIA Corporation，NASDAQ: NVDA）為全球加速運算與人工智慧（AI）半導體解決方案的龍頭企業，歸屬於資訊科技產業。公司旗下核心業務涵蓋資料中心 AI 加速晶片、軟硬體整合運算平台（CUDA 生態系）、專業視覺化與車用運算晶片。隨著生成式 AI 基礎設施需求呈現爆發式擴張，NVDA 在全球先進 AI 訓練與推論晶片市場中維持絕對主導地位，並持續帶動全球科技供應鏈的資本支出浪潮。
+輝達（NVIDIA Corporation，NASDAQ: NVDA）是全球加速運算與人工智慧（AI）架構的領頭羊。公司業務橫跨資料中心 GPU、AI 運算叢集、網路解決方案（如 InfiniBand）以及 CUDA 軟體開發平台。隨著全球生成式 AI 與超大規模雲端服務商（Hyperscalers）基礎設施擴建浪潮持續推進，NVIDIA 牢牢佔據 AI 算力供應鏈核心樞紐位置，成為推動美股科技板塊與整體大盤指數走勢的最關鍵權重股。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期市場焦點高度集中於輝達（NVDA）強勁的股價表現與財務基本面擴張。截至 2026 年 10 月初，NVDA 股價突破歷史新高來到 238.9 美元（盤中高點達 238.70 美元），年內與過去一年漲幅達約 27%，帶動公司總市值突破 5.7 兆美元，並強烈叩關 6 兆美元歷史大關。執行長黃仁勳（Jensen Huang）個人淨資產亦同步突破 2,000 億美元里程碑。
+在 2026 年 10 月初的最新市場動態中，NVIDIA 股價突破歷史新高來到 239.24 美元附近（前一交易日收於 238.90 美元創收盤紀錄），帶動標普 500 指數與納斯達克指數同步刷新歷史高點。市場熱議焦點聚焦於該公司市值正大步邁向「6 兆美元」里程碑。華爾街頂級機構情緒高昂，摩根士丹利（Morgan Stanley）重申其為首選標的並維持「加碼」（Overweight）評級與 300 美元目標價；法巴銀行（BNP Paribas）則因強勁的 AI 伺服器需求，將目標價進一步上調至 345 美元；Zacks 亦將其列為推動指數創新高的頂級 AI 標的。
 
-推動此波漲勢的核心動能來自多重利多共振：首先，華爾街投行摩根士丹利（Morgan Stanley）將輝達列為「首選股票（Top Pick）」，強調當前 AI 產業發展趨勢完美契合其核心競爭優勢；其次，星展銀行（DBS）投資長公開指出，從輝達的獲利能力與估值結構來看，AI 族群遠未形成泡沫；再者，公司先前公布的第二季財報營收達 962 億美元，展現高達 106% 的年增長率，大幅超越華爾街的高標預期。
-
-在產業鏈與生態系方面，關鍵供應商營收因 AI 需求強勁而大幅攀升，並帶動包含光通訊廠商 Lumentum、伺服器夥伴美超微（Super Micro）等概念股同步走揚；同時市場亦傳出近 120 億美元的 AI 相關新交易催化劑。然而，市場分析師亦提出審慎觀點，指出投資人後續需密切關注應收帳款（Accounts Receivable）的增長趨勢與現金流健康度，以及主要競爭同業在 AI 晶片領域帶來的潛在上檔壓制效應。
+在基本面與資本配置方面，NVIDIA 先前公布的 106% 營收翻倍增長，加上 1,500 億美元的龐大庫藏股計畫，為市場注入強心針，有力回擊了市場對 AI 晶片折舊週期的質疑。在生態圈拓展上，由 NVIDIA 支持的新興雲端服務商（Neocloud）Lambda 正進行 IPO 前最後一輪 40 億美元融資，進一步鞏固其 GPU 算力租賃生態鏈。然而，多頭狂歡背後仍有隱憂浮現：一方面，NVIDIA 與 Groq 達成的 200 億美元交易面臨股東訴訟，指控收購案損害股東權益；另一方面，分析機構對極端記憶體成本壓制毛利率、庫存上升週期以及 NVIDIA 已佔納指 13% 和標普 8% 所帶來的極端集中度風險提出警示。整體而言，市場正處於基本面強勢與超高估值拉鋸的關鍵轉折點。
 
 ---
 
 ## 💡 關鍵洞察
-- **基本面強韌打破泡沫疑慮**：星展銀行（DBS）投資長與最新財報數據顯示，輝達營收成長率達 106% 且單季營收達 962 億美元，高速獲利增長實質支撐當前估值，顯示 AI 基礎建設投資具備實質基本面，非單純投機泡沫。
-- **機構法人堅定做多核心資產**：摩根士丹利將其評為「Top Pick」，反映頂級機構法人認為在 AI 算力基礎架構擴張週期中，輝達的軟硬體生態系護城河依舊是首選配置標的。
-- **市值向 6 兆美元大關邁進**：選擇權市場與衍生品交易員正積極定價 NVDA 挑戰 6 兆美元市值的時間點，衍生品資金流向反映多頭動能尚未出現明顯衰竭訊號。
-- **供應鏈共振與光通訊新催化劑**：除伺服器整合商外，輝達為 Lumentum 等關鍵光學零組件供應商帶來強大需求支撐，近 120 億美元的 AI 訂單/交易預期進一步鞏固了整個硬體供應鏈的訂單可見度。
-- **競爭格局加劇壓制長期暴利空間**：部分市場分析指出，超微（AMD）等競爭對手在市場份額上的追趕，可能對輝達長期維持超高毛利率與股價估值上檔空間構成一定天花板限制。
-- **資產負債表需關注應收帳款變化**：在營收高速膨脹至近千億美元規模的同時，分析師提醒應收帳款週轉與客戶信用回款節奏將是評估後續獲利品質與現金轉換效率的關鍵指標。
+
+- **指數權重巨型化與系統性連動**：NVIDIA 目前在納斯達克指數權重約 13%、標普 500 指數權重約 8%，連同前三大科技股合計佔標普超過 20%。這意味著 NVDA 的股價波動已不再只是單一個股事件，而是直接決定美股大盤走勢的指數級宏觀驅動因子。
+- **生態系資本綁定持續深化**：NVIDIA 支持的專用 AI 雲端平台 Lambda 正籌集 40 億美元並邁向 IPO。透過扶植 Neocloud 新創，NVIDIA 不僅創造了硬體採購需求，更建立了對抗傳統公有雲巨頭（如 AWS、Azure 自研晶片）的專屬算力生態壁壘。
+- **巨額庫藏股對沖市場估值焦慮**：公司祭出 1,500 億美元的股票回購計畫，展現管理層對自由現金流持續性的極高信心，同時在股價挑戰 6 兆美元估值之際，提供了有力的下檔防禦與每股盈餘（EPS）支撐。
+- **供應鏈景氣驗證與外溢效應**：關鍵硬體供應商的營收暴增（如台積電等上游供應鏈營收強勁），實質佐證了全球 AI 伺服器硬體需求仍處於擴張軌道，消除了市場短期內對下游 CapEx 放緩的恐懼。
+- **併購交易法律摩擦與合規成本**：涉及 Groq 的 200 億美元交易遭遇股東訴訟，顯示巨型交易在估值定價與反壟斷/股東利益權衡上面臨嚴格檢視，可能延宕整合進程或增加法律合規支出。
+- **供應鏈成本結構面臨結構性毛利挑戰**：儘管營收成長翻倍，但「極端」的記憶體（如 HBM）成本壓力與庫存管理指標開始引發部分分析師下調評級，毛利率能否維持歷史峰值成為後續多空博弈核心。
 
 ---
 
 ## 📰 近期新聞總覽
+
+- 2026-10-06 | Buy These Top AI Stocks for Higher Highs: HPE, NVDA, TSM — Zacks Investment Research
+- 2026-10-06 | Stock market today: S&P 500, Nasdaq hit record highs as Nvidia, AMD lead tech higher — Yahoo Finance
+- 2026-10-06 | Nvidia-backed neocloud Lambda is raising $4B in final round before IPO - WSJ — Seeking Alpha
+- 2026-10-06 | Nvidia: Plenty Of Reasons To Worry, But The Stock Keeps Cooking — Seeking Alpha
+- 2026-10-06 | Nvidia stock flashes massive signal as Wall Street leans in — Yahoo Finance
+- 2026-10-06 | 321 Reasons to Buy AI Stocks Right Now — Yahoo Finance
+- 2026-10-06 | The 3 tech stocks accounting for over 20% of the S&P 500 — Yahoo Finance
+- 2026-10-06 | Groq-Nvidia $20B deal faces suit alleging stockholders were shortchanged: report — Seeking Alpha
+- 2026-10-06 | Nvidia Heads for $6 Trillion Value With Chipmaker Back at Record — Yahoo Finance
+- 2026-10-06 | Why Are Nasdaq, Dow Futures Rising Premarket? SPCX, NVDA, CEG, AMD, ORCL, NOK In Focus — Yahoo Finance
+- 2026-10-06 | Can Nvidia (NVDA) Reach $6 Trillion Valuation After Monday’s Record Close? — Blockonomi
+- 2026-10-06 | Nvidia: Inventory Doesn't Lie And Says Downgrade — Seeking Alpha
 - 2026-10-05 | Stock Market Today: Dow Gains, Nasdaq Hits New High; Shopify, Brazil Plays Offer Entries — Investor's Business Daily
 - 2026-10-05 | Nvidia Stock Hits Record as Key Supplier’s Revenue Booms on AI Demand — Barron's
-- 2026-10-05 | Nvidia Stock: Buy at the High? — Bing News
-- 2026-10-05 | Nvidia’s valuation shows AI stocks are far from a bubble, DBS CIO says (NVDA:NASDAQ) — Seeking Alpha
-- 2026-10-05 | Signal Says Nvidia Stock Still Hasn't Hit Its Top — Schaeffer's Investment Research
 - 2026-10-05 | Nvidia stock hits all-time high, as market cap closes in on $6 trillion — Yahoo Finance
-- 2026-10-04 | Nvidia Just Gave Lumentum Stock a New AI Catalyst — Barchart.com
-- 2026-10-04 | NVDY: NVIDIA Shares Break To Record Highs, Don't Cede The Upside Now (NYSEARCA:NVDY) — Seeking Alpha
-- 2026-10-04 | 2 Millionaire-Maker Quantum Computing Stocks to Buy Hand Over Fist — The Motley Fool
-- 2026-10-04 | Nvidia Gets Its Leather Jacket Back — Seeking Alpha
-- 2026-10-03 | A Nearly $12 Billion AI Deal Could Be Another Reason to Buy Nvidia Stock — Yahoo Finance
-- 2026-10-03 | Why Super Micro (SMCI) Stock Is Up Today — Yahoo Finance
-- 2026-10-03 | 3 AI Chip Stocks To Watch After Nvidia Stock Hit A Fresh All Time High — Yahoo Finance
-- 2026-10-03 | Nvidia (NVDA) Stock Hits Record High on Morgan Stanley’s “Top Pick” Call — CoinCentral
-- 2026-10-02 | Nvidia: Competition Caps The Upside Case (NASDAQ:NVDA) — Seeking Alpha
-- 2026-10-02 | Nvidia Stock Has Become Deeply Undervalued, But Watch Out For Accounts Receivable (NVDA) — Seeking Alpha
-- 2026-10-02 | Nvidia stock hits record high, market cap nears $6 trillion — Yahoo Finance
-- 2026-10-02 | Jensen Huang Tops $200 Billion Fortune After Nvidia Shares Reach Record High — Forbes
-- 2026-10-02 | NVDA Stock Hits Record High After Morgan Stanley Names Nvidia Top Pick, Says AI Trends Play To Its ‘Strengths’ — Yahoo Finance
+- 2026-10-05 | Nvidia: Reaching The Point Of An Explosive Upside Breakout — Seeking Alpha
+- 2026-10-02 | Nvidia (NVDA) Stock Hits Record High as Buyback and AI Optimism Fuel Rally — CoinCentral
+- 2026-10-02 | NVDA stock is back as Morgan Stanley’s top pick – all AI trends play to Nvidia’s strengths, says analyst — MSN / Morgan Stanley
 - 2026-09-28 | Nvidia Just Delivered 106% Revenue Growth. What Could NVDA Stock Do Next? — 24/7 Wall St.
+- 2026-08-26 | Nvidia earnings: Stock jumps as revenue expected to grow 70%, but 'extreme' memory costs pressure margins — Business Insider
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 摩根士丹利重申「Top Pick」評級，推動市值突破 5.7 兆美元挑戰 6 兆大關
-- **核心內容**：摩根士丹利（Morgan Stanley）發布報告將輝達列為首選標的，認為整體 AI 發展趨勢高度吻合輝達的核心優勢。受此激勵，NVDA 股價刷新歷史高點達 238.9 美元，市值達 5.7 兆美元，選擇權市場更積極押注其登上 6 兆美元大關。
-- **營運與財務影響**：一線投行的背書強化了機構投資人的長期持股信心，進一步降低資本成本，並鞏固其在雲端服務商（CSP）大額資本支出中的優先議價地位。
-- **股價意涵**：在突破前高後，技術面與機構資金流形成良性循環，為股價在突破 238 美元後朝更高目標區間（如市場模型討論之 350 美元路徑）奠定心理支撐。
+### 1. 股價創歷史新高逼近 6 兆美元市值，頂級投行激進調升目標價
+- **新聞來源**：Yahoo Finance, Blockonomi, Morgan Stanley
+- **核心內容**：NVIDIA 股價突破 239 美元，收盤創 238.90 美元歷史新高，總市值迅速逼近 6 兆美元關卡。摩根士丹利重申其為產業「Top Pick」，維持加碼評級及 300 美元目標價；法巴銀行（BNP Paribas）更將目標價大幅上調至 345 美元，主因 AI 伺服器建置需求毫無放緩跡象。
+- **營運與財務影響**：目標價上調至 $300–$345 區間，反映機構法人對其 Blackwell 及次世代架構生命週期收益的高度認可。高估值溢價使 NVIDIA 具備低成本股權融資與併購擴張的無形優勢。
+- **股價意涵**：短期內突破歷史新高後形成強烈動能突破型態（Explosive Upside Breakout），但需注意其在納指 13%、標普 8% 的極高權重，可能引發被動指數型基金再平衡時的被動調節壓力。
 
-### 2. 星展銀行力挺估值合理性，第二季營收 962 億美元年增 106% 奠定基礎
-- **核心內容**：星展銀行（DBS）投資長公開表示，輝達目前的估值倍數證明 AI 類股並非泡沫。先前公布的第二季財報顯示營收達 962 億美元，年成長達 106%，獲利與營收指引雙雙超越市場高標。
-- **營運與財務影響**：高達 106% 的營收增長確認了全球算力基礎設施需求的續航力，化解了市場對於雲端資本支出放緩的疑慮，每股盈餘（EPS）的高速擴張實質消化了本益比倍數。
-- **股價意涵**：為價值投資者與大型主權基金提供進場與續抱的理論基礎，有助於減緩高檔獲利了結賣壓。
+### 2. 轉投資 Neocloud 獨角獸 Lambda 展開 IPO 前 40 億美元最後輪融資
+- **新聞來源**：Seeking Alpha / Wall Street Journal
+- **核心內容**：由 NVIDIA 大力支持的專用 GPU 雲端運算供應商 Lambda 正在進行公開上市（IPO）前最後一輪融資，籌資規模達 40 億美元。
+- **營運與財務影響**：Lambda 這類專注於 AI 加速運算的 Neocloud 是 NVIDIA GPU 的主要消化管道。NVIDIA 透過早期股權投資與晶片優先供應權，將硬體銷售轉化為生態系閉環。Lambda 的高估值與成功融資，意味著算力租賃需求依然火熱，減輕了市場對雲端算力轉售市場需求飽和的疑慮。
+- **股價意涵**：增強投資人對長期 GPU 採購需求能見度的信心，並可能在 Lambda 後續 IPO 時為 NVIDIA 帶來潛在的業外投資增值回報。
 
-### 3. 近 120 億美元 AI 交易與供應鏈夥伴（Lumentum / 關鍵供應商）同步受惠
-- **核心內容**：報導指出近 120 億美元的 AI 新交易為輝達提供額外買進理由，同時關鍵供應商營收大增，並為光學零組件廠 Lumentum 與伺服器夥伴 Super Micro 注入新的營運催化劑。
-- **營運與財務影響**：AI 叢集規模擴大導致光互聯（Optical Interconnect）與高效冷卻伺服器的需求急升，輝達生態系的協同效應正在擴大，確保了從晶片到系統級產品的完整交付能力。
-- **股價意涵**：供應鏈的熱絡證實下游訂單能見度清晰，消除了市場對供應鏈斷鏈或庫存堆積的短期擔憂。
+### 3. 與 Groq 的 200 億美元重磅交易遭遇股東權益訴訟
+- **新聞來源**：Seeking Alpha
+- **核心內容**：NVIDIA 與專用推論晶片新創 Groq 所涉及的 200 億美元交易案面臨股東集體訴訟，原告指控該交易架構讓部分股東利益受損（shortchanged）。
+- **營運與財務影響**：Groq 以 LPU（Language Processing Unit）在 AI 推論端具備高能效架構，此 200 億美元交易原被視為 NVIDIA 在推論領域圍堵競品威脅的關鍵防禦動作。面臨訴訟可能導致交易審查時間拉長、司法抗辯費用攀升，甚至引發監管機構對算力市場壟斷程度的重新評估。
+- **股價意涵**：屬於短期法律與情緒雜音，雖不至於動搖公司基本盤，但可能在收購審批過程中壓抑部分多頭情緒。
 
-### 4. 競爭威脅與應收帳款風險成為多空爭鳴焦點
-- **核心內容**：Seeking Alpha 等分析指出，儘管估值有基本面支撐，但同業競爭（如 AMD 及客製化晶片）可能限制未來的上檔溢價；同時，投資人需密切追蹤應收帳款（Accounts Receivable）的快速膨脹。
-- **營運與財務影響**：若應收帳款增長速度持續高於營收增幅，可能代表客戶端付款週期拉長或信用風險上升，對營運現金流品質構成潛在壓力。
-- **股價意涵**：提醒高檔追價的投資人保持風險意識，若後續季報中現金流或毛利率受競爭影響出現微幅收窄，可能引發短線高波動修正。
+### 4. 1,500 億美元庫藏股對決記憶體成本與庫存週轉挑戰
+- **新聞來源**：CoinCentral, Seeking Alpha, Business Insider
+- **核心內容**：在營收繳出 106% 暴增成績的同時，公司推出了高達 1,500 億美元的股票回購計畫。然而，Seeking Alpha 分析師以庫存指標為由給予降評警示；Business Insider 亦指出極端的記憶體（HBM）成本正對毛利率構成實質擠壓。
+- **營運與財務影響**：1,500 億美元庫藏股為科技史上罕見的資本回報手筆，直接提升 EPS 質量並粉碎硬體折舊放緩的看空論點。然而，若高頻寬記憶體（HBM）價格持續上漲且庫存去化週期拉長，可能侵蝕毛利率自 75%+ 的高位緩步滑落，考驗其定價轉嫁能力。
+- **股價意涵**：在強大的多頭推進力中埋下基本面檢驗指標，市場將以更高標準審視下一季財報中的毛利率指引與庫存天數。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟢 正面（Strong Bullish）**
+**整體市場情緒：🟢 正面（強烈偏多，但伴隨高估值分歧）**
 
-### 評估依據：
-- **正面因素**：
-  1. 股價創下歷史新高（238.9 USD），年內與過去一年累計漲幅達約 27%，技術面呈現強勢多頭排列。
-  2. 摩根士丹利列為首選股，星展銀行投資長公開背書非泡沫，機構共識強烈。
-  3. Q2 營收 962 億美元與 106% 的翻倍年成長率提供無可撼動的基本面支撐。
-  4. 供應鏈（Lumentum、關鍵零組件廠）獲利同步爆發，近 120 億美元 AI 交易催化劑增強訂單確定性。
-- **負面/中性警示因素**：
-  1. 逼近 6 兆美元市值整數關卡，短期選擇權博弈與獲利了結壓力上升。
-  2. 市場開始審視競爭對手上檔壓制及應收帳款累積速度。
+| 維度 | 評估依據 | 影響程度 |
+| :--- | :--- | :--- |
+| **正面因素** | 1. 股價創歷史新高，直奔 6 兆美元市值大關<br>2. 投行目標價最高調升至 $345（BNP Paribas）及首選加碼 $300（MS）<br>3. 1,500 億美元巨額庫藏股展現現金流實力<br>4. 關鍵供應商營收大增，證實 AI 硬體需求強韌 | ⭐️⭐️⭐️⭐️⭐️ (強烈) |
+| **負面/警示因素** | 1. Groq 200 億美元收購案面臨股東訴訟<br>2. 指數集中度過高（佔標普 8%、納指 13%），面臨宏觀系統性波動風險<br>3. 供應鏈極端記憶體成本壓制毛利率預期與庫存週轉疑慮 | ⭐️⭐️⭐️ (中等) |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **高階算力市場競爭加劇（風險等級：高）**
-  - AMD 與主要 CSP 自研 ASIC 晶片持續推進，可能逐步侵蝕特定推論或特定工作負載市佔率，對長期毛利率定價權造成壓力。
-- 🟡 **應收帳款與現金流品質風險（風險等級：中）**
-  - 營收規模暴增至單季近千億美元，客戶付款週期與應收帳款回款進度若出現延滯，將對營運現金流與資產負債表健康度帶來考驗。
-- 🟡 **整數關卡與高估值回檔波動（風險等級：中）**
-  - 股價突破 238 美元並挑戰 6 兆美元市值關卡，高基期下任何低於極高預期的營運數據都容易引發短線獲利了結與高波動震盪。
+- 🔴 **高權重與宏觀指數共振風險**：NVIDIA 在納指與標普的權重分別達 13% 與 8%，個股波動與大盤指數已高度綁定。若大盤出現總體經濟流動性收緊或被動資金調倉，股價可能遭遇放大級別的波動。
+- 🟡 **重大併購案法律與監管風險**：針對 Groq 200 億美元交易的股東訴訟可能增加交易不確定性，並可能引來反壟斷機構對 AI 算力整合的額外關注。
+- 🟡 **記憶體成本上升與毛利率承壓**：新一代高算力晶片對 HBM3e/HBM4 的依賴度極高，上游記憶體供應鏈報價高昂，若無法完全轉嫁予雲端終端客戶，毛利率存在下行壓力。
+- 🟡 **庫存週期與成長放緩疑慮**：在經歷 106% 的營收超高速增長後，基期大幅墊高，庫存週轉數據若出現惡化，可能引發市場對下游採購週期進入高原期的擔憂。
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
-1. **6 兆美元市值心理關卡挑戰**：關注股價在 238–245 美元區間的量能變化與選擇權未平倉量分佈。
-2. **供應鏈財報與出貨交叉驗證**：追蹤光通訊（如 Lumentum）及硬體組裝夥伴（如 Super Micro）的營收動能，確認次世代 AI 平台出貨進度。
-3. **應收帳款與客戶資本支出動態**：密切追蹤大型雲端巨頭（CSP）最新資本支出計畫更新與回款節奏，以評估千億營收規模下的現金流品質。
+## 🔮 短期關注重點
+
+1. **突破 $240 關卡與 6 兆美元市值心理防線**：觀察股價在突破 $238.90 歷史高位後，能否在 $240 上方形成有效支撐，完成市值 6 兆美元的歷史性站位。
+2. **Groq 併購訴訟後續進展**：關注法院對於 200 億美元收購案訴訟的裁決或雙方和解協議，評估是否影響 NVIDIA 在推論晶片領域的技術佈局。
+3. **Lambda 40 億美元融資完成與 IPO 時程**：觀察 Neocloud 生態系資本市場反響，確認算力租賃終端需求真實熱度。
+4. **供應鏈產能與記憶體成本動態**：追蹤主要代工廠（如台積電）與記憶體供應商的產能擴產及報價趨勢，評估對次季毛利率的實質影響。
 
 ---
 
 ## 📌 新聞來源索引
-1. Stock Market Today: Dow Gains, Nasdaq Hits New High; Shopify, Brazil Plays Offer Entries — Investor's Business Daily (2026-10-05)
-2. Nvidia Stock Hits Record as Key Supplier’s Revenue Booms on AI Demand — Barron's (2026-10-05)
-3. Nvidia Stock: Buy at the High? — Bing News (2026-10-05)
-4. Nvidia’s valuation shows AI stocks are far from a bubble, DBS CIO says (NVDA:NASDAQ) — Seeking Alpha (2026-10-05)
-5. Signal Says Nvidia Stock Still Hasn't Hit Its Top — Schaeffer's Investment Research (2026-10-05)
-6. Nvidia stock hits all-time high, as market cap closes in on $6 trillion — Yahoo Finance (2026-10-05)
-7. Nvidia Just Gave Lumentum Stock a New AI Catalyst — Barchart.com (2026-10-04)
-8. NVDY: NVIDIA Shares Break To Record Highs, Don't Cede The Upside Now (NYSEARCA:NVDY) — Seeking Alpha (2026-10-04)
-9. 2 Millionaire-Maker Quantum Computing Stocks to Buy Hand Over Fist — The Motley Fool (2026-10-04)
-10. Nvidia Gets Its Leather Jacket Back — Seeking Alpha (2026-10-04)
-11. A Nearly $12 Billion AI Deal Could Be Another Reason to Buy Nvidia Stock — Yahoo Finance (2026-10-03)
-12. Why Super Micro (SMCI) Stock Is Up Today — Yahoo Finance (2026-10-03)
-13. 3 AI Chip Stocks To Watch After Nvidia Stock Hit A Fresh All Time High — Yahoo Finance (2026-10-03)
-14. Nvidia (NVDA) Stock Hits Record High on Morgan Stanley’s “Top Pick” Call — CoinCentral (2026-10-03)
-15. Nvidia: Competition Caps The Upside Case (NASDAQ:NVDA) — Seeking Alpha (2026-10-02)
-16. Nvidia Stock Has Become Deeply Undervalued, But Watch Out For Accounts Receivable (NVDA) — Seeking Alpha (2026-10-02)
-17. Nvidia stock hits record high, market cap nears $6 trillion — Yahoo Finance (2026-10-02)
-18. Jensen Huang Tops $200 Billion Fortune After Nvidia Shares Reach Record High — Forbes (2026-10-02)
-19. NVDA Stock Hits Record High After Morgan Stanley Names Nvidia Top Pick, Says AI Trends Play To Its ‘Strengths’ — Yahoo Finance (2026-10-02)
-20. Nvidia Just Delivered 106% Revenue Growth. What Could NVDA Stock Do Next? — 24/7 Wall St. (2026-09-28)
+
+1. Buy These Top AI Stocks for Higher Highs: HPE, NVDA, TSM — Zacks Investment Research (2026-10-06)
+2. Stock market today: S&P 500, Nasdaq hit record highs as Nvidia, AMD lead tech higher — Yahoo Finance (2026-10-06)
+3. Nvidia-backed neocloud Lambda is raising $4B in final round before IPO - WSJ — Seeking Alpha (2026-10-06)
+4. Nvidia: Plenty Of Reasons To Worry, But The Stock Keeps Cooking — Seeking Alpha (2026-10-06)
+5. Nvidia stock flashes massive signal as Wall Street leans in — Yahoo Finance (2026-10-06)
+6. 321 Reasons to Buy AI Stocks Right Now — Yahoo Finance (2026-10-06)
+7. The 3 tech stocks accounting for over 20% of the S&P 500 — Yahoo Finance (2026-10-06)
+8. Groq-Nvidia $20B deal faces suit alleging stockholders were shortchanged: report — Seeking Alpha (2026-10-06)
+9. Nvidia Heads for $6 Trillion Value With Chipmaker Back at Record — Yahoo Finance (2026-10-06)
+10. Why Are Nasdaq, Dow Futures Rising Premarket? SPCX, NVDA, CEG, AMD, ORCL, NOK In Focus — Yahoo Finance (2026-10-06)
+11. Can Nvidia (NVDA) Reach $6 Trillion Valuation After Monday’s Record Close? — Blockonomi (2026-10-06)
+12. Nvidia: Inventory Doesn't Lie And Says Downgrade — Seeking Alpha (2026-10-06)
+13. Stock Market Today: Dow Gains, Nasdaq Hits New High; Shopify, Brazil Plays Offer Entries — Investor's Business Daily (2026-10-05)
+14. Nvidia Stock Hits Record as Key Supplier’s Revenue Booms on AI Demand — Barron's (2026-10-05)
+15. Nvidia stock hits all-time high, as market cap closes in on $6 trillion — Yahoo Finance (2026-10-05)
+16. Nvidia: Reaching The Point Of An Explosive Upside Breakout — Seeking Alpha (2026-10-05)
+17. Nvidia (NVDA) Stock Hits Record High as Buyback and AI Optimism Fuel Rally — CoinCentral (2026-10-02)
+18. NVDA stock is back as Morgan Stanley’s top pick – all AI trends play to Nvidia’s strengths, says analyst — MSN / Morgan Stanley (2026-10-02)
+19. Nvidia Just Delivered 106% Revenue Growth. What Could NVDA Stock Do Next? — 24/7 Wall St. (2026-09-28)
+20. Nvidia earnings: Stock jumps as revenue expected to grow 70%, but 'extreme' memory costs pressure margins — Business Insider (2026-08-26)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
