@@ -17,94 +17,130 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ---
 
 ## 🏢 公司概覽
-超微半導體（Advanced Micro Devices, Inc., NASDAQ: AMD）是全球領先的高效能運算與繪圖晶片供應商。公司業務架構涵蓋資料中心（Data Center，包含 EPYC 伺服器處理器與 Instinct 系列運算加速卡）、客戶端運算（Client，涵蓋 Ryzen 桌上型與筆電處理器）、遊戲產品（Gaming）以及嵌入式解決方案（Embedded）。隨著人工智慧（AI）技術演進至自主代理人（Agentic AI）階段，AMD 憑藉其在 CPU 與 GPU 領域的雙重架構優勢，成功躋身全球半導體領導核心，持續與業界巨頭爭奪次世代運算市場的主導地位。
+超微半導體（Advanced Micro Devices, Inc., NASDAQ: AMD）是全球高效能與自適應運算晶片的領導廠商。公司核心產品線涵蓋資料中心 x86 伺服器處理器（EPYC 系列）、AI 加速運算晶片（Instinct 系列 GPU）、個人電腦處理器（Ryzen 系列）及嵌入式與半客製化晶片。隨著生成式 AI 演進至全天候代理型 AI（Agentic AI）架構，AMD 憑藉在伺服器 CPU 的架構優勢以及在 AI 資料中心加速晶片的持續深耕，已成為推動全球大型雲端服務商（Hyperscalers）與企業級 AI 基礎設施擴展的核心架構供應商。
 
 ---
 
 ## 📝 新聞摘要總覽
-回顧 2026 年 9 月至 10 月初，AMD 展現出極為強勁的市場動能，成為資本市場與半導體產業的焦點。首先，在技術與架構趨勢方面，Meta 推出的全新「Muse」AI 代理人（Agent）模型引發市場對 CPU 運算能力的新一波龐大需求，推動包括 AMD 在內的 CPU 供應鏈股價強勢噴出。在該題材帶動下，AMD 股價於 9 月份單月累計暴漲達 30%，其中在 9 月 21 日更創下單日大漲 9.9% 的亮眼表現。
+截至 2026 年 10 月 6 日，AMD 最新股價報 649.42 美元，過去十二個月累計投資報酬率高達 272%，遠超同期標普 500 指數約 16% 的漲幅，股價持續刷新歷史新高。
 
-這一波凌厲的漲勢直接推動 AMD 市值正式突破 1 兆美元大關，成為繼輝達（Nvidia）、博通（Broadcom）與美光（Micron Technology）之後，第四家晉升「兆美元俱樂部」的美國半導體企業。儘管股價在觸及里程碑後稍有技術性拉回至 608 美元附近整理，但歷史數據與產業分析指出，1 兆美元市值並非該公司的成長天花板。
+推動本輪強勁漲勢的核心催化劑，在於生成式 AI 技術正規劃性邁入「代理型 AI」（Agentic AI，如 Meta 近期推出的個人代理 Muse）時代。與傳統以單次問答為主的對話式機器人不同，AI 代理需具備全天候（24/7）持續運算、自主決策與複雜邏輯排程能力，這帶動了市場對底層伺服器 CPU、高速記憶體與網路頻寬的爆發性需求。華爾街頂級投資機構隨即展開估值上修潮：花旗集團（Citi）將 AMD 目標價由 575 美元大幅上調至華爾街最高的 800 美元（隱含約 23%–25% 上行空間）；瑞穗證券（Mizuho）與法國巴黎銀行（BNP Paribas）亦因 CPU 在 Agentic AI 工作負載中的不可或缺性，相繼調高目標價。
 
-進入 10 月初，費城半導體指數（SOX）在連續兩日大漲後陷入橫盤整理，但華爾街機構對 AMD 的後市看法依然堅定，於 10 月 5 日再度出現兩家華爾街投行調升其目標價。此外，市場分析指出，針對 Agentic AI 最佳化的小型電腦與終端裝置將成為 AMD 客戶端（Client）晶片業務極具盈利潛力的新營收支柱，為公司在資料中心與終端邊緣運算雙向提供持久的成長動能。
+在產業營運與供應鏈端，執行長蘇姿丰（Lisa Su）公開表示，全球對高效能運算晶片的極高需求將延續數年，並正面肯定晶圓代工核心夥伴台積電（TSMC）的先進產能擴張步伐。此外，市場亦高度關注 AMD 高達 80 億美元的 AI 戰略投資，以及即將推向市場的 Helios 平台。儘管半導體類股在 10 月初經歷一輪急漲後於盤前出現獲利了結的微幅回檔，但在機構資金（如 Ferguson Wellman）持續增持與個人代理應用的結構性推動下，AMD 展現出超越傳統超大型科技股的強烈成長動能。
 
 ---
 
 ## 💡 關鍵洞察
-- **Agentic AI 驅動 CPU 需求價值重估**：Meta Muse 等次世代 AI 代理人架構不僅依賴 GPU 加速運算，亦高度仰賴高效能 CPU 進行邏輯推理與任務排程調度。此架構演變打破了過往「僅 GPU 受惠」的市場認知，為 AMD 的伺服器與客戶端 CPU 產品線注入強大的重新定價空間。
-- **躋身 1 兆美元半導體巨頭陣營**：AMD 成功跨越 1 兆美元市值門檻，奠定其與 Nvidia、Broadcom 及 Micron 並列的產業四強地位。這不僅提升了其在機構投資人投資組合中的核心配置權重，亦象徵市場認可其長期運算平台戰略。
-- **終端客戶端（Client）迎來結構性成長新引擎**：專為 Agentic AI 最佳化的小型電腦與邊緣裝置需求升溫，有望大幅拉升 AMD 客戶端晶片業務的平均售價（ASP）與毛利率，使終端市場不再僅依賴傳統 PC 換機週期。
-- **華爾街評級與目標價調升具備抗震性**：在費半指數進入橫盤整理的背景下，華爾街分析師仍逆勢連續調升 AMD 目標價，顯示機構資金對 AMD 盈餘能見度與競爭優勢具備高度信心。
-- **歷史估值規律支持中長期擴張**：歷史經驗顯示，具備平台型優勢的半導體領導者在突破 1 兆美元市值後，通常進入由實質獲利推動的持續擴張期，兆元整數關卡將由阻力轉化為實質支撐。
+
+- **Agentic AI 引發計算架構典範轉移，CPU 戰略價值重獲重估**：Meta Muse 等個人 AI 代理具備持續運作特性，推理與控制流邏輯大幅倚賴 CPU 進行調度。這直接扭轉了市場「AI 僅需 GPU」的偏狹預期，使 AMD 的 EPYC 伺服器 CPU 出貨量與平均售價（ASP）迎來結構性提振。
+- **華爾街評級與目標價全面上修，花旗給出街面最高 800 美元**：花旗、瑞穗及法巴等頂級投行密集上調評級，反映法人圈對 AMD 在 Agentic AI 時代的營收與獲利成長能見度具備高度共識，資金認同度顯著提升。
+- **管理層釋出長期高景氣信號，台積電產能擴建消除供給側隱憂**：執行長蘇姿丰定調晶片需求高檔將維持數年，搭配台積電產能擴張計畫，確認 AMD 未來幾年的產品交付能力與市占擴張空間無虞。
+- **12 個月暴漲 272% 帶來的「完美定價」估值檢驗**：AMD 股價年內漲幅巨大，市場已將未來的營收爆發提前定價，這意味著後續即將推出的 Helios 平台或資料中心營收指引容錯率極低，任何微小延遲都可能引發劇烈波動。
+- **80 億美元 AI 戰略投資進入收割期，生態系護城河成形**：市場聚焦 AMD 投入 80 億美元重塑其 AI 戰略，從軟體架構（ROCm）到伺服器整機機架設計全面進逼，正有效縮小與競爭對手在生態系上的落差。
+- **機構長線資金進駐與短期籌碼沉澱拉鋸**：包括 Ferguson Wellman 在內的資產管理機構持續建倉，然而在經歷 10 月初創高狂飆後，短期半導體族群出現盤前獲利了結調節，投資人需留意短期技術面震盪。
 
 ---
 
 ## 📰 近期新聞總覽
-- 2026-10-05 | Chip stocks pause after two-day pop. AMD stock gets price-target hikes. — Bing News
-- 2026-10-02 | Why AMD stock jumped 30% in September — Bing News
-- 2026-10-01 | Why Did AMD Stock Jump? — Yahoo Finance
-- 2026-09-30 | History Says AMD Stock's $1 Trillion Milestone Isn't a Ceiling — The Motley Fool
-- 2026-09-30 | Should You Buy AMD Stock as the AI-Agent Chip Race Heats Up? — Bing News
+
+- 2026-10-06 | Agentic AI drives up CPU demand; Mizuho ups targets on AMD, Intel — Seeking Alpha
+- 2026-10-06 | 3 Overlooked Growth Stocks Powering Every AI Chip Nvidia and AMD Build — The Motley Fool
+- 2026-10-06 | Citi now thinks AMD stock could rip another 25% because of Meta Muse — Yahoo Finance
+- 2026-10-06 | AMD stock hit a fresh high. Meta’s Muse is a win for the chipmaker, says Citi — Bing News
+- 2026-10-06 | INTC, AMD, MU, SNDK, SOXX: Chips, Memory Stocks Slip Premarket After Sharp October Rally — Yahoo Finance
+- 2026-10-06 | AMD CEO Lisa Su sees 'very high' chip demand continuing for years, praises TSMC expansion (AMD:NASDAQ) — Seeking Alpha
+- 2026-10-06 | Does AMD Stock's Run Make Any Sense Now? — Bing News
+- 2026-10-06 | AMD Stock Jumps. How It Can Ride the Meta Muse AI Wave. — Bing News
+- 2026-10-06 | AMD and Microsoft Haven’t Undertaken Stock Splits for 20+ Years And Investors Shouldn’t Care — Bing News
+- 2026-10-06 | Meta Muse popularity lifts AMD stock to fresh highs as AI agents juice CPU sales — Bing News
+- 2026-10-05 | Are stocks expensive? This 30-year-low stat says otherwise. — Yahoo Finance
+- 2026-10-05 | TSMC stock hits all-time high after Elon Musk confirms early Terafab talks — Yahoo Finance
+- 2026-10-05 | AMD Stock: The $8 Billion Bet That Could Redefine Its AI Strategy (NASDAQ:AMD) — Seeking Alpha
+- 2026-10-05 | Advanced Micro Devices, Inc. $AMD Stock Purchased by Ferguson Wellman Capital Management Inc. — MarketBeat
+- 2026-10-05 | AMD in focus as BNP Paribas ups price target on CPU strength (AMD:NASDAQ) — Seeking Alpha
+- 2026-10-05 | Nvidia and AMD just hit record highs, but tech stocks still look cheap — Yahoo Finance
+- 2026-10-03 | AMD: The Job Is Difficult, But Not Impossible (NASDAQ:AMD) — Seeking Alpha
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 市值突破 1 兆美元里程碑，產業四強格局確立
-- **新聞要點**：AMD 正式成為第四家市值突破 1 兆美元的美國晶片巨頭，排在 Nvidia、Broadcom 與 Micron 之後。雖然股價在衝高後曾短暫回落至約 608 美元，但市場分析指出歷史規律表明此關卡並非成長極限。
-- **營運與財務影響**：市值破兆是資本市場對 AMD 資料中心與邊緣運算長期戰略的高度認可。晉升超大型權值股後，AMD 將獲得更多被動指數型基金與主權財富基金的被動配置買盤，降低資本成本，並增強其在先進製程產能爭取與併購上的談判籌碼。
-- **股價意涵**：從 608 美元回檔後迅速回升至當前 631.75 美元，顯示整數關卡具備強大的籌碼換手與支撐效能，破兆後的震盪消化有助於構築中期底部。
+### 1. 花旗上修 AMD 目標價至 800 美元：Meta Muse 催化 Agentic AI 算力潮
+- **核心內容**：花旗分析師將 AMD 目標價自 575 美元大幅上修至華爾街最高的 800 美元，看好 Meta 推出的 AI 代理「Muse」等新一代應用，將大幅帶動對 AMD 晶片的硬體需求。
+- **深度分析**：
+  - **營運與財務影響**：傳統 LLM 推理多為「請求-回應」模式，而 Agentic AI 需持續監控環境、多步驟規劃與執行工作，運算時間大幅拉長。這將直接推升雲端巨頭對 AMD 資料中心算力模組的採購量，帶動資料中心業務營收維持高速雙位數乃至三位數成長。
+  - **股價意涵**：以目前 649.42 美元計算，800 美元目標價隱含約 23.2% 的潛在上漲空間，為市場提供了強有力的估值錨定點。
 
-### 2. Meta Muse 引爆 CPU 運算需求，9 月股價累計大漲 30%
-- **新聞要點**：Meta 推出全新 Muse 代理人模型，引發市場對 CPU 在 AI 代理人工作負載中重要性的重新認識，帶動 CPU 族群大漲，促成 AMD 9 月份股價大漲 30%，其中 9 月 21 日單日漲幅達 9.9%。
-- **營運與財務影響**：長期以來市場普遍認為 AI 資本支出過度偏向 GPU，忽略了處理複雜工作流程與環境互動的 CPU。Meta Muse 的問世證明了自主 AI 代理人需要高吞吐、低延遲的 CPU 進行決策鏈控制。AMD 身為 x86 伺服器 CPU 的領導者，其 EPYC 系列晶片將直接迎來額外的伺服器節點採購訂單，改善整體營收結構。
-- **股價意涵**：單日 9.9% 的跳空大漲與單月 30% 的漲幅，反映法人資金迅速將 CPU 重新定價為 AI 核心受益者，形成強烈的多頭催化動能。
+### 2. 蘇姿丰看好晶片高需求延續數年，讚揚台積電產能擴張
+- **核心內容**：執行長蘇姿丰於公開發言中指出，晶片市場的極高需求並非短暫週期現象，而是將持續數年的長期趨勢，同時高度讚許台積電的先進產能佈局。
+- **深度分析**：
+  - **營運與財務影響**：作為無晶圓廠（Fabless）設計巨擘，AMD 的出貨能力高度取決於台積電的先進製程（如 3nm/2nm）及 CoWoS 等先進封裝產能。管理層對台積電擴產的背書，消除了市場對供應鏈瓶頸壓制營收成長的擔憂。
+  - **市場信號**：蘇姿丰一貫審慎客觀的指引風格在市場上具備高度公信力，此番發言確立了 AMD 進入為期數年的高能見度成長週期。
 
-### 3. Agentic AI 終端裝置競局升溫，客戶端晶片迎新契機
-- **新聞要點**：針對 AI 代理人最佳化的小型電腦與終端設備，正成為 AMD 客戶端晶片業務極具盈利潛力的新營收來源。
-- **營運與財務影響**：隨著 AI 代理人逐漸從雲端下沉至邊緣終端，具備高效能 NPU 與高算力 CPU/GPU 架構的終端裝置需求激增。AMD 客戶端業務（Ryzen 系列）將由原本單純的 PC 週期性商品，升級為邊緣 AI 執行節點，這將大幅改善該業務部門的毛利率表現與產品生命週期定價能力。
-- **股價意涵**：有助於平衡資料中心業務的集中度風險，為整體獲利提供雙引擎支撐，提升估值倍數（P/E Multiple）的合理性。
+### 3. Agentic AI 帶動伺服器 CPU 需求復興，瑞穗與法巴聯手唱多
+- **核心內容**：瑞穗證券與法國巴黎銀行接連調高 AMD 目標價，強調在個人 AI 代理架構下，CPU 扮演的控制中樞角色不可替代，推動伺服器 CPU 銷售動能。
+- **深度分析**：
+  - **營運與財務影響**：過去兩年市場高度集中於 AI GPU 加速器，甚至壓縮了通用伺服器的預算；但 Agentic AI 的多執行緒管理與數據吞吐需要強大的 EPYC CPU 支援。這將使 AMD 的伺服器 CPU 市占率進一步自傳統競爭對手 Intel 處掠奪，形成「CPU + GPU」雙引擎推升毛利率。
 
-### 4. 費半指數震盪整理，AMD 逆勢獲機構調升目標價
-- **新聞要點**：在費城半導體指數經歷兩日上漲後轉為橫盤整理之際，AMD 於 10 月 5 日獲得兩家華爾街投行上調目標價。
-- **營運與財務影響**：目標價的調升反映分析師對 AMD 2026 年下半年至 2027 年營收與每股盈餘（EPS）預期的上修，主要立足於資料中心市佔率擴張及終端 Agentic AI 電腦出貨的樂觀預期。
-- **股價意涵**：大盤橫盤時獲得評級調升，顯示 AMD 展現出超越類股大盤的相對強勢（Relative Strength），吸引換股操作的避險與成長型資金進駐。
+### 4. 80 億美元 AI 策略佈局與 Helios 平台的定價考驗
+- **核心內容**：市場深入剖析 AMD 投入 80 億美元的 AI 戰略轉型，同時關注資料中心業務爆發與即將到來的 Helios 平台定價與發布風險。
+- **深度分析**：
+  - **營運與財務影響**：80 億美元的投資涵蓋軟硬體整合、網路互連架構與生態系擴充，是 AMD 擺脫「硬體單打獨鬥」走向「整機機架解決方案」的關鍵。然而，市場對 Helios 的期待已拉至最高點，發布時的功耗、算力密度與交付節奏必須無懈可擊，才能支撐現有的高估值倍數。
 
 ---
 
 ## 📊 市場情緒評估
-**整體市場情緒：🟢 正面**
 
-| 評估面向 | 狀態 / 趨勢 | 具體分析依據 |
-| :--- | :---: | :--- |
-| **技術動能** | 🟢 強勁 | 9 月大漲 30%，單日曾暴漲 9.9%，回檔 608 美元獲支撐後重返 631.75 美元高位。 |
-| **產業趨勢** | 🟢 擴張 | Agentic AI（如 Meta Muse）拓展 CPU 運算需求，邊緣小型 AI 電腦開闢新市場。 |
-| **機構態度** | 🟢 樂觀 | 躋身 1 兆美元市值行列，華爾街投行在板塊橫盤時持續上調目標價。 |
-| **板塊氛圍** | 🟡 中性 | 費城半導體指數（SOX）在短線大漲後面臨橫盤整理壓力。 |
+**整體市場情緒：🟢 正面（Bullish）**
+
+| 面向 | 評估指標 / 現況說明 | 影響方向 |
+| :--- | :--- | :---: |
+| **技術創新** | Agentic AI（Meta Muse）開啟個人代理時代，CPU/GPU 需求雙雙擴大 | 🟢 正面 |
+| **法人評級** | 花旗（$800）、瑞穗、法巴密集上調評級與目標價 | 🟢 正面 |
+| **管理層信心** | 蘇姿丰確認高需求持續數年，供應鏈夥伴產能到位 | 🟢 正面 |
+| **資金流向** | 機構（Ferguson Wellman）持續建倉，12 個月報酬率達 272% | 🟢 正面 |
+| **短期籌碼** | 10 月初創高後，晶片板塊盤前出現獲利了結賣壓 | 🟡 中性/警戒 |
+| **估值倍數** | 股價處於歷史高檔，市場對 Helios 等新產品容錯率極低 | 🔴 負面/風險 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **短期技術指標過熱與乖離修正風險**：AMD 股價在 9 月累計上漲 30%，短線漲幅巨大。儘管基本面強勁，若大盤或半導體板塊（SOX）出現較大幅度拉回，AMD 易面臨獲利了結賣壓。
-- 🟡 **Agentic AI 終端滲透速度不如預期**：專為 AI 代理人設計的小型電腦與終端設備尚處於商業化推廣初期，終端消費市場與企業端採購落地節奏若放緩，可能推遲客戶端業務的高毛利爆發點。
-- 🟢 **同業競爭與先進產能排擠**：身處 1 兆美元梯隊，AMD 需持續在晶圓代工高階製程（如台積電先進節點）與先進封裝產能上與 Nvidia、Broadcom 展開激烈爭奪，產能供給將直接約束出貨上限。
+- 🔴 **高估值下的容錯率風險（完美定價壓力）**：過去一年股價飆升 272%，目前股價已充分反映高度樂觀預期。若即將推出的 Helios 平台在性能表現、功耗或客戶導入節奏上略遜於市場預期，可能引發劇烈的估值修正。
+- 🟡 **短期技術面超買與獲利回吐壓力**：半導體類股在 10 月初急漲後，已出現盤前走弱跡象。短線籌碼沉澱與技術指標過熱可能帶來短期價格回檔整理。
+- 🟡 **先進封裝與代工供應鏈集中風險**：儘管台積電持續擴產，但全球頂級先進封裝產能競爭激烈，若上游擴產節奏延遲，仍可能對高階 AI 晶片的交期構成挑戰。
+- 🟢 **雲端巨頭資本支出波動風險**：微軟、Meta 等超大型客戶的 AI 資本支出步調若因宏觀經濟或 ROI 檢視而出現階段性調整，將直接影響資料中心機架拉貨力道。
 
 ---
 
 ## 🔮 短期關注重點
-1. **華爾街目標價上修潮之延續性**：觀察 10 月初兩家投行調升目標價後，是否有更多大型券商跟進上調評級，推動機構買盤持續湧入。
-2. **AI 代理人架構（Agentic AI）生態系進展**：追蹤 Meta Muse 及其他科技巨頭在自主 AI 代理人應用的部署進度，特別是雲端運算架構中 CPU 與 GPU 搭配比例的實際轉化數據。
-3. **股價於 600–630 美元區間之支撐強度**：關注 AMD 股價在突破 1 兆美元關卡後的量價配合情況，確認 608 美元低點是否已形成堅實的中期支撐防線。
+
+1. **Meta Muse 等 AI 代理之客戶端與雲端實際負載數據**：持續追蹤 Agentic AI 落地後的實際推論運算消耗，驗證對 EPYC CPU 及 Instinct 加速器的追加訂單強度。
+2. **Helios 產品發布進度與技術驗證**：密切留意管理層公布之 Helios 平台最新進展、客戶測試數據與正式量產時程。
+3. **第三季財報與第四季業績指引**：檢視資料中心部門營收年增率、AI 相關產品營收目標是否再度調升，以及毛利率擴張趨勢。
+4. **半導體類股籌碼整理狀況**：觀察盤前回檔後在 600–650 美元區間的支撐力道與法人買盤承接意願。
 
 ---
 
 ## 📌 新聞來源索引
-1. **Chip stocks pause after two-day pop. AMD stock gets price-target hikes.** — *Bing News (MSN)* (2026-10-05)
-2. **Why AMD stock jumped 30% in September** — *Bing News (MSN)* (2026-10-02)
-3. **Why Did AMD Stock Jump?** — *Yahoo Finance* (2026-10-01)
-4. **History Says AMD Stock's $1 Trillion Milestone Isn't a Ceiling** — *The Motley Fool* (2026-09-30)
-5. **Should You Buy AMD Stock as the AI-Agent Chip Race Heats Up?** — *Bing News (MSN)* (2026-09-30)
+
+1. Agentic AI drives up CPU demand; Mizuho ups targets on AMD, Intel — Seeking Alpha (2026-10-06)
+2. 3 Overlooked Growth Stocks Powering Every AI Chip Nvidia and AMD Build — The Motley Fool (2026-10-06)
+3. Citi now thinks AMD stock could rip another 25% because of Meta Muse — Yahoo Finance (2026-10-06)
+4. AMD stock hit a fresh high. Meta’s Muse is a win for the chipmaker, says Citi — Bing News (2026-10-06)
+5. INTC, AMD, MU, SNDK, SOXX: Chips, Memory Stocks Slip Premarket After Sharp October Rally — Yahoo Finance (2026-10-06)
+6. AMD CEO Lisa Su sees 'very high' chip demand continuing for years, praises TSMC expansion (AMD:NASDAQ) — Seeking Alpha (2026-10-06)
+7. Does AMD Stock's Run Make Any Sense Now? — Bing News (2026-10-06)
+8. AMD Stock Jumps. How It Can Ride the Meta Muse AI Wave. — Bing News (2026-10-06)
+9. AMD and Microsoft Haven’t Undertaken Stock Splits for 20+ Years And Investors Shouldn’t Care — Bing News (2026-10-06)
+10. Meta Muse popularity lifts AMD stock to fresh highs as AI agents juice CPU sales — Bing News (2026-10-06)
+11. Are stocks expensive? This 30-year-low stat says otherwise. — Yahoo Finance (2026-10-05)
+12. TSMC stock hits all-time high after Elon Musk confirms early Terafab talks — Yahoo Finance (2026-10-05)
+13. AMD Stock: The $8 Billion Bet That Could Redefine Its AI Strategy (NASDAQ:AMD) — Seeking Alpha (2026-10-05)
+14. Advanced Micro Devices, Inc. $AMD Stock Purchased by Ferguson Wellman Capital Management Inc. — MarketBeat (2026-10-05)
+15. AMD in focus as BNP Paribas ups price target on CPU strength (AMD:NASDAQ) — Seeking Alpha (2026-10-05)
+16. Nvidia and AMD just hit record highs, but tech stocks still look cheap — Yahoo Finance (2026-10-05)
+17. AMD: The Job Is Difficult, But Not Impossible (NASDAQ:AMD) — Seeking Alpha (2026-10-03)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
