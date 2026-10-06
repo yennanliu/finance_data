@@ -17,133 +17,118 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ---
 
 ## 🏢 公司概覽
-SoFi Technologies, Inc.（NASDAQ: SOFI）是一家領先的一站式數位金融服務與金融科技平台公司，旗下涵蓋借貸業務（學生貸款、個人無擔保貸款、房屋抵押貸款）、金融服務生態系（SoFi Money、SoFi Invest、信用卡），以及核心技術基礎設施部門（包含 Galileo 與 Technisys）。公司持有美國正式全功能銀行牌照（National Bank Charter），致力於透過整合多元金融產品，降低客戶獲取成本（CAC），並逐步轉向高資本效率的輕資產收費模式，為新世代數位原生客群提供全方位金融解決方案。
+**SoFi Technologies, Inc. (NASDAQ: SOFI)** 是一家領先的一站式數位個人理財與金融科技公司。公司業務涵蓋三大核心板塊：借貸產品（學生貸款、個人貸款及房屋抵押貸款）、金融服務（包括 SoFi Money 數位銀行帳戶、SoFi Invest 投資平台、信用卡及保險等產品），以及技術平台（由 Galileo 和 Technisys 驅動的金融核心底層與 API 服務）。SoFi 憑藉全數位化銀行牌照與高度協同的金融生態系統，致力於降低營運成本並提高用戶終身價值（LTV），在美國新世代數位銀行與金融科技領域佔據重要市場地位。
 
 ---
 
 ## 📝 新聞摘要總覽
-近期圍繞 SoFi Technologies 的市場訊息呈現「基本面強勁成長與短期宏觀股價承壓」的顯著脫鉤現象。截至 2026 年 10 月初，SOFI 股價報 15.92 美元。儘管公司在 2026 年累計回檔幅度超過 40%（較歷史高點回落約 50%），且在 9 月份隨整體銀行板塊因高利率環境拖累而下跌約 12%，但市場底部支撐與反彈動能已逐步浮現。
+回顧近期市場動態，SoFi Technologies (SOFI) 呈現出顯著的「基本面強勁但股價大幅回調」的背離格局。截至 2026 年 10 月 6 日，SOFI 最新股價報 15.76 美元，今年以來累計跌幅超過 40% 至 43%，自年初約 29 美元的高點一路震盪下挫至 16 美元附近。特別是在剛過去的 9 月份，受制於高利率環境對整體金融與銀行板塊的估值打壓，SOFI 單月回調達 12%。
 
-在營運基本面層面，分析機構指出 SoFi 不僅剛繳出創紀錄的貸款發放量（Loan Originations），更上調了全年財務指引。同時，SoFi 正積極推進向「輕資產收入模型（Capital-Light Revenue Model）」轉型，透過擴大貸款平台業務（Loan Platform Business）收取服務費與手續費，降低對資產負債表留存貸款的依賴，顯著提升了風險回報比。此外，華爾街投行 Piper Sandler 近期重申對 SOFI 的看漲立場，給予高達 22 美元的目標價，相較於現價展現出逾 38% 的潛在上行空間。
+然而，在股價承壓的背後，公司的底層營運依然展現強韌動能。SoFi 在第二季度實現營收年增 40%，維持創紀錄的會員增長步調，並上調了 2026 全年營收指引。目前市場焦點正迅速轉向公司兩大新型增長引擎：首先是**向資本輕量化（Capital-Light）模式轉型**，其「貸款平台業務（Loan Platform Business）」正被華爾街視為驅動下一階段獲利爆發的核心動能；其次是**金融科技創新技術的重大突破**，SoFi 計劃將規模達 250 億美元的信用卡投資組合轉向由銀行發行的穩定幣結算體系，並與 Mastercard 及 Payward 展開合作，此舉有望大幅削減傳統清算手續費成本並提升交易速度。
 
-在技術創新與催化劑方面，市場正聚焦於 SoFi 即將於 10 月 27 日發布的季度財務報告。投資人密切權衡其與 Mastercard 及 Payward 在穩定幣結算（Stablecoin Settlement）方面的合作動向，並關注美股 24/7 交易與資產代幣化趨勢為數位金融平台帶來的結構性擴張機會。整體而言，市場正逐步消化高利率對銀行類股的情緒壓制，價值型與成長型買盤在財報前夕開始重新審視其被低估的成長潛力。
+隨著即將於 **10 月 27 日** 發布的第三季度財報臨近，市場投資情緒正在醞釀轉折。多數分析機構指出，股價的大幅回撤使 SOFI 的風險回報比更具吸引力，若即將公布的財報能進一步印證資本輕量化戰略與穩定幣創新帶來的利潤擴張潛力，將有望打破年內的下行趨勢，為股價提供強勁的修復催化劑。
 
 ---
 
 ## 💡 關鍵洞察
-- **基本面與股價走勢出現嚴重背離**：SoFi 在創下歷史新高貸款發放量並調升全年指引的背景下，股價年內卻深跌逾 40%，這種脫鉤主因是市場將其與傳統區域銀行混為一談，為中長期投資人提供了極具吸引力的估值重塑窗口。
-- **輕資產營運模式（Capital-Light Model）加速成形**：分析師看好貸款平台業務的擴張，透過出售貸款與收取發放及服務手續費，能有效減少自有資本佔用，降低高利率環境下的信貸違約風險，提升股本回報率（ROE）。
-- **機構多頭目標價提供強大估值支撐**：Piper Sandler 頂住華爾街普遍猶豫的情緒，開出 22 美元的強烈看多目標價，凸顯一線機構對其技術平台價值與獲利持續性的實質認可。
-- **10 月 27 日財報為短期核心催化節點**：市場在財報公布前數週已開始小幅推升股價，顯示部分資金押注即將公布的業績將再次超越市場共識，財報成果將決定股價能否正式扭轉 2026 年以來的下行趨勢。
-- **穩定幣結算拓展 Web3 與代幣化金融邊界**：涉及 Mastercard 與 Payward 的穩定幣結算佈局，以及 24/7 美股交易與代幣化趨勢，展現 SoFi 超越傳統數位銀行的基礎架構擴展潛力，長線有助於享有更高維度的金融科技溢價。
-- **利率敏感性分化與抗跌韌性考驗**：儘管 9 月受聯準會利率維持高檔預期影響導致板塊回檔 12%，但 SoFi 的存款吸收能力與多元手續費收入，使其抵禦高利率週期的能力明顯優於傳統依賴利差的同業。
+
+- **基本面與估值顯著背離**：SOFI 年內股價自 29 美元高點回調逾 40% 至 16 美元區間，但 Q2 營收仍維持 40% 的高年增率並上修全年指引，會員規模持續創下新高，為中長期投資人提供了風險回報比極佳的逢低進場機會。
+- **資本輕量化模式（Capital-Light Model）開啟利潤新引擎**：分析師看好 SoFi 正加速發展的貸款平台業務。該模式透過撮合理財需求與第三方資本，不僅能賺取穩定的手續費收入，還能有效釋放資產負債表壓力，降低資本充足率約束帶來的擴張限制。
+- **250 億美元信用卡資產導入穩定幣結算**：SoFi 推進與 Mastercard 及 Payward 的合作，將 250 億美元信用卡業務切換至銀行發行的穩定幣清算。這項舉措展現了其全數位銀行牌照與底層科技平台的整合優勢，大幅縮減清算手續費支出並提升資金週轉效率。
+- **總體利率預期對金融板塊形成短期壓抑**：9 月份 SOFI 隨整體銀行類股下跌 12%，反映市場對利率長期處於高位（Higher-for-Longer）將推升資金成本及信用違約風險的擔憂；但數位化低成本存款基礎將有助於 SoFi 抵禦傳統同業面臨的淨息差收窄壓力。
+- **10 月 27 日 Q3 財報為短期核心催化劑**：市場正密切關注即將公布的 Q3 財報數據，特別是貸款平台業務收入佔比、全年指引達成進度以及穩定幣結算整合的具體推進時間表，這將直接決定年終反彈行情的強度。
 
 ---
 
 ## 📰 近期新聞總覽
-- 2026-10-05 | SOFI Edges Higher With Earnings Weeks Away - What Investors Should Know Before Oct. 27 — Bing News / AOL
-- 2026-10-05 | 24/7 trading: Here comes the tokenization of the U.S. stock market — Seeking Alpha
-- 2026-10-05 | Why SoFi Stock Dropped 12% in September — The Motley Fool
-- 2026-10-05 | Why SoFi Stock Dropped 12% in September — The Globe and Mail
-- 2026-10-05 | Why SoFi Stock Dropped 12% in September — Yahoo Finance
-- 2026-10-05 | Why SoFi stock dropped 12% in September — Bing News / MSN
-- 2026-10-05 | Financials Got Hit On Higher Rates, I'm Buying These Four Names (NDX) — Seeking Alpha
-- 2026-10-05 | SOFI Stock Is Down More Than 40% In 2026, But This Analyst Sees Attractive Growth Opportunity In Loan Platform Business — Yahoo Finance
-- 2026-10-04 | SOFI Stock Gains After Bullish $22 Piper Sandler Call Amid Broader Wall Street Hesitation — Stocktwits
-- 2026-10-03 | SoFi Stock: Why the Opportunity May Be Too Good to Ignore — Barchart.com
-- 2026-10-03 | SoFi Stock: Why the Opportunity May Be Too Good to Ignore — Bing News / Yahoo Finance
-- 2026-10-03 | SoFi Stock Is Down 43% in 2026. Should You Buy the Dip Before November? — Yahoo Finance
-- 2026-10-01 | Oracle Just Sent A Notice That Has Everyone Staring At The Wrong Place — Seeking Alpha
-- 2026-10-01 | Broadcom to lend Anthropic up to $42B to lease chips: report — Seeking Alpha
-- 2026-10-01 | 1 reason now is a great time to buy SoFi Technologies stock — Bing News / MSN
-- 2026-09-30 | Western Digital ($WDC) Quant Rating & AI Storage Analysis — Seeking Alpha
-- 2026-09-30 | The SoFi Growth Story Is Getting Harder to Ignore — 24/7 Wall St
-- 2026-09-29 | ASTS Stock Rises Overnight: Change-Of-Control Payout Plan For CEO, Senior Execs Fuels Buyout Buzz — Yahoo Finance
-- 2016-07-05 | Nu Holdings Ltd. (NU) Stock Price, News, Quote & History — Yahoo Finance
+
+- **2026-10-06** | SoFi Technologies (NASDAQ:SOFI) Stock Falls 1% - Here's Why — *MarketBeat*
+- **2026-10-06** | SoFi’s Next Growth Engine Could Surprise Wall Street — *24/7 Wall St.*
+- **2026-10-05** | SOFI Edges Higher With Earnings Weeks Away - What Investors Should Know Before Oct. 27 — *AOL / Bing News*
+- **2026-10-05** | Why SoFi Stock Dropped 12% in September — *The Motley Fool / Yahoo Finance / MSN*
+- **2026-10-05** | Financials Got Hit On Higher Rates, I'm Buying These Four Names — *Seeking Alpha*
+- **2026-10-05** | SOFI Stock Is Down More Than 40% In 2026, But This Analyst Sees Attractive Growth Opportunity In Loan Platform Business — *Yahoo Finance*
+- **2026-10-04** | SoFi’s US$25 Billion Card Portfolio Shift To Bank-Issued Stablecoin Might Change The Case For Investing In SoFi Technologies (SOFI) — *Yahoo Finance*
+- **2026-10-03** | SoFi Stock: Why the Opportunity May Be Too Good to Ignore — *Barchart.com / Yahoo Finance*
+- **2026-10-03** | SoFi Stock Is Down 43% in 2026. Should You Buy the Dip Before November? — *Yahoo Finance*
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 財報前夕股價小幅回升與穩定幣結算佈局
-- **核心內容**：市場在距離 10 月 27 日財報發布僅數週之際推升 SOFI 股價，交易員聚焦於業績展望，並評估與 Mastercard、Payward 相關的穩定幣結算（Stablecoin Settlement）進展。
+### 1. 250 億美元信用卡資產轉向銀行發行穩定幣結算
+- **新聞要點**：SoFi 正推進將其規模達 250 億美元的信用卡業務結算轉移至銀行端發行的穩定幣架構，並與支付巨頭 Mastercard 及加密貨幣基礎設施服務商 Payward 展開合作。
 - **深度分析**：
-  - **營運與財務影響**：財報公布前的買盤回流，顯示市場對 Q3 財報維持正面預期。涉足穩定幣結算標誌著 SoFi 正在跨入次世代支付清算網路，與 Mastercard 和 Payward 的潛在合作有望顯著降低跨境與同業清算成本，並為手續費收入注入新活水。
-  - **股價意涵**：在 10 月 27 日之前，市場情緒有望維持穩健支撐，任何關於穩定幣產品落地或結算量能的正面公告，皆可能成為引爆股價補漲的即時催化劑。
+  - **營運層面**：傳統信用卡交易牽涉發卡行、收單行、清算網絡等多方中介，交易費率（Interchange Fees）與清算時效（通常為 T+1 至 T+3）存在摩擦成本。SoFi 利用自身具備的聯邦銀行特許牌照優勢，發行合規穩定幣進行即時鏈上清算，能大幅降低支付通道成本。
+  - **財務與估值影響**：250 億美元的支付量一旦完成遷移，將顯著節省清算成本並提升手續費淨利潤率。此外，這證明了 SoFi 旗下技術平台（Galileo/Technisys）的跨鏈與次世代核心金融架構實力，有助於帶動其 SaaS 科技服務收入，促使市場重估其科技溢價。
 
-### 2. 9 月回檔 12% 與 2026 年累計重挫 40% 的宏觀解構
-- **核心內容**：多家財經媒體（The Motley Fool、Yahoo Finance 等）分析指出，SOFI 9 月下挫 12%，年初至今跌幅超過 40%，其回跌主因為整體金融與銀行板塊在高利率環境下普遍走弱。
+### 2. 年內股價回調逾 40% 與基本面增長之背離
+- **新聞要點**：SOFI 年內跌幅超過 40%（自 29 美元高點回落至 15.76–16.00 美元），然而其 Q2 營收年增達 40%，且管理層上調了 2026 全年營收預期，會員數持續維持歷史新高增長。
 - **深度分析**：
-  - **營運與財務影響**：高利率環境使投資人擔憂貸款需求降溫及潛在信用違約成本上升。然而，與傳統銀行不同的是，SoFi 客群平均信用評分較高且數位營運成本結構輕盈，實際信貸損失率受控。
-  - **股價意涵**：股價的下跌更多是總體板塊情緒外溢（Beta 下跌），而非個體營運惡化（Alpha 衰退）。這種非理性拋售使得當前 15.92 美元的股價進入具吸引力的價值防禦區間。
+  - **市場心理與板塊連動**：股價大幅拉回主因在於市場對高利率環境下信貸資產質量的系統性恐慌，引發資金對整體金融板塊的減倉拋售（9 月單月跌幅達 12%）。
+  - **投資啟示**：高達 40% 的營收年增率證明 SoFi 的「一站式金融生態圈」飛輪效應依舊強勁。隨著客群黏著度提升與交叉銷售率增加，客戶獲取成本（CAC）被攤薄，估值修正反而釋放了前期過高預期帶來的泡沫，當前價位已建立具備支撐力的安全邊際。
 
-### 3. 貸款平台業務與輕資產轉型（Capital-Light Model）
-- **核心內容**：Barchart 與 Yahoo Finance 報導指出，SoFi 正加速朝向輕資產收入模型轉型，分析師特別看好貸款平台業務帶來的結構性增長動能。
+### 3. 戰略轉向資本輕量化（Capital-Light）與貸款平台業務
+- **新聞要點**：華爾街分析師指出，SoFi 正加速推進貸款平台業務（Loan Platform Business），推動業務向低資本消耗模式演進。
 - **深度分析**：
-  - **營運與財務影響**：透過將貸款發放後快速打包分銷予機構投資人，SoFi 能在不擴大資產負債表風險加權資產（RWA）的前提下賺取發放手續費與管理費。這不僅大幅降低利率風險，更使淨手續費收入占比持續提高，使獲利品質更加平穩可預測。
-  - **股價意涵**：市場過去常將 SoFi 以傳統銀行（低 P/E、低 P/B）估值，一旦輕資產轉型成功並獲市場廣泛認同，估值體系有望向高倍數的金融科技 SaaS 軟體與手續費平台靠攏。
-
-### 4. Piper Sandler 給予 $22 看漲目標價與華爾街分歧
-- **核心內容**：Piper Sandler 發布報告給予 SOFI 22 美元目標價，帶動市場交易熱度，但在華爾街整體環境中仍存在部分觀望情緒。
-- **深度分析**：
-  - **營運與財務影響**：Piper Sandler 的看多立場建立在 SoFi 營收動能強勁、技術平台 Galileo 滲透率提高以及產品交乘銷售（Cross-buying）效率提升的基礎上。
-  - **股價意涵**：以最新收盤價 15.92 美元計算，22 美元目標價代表約 38.2% 的潛在上行空間。這為猶豫不決的機構資金提供了強力的背書，有望引導賣空部位平倉及多頭買盤回流。
+  - **營運模式變革**：過去 SoFi 依賴將貸款保留在自身資產負債表上以賺取淨利息收入（NII），這種模式受限於資本充足率規定，且承擔信用違約風險。貸款平台業務轉為撮合機構投資人購買貸款，SoFi 賺取無風險的發放與服務費（Origination & Servicing Fees）。
+  - **財務效益**：這項轉型有助於平滑利率波動對獲利的衝擊，提高股本回報率（ROE），並為公司帶來更高質量、可預測性更強的經常性手續費收入。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性偏多**
+**整體市場情緒**：🟡 **中性偏正面（Neutral to Moderately Bullish）**
 
-| 維度 | 評估 | 驅動因素說明 |
-| :--- | :---: | :--- |
-| **正面因素** | 🟢 強勁 | • 貸款發放量創歷史新高並調升全年財務指引。<br>• Piper Sandler 給予 22 美元高目標價。<br>• 輕資產轉型提升資金效率，降低信貸風險。<br>• 穩定幣結算與 10 月 27 日財報催化劑發酵。 |
-| **負面因素** | 🔴 壓制 | • 2026 年內累計跌幅逾 40%，技術面處於長期均線修復期。<br>• 宏觀高利率環境壓制整體銀行業板塊估值。<br>• 華爾街部分機構對信貸週期放緩仍持保留態度。 |
+```
+   悲觀 (Bearish)          中性 (Neutral)          樂觀 (Bullish)
+        ├────────────────────────●──────────────┤
+                              當前情緒 (62/100)
+```
+
+### 評估依據：
+- **正面因素（驅動反彈）**：
+  1. Q2 營收年增 40% 且上調全年財測，營運基本面極具韌性。
+  2. 250 億美元信用卡導入穩定幣清算（結盟 Mastercard/Payward），確立金融科技創新領先地位。
+  3. 資本輕量化貸款平台業務獲得華爾街分析師認同，營運模式抗風險能力提升。
+  4. 年內回調幅度逾 40%，股價已充分消化高利率利空，估值吸引力顯現。
+- **負面因素（短期壓抑）**：
+  1. 9 月隨銀行股重挫 12%，總體高利率環境仍在短期壓制金融類股估值倍數。
+  2. 10 月 27 日財報公布前，市場短線觀望情緒濃厚，股價易受大盤波動干擾。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **高利率維持過久之宏觀風險（高風險）**：若終端利率居高不下，整體借貸市場需求將持續承壓，可能壓抑個人貸款與學貸的增長斜率，並增加整體金融業的資金成本負擔。
-- 🟡 **信貸質量與違約率攀升風險（中風險）**：在經濟增長放緩環境下，無擔保個人貸款組合的壞帳率若超出預期，將迫使公司提高備抵呆帳提存，侵蝕淨利潤。
-- 🟢 **輕資產平台模式執行進度風險（低至中風險）**：機構買家對打包資產的承接意願取決於流動性市場環境，若機構端買氣不足，可能延緩手續費收入成長步伐。
+| 風險項目 | 等級 | 風險說明與潛在影響 |
+| :--- | :---: | :--- |
+| **總體高利率與信用風險** | 🔴 高 | 利率若持續處於高位，可能加劇個人貸款及信用卡客戶的違約率，導致撥備費用增加並侵蝕利潤。 |
+| **板塊連動與市場情緒風險** | 🟡 中 | 傳統銀行股與區域銀行板塊波動劇烈，SOFI 容易受到整體金融板塊資金外流的系統性衝擊。 |
+| **穩定幣業務監管與執行風險** | 🟡 中 | 250 億美元信用卡穩定幣結算架構涉及監管合規審查及技術整合，若進度延宕可能推遲成本優化效益。 |
+| **財報指引達成風險** | 🟢 低 | 管理層已調升 2026 全年營收預期，若 Q3 數據不如市場樂觀預期，可能引發短線獲利了結或拋售賣壓。 |
 
 ---
 
-## 🔮 短期關注重點（未來 1–4 週）
+## 🔮 短期關注重點
 
-1. **2026 年 10 月 27 日 Q3 財報與管理層電話會議**：
-   - 檢視 GAAP 淨利潤表現與各部門（借貸、金融服務、技術平台）的營收貢獻度。
-   - 關注管理層是否進一步上修 2026 全年營收及 EBITDA 指引。
-2. **貸款平台手續費收入占比**：
-   - 追蹤輕資產模式下的貸款分銷量與非利息收入佔比變化。
-3. **穩定幣結算與合作夥伴落地細節**：
-   - 留意與 Mastercard 及 Payward 的實質產品進展或監管合規披露。
-4. **股價技術面關鍵關卡測試**：
-   - 觀察 15.00 美元整數支撐強度，以及挑戰 Piper Sandler 目標價 22 美元途中的技術阻力區。
+1. **10 月 27 日 Q3 財報公布**：關注第三季度實際營收、EPS 表現，以及對 2026 全年指引的最新更新。
+2. **貸款平台業務（Loan Platform）營收佔比**：觀察手續費收入成長速度，驗證資本輕量化轉型是否如期加速。
+3. **穩定幣結算整合進展**：追蹤與 Mastercard 及 Payward 在 250 億美元信用卡清算上的具體落地時程與監管批准進度。
+4. **信貸資產質量與逾期率指標**：檢視個人貸款與信用卡資產的 90 天以上逾期率及淨壞帳沖銷率（NCO）。
 
 ---
 
 ## 📌 新聞來源索引
-1. SOFI Edges Higher With Earnings Weeks Away - What Investors Should Know Before Oct. 27 — Bing News / AOL (2026-10-05)
-2. 24/7 trading: Here comes the tokenization of the U.S. stock market — Seeking Alpha (2026-10-05)
-3. Why SoFi Stock Dropped 12% in September — The Motley Fool (2026-10-05)
-4. Why SoFi Stock Dropped 12% in September — The Globe and Mail (2026-10-05)
-5. Why SoFi Stock Dropped 12% in September — Yahoo Finance (2026-10-05)
-6. Why SoFi stock dropped 12% in September — Bing News / MSN (2026-10-05)
-7. Financials Got Hit On Higher Rates, I'm Buying These Four Names (NDX) — Seeking Alpha (2026-10-05)
-8. SOFI Stock Is Down More Than 40% In 2026, But This Analyst Sees Attractive Growth Opportunity In Loan Platform Business — Yahoo Finance (2026-10-05)
-9. SOFI Stock Gains After Bullish $22 Piper Sandler Call Amid Broader Wall Street Hesitation — Stocktwits (2026-10-04)
-10. SoFi Stock: Why the Opportunity May Be Too Good to Ignore — Barchart.com (2026-10-03)
-11. SoFi Stock: Why the Opportunity May Be Too Good to Ignore — Bing News / Yahoo Finance (2026-10-03)
-12. SoFi Stock Is Down 43% in 2026. Should You Buy the Dip Before November? — Yahoo Finance (2026-10-03)
-13. Oracle Just Sent A Notice That Has Everyone Staring At The Wrong Place — Seeking Alpha (2026-10-01)
-14. Broadcom to lend Anthropic up to $42B to lease chips: report — Seeking Alpha (2026-10-01)
-15. 1 reason now is a great time to buy SoFi Technologies stock — Bing News / MSN (2026-10-01)
-16. Western Digital ($WDC) Quant Rating & AI Storage Analysis — Seeking Alpha (2026-09-30)
-17. The SoFi Growth Story Is Getting Harder to Ignore — 24/7 Wall St (2026-09-30)
-18. ASTS Stock Rises Overnight: Change-Of-Control Payout Plan For CEO, Senior Execs Fuels Buyout Buzz — Yahoo Finance (2026-09-29)
-19. Nu Holdings Ltd. (NU) Stock Price, News, Quote & History — Yahoo Finance (2016-07-05)
+
+1. **SoFi Technologies (NASDAQ:SOFI) Stock Falls 1% - Here's Why** — *MarketBeat* (2026-10-06)
+2. **SoFi’s Next Growth Engine Could Surprise Wall Street** — *24/7 Wall St.* (2026-10-06)
+3. **SOFI Edges Higher With Earnings Weeks Away - What Investors Should Know Before Oct. 27** — *AOL / Bing News* (2026-10-05)
+4. **Why SoFi Stock Dropped 12% in September** — *The Motley Fool / Yahoo Finance / MSN* (2026-10-05)
+5. **Financials Got Hit On Higher Rates, I'm Buying These Four Names** — *Seeking Alpha* (2026-10-05)
+6. **SOFI Stock Is Down More Than 40% In 2026, But This Analyst Sees Attractive Growth Opportunity In Loan Platform Business** — *Yahoo Finance* (2026-10-05)
+7. **SoFi’s US$25 Billion Card Portfolio Shift To Bank-Issued Stablecoin Might Change The Case For Investing In SoFi Technologies (SOFI)** — *Yahoo Finance* (2026-10-04)
+8. **SoFi Stock: Why the Opportunity May Be Too Good to Ignore** — *Barchart.com / Yahoo Finance* (2026-10-03)
+9. **SoFi Stock Is Down 43% in 2026. Should You Buy the Dip Before November?** — *Yahoo Finance* (2026-10-03)
 
 ---
-*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。投資人應獨立評估風險並審慎決策。*
