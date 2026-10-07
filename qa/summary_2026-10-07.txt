@@ -1,13 +1,13 @@
 
 ============================================================
-Total scanned : 5207
+Total scanned : 5816
 Bad reports   : 2  (0.0%)
 
 Issue breakdown:
   REFUSAL                  2
 
 Top 10 tickers by bad-report count:
-  nbis            1 / 172  bad
-  wdc             1 / 78   bad
+  nbis            1 / 192  bad
+  wdc             1 / 88   bad
 
-CSV written → qa/bad_reports_2026-09-27.csv
+CSV written → qa/bad_reports_2026-10-07.csv
