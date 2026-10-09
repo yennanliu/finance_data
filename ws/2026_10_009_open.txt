@@ -1,0 +1,6 @@
+Generated: 2026-10-09 01:47 UTC
+Model: gemini-3.5-flash
+Purpose: Fundamental long-term US stock watchlist (under-the-radar)
+======================================================================
+
+
