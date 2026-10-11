@@ -7,10 +7,10 @@ an LLM to judge what regex cannot see.
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-10-10 |
+| Last run | 2026-10-11 |
 | Bad reports found | 2 |
-| CSV | [bad_reports_2026-10-10.csv](bad_reports_2026-10-10.csv) |
-| Full summary | [summary_2026-10-10.txt](summary_2026-10-10.txt) |
+| CSV | [bad_reports_2026-10-11.csv](bad_reports_2026-10-11.csv) |
+| Full summary | [summary_2026-10-11.txt](summary_2026-10-11.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -18,17 +18,17 @@ an LLM to judge what regex cannot see.
 ```
 
 ============================================================
-Total scanned : 5999
+Total scanned : 6060
 Bad reports   : 2  (0.0%)
 
 Issue breakdown:
   REFUSAL                  2
 
 Top 10 tickers by bad-report count:
-  nbis            1 / 198  bad
-  wdc             1 / 91   bad
+  nbis            1 / 200  bad
+  wdc             1 / 92   bad
 
-CSV written → qa/bad_reports_2026-10-10.csv
+CSV written → qa/bad_reports_2026-10-11.csv
 ```
 
 ## Stage 2 — LLM review (`scripts/review_report_quality.py`)
@@ -39,74 +39,73 @@ run 17:00-03:00 UTC, so one cycle spans two date stamps).
 
 | Field | Value |
 |-------|-------|
-| CSV | [llm_review_2026-10-10.csv](llm_review_2026-10-10.csv) |
-| Full summary | [llm_review_2026-10-10.txt](llm_review_2026-10-10.txt) |
+| CSV | [llm_review_2026-10-11.csv](llm_review_2026-10-11.csv) |
+| Full summary | [llm_review_2026-10-11.txt](llm_review_2026-10-11.txt) |
 
 ```
 
 ============================================================
-Reports reviewed : 149
-Ungrounded       : 3  (all-ones scores citing nothing from the report — in the CSV, excluded below)
+Reports reviewed : 144
+Ungrounded       : 2  (all-ones scores citing nothing from the report — in the CSV, excluded below)
 Mean score       : 2.42 / 5
 
-Verdict breakdown (146 grounded):
-  pass              14
+Verdict breakdown (142 grounded):
+  pass              11
   warn              44
-  fail              88
+  fail              87
 
 Mean score by dimension:
-  data_integrity   2.34
-  completeness     3.19
-  depth            2.50
-  consistency      2.69
-  language         3.83
+  data_integrity   2.27
+  completeness     3.27
+  depth            2.54
+  consistency      2.70
+  language         3.89
 
-Failed review (88):
-  0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的穿透 ROIC 達 21.8% 與 WACC 8.45% 的數據未能提供合理的來源或依據。
-  2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 TTM 營收達 NT$4.44T（YoY +36.0%）與後續數據不一致，造成數據誠信問題。
-  amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 'Forward P/E 38.7x' 與 'Trailing P/E 155.1x' 之間的矛盾未解釋。
-  amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的TTM營收突破$775.68B的數字未能在其他章節中得到支持，且與其他數據存在矛盾。
-  avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 'TTM 營收 $89.10B（YoY +85.5%）' 似乎不合理，因為這樣的增長率在半導體行業中極為罕見。
+Failed review (87):
+  0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的穿透 ROIC 達 21.4% 與 WACC 9.2% 的數據未能提供合理的來源，且這些數字在行業中顯得不合理。
+  2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中出現的數字如營業利益率達到 60.3% 和 ROIC 達 31.9% 可能不合理，缺乏具體數據支持。
+  amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的 'TTM 營收 $41.31B（YoY +50.1%）' 與 'FY2023 $22.68B' 之間存在矛盾。
+  amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的營業利潤率從 FY2022 的 2.4% 增長至 13.7%，但未提供具體數據來源，可能存在誤導。
+  avav         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avav/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到 FY2026 營收為 $1.98B，但在其他地方提到 TTM 營收達到 $2.00B，存在矛盾。
+  avgo         unknown                      /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-10-10_gemini-2.md
+      → 報告中出現的數字如營收年增率 85.5% 和毛利率 75.5% 可能不合理，缺乏具體來源支持。
   avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-10-10_gemini.md
-      → 報告中提到的TTM營收$89.10B與YoY增長85.5%不合理，因為這意味著去年營收僅為$48.06B，這對於Broadcom來說是不可能的。
-  goog         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/goog/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 TTM 營收 $445.87B 與 YoY +24.2% 的數字不合理，因為這意味著去年營收為 $358.56B，但該數字未在報告中出現。
-  grab         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/grab/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 'TTM 營收 $3.73B（YoY +21.9%）' 與 'FY2025 營收 $3.37B' 之間存在矛盾。
+      → 報告中提到的 'TTM 營收 $89.10B（YoY +85.5%）' 可能不合理，因為這樣的增長率需要基於一個相對較低的基期。
+  goog         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/goog/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的TTM營收445.87B與YoY增長20.05%不合理，因為這意味著去年營收約370.00B，與過去數據不符。
+  intc         unknown                      /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-10-10_gemini-2.md
+      → 報告中提到的 GAAP 淨利虧損 -$11.03B 與其他數據不一致，顯示數據誠信不足。
   intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-10-10_gemini.md
       → 報告中提到的 Forward P/E 為 50.27x，但在相對估值分析中卻顯示為 50.3x，存在數字不一致。
-  ktos         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/ktos/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的 TTM 營收 $1.52B 與 YoY +30.5% 的數字在其他章節中未能得到一致的支持，存在數據誠信問題。
-  meta         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/meta/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的TTM營收228.25B與YoY增長28.0%不一致，因為前一年營收116.61B無法支持此增長。
-  mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中出現的數字如營收年增率36.5%與TTM FCF達$2.41B等缺乏來源，無法驗證其真實性。
-  msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到 FY2026 營收達 $3,318.4 億，但在其他地方提到的數字不一致，造成數據矛盾。
-  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-10-09_openai.md
-      → 報告中提到的 ROIC 遠高於 WACC，ROIC 為 88.3%，WACC 為 9.41%，這樣的數據不合理。
-  nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到TTM營收爆發成長454.0%至$1.36B，但未提供去年基期的具體數字，可能捏造數據。
+  meta         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/meta/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的TTM營收228.25B與TTM FCF 21.55B的數字未能在其他章節中得到合理的支持或解釋。
+  mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的TTM營收達$9.45B（YoY +36.5%）與後文提到的FY2026營收$8.19B存在矛盾。
+  msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的 FY2026 營收 $331.84B 與其他數據不一致，特別是與預測的成長率相矛盾。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到 FY2026 營收達到 $133.19B，較前一年暴增 256.3%，但前一年營收為 $37.38B，這樣的增長率不合理。
   nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-10-10_gemini.md
-      → 報告中提到的TTM自由現金流為-$9.61B，與其他數據不一致，顯示數據誠信不足。
-  nu           unknown                      /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-10-09_gemini-2.md
-      → 報告中提到的營業利益率達 50.2% 與後文提到的 36.4% 存在矛盾。
-  nu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到 FY25 營收為 $10.63B，但在其他地方提到 FY25 營收為 $8.44B，數據矛盾。
-  nvda         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nvda/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的TTM營收$302.97B與YoY增長83.4%不合理，因為這意味著去年營收為$165.00B，這對於NVIDIA來說是從未達到的數字。
-  onds         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-10-09_gemini.md
-      → 報告中提到的TTM營收增長1235.4%與FY2024的4.8%毛利率存在矛盾。
+      → 報告中提到的TTM自由現金流為-$9.61B，與TTM營收454%增長的說法相矛盾。
+  nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-10-11_gemini.md
+      → 報告中提到的TTM營收$1.36B與YoY增長454.0%不合理，因為基期數據未提供，且2025年營收僅為$529.8M。
+  nu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的營收年增率52.1%與其他數據不一致，造成數據誠信問題。
+  nvda         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nvda/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的TTM營收302.97B與YoY增長105.9%不合理，因為這意味著去年營收約147.5B，該數字未曾達到。
+  onds         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的營業利益率 -166.3% 與 GAAP 淨利轉正的矛盾，顯示數據不一致。
+  orcl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/orcl/fundamental_analysis_2026-10-10_gemini.md
+      → 報告中提到的TTM營收$71.78B與YoY增長29.6%不一致，因為TTM數據應該是基於過去12個月的數據，而不是單一季度的數據。
 
-Ungrounded verdicts (3) — reviewer noise, not report defects:
-  0050         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/0050/technical_analysis_2026-10-10_gemini.md
-  onds         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/onds/technical_analysis_2026-10-10_gemini.md
-  pl           fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/pl/technical_analysis_2026-10-09_gemini.md
+Ungrounded verdicts (2) — reviewer noise, not report defects:
+  orcl         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/orcl/fundamental_analysis_2026-10-10_gemini-2.md
+  ktos         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/ktos/technical_analysis_2026-10-11_gemini.md
 
-CSV written → qa/llm_review_2026-10-10.csv (135 row(s))
+CSV written → qa/llm_review_2026-10-11.csv (133 row(s))
 ```
