@@ -84,6 +84,17 @@
 | A7 | **本機清理:** 對已合併的 worktree 執行 `git worktree remove`,或在 worktree 內使用 sparse checkout。`git gc` 合併 22 個 pack | 本機最多可釋放 5.7 GB | 只影響本機 |
 | A8 | 刪除已合併的遠端分支(遠端 64 個,本機 15 個已合併進 `main`) | 單獨效果小,但**是 B 的前置條件**(未改寫的分支會讓舊 blob 繼續存在) | 先關閉或合併進行中的 PR |
 
+**執行狀態(2026-10-17),A 類除 A3 外皆已完成:**
+
+- A1 ✅ 已完成(`1af337af5`)。
+- A2 ✅ `.github/workflows/prune_old_reports.yml`:每月 1 日 04:30 UTC 執行,保留 90 天。也可手動觸發並指定 `keep_days` / `dry_run`,最低不少於 30 天。
+- A4 ✅ 不需修改:已不再產生圖表,剩下的由 A2 清除。
+- A5 ✅ README 新增「Clone (lightweight)」段落。
+- A6 ✅ 原本就已完成,不需修改。
+- A7 ✅ 移除 4 個 worktree(皆無未提交變更,且已推送或已合併),刪除 14 個已合併的本機分支,並執行 `git gc`(22 個 pack → 1)。`option3-collector` 有未推送的 commit,故保留。`.git` 仍為 1.0 GB,符合預期。
+- A8 ✅ 刪除 18 個已完全合併進 `main` 且沒有進行中 PR 的遠端分支(64 → 46)。其餘 46 個不是 `main` 的祖先,予以保留。
+- A3 ⏸ 暫緩。
+
 A1–A8 能限制**工作目錄**大小並減緩**成長**,但都無法讓現有的 `.git` 變小。
 
 ### B. 一次性改寫歷史(`git filter-repo`)

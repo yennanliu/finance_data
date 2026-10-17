@@ -89,6 +89,17 @@ place, because a prune only deletes files from `HEAD`.
 | A7 | **Local cleanup:** `git worktree remove` on merged worktrees, or use sparse checkout in them. `git gc` consolidates the 22 packs | Frees up to 5.7 GB locally | Local only |
 | A8 | Delete merged remote branches (64 remote, 15 local already merged into `main`) | Small on its own, but **a precondition for B** (an un-rewritten branch keeps the old blobs alive) | Close or merge the open PRs first |
 
+**Status (2026-10-17), everything in A except A3:**
+
+- A1 ✅ done (`1af337af5`).
+- A2 ✅ `.github/workflows/prune_old_reports.yml`: runs on the 1st of each month at 04:30 UTC with a 90-day cutoff. It can also be dispatched with `keep_days` / `dry_run`, and won't go below 30 days.
+- A4 ✅ nothing to change: charts are no longer generated, and A2 removes the remaining ones.
+- A5 ✅ README "Clone (lightweight)" section.
+- A6 ✅ already done, no change.
+- A7 ✅ removed 4 worktrees (clean, and either pushed or merged), deleted 14 merged local branches, and ran `git gc` (22 packs → 1). The `option3-collector` worktree was kept because it has unpushed commits. `.git` is still 1.0 GB, as expected.
+- A8 ✅ deleted 18 remote branches that were fully merged into `main` and had no open PR (64 → 46). The 46 remaining branches are not ancestors of `main` and were kept.
+- A3 ⏸ deferred.
+
 A1–A8 bound the **checkout** and slow **growth**. None of them makes the
 existing `.git` smaller.
 
