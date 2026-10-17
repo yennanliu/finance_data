@@ -80,10 +80,14 @@ partial clone downloads file contents only for what you check out, and sparse
 checkout skips the PDF folders:
 
 ```bash
-git clone --filter=blob:none git@github.com:yennanliu/finance_data.git
+git clone --filter=blob:none --no-checkout git@github.com:yennanliu/finance_data.git
 cd finance_data
 git sparse-checkout set --no-cone '/*' '!notebook_llm/' '!10-k/' '!10-q/'
+git checkout main
 ```
+
+Set the sparse patterns *before* the first checkout — a plain clone checks out
+(and so downloads) every file, PDFs included, before they apply.
 
 `git sparse-checkout disable` brings the PDFs back. See `docs/REPO_SIZE_EVAL.md`.
 
