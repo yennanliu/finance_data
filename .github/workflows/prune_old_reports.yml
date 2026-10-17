@@ -1,0 +1,121 @@
+name: Prune Old Reports
+
+# Retention policy for ai_gen_report/: deletes dated reports older than
+# `keep_days` (default 90) via scripts/maintain_ai_gen_report.py prune.
+# This bounds the checkout, not .git — pruned files stay in history.
+# See docs/REPO_SIZE_EVAL.md (option A2).
+on:
+  schedule:
+    # 1st of each month, 04:30 UTC — outside the 17:00–03:00 report-gen window
+    # and after the 02:00 QA audit, which reads a rolling 2-day window.
+    - cron: "30 4 1 * *"
+
+  workflow_dispatch:
+    inputs:
+      keep_days:
+        description: "Keep reports dated within this many days"
+        required: false
+        default: "90"
+        type: string
+      dry_run:
+        description: "List files but don't delete"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prune-old-reports
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    name: Prune reports older than retention window
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Shallow: prune reads dates from filenames, not history.
+
+      - name: Resolve parameters
+        id: params
+        env:
+          IN_KEEP_DAYS: ${{ github.event.inputs.keep_days }}
+          IN_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          KEEP_DAYS="${IN_KEEP_DAYS:-90}"
+          case "$KEEP_DAYS" in
+            ''|*[!0-9]*) echo "::error::keep_days must be a positive integer, got '$KEEP_DAYS'"; exit 1 ;;
+          esac
+          if [ "$KEEP_DAYS" -lt 30 ]; then
+            echo "::error::keep_days=$KEEP_DAYS is below the 30-day floor"; exit 1
+          fi
+          {
+            echo "keep_days=${KEEP_DAYS}"
+            echo "before=$(date -u -d "${KEEP_DAYS} days ago" +%Y-%m-%d)"
+            echo "dry_run=${IN_DRY_RUN:-false}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Prune
+        id: prune
+        env:
+          BEFORE: ${{ steps.params.outputs.before }}
+          DRY_RUN: ${{ steps.params.outputs.dry_run }}
+        run: |
+          set -euo pipefail
+          ARGS=(prune --before "$BEFORE")
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python3 scripts/maintain_ai_gen_report.py "${ARGS[@]}" \
+            | tee "$RUNNER_TEMP/prune.log"
+          COUNT=$(grep -cE '^  (would )?remove ' "$RUNNER_TEMP/prune.log" || true)
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+
+      - name: Build commit message
+        id: msg
+        if: steps.params.outputs.dry_run != 'true' && steps.prune.outputs.count != '0'
+        env:
+          BEFORE: ${{ steps.params.outputs.before }}
+          COUNT: ${{ steps.prune.outputs.count }}
+          KEEP_DAYS: ${{ steps.params.outputs.keep_days }}
+        run: |
+          set -euo pipefail
+          {
+            echo "message<<COMMIT_MSG_EOF"
+            echo "chore: prune ${COUNT} ai_gen_report files dated before ${BEFORE}"
+            echo ""
+            echo "Automated ${KEEP_DAYS}-day retention (prune_old_reports.yml)."
+            echo ""
+            echo "[skip ci]"
+            echo "COMMIT_MSG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.params.outputs.dry_run != 'true' && steps.prune.outputs.count != '0'
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: "ai_gen_report"
+          # -u: this job only ever removes tracked files.
+          add-flags: "-u"
+          message: ${{ steps.msg.outputs.message }}
+
+      - name: Job summary
+        if: always()
+        env:
+          BEFORE: ${{ steps.params.outputs.before }}
+          COUNT: ${{ steps.prune.outputs.count }}
+          DRY_RUN: ${{ steps.params.outputs.dry_run }}
+        run: |
+          {
+            echo "## Prune Old Reports"
+            echo ""
+            echo "**Cutoff:** files dated before \`${BEFORE}\`"
+            echo "**Files:** ${COUNT:-0} $([ "$DRY_RUN" = "true" ] && echo '(dry run, nothing deleted)')"
+          } >> "$GITHUB_STEP_SUMMARY"
