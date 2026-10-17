@@ -73,6 +73,20 @@ A research platform that combines **SEC filings**, **AI-generated analysis**, an
 
 ## Quick Start
 
+### Clone (lightweight)
+
+The full history is ~1 GB, mostly PDFs (`notebook_llm/`, `10-k/`, `10-q/`). A
+partial clone downloads file contents only for what you check out, and sparse
+checkout skips the PDF folders:
+
+```bash
+git clone --filter=blob:none git@github.com:yennanliu/finance_data.git
+cd finance_data
+git sparse-checkout set --no-cone '/*' '!notebook_llm/' '!10-k/' '!10-q/'
+```
+
+`git sparse-checkout disable` brings the PDFs back. See `docs/REPO_SIZE_EVAL.md`.
+
 ### Generate an analysis report locally
 
 ```bash
@@ -160,6 +174,7 @@ finance_data/
 | `advanced_analysis.yml` | Manual / dispatch | Earnings-call, insider-trading, 13-F, and interactive HTML reports |
 | `qa_report_quality.yml` | 02:00 UTC daily | Quality-checks recent reports: rule-based scan + an OpenAI LLM review |
 | `cleanup_refusals.yml` | 02:00 UTC daily | Removes reports containing LLM refusal messages |
+| `prune_old_reports.yml` | 04:30 UTC, 1st of month | Deletes `ai_gen_report/` files older than 90 days (retention policy) |
 | `daily_progress.yml` | 00:40 UTC daily | Generates a daily progress summary |
 | `download_10k.yml` | Manual / dispatch | Downloads SEC 10-K filings on demand |
 | `deploy.yml` | Nightly + on push | Builds docs and deploys to GitHub Pages (single consolidated build) |
