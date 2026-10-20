@@ -15,126 +15,115 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 2026-10-20
 
 ## 🏢 公司概覽
-M31 Technology Corp.（円星科技，代碼：6643.TW / TPEX:6643）為台灣指標性的純晶圓智財權（Silicon IP）研發設計服務商。公司核心業務深耕於高速傳輸介面 IP（包括 USB、PCIe、MIPI、Type-C 等）與基礎架構 IP（包括 Standard Cell Library、Memory Compiler 等）。M31 處於半導體晶片設計鏈的最上游，商業模式主要仰賴晶片開案時收取的「授權金」（Licensing Fee）以及晶片量產後依投片量抽取的「權利金」（Royalty）。隨著高效能運算（HPC）、車用電子以及先進製程節點的不斷演進，基礎 IP 與高速介面 IP 成為先進晶片開案不可或缺的關鍵元件，具備高技術壁壘與穩定客戶黏著度之產業特性。
+M31 Technology Corp.（円星科技，證券代碼：6643.TW / TPEX: 6643）為台灣專精於高階矽智財（Silicon IP）設計與授權之指標性廠商。公司主要核心業務涵蓋基礎元件 IP（Foundation IP，包括標準元件庫、記憶體編譯器等）以及高速傳輸介面 IP（High-Speed Interface IP，包括 USB、PCIe、MIPI、SATA 等通訊協定）。M31 深度切入全球晶圓代工龍頭與先進製程生態體系，業務成長與高效能運算（HPC）、人工智慧（AI）、車用電子及物聯網等終端晶片設計開案量高度連動，營運模式以技術授權金（License Fee）與量產權利金（Royalty）為主要營收支柱。
 
 ---
 
 ## 📝 新聞摘要總覽
-本次彙整之相關市場新聞與研報數據，呈現出機構投資人與分析平台針對 M31（6643.TW）長期營運前景、半導體總體景氣擴張循環及資本市場環境的多元觀點。在個別公司層面，知名財經圖表與分析平台 TradingView 針對 6643 釋出指向 2027 年的目標價預測模型，突顯市場法人對該公司跨入先進製程節點、長線開案累積動能的關注，並將評估視角拉長至未來數年的結構性增長。同時，Barron's 亦透過 FactSet 數據庫持續追蹤 M31 Technology 的基本面財務架構，展現外資機構與國際市場數據商對台灣上游 IP 廠的定期檢視。
+本次彙整之市場資訊涵蓋 M31 Technology（6643.TW）長期預測模型、半導體上游資本支出動向，以及總體金融環境之多空訊號。在公司本身維度上，TradingView 等專業分析平台發布了針對 6643 至 2027 年的長期目標價與獲利預測（2026 Forecast — Price Target — Prediction for 2027），配合 FactSet 與 Barron's 等國際權威金融數據庫的常態性建檔追蹤，顯示市場機構法人對 M31 在先進製程節點的長期 IP 開案成長性維持結構性追蹤。
 
-在產業總體生態鏈方面，全球記憶體龍頭美光（Micron）展現激進的資本支出擴張策略（"Go Big Or Go Home"），其擴張幅度大幅超越同業。此舉象徵先進記憶體、AI 伺服器與高速運算基礎設施的資本支出浪潮仍在推進，對於專注於提供先進節點高速介面與記憶體編譯器 IP 的 M31 而言，無疑提供了潛在的產業外溢紅利。同屬台灣高階 IC 設計生態的達發科技（6526.TW）動態，亦持續牽動台灣半導體高價股的估值比價效應。
+然而，在產業與外部環境層面，多項跨市場指標呈現高度分化與震盪警訊。半導體產業鏈方面，美光科技（Micron）展現「激進擴張（Go Big Or Go Home）」的戰略態勢，大幅提高資本支出規模，遠超同業水準；此舉確認了記憶體與先進晶片架構對高頻寬、高密度介面 IP 的龐大資本投入，對高階 IP 供應鏈形成潛在支撐。
 
-然而，宏觀資本市場並非全無隱憂。美股標普 500 指數面臨技術趨勢線面臨考驗之警訊，以及傳統能源巨頭 Marathon Petroleum（MPC）在繳出優異業績後股價反向重挫、私募信貸折價等事件，皆反映出高利率後週期環境下投資人對估值容忍度收斂、市場情緒敏感多變。總體而言，M31 當前處於產業長線成長引擎（先進製程 IP 需求激增、半導體資本支出放大）與總體流動性審慎交織的市場格局中，基本面長線指引成為支撐評價之關鍵。
+相對地，金融市場總體面卻浮現疲態。技術分析指出標普 500 指數（S&P 500）長期上升趨勢正面臨跌破邊緣，市場系統性風險升溫；美股傳統能源巨頭馬拉松石油（Marathon Petroleum）在發布大幅超越預期的財報後，股價卻反常暴跌，反映高利率環境下投資人對「利多出盡」與週期高點的極度敏感。此外，凱雷旗下信貸工具（Carlyle Secured Lending）呈現高達 34% 的資產淨值折價，折射出另類資產與中小型股流動性緊縮的壓力。
+
+整體而言，M31 雖處於半導體資本支出擴張的有利技術節點，但在總體指數面臨轉折、市場情緒偏向保守苛求的宏觀逆風下，評價倍數的維持將面臨考驗。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **長線 IP 價值重估聚焦 2027 年願景**：TradingView 等專業研析機構針對 6643 發布面向 2027 年的價格預測，顯示分析師社群不再僅以短期季度營收衡量 M31，而是將重點置於新開案從設計授權轉化為長期量產權利金的複利週期，中長期營運可預測性正成為核心定價因子。
-- **半導體巨頭激進 Capex 確立先進架構需求**：美光（Micron）大幅提高資本支出，宣示高效能運算與先進架構開案未見停滯。這對身為上游高速介面與基礎 IP 供應商的 M31 而言，印證了高速資料傳輸與記憶體架構優化的強勁剛性需求。
-- **高估值矽智財族群受宏觀技術面波動牽動**：S&P 500 出現技術趨勢可能跌破的分析警訊，加之美股能源龍頭超預期仍遭拋售的現象，暗示市場對利多鈍化、對估值嚴苛檢視的風險偏好收縮，M31 作為高本益比成長股，需留意系統性本益比壓縮壓力。
-- **國際資料庫強化台灣利基型 IP 覆蓋度**：FactSet 與 Barron's 對 M31 的基本面持續追蹤，代表國際機構投資者對台灣半導體上游智財權標的之關注已制度化，有利於提高外資在長線股權結構中的參與深度。
-- **同業比價效應與台股高價 IC 設計族群聯動**：達發科技（6526.TW）等高階通訊 IC 設計業者的市場動態，提供市場評估台灣上游晶片設計生態系稼動率與開案意願的參照座標，牽動 M31 的市場情緒連動。
-- **過濾非相關標的之代碼碰撞雜訊**：市場檢索中偶見日本 Togami Electric（6643.T）等異質標的之代碼重疊，機構投資人在處理量化數據與新聞流時，須建立精確的資料清洗機制，避免非本業之海外市場雜訊干擾基本面判斷。
+- **2027 年長期獲利模型建立，市場評價回歸基本面檢驗**：TradingView 針對 6643 發布面向 2027 年的長期展望與價格預測，顯示機構投資人正跨越短期季報雜音，評估先進製程 IP 權利金於 2026 至 2027 年進入量產收割期的現金流折現價值，長期本益比定價中樞正處於重構階段。
+- **美光激進 Capex 擴張釋放半導體高階介面需求信號**：美光大幅拉升資本支出，象徵先進記憶體（如 HBM、DDR5）與運算晶片間的高速互聯需求迫切。M31 作為高速傳輸介面 IP 關鍵供應商，可望間接受惠於整體晶片傳輸頻寬規格升級帶來的授權合約增長。
+- **財報利多出盡反遭拋售，警惕成長股「高預期殺手」**：馬拉松石油財報大幅優於預期卻重挫，揭示當前市場資金極度挑剔，任何指引瑕疵或利多兌現皆可能誘發獲利了結賣壓；此機制對享有較高預期本益比的 IP 類股具有警示作用。
+- **總體指數技術面轉折警訊，系統性 Beta 風險提升**：標普 500 指數面臨技術趨勢跌破威脅，若美股主要指數反轉修正，全球高估值成長型科技股將首當其衝承受估值收縮（Multiple Compression）壓力。
+- **私人信貸大幅折價反映中小市值資產流動性溢價提高**：凱雷信貸工具 34% 的巨額折價顯示市場對非核心資產流動性的謹慎態度；台股中小型高價股如 M31 需提防國際外資在風險趨避時的被動抽離。
+- **跨市場代碼雜訊需審慎辨別**：新聞流中夾雜同代號之日本戶上電機（Togami Electric, 6643.T），凸顯國際數據源在跨交易所代號映射時的雜訊，專業投資決策需剔除無關市場之擾動。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-10-08 | Airoha Technology Corp. (6526.TW) stock price, news, quote and history — Yahoo News
-- 2026-08-07 | Marathon Petroleum: Why Stock Plummeted After A Massive Beat (NYSE:MPC) — Seeking Alpha
-- 2026-07-15 | Carlyle Secured Lending: 34% Discount, Stable Portfolio (NASDAQ:CGBD) — Seeking Alpha
+- 2026-08-07 | Marathon Petroleum: Why Stock Plummeted After A Massive Beat — Seeking Alpha
+- 2026-07-15 | Carlyle Secured Lending: 34% Discount, Stable Portfolio — Seeking Alpha
 - 2026-06-26 | 6643 Forecast — Price Target — Prediction for 2027 — TradingView
-- 2026-04-29 | M31 Technology Corp. — Barron's / Bing News
-- 2026-03-25 | Micron Says Go Big Or Go Home As It Ramps Up Capex Far More Than Peers (NASDAQ:MU) — Seeking Alpha
-- 2025-09-28 | S&P 500: This Trend is About to Break (Technical Analysis) (SP500) — Seeking Alpha
+- 2026-04-29 | M31 Technology Corp. — Bing News / Barron's (FactSet)
+- 2026-03-25 | Micron Says Go Big Or Go Home As It Ramps Up Capex Far More Than Peers — Seeking Alpha
+- 2025-09-28 | S&P 500: This Trend is About to Break (Technical Analysis) — Seeking Alpha
 - 2021-09-25 | 6643 Stock Price and Chart — TPEX:6643 — TradingView
-- 2021-05-02 | M31 Technology (TPEX:6643) - Stock Analysis — Simply Wall Street
 - 2021-04-13 | M31 Technology Corporation (6643.TWO) Stock Price, News, Quote & History — Yahoo! Finance Canada
+- 2019-11-25 | Togami Electric Mfg. Co., Ltd. (6643.T) Stock Price, News, Quote & History — Yahoo Finance
 - 2019-11-01 | M31 Technology Corporation (6643.TWO) stock price, news, quote and history — Yahoo Finance Singapore
-- 2019-10-29 | Togami Electric Mfg. Co., Ltd. (6643.T) stock price, news, quote and history — Yahoo Finance Singapore
 - 2019-01-14 | META_TITLE_QUOTE — Yahoo Finance
+- 2015-07-03 | VanEck Steel ETF (SLX) Price, Quote, News & Analysis — Seeking Alpha
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 6643 長線目標價與 2027 年預測分析
-- **新聞來源**：TradingView (2026-06-26)
-- **分析內容**：
-  TradingView 對 6643 發布面向 2027 年的價格預測模型與目標分析。在矽智財產業中，個別專案的開案到晶片終端量產通常需要 2 至 3 年的研發週期。因此，法人與量化模型將預測時間軸延伸至 2027 年，反映出市場著眼於公司在 7 奈米、5 奈米乃至更先進製程節點 IP 開發成果的收割期。
-- **對營運與股價的影響**：
-  此類長期預測強化了長線基本面買盤的持股信心。若 2027 年的營運模型預示著權利金占比隨先進節點量產而顯著攀升，將推升 M31 的毛利率結構並擴大營運槓桿效益，有助於支撐中長期估值中樞。
+### 1. M31（6643）2027 年長期目標價與獲利展望發布
+- **分析內容**：TradingView 於 2026 年中釋出針對 6643.TW 跨入 2027 年的財務預測模型與目標價分析。在半導體 IP 商業模式中，從晶片設計定案（Tape-out）到產品晶圓量產通常需要 1.5 至 2 年週期。分析師將目光延伸至 2027 年，顯示市場評估焦點正落在先進製程節點（如 3 奈米及更先進架構）的權利金放大效應。
+- **營運與財務影響**：此類長期預測有助於平抑單季授權金入帳時間點不確定所造成的股價波動。若預測模型顯示 2027 年量產權利金佔比顯著拉升，將大幅改善 M31 的現金流穩定度與營業利益率。
+- **股價意涵**：提供機構買盤中長期估值錨，在總體市場拉回時可望於特定長線預期殖利率或本益比區間形成下檔防禦。
 
-### 2. 美光（Micron）激進擴大資本支出之連鎖效應
-- **新聞來源**：Seeking Alpha (2026-03-25)
-- **分析內容**：
-  美光展現「Go Big Or Go Home」的氣魄，資本支出增長規模大幅超越同行。這表明記憶體與高速資料吞吐架構的技術軍備競賽已進入白熱化階段。先進記憶體晶片與處理器之間的傳輸頻寬瓶頸，使得高速介面 IP 與特殊存取架構（Memory Compiler）之重要性與日俱增。
-- **對營運與股價的影響**：
-  M31 的核心優勢即在於客製化基礎 IP 與高速傳輸介面 IP。一線半導體大廠的資本支出擴張，意味著供應鏈中各類 ASIC 與運算控制晶片的開案量同步放大，直接驅動 M31 授權金收入動能，對中長期營收成長構成明確的實質支撐。
+### 2. 美光（Micron）大幅擴張資本支出（Capex）
+- **分析內容**：Seeking Alpha 報導美光採取極度積極的擴產政策，資本支出增幅遠超越同業。記憶體與先進封裝架構正面臨頻寬瓶頸，巨額 Capex 意味著大量次世代控制器、介面晶片與客製化 ASIC 進入實質開發階段。
+- **營運與財務影響**：M31 在高速介面 IP 領域深耕多年，美光大舉擴產帶動的周邊晶片設計熱潮，將直接刺激高速介面（如 PCIe Gen 5/6、CXL 相關協定）IP 的授權需求，擴大 M31 的潛在可定址市場（TAM）。
+- **股價意涵**：半導體龍頭 Capex 擴增通常是上游 IP 族群營收動能的領先指標，為 M31 注入產業基本面的強心針。
 
-### 3. 達發科技（6526.TW）等 IC 設計鏈之市場情緒投射
-- **新聞來源**：Yahoo News (2026-10-08)
-- **分析內容**：
-  達發科技（6526.TW）作為聯發科旗下專注於寬頻、藍牙與衛星定位晶片的高階設計公司，其市場報價與產業訊息常被視為台灣中高階晶片開案與終端出貨的風向球。上游 IP 業者與下游 IC 設計業者維持緊密的共生關係。
-- **對營運與股價的影響**：
-  若台灣中高階 IC 設計業者營運動能穩健，代表晶片設計開案預算未受通膨或終端需求疲弱影響，有助於穩定 M31 來自台灣本地設計公司的授權開案量，形成族群內的正向信心共振。
+### 3. 馬拉松石油（MPC）財報超預期後重挫與市場定價邏輯異變
+- **分析內容**：美股大型能源股 MPC 在公布超越預期的業績後股價不升反跌。深入分析其市場行為，反映在總經高利率與景氣晚期疑慮下，投資者對「成長觸頂」的恐懼超越了現有獲利成果。
+- **營運與財務影響**：雖然產業不同，但該定價現象直指科技股的核心痛點——即便 M31 繳出符合或略優於預期的營運數字，若未能給出突破性的前瞻指引，極易遭遇市場無情下修評價倍數。
+- **股價意涵**：提醒投資人嚴控進場成本，切忌在財報公布前夕過度追高，並需密切審視 M31 授權合約增長的速度是否跟上市場嚴苛的預期。
 
-### 4. Barron's / FactSet 數據庫追蹤 M31 基本面架構
-- **新聞來源**：Barron's / Bing News (2026-04-29)
-- **分析內容**：
-  FactSet 持續更新並提供 M31 Technology 的基本面財務數據與市場報價，顯示該公司已被完整納入國際機構投資者的標準化量化篩選與監控清單之中。
-- **對營運與股價的影響**：
-  標準化數據覆蓋提高了資訊透明度，有利於降低國際資金進入台灣中型利基型半導體股的流動性門檻，對籌碼穩定性及機構持股比例具正面意涵。
+### 4. 標普 500（S&P 500）技術趨勢面臨破位風險
+- **分析內容**：技術面分析示警美股基準指數標普 500 長期上升通道瀕臨跌破，指標背離與量價結構惡化顯示多頭防線動搖。
+- **營運與財務影響**：總體系統性風險升溫將導致全球機構法人降低風險資產曝險（De-risking），台股高本益比科技股通常首當其衝承受外資調節賣壓。
+- **股價意涵**：M31 屬於高 Beta、高估值特性的矽智財族群，一旦美股大盤確認破位引發全球流動性收縮，股價技術面回檔壓力將被顯著放大。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒：🟡 中性**
+**整體市場情緒評級：🟡 中性（偏謹慎觀望）**
 
-### 評估依據：
-- **正面因素**：
-  1. 產業上游擴張動能明確：國際半導體巨頭美光大舉擴編資本支出，反映出高頻寬、先進架構的硬體投資循環仍然穩固，為 IP 授權需求提供底氣。
-  2. 長線分析架構正向：專業研究機構建立面向 2027 年的營運與股價預測，突顯 M31 具備以多年開案週期為支撐的結構性增長潛力。
-- **負面因素**：
-  1. 宏觀市場技術面隱憂：S&P 500 指數面臨趨勢線突破或跌破的關鍵轉折點，總體經濟不確定性可能促使全球風險性資產回檔。
-  2. 財報超預期但市場反應冷淡之警訊：美股部分指標股繳出極佳獲利卻遭遇重挫，顯示當前市場情緒對估值具高度戒心，對高本益比的矽智財族群而言，容易引發獲利了結與估值收縮賣壓。
+| 面向 | 評估因素 | 影響力道 |
+| :--- | :--- | :--- |
+| **正面因素 🟢** | 1. 2027 年長期預測模型確立，確認半導體先進製程 IP 長線收割趨勢。<br>2. 美光激進擴張資本支出，點燃次世代高頻寬與互聯晶片開案動能。<br>3. FactSet/Barron's 等主流機構持續追蹤，外資覆蓋度具備基礎。 | 中至強 |
+| **負面因素 🔴** | 1. S&P 500 技術走勢面臨跌破警訊，總體系統性風險攀升。<br>2. 財報超預期卻遭拋售（MPC 案例），揭示市場對估值容忍度極低。<br>3. 凱雷私人信貸大幅折價，隱含中小市值與非流動性資產折價擴大。 | 強 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **系統性估值壓縮風險**：全球總體流動性變化及美股主要指數技術面轉弱，可能導致資金自高估值、高本益比的科技成長股撤出，使 M31 面臨系統性評價修正。
-- 🟡 **開案進度與量產轉化遞延風險**：先進製程 IP 開發技術門檻高，若晶圓代工廠先進節點製程驗證出現延誤，或無晶圓廠客戶晶片流片（Tape-out）進度推遲，將直接影響當期授權金認列與後續權利金發酵時間。
-- 🟡 **終端應用市場波動風險**：雖然 AI 與 HPC 需求強勁，但若消費型電子、車用晶片等泛用型終端需求復甦力道放緩，將壓抑客戶開案意願，導致授權專案單價與數量成長放緩。
-- 🟢 **多國市場代碼混淆風險**：日股 Togami Electric 同樣使用 6643 代碼，極端市況下若演算法未精確區隔代碼前綴/後綴，可能在特定量化數據串流中產生短暫雜訊，但對實體營運無實質損害。
+- 🔴 **高估值倍數收縮風險（系統性風險）**：若美股標普 500 指數確認破位，全球資本市場將啟動去槓桿與防禦性調倉，M31 做為高本益比的矽智財股票，面臨估值壓縮之直接衝擊。
+- 🟡 **半導體下游晶圓代工與開案遞延風險**：美光等巨頭資本支出若未如期轉化為晶片設計端之晶圓投片量，將導致 M31 權利金（Royalty）認列時程向後推遲，衝擊短期營收預估。
+- 🟡 **財報利多出盡之情緒修正風險**：當前市場定價心態偏向苛刻，若 M31 單季授權金認列認列節奏不均導致季報未達市場高標，恐誘發劇烈賣壓。
+- 🟢 **國際數據代碼混淆引發之流動性雜訊**：跨市場代碼 6643（如日本戶上電機 6643.T）常在國際自動化量化交易系統引發資料匹配雜訊，短期恐帶來非基本面之流動性擾動。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **半導體巨頭資本支出落地節奏**：密切跟蹤主要晶圓代工夥伴與記憶體領導廠在先進封裝與新製程節點上的實際投片與驗證進度。
-2. **台灣高階 IC 設計業者法說會指引**：關注達發等主要設計業者對後續開案研發費用（R&D）的投入預期，以研判 M31 授權合約簽署的動能。
-3. **宏觀市場波動與櫃買指數支撐**：檢視標普 500 與台股櫃買指數（TPEX）能否在關鍵技術關卡止跌回穩，作為成長型 IP 股股價防禦力的評估基準。
+1. **半導體巨頭後續 Capex 細節與晶圓廠開案進度**：未來 1–4 週需密切追蹤國際半導體廠針對先進節點資本支出的具體配置，特別是投入高速傳輸與記憶體控制晶片之研發比重。
+2. **美股 S&P 500 指數關鍵技術支撐位防守**：觀察標普 500 能否在關鍵支撐區間止跌回穩，若跌破確認，需高度防範外資對台股高價矽智財族群之避險拋補操作。
+3. **M31 授權合約入帳時程與法人目標價調整**：檢視國內外券商在 TradingView 2027 展望發布後，是否跟進調整對 M31 在 2026 下半年的授權金營收預期及目標價區間。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Airoha Technology Corp. (6526.TW) stock price, news, quote and history — Yahoo News (2026-10-08)
-2. Marathon Petroleum: Why Stock Plummeted After A Massive Beat (NYSE:MPC) — Seeking Alpha (2026-08-07)
-3. Carlyle Secured Lending: 34% Discount, Stable Portfolio (NASDAQ:CGBD) — Seeking Alpha (2026-07-15)
-4. 6643 Forecast — Price Target — Prediction for 2027 — TradingView (2026-06-26)
-5. M31 Technology Corp. — Barron's / FactSet / Bing News (2026-04-29)
-6. Micron Says Go Big Or Go Home As It Ramps Up Capex Far More Than Peers (NASDAQ:MU) — Seeking Alpha (2026-03-25)
-7. S&P 500: This Trend is About to Break (Technical Analysis) (SP500) — Seeking Alpha (2025-09-28)
-8. 6643 Stock Price and Chart — TPEX:6643 — TradingView (2021-09-25)
-9. M31 Technology (TPEX:6643) - Stock Analysis — Simply Wall Street (2021-05-02)
-10. M31 Technology Corporation (6643.TWO) Stock Price, News, Quote & History — Yahoo! Finance Canada (2021-04-13)
-11. M31 Technology Corporation (6643.TWO) stock price, news, quote and history — Yahoo Finance Singapore (2019-11-01)
-12. Togami Electric Mfg. Co., Ltd. (6643.T) stock price, news, quote and history — Yahoo Finance Singapore (2019-10-29)
-13. META_TITLE_QUOTE — Yahoo Finance (2019-01-14)
+1. Marathon Petroleum: Why Stock Plummeted After A Massive Beat — Seeking Alpha (2026-08-07)
+2. Carlyle Secured Lending: 34% Discount, Stable Portfolio — Seeking Alpha (2026-07-15)
+3. 6643 Forecast — Price Target — Prediction for 2027 — TradingView (2026-06-26)
+4. M31 Technology Corp. — Bing News / Barron's (FactSet) (2026-04-29)
+5. Micron Says Go Big Or Go Home As It Ramps Up Capex Far More Than Peers — Seeking Alpha (2026-03-25)
+6. S&P 500: This Trend is About to Break (Technical Analysis) — Seeking Alpha (2025-09-28)
+7. 6643 Stock Price and Chart — TPEX:6643 — TradingView (2021-09-25)
+8. M31 Technology Corporation (6643.TWO) Stock Price, News, Quote & History — Yahoo! Finance Canada (2021-04-13)
+9. Togami Electric Mfg. Co., Ltd. (6643.T) Stock Price, News, Quote & History — Yahoo Finance (2019-11-25)
+10. M31 Technology Corporation (6643.TWO) stock price, news, quote and history — Yahoo Finance Singapore (2019-11-01)
+11. META_TITLE_QUOTE — Yahoo Finance (2019-01-14)
+12. VanEck Steel ETF (SLX) Price, Quote, News & Analysis — Seeking Alpha (2015-07-03)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
