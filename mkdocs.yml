@@ -88,8 +88,9 @@ plugins:
         - en
         - zh
   - awesome-pages
-  - minify:
-      minify_html: true
+  # No `minify` plugin. minify_html re-parsed every finished page with a
+  # pure-Python HTML parser — ~436s, a third of the whole nightly build — to
+  # strip whitespace that GitHub Pages already gzips away in transit.
 
 # ── Markdown extensions ──────────────────────────────────────────────────────
 markdown_extensions:
@@ -116,12 +117,14 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
-  - pymdownx.magiclink:
-      repo_url_shorthand: true
-      user: yennanliu
-      repo: finance_data
+  # Bare-URL autolinking only. repo_url_shorthand turned report prose into
+  # GitHub links — `@WACC` to a user called WACC, a ranking's `#1` to this
+  # repo's issue #1 — on ~15% of report pages, and was ~13% of Markdown time.
+  - pymdownx.magiclink
   - pymdownx.mark
-  - pymdownx.smartsymbols
+  # pymdownx.smartsymbols is deliberately absent. Its fraction rule rewrote
+  # chip nodes and product generations in LLM reports (`4/5nm` -> `⅘nm`,
+  # `Zen 5/6` -> `Zen ⅚`), and it cost ~23% of Markdown conversion time.
   - pymdownx.snippets:
       auto_append:
         - docs/includes/abbreviations.md

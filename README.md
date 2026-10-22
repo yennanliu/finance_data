@@ -131,7 +131,7 @@ python3 scripts/download_10k_pdf.py meta-platforms-inc
 ### Build the docs site locally
 
 ```bash
-pip install mkdocs-material mkdocs-awesome-pages-plugin mkdocs-minify-plugin
+pip install mkdocs-material mkdocs-awesome-pages-plugin
 
 python3 scripts/build_docs.py
 mkdocs serve

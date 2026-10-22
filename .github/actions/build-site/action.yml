@@ -31,7 +31,6 @@ runs:
         packages: >-
           mkdocs-material==9.5.*
           mkdocs-awesome-pages-plugin
-          mkdocs-minify-plugin
           Pillow
           cairosvg
 
