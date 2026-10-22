@@ -128,7 +128,7 @@ def _get_anthropic():
         import anthropic
         return anthropic
     except ImportError:
-        logger.error("'anthropic' not installed. Run: pip install anthropic")
+        logger.error("'anthropic' not installed. Run: uv sync")
         raise LLMError("anthropic library not found") from None
 
 
@@ -202,7 +202,7 @@ def run_openai(ticker: str, prompt: str, system_message: str, *,
     try:
         import openai
     except ImportError:
-        logger.error("'openai' not installed. Run: pip install openai")
+        logger.error("'openai' not installed. Run: uv sync")
         raise LLMError("openai library not found") from None
 
     api_key = os.environ.get("OPENAI_API_KEY", "")
@@ -286,7 +286,7 @@ def run_gemini(ticker: str, prompt: str, system_message: str, *,
         from google import genai
         from google.genai import types
     except ImportError:
-        logger.error("'google-genai' not installed. Run: pip install google-genai")
+        logger.error("'google-genai' not installed. Run: uv sync")
         raise LLMError("google-genai library not found") from None
 
     api_key = os.environ.get("GEMINI_API_KEY", "")

@@ -94,7 +94,7 @@ Set the sparse patterns *before* the first checkout — a plain clone checks out
 ### Generate an analysis report locally
 
 ```bash
-pip install -e ".[dev]"   # installs anthropic, openai, google-genai, yfinance, mkdocs, …
+uv sync --extra dev   # .venv from uv.lock: anthropic, openai, google-genai, yfinance, pytest, …
 
 # Set the API key for the provider you want to use
 export ANTHROPIC_API_KEY="sk-..."   # Claude
@@ -102,11 +102,11 @@ export OPENAI_API_KEY="sk-..."      # OpenAI
 export GEMINI_API_KEY="..."         # Gemini (daily-CI default)
 
 # Generate a fundamental analysis for AAPL (default provider: Claude)
-python3 scripts/generate_analysis.py AAPL
+uv run python scripts/generate_analysis.py AAPL
 
 # Choose provider and analysis type
-python3 scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider gemini
-python3 scripts/generate_analysis.py NVDA --analysis-type stock-valuation --provider openai
+uv run python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider gemini
+uv run python scripts/generate_analysis.py NVDA --analysis-type stock-valuation --provider openai
 ```
 
 Output saved to `ai_gen_report/fundamental/aapl/fundamental_analysis_YYYY-MM-DD.md`
@@ -116,25 +116,25 @@ types save to `ai_gen_report/stock/<ticker>/`)
 ### Download SEC filings
 
 ```bash
-pip install requests
+uv sync   # requests is a core dependency
 
 # Download 5 most recent 10-K reports for Apple
-python3 scripts/download_10k.py AAPL
+uv run python scripts/download_10k.py AAPL
 
 # Download for multiple companies
-python3 scripts/download_10k.py AAPL MSFT TSLA
+uv run python scripts/download_10k.py AAPL MSFT TSLA
 
 # Download 10-K PDFs
-python3 scripts/download_10k_pdf.py meta-platforms-inc
+uv run python scripts/download_10k_pdf.py meta-platforms-inc
 ```
 
 ### Build the docs site locally
 
 ```bash
-pip install mkdocs-material mkdocs-awesome-pages-plugin mkdocs-minify-plugin
+uv pip install "mkdocs-material==9.5.*" mkdocs-awesome-pages-plugin minify-html
 
-python3 scripts/build_docs.py
-mkdocs serve
+uv run python scripts/build_docs.py
+uv run mkdocs serve
 ```
 
 ---

@@ -2,7 +2,7 @@
 name = "finance-data"
 version = "0.1.0"
 description = "US stock investment research with AI-powered analysis and technical charts"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "anthropic>=0.40.0",
     "openai>=1.0.0",

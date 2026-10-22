@@ -342,7 +342,7 @@ def _get_yf():
         return yf
     except ImportError as exc:
         # Raise (don't sys.exit) so callers / test runners can handle it.
-        raise DataFetchError("'yfinance' not installed. Run: pip install yfinance") from exc
+        raise DataFetchError("'yfinance' not installed. Run: uv sync") from exc
 
 
 def fetch_data(ticker: str) -> dict:

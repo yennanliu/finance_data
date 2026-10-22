@@ -4194,7 +4194,7 @@ def build_scripts_page(lang: str = "en"):
         "```bash",
         "git clone https://github.com/yennanliu/finance_data.git",
         "cd finance_data",
-        "pip install -r requirements.txt  # or: uv sync",
+        "uv sync",
         "```",
         "",
         "## Python Scripts",
