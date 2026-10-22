@@ -66,12 +66,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      # The runner image already ships Google Chrome, so skip puppeteer's own
+      # Chromium download (most of this step's ~22s) and point mmdc at it.
       - name: Install mermaid-cli
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
         run: npm install -g @mermaid-js/mermaid-cli
 
       - name: Validate sample site (structure + Mermaid zero-regression)
         run: |
-          echo '{"args":["--no-sandbox"]}' > "$RUNNER_TEMP/puppeteer.json"
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable)"
+          printf '{"args":["--no-sandbox"],"executablePath":"%s"}\n' "$CHROME" \
+            > "$RUNNER_TEMP/puppeteer.json"
           PUPPETEER_CONFIG="$RUNNER_TEMP/puppeteer.json" python scripts/validate_sample_site.py
 
       - name: Upload sample site artifact

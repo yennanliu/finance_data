@@ -125,7 +125,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         # Shallow: nothing here reads history, and the pack is ~1 GB, so a full
-        # clone cost ~37 pointless deep fetches a day.
+        # clone cost ~37 pointless deep fetches a day. Sparse for the same
+        # reason as daily_analysis.yml: the generator reads only scripts/, so
+        # the ~1.1 GB tip tree is never downloaded. The ticker's news directory
+        # joins the cone below, once the ticker is resolved.
+        with:
+          sparse-checkout: |
+            .github
+            scripts
+            data
 
       - name: Set up Python and dependencies
         uses: ./.github/actions/python-env
@@ -221,6 +229,15 @@ jobs:
           echo "  Provider:   ${PROVIDER}"
           echo "  Model:      ${MODEL}"
           echo "  Max tokens: ${MAX_TOKENS}"
+
+      # generate_market_news.py defaults to ai_gen_report/market_news/<ticker>/.
+      - name: Add the news directory to the sparse checkout
+        env:
+          TICKER: ${{ steps.params.outputs.ticker }}
+        run: |
+          set -euo pipefail
+          t="$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')"
+          git sparse-checkout add "ai_gen_report/market_news/${t}"
 
       # Checks the key for the primary provider AND every fallback level, so a
       # fallback attempt never runs without its key.
