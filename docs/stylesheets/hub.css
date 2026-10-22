@@ -573,11 +573,6 @@
 }
 .rp-progress.is-on { opacity: 1; }
 
-@media (prefers-reduced-motion: reduce) {
-  .md-typeset .hub-card,
-  .md-typeset .hub-card:hover { transform: none; transition: none; }
-}
-
 /* ── narrow viewports ─────────────────────────────────────────────────────── */
 
 @media screen and (max-width: 44.9375em) {
@@ -636,7 +631,7 @@
   font-size: 0.8rem;
   min-height: 2.2rem;
 }
-.md-typeset .hub-filter__input:hover { border-color: #9aa4b5; }
+.md-typeset .hub-filter__input:hover { border-color: var(--fp-border-hover); }
 .md-typeset .hub-filter__input:focus {
   border-color: var(--fp-text);
   box-shadow: 0 0 0 3px var(--fp-accent-dim);
@@ -743,3 +738,10 @@
 
 .crumbs li[aria-current] { color: var(--fp-text); }
 .rp-progress { background: var(--fp-text) !important; }
+
+/* Last in the file so no later rule can restore the card motion. */
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .hub-card,
+  .md-typeset .hub-card:hover,
+  .md-typeset .hub-card:focus-within { transform: none; transition: none; }
+}

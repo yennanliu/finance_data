@@ -40,6 +40,7 @@ body,
   --fp-border: #e4e9f1;
   --fp-border-dim: #eef1f6;
   --fp-border-strong: #dbe1e8;
+  --fp-border-hover: #9aa4b5;
   --fp-text: #111827;
   --fp-prose: #374151;
   --fp-text-secondary: #475569;
@@ -109,6 +110,7 @@ body,
   --fp-border: #232a38;
   --fp-border-dim: #1a202c;
   --fp-border-strong: #2e3646;
+  --fp-border-hover: #4b5567;
   --fp-text: #f3f5f8;
   --fp-prose: #c9cfd8;
   --fp-text-secondary: #a3acba;
@@ -239,7 +241,7 @@ body { background: var(--fp-bg); }
 }
 
 .md-search__form:hover {
-  border-color: #9aa4b5;
+  border-color: var(--fp-border-hover);
 }
 
 .md-search__input {
@@ -298,7 +300,7 @@ body { background: var(--fp-bg); }
 }
 
 .md-tabs__link:hover {
-  border-color: #9aa4b5;
+  border-color: var(--fp-border-hover);
   background: var(--fp-bg-raised);
   color: var(--fp-text) !important;
 }
@@ -1437,8 +1439,9 @@ body,
     padding: 0.65rem 0.9rem;
   }
 
-  /* Navigation drawer — larger tap targets */
-  .md-nav__item .md-nav__link {
+  /* Navigation drawer — larger tap targets. Same selector as the desktop
+     rule so the media query, not specificity, decides. */
+  .md-nav--primary .md-nav__item .md-nav__link {
     font-size: 0.85rem;
     padding: 0.45rem 0.6rem;
   }

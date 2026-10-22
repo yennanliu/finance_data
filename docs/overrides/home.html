@@ -560,7 +560,7 @@
   text-decoration: none !important;
   transition: border-color .16s, background .16s;
 }
-.lp-ghost:hover { border-color: #9aa4b5; background: var(--fp-bg-raised); }
+.lp-ghost:hover { border-color: var(--fp-border-hover); background: var(--fp-bg-raised); }
 .lp-prompt-acts .lp-btn { min-height: 2.1rem; padding: 0 1.1rem; font-size: 0.72rem; }
 
 /* ─── 8. Audience ─── */
@@ -644,6 +644,7 @@
     "pills": [["◇", "Data", "yfinance OHLCV + SEC EDGAR filings"], ["✦", "Models", "Gemini by default, OpenAI as fallback"], ["◷", "Schedule", "One cron slot per ticker, every day"]],
     "show_note": "AI-generated research is for education only and is not investment advice.",
     "ytd": "Year to date",
+    "vol_1y": "Vol 1Y",
     "last": "Last close",
     "tabs": [["126", "6M"], ["252", "1Y"], ["0", "All"]],
     "data_badge": "Market Data",
@@ -727,6 +728,7 @@
     "pills": [["◇", "資料", "yfinance 行情 + SEC EDGAR 文件"], ["✦", "模型", "預設 Gemini，OpenAI 作為備援"], ["◷", "排程", "每個標的每天一個排程時段"]],
     "show_note": "AI 生成的研究僅供教育用途，不構成投資建議。",
     "ytd": "今年以來",
+    "vol_1y": "波動率 (1Y)",
     "last": "最新收盤",
     "tabs": [["126", "6M"], ["252", "1Y"], ["0", "全部"]],
     "data_badge": "市場數據",
@@ -892,7 +894,7 @@
           <span><i>1D</i><span data-hub-field="1d">—</span></span>
           <span><i>1M</i><span data-hub-field="1m">—</span></span>
           <span><i>1Y</i><span data-hub-field="1y">—</span></span>
-          <span><i>Vol 1Y</i><span data-hub-field="vol">—</span></span>
+          <span><i>{{ C.vol_1y }}</i><span data-hub-field="vol">—</span></span>
         </div>
       </div>
     </div>
