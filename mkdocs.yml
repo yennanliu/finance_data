@@ -34,22 +34,21 @@ theme:
   custom_dir: docs/overrides
   language: en
   palette:
-    # Dark mode (default)
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: black
-      accent: white
-      toggle:
-        icon: material/weather-night
-        name: Switch to light mode
-    # Light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+    # Light "paper" scheme is the default, matching the editorial redesign
+    # (after finlab.finance). No `media:` keys: the first entry wins on a first
+    # visit, and the toggle persists the reader's choice from then on.
+    - scheme: default
       primary: white
       accent: black
       toggle:
         icon: material/weather-sunny
         name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: white
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
   font:
     text: false
     code: false

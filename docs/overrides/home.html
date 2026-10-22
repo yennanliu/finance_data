@@ -1,930 +1,1050 @@
 {% extends "main.html" %}
 
-{% block tabs %}
-  {{ super() }}
-{% endblock %}
+{#-
+  Landing page — modelled on the finlab.finance/en front page: a sequence of
+  full-bleed bands, each making one point.
+
+    1. hero        centred headline, a request/reply exchange whose reply is
+                   filled from the featured report, a large CTA, a scroll cue
+    2. showcase    warm-black band: copy + pills, and a dark "app frame" that
+                   plots the featured ticker's closes with 6M / 1Y / All tabs
+    3. data        light band with glows: glass figures + a rotating sphere of
+                   every covered ticker
+    4. research    dark feature card + "also published" rows
+    5. guides      six cards into the site's sections
+    6. lenses      the twelve report types as two opposing marquees
+    7. run it      the workflow command, copyable
+    8. audience    built for / not for
+    9. closing CTA
+
+  One template serves both languages. home_zh.html only overrides
+  `home_lang`; every visible string comes from COPY below.
+
+  Data:
+    hub.json (scripts/build_docs.py, write_hub_payload) — tape, counts, the
+      featured report and the latest list, every figure computed in Python.
+    reports/<ticker>/kline.json — the OHLCV bars the ticker pages' candlestick
+      chart already reads. Only the closes are plotted, as-is: no statistic is
+      derived in JS.
+  Slots that carry figures stay `hidden` (or show a neutral fallback) until
+  their data arrives, so a failed fetch never shows stale numbers. All motion
+  is skipped under prefers-reduced-motion, and scroll reveals are gated on the
+  `lp-js` class so the page is fully visible with scripts off.
+-#}
+
+{% block home_lang %}en{% endblock %}
 
 {% block styles %}
 {{ super() }}
 <style>
-/* ─── Landing page (home.html) — lp- prefix, uses --fp-* project tokens ─── */
+/* ─── Landing page — lp- prefix, uses the --fp-* tokens from extra.css ─── */
+
+.md-main__inner:has(.lp-page) { margin-top: 0; }
+.md-content__inner:has(> .lp-page) { padding: 0 !important; margin: 0 !important; }
+.md-content__inner:has(> .lp-page)::before { display: none; }
+.md-content__inner:has(> .lp-page) > .md-content__button { display: none; }
+/* Full-bleed bands: lift Material's grid width cap on the landing page only. */
+.md-main__inner.md-grid:has(.lp-page) { max-width: none; }
+.md-content:has(.lp-page) { max-width: none; }
 
 .lp-page {
-  overflow-x: hidden;
-  background: var(--fp-bg);
+  --lp-a: #10b981;
+  --lp-b: #3b82f6;
+  --lp-ink-band: linear-gradient(180deg, #140f12, #100b0d 48%, #0b0809);
+  --lp-soft: #f5f5f7;
+  --lp-ease: cubic-bezier(.25, 1, .5, 1);
+  --lp-expo: cubic-bezier(.16, 1, .3, 1);
+  position: relative;
+  overflow-x: clip;
   color: var(--fp-text);
+  font-size: 0.8rem;
+  line-height: 1.6;
 }
+[data-md-color-scheme="slate"] .lp-page { --lp-soft: #0e121b; }
 
-/* Reset MkDocs typeset defaults inside the landing page */
-.lp-page p, .lp-page h1, .lp-page h2, .lp-page h3, .lp-page h4 {
-  margin: 0;
-  line-height: inherit;
+.md-typeset .lp-page p { margin: 0; }
+.md-typeset .lp-page ul { margin: 0; padding: 0; list-style: none; }
+.md-typeset .lp-page li { margin: 0 !important; }
+
+.lp-wrap { width: min(100%, 64rem); margin: 0 auto; padding: 0 1.2rem; }
+
+.md-typeset .lp-page h1,
+.md-typeset .lp-page h2,
+.md-typeset .lp-page h3 {
+  font-family: var(--fp-font-display) !important;
+  font-weight: 300 !important;
+  color: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  -webkit-text-fill-color: currentcolor !important;
+  letter-spacing: -0.025em !important;
+  text-wrap: balance;
 }
+.md-typeset .lp-page h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem) !important; line-height: 1.1 !important; }
 
-/* ─── Ticker strip ─── */
-.lp-ticker {
-  background: var(--fp-bg-alt);
-  border-bottom: 1px solid var(--fp-border);
-  height: 30px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  /* break out of MkDocs typeset padding */
-  margin: 0 -0.8rem;
-}
+.lp-band { position: relative; padding: clamp(3.5rem, 8vw, 5.5rem) 0; }
 
-.lp-ticker-track {
-  display: flex;
-  gap: 2.5rem;
-  animation: lp-scroll 50s linear infinite;
-  white-space: nowrap;
-  padding: 0 2.5rem 0 0;
-}
-
-.lp-ticker-track:hover { animation-play-state: paused; }
-
-@keyframes lp-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.lp-tick {
+.lp-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
+  margin-bottom: 0.7rem;
+  color: var(--fp-kicker);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
+.lp-lede { margin-top: 0.9rem !important; max-width: 32rem; color: var(--fp-text-secondary); font-size: 0.85rem; line-height: 1.75; }
 
-.lp-tick-sym { color: var(--fp-text); font-weight: 700; }
-.lp-tick-px  { color: var(--fp-text-muted); }
-.lp-tick-up  { color: var(--fp-green); }
-.lp-tick-dn  { color: var(--fp-red); }
-.lp-tick-sep { color: var(--fp-border); user-select: none; margin: 0 0.5rem; }
-
-/* ─── Container ─── */
-.lp-con {
-  max-width: 1140px;
-  margin: 0 auto;
-  width: min(100%, 1140px);
-  padding: 0 1.5rem;
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.6rem;
+  padding: 0 1.6rem;
+  border-radius: var(--fp-pill);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+  font-size: 0.8rem;
+  text-decoration: none !important;
+  transition: transform .18s var(--lp-ease), box-shadow .18s var(--lp-ease), background .18s;
 }
+.lp-btn:hover { transform: translateY(-2px); box-shadow: 0 24px 44px -16px rgba(17, 24, 39, .45); }
+.lp-btn:active { transform: translateY(0) scale(.98); }
+.lp-btn .lp-arr { transition: transform .18s var(--lp-ease); }
+.lp-btn:hover .lp-arr, .lp-link:hover .lp-arr { transform: translateX(3px); }
+.lp-btn--lg { min-height: 3rem; padding: 0 2rem; font-size: 0.85rem; }
 
-/* ─── Full-bleed bands ─── */
-.lp-band {
-  margin: 0 -0.8rem;
-}
+.lp-link { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--fp-text) !important; font-size: 0.8rem; text-decoration: none !important; }
+.lp-link .lp-arr { transition: transform .18s var(--lp-ease); }
 
-/* ─── Hero ─── */
+.lp-page a:focus-visible, .lp-page button:focus-visible { outline: 2px solid var(--fp-text); outline-offset: 3px; }
+
+.lp-up { color: var(--fp-green) !important; }
+.lp-dn { color: var(--fp-red) !important; }
+
+/* ─── 1. Hero ─── */
 .lp-hero {
-  padding: 5rem 0 4rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: min(86vh, 46rem);
+  padding: 0 1.2rem;
   overflow: hidden;
+  text-align: center;
 }
-
-.lp-hero::before {
-  content: '';
+.lp-hero::before { content: ""; flex-grow: 1; }
+.lp-hero-ambient {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 700px 500px at 15% 60%, rgba(34,197,94,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 85% 20%, rgba(120,119,198,0.03) 0%, transparent 60%);
+  top: 50%;
+  left: 50%;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--fp-bg-raised), transparent);
+  filter: blur(40px);
+  transform: translate(-50%, -50%) scale(.96);
+  animation: lp-breathe 10s var(--lp-ease) .7s infinite alternate;
   pointer-events: none;
 }
+[data-md-color-scheme="default"] .lp-hero-ambient { background: radial-gradient(closest-side, rgba(229, 231, 235, .8), transparent); }
+@keyframes lp-breathe { to { transform: translate(-50%, -50%) scale(1.06); } }
 
-.lp-hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 4rem;
-  align-items: center;
-}
+.lp-hero-inner { position: relative; z-index: 1; width: min(100%, 44rem); }
 
-.lp-eyebrow {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-green);
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
+.lp-in { opacity: 0; transform: translateY(14px); filter: blur(5px); animation: lp-copy-in .62s var(--lp-expo) forwards; }
+@keyframes lp-copy-in { to { opacity: 1; transform: none; filter: none; } }
 
-.lp-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  background: var(--fp-green);
-  flex-shrink: 0;
-}
-
-.lp-h1 {
-  font-size: clamp(2rem, 4vw, 3.25rem) !important;
-  font-weight: 800 !important;
+.lp-hero-kicker { color: var(--fp-text-secondary); font-size: 0.75rem; margin-bottom: 0.6rem !important; animation-delay: .08s; }
+.md-typeset .lp-page .lp-hero-title {
+  font-size: clamp(1.8rem, 4.6vw, 2.6rem) !important;
   line-height: 1.12 !important;
-  letter-spacing: -0.035em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 1.5rem !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
+  letter-spacing: -0.03em !important;
+  margin-bottom: 0.9rem !important;
+  animation-delay: .16s;
 }
+.lp-hero-sub { color: var(--fp-text-secondary); font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 300; line-height: 1.6; margin-bottom: 2rem !important; animation-delay: .28s; }
 
-.lp-typewriter {
-  display: block;
-  color: var(--fp-green);
-  min-height: 1.2em;
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+/* The exchange */
+.lp-chat {
+  width: min(100%, 23rem);
+  margin: 0 auto 2rem;
+  text-align: left;
+  filter: drop-shadow(0 18px 28px rgba(17, 24, 39, .08));
+  animation-delay: .43s;
 }
-
-.lp-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  background: var(--fp-green);
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: lp-blink 0.9s step-end infinite;
-  border-radius: 1px;
+.lp-msg { display: flex; }
+.lp-msg--you { justify-content: flex-end; }
+.lp-msg--bot { align-items: flex-start; gap: 0.6rem; margin-top: 0.6rem; }
+.lp-bubble { border-radius: 18px; padding: 0.65rem 0.85rem; transition: transform .16s var(--lp-ease), box-shadow .16s var(--lp-ease); }
+.lp-bubble--you { max-width: 84%; border-bottom-right-radius: 6px; background: #030712; color: #fff; }
+.lp-bubble--bot {
+  flex: 1;
+  min-height: 7.4rem;
+  border-top-left-radius: 6px;
+  background: var(--fp-bg-card);
+  box-shadow: 0 1px 2px rgba(17, 24, 39, .05), 0 0 0 1px var(--fp-border);
 }
-
-@keyframes lp-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.lp-chat:hover .lp-bubble--you { transform: translate(-2px, -1px); }
+.lp-chat:hover .lp-bubble--bot { transform: translate(2px, 1px); box-shadow: 0 12px 24px rgba(17, 24, 39, .08), 0 0 0 1px var(--fp-border); }
+.lp-who { font-size: 0.6rem; margin-bottom: 0.15rem !important; color: var(--fp-text-muted); }
+.lp-bubble--you .lp-who { color: #d1d5db; }
+.lp-said { font-size: 0.72rem; line-height: 1.55; }
+.lp-said-sub { margin-top: 0.4rem !important; color: var(--fp-text-secondary); font-size: 0.64rem; line-height: 1.55; }
+.lp-said-sub[hidden] { display: none; }
+.lp-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: 0.2rem;
+  border-radius: 0.5rem;
+  background: #111827;
+  color: #fff;
+  font-size: 0.7rem;
 }
-
-.lp-desc {
-  font-size: 1rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.75 !important;
-  max-width: 500px;
-  margin-bottom: 2rem !important;
-}
-
-.lp-actions {
-  display: flex;
-  gap: 1rem;
+.lp-caret { display: inline-block; width: 1px; height: 0.9em; margin-left: 1px; vertical-align: -0.1em; background: currentcolor; animation: lp-blink 1s steps(1) infinite; }
+@keyframes lp-blink { 50% { opacity: 0; } }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.6rem; }
+.lp-chip {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 1.25rem;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--fp-pill);
+  background: var(--fp-accent-dim);
+  color: var(--fp-text-secondary);
+  font-size: 0.58rem;
+  opacity: 0;
+  transform: translateY(5px);
+  animation: lp-chip-in .4s var(--lp-ease) forwards;
+  animation-delay: var(--d);
 }
+.lp-chip::before { content: ""; width: 0.3rem; height: 0.3rem; border-radius: 50%; background: #059669; }
+@keyframes lp-chip-in { to { opacity: 1; transform: none; } }
 
-.lp-btn-primary {
-  background: var(--fp-green) !important;
-  color: #09090b !important;
-  font-weight: 700;
-  font-size: 0.9375rem;
-  padding: 0.7rem 1.75rem;
-  border-radius: 5px;
+.lp-hero-action { animation-delay: 1.1s; }
+.lp-scroll {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 1.6rem;
+  height: 2.8rem;
+  margin: 0.6rem 0 1.4rem;
+  color: var(--fp-text-muted) !important;
+  animation: lp-cue 2.8s var(--lp-ease) 1.6s infinite;
+}
+.lp-scroll::before { content: ""; position: absolute; top: 0.25rem; width: 1px; height: 1.6rem; background: linear-gradient(transparent, var(--fp-text-muted)); }
+@keyframes lp-cue { 0%, 100% { transform: translateY(0); opacity: .7; } 50% { transform: translateY(5px); opacity: 1; } }
+.lp-hero-foot { display: flex; flex-grow: 1; flex-basis: 0; flex-direction: column; justify-content: flex-end; }
+
+/* ─── 2. Showcase (warm-black) ─── */
+.lp-show { background: var(--lp-ink-band); color: #fff; padding: clamp(4rem, 9vw, 6.5rem) 0; }
+.lp-show-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(1.8rem, 4vw, 3rem); align-items: center; }
+.lp-show .lp-eyebrow { color: #6ee7b7; text-transform: none; letter-spacing: 0; font-size: 0.72rem; }
+.lp-show .lp-lede { color: #d1d5db; }
+.lp-pills { display: grid; gap: 0.9rem; margin-top: 2rem; padding-top: 1.4rem; border-top: 1px solid rgba(255, 255, 255, .1); }
+.lp-mpill { display: flex; align-items: center; gap: 0.65rem; transition: transform .18s var(--lp-ease); }
+.lp-mpill:hover { transform: translateY(-2px); }
+.lp-mpill-ic { flex: none; display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 0.5rem; background: rgba(110, 231, 183, .1); color: #6ee7b7; font-size: 0.75rem; }
+.lp-mpill small { display: block; color: #9ca3af; font-size: 0.6rem; }
+.lp-mpill b { display: block; color: #fff; font-size: 0.72rem; font-weight: 500; }
+.lp-note { margin-top: 1.6rem !important; color: #6b7280; font-size: 0.62rem; }
+
+/* App frame */
+.lp-app {
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 1rem;
+  background: #0d0a0b;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .03) inset;
+  overflow: hidden;
+}
+.lp-app[hidden] { display: none; }
+.lp-app-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.55rem 0.7rem; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+.lp-app-dots { display: flex; gap: 0.3rem; }
+.lp-app-dots i { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: rgba(255, 255, 255, .15); }
+.lp-tabs { display: flex; gap: 0.2rem; padding: 0.15rem; border-radius: var(--fp-pill); background: rgba(255, 255, 255, .06); }
+.lp-tab {
+  appearance: none;
+  border: 0;
+  border-radius: var(--fp-pill);
+  padding: 0.25rem 0.75rem;
+  background: transparent;
+  color: #9ca3af;
+  font: inherit;
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: background .16s, color .16s;
+}
+.lp-tab:hover { color: #fff; }
+.lp-tab[aria-selected="true"] { background: rgba(255, 255, 255, .14); color: #fff; }
+.lp-app-sym { color: #9ca3af; font-size: 0.62rem; }
+.lp-app-body { padding: 1rem 1.1rem 1.1rem; background: radial-gradient(120% 80% at 80% 100%, rgba(16, 185, 129, .1), transparent 60%); }
+.lp-app-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; }
+.lp-app-k { color: #9ca3af; font-size: 0.62rem; }
+.lp-app-big { font-family: var(--fp-font-display); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1.05; color: #e5e7eb; font-variant-numeric: tabular-nums; }
+.lp-app-meta { margin-top: 0.25rem; color: #9ca3af; font-size: 0.64rem; }
+.lp-app-meta b { color: #e5e7eb; font-weight: 400; }
+.lp-app-range { flex: none; padding: 0.2rem 0.6rem; border: 1px solid rgba(255, 255, 255, .12); border-radius: var(--fp-pill); color: #d1d5db; font-size: 0.6rem; font-variant-numeric: tabular-nums; }
+.lp-plot { position: relative; margin-top: 0.8rem; }
+.lp-plot svg { display: block; width: 100%; height: 11rem; overflow: visible; }
+.lp-plot .lp-gl { stroke: rgba(255, 255, 255, .06); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.lp-plot .lp-pl { fill: none; stroke: #34d399; stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.lp-plot .lp-pa { fill: url(#lp-fill-dark); }
+.lp-plot-axis { display: flex; justify-content: space-between; margin-top: 0.35rem; color: #6b7280; font-size: 0.58rem; font-variant-numeric: tabular-nums; }
+.lp-app-foot { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid rgba(255, 255, 255, .07); }
+.lp-app-foot > span { padding: 0.6rem 0.8rem; font-size: 0.72rem; font-variant-numeric: tabular-nums; color: #e5e7eb; }
+.lp-app-foot > span + span { border-left: 1px solid rgba(255, 255, 255, .07); }
+.lp-app-foot i { display: block; font-style: normal; color: #6b7280; font-size: 0.56rem; }
+.lp-app .lp-up { color: #34d399 !important; }
+.lp-app .lp-dn { color: #f87171 !important; }
+
+/* ─── 3. Data band ─── */
+.lp-data { isolation: isolate; overflow: hidden; background: var(--lp-soft); }
+.lp-data::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 72% 32%, rgba(0, 113, 227, .16), transparent 34rem),
+    radial-gradient(circle at 18% 70%, rgba(52, 199, 89, .1), transparent 30rem);
+}
+.lp-data::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .5;
+  background-image: linear-gradient(var(--fp-border) 1px, transparent 1px), linear-gradient(90deg, var(--fp-border) 1px, transparent 1px);
+  background-size: 3.6rem 3.6rem;
+  -webkit-mask-image: radial-gradient(circle at 68% 45%, #000, transparent 66%);
+  mask-image: radial-gradient(circle at 68% 45%, #000, transparent 66%);
+}
+.lp-data-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+.lp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  color: var(--fp-text-secondary);
+  font-size: 0.66rem;
+}
+.lp-glass {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 2rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .24);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7), inset 0 -1px rgba(15, 23, 42, .08);
+  -webkit-backdrop-filter: blur(24px) saturate(1.18);
+  backdrop-filter: blur(24px) saturate(1.18);
+}
+[data-md-color-scheme="slate"] .lp-glass { background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.lp-glass > div { padding: 1.1rem 1rem; background: rgba(255, 255, 255, .36); min-width: 0; }
+[data-md-color-scheme="slate"] .lp-glass > div { background: rgba(255, 255, 255, .02); }
+.lp-glass b { display: block; font-family: var(--fp-font-display); font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 400; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lp-glass small { display: block; margin-top: 0.55rem; color: var(--fp-text-muted); font-size: 0.66rem; line-height: 1.4; }
+.lp-proof { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.6rem; }
+.lp-proof > div { padding-top: 0.8rem; border-top: 1px solid var(--fp-border); color: var(--fp-text-muted); font-size: 0.72rem; line-height: 1.65; }
+.lp-proof b { display: block; color: var(--fp-text); font-weight: 500; }
+
+/* Ticker sphere */
+.lp-sphere {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 26rem);
+  margin: 0 auto;
+  border-radius: 50%;
+  touch-action: pan-y;
+  user-select: none;
+}
+.lp-sphere::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 70%);
+  box-shadow: 0 40px 80px -40px rgba(0, 113, 227, .35);
+}
+[data-md-color-scheme="slate"] .lp-sphere::before { background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, .07), transparent 70%); }
+.lp-node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  color: var(--fp-text) !important;
+  font-size: 0.64rem;
+  white-space: nowrap;
   text-decoration: none !important;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
-  display: inline-block;
+  box-shadow: 0 6px 16px -8px rgba(15, 23, 42, .25);
+  will-change: transform, opacity;
+  transition: border-color .15s, box-shadow .15s;
 }
+.lp-node b { font-weight: 500; }
+.lp-node small { font-size: 0.56rem; font-variant-numeric: tabular-nums; }
+.lp-node:hover { border-color: var(--fp-text); box-shadow: 0 10px 24px -8px rgba(15, 23, 42, .35); }
+.lp-sphere-hint { margin-top: 0.6rem !important; text-align: center; color: var(--fp-text-muted); font-size: 0.62rem; }
 
-.lp-btn-primary:hover {
-  background: #16a34a !important;
-  box-shadow: 0 0 24px rgba(34,197,94,0.3);
-  transform: translateY(-1px);
-  color: #09090b !important;
-}
-
-.lp-btn-ghost {
-  color: var(--fp-text-secondary) !important;
-  font-size: 0.9375rem;
+/* ─── 4. Research ─── */
+.lp-research { background: var(--fp-bg-card); }
+.lp-head { max-width: 42rem; margin-bottom: clamp(1.6rem, 4vw, 2.4rem); }
+.lp-head p.lp-kick { color: var(--fp-text-secondary); font-size: 0.8rem; margin-bottom: 0.6rem !important; }
+.lp-res-grid { display: grid; grid-template-columns: 1.12fr 1fr; gap: clamp(1.2rem, 3vw, 2.2rem); align-items: stretch; }
+.lp-feat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 17rem;
+  padding: clamp(1.4rem, 3vw, 2.1rem);
+  border-radius: 1.1rem;
+  background: #111827;
+  color: #fff !important;
   text-decoration: none !important;
+  transition: transform .2s var(--lp-ease);
+}
+.lp-feat[hidden] { display: none; }
+.lp-feat:hover { transform: translateY(-.2rem); }
+.lp-feat-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.lp-feat-tag { color: #9aa6b8; font-size: 0.7rem; }
+.lp-feat-mkt { padding: 0.2rem 0.55rem; border: 1px solid rgba(255, 255, 255, .22); border-radius: var(--fp-pill); color: #e5e9f0; font-size: 0.66rem; }
+.md-typeset .lp-page .lp-feat h3 { font-size: clamp(1.3rem, 2.8vw, 1.8rem) !important; line-height: 1.2 !important; }
+.lp-feat-find { max-width: 28rem; color: #cdd5e1; font-size: 0.8rem; line-height: 1.6; }
+.lp-feat-stat { display: flex; flex-direction: column; gap: 0.2rem; margin-top: auto; padding-top: 0.9rem; border-top: 1px solid rgba(255, 255, 255, .14); }
+.lp-feat-stat b { font-family: var(--fp-font-display); font-weight: 400; font-size: 0.85rem; }
+.lp-feat-stat small { color: #9aa6b8; font-size: 0.68rem; }
+.lp-feat-go { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; }
+.lp-feat-go .lp-arr { transition: transform .18s ease; }
+.lp-feat:hover .lp-feat-go .lp-arr { transform: translateX(.18rem); }
+.lp-feat .lp-up { color: #6ee7b7 !important; }
+.lp-feat .lp-dn { color: #fca5a5 !important; }
+
+.lp-more-label { margin-bottom: 0.5rem !important; color: var(--fp-text-muted); font-size: 0.7rem; }
+.lp-rows { border-top: 1px solid var(--fp-border); }
+.lp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 0.25rem;
+  border-bottom: 1px solid var(--fp-border-dim);
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: background-color .16s ease, padding .16s ease;
+}
+.lp-row:hover { background: var(--fp-bg-raised); padding-left: 0.5rem; }
+.lp-row-t { min-width: 0; overflow: hidden; color: var(--fp-text); font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; transition: transform .16s ease; }
+.lp-row:hover .lp-row-t { transform: translateX(.3rem); }
+.lp-row-m { color: var(--fp-text-muted); font-size: 0.66rem; font-variant-numeric: tabular-nums; }
+.lp-row-a { color: var(--fp-text-muted); }
+.lp-res-more { margin-top: 1.2rem; }
+
+/* ─── 5. Guides ─── */
+.lp-guides { background: var(--fp-bg-raised); }
+.lp-guides .lp-head p.lp-kick { color: var(--fp-kicker); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.lp-ggrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; }
+.lp-guide {
+  display: flex;
+  min-height: 11.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border: 1px solid var(--fp-border);
+  border-radius: 0.5rem;
+  background: var(--fp-bg-card);
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.lp-guide:hover { border-color: #10b981; box-shadow: 0 16px 30px rgba(15, 23, 42, .08); transform: translateY(-2px); }
+.lp-guide-top { display: flex; align-items: center; justify-content: space-between; color: var(--fp-kicker); font-size: 0.68rem; }
+.lp-guide-top i { font-style: normal; color: var(--fp-text-muted); font-size: 0.85rem; }
+.md-typeset .lp-page .lp-guide h3 { font-size: 1.05rem !important; line-height: 1.35 !important; letter-spacing: 0 !important; color: var(--fp-text) !important; }
+.lp-guide p { flex: 1; color: var(--fp-text-secondary); font-size: 0.74rem; line-height: 1.7; }
+.lp-guide-go { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--fp-text); font-size: 0.74rem; }
+
+/* ─── 6. Lenses ─── */
+.lp-lenses { background: var(--fp-bg-card); overflow: hidden; }
+.lp-lenses-head { text-align: center; margin-bottom: clamp(2rem, 5vw, 2.8rem); padding: 0 1.2rem; }
+.lp-lenses-head p.lp-kick { color: var(--fp-text-secondary); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem !important; }
+.lp-count { font-family: var(--fp-font-display); font-size: clamp(2.8rem, 7vw, 4.4rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.lp-lenses-head .lp-sub { margin-top: 0.5rem !important; color: var(--fp-text-secondary); font-size: 0.9rem; font-weight: 300; }
+.lp-track-wrap { position: relative; overflow: hidden; }
+.lp-track-wrap + .lp-track-wrap { margin-top: 0.9rem; }
+.lp-track-wrap::before, .lp-track-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; z-index: 2; width: min(6rem, 8vw); pointer-events: none; }
+.lp-track-wrap::before { left: 0; background: linear-gradient(to right, var(--fp-bg-card), transparent); }
+.lp-track-wrap::after { right: 0; background: linear-gradient(to left, var(--fp-bg-card), transparent); }
+.lp-track { display: flex; gap: 0.8rem; width: max-content; padding: 0.2rem 0; animation: lp-left 55s linear infinite; }
+.lp-track--r { animation: lp-right 60s linear infinite; }
+.lp-track:hover { animation-play-state: paused; }
+@keyframes lp-left { to { transform: translateX(-50%); } }
+@keyframes lp-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.lp-lens {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: min(17rem, calc(100vw - 3rem));
+  padding: 1.15rem;
+  border: 1px solid var(--fp-border-dim);
+  border-radius: 18px;
+  background: var(--fp-bg-card);
+  box-shadow: 0 1px 2px rgba(17, 24, 39, .03);
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.lp-lens:hover { transform: translateY(-2px); border-color: var(--fp-border); box-shadow: 0 12px 32px rgba(17, 24, 39, .08); }
+.lp-lens-ic { font-size: 1.1rem; margin-bottom: 0.6rem; }
+.lp-lens b { font-family: var(--fp-font-display); font-weight: 400; font-size: 0.9rem; color: var(--fp-text); }
+.lp-lens p { margin-top: 0.35rem !important; color: var(--fp-prose); font-size: 0.74rem; line-height: 1.7; }
+
+/* ─── 7. Run it yourself ─── */
+.lp-run { background: var(--lp-soft); }
+.lp-run-shell { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(1.4rem, 4vw, 2.6rem); align-items: center; }
+.lp-trial { display: inline-block; margin-bottom: 0.9rem; padding: 0.2rem 0.6rem; border-radius: var(--fp-pill); background: rgba(16, 185, 129, .12); color: var(--fp-kicker); font-size: 0.64rem; }
+.lp-prompt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 1.1rem;
+  border: 1px solid var(--fp-border);
+  border-radius: 1rem;
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow);
+}
+.lp-prompt-mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 0.6rem; background: #111827; color: #fff; font-size: 0.62rem; font-family: var(--fp-font-display); }
+.lp-prompt-label { color: var(--fp-text-muted); font-size: 0.66rem; }
+.md-typeset .lp-code {
+  margin: 0.35rem 0 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.6rem;
+  background: #0b0809;
+  color: #e5e7eb;
+  font-family: var(--md-code-font);
+  font-size: 0.66rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.lp-prompt-acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
+.lp-ghost {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  transition: color 0.15s, gap 0.15s;
-}
-
-.lp-btn-ghost:hover { color: var(--fp-text) !important; gap: 0.6rem; }
-
-.lp-hero-note {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.75rem !important;
-  color: var(--fp-text-muted) !important;
-  margin: 0 !important;
-}
-
-/* ─── Report card (hero visual) ─── */
-.lp-rcard {
+  min-height: 2.1rem;
+  padding: 0 0.95rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
   background: var(--fp-bg-card);
-  border: 1px solid var(--fp-border);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 24px 64px rgba(0,0,0,0.5),
-    0 0 80px rgba(34,197,94,0.05);
-  transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
-}
-
-.lp-rcard:hover {
-  transform: perspective(1200px) rotateY(-2deg) rotateX(0.5deg);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 32px 80px rgba(0,0,0,0.5),
-    0 0 100px rgba(34,197,94,0.08);
-}
-
-.lp-rcard-bar {
-  background: var(--fp-bg-alt);
-  padding: 0.625rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--fp-border);
-  gap: 0.75rem;
-}
-
-.lp-rcard-ticker {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--fp-text);
-  letter-spacing: 0.05em;
-}
-
-.lp-rcard-type {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  color: var(--fp-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.lp-live {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-green);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.lp-live::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--fp-green);
-  animation: fp-pulse 1.5s infinite;
-}
-
-.lp-rcard-body { padding: 1.125rem; }
-
-.lp-rcard-hl {
-  font-size: 0.9375rem !important;
-  font-weight: 700 !important;
   color: var(--fp-text) !important;
-  line-height: 1.4 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.625rem;
-  margin-bottom: 1rem;
-}
-
-.lp-metric {
-  background: var(--fp-bg);
-  border: 1px solid var(--fp-border-dim);
-  border-radius: 5px;
-  padding: 0.5rem 0.625rem;
-}
-
-.lp-metric-lbl {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fp-text-muted);
-  margin-bottom: 0.2rem;
-}
-
-.lp-metric-val {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--fp-text);
-}
-
-.lp-metric-val.g { color: var(--fp-green); }
-.lp-metric-val.r { color: var(--fp-red); }
-.lp-metric-val.a { color: var(--fp-yellow); }
-
-.lp-excerpt {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.65 !important;
-  border-left: 2px solid var(--fp-green);
-  padding-left: 0.75rem;
-  font-style: italic;
-  margin-bottom: 0 !important;
-}
-
-.lp-rcard-foot {
-  border-top: 1px solid var(--fp-border);
-  padding: 0.625rem 1.125rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.lp-tags { display: flex; gap: 0.4rem; }
-
-.lp-ctag {
-  background: rgba(34,197,94,0.12);
-  color: var(--fp-green);
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.lp-model-label {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-}
-
-/* ─── Stats strip ─── */
-.lp-stats-inner {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.lp-stat {
-  padding: 2rem 1.5rem;
-  text-align: center;
-  position: relative;
-}
-
-.lp-stat + .lp-stat { border-left: 1px solid var(--fp-border); }
-
-.lp-stat-num {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 2.25rem !important;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--fp-text) !important;
-  line-height: 1;
-  margin-bottom: 0.4rem !important;
-}
-
-.lp-stat-num span { color: var(--fp-green); }
-
-.lp-stat-lbl {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.4;
-  margin: 0 !important;
-}
-
-/* ─── Generic section spacing ─── */
-.lp-section { padding: 5rem 0; }
-
-.lp-sec-eye {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-green);
-  margin-bottom: 0.75rem;
-}
-
-.lp-sec-h {
-  font-size: clamp(1.6rem, 2.8vw, 2.25rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.75rem !important;
-  line-height: 1.2 !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-}
-
-.lp-sec-sub {
-  font-size: 1rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.7 !important;
-  max-width: 560px;
-  margin-bottom: 3rem !important;
-}
-
-/* ─── Analysis types grid ─── */
-.lp-an-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--fp-border);
-  border-radius: 8px;
-  overflow: hidden;
-  gap: 1px;
-  background: var(--fp-border);
-}
-
-.lp-an-card {
-  background: var(--fp-bg-card);
-  padding: 1.25rem;
-  transition: background 0.2s;
-}
-
-.lp-an-card:hover { background: var(--fp-bg-card-hover); }
-
-.lp-an-icon {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  display: block;
-  line-height: 1;
-}
-
-.lp-an-name {
-  font-size: 0.8125rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.375rem !important;
-}
-
-.lp-an-desc {
-  font-size: 0.75rem !important;
-  color: var(--fp-text-muted) !important;
-  line-height: 1.55 !important;
-  margin: 0 !important;
-}
-
-/* ─── How it works ─── */
-.lp-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
-  margin-top: 3rem;
-}
-
-.lp-step-num {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-text-muted);
-  margin-bottom: 1rem;
-  border-top: 1px solid var(--fp-border);
-  padding-top: 1rem;
-}
-
-.lp-step-title {
-  font-size: 1.0625rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.625rem !important;
-  line-height: 1.35 !important;
-}
-
-.lp-step-desc {
-  font-size: 0.875rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.7 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-step-code {
-  background: var(--fp-bg);
-  border: 1px solid var(--fp-border);
-  border-radius: 4px;
-  padding: 0.5rem 0.75rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  color: #90c4a0;
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-/* ─── Latest reports grid ─── */
-.lp-reports {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.lp-rp {
-  background: var(--fp-bg-card);
-  border: 1px solid var(--fp-border);
-  border-radius: 8px;
-  padding: 1.125rem;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
   text-decoration: none !important;
-  color: inherit;
-  display: block;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: border-color .16s, background .16s;
 }
+.lp-ghost:hover { border-color: var(--fp-border-hover); background: var(--fp-bg-raised); }
+.lp-prompt-acts .lp-btn { min-height: 2.1rem; padding: 0 1.1rem; font-size: 0.72rem; }
 
-.lp-rp:hover {
-  border-color: var(--fp-green);
-  box-shadow: 0 0 24px rgba(34,197,94,0.08);
-  transform: translateY(-2px);
-}
+/* ─── 8. Audience ─── */
+.lp-aud { background: var(--fp-bg-card); }
+.lp-aud-head { text-align: center; margin-bottom: clamp(2rem, 5vw, 3rem); }
+.lp-aud-head p { margin-top: 0.7rem !important; color: var(--fp-text-secondary); font-size: 0.8rem; }
+.lp-board { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 1.4rem; max-width: 52rem; margin: 0 auto; }
+.lp-board-h { display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--fp-border); }
+.md-typeset .lp-page .lp-board-h h3 { font-size: 1rem !important; letter-spacing: 0 !important; }
+.lp-board-ic { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; font-size: 0.7rem; color: #fff; }
+.lp-board-ic--fit { background: #059669; }
+.lp-board-ic--limit { background: #9ca3af; }
+.lp-axis { width: 1px; background: var(--fp-border); }
+.lp-sig { display: grid; grid-template-columns: auto auto 1fr; align-items: start; gap: 0.6rem; padding: 1rem 0; border-bottom: 1px solid var(--fp-border-dim); }
+.lp-sig-n { color: var(--fp-text-muted); font-size: 0.62rem; font-variant-numeric: tabular-nums; padding-top: 0.15rem; }
+.lp-sig-ic { font-size: 0.72rem; padding-top: 0.05rem; }
+.lp-sig--fit .lp-sig-ic { color: #059669; }
+.lp-sig--limit .lp-sig-ic { color: var(--fp-text-muted); }
+.lp-sig p { color: var(--fp-prose); font-size: 0.78rem; line-height: 1.6; }
 
-.lp-rp-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
+/* ─── 9. Closing CTA ─── */
+.lp-end { background: var(--lp-ink-band); color: #fff; text-align: center; padding: clamp(4.5rem, 10vw, 7rem) 0; }
+.md-typeset .lp-page .lp-end h2 { font-size: clamp(1.8rem, 4.6vw, 2.8rem) !important; letter-spacing: -0.035em !important; }
+.md-typeset .lp-page .lp-end p { margin: 1rem auto 0; max-width: 30rem; color: #d1d5db; font-size: 0.85rem; }
+.lp-end .lp-btn { margin-top: 2rem; background: #fff; color: #0b0809 !important; }
+.lp-end .lp-btn:hover { background: #f5f5f5; transform: translateY(-1px); }
 
-.lp-rp-ticker {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 1.125rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  line-height: 1;
-  margin: 0 !important;
-}
-
-.lp-rp-co {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.75rem;
-  color: var(--fp-text-muted);
-  margin-top: 0.25rem;
-}
-
-.lp-rp-chg {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.875rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.lp-rp-chg.g { color: var(--fp-green); }
-.lp-rp-chg.r { color: var(--fp-red); }
-
-.lp-rp-sum {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.65 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-rp-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.lp-rp-date {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-}
-
-/* ─── CTA ─── */
-.lp-cta {
-  text-align: center;
-  padding: 6rem 0;
-  background:
-    radial-gradient(ellipse 900px 400px at 50% 0%, rgba(34,197,94,0.07) 0%, transparent 70%),
-    var(--fp-bg);
-}
-
-.lp-cta-h {
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.035em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 1rem !important;
-  line-height: 1.2 !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-}
-
-.lp-cta-sub {
-  color: var(--fp-text-secondary) !important;
-  font-size: 1rem !important;
-  max-width: 480px;
-  margin: 0 auto 2.5rem !important;
-  line-height: 1.7 !important;
-}
-
-.lp-cta-acts {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.lp-btn-outline {
-  color: var(--fp-text-secondary) !important;
-  font-size: 0.9375rem;
-  padding: 0.7rem 1.5rem;
-  border: 1px solid var(--fp-border);
-  border-radius: 5px;
-  text-decoration: none !important;
-  transition: border-color 0.15s, color 0.15s;
-  display: inline-block;
-}
-
-.lp-btn-outline:hover {
-  border-color: var(--fp-text-muted);
-  color: var(--fp-text) !important;
-}
-
-/* ─── Dividers ─── */
-.lp-divider {
-  border: none;
-  border-top: 1px solid var(--fp-border);
-  margin: 0 -0.8rem;
-}
-
-.lp-alt-bg {
-  background: var(--fp-bg-alt);
-  margin: 0 -0.8rem;
-  padding: 0 0.8rem;
-}
+/* ─── Scroll reveal — only once JS has marked the page ─── */
+.lp-js .lp-rv { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--lp-ease), transform .7s var(--lp-ease); transition-delay: var(--lp-d, 0s); }
+.lp-js .lp-rv.is-in { opacity: 1; transform: none; }
 
 /* ─── Responsive ─── */
-@media (max-width: 900px) {
-  .lp-hero-inner { grid-template-columns: 1fr; }
-  .lp-card-hide { display: none; }
-  .lp-stats-inner { grid-template-columns: repeat(2, 1fr); }
-  .lp-stat + .lp-stat { border-left: none; border-top: 1px solid var(--fp-border); }
-  .lp-an-grid { grid-template-columns: repeat(2, 1fr); }
-  .lp-steps { grid-template-columns: 1fr; gap: 0; }
-  .lp-reports { grid-template-columns: 1fr; }
+@media (max-width: 60rem) {
+  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell { grid-template-columns: 1fr; }
+  .lp-ggrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
+@media (max-width: 40rem) {
+  .lp-wrap { padding: 0 0.8rem; }
+  .lp-ggrid { grid-template-columns: 1fr; }
+  .lp-guide { min-height: 0; }
+  .lp-glass { grid-template-columns: 1fr; }
+  .lp-proof { grid-template-columns: 1fr; }
+  .lp-app-foot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-app-foot > span:nth-child(3) { border-left: 0; }
+  .lp-app-foot > span:nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, .07); }
+  .lp-board { grid-template-columns: 1fr; }
+  .lp-axis { display: none; }
+  .lp-board-h--limit { margin-top: 1.6rem; }
+  .lp-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .lp-row-a { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .lp-ticker-track { animation: none; }
-  .lp-cursor { animation: none; }
-  .lp-live::before { animation: none; }
-}
-
-/* ─── Hydrated slots ─── */
-/* The tape and the hero card carry no numbers of their own: they are filled
-   from hub.json and stay hidden until it arrives, so nothing stale is shown. */
-.lp-ticker[hidden], .lp-rcard-wrap[hidden] { display: none; }
-
-.lp-tick { text-decoration: none !important; color: inherit; }
-.lp-tick:hover .lp-tick-sym { color: var(--fp-green); }
-
-.lp-rcard-type { display: flex; flex-wrap: wrap; gap: 0 0.4rem; }
-
-.lp-range {
-  margin: 1rem 0 0;
-}
-.lp-range-lbl {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fp-text-muted);
-  margin-bottom: 0.35rem;
-}
-.lp-range-rail {
-  position: relative;
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(to right, var(--fp-red), var(--fp-text-muted), var(--fp-green));
-  opacity: 0.85;
-}
-.lp-range-dot {
-  position: absolute;
-  top: 50%;
-  width: 11px;
-  height: 11px;
-  margin-left: -5.5px;
-  border-radius: 50%;
-  transform: translateY(-50%);
-  background: var(--fp-text);
-  border: 2px solid var(--fp-bg-card);
-  box-shadow: 0 0 0 1px var(--fp-border);
-  transition: left .4s ease;
-}
-.lp-range-ends {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.3rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.lp-rp-sum {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.lp-rp--all {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 9rem;
-  font-weight: 700;
-  color: var(--fp-text) !important;
+  .lp-in, .lp-chip { animation: none !important; opacity: 1; transform: none; filter: none; }
+  .lp-hero-ambient, .lp-scroll, .lp-caret, .lp-track { animation: none !important; }
+  .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="lp-page" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"} | tojson }}'>
+{%- set lang = self.home_lang() | trim -%}
+{%- set COPY = {
+  "en": {
+    "labels": {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"},
+    "kicker": "Finance Data Research Hub",
+    "title": "AI-Powered Equity Research, Published Every Morning",
+    "sub": "Research US and Taiwan stocks with daily reports, price history, filings, and news.",
+    "you": "You",
+    "bot": "Research Hub",
+    "ask": "Write today's research on the stocks I follow",
+    "ask_t": "Write today's research on {t}",
+    "reply": "Today's run is published. Open the reports to read it.",
+    "reply_t": "Published the {k} report for {t} on {d}.",
+    "reply_s": "Last close {p} · YTD {y} · 1Y {o}. Open it for the full analysis.",
+    "chips": ["Data fetched", "Report written", "Published"],
+    "cta": "Read today's reports",
+    "scroll": "Scroll down for more",
+    "show_eye": "Live price context",
+    "show_h": "Every report sits next to the price it was written against.",
+    "show_p": "Each ticker page pairs its reports with the full price history. This is the featured ticker's own chart — switch the range to look further back.",
+    "pills": [["◇", "Data", "yfinance OHLCV + SEC EDGAR filings"], ["✦", "Models", "Gemini by default, OpenAI as fallback"], ["◷", "Schedule", "One cron slot per ticker, every day"]],
+    "show_note": "AI-generated research is for education only and is not investment advice.",
+    "ytd": "Year to date",
+    "vol_1y": "Vol 1Y",
+    "last": "Last close",
+    "tabs": [["126", "6M"], ["252", "1Y"], ["0", "All"]],
+    "data_badge": "Market Data",
+    "data_h": "Price history and fundamentals, side by side",
+    "data_p": "Every covered ticker has a Market Data page: candles, drawdown, volatility, statements, valuation multiples, and CSV/JSON downloads.",
+    "g_tickers": "Tickers with research",
+    "g_reports": "Reports published",
+    "g_days": "Day rolling window",
+    "proof": [["Computed in Python", "Every statistic is computed at build time, never in the browser."], ["Downloadable", "Each ticker ships its prices and financials as CSV and JSON."]],
+    "data_cta": "Open Market Data",
+    "sphere_hint": "Drag to spin · click a ticker to open it",
+    "res_kick": "Fresh from the pipeline",
+    "res_h": "How a morning's research reads",
+    "res_tag": "Latest report",
+    "res_more": "Also published",
+    "res_all": "Browse all reports",
+    "res_read": "Read the report",
+    "guides_kick": "Start here",
+    "guides_h": "Find your way around",
+    "guides_p": "The sections readers use most: daily reports, market data, news, filings and the scripts behind them.",
+    "guides": [
+      ["reports/", "Research", "AI Gen Reports", "Fundamental and technical reports for every covered ticker, newest first."],
+      ["data/", "Data", "Market Data", "Charts, statistics and downloads built from the committed price and fundamentals store."],
+      ["market_news/", "News", "Market News", "Daily headlines per ticker, fetched and summarised alongside the reports."],
+      ["sec/", "Filings", "SEC Filings", "10-K, 10-Q and other filings collected for the tickers we follow."],
+      ["notebooks/", "Notebooks", "NotebookLLM", "Long-form study notes and audio-ready digests per company."],
+      ["scripts/", "Tools", "Download Scripts", "The scripts that fetch filings and data, so you can run them yourself."]
+    ],
+    "open": "Open",
+    "lens_kick": "Twelve analysis types",
+    "lens_sub": "reports published in the rolling window",
+    "cov": [
+      ["📊", "Fundamental Analysis", "Revenue, margins, balance sheet, and long-term earnings drivers."],
+      ["📈", "Technical Analysis", "Price action, MAs, RSI, MACD, volume, and chart pattern detection."],
+      ["💰", "DCF Valuation", "Intrinsic value modeling with multi-scenario sensitivity analysis."],
+      ["📄", "10-K Digest", "Annual report summaries — risks, strategy, and management commentary."],
+      ["🎯", "Catalyst Calendar", "Upcoming earnings, product events, and macro catalysts with expected impact."],
+      ["🏆", "Competitor Analysis", "Competitive moat assessment, market share, and industry positioning."],
+      ["📞", "Earnings Call Analysis", "Management tone, guidance signals, and sentiment from transcripts."],
+      ["🏦", "Institutional Ownership", "13F analysis — smart-money moves and ownership concentration shifts."],
+      ["👔", "Insider Trading", "Form 4 review — who's buying and selling, and what the pattern signals."],
+      ["📉", "Short Interest", "Short float, days-to-cover, and squeeze potential from borrow data."],
+      ["⚡", "Options Analysis", "IV, Greeks, put/call skew, and strategy selection for the current setup."],
+      ["💳", "Dividend Analysis", "Dividends, buybacks, M&A, and the quality of FCF deployment."]
+    ],
+    "run_badge": "Open source",
+    "run_h": "Generate a report for any ticker in one command",
+    "run_p": "The whole pipeline lives in the GitHub repo. Fork it, add your API key, and trigger a run from the terminal.",
+    "run_label": "Run in your fork:",
+    "copy_btn": "Copy command",
+    "copied": "Copied",
+    "repo": "View on GitHub",
+    "aud_h": "Who this hub is for",
+    "aud_p": "A clear look at where it helps, and where it doesn't.",
+    "fit_h": "Best fit for",
+    "limit_h": "Probably not for",
+    "fit": ["Investors who want a daily, structured read on the stocks they follow", "Researchers comparing how LLMs analyse the same company over time", "Developers who want a working, forkable research pipeline"],
+    "limit": ["Anyone looking for trade signals or personalised investment advice", "Intraday traders needing minute-level or tick-level data", "Readers who need guaranteed accuracy — AI output can be wrong"],
+    "end_h": "Research that runs while you sleep.",
+    "end_p": "Dozens of analyses published automatically every morning. Zero subscription, zero paywall — just open it.",
+    "end_cta": "Open the research hub"
+  },
+  "zh": {
+    "labels": {"fundamental_analysis": "基本面", "technical_analysis": "技術面", "market_news": "市場新聞"},
+    "kicker": "財經資料研究中心",
+    "title": "AI 驅動的股票研究，每天清晨發布",
+    "sub": "以每日報告、價格歷史、財報文件與新聞，研究美股與台股。",
+    "you": "你",
+    "bot": "研究中心",
+    "ask": "幫我寫今天關注個股的研究",
+    "ask_t": "幫我寫 {t} 今天的研究",
+    "reply": "今日報告已發布，打開報告即可閱讀。",
+    "reply_t": "已於 {d} 發布 {t} 的{k}報告。",
+    "reply_s": "最新收盤 {p} · 今年以來 {y} · 1Y {o}。打開報告查看完整分析。",
+    "chips": ["資料已抓取", "報告已撰寫", "已發布"],
+    "cta": "閱讀今日報告",
+    "scroll": "向下捲動查看更多",
+    "show_eye": "即時價格脈絡",
+    "show_h": "每一份報告，都與撰寫當下的股價並列。",
+    "show_p": "每個標的頁面都把報告與完整價格歷史放在一起。這是精選標的自己的走勢圖 — 切換區間可往回查看。",
+    "pills": [["◇", "資料", "yfinance 行情 + SEC EDGAR 文件"], ["✦", "模型", "預設 Gemini，OpenAI 作為備援"], ["◷", "排程", "每個標的每天一個排程時段"]],
+    "show_note": "AI 生成的研究僅供教育用途，不構成投資建議。",
+    "ytd": "今年以來",
+    "vol_1y": "波動率 (1Y)",
+    "last": "最新收盤",
+    "tabs": [["126", "6M"], ["252", "1Y"], ["0", "全部"]],
+    "data_badge": "市場數據",
+    "data_h": "價格歷史與基本面，並排呈現",
+    "data_p": "每個涵蓋的標的都有市場數據頁：K 線、回撤、波動率、財務報表、估值倍數，以及 CSV/JSON 下載。",
+    "g_tickers": "已有研究的標的",
+    "g_reports": "已發布報告",
+    "g_days": "天滾動區間",
+    "proof": [["以 Python 計算", "所有統計數據都在建置時計算，從不在瀏覽器中運算。"], ["可下載", "每個標的都提供價格與財務資料的 CSV 與 JSON。"]],
+    "data_cta": "開啟市場數據",
+    "sphere_hint": "拖曳旋轉 · 點擊標的開啟",
+    "res_kick": "剛出爐",
+    "res_h": "一個早晨的研究長這樣",
+    "res_tag": "最新報告",
+    "res_more": "同時發布",
+    "res_all": "瀏覽全部報告",
+    "res_read": "閱讀報告",
+    "guides_kick": "從這裡開始",
+    "guides_h": "網站導覽",
+    "guides_p": "讀者最常用的區塊：每日報告、市場數據、新聞、財報文件，以及背後的腳本。",
+    "guides": [
+      ["reports/", "研究", "AI 生成報告", "每個涵蓋標的的基本面與技術面報告，依時間排序。"],
+      ["data/", "數據", "市場數據", "由價格與基本面資料庫建置的圖表、統計與下載。"],
+      ["market_news/", "新聞", "市場新聞", "每個標的的每日新聞，與報告一同抓取與摘要。"],
+      ["sec/", "文件", "SEC 文件", "我們追蹤標的的 10-K、10-Q 等申報文件。"],
+      ["notebooks/", "筆記", "NotebookLLM", "各公司的長篇研究筆記與語音摘要。"],
+      ["scripts/", "工具", "下載腳本", "抓取文件與資料的腳本，你也可以自己執行。"]
+    ],
+    "open": "開啟",
+    "lens_kick": "十二種分析類型",
+    "lens_sub": "篇報告於滾動區間內發布",
+    "cov": [
+      ["📊", "基本面分析", "營收、利潤率、資產負債表，以及長期獲利驅動因素。"],
+      ["📈", "技術分析", "價格走勢、均線、RSI、MACD、成交量與型態辨識。"],
+      ["💰", "DCF 估值", "內在價值模型，搭配多情境敏感度分析。"],
+      ["📄", "10-K 摘要", "年度報告摘要 — 風險、策略與管理層評論。"],
+      ["🎯", "催化劑日曆", "即將公布的財報、產品活動與總經催化劑及其預期影響。"],
+      ["🏆", "競爭對手分析", "競爭護城河評估、市場佔有率與產業定位。"],
+      ["📞", "財報電話會議分析", "管理層語氣、指引訊號與逐字稿中的情緒。"],
+      ["🏦", "機構持股", "13F 分析 — 聰明錢動向與持股集中度變化。"],
+      ["👔", "內部人交易", "Form 4 檢視 — 誰在買賣，以及型態傳達的訊號。"],
+      ["📉", "放空餘額", "放空比例、回補天數與借券資料隱含的軋空潛力。"],
+      ["⚡", "選擇權分析", "隱含波動率、Greeks、買賣權偏斜與策略選擇。"],
+      ["💳", "股利分析", "股利、庫藏股、併購與自由現金流運用品質。"]
+    ],
+    "run_badge": "開源",
+    "run_h": "一行指令，為任何標的生成報告",
+    "run_p": "整個流程都在 GitHub 上。Fork 專案、加入 API 金鑰，就能從終端機觸發執行。",
+    "run_label": "在你的 fork 中執行：",
+    "copy_btn": "複製指令",
+    "copied": "已複製",
+    "repo": "在 GitHub 上查看",
+    "aud_h": "這個研究中心適合誰",
+    "aud_p": "清楚說明它擅長什麼，以及不擅長什麼。",
+    "fit_h": "最適合",
+    "limit_h": "可能不適合",
+    "fit": ["想每天有條理地追蹤關注個股的投資人", "想比較大型語言模型如何長期分析同一家公司的研究者", "想要一套可運作、可 fork 的研究流程的開發者"],
+    "limit": ["尋找交易訊號或個人化投資建議的人", "需要分鐘級或逐筆資料的當沖交易者", "需要保證正確的讀者 — AI 產出可能有誤"],
+    "end_h": "在你沉睡時運轉的研究。",
+    "end_p": "每天清晨自動發布數十篇分析。零訂閱，零付費牆 — 打開即看。",
+    "end_cta": "開啟研究中心"
+  }
+} -%}
+{%- set C = COPY[lang] if lang in COPY else COPY["en"] -%}
+{%- set CMD = "gh workflow run daily_analysis.yml \\\n  -f ticker=MSFT \\\n  -f analysis_type=technical-analysis" -%}
+<div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}"
+     data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/"
+     data-hub-labels='{{ C.labels | tojson }}'
+     data-hub-copy='{{ {"ask_t": C.ask_t, "reply_t": C.reply_t, "reply_s": C.reply_s, "copied": C.copied, "copy": C.copy_btn} | tojson }}'>
 
-  <!-- ── Ticker strip (filled from hub.json) ── -->
-  <div class="lp-ticker" data-hub-tape hidden>
-    <div class="lp-ticker-track"></div>
-  </div>
-
-  <!-- ── Hero ── -->
+  <!-- ── 1. Hero ── -->
   <section class="lp-hero">
-    <div class="lp-con">
-      <div class="lp-hero-inner">
+    <div class="lp-hero-ambient" aria-hidden="true"></div>
+    <div class="lp-hero-inner">
+      <p class="lp-hero-kicker lp-in">{{ C.kicker }}</p>
+      <h1 class="lp-hero-title lp-in">{{ C.title }}</h1>
+      <p class="lp-hero-sub lp-in">{{ C.sub }}</p>
 
+      <div class="lp-chat lp-in" aria-live="polite">
+        <div class="lp-msg lp-msg--you">
+          <div class="lp-bubble lp-bubble--you">
+            <p class="lp-who">{{ C.you }}</p>
+            <p class="lp-said" data-hub-ask>{{ C.ask }}</p>
+          </div>
+        </div>
+        <div class="lp-msg lp-msg--bot">
+          <span class="lp-avatar" aria-hidden="true">✦</span>
+          <div class="lp-bubble lp-bubble--bot">
+            <p class="lp-who">{{ C.bot }}</p>
+            <p class="lp-said" data-hub-reply>{{ C.reply }}</p>
+            <p class="lp-said-sub" data-hub-reply-sub hidden></p>
+            <div class="lp-chips">
+              {%- for chip in C.chips %}
+              <span class="lp-chip" style="--d:{{ 0.9 + loop.index0 * 0.12 }}s">{{ chip }}</span>
+              {%- endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lp-hero-action lp-in">
+        <a class="lp-btn lp-btn--lg" href="reports/">{{ C.cta }} <span class="lp-arr" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="lp-hero-foot">
+      <a class="lp-scroll" href="#lp-show" aria-label="{{ C.scroll }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── 2. Showcase ── -->
+  <section class="lp-show" id="lp-show">
+    <div class="lp-wrap lp-show-grid">
+      <div class="lp-rv">
+        <p class="lp-eyebrow">∿ {{ C.show_eye }}</p>
+        <h2>{{ C.show_h }}</h2>
+        <p class="lp-lede">{{ C.show_p }}</p>
+        <div class="lp-pills">
+          {%- for ic, k, v in C.pills %}
+          <div class="lp-mpill"><span class="lp-mpill-ic" aria-hidden="true">{{ ic }}</span><span><small>{{ k }}</small><b>{{ v }}</b></span></div>
+          {%- endfor %}
+        </div>
+        <p class="lp-note">{{ C.show_note }}</p>
+      </div>
+
+      <div class="lp-app lp-rv" style="--lp-d:.1s" data-hub-app hidden>
+        <div class="lp-app-bar">
+          <span class="lp-app-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="lp-tabs" role="tablist">
+            {%- for n, label in C.tabs %}
+            <button type="button" class="lp-tab" role="tab" data-range="{{ n }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
+            {%- endfor %}
+          </span>
+          <span class="lp-app-sym" data-hub-field="ticker">—</span>
+        </div>
+        <div class="lp-app-body">
+          <div class="lp-app-head">
+            <div>
+              <div class="lp-app-k">{{ C.ytd }}</div>
+              <div class="lp-app-big" data-hub-field="ytd">—</div>
+              <div class="lp-app-meta">{{ C.last }} <b data-hub-field="price">—</b> · <span data-hub-field="sector">—</span></div>
+            </div>
+            <span class="lp-app-range" data-hub-field="span">—</span>
+          </div>
+          <div class="lp-plot">
+            <svg viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="lp-fill-dark" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#34d399" stop-opacity=".35"/><stop offset="1" stop-color="#34d399" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line class="lp-gl" x1="0" x2="600" y1="50" y2="50"/>
+              <line class="lp-gl" x1="0" x2="600" y1="100" y2="100"/>
+              <line class="lp-gl" x1="0" x2="600" y1="150" y2="150"/>
+              <path class="lp-pa" d=""/>
+              <path class="lp-pl" d=""/>
+            </svg>
+            <div class="lp-plot-axis"><span data-hub-field="from">—</span><span data-hub-field="to">—</span></div>
+          </div>
+        </div>
+        <div class="lp-app-foot">
+          <span><i>1D</i><span data-hub-field="1d">—</span></span>
+          <span><i>1M</i><span data-hub-field="1m">—</span></span>
+          <span><i>1Y</i><span data-hub-field="1y">—</span></span>
+          <span><i>{{ C.vol_1y }}</i><span data-hub-field="vol">—</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. Data ── -->
+  <section class="lp-band lp-data">
+    <div class="lp-wrap lp-data-grid">
+      <div class="lp-rv">
+        <span class="lp-badge">▦ {{ C.data_badge }}</span>
+        <h2>{{ C.data_h }}</h2>
+        <p class="lp-lede">{{ C.data_p }}</p>
+        <div class="lp-glass">
+          <div><b data-hub-num="tickers">—</b><small>{{ C.g_tickers }}</small></div>
+          <div><b data-hub-num="reports">—</b><small>{{ C.g_reports }}</small></div>
+          <div><b data-hub-days>—</b><small>{{ C.g_days }}</small></div>
+        </div>
+        <div class="lp-proof">
+          {%- for k, v in C.proof %}
+          <div><b>{{ k }}</b>{{ v }}</div>
+          {%- endfor %}
+        </div>
+        <p style="margin-top:1.6rem"><a class="lp-link" href="data/">{{ C.data_cta }} <span class="lp-arr" aria-hidden="true">→</span></a></p>
+      </div>
+      <div class="lp-rv" style="--lp-d:.12s">
+        <div class="lp-sphere" data-hub-sphere aria-label="{{ C.sphere_hint }}"></div>
+        <p class="lp-sphere-hint">{{ C.sphere_hint }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. Research ── -->
+  <section class="lp-band lp-research">
+    <div class="lp-wrap">
+      <div class="lp-head lp-rv">
+        <p class="lp-kick">{{ C.res_kick }}</p>
+        <h2>{{ C.res_h }}</h2>
+      </div>
+      <div class="lp-res-grid">
+        <a class="lp-feat lp-rv" href="reports/" data-hub-feat hidden>
+          <span class="lp-feat-top"><span class="lp-feat-tag">{{ C.res_tag }} · <span data-hub-field="kind">—</span></span><span class="lp-feat-mkt" data-hub-field="ticker">—</span></span>
+          <h3 data-hub-field="title">—</h3>
+          <p class="lp-feat-find" data-hub-field="name">—</p>
+          <span class="lp-feat-stat"><b data-hub-field="chg">—</b><small data-hub-field="meta">—</small></span>
+          <span class="lp-feat-go">{{ C.res_read }} <span class="lp-arr" aria-hidden="true">→</span></span>
+        </a>
+        <div class="lp-rv" style="--lp-d:.1s">
+          <p class="lp-more-label">{{ C.res_more }}</p>
+          <ul class="lp-rows" data-hub-rows></ul>
+          <a class="lp-link lp-res-more" href="reports/">{{ C.res_all }} <span class="lp-arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. Guides ── -->
+  <section class="lp-band lp-guides">
+    <div class="lp-wrap">
+      <div class="lp-head lp-rv">
+        <p class="lp-kick">{{ C.guides_kick }}</p>
+        <h2>{{ C.guides_h }}</h2>
+        <p class="lp-lede">{{ C.guides_p }}</p>
+      </div>
+      <div class="lp-ggrid">
+        {%- for href, tag, name, desc in C.guides %}
+        <a class="lp-guide lp-rv" style="--lp-d:{{ (loop.index0 % 3) * 0.06 }}s" href="{{ href }}">
+          <span class="lp-guide-top"><span>{{ tag }}</span><i aria-hidden="true">↗</i></span>
+          <h3>{{ name }}</h3>
+          <p>{{ desc }}</p>
+          <span class="lp-guide-go">{{ C.open }} <span aria-hidden="true">→</span></span>
+        </a>
+        {%- endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. Lenses ── -->
+  <section class="lp-band lp-lenses">
+    <div class="lp-lenses-head lp-rv">
+      <p class="lp-kick">{{ C.lens_kick }}</p>
+      <div class="lp-count"><span data-hub-num="reports" data-count>—</span></div>
+      <p class="lp-sub">{{ C.lens_sub }}</p>
+    </div>
+    {%- set half = (C.cov | length) // 2 %}
+    {%- for row in [C.cov[:half], C.cov[half:]] %}
+    <div class="lp-track-wrap">
+      <div class="lp-track{{ ' lp-track--r' if loop.last }}">
+        {%- for pass in [0, 1] %}
+        {%- for icon, name, desc in row %}
+        <div class="lp-lens"{% if pass %} aria-hidden="true"{% endif %}><span class="lp-lens-ic" aria-hidden="true">{{ icon }}</span><b>{{ name }}</b><p>{{ desc }}</p></div>
+        {%- endfor %}
+        {%- endfor %}
+      </div>
+    </div>
+    {%- endfor %}
+  </section>
+
+  <!-- ── 7. Run it yourself ── -->
+  <section class="lp-band lp-run">
+    <div class="lp-wrap lp-run-shell">
+      <div class="lp-rv">
+        <span class="lp-trial">{{ C.run_badge }}</span>
+        <h2>{{ C.run_h }}</h2>
+        <p class="lp-lede">{{ C.run_p }}</p>
+      </div>
+      <div class="lp-prompt lp-rv" style="--lp-d:.1s">
+        <span class="lp-prompt-mark" aria-hidden="true">&gt;_</span>
         <div>
-          <div class="lp-eyebrow">Daily · Automated · Open Access</div>
-          <h1 class="lp-h1">
-            Deep research on<br>
-            <span class="lp-typewriter" id="lp-tw" data-phrases='["US equities.","Taiwan ETFs.","semiconductors.","defense tech.","every morning.","12 lenses each."]'>US equities<span class="lp-cursor"></span></span>
-          </h1>
-          <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for <b data-hub="tickers">dozens of</b> US and Taiwan tickers, written by frontier LLMs from live market data.</p>
-          <div class="lp-actions">
-            <a href="reports/" class="lp-btn-primary">Read Today's Reports</a>
-            <a href="#lp-how" class="lp-btn-ghost">How it works →</a>
-          </div>
-          <p class="lp-hero-note"><span data-hub="per_day">—</span> analyses in the latest run &nbsp;·&nbsp; <span data-hub="types">12</span> report types live &nbsp;·&nbsp; No paywall</p>
+          <p class="lp-prompt-label">{{ C.run_label }}</p>
+          <pre class="lp-code" data-hub-cmd>{{ CMD }}</pre>
         </div>
-
-        <div class="lp-card-hide lp-rcard-wrap" data-hub-hero hidden>
-          <div class="lp-rcard">
-            <div class="lp-rcard-bar">
-              <div>
-                <div class="lp-rcard-ticker"><span data-hub-field="ticker">—</span> <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· <span data-hub-field="sector">—</span></span></div>
-                <div class="lp-rcard-type"><span data-hub-field="kind">—</span></div>
-              </div>
-              <div class="lp-live">Live</div>
-            </div>
-            <div class="lp-rcard-body">
-              <p class="lp-rcard-hl" data-hub-field="title">—</p>
-              <div class="lp-metrics">
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">Price</div>
-                  <div class="lp-metric-val" data-hub-field="price">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1D</div>
-                  <div class="lp-metric-val" data-hub-field="1d">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1M</div>
-                  <div class="lp-metric-val" data-hub-field="1m">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">YTD</div>
-                  <div class="lp-metric-val" data-hub-field="ytd">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1Y</div>
-                  <div class="lp-metric-val" data-hub-field="1y">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">Vol (1Y)</div>
-                  <div class="lp-metric-val a" data-hub-field="vol">—</div>
-                </div>
-              </div>
-              <div class="lp-range">
-                <div class="lp-range-lbl">52W Range</div>
-                <div class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></div>
-                <div class="lp-range-ends"><span data-hub-field="low">—</span><span data-hub-field="high">—</span></div>
-              </div>
-            </div>
-            <a class="lp-rcard-foot" data-hub-field="link" href="reports/" style="text-decoration:none">
-              <div class="lp-tags">
-                <span class="lp-ctag" data-hub-field="tag-type">—</span>
-                <span class="lp-ctag" data-hub-field="tag-sector">—</span>
-              </div>
-              <span class="lp-model-label" data-hub-field="model">—</span>
-            </a>
-          </div>
+        <div class="lp-prompt-acts">
+          <button type="button" class="lp-ghost" data-hub-copy>{{ C.copy_btn }}</button>
+          <a class="lp-btn" href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener">{{ C.repo }} <span class="lp-arr" aria-hidden="true">↗</span></a>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ── Stats ── -->
-  <hr class="lp-divider">
-  <div class="lp-alt-bg">
-    <div class="lp-con">
-      <div class="lp-stats-inner">
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="tickers">—</div>
-          <p class="lp-stat-lbl">Tickers with published research</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="per_day">—</div>
-          <p class="lp-stat-lbl">Analyses in the latest daily run</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="types">—</div>
-          <p class="lp-stat-lbl">Report types in production</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num">0<span>$</span></div>
-          <p class="lp-stat-lbl">Cost to read. Always free.</p>
-        </div>
+  <!-- ── 8. Audience ── -->
+  <section class="lp-band lp-aud">
+    <div class="lp-wrap">
+      <div class="lp-aud-head lp-rv">
+        <h2>{{ C.aud_h }}</h2>
+        <p>{{ C.aud_p }}</p>
       </div>
-    </div>
-  </div>
-  <hr class="lp-divider">
-
-  <!-- ── Analysis types ── -->
-  <section class="lp-section" id="lp-analysis">
-    <div class="lp-con">
-      <div class="lp-sec-eye">Coverage</div>
-      <h2 class="lp-sec-h">Twelve lenses. One stock.</h2>
-      <p class="lp-sec-sub">Each analysis type targets a different signal — from price action to SEC filings to competitive position. All generated fresh from live data, never from cached summaries.</p>
-
-      <div class="lp-an-grid">
-        <div class="lp-an-card"><span class="lp-an-icon">📊</span><p class="lp-an-name">Fundamental Analysis</p><p class="lp-an-desc">Revenue, margins, balance sheet, and long-term earnings drivers.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📈</span><p class="lp-an-name">Technical Analysis</p><p class="lp-an-desc">Price action, MAs, RSI, MACD, volume, and chart pattern detection.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">💰</span><p class="lp-an-name">DCF Valuation</p><p class="lp-an-desc">Intrinsic value modeling with multi-scenario sensitivity analysis.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📄</span><p class="lp-an-name">10-K Digest</p><p class="lp-an-desc">Annual report summaries — risks, strategy, and management commentary from SEC filings.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🎯</span><p class="lp-an-name">Catalyst Calendar</p><p class="lp-an-desc">Upcoming earnings, product events, and macro catalysts with expected price impact.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🏆</span><p class="lp-an-name">Competitor Analysis</p><p class="lp-an-desc">Competitive moat assessment, market share, and industry positioning.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📞</span><p class="lp-an-name">Earnings Call Analysis</p><p class="lp-an-desc">Management tone, forward guidance signals, and hidden sentiment from transcripts.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🏦</span><p class="lp-an-name">Institutional Ownership</p><p class="lp-an-desc">13F filing analysis — track smart money moves and ownership concentration shifts.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">👔</span><p class="lp-an-name">Insider Trading</p><p class="lp-an-desc">Form 4 filing review — who's buying and selling, and what the pattern signals.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📉</span><p class="lp-an-name">Short Interest</p><p class="lp-an-desc">Short float, days-to-cover, and short squeeze potential from borrow data.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">⚡</span><p class="lp-an-name">Options Analysis</p><p class="lp-an-desc">IV, Greeks, put/call skew, and strategy selection for the current market setup.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">💳</span><p class="lp-an-name">Dividend Analysis</p><p class="lp-an-desc">Capital allocation: dividends, buybacks, M&amp;A activity, and FCF deployment quality.</p></div>
+      <div class="lp-board lp-rv">
+        <div>
+          <div class="lp-board-h"><span class="lp-board-ic lp-board-ic--fit" aria-hidden="true">✓</span><h3>{{ C.fit_h }}</h3></div>
+          {%- for s in C.fit %}
+          <div class="lp-sig lp-sig--fit"><span class="lp-sig-n">0{{ loop.index }}</span><span class="lp-sig-ic" aria-hidden="true">✓</span><p>{{ s }}</p></div>
+          {%- endfor %}
+        </div>
+        <span class="lp-axis" aria-hidden="true"></span>
+        <div>
+          <div class="lp-board-h lp-board-h--limit"><span class="lp-board-ic lp-board-ic--limit" aria-hidden="true">–</span><h3>{{ C.limit_h }}</h3></div>
+          {%- for s in C.limit %}
+          <div class="lp-sig lp-sig--limit"><span class="lp-sig-n">0{{ loop.index }}</span><span class="lp-sig-ic" aria-hidden="true">✕</span><p>{{ s }}</p></div>
+          {%- endfor %}
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ── How it works ── -->
-  <hr class="lp-divider">
-  <div class="lp-alt-bg">
-    <section class="lp-section" id="lp-how">
-      <div class="lp-con">
-        <div class="lp-sec-eye">Under the Hood</div>
-        <h2 class="lp-sec-h">Daily. Automated. Built from source data.</h2>
-        <p class="lp-sec-sub">No human editors touch these reports. Every analysis runs from live market data and public filings — assembled, interpreted, and published before markets open each day.</p>
-
-        <div class="lp-steps">
-          <div class="lp-step">
-            <div class="lp-step-num">Step 01 &nbsp;·&nbsp; Data Fetch</div>
-            <p class="lp-step-title">Live data assembled from market feeds and EDGAR</p>
-            <p class="lp-step-desc">yfinance collects OHLCV, financials, and earnings data. SEC EDGAR scrapers pull the latest filings. Everything normalizes into a structured context package ready for the model.</p>
-            <pre class="lp-step-code">yfinance + SEC EDGAR → data_fetch.py → context.py</pre>
-          </div>
-          <div class="lp-step">
-            <div class="lp-step-num">Step 02 &nbsp;·&nbsp; AI Analysis</div>
-            <p class="lp-step-title">A frontier model reads the numbers and writes the report</p>
-            <p class="lp-step-desc">The context goes to the configured model — Gemini by default, with OpenAI and Claude as fallbacks — under a domain-specific prompt. The model runs the full analysis, draws Mermaid charts, and produces structured markdown; a nightly QA pass grades the output.</p>
-            <pre class="lp-step-code">prompts/*.txt + context → llm.py → gemini | openai | claude</pre>
-          </div>
-          <div class="lp-step">
-            <div class="lp-step-num">Step 03 &nbsp;·&nbsp; Publish</div>
-            <p class="lp-step-title">GitHub Actions publishes the whole run every morning</p>
-            <p class="lp-step-desc">Cron-triggered GitHub Actions run one analysis job per ticker and report type. Reports land in the MkDocs site and publish to GitHub Pages within minutes of generation.</p>
-            <pre class="lp-step-code">daily_analysis.yml → MkDocs → GitHub Pages</pre>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-  <hr class="lp-divider">
-
-  <!-- ── Latest reports ── -->
-  <section class="lp-section" id="lp-reports">
-    <div class="lp-con">
-      <div class="lp-sec-eye">Latest</div>
-      <h2 class="lp-sec-h">Today's reports</h2>
-      <p class="lp-sec-sub">Generated this morning from live market data. Not cached. Not edited. These are the actual outputs from the pipeline.</p>
-
-      <div class="lp-reports" data-hub-latest>
-        <a href="reports/" class="lp-rp lp-rp--all">Browse all reports →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CTA ── -->
-  <hr class="lp-divider">
-  <section class="lp-cta">
-    <div class="lp-con">
-      <h2 class="lp-cta-h">Research that runs<br>while you sleep.</h2>
-      <p class="lp-cta-sub">Dozens of analyses published automatically every morning. Zero subscription. Zero paywall. Just open it.</p>
-      <div class="lp-cta-acts">
-        <a href="reports/" class="lp-btn-primary">Open the Research Hub ↗</a>
-        <a href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener" class="lp-btn-outline">View on GitHub</a>
-      </div>
+  <!-- ── 9. Closing CTA ── -->
+  <section class="lp-end">
+    <div class="lp-wrap lp-rv">
+      <h2>{{ C.end_h }}</h2>
+      <p>{{ C.end_p }}</p>
+      <a class="lp-btn lp-btn--lg" href="reports/">{{ C.end_cta }} <span class="lp-arr" aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -934,149 +1054,276 @@
 {% block scripts %}
 {{ super() }}
 <script>
+  // ── Landing page ─────────────────────────────────────────────────────────
+  // hub.json fills the exchange, the showcase, the data figures, the sphere and
+  // the research list; reports/<ticker>/kline.json supplies the closes that the
+  // showcase plots as-is. Nothing here computes a statistic.
   (function () {
-    var el = document.getElementById("lp-tw");
-    if (!el) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    var phrases;
-    try { phrases = JSON.parse(el.getAttribute("data-phrases")); } catch (e) { phrases = null; }
-    if (!phrases || !phrases.length) return;
+    function init() {
+      var root = document.querySelector(".lp-page");
+      if (!root || root.hasAttribute("data-lp-ready")) return;
+      root.setAttribute("data-lp-ready", "");
+      root.classList.add("lp-js");
 
-    var pi = 0, ci = 0, deleting = false, wait = 0;
+      var src = root.getAttribute("data-hub-src");
+      var base = root.getAttribute("data-hub-base") || "";
+      var labels = {}, copy = {};
+      try { labels = JSON.parse(root.getAttribute("data-hub-labels") || "{}"); } catch (e) {}
+      try { copy = JSON.parse(root.getAttribute("data-hub-copy") || "{}"); } catch (e) {}
 
-    function tick() {
-      var target = phrases[pi];
-      if (!deleting) {
-        ci++;
-        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
-        if (ci === target.length) { deleting = true; wait = 28; }
-      } else {
-        if (wait-- > 0) { setTimeout(tick, 80); return; }
-        ci--;
-        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
-        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      function $(sel, scope) { return (scope || root).querySelector(sel); }
+      function $$(sel, scope) { return Array.prototype.slice.call((scope || root).querySelectorAll(sel)); }
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
       }
-      setTimeout(tick, deleting ? 45 : 90);
-    }
+      function fill(tpl, map) { return String(tpl).replace(/\{(\w)\}/g, function (_, k) { return map[k] == null ? "—" : map[k]; }); }
+      function pct(v) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + "%"; }
+      function tone(v) { return v == null ? "" : (v >= 0 ? "lp-up" : "lp-dn"); }
+      function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
+      function set(scope, field, text) {
+        var el = scope.querySelector('[data-hub-field="' + field + '"]');
+        if (el) el.textContent = text == null || text === "" ? "—" : text;
+        return el;
+      }
+      function metric(scope, field, v) {
+        var el = set(scope, field, pct(v));
+        if (el) { el.classList.remove("lp-up", "lp-dn"); if (tone(v)) el.classList.add(tone(v)); }
+      }
 
-    tick();
-  })();
-</script>
+      // ── reveal ──
+      var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -8% 0px" }) : null;
+      $$(".lp-rv").forEach(function (el) { if (io && !reduce) io.observe(el); else el.classList.add("is-in"); });
 
-<script>
-  // ── Landing-page hydration ──────────────────────────────────────────────
-  // The market tape, the headline counts, the hero card and "latest reports"
-  // are read from hub.json, which scripts/build_docs.py derives from the price
-  // store and the published report set at build time. Everything here only
-  // fills slots the static markup already has; if the fetch fails the page
-  // stays as rendered, with the tape and hero card hidden (never stale data).
-  (function () {
-    var root = document.querySelector(".lp-page");
-    if (!root || !window.fetch) return;
-    var src = root.getAttribute("data-hub-src");
-    var base = root.getAttribute("data-hub-base") || "";
-    var labels = {};
-    try { labels = JSON.parse(root.getAttribute("data-hub-labels") || "{}"); } catch (e) {}
-
-    function esc(s) {
-      return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      // ── copy button ──
+      var cbtn = $("[data-hub-copy]");
+      if (cbtn) cbtn.addEventListener("click", function () {
+        var text = $("[data-hub-cmd]").textContent;
+        var done = function () { cbtn.textContent = copy.copied || "Copied"; setTimeout(function () { cbtn.textContent = copy.copy || "Copy"; }, 1600); };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
       });
-    }
-    function pct(v, d) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(d == null ? 2 : d) + "%"; }
-    function arrow(v) { return v == null ? "" : (v >= 0 ? "▲ " : "▼ "); }
-    function toneCls(v) { return v == null ? "" : (v >= 0 ? "g" : "r"); }
-    function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
-    function set(scope, field, text) {
-      var el = scope.querySelector('[data-hub-field="' + field + '"]');
-      if (el) el.textContent = text == null || text === "" ? "—" : text;
-      return el;
-    }
-    function metric(scope, field, v) {
-      var el = set(scope, field, pct(v));
-      if (el) { el.classList.remove("g", "r"); if (toneCls(v)) el.classList.add(toneCls(v)); }
-    }
 
-    function hydrate(d) {
-      var stats = d.stats || {};
+      // ── count-up ──
+      function countTo(el, v) {
+        if (typeof v !== "number" || reduce || !io) { el.textContent = typeof v === "number" ? v.toLocaleString() : v; return; }
+        el.textContent = "0";
+        var ob = new IntersectionObserver(function (es) {
+          if (!es[0].isIntersecting) return;
+          ob.disconnect();
+          var t0 = performance.now(), dur = 1400;
+          (function step(t) {
+            var k = Math.min(1, Math.max(0, (t - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
+            el.textContent = Math.round(v * e).toLocaleString();
+            if (k < 1) requestAnimationFrame(step);
+          })(t0);
+        });
+        ob.observe(el);
+      }
 
-      // 1. tape — duplicated once so the marquee loops seamlessly
-      var tape = root.querySelector("[data-hub-tape]");
-      if (tape && d.tape && d.tape.length) {
-        var html = d.tape.map(function (t) {
-          return '<a class="lp-tick" href="' + esc(base + t.href) + '">' +
-            '<span class="lp-tick-sym">' + esc(t.sym) + '</span>' +
-            '<span class="lp-tick-px">' + esc(t.px) + '</span>' +
-            (t.chg == null ? "" : '<span class="lp-tick-' + (t.chg >= 0 ? "up" : "dn") + '">' + arrow(t.chg) + pct(t.chg) + "</span>") +
-            '</a><span class="lp-tick-sep">·</span>';
+      // ── typing ──
+      function type(el, text, ms, then) {
+        if (reduce) { el.textContent = text; if (then) then(); return; }
+        var i = 0;
+        var caret = document.createElement("span");
+        caret.className = "lp-caret";
+        (function tick() {
+          el.textContent = text.slice(0, ++i);
+          el.appendChild(caret);
+          if (i < text.length) setTimeout(tick, ms);
+          else { setTimeout(function () { caret.remove(); }, 500); if (then) then(); }
+        })();
+      }
+
+      // ── kline.json → path data (closes plotted as-is) ──
+      var klineCache = {};
+      function kline(ticker) {
+        var k = String(ticker).toLowerCase();
+        if (!klineCache[k]) {
+          klineCache[k] = fetch(base + "reports/" + encodeURIComponent(k) + "/kline.json")
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (d) { return d.bars || []; });
+        }
+        return klineCache[k];
+      }
+      function paths(bars, w, h, pad) {
+        var cs = bars.map(function (b) { return b.c; });
+        var lo = Math.min.apply(null, cs), hi = Math.max.apply(null, cs), span = hi - lo || 1;
+        var line = cs.map(function (c, i) {
+          return (i ? "L" : "M") + ((i / (cs.length - 1)) * w).toFixed(1) + " " + (pad + (1 - (c - lo) / span) * (h - pad * 2)).toFixed(1);
         }).join("");
-        tape.querySelector(".lp-ticker-track").innerHTML = html + html;
-        tape.hidden = false;
+        return { line: line, area: line + "L" + w + " " + h + "L0 " + h + "Z" };
       }
 
-      // 2. counts — plain slots, and the big stat digits (last digit accented)
-      Array.prototype.forEach.call(root.querySelectorAll("[data-hub]"), function (el) {
-        var v = stats[el.getAttribute("data-hub")];
-        if (v != null && v !== "") el.textContent = typeof v === "number" ? v.toLocaleString() : v;
-      });
-      Array.prototype.forEach.call(root.querySelectorAll("[data-hub-num]"), function (el) {
-        var v = stats[el.getAttribute("data-hub-num")];
-        if (v == null) return;
-        var s = String(v);
-        el.innerHTML = esc(s.slice(0, -1)) + "<span>" + esc(s.slice(-1)) + "</span>";
-      });
+      function showcase(app, h) {
+        set(app, "ticker", h.ticker);
+        set(app, "sector", h.sector);
+        set(app, "price", (h.currency ? h.currency + " " : "") + h.price);
+        metric(app, "ytd", h.ytd);
+        metric(app, "1d", h.chg_1d);
+        metric(app, "1m", h.chg_1m);
+        metric(app, "1y", h.chg_1y);
+        set(app, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
 
-      // 3. hero card — the newest report that has a priced ticker
-      var card = root.querySelector("[data-hub-hero]");
-      var h = d.hero;
-      if (card && h) {
-        set(card, "ticker", h.ticker);
-        set(card, "sector", h.sector);
-        set(card, "kind", typeLabel(h) + " · " + h.date);
-        set(card, "title", h.title || (h.ticker + " — " + typeLabel(h)));
-        set(card, "price", (h.currency ? h.currency + " " : "") + h.price);
-        metric(card, "1d", h.chg_1d);
-        metric(card, "1m", h.chg_1m);
-        metric(card, "ytd", h.ytd);
-        metric(card, "1y", h.chg_1y);
-        set(card, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
-        set(card, "low", h.low_52w == null ? "—" : Number(h.low_52w).toFixed(2));
-        set(card, "high", h.high_52w == null ? "—" : Number(h.high_52w).toFixed(2));
-        var dot = card.querySelector("[data-hub-field=\"pos\"]");
-        if (dot) dot.style.left = (h.range_position == null ? 50 : Math.max(0, Math.min(100, h.range_position))).toFixed(1) + "%";
-        set(card, "model", h.model || h.provider);
-        set(card, "tag-type", typeLabel(h));
-        set(card, "tag-sector", h.sector);
-        var link = card.querySelector('[data-hub-field="link"]');
-        if (link) link.setAttribute("href", base + h.href);
-        card.hidden = false;
+        kline(h.ticker).then(function (all) {
+          if (all.length < 2) return;
+          var line = $(".lp-pl", app), area = $(".lp-pa", app);
+          function draw(n) {
+            var bars = n > 0 ? all.slice(-n) : all;
+            var p = paths(bars, 600, 200, 12);
+            area.setAttribute("d", p.area);
+            line.setAttribute("d", p.line);
+            set(app, "from", bars[0].t);
+            set(app, "to", bars[bars.length - 1].t);
+            set(app, "span", bars[0].t.slice(0, 7) + " → " + bars[bars.length - 1].t.slice(0, 7));
+            if (!reduce && line.getTotalLength) {
+              var len = line.getTotalLength();
+              line.style.transition = "none";
+              line.style.strokeDasharray = len;
+              line.style.strokeDashoffset = len;
+              line.getBoundingClientRect();
+              line.style.transition = "stroke-dashoffset 1.4s cubic-bezier(.25,1,.5,1)";
+              line.style.strokeDashoffset = "0";
+            }
+          }
+          $$(".lp-tab", app).forEach(function (tab) {
+            tab.addEventListener("click", function () {
+              $$(".lp-tab", app).forEach(function (t) { t.setAttribute("aria-selected", String(t === tab)); });
+              draw(+tab.getAttribute("data-range"));
+            });
+          });
+          app.hidden = false;
+          draw(126);
+        }).catch(function () { /* frame stays hidden */ });
       }
 
-      // 4. latest reports
-      var grid = root.querySelector("[data-hub-latest]");
-      if (grid && d.latest && d.latest.length) {
-        grid.innerHTML = d.latest.slice(0, 6).map(function (r) {
-          return '<a href="' + esc(base + r.href) + '" class="lp-rp">' +
-            '<div class="lp-rp-top"><div>' +
-              '<p class="lp-rp-ticker">' + esc(r.ticker) + '</p>' +
-              '<div class="lp-rp-co">' + esc(r.name) + '</div>' +
-            '</div>' +
-            (r.chg == null ? "" : '<span class="lp-rp-chg ' + toneCls(r.chg) + '">' + arrow(r.chg) + pct(r.chg) + '</span>') +
-            '</div>' +
-            '<p class="lp-rp-sum">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</p>' +
-            '<div class="lp-rp-foot">' +
-              '<div class="lp-tags"><span class="lp-ctag">' + esc(typeLabel(r)) + '</span></div>' +
-              '<span class="lp-rp-date">' + esc(r.date) + (r.model ? " · " + esc(r.model) : "") + '</span>' +
-            '</div></a>';
+      // ── ticker sphere ──
+      function sphere(el, tape) {
+        var n = tape.length;
+        if (!n) return;
+        el.innerHTML = tape.map(function (t) {
+          return '<a class="lp-node" href="' + esc(base + t.href) + '" draggable="false"><b>' + esc(t.sym) + '</b>' +
+            (t.chg == null ? "" : '<small class="' + tone(t.chg) + '">' + pct(t.chg) + '</small>') + '</a>';
         }).join("");
+        var nodes = $$(".lp-node", el);
+        var pts = nodes.map(function (_, i) {           // Fibonacci sphere
+          var y = 1 - (i / Math.max(1, n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+          return [Math.cos(th) * r, y, Math.sin(th) * r];
+        });
+        var ay = 0, ax = -0.25, vy = 0.0035, vx = 0, hover = false, drag = null, moved = 0;
+        function render() {
+          var R = el.clientWidth * 0.4, cy = Math.cos(ay), sy = Math.sin(ay), cx = Math.cos(ax), sx = Math.sin(ax);
+          pts.forEach(function (p, i) {
+            var x = p[0] * cy + p[2] * sy, z = -p[0] * sy + p[2] * cy;
+            var y = p[1] * cx - z * sx; z = p[1] * sx + z * cx;
+            var depth = (z + 1) / 2, s = 0.62 + depth * 0.5;
+            var nd = nodes[i];
+            nd.style.transform = "translate(-50%,-50%) translate3d(" + (x * R).toFixed(1) + "px," + (y * R).toFixed(1) + "px,0) scale(" + s.toFixed(3) + ")";
+            nd.style.opacity = (0.22 + depth * 0.78).toFixed(3);
+            nd.style.zIndex = Math.round(depth * 100);
+            nd.style.pointerEvents = depth > 0.45 ? "auto" : "none";
+          });
+        }
+        render();
+        if (reduce) return;
+        el.addEventListener("pointerenter", function () { hover = true; });
+        el.addEventListener("pointerleave", function () { hover = false; drag = null; });
+        el.addEventListener("pointerdown", function (e) { drag = [e.clientX, e.clientY]; moved = 0; });
+        window.addEventListener("pointerup", function () { drag = null; });
+        el.addEventListener("pointermove", function (e) {
+          if (!drag) return;
+          var dx = e.clientX - drag[0], dy = e.clientY - drag[1];
+          moved += Math.abs(dx) + Math.abs(dy);
+          vy = dx * 0.0006; vx = -dy * 0.0006;
+          drag = [e.clientX, e.clientY];
+        });
+        // A drag that ends over a node must not also open it.
+        el.addEventListener("click", function (e) { if (moved > 6) { e.preventDefault(); moved = 0; } }, true);
+        var visible = true;
+        if (io) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(el);
+        (function loop() {
+          if (!document.body.contains(el)) return;
+          if (visible) {
+            var k = hover && !drag ? 0.2 : 1;
+            ay += vy * k; ax = Math.max(-1, Math.min(1, ax + vx));
+            if (!drag) { vy += (0.0035 - vy) * 0.02; vx *= 0.92; }
+            render();
+          }
+          requestAnimationFrame(loop);
+        })();
       }
+
+      function hydrate(d) {
+        var stats = d.stats || {}, h = d.hero;
+
+        // counts
+        $$("[data-hub-num]").forEach(function (el) {
+          var v = stats[el.getAttribute("data-hub-num")];
+          if (v == null || v === "") return;
+          if (el.hasAttribute("data-count")) countTo(el, v);
+          else el.textContent = typeof v === "number" ? v.toLocaleString() : v;
+        });
+        var days = $("[data-hub-days]");
+        if (days && d.retention_days != null) days.textContent = d.retention_days;
+
+        // 1. the exchange
+        if (h) {
+          var ask = $("[data-hub-ask]"), reply = $("[data-hub-reply]"), sub = $("[data-hub-reply-sub]");
+          ask.textContent = fill(copy.ask_t, { t: h.ticker });
+          var r1 = fill(copy.reply_t, { k: typeLabel(h), t: h.ticker, d: h.date });
+          var r2 = fill(copy.reply_s, { p: (h.currency ? h.currency + " " : "") + h.price, y: pct(h.ytd), o: pct(h.chg_1y) });
+          setTimeout(function () {
+            type(reply, r1, 18, function () { sub.hidden = false; type(sub, r2, 10); });
+          }, reduce ? 0 : 700);
+        }
+
+        // 2. showcase
+        var app = $("[data-hub-app]");
+        if (app && h) showcase(app, h);
+
+        // 3. sphere
+        var sp = $("[data-hub-sphere]");
+        if (sp && d.tape) sphere(sp, d.tape);
+
+        // 4. research — feature the newest report that is not the hero, list the rest
+        var latest = (d.latest || []).filter(function (r) { return !h || r.href !== h.href; });
+        var feat = $("[data-hub-feat]"), first = latest[0];
+        if (feat && first) {
+          set(feat, "kind", typeLabel(first));
+          set(feat, "ticker", first.ticker);
+          set(feat, "title", first.title || (first.ticker + " — " + typeLabel(first)));
+          set(feat, "name", [first.name, first.sector].filter(Boolean).join(" · "));
+          var chg = set(feat, "chg", first.chg == null ? "" : "1D " + pct(first.chg));
+          if (chg && tone(first.chg)) chg.className = tone(first.chg);
+          set(feat, "meta", first.date + (first.model ? " · " + first.model : ""));
+          feat.setAttribute("href", base + first.href);
+          feat.hidden = false;
+        }
+        var rows = $("[data-hub-rows]");
+        if (rows) {
+          rows.innerHTML = latest.slice(1, 7).map(function (r) {
+            return '<li><a class="lp-row" href="' + esc(base + r.href) + '">' +
+              '<span class="lp-row-t">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</span>' +
+              '<span class="lp-row-m">' + esc(typeLabel(r)) + ' · ' + esc(r.date) + '</span>' +
+              '<span class="lp-row-a" aria-hidden="true">→</span></a></li>';
+          }).join("");
+        }
+      }
+
+      if (!src || !window.fetch) return;
+      fetch(src, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
+        .then(hydrate)
+        .catch(function () { /* static page stands; nothing stale is shown */ });
     }
 
-    if (!src) return;
-    fetch(src, { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
-      .then(hydrate)
-      .catch(function () { /* static page stands; nothing stale is shown */ });
+    init();
+    // navigation.instant swaps pages without a reload; re-run on arrival.
+    if (typeof document$ !== "undefined") document$.subscribe(init);
   })();
 </script>
 {% endblock %}

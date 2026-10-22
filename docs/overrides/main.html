@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block extrahead %}
+  {#- Display + body faces for the editorial theme (extra.css). Latin-only and
+      display=swap, so text paints in the system stack first and CJK pages
+      never wait on them. -#}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Space+Grotesk:wght@300..600&display=swap">
   <!--
     Mobile reading improvements:
     1. Viewport allows pinch-to-zoom (no user-scalable=no) for accessibility.

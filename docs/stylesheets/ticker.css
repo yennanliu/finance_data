@@ -320,3 +320,34 @@
      let the legend stack instead of clipping. */
   .md-typeset .tkrail__legend { gap: 0.3rem 0.75rem; }
 }
+
+/* ── editorial pass (finlab.finance) ─────────────────────────────────────────
+   Flat white card with a soft lift, KPI tiles on a raised wash, figures in
+   light Space Grotesk, labels in sentence case. Positions are untouched. */
+
+.md-typeset .tkhero {
+  border-radius: var(--fp-radius, 1rem);
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow-sm);
+}
+.md-typeset .tkhero__mark {
+  border-radius: var(--fp-radius-sm, 0.7rem);
+  background: var(--fp-bg-raised);
+}
+.md-typeset .tkstat {
+  border-radius: var(--fp-radius-sm, 0.7rem);
+  background: var(--fp-bg-raised);
+  border-color: var(--fp-border-dim);
+}
+.md-typeset .tkstat__k {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fp-text-secondary);
+}
+.md-typeset .tkstat__v {
+  font-family: var(--fp-font-display);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}

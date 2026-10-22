@@ -10,7 +10,7 @@
   margin: 0 0 1.5rem;
   padding: 0.9rem 1.05rem 0.75rem;
   border: 1px solid var(--fp-border, #27272a);
-  border-radius: 14px;
+  border-radius: var(--fp-radius, 1rem);
   background: var(--fp-bg-card, #16161a);
 }
 
