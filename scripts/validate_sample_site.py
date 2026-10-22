@@ -33,11 +33,12 @@ SRC_STOCK = ROOT / "ai_gen_report" / "stock"
 # writes a puppeteer config and points PUPPETEER_CONFIG at it.
 _PUPPETEER = os.environ.get("PUPPETEER_CONFIG", "")
 # Each mmdc call boots its own headless Chromium, so the gate was ~70s of
-# serial browser startups. One render per core runs them concurrently without
-# oversubscribing: a starved render that hits its 60s timeout reads as a
-# failure, and a spurious failure on the sanitized side would be reported as
-# a regression.
-_RENDER_WORKERS = os.cpu_count() or 2
+# serial browser startups. They now run concurrently, capped at 4: each
+# Chromium needs far more than one core's worth of memory and startup I/O, so
+# "one per logical core" would boot dozens on a large runner. A starved render
+# that hits its 60s timeout reads as a failure, and a spurious failure on the
+# sanitized side would be reported as a regression.
+_RENDER_WORKERS = min(4, os.cpu_count() or 2)
 
 
 def _load_build_docs():
