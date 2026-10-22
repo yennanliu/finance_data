@@ -1844,6 +1844,10 @@ def test_hub_payload_is_derived_from_the_stores(tmp_path, monkeypatch):
     assert payload["tape"][0]["href"] == "reports/amd/"
     assert {"chg_1m", "ytd", "chg_1y", "sector"} <= set(payload["tape"][0])
     assert set(payload["breadth"]) == {"1d", "1m", "ytd", "1y"}
+    types = {t["slug"]: t["count"] for t in payload["types"]}
+    assert len(types) == 12                                    # every ANALYSIS_TYPES entry
+    assert types["fundamental-analysis"] == 1 and types["technical-analysis"] == 2
+    assert types["stock-valuation"] == 0                       # in pipeline, not published
     assert len(payload["latest"]) == 3
     assert all(not k.startswith("_") for r in payload["latest"] for k in r)
     hero = payload["hero"]

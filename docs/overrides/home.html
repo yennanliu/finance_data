@@ -12,7 +12,8 @@
                    beeswarm of every covered ticker's return (1D/1M/YTD/1Y)
     4. research    dark feature card + "also published" rows
     5. guides      six cards into the site's sections
-    6. lenses      the twelve report types as two opposing marquees
+    6. lenses      the pipeline's twelve analysis types as an interactive
+                   wheel, live types solid with their published counts
     7. run it      the workflow command, copyable
     8. audience    built for / not for
     9. closing CTA
@@ -579,38 +580,79 @@
 .lp-guide p { flex: 1; color: var(--fp-text-secondary); font-size: 0.74rem; line-height: 1.7; }
 .lp-guide-go { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--fp-text); font-size: 0.74rem; }
 
-/* ─── 6. Lenses ─── */
+/* ─── 6. Lenses — the analysis wheel ───
+   Twelve segments, one per ANALYSIS_TYPES entry, coloured by family. Types
+   with reports in the window are solid; the rest are drawn as outlines and
+   labelled "in pipeline". Counts come from hub.json (types). */
 .lp-lenses { background: var(--fp-bg-card); overflow: hidden; }
-.lp-lenses-head { text-align: center; margin-bottom: clamp(2rem, 5vw, 2.8rem); padding: 0 1.2rem; }
-.lp-lenses-head p.lp-kick { color: var(--fp-text-secondary); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem !important; }
-.lp-count { font-family: var(--fp-font-display); font-size: clamp(2.8rem, 7vw, 4.4rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.lp-lenses-head .lp-sub { margin-top: 0.5rem !important; color: var(--fp-text-secondary); font-size: 0.9rem; font-weight: 300; }
-.lp-track-wrap { position: relative; overflow: hidden; }
-.lp-track-wrap + .lp-track-wrap { margin-top: 0.9rem; }
-.lp-track-wrap::before, .lp-track-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; z-index: 2; width: min(6rem, 8vw); pointer-events: none; }
-.lp-track-wrap::before { left: 0; background: linear-gradient(to right, var(--fp-bg-card), transparent); }
-.lp-track-wrap::after { right: 0; background: linear-gradient(to left, var(--fp-bg-card), transparent); }
-.lp-track { display: flex; gap: 0.8rem; width: max-content; padding: 0.2rem 0; animation: lp-left 55s linear infinite; }
-.lp-track--r { animation: lp-right 60s linear infinite; }
-.lp-track:hover { animation-play-state: paused; }
-@keyframes lp-left { to { transform: translateX(-50%); } }
-@keyframes lp-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-.lp-lens {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  width: min(17rem, calc(100vw - 3rem));
-  padding: 1.15rem;
-  border: 1px solid var(--fp-border-dim);
-  border-radius: 18px;
+.lp-wheel-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(1.6rem, 4vw, 3rem); align-items: center; }
+.lp-lenses .lp-kick { color: var(--fp-kicker); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem !important; }
+.lp-count-row { display: flex; align-items: baseline; gap: 0.6rem; margin-top: 1.2rem; }
+.lp-count { font-family: var(--fp-font-display); font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.lp-count-row small { color: var(--fp-text-secondary); font-size: 0.74rem; }
+
+.lp-legend { display: grid; gap: 1rem; margin-top: 1.6rem; }
+.lp-fam > p { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem !important; color: var(--fp-text-muted); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.lp-fam > p::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 2px; background: var(--fam); }
+.md-typeset .lp-fam ul { display: flex; flex-wrap: wrap; gap: 0.3rem; } /* Material makes every ul flow-root */
+.lp-lt {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-pill);
   background: var(--fp-bg-card);
-  box-shadow: 0 1px 2px rgba(17, 24, 39, .03);
-  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  color: var(--fp-text-secondary);
+  font: inherit;
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition: border-color .16s, background .16s, color .16s;
 }
-.lp-lens:hover { transform: translateY(-2px); border-color: var(--fp-border); box-shadow: 0 12px 32px rgba(17, 24, 39, .08); }
-.lp-lens-ic { font-size: 1.1rem; margin-bottom: 0.6rem; }
-.lp-lens b { font-family: var(--fp-font-display); font-weight: 400; font-size: 0.9rem; color: var(--fp-text); }
-.lp-lens p { margin-top: 0.35rem !important; color: var(--fp-prose); font-size: 0.74rem; line-height: 1.7; }
+.lp-lt i { font-style: normal; color: var(--fp-text-muted); font-size: 0.58rem; font-variant-numeric: tabular-nums; }
+.lp-lt.is-live { color: var(--fp-text); }
+.lp-lt.is-live i { color: var(--fam); font-weight: 600; }
+.lp-lt:hover { border-color: var(--fam); }
+.lp-lt[aria-pressed="true"] { border-color: var(--fam); background: color-mix(in srgb, var(--fam) 12%, var(--fp-bg-card)); color: var(--fp-text); }
+
+.lp-wheel { position: relative; width: min(100%, 26rem); margin: 0 auto; aspect-ratio: 1; }
+.lp-wheel[hidden] { display: none; }
+.lp-wheel svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.lp-seg-arc {
+  cursor: pointer;
+  stroke: var(--fp-bg-card);
+  stroke-width: 2;
+  transform-origin: 200px 200px;
+  transition: transform .45s var(--lp-ease), opacity .3s, filter .3s;
+  outline: none;
+}
+.lp-seg-arc.is-pipe { fill-opacity: .14; stroke: var(--fam-c); stroke-dasharray: 3 3; stroke-width: 1; }
+.lp-seg-arc.is-on { transform: scale(1.06); filter: drop-shadow(0 8px 14px rgba(15, 23, 42, .22)); }
+.lp-wheel.has-sel .lp-seg-arc:not(.is-on) { opacity: .45; }
+.lp-seg-arc:focus-visible { stroke: var(--fp-text); stroke-width: 2.5; }
+.lp-seg-num { fill: #fff; font-size: 11px; font-weight: 600; pointer-events: none; font-family: var(--fp-font-display); }
+.lp-seg-num.is-pipe { fill: var(--fp-text-muted); }
+.lp-share { fill: none; stroke-width: 5; stroke-linecap: round; transition: opacity .3s; }
+.lp-orbit { fill: none; stroke: var(--fp-border); stroke-dasharray: 2 5; }
+.lp-orbit-dot { fill: var(--fp-green); }
+
+.lp-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.lp-core-fam { font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fam, var(--fp-text-muted)); }
+.lp-core-name { margin-top: 0.2rem !important; font-family: var(--fp-font-display); font-size: clamp(0.85rem, 2vw, 1.05rem); line-height: 1.25; color: var(--fp-text); }
+.lp-core-desc { margin-top: 0.35rem !important; color: var(--fp-text-secondary); font-size: 0.62rem; line-height: 1.5; }
+.lp-core-n { display: inline-block; margin-top: 0.5rem; padding: 0.15rem 0.55rem; border-radius: var(--fp-pill); font-size: 0.6rem; font-variant-numeric: tabular-nums; background: var(--fp-accent-dim); color: var(--fp-text-secondary); }
+.lp-core-n.is-live { background: color-mix(in srgb, var(--fam) 16%, transparent); color: var(--fp-text); }
+.lp-core > * { transition: opacity .25s; }
+.lp-core.is-swap > * { opacity: 0; }
 
 /* ─── 7. Run it yourself ─── */
 .lp-run { background: var(--lp-soft); }
@@ -692,7 +734,7 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 60rem) {
-  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell { grid-template-columns: 1fr; }
+  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell, .lp-wheel-grid { grid-template-columns: 1fr; }
   .lp-ggrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 40rem) {
@@ -714,7 +756,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .lp-in { animation: none !important; opacity: 1; transform: none; filter: none; }
-  .lp-hero-ambient, .lp-scroll, .lp-cursor, .lp-track { animation: none !important; }
+  .lp-hero-ambient, .lp-scroll, .lp-cursor { animation: none !important; }
+  .lp-seg-arc { transition: none; }
   .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
@@ -779,20 +822,30 @@
     ],
     "open": "Open",
     "lens_kick": "Twelve analysis types",
-    "lens_sub": "reports published in the rolling window",
-    "cov": [
-      ["📊", "Fundamental Analysis", "Revenue, margins, balance sheet, and long-term earnings drivers."],
-      ["📈", "Technical Analysis", "Price action, MAs, RSI, MACD, volume, and chart pattern detection."],
-      ["💰", "DCF Valuation", "Intrinsic value modeling with multi-scenario sensitivity analysis."],
-      ["📄", "10-K Digest", "Annual report summaries — risks, strategy, and management commentary."],
-      ["🎯", "Catalyst Calendar", "Upcoming earnings, product events, and macro catalysts with expected impact."],
-      ["🏆", "Competitor Analysis", "Competitive moat assessment, market share, and industry positioning."],
-      ["📞", "Earnings Call Analysis", "Management tone, guidance signals, and sentiment from transcripts."],
-      ["🏦", "Institutional Ownership", "13F analysis — smart-money moves and ownership concentration shifts."],
-      ["👔", "Insider Trading", "Form 4 review — who's buying and selling, and what the pattern signals."],
-      ["📉", "Short Interest", "Short float, days-to-cover, and squeeze potential from borrow data."],
-      ["⚡", "Options Analysis", "IV, Greeks, put/call skew, and strategy selection for the current setup."],
-      ["💳", "Dividend Analysis", "Dividends, buybacks, M&A, and the quality of FCF deployment."]
+    "lens_h": "One pipeline, twelve ways to read a stock",
+    "lens_p": "Every analysis type the generator knows. Solid segments are in daily production; outlined ones can be run on demand.",
+    "lens_sub": "reports in the rolling window",
+    "live": "published",
+    "pipe": "In pipeline · run on demand",
+    "fams": [
+      ["value", "#10b981", "Fundamentals & valuation"],
+      ["market", "#3b82f6", "Market & macro"],
+      ["flow", "#8b5cf6", "Filings & flows"],
+      ["book", "#f59e0b", "Portfolio & output"]
+    ],
+    "lenses": [
+      ["fundamental-analysis", "value", "Fundamental Analysis", "Statements, margins, balance sheet, DCF and a rated verdict."],
+      ["stock-valuation", "value", "Stock Valuation", "DCF, comparables, EV multiples and residual income side by side."],
+      ["stock-eval", "value", "Stock Evaluation", "An all-round score across eight dimensions with peer comparison."],
+      ["financial-report-analyst", "value", "Financial Report Analyst", "A deep read of the filings: statement quality and red flags."],
+      ["technical-analysis", "market", "Technical Analysis", "Trend, moving averages, RSI and MACD, volume and key levels."],
+      ["sector-analysis", "market", "Sector Analysis", "Sector rotation and where the company sits within it."],
+      ["economics-analysis", "market", "Economics Analysis", "Macro indicators and what they imply for the market."],
+      ["earnings-call-analysis", "flow", "Earnings Call Analysis", "Management tone, guidance signals and themes from the call."],
+      ["insider-trading", "flow", "Insider Trading", "Form 4 buying and selling, and what the pattern signals."],
+      ["institutional-ownership", "flow", "Institutional Ownership", "13F holding changes and smart-money moves."],
+      ["portfolio-review", "book", "Portfolio Review", "Allocation, performance and risk across a portfolio."],
+      ["report-generator", "book", "HTML Report", "A compiled, interactive HTML report with charts."]
     ],
     "run_badge": "Open source",
     "run_h": "Generate a report for any ticker in one command",
@@ -867,20 +920,30 @@
     ],
     "open": "開啟",
     "lens_kick": "十二種分析類型",
-    "lens_sub": "篇報告於滾動區間內發布",
-    "cov": [
-      ["📊", "基本面分析", "營收、利潤率、資產負債表，以及長期獲利驅動因素。"],
-      ["📈", "技術分析", "價格走勢、均線、RSI、MACD、成交量與型態辨識。"],
-      ["💰", "DCF 估值", "內在價值模型，搭配多情境敏感度分析。"],
-      ["📄", "10-K 摘要", "年度報告摘要 — 風險、策略與管理層評論。"],
-      ["🎯", "催化劑日曆", "即將公布的財報、產品活動與總經催化劑及其預期影響。"],
-      ["🏆", "競爭對手分析", "競爭護城河評估、市場佔有率與產業定位。"],
-      ["📞", "財報電話會議分析", "管理層語氣、指引訊號與逐字稿中的情緒。"],
-      ["🏦", "機構持股", "13F 分析 — 聰明錢動向與持股集中度變化。"],
-      ["👔", "內部人交易", "Form 4 檢視 — 誰在買賣，以及型態傳達的訊號。"],
-      ["📉", "放空餘額", "放空比例、回補天數與借券資料隱含的軋空潛力。"],
-      ["⚡", "選擇權分析", "隱含波動率、Greeks、買賣權偏斜與策略選擇。"],
-      ["💳", "股利分析", "股利、庫藏股、併購與自由現金流運用品質。"]
+    "lens_h": "一條流程，十二種解讀股票的方式",
+    "lens_p": "生成器支援的每一種分析類型。實心區塊為每日生產中，外框區塊可依需求執行。",
+    "lens_sub": "篇報告於滾動區間內",
+    "live": "篇已發布",
+    "pipe": "流程中 · 可依需求執行",
+    "fams": [
+      ["value", "#10b981", "基本面與估值"],
+      ["market", "#3b82f6", "市場與總經"],
+      ["flow", "#8b5cf6", "文件與資金流向"],
+      ["book", "#f59e0b", "投資組合與輸出"]
+    ],
+    "lenses": [
+      ["fundamental-analysis", "value", "基本面深度分析", "財務報表、利潤率、資產負債表、DCF 與評級結論。"],
+      ["stock-valuation", "value", "多方法估值分析", "DCF、可比公司、EV 倍數與剩餘收益法並列。"],
+      ["stock-eval", "value", "綜合股票評估", "八大維度綜合評分，並與同業比較。"],
+      ["financial-report-analyst", "value", "財報深度解析", "深入解讀申報文件：報表品質與警訊。"],
+      ["technical-analysis", "market", "技術分析", "趨勢、均線、RSI 與 MACD、成交量與關鍵價位。"],
+      ["sector-analysis", "market", "產業板塊分析", "產業輪動，以及公司在其中的位置。"],
+      ["economics-analysis", "market", "總體經濟分析", "總經指標及其對市場的意涵。"],
+      ["earnings-call-analysis", "flow", "財報電話會議分析", "管理層語氣、指引訊號與會議主題。"],
+      ["insider-trading", "flow", "內部人交易分析", "Form 4 買賣紀錄及其型態訊號。"],
+      ["institutional-ownership", "flow", "機構持股分析", "13F 持股變化與聰明錢動向。"],
+      ["portfolio-review", "book", "投資組合回顧", "投資組合的配置、績效與風險。"],
+      ["report-generator", "book", "綜合 HTML 報告", "附互動圖表的完整 HTML 投資報告。"]
     ],
     "run_badge": "開源",
     "run_h": "一行指令，為任何標的生成報告",
@@ -1090,25 +1153,43 @@
     </div>
   </section>
 
-  <!-- ── 6. Lenses ── -->
+  <!-- ── 6. Lenses — the analysis wheel ── -->
+  {%- set FAM = {} %}{% for k, c, n in C.fams %}{% set _ = FAM.update({k: [c, n]}) %}{% endfor %}
   <section class="lp-band lp-lenses">
-    <div class="lp-lenses-head lp-rv">
-      <p class="lp-kick">{{ C.lens_kick }}</p>
-      <div class="lp-count"><span data-hub-num="reports" data-count>—</span></div>
-      <p class="lp-sub">{{ C.lens_sub }}</p>
-    </div>
-    {%- set half = (C.cov | length) // 2 %}
-    {%- for row in [C.cov[:half], C.cov[half:]] %}
-    <div class="lp-track-wrap">
-      <div class="lp-track{{ ' lp-track--r' if loop.last }}">
-        {%- for pass in [0, 1] %}
-        {%- for icon, name, desc in row %}
-        <div class="lp-lens"{% if pass %} aria-hidden="true"{% endif %}><span class="lp-lens-ic" aria-hidden="true">{{ icon }}</span><b>{{ name }}</b><p>{{ desc }}</p></div>
-        {%- endfor %}
-        {%- endfor %}
+    <div class="lp-wrap lp-wheel-grid">
+      <div class="lp-rv">
+        <p class="lp-kick">{{ C.lens_kick }}</p>
+        <h2>{{ C.lens_h }}</h2>
+        <p class="lp-lede">{{ C.lens_p }}</p>
+        <div class="lp-count-row"><span class="lp-count" data-hub-num="reports" data-count>—</span><small>{{ C.lens_sub }}</small></div>
+        <div class="lp-legend">
+          {%- for fk, fc, fn in C.fams %}
+          <div class="lp-fam" style="--fam:{{ fc }}">
+            <p>{{ fn }}</p>
+            <ul>
+              {%- for slug, fam, name, desc in C.lenses if fam == fk %}
+              <li><button type="button" class="lp-lt" data-lens="{{ slug }}" aria-pressed="false">{{ name }} <i data-lens-n="{{ slug }}"></i></button></li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endfor %}
+        </div>
+      </div>
+      <div class="lp-rv" style="--lp-d:.12s">
+        <div class="lp-wheel" data-hub-wheel hidden
+             data-lenses='{{ C.lenses | tojson }}'
+             data-fams='{{ FAM | tojson }}'
+             data-copy='{{ {"live": C.live, "pipe": C.pipe} | tojson }}'>
+          <svg viewBox="0 0 400 400" role="group" aria-label="{{ C.lens_kick }}"></svg>
+          <div class="lp-core" aria-live="polite">
+            <div class="lp-core-fam"></div>
+            <p class="lp-core-name"></p>
+            <p class="lp-core-desc"></p>
+            <span class="lp-core-n"></span>
+          </div>
+        </div>
       </div>
     </div>
-    {%- endfor %}
   </section>
 
   <!-- ── 7. Run it yourself ── -->
@@ -1473,6 +1554,87 @@
         window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { if (document.body.contains(card)) layout(cur); }, 150); });
       }
 
+      // ── analysis wheel ──
+      // Geometry only: each type gets a 30° segment; whether it is live and its
+      // count come from hub.json (types), the share arc is count / total.
+      function wheel(el, types) {
+        var lenses = [], fams = {}, wc = {};
+        try { lenses = JSON.parse(el.getAttribute("data-lenses")); fams = JSON.parse(el.getAttribute("data-fams")); wc = JSON.parse(el.getAttribute("data-copy")); } catch (e) { return; }
+        var count = {};
+        types.forEach(function (t) { count[t.slug] = t.count; });
+        var total = types.reduce(function (a, t) { return a + t.count; }, 0) || 1;
+        var svg = $("svg", el), core = $(".lp-core", el), NS = "http://www.w3.org/2000/svg";
+        var C0 = 200, RO = 170, RI = 108, n = lenses.length, step = 360 / n, gap = 1.6;
+        function pt(r, a) { var t = (a - 90) * Math.PI / 180; return [C0 + r * Math.cos(t), C0 + r * Math.sin(t)]; }
+        function arc(r1, r2, a1, a2) {
+          var p1 = pt(r2, a1), p2 = pt(r2, a2), p3 = pt(r1, a2), p4 = pt(r1, a1), lg = a2 - a1 > 180 ? 1 : 0;
+          return "M" + p1 + "A" + r2 + "," + r2 + " 0 " + lg + " 1 " + p2 + "L" + p3 + "A" + r1 + "," + r1 + " 0 " + lg + " 0 " + p4 + "Z";
+        }
+        var html = '<circle class="lp-orbit" cx="200" cy="200" r="190"/>';
+        lenses.forEach(function (L, i) {
+          var a1 = i * step + gap / 2, a2 = (i + 1) * step - gap / 2, c = (fams[L[1]] || ["#9ca3af"])[0];
+          var live = (count[L[0]] || 0) > 0, mid = pt((RO + RI) / 2, (a1 + a2) / 2);
+          html += '<path class="lp-seg-arc' + (live ? '' : ' is-pipe') + '" tabindex="0" role="button" data-i="' + i + '" fill="' + c + '" style="--fam-c:' + c + '" d="' + arc(RI, RO, a1, a2) + '" aria-label="' + esc(L[2]) + '"/>';
+          html += '<text class="lp-seg-num' + (live ? '' : ' is-pipe') + '" x="' + mid[0].toFixed(1) + '" y="' + mid[1].toFixed(1) + '" text-anchor="middle" dominant-baseline="central">' + String(i + 1).padStart(2, "0") + '</text>';
+          if (live) {
+            var sh = Math.max(2, (count[L[0]] / total) * (step - gap));
+            var o1 = pt(RO + 12, a1), o2 = pt(RO + 12, a1 + sh);
+            html += '<path class="lp-share" stroke="' + c + '" d="M' + o1 + 'A' + (RO + 12) + ',' + (RO + 12) + ' 0 0 1 ' + o2 + '"/>';
+          }
+        });
+        html += '<circle class="lp-orbit-dot" r="3.5" cx="200" cy="10"><animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="24s" repeatCount="indefinite"/></circle>';
+        svg.innerHTML = html;
+        if (reduce) { var dot = $(".lp-orbit-dot", svg); if (dot) dot.remove(); }
+
+        // legend counts
+        lenses.forEach(function (L) {
+          var c = count[L[0]] || 0, i = $('[data-lens-n="' + L[0] + '"]');
+          if (i) i.textContent = c ? c.toLocaleString() : "·";
+          var b = $('.lp-lt[data-lens="' + L[0] + '"]');
+          if (b) b.classList.toggle("is-live", c > 0);
+        });
+
+        var segs = $$(".lp-seg-arc", svg), btns = $$(".lp-lt"), sel = -1, timer = null, user = false;
+        function select(i, byUser) {
+          if (byUser) { user = true; clearInterval(timer); }
+          if (i === sel) return;
+          sel = i;
+          var L = lenses[i], f = fams[L[1]] || ["#9ca3af", ""], c = count[L[0]] || 0;
+          el.classList.add("has-sel");
+          segs.forEach(function (s, k) { s.classList.toggle("is-on", k === i); });
+          btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === L[0])); });
+          core.classList.add("is-swap");
+          setTimeout(function () {
+            core.style.setProperty("--fam", f[0]);
+            $(".lp-core-fam", core).textContent = f[1];
+            $(".lp-core-name", core).textContent = L[2];
+            $(".lp-core-desc", core).textContent = L[3];
+            var nEl = $(".lp-core-n", core);
+            nEl.textContent = c ? c.toLocaleString() + " " + wc.live : wc.pipe;
+            nEl.classList.toggle("is-live", c > 0);
+            core.classList.remove("is-swap");
+          }, reduce ? 0 : 160);
+        }
+        segs.forEach(function (s) {
+          var i = +s.getAttribute("data-i");
+          s.addEventListener("pointerenter", function () { select(i, true); });
+          s.addEventListener("click", function () { select(i, true); });
+          s.addEventListener("focus", function () { select(i, true); });
+          s.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i, true); } });
+        });
+        btns.forEach(function (b) {
+          var i = lenses.findIndex(function (L) { return L[0] === b.getAttribute("data-lens"); });
+          b.addEventListener("click", function () { select(i, true); });
+          b.addEventListener("pointerenter", function () { select(i, true); });
+        });
+        el.hidden = false;
+        // Start on the busiest type, then tour the wheel until the reader takes over.
+        var start = 0;
+        lenses.forEach(function (L, i) { if ((count[L[0]] || 0) > (count[lenses[start][0]] || 0)) start = i; });
+        select(start, false);
+        if (!reduce) timer = setInterval(function () { if (!user && document.body.contains(el)) select((sel + 1) % n, false); else clearInterval(timer); }, 3200);
+      }
+
       function hydrate(d) {
         var stats = d.stats || {}, h = d.hero;
 
@@ -1508,6 +1670,10 @@
         // 2. showcase
         var app = $("[data-hub-app]");
         if (app && h) showcase(app, h);
+
+        // 6. analysis wheel
+        var wh = $("[data-hub-wheel]");
+        if (wh && d.types) wheel(wh, d.types);
 
         // 3. market pulse
         var pl = $("[data-hub-pulse]");

@@ -2086,8 +2086,25 @@ def _breadth(tape: "list[dict]", key: str) -> dict:
     }
 
 
+def _type_counts(files: "list[Path]") -> "list[dict]":
+    """Published-report count for every analysis type the pipeline defines.
+
+    Driven by ANALYSIS_TYPES, so the landing page's wheel always lists the
+    real twelve types; a type with no report in the retention window is shown
+    as "in pipeline" rather than left out."""
+    from analysis.config import ANALYSIS_TYPES
+    seen: "dict[str, int]" = {}
+    for f in files:
+        k = report_type_key(f)
+        seen[k] = seen.get(k, 0) + 1
+    return [{"slug": slug, "key": spec["filename_prefix"],
+             "count": seen.get(spec["filename_prefix"], 0)}
+            for slug, spec in ANALYSIS_TYPES.items()]
+
+
 def hub_payload() -> dict:
     tape: "list[dict]" = []
+    published: "list[Path]" = []
     reports: "list[dict]" = []
     type_keys: set = set()
     total = 0
@@ -2097,6 +2114,9 @@ def hub_payload() -> dict:
                          if f.suffix == ".md" and within_retention(f)])
         if not files:
             continue
+        # HTML reports (report-generator) count towards their type too.
+        published += [f for f in ticker_files(tk)
+                      if f.suffix in (".md", ".html") and within_retention(f)]
         meta = get_meta(tk)
         bars = store_bars(tk)
         stats = price_analytics.summary(bars) if bars else None
@@ -2161,6 +2181,7 @@ def hub_payload() -> dict:
                   "types": len(type_keys), "news_tickers": news_tickers},
         "tape": tape,
         "breadth": {w: _breadth(tape, key) for w, key in HUB_BREADTH_WINDOWS},
+        "types": _type_counts(published),
         "latest": latest,
         "hero": hero,
     }
