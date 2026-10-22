@@ -88,9 +88,11 @@ plugins:
         - en
         - zh
   - awesome-pages
-  # No `minify` plugin. minify_html re-parsed every finished page with a
-  # pure-Python HTML parser — ~436s, a third of the whole nightly build — to
-  # strip whitespace that GitHub Pages already gzips away in transit.
+  # HTML minification is the hook below, not mkdocs-minify-plugin: that ran
+  # htmlmin, a pure-Python parser, and was a third of the nightly build.
+
+hooks:
+  - scripts/mkdocs_minify_hook.py
 
 # ── Markdown extensions ──────────────────────────────────────────────────────
 markdown_extensions:
