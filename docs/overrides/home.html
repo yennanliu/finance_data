@@ -757,7 +757,9 @@
 @media (prefers-reduced-motion: reduce) {
   .lp-in { animation: none !important; opacity: 1; transform: none; filter: none; }
   .lp-hero-ambient, .lp-scroll, .lp-cursor { animation: none !important; }
-  .lp-seg-arc { transition: none; }
+  /* The pulse bubbles and breadth bar would otherwise glide on every tab
+     change, and the wheel's centre would cross-fade. */
+  .lp-seg-arc, .lp-dot, .lp-swarm, .lp-breadth-bar i, .lp-tip, .lp-core > * { transition: none !important; }
   .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
@@ -1181,7 +1183,7 @@
              data-fams='{{ FAM | tojson }}'
              data-copy='{{ {"live": C.live, "pipe": C.pipe} | tojson }}'>
           <svg viewBox="0 0 400 400" role="group" aria-label="{{ C.lens_kick }}"></svg>
-          <div class="lp-core" aria-live="polite">
+          <div class="lp-core" aria-live="off">
             <div class="lp-core-fam"></div>
             <p class="lp-core-name"></p>
             <p class="lp-core-desc"></p>
@@ -1444,6 +1446,7 @@
         var dots = $$(".lp-dot", swarm);
 
         function showTip(dot) {
+          if (dot._x == null) return;
           var t = dot._t, v = t[WKEY[cur]];
           tip.innerHTML = '<b>' + esc(t.sym) + '</b> <span class="' + tone(v) + '">' + pct(v) + '</span>' +
             '<small>' + esc(t.sector || "") + '</small><small>' + esc(t.px) + ' · 1D ' + pct(t.chg) + '</small>';
@@ -1500,7 +1503,16 @@
           items.forEach(function (it, i) {
             var d = it.d;
             d.style.setProperty("--d", D + "px");
-            if (it.x == null) { d.style.opacity = "0"; d.tabIndex = -1; return; }
+            if (it.x == null) {
+              // No value for this window: out of sight, out of reach — no
+              // pointer target over a visible bubble, nothing for a screen reader.
+              d.style.opacity = "0";
+              d.style.pointerEvents = "none";
+              d.tabIndex = -1;
+              d.setAttribute("aria-hidden", "true");
+              d._x = null;
+              return;
+            }
             var mag = Math.min(1, Math.abs(frac(it.v)));
             d.classList.toggle("up", it.v > 0);
             d.classList.toggle("dn", it.v < 0);
@@ -1509,6 +1521,8 @@
             d.style.fontSize = (short(d._t.sym).length > 4 ? 0.42 : 0.5) + "rem";
             d._x = it.x; d._y = H / 2 + it.y;
             d.style.opacity = "1";
+            d.style.pointerEvents = "";
+            d.removeAttribute("aria-hidden");
             d.tabIndex = 0;
             d.setAttribute("aria-label", d._t.sym + " " + pct(it.v));
             d.style.setProperty("--dl", first && !reduce ? (i * 0.018).toFixed(3) + "s" : "0s");
@@ -1596,7 +1610,12 @@
 
         var segs = $$(".lp-seg-arc", svg), btns = $$(".lp-lt"), sel = -1, timer = null, user = false;
         function select(i, byUser) {
-          if (byUser) { user = true; clearInterval(timer); }
+          if (byUser) {
+            user = true;
+            clearInterval(timer);
+            // Silent while the tour cycles; announce only what the reader picks.
+            core.setAttribute("aria-live", "polite");
+          }
           if (i === sel) return;
           sel = i;
           var L = lenses[i], f = fams[L[1]] || ["#9ca3af", ""], c = count[L[0]] || 0;
