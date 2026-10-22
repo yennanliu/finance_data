@@ -12,6 +12,7 @@ on:
     paths:
       - "mkdocs.yml"
       - "scripts/build_docs.py"
+      - "scripts/mkdocs_minify_hook.py"
       - ".github/actions/build-site/**"
       - ".github/actions/python-env/**"
       - ".github/workflows/deploy.yml"
@@ -40,15 +41,18 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   # ── Build ────────────────────────────────────────────────────
   build:
     name: Build MkDocs Site
     runs-on: ubuntu-latest
+    # A build of an older commit is wasted work once a newer one is queued:
+    # the newer checkout already contains everything. So superseded builds are
+    # cancelled — the deploy job below keeps its own, non-cancelling group,
+    # so a deployment that has started is never interrupted mid-sync.
+    concurrency:
+      group: pages-build
+      cancel-in-progress: true
     timeout-minutes: 60      # a full build is ~752 MB / tens of thousands of pages
     steps:
       - name: Checkout repository
@@ -88,6 +92,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     timeout-minutes: 45      # must exceed the deploy-pages timeout below
     steps:
       - name: Deploy to GitHub Pages

@@ -23,6 +23,7 @@ on:
     paths:
       - "mkdocs.yml"
       - "scripts/build_docs.py"
+      - "scripts/mkdocs_minify_hook.py"
       - "scripts/validate_sample_site.py"
       - ".github/actions/build-site/**"
       - ".github/actions/python-env/**"
