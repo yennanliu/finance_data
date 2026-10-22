@@ -1842,6 +1842,12 @@ def test_hub_payload_is_derived_from_the_stores(tmp_path, monkeypatch):
                                 "latest_day": bd.TODAY, "types": 2, "news_tickers": 1}
     assert [t["sym"] for t in payload["tape"]] == ["AMD"]      # only priced tickers
     assert payload["tape"][0]["href"] == "reports/amd/"
+    assert {"chg_1m", "ytd", "chg_1y", "sector"} <= set(payload["tape"][0])
+    assert set(payload["breadth"]) == {"1d", "1m", "ytd", "1y"}
+    types = {t["slug"]: t["count"] for t in payload["types"]}
+    assert len(types) == 12                                    # every ANALYSIS_TYPES entry
+    assert types["fundamental-analysis"] == 1 and types["technical-analysis"] == 2
+    assert types["stock-valuation"] == 0                       # in pipeline, not published
     assert len(payload["latest"]) == 3
     assert all(not k.startswith("_") for r in payload["latest"] for k in r)
     hero = payload["hero"]
@@ -1861,6 +1867,24 @@ def test_hub_payload_without_reports_is_empty_but_valid(tmp_path, monkeypatch):
     payload = bd.hub_payload()
     assert payload["stats"]["tickers"] == 0 and payload["tape"] == []
     assert payload["latest"] == [] and payload["hero"] is None
+    assert payload["breadth"]["1d"] == {"up": 0, "down": 0, "flat": 0, "best": None,
+                                        "worst": None, "span": None, "scale": "linear"}
+
+
+def test_breadth_counts_extremes_and_skips_missing_values():
+    tape = [{"sym": "A", "chg": 2.0}, {"sym": "B", "chg": -3.5},
+            {"sym": "C", "chg": 0.0}, {"sym": "D", "chg": None}, {"sym": "E", "chg": 1.0}]
+    b = bd._breadth(tape, "chg")
+    assert (b["up"], b["down"], b["flat"]) == (2, 1, 1)          # D is not counted
+    assert b["best"] == {"sym": "A", "v": 2.0}
+    assert b["worst"] == {"sym": "B", "v": -3.5}
+    assert b["span"] == 3.5 and b["scale"] == "linear"
+
+
+def test_breadth_switches_to_symlog_for_a_runaway_move():
+    tape = [{"sym": s, "ytd": v} for s, v in
+            [("A", 12.0), ("B", -8.0), ("C", 20.0), ("D", 5.0), ("E", 410.0)]]
+    assert bd._breadth(tape, "ytd")["scale"] == "symlog"
 
 
 def test_build_market_news_merges_legacy_folders_newest_first(tmp_path, monkeypatch):

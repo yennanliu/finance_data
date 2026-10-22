@@ -164,6 +164,9 @@ extra_css:
   # Section index cards and stats, the report meta bar, breadcrumbs and the
   # reading-progress bar.
   - stylesheets/hub.css
+  # Article typography and tables for every report page; last so it owns
+  # headings, body, lists and tables outright.
+  - stylesheets/report.css
 
 extra_javascript:
   - javascripts/clickable-rows.js

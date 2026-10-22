@@ -8,11 +8,12 @@
                    filled from the featured report, a large CTA, a scroll cue
     2. showcase    warm-black band: copy + pills, and a dark "app frame" that
                    plots the featured ticker's closes with 6M / 1Y / All tabs
-    3. data        light band with glows: glass figures + a rotating sphere of
-                   every covered ticker
+    3. data        light band with glows: glass figures + a market-pulse
+                   beeswarm of every covered ticker's return (1D/1M/YTD/1Y)
     4. research    dark feature card + "also published" rows
     5. guides      six cards into the site's sections
-    6. lenses      the twelve report types as two opposing marquees
+    6. lenses      the pipeline's twelve analysis types as an interactive
+                   wheel, live types solid with their published counts
     7. run it      the workflow command, copyable
     8. audience    built for / not for
     9. closing CTA
@@ -168,64 +169,81 @@
 }
 .lp-hero-sub { color: var(--fp-text-secondary); font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 300; line-height: 1.6; margin-bottom: 2rem !important; animation-delay: .28s; }
 
-/* The exchange */
-.lp-chat {
-  width: min(100%, 23rem);
-  margin: 0 auto 2rem;
+/* The terminal — a macOS Terminal window running the repo's real CLI.
+   Always dark, like Terminal's default profile, in both site schemes. */
+.lp-term {
+  width: min(100%, 37rem);
+  margin: 0 auto 2.2rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
   text-align: left;
-  filter: drop-shadow(0 18px 28px rgba(17, 24, 39, .08));
+  background: rgba(17, 19, 24, .96);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, .55),
+    0 0 0 1.5px rgba(255, 255, 255, .06) inset,
+    0 30px 60px -18px rgba(15, 23, 42, .45),
+    0 12px 24px -12px rgba(15, 23, 42, .3);
   animation-delay: .43s;
+  transition: transform .3s var(--lp-ease), box-shadow .3s var(--lp-ease);
 }
-.lp-msg { display: flex; }
-.lp-msg--you { justify-content: flex-end; }
-.lp-msg--bot { align-items: flex-start; gap: 0.6rem; margin-top: 0.6rem; }
-.lp-bubble { border-radius: 18px; padding: 0.65rem 0.85rem; transition: transform .16s var(--lp-ease), box-shadow .16s var(--lp-ease); }
-.lp-bubble--you { max-width: 84%; border-bottom-right-radius: 6px; background: #030712; color: #fff; }
-.lp-bubble--bot {
-  flex: 1;
-  min-height: 7.4rem;
-  border-top-left-radius: 6px;
-  background: var(--fp-bg-card);
-  box-shadow: 0 1px 2px rgba(17, 24, 39, .05), 0 0 0 1px var(--fp-border);
-}
-.lp-chat:hover .lp-bubble--you { transform: translate(-2px, -1px); }
-.lp-chat:hover .lp-bubble--bot { transform: translate(2px, 1px); box-shadow: 0 12px 24px rgba(17, 24, 39, .08), 0 0 0 1px var(--fp-border); }
-.lp-who { font-size: 0.6rem; margin-bottom: 0.15rem !important; color: var(--fp-text-muted); }
-.lp-bubble--you .lp-who { color: #d1d5db; }
-.lp-said { font-size: 0.72rem; line-height: 1.55; }
-.lp-said-sub { margin-top: 0.4rem !important; color: var(--fp-text-secondary); font-size: 0.64rem; line-height: 1.55; }
-.lp-said-sub[hidden] { display: none; }
-.lp-avatar {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  margin-top: 0.2rem;
-  border-radius: 0.5rem;
-  background: #111827;
-  color: #fff;
-  font-size: 0.7rem;
-}
-.lp-caret { display: inline-block; width: 1px; height: 0.9em; margin-left: 1px; vertical-align: -0.1em; background: currentcolor; animation: lp-blink 1s steps(1) infinite; }
-@keyframes lp-blink { 50% { opacity: 0; } }
-.lp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.6rem; }
-.lp-chip {
-  display: inline-flex;
+.lp-term:hover { transform: translateY(-2px); }
+.lp-term-bar {
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--fp-pill);
-  background: var(--fp-accent-dim);
-  color: var(--fp-text-secondary);
-  font-size: 0.58rem;
-  opacity: 0;
-  transform: translateY(5px);
-  animation: lp-chip-in .4s var(--lp-ease) forwards;
-  animation-delay: var(--d);
+  height: 1.7rem;
+  padding: 0 0.6rem;
+  background: linear-gradient(#3a3a3d, #2c2c2f);
+  border-bottom: 1px solid #000;
 }
-.lp-chip::before { content: ""; width: 0.3rem; height: 0.3rem; border-radius: 50%; background: #059669; }
-@keyframes lp-chip-in { to { opacity: 1; transform: none; } }
+.lp-lights { display: flex; gap: 0.4rem; }
+.lp-lights i { width: 0.6rem; height: 0.6rem; border-radius: 50%; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, .25); }
+.lp-lights i:nth-child(1) { background: #ff5f57; }
+.lp-lights i:nth-child(2) { background: #febc2e; }
+.lp-lights i:nth-child(3) { background: #28c840; }
+.lp-term-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #a1a1aa;
+  font-size: 0.6rem;
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.lp-term-body {
+  min-height: 11.6rem;
+  padding: 0.7rem 0.85rem 0.85rem;
+  color: #e4e4e7;
+  font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "PingFang TC", monospace;
+  font-size: 0.64rem;
+  line-height: 1.75;
+}
+.lp-tl { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lp-tl[hidden] { display: none; }
+.lp-ps { color: #4ade80; }
+.lp-path { color: #60a5fa; }
+.lp-pr { color: #e4e4e7; }
+.lp-cmd { color: #fafafa; }
+.lp-flag { color: #fbbf24; white-space: nowrap; }
+.lp-step { display: grid; grid-template-columns: 1.1em 10.5em minmax(0, 1fr); gap: 0 0.5em; }
+.lp-ok { color: #4ade80; }
+.lp-spin { color: #fbbf24; }
+.lp-dim { color: #71717a; }
+.lp-sum { margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px dashed rgba(255, 255, 255, .1); }
+.lp-sum b { color: #fafafa; font-weight: 600; }
+.lp-term .lp-up { color: #4ade80 !important; }
+.lp-term .lp-dn { color: #f87171 !important; }
+.lp-term a { color: #93c5fd !important; text-decoration: none !important; border-bottom: 1px dotted rgba(147, 197, 253, .5); }
+.lp-term a:hover { border-bottom-style: solid; }
+.lp-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  background: #e4e4e7;
+  animation: lp-blink 1.05s steps(1) infinite;
+}
+@keyframes lp-blink { 50% { opacity: 0; } }
 
 .lp-hero-action { animation-delay: 1.1s; }
 .lp-scroll {
@@ -361,48 +379,129 @@
 .lp-proof > div { padding-top: 0.8rem; border-top: 1px solid var(--fp-border); color: var(--fp-text-muted); font-size: 0.72rem; line-height: 1.65; }
 .lp-proof b { display: block; color: var(--fp-text); font-weight: 500; }
 
-/* Ticker sphere */
-.lp-sphere {
+/* Market pulse — a beeswarm: one bubble per ticker, placed on a diverging
+   axis by its return for the selected window. Counts, extremes and the axis
+   half-width come from hub.json (breadth); JS only lays the bubbles out. */
+.lp-pulse {
   position: relative;
-  aspect-ratio: 1;
-  width: min(100%, 26rem);
-  margin: 0 auto;
-  border-radius: 50%;
-  touch-action: pan-y;
-  user-select: none;
+  padding: 1rem 1.05rem 0.9rem;
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, .62);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .8), 0 30px 60px -28px rgba(15, 23, 42, .28), 0 0 0 1px var(--fp-border);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
 }
-.lp-sphere::before {
+[data-md-color-scheme="slate"] .lp-pulse { background: rgba(17, 22, 34, .7); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 30px 60px -28px rgba(0, 0, 0, .6); }
+.lp-pulse[hidden] { display: none; }
+.lp-pulse-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap; }
+.lp-pulse-k { color: var(--fp-text-muted); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.lp-pulse-t { font-family: var(--fp-font-display); font-size: 0.95rem; color: var(--fp-text); }
+.lp-seg { display: inline-flex; padding: 0.15rem; border-radius: var(--fp-pill); background: var(--fp-accent-dim); }
+.lp-seg button {
+  appearance: none;
+  border: 0;
+  border-radius: var(--fp-pill);
+  padding: 0.25rem 0.7rem;
+  background: transparent;
+  color: var(--fp-text-secondary);
+  font: inherit;
+  font-size: 0.64rem;
+  cursor: pointer;
+  transition: background .18s, color .18s, box-shadow .18s;
+}
+.lp-seg button:hover { color: var(--fp-text); }
+.lp-seg button[aria-selected="true"] { background: var(--fp-bg-card); color: var(--fp-text); box-shadow: 0 1px 3px rgba(15, 23, 42, .12); }
+
+.lp-breadth { margin-top: 0.85rem; }
+.lp-breadth-bar { display: flex; height: 0.45rem; border-radius: var(--fp-pill); overflow: hidden; background: var(--fp-accent-dim); }
+.lp-breadth-bar i { display: block; height: 100%; transition: flex-grow .7s var(--lp-ease); }
+.lp-breadth-bar .dn { background: linear-gradient(90deg, #ef4444, #f87171); }
+.lp-breadth-bar .fl { background: var(--fp-text-muted); opacity: .4; }
+.lp-breadth-bar .up { background: linear-gradient(90deg, #34d399, #10b981); }
+.lp-breadth-lbl { display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.62rem; font-variant-numeric: tabular-nums; color: var(--fp-text-muted); }
+.lp-breadth-lbl b { font-weight: 600; }
+
+.lp-swarm { position: relative; margin-top: 0.9rem; transition: height .6s var(--lp-ease); }
+.lp-swarm::before {
   content: "";
   position: absolute;
-  inset: 12%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 70%);
-  box-shadow: 0 40px 80px -40px rgba(0, 113, 227, .35);
+  inset: 0;
+  border-radius: 0.8rem;
+  background: linear-gradient(90deg, rgba(239, 68, 68, .09), transparent 42%, transparent 58%, rgba(16, 185, 129, .1));
 }
-[data-md-color-scheme="slate"] .lp-sphere::before { background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, .07), transparent 70%); }
-.lp-node {
+.lp-swarm-zero { position: absolute; top: 0; bottom: 0; left: 50%; width: 0; border-left: 1px dashed var(--fp-border-hover, #9aa4b5); }
+.lp-dot {
+  --c: var(--fp-text-muted);
+  --t: .3;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: var(--d, 2rem);
+  height: var(--d, 2rem);
+  margin: calc(var(--d, 2rem) / -2) 0 0 calc(var(--d, 2rem) / -2);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c) calc(var(--t) * 100%), var(--fp-bg-card));
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--c) 55%, transparent), 0 6px 14px -6px color-mix(in srgb, var(--c) 70%, transparent);
+  color: var(--fp-text) !important;
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none !important;
+  will-change: transform;
+  transition: transform .8s var(--lp-expo), opacity .5s ease, box-shadow .2s;
+  transition-delay: var(--dl, 0s);
+}
+.lp-dot.is-hot { color: #fff !important; }
+.lp-dot.up { --c: #10b981; }
+.lp-dot.dn { --c: #ef4444; }
+.lp-dot:hover, .lp-dot:focus-visible { z-index: 5; box-shadow: 0 0 0 2px var(--c), 0 10px 22px -6px color-mix(in srgb, var(--c) 80%, transparent); }
+.lp-dot:focus-visible { outline: none; }
+
+.lp-axis-x { position: relative; height: 1rem; margin-top: 0.35rem; color: var(--fp-text-muted); font-size: 0.56rem; font-variant-numeric: tabular-nums; }
+.lp-axis-x span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.lp-axis-x span:first-child { transform: none; }
+.lp-axis-x span:last-child { transform: translateX(-100%); }
+
+.lp-pulse-foot { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.lp-pulse-foot a {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.25rem 0.55rem;
-  border: 1px solid var(--fp-border);
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--fp-pill);
   background: var(--fp-bg-card);
-  color: var(--fp-text) !important;
-  font-size: 0.64rem;
-  white-space: nowrap;
+  box-shadow: 0 0 0 1px var(--fp-border);
+  color: var(--fp-text-secondary) !important;
+  font-size: 0.62rem;
   text-decoration: none !important;
-  box-shadow: 0 6px 16px -8px rgba(15, 23, 42, .25);
-  will-change: transform, opacity;
-  transition: border-color .15s, box-shadow .15s;
+  font-variant-numeric: tabular-nums;
 }
-.lp-node b { font-weight: 500; }
-.lp-node small { font-size: 0.56rem; font-variant-numeric: tabular-nums; }
-.lp-node:hover { border-color: var(--fp-text); box-shadow: 0 10px 24px -8px rgba(15, 23, 42, .35); }
-.lp-sphere-hint { margin-top: 0.6rem !important; text-align: center; color: var(--fp-text-muted); font-size: 0.62rem; }
+.lp-pulse-foot a b { color: var(--fp-text); font-weight: 600; }
+
+.lp-tip {
+  position: absolute;
+  z-index: 10;
+  min-width: 8rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.6rem;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 0.62rem;
+  line-height: 1.45;
+  pointer-events: none;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, .45);
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 0.6rem)) scale(.96);
+  transition: opacity .15s, transform .15s;
+}
+.lp-tip.on { opacity: 1; transform: translate(-50%, calc(-100% - 0.6rem)); }
+.lp-tip b { font-size: 0.7rem; }
+.lp-tip small { display: block; color: #9ca3af; }
+.lp-tip .lp-up { color: #34d399 !important; }
+.lp-tip .lp-dn { color: #f87171 !important; }
+.lp-pulse-hint { margin-top: 0.6rem !important; text-align: center; color: var(--fp-text-muted); font-size: 0.6rem; }
 
 /* ─── 4. Research ─── */
 .lp-research { background: var(--fp-bg-card); }
@@ -481,38 +580,79 @@
 .lp-guide p { flex: 1; color: var(--fp-text-secondary); font-size: 0.74rem; line-height: 1.7; }
 .lp-guide-go { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--fp-text); font-size: 0.74rem; }
 
-/* ─── 6. Lenses ─── */
+/* ─── 6. Lenses — the analysis wheel ───
+   Twelve segments, one per ANALYSIS_TYPES entry, coloured by family. Types
+   with reports in the window are solid; the rest are drawn as outlines and
+   labelled "in pipeline". Counts come from hub.json (types). */
 .lp-lenses { background: var(--fp-bg-card); overflow: hidden; }
-.lp-lenses-head { text-align: center; margin-bottom: clamp(2rem, 5vw, 2.8rem); padding: 0 1.2rem; }
-.lp-lenses-head p.lp-kick { color: var(--fp-text-secondary); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem !important; }
-.lp-count { font-family: var(--fp-font-display); font-size: clamp(2.8rem, 7vw, 4.4rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.lp-lenses-head .lp-sub { margin-top: 0.5rem !important; color: var(--fp-text-secondary); font-size: 0.9rem; font-weight: 300; }
-.lp-track-wrap { position: relative; overflow: hidden; }
-.lp-track-wrap + .lp-track-wrap { margin-top: 0.9rem; }
-.lp-track-wrap::before, .lp-track-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; z-index: 2; width: min(6rem, 8vw); pointer-events: none; }
-.lp-track-wrap::before { left: 0; background: linear-gradient(to right, var(--fp-bg-card), transparent); }
-.lp-track-wrap::after { right: 0; background: linear-gradient(to left, var(--fp-bg-card), transparent); }
-.lp-track { display: flex; gap: 0.8rem; width: max-content; padding: 0.2rem 0; animation: lp-left 55s linear infinite; }
-.lp-track--r { animation: lp-right 60s linear infinite; }
-.lp-track:hover { animation-play-state: paused; }
-@keyframes lp-left { to { transform: translateX(-50%); } }
-@keyframes lp-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-.lp-lens {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  width: min(17rem, calc(100vw - 3rem));
-  padding: 1.15rem;
-  border: 1px solid var(--fp-border-dim);
-  border-radius: 18px;
+.lp-wheel-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(1.6rem, 4vw, 3rem); align-items: center; }
+.lp-lenses .lp-kick { color: var(--fp-kicker); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem !important; }
+.lp-count-row { display: flex; align-items: baseline; gap: 0.6rem; margin-top: 1.2rem; }
+.lp-count { font-family: var(--fp-font-display); font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 300; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.lp-count-row small { color: var(--fp-text-secondary); font-size: 0.74rem; }
+
+.lp-legend { display: grid; gap: 1rem; margin-top: 1.6rem; }
+.lp-fam > p { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem !important; color: var(--fp-text-muted); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.lp-fam > p::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 2px; background: var(--fam); }
+.md-typeset .lp-fam ul { display: flex; flex-wrap: wrap; gap: 0.3rem; } /* Material makes every ul flow-root */
+.lp-lt {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-pill);
   background: var(--fp-bg-card);
-  box-shadow: 0 1px 2px rgba(17, 24, 39, .03);
-  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  color: var(--fp-text-secondary);
+  font: inherit;
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition: border-color .16s, background .16s, color .16s;
 }
-.lp-lens:hover { transform: translateY(-2px); border-color: var(--fp-border); box-shadow: 0 12px 32px rgba(17, 24, 39, .08); }
-.lp-lens-ic { font-size: 1.1rem; margin-bottom: 0.6rem; }
-.lp-lens b { font-family: var(--fp-font-display); font-weight: 400; font-size: 0.9rem; color: var(--fp-text); }
-.lp-lens p { margin-top: 0.35rem !important; color: var(--fp-prose); font-size: 0.74rem; line-height: 1.7; }
+.lp-lt i { font-style: normal; color: var(--fp-text-muted); font-size: 0.58rem; font-variant-numeric: tabular-nums; }
+.lp-lt.is-live { color: var(--fp-text); }
+.lp-lt.is-live i { color: var(--fam); font-weight: 600; }
+.lp-lt:hover { border-color: var(--fam); }
+.lp-lt[aria-pressed="true"] { border-color: var(--fam); background: color-mix(in srgb, var(--fam) 12%, var(--fp-bg-card)); color: var(--fp-text); }
+
+.lp-wheel { position: relative; width: min(100%, 26rem); margin: 0 auto; aspect-ratio: 1; }
+.lp-wheel[hidden] { display: none; }
+.lp-wheel svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.lp-seg-arc {
+  cursor: pointer;
+  stroke: var(--fp-bg-card);
+  stroke-width: 2;
+  transform-origin: 200px 200px;
+  transition: transform .45s var(--lp-ease), opacity .3s, filter .3s;
+  outline: none;
+}
+.lp-seg-arc.is-pipe { fill-opacity: .14; stroke: var(--fam-c); stroke-dasharray: 3 3; stroke-width: 1; }
+.lp-seg-arc.is-on { transform: scale(1.06); filter: drop-shadow(0 8px 14px rgba(15, 23, 42, .22)); }
+.lp-wheel.has-sel .lp-seg-arc:not(.is-on) { opacity: .45; }
+.lp-seg-arc:focus-visible { stroke: var(--fp-text); stroke-width: 2.5; }
+.lp-seg-num { fill: #fff; font-size: 11px; font-weight: 600; pointer-events: none; font-family: var(--fp-font-display); }
+.lp-seg-num.is-pipe { fill: var(--fp-text-muted); }
+.lp-share { fill: none; stroke-width: 5; stroke-linecap: round; transition: opacity .3s; }
+.lp-orbit { fill: none; stroke: var(--fp-border); stroke-dasharray: 2 5; }
+.lp-orbit-dot { fill: var(--fp-green); }
+
+.lp-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.lp-core-fam { font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fam, var(--fp-text-muted)); }
+.lp-core-name { margin-top: 0.2rem !important; font-family: var(--fp-font-display); font-size: clamp(0.85rem, 2vw, 1.05rem); line-height: 1.25; color: var(--fp-text); }
+.lp-core-desc { margin-top: 0.35rem !important; color: var(--fp-text-secondary); font-size: 0.62rem; line-height: 1.5; }
+.lp-core-n { display: inline-block; margin-top: 0.5rem; padding: 0.15rem 0.55rem; border-radius: var(--fp-pill); font-size: 0.6rem; font-variant-numeric: tabular-nums; background: var(--fp-accent-dim); color: var(--fp-text-secondary); }
+.lp-core-n.is-live { background: color-mix(in srgb, var(--fam) 16%, transparent); color: var(--fp-text); }
+.lp-core > * { transition: opacity .25s; }
+.lp-core.is-swap > * { opacity: 0; }
 
 /* ─── 7. Run it yourself ─── */
 .lp-run { background: var(--lp-soft); }
@@ -594,10 +734,12 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 60rem) {
-  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell { grid-template-columns: 1fr; }
+  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell, .lp-wheel-grid { grid-template-columns: 1fr; }
   .lp-ggrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 40rem) {
+  .lp-term-title { display: none; }
+  .lp-step { grid-template-columns: 1.1em 8em minmax(0, 1fr); }
   .lp-wrap { padding: 0 0.8rem; }
   .lp-ggrid { grid-template-columns: 1fr; }
   .lp-guide { min-height: 0; }
@@ -613,8 +755,11 @@
   .lp-row-a { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lp-in, .lp-chip { animation: none !important; opacity: 1; transform: none; filter: none; }
-  .lp-hero-ambient, .lp-scroll, .lp-caret, .lp-track { animation: none !important; }
+  .lp-in { animation: none !important; opacity: 1; transform: none; filter: none; }
+  .lp-hero-ambient, .lp-scroll, .lp-cursor { animation: none !important; }
+  /* The pulse bubbles and breadth bar would otherwise glide on every tab
+     change, and the wheel's centre would cross-fade. */
+  .lp-seg-arc, .lp-dot, .lp-swarm, .lp-breadth-bar i, .lp-tip, .lp-core > * { transition: none !important; }
   .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
@@ -628,14 +773,11 @@
     "kicker": "Finance Data Research Hub",
     "title": "AI-Powered Equity Research, Published Every Morning",
     "sub": "Research US and Taiwan stocks with daily reports, price history, filings, and news.",
-    "you": "You",
-    "bot": "Research Hub",
-    "ask": "Write today's research on the stocks I follow",
-    "ask_t": "Write today's research on {t}",
-    "reply": "Today's run is published. Open the reports to read it.",
-    "reply_t": "Published the {k} report for {t} on {d}.",
-    "reply_s": "Last close {p} · YTD {y} · 1Y {o}. Open it for the full analysis.",
-    "chips": ["Data fetched", "Report written", "Published"],
+    "term_title": "research-hub — zsh — 80×24",
+    "t_fetch": "fetch market data",
+    "t_write": "write report",
+    "t_pub": "publish",
+    "t_saved": "saved",
     "cta": "Read today's reports",
     "scroll": "Scroll down for more",
     "show_eye": "Live price context",
@@ -655,7 +797,14 @@
     "g_days": "Day rolling window",
     "proof": [["Computed in Python", "Every statistic is computed at build time, never in the browser."], ["Downloadable", "Each ticker ships its prices and financials as CSV and JSON."]],
     "data_cta": "Open Market Data",
-    "sphere_hint": "Drag to spin · click a ticker to open it",
+    "pulse_k": "Market pulse",
+    "pulse_t": "Every covered ticker, by return",
+    "windows": [["1d", "1D"], ["1m", "1M"], ["ytd", "YTD"], ["1y", "1Y"]],
+    "adv": "advancing",
+    "dec": "declining",
+    "best": "Best",
+    "worst": "Worst",
+    "pulse_hint": "Hover a bubble for details · click to open the ticker",
     "res_kick": "Fresh from the pipeline",
     "res_h": "How a morning's research reads",
     "res_tag": "Latest report",
@@ -675,20 +824,30 @@
     ],
     "open": "Open",
     "lens_kick": "Twelve analysis types",
-    "lens_sub": "reports published in the rolling window",
-    "cov": [
-      ["📊", "Fundamental Analysis", "Revenue, margins, balance sheet, and long-term earnings drivers."],
-      ["📈", "Technical Analysis", "Price action, MAs, RSI, MACD, volume, and chart pattern detection."],
-      ["💰", "DCF Valuation", "Intrinsic value modeling with multi-scenario sensitivity analysis."],
-      ["📄", "10-K Digest", "Annual report summaries — risks, strategy, and management commentary."],
-      ["🎯", "Catalyst Calendar", "Upcoming earnings, product events, and macro catalysts with expected impact."],
-      ["🏆", "Competitor Analysis", "Competitive moat assessment, market share, and industry positioning."],
-      ["📞", "Earnings Call Analysis", "Management tone, guidance signals, and sentiment from transcripts."],
-      ["🏦", "Institutional Ownership", "13F analysis — smart-money moves and ownership concentration shifts."],
-      ["👔", "Insider Trading", "Form 4 review — who's buying and selling, and what the pattern signals."],
-      ["📉", "Short Interest", "Short float, days-to-cover, and squeeze potential from borrow data."],
-      ["⚡", "Options Analysis", "IV, Greeks, put/call skew, and strategy selection for the current setup."],
-      ["💳", "Dividend Analysis", "Dividends, buybacks, M&A, and the quality of FCF deployment."]
+    "lens_h": "One pipeline, twelve ways to read a stock",
+    "lens_p": "Every analysis type the generator knows. Solid segments are in daily production; outlined ones can be run on demand.",
+    "lens_sub": "reports in the rolling window",
+    "live": "published",
+    "pipe": "In pipeline · run on demand",
+    "fams": [
+      ["value", "#10b981", "Fundamentals & valuation"],
+      ["market", "#3b82f6", "Market & macro"],
+      ["flow", "#8b5cf6", "Filings & flows"],
+      ["book", "#f59e0b", "Portfolio & output"]
+    ],
+    "lenses": [
+      ["fundamental-analysis", "value", "Fundamental Analysis", "Statements, margins, balance sheet, DCF and a rated verdict."],
+      ["stock-valuation", "value", "Stock Valuation", "DCF, comparables, EV multiples and residual income side by side."],
+      ["stock-eval", "value", "Stock Evaluation", "An all-round score across eight dimensions with peer comparison."],
+      ["financial-report-analyst", "value", "Financial Report Analyst", "A deep read of the filings: statement quality and red flags."],
+      ["technical-analysis", "market", "Technical Analysis", "Trend, moving averages, RSI and MACD, volume and key levels."],
+      ["sector-analysis", "market", "Sector Analysis", "Sector rotation and where the company sits within it."],
+      ["economics-analysis", "market", "Economics Analysis", "Macro indicators and what they imply for the market."],
+      ["earnings-call-analysis", "flow", "Earnings Call Analysis", "Management tone, guidance signals and themes from the call."],
+      ["insider-trading", "flow", "Insider Trading", "Form 4 buying and selling, and what the pattern signals."],
+      ["institutional-ownership", "flow", "Institutional Ownership", "13F holding changes and smart-money moves."],
+      ["portfolio-review", "book", "Portfolio Review", "Allocation, performance and risk across a portfolio."],
+      ["report-generator", "book", "HTML Report", "A compiled, interactive HTML report with charts."]
     ],
     "run_badge": "Open source",
     "run_h": "Generate a report for any ticker in one command",
@@ -712,14 +871,11 @@
     "kicker": "財經資料研究中心",
     "title": "AI 驅動的股票研究，每天清晨發布",
     "sub": "以每日報告、價格歷史、財報文件與新聞，研究美股與台股。",
-    "you": "你",
-    "bot": "研究中心",
-    "ask": "幫我寫今天關注個股的研究",
-    "ask_t": "幫我寫 {t} 今天的研究",
-    "reply": "今日報告已發布，打開報告即可閱讀。",
-    "reply_t": "已於 {d} 發布 {t} 的{k}報告。",
-    "reply_s": "最新收盤 {p} · 今年以來 {y} · 1Y {o}。打開報告查看完整分析。",
-    "chips": ["資料已抓取", "報告已撰寫", "已發布"],
+    "term_title": "research-hub — zsh — 80×24",
+    "t_fetch": "抓取市場資料",
+    "t_write": "撰寫報告",
+    "t_pub": "發布",
+    "t_saved": "已存",
     "cta": "閱讀今日報告",
     "scroll": "向下捲動查看更多",
     "show_eye": "即時價格脈絡",
@@ -739,7 +895,14 @@
     "g_days": "天滾動區間",
     "proof": [["以 Python 計算", "所有統計數據都在建置時計算，從不在瀏覽器中運算。"], ["可下載", "每個標的都提供價格與財務資料的 CSV 與 JSON。"]],
     "data_cta": "開啟市場數據",
-    "sphere_hint": "拖曳旋轉 · 點擊標的開啟",
+    "pulse_k": "市場脈動",
+    "pulse_t": "所有涵蓋標的，依報酬分布",
+    "windows": [["1d", "1D"], ["1m", "1M"], ["ytd", "今年"], ["1y", "1Y"]],
+    "adv": "上漲",
+    "dec": "下跌",
+    "best": "最佳",
+    "worst": "最差",
+    "pulse_hint": "滑過泡泡查看細節 · 點擊開啟標的",
     "res_kick": "剛出爐",
     "res_h": "一個早晨的研究長這樣",
     "res_tag": "最新報告",
@@ -759,20 +922,30 @@
     ],
     "open": "開啟",
     "lens_kick": "十二種分析類型",
-    "lens_sub": "篇報告於滾動區間內發布",
-    "cov": [
-      ["📊", "基本面分析", "營收、利潤率、資產負債表，以及長期獲利驅動因素。"],
-      ["📈", "技術分析", "價格走勢、均線、RSI、MACD、成交量與型態辨識。"],
-      ["💰", "DCF 估值", "內在價值模型，搭配多情境敏感度分析。"],
-      ["📄", "10-K 摘要", "年度報告摘要 — 風險、策略與管理層評論。"],
-      ["🎯", "催化劑日曆", "即將公布的財報、產品活動與總經催化劑及其預期影響。"],
-      ["🏆", "競爭對手分析", "競爭護城河評估、市場佔有率與產業定位。"],
-      ["📞", "財報電話會議分析", "管理層語氣、指引訊號與逐字稿中的情緒。"],
-      ["🏦", "機構持股", "13F 分析 — 聰明錢動向與持股集中度變化。"],
-      ["👔", "內部人交易", "Form 4 檢視 — 誰在買賣，以及型態傳達的訊號。"],
-      ["📉", "放空餘額", "放空比例、回補天數與借券資料隱含的軋空潛力。"],
-      ["⚡", "選擇權分析", "隱含波動率、Greeks、買賣權偏斜與策略選擇。"],
-      ["💳", "股利分析", "股利、庫藏股、併購與自由現金流運用品質。"]
+    "lens_h": "一條流程，十二種解讀股票的方式",
+    "lens_p": "生成器支援的每一種分析類型。實心區塊為每日生產中，外框區塊可依需求執行。",
+    "lens_sub": "篇報告於滾動區間內",
+    "live": "篇已發布",
+    "pipe": "流程中 · 可依需求執行",
+    "fams": [
+      ["value", "#10b981", "基本面與估值"],
+      ["market", "#3b82f6", "市場與總經"],
+      ["flow", "#8b5cf6", "文件與資金流向"],
+      ["book", "#f59e0b", "投資組合與輸出"]
+    ],
+    "lenses": [
+      ["fundamental-analysis", "value", "基本面深度分析", "財務報表、利潤率、資產負債表、DCF 與評級結論。"],
+      ["stock-valuation", "value", "多方法估值分析", "DCF、可比公司、EV 倍數與剩餘收益法並列。"],
+      ["stock-eval", "value", "綜合股票評估", "八大維度綜合評分，並與同業比較。"],
+      ["financial-report-analyst", "value", "財報深度解析", "深入解讀申報文件：報表品質與警訊。"],
+      ["technical-analysis", "market", "技術分析", "趨勢、均線、RSI 與 MACD、成交量與關鍵價位。"],
+      ["sector-analysis", "market", "產業板塊分析", "產業輪動，以及公司在其中的位置。"],
+      ["economics-analysis", "market", "總體經濟分析", "總經指標及其對市場的意涵。"],
+      ["earnings-call-analysis", "flow", "財報電話會議分析", "管理層語氣、指引訊號與會議主題。"],
+      ["insider-trading", "flow", "內部人交易分析", "Form 4 買賣紀錄及其型態訊號。"],
+      ["institutional-ownership", "flow", "機構持股分析", "13F 持股變化與聰明錢動向。"],
+      ["portfolio-review", "book", "投資組合回顧", "投資組合的配置、績效與風險。"],
+      ["report-generator", "book", "綜合 HTML 報告", "附互動圖表的完整 HTML 投資報告。"]
     ],
     "run_badge": "開源",
     "run_h": "一行指令，為任何標的生成報告",
@@ -797,7 +970,7 @@
 <div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}"
      data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/"
      data-hub-labels='{{ C.labels | tojson }}'
-     data-hub-copy='{{ {"ask_t": C.ask_t, "reply_t": C.reply_t, "reply_s": C.reply_s, "copied": C.copied, "copy": C.copy_btn} | tojson }}'>
+     data-hub-copy='{{ {"t_fetch": C.t_fetch, "t_write": C.t_write, "t_pub": C.t_pub, "t_saved": C.t_saved, "copied": C.copied, "copy": C.copy_btn} | tojson }}'>
 
   <!-- ── 1. Hero ── -->
   <section class="lp-hero">
@@ -807,25 +980,19 @@
       <h1 class="lp-hero-title lp-in">{{ C.title }}</h1>
       <p class="lp-hero-sub lp-in">{{ C.sub }}</p>
 
-      <div class="lp-chat lp-in" aria-live="polite">
-        <div class="lp-msg lp-msg--you">
-          <div class="lp-bubble lp-bubble--you">
-            <p class="lp-who">{{ C.you }}</p>
-            <p class="lp-said" data-hub-ask>{{ C.ask }}</p>
-          </div>
+      {#- Static session: the generic command with neutral output. With data it
+          is re-run for the featured report (ticker, type, model, date, figures). -#}
+      <div class="lp-term lp-in" role="img" aria-label="{{ C.term_title }}">
+        <div class="lp-term-bar">
+          <span class="lp-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="lp-term-title">{{ C.term_title }}</span>
         </div>
-        <div class="lp-msg lp-msg--bot">
-          <span class="lp-avatar" aria-hidden="true">✦</span>
-          <div class="lp-bubble lp-bubble--bot">
-            <p class="lp-who">{{ C.bot }}</p>
-            <p class="lp-said" data-hub-reply>{{ C.reply }}</p>
-            <p class="lp-said-sub" data-hub-reply-sub hidden></p>
-            <div class="lp-chips">
-              {%- for chip in C.chips %}
-              <span class="lp-chip" style="--d:{{ 0.9 + loop.index0 * 0.12 }}s">{{ chip }}</span>
-              {%- endfor %}
-            </div>
-          </div>
+        <div class="lp-term-body" data-hub-term>
+          <div class="lp-tl"><span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> <span class="lp-cmd">python scripts/generate_analysis.py AAPL <span class="lp-flag">--analysis-type</span> fundamental-analysis</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_fetch }}</span><span class="lp-dim">yfinance · SEC EDGAR</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_write }}</span><span class="lp-dim">gemini → openai</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_pub }}</span><span class="lp-dim">GitHub Pages</span></div>
+          <div class="lp-tl"><span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> <span class="lp-cursor"></span></div>
         </div>
       </div>
 
@@ -920,8 +1087,25 @@
         <p style="margin-top:1.6rem"><a class="lp-link" href="data/">{{ C.data_cta }} <span class="lp-arr" aria-hidden="true">→</span></a></p>
       </div>
       <div class="lp-rv" style="--lp-d:.12s">
-        <div class="lp-sphere" data-hub-sphere aria-label="{{ C.sphere_hint }}"></div>
-        <p class="lp-sphere-hint">{{ C.sphere_hint }}</p>
+        <div class="lp-pulse" data-hub-pulse hidden data-copy='{{ {"adv": C.adv, "dec": C.dec, "best": C.best, "worst": C.worst} | tojson }}'>
+          <div class="lp-pulse-head">
+            <div><p class="lp-pulse-k">{{ C.pulse_k }}</p><p class="lp-pulse-t">{{ C.pulse_t }}</p></div>
+            <div class="lp-seg" role="tablist">
+              {%- for key, label in C.windows %}
+              <button type="button" role="tab" data-w="{{ key }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
+              {%- endfor %}
+            </div>
+          </div>
+          <div class="lp-breadth">
+            <div class="lp-breadth-bar" aria-hidden="true"><i class="dn"></i><i class="fl"></i><i class="up"></i></div>
+            <div class="lp-breadth-lbl"><span data-pulse="dn">—</span><span data-pulse="up">—</span></div>
+          </div>
+          <div class="lp-swarm" data-pulse-swarm><div class="lp-swarm-zero" aria-hidden="true"></div></div>
+          <div class="lp-axis-x" data-pulse-axis aria-hidden="true"></div>
+          <div class="lp-pulse-foot" data-pulse-foot></div>
+          <div class="lp-tip" data-pulse-tip role="status"></div>
+        </div>
+        <p class="lp-pulse-hint">{{ C.pulse_hint }}</p>
       </div>
     </div>
   </section>
@@ -971,25 +1155,43 @@
     </div>
   </section>
 
-  <!-- ── 6. Lenses ── -->
+  <!-- ── 6. Lenses — the analysis wheel ── -->
+  {%- set FAM = {} %}{% for k, c, n in C.fams %}{% set _ = FAM.update({k: [c, n]}) %}{% endfor %}
   <section class="lp-band lp-lenses">
-    <div class="lp-lenses-head lp-rv">
-      <p class="lp-kick">{{ C.lens_kick }}</p>
-      <div class="lp-count"><span data-hub-num="reports" data-count>—</span></div>
-      <p class="lp-sub">{{ C.lens_sub }}</p>
-    </div>
-    {%- set half = (C.cov | length) // 2 %}
-    {%- for row in [C.cov[:half], C.cov[half:]] %}
-    <div class="lp-track-wrap">
-      <div class="lp-track{{ ' lp-track--r' if loop.last }}">
-        {%- for pass in [0, 1] %}
-        {%- for icon, name, desc in row %}
-        <div class="lp-lens"{% if pass %} aria-hidden="true"{% endif %}><span class="lp-lens-ic" aria-hidden="true">{{ icon }}</span><b>{{ name }}</b><p>{{ desc }}</p></div>
-        {%- endfor %}
-        {%- endfor %}
+    <div class="lp-wrap lp-wheel-grid">
+      <div class="lp-rv">
+        <p class="lp-kick">{{ C.lens_kick }}</p>
+        <h2>{{ C.lens_h }}</h2>
+        <p class="lp-lede">{{ C.lens_p }}</p>
+        <div class="lp-count-row"><span class="lp-count" data-hub-num="reports" data-count>—</span><small>{{ C.lens_sub }}</small></div>
+        <div class="lp-legend">
+          {%- for fk, fc, fn in C.fams %}
+          <div class="lp-fam" style="--fam:{{ fc }}">
+            <p>{{ fn }}</p>
+            <ul>
+              {%- for slug, fam, name, desc in C.lenses if fam == fk %}
+              <li><button type="button" class="lp-lt" data-lens="{{ slug }}" aria-pressed="false">{{ name }} <i data-lens-n="{{ slug }}"></i></button></li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endfor %}
+        </div>
+      </div>
+      <div class="lp-rv" style="--lp-d:.12s">
+        <div class="lp-wheel" data-hub-wheel hidden
+             data-lenses='{{ C.lenses | tojson }}'
+             data-fams='{{ FAM | tojson }}'
+             data-copy='{{ {"live": C.live, "pipe": C.pipe} | tojson }}'>
+          <svg viewBox="0 0 400 400" role="group" aria-label="{{ C.lens_kick }}"></svg>
+          <div class="lp-core" aria-live="off">
+            <div class="lp-core-fam"></div>
+            <p class="lp-core-name"></p>
+            <p class="lp-core-desc"></p>
+            <span class="lp-core-n"></span>
+          </div>
+        </div>
       </div>
     </div>
-    {%- endfor %}
   </section>
 
   <!-- ── 7. Run it yourself ── -->
@@ -1055,7 +1257,7 @@
 {{ super() }}
 <script>
   // ── Landing page ─────────────────────────────────────────────────────────
-  // hub.json fills the exchange, the showcase, the data figures, the sphere and
+  // hub.json fills the terminal, the showcase, the data figures, the pulse and
   // the research list; reports/<ticker>/kline.json supplies the closes that the
   // showcase plots as-is. Nothing here computes a statistic.
   (function () {
@@ -1125,17 +1327,37 @@
         ob.observe(el);
       }
 
-      // ── typing ──
-      function type(el, text, ms, then) {
-        if (reduce) { el.textContent = text; if (then) then(); return; }
+      // ── terminal session ──
+      var PROMPT = '<span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> ';
+      function session(body, cmd, steps, summary) {
+        var flagged = esc(cmd).replace(/(--[\w-]+)/g, '<span class="lp-flag">$1</span>');
+        var html = '<div class="lp-tl">' + PROMPT + '<span class="lp-cmd" data-cmd></span><span class="lp-cursor" data-cur></span></div>' +
+          steps.map(function (st) {
+            return '<div class="lp-tl lp-step" hidden><span class="lp-spin">⠋</span><span>' + esc(st[0]) + '</span><span class="lp-dim">' + esc(st[1]) + '</span></div>';
+          }).join("") +
+          '<div class="lp-tl lp-sum" hidden>' + summary + '</div>' +
+          '<div class="lp-tl" hidden>' + PROMPT + '<span class="lp-cursor"></span></div>';
+        body.innerHTML = html;
+        var cmdEl = body.querySelector("[data-cmd]"), cur = body.querySelector("[data-cur]");
+        var rest = Array.prototype.slice.call(body.querySelectorAll(".lp-tl[hidden]"));
+        function finish() { cmdEl.innerHTML = flagged; cur.remove(); rest.forEach(function (el) { el.hidden = false; }); body.querySelectorAll(".lp-spin").forEach(function (s) { s.className = "lp-ok"; s.textContent = "✓"; }); }
+        if (reduce) return finish();
         var i = 0;
-        var caret = document.createElement("span");
-        caret.className = "lp-caret";
-        (function tick() {
-          el.textContent = text.slice(0, ++i);
-          el.appendChild(caret);
-          if (i < text.length) setTimeout(tick, ms);
-          else { setTimeout(function () { caret.remove(); }, 500); if (then) then(); }
+        (function typeCmd() {
+          cmdEl.textContent = cmd.slice(0, ++i);
+          if (i < cmd.length) return setTimeout(typeCmd, 22 + Math.random() * 30);
+          cmdEl.innerHTML = flagged;
+          cur.remove();
+          var k = 0, frames = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";
+          (function next() {
+            if (k >= rest.length) return;
+            var el = rest[k++];
+            el.hidden = false;
+            var sp = el.querySelector(".lp-spin");
+            if (!sp) return setTimeout(next, 260);
+            var f = 0, t = setInterval(function () { sp.textContent = frames[f++ % frames.length]; }, 70);
+            setTimeout(function () { clearInterval(t); sp.className = "lp-ok"; sp.textContent = "✓"; next(); }, 520 + Math.random() * 380);
+          })();
         })();
       }
 
@@ -1201,60 +1423,235 @@
         }).catch(function () { /* frame stays hidden */ });
       }
 
-      // ── ticker sphere ──
-      function sphere(el, tape) {
-        var n = tape.length;
-        if (!n) return;
-        el.innerHTML = tape.map(function (t) {
-          return '<a class="lp-node" href="' + esc(base + t.href) + '" draggable="false"><b>' + esc(t.sym) + '</b>' +
-            (t.chg == null ? "" : '<small class="' + tone(t.chg) + '">' + pct(t.chg) + '</small>') + '</a>';
-        }).join("");
-        var nodes = $$(".lp-node", el);
-        var pts = nodes.map(function (_, i) {           // Fibonacci sphere
-          var y = 1 - (i / Math.max(1, n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
-          return [Math.cos(th) * r, y, Math.sin(th) * r];
+      // ── market pulse (beeswarm) ──
+      // Values, counts, extremes and the axis half-width all come from
+      // hub.json; this only maps them to pixels and dodges overlaps.
+      var WKEY = { "1d": "chg", "1m": "chg_1m", "ytd": "ytd", "1y": "chg_1y" };
+      function pulse(card, tape, breadth) {
+        if (!tape.length) return;
+        var pc = {};
+        try { pc = JSON.parse(card.getAttribute("data-copy") || "{}"); } catch (e) {}
+        var swarm = $("[data-pulse-swarm]", card), axis = $("[data-pulse-axis]", card);
+        var foot = $("[data-pulse-foot]", card), tip = $("[data-pulse-tip]", card);
+        function short(sym) { return String(sym).replace(/\.TW$/i, ""); }
+
+        tape.forEach(function (t) {
+          var a = document.createElement("a");
+          a.className = "lp-dot";
+          a.href = base + t.href;
+          a.textContent = short(t.sym);
+          a._t = t;
+          swarm.appendChild(a);
         });
-        var ay = 0, ax = -0.25, vy = 0.0035, vx = 0, hover = false, drag = null, moved = 0;
-        function render() {
-          var R = el.clientWidth * 0.4, cy = Math.cos(ay), sy = Math.sin(ay), cx = Math.cos(ax), sx = Math.sin(ax);
-          pts.forEach(function (p, i) {
-            var x = p[0] * cy + p[2] * sy, z = -p[0] * sy + p[2] * cy;
-            var y = p[1] * cx - z * sx; z = p[1] * sx + z * cx;
-            var depth = (z + 1) / 2, s = 0.62 + depth * 0.5;
-            var nd = nodes[i];
-            nd.style.transform = "translate(-50%,-50%) translate3d(" + (x * R).toFixed(1) + "px," + (y * R).toFixed(1) + "px,0) scale(" + s.toFixed(3) + ")";
-            nd.style.opacity = (0.22 + depth * 0.78).toFixed(3);
-            nd.style.zIndex = Math.round(depth * 100);
-            nd.style.pointerEvents = depth > 0.45 ? "auto" : "none";
-          });
+        var dots = $$(".lp-dot", swarm);
+
+        function showTip(dot) {
+          if (dot._x == null) return;
+          var t = dot._t, v = t[WKEY[cur]];
+          tip.innerHTML = '<b>' + esc(t.sym) + '</b> <span class="' + tone(v) + '">' + pct(v) + '</span>' +
+            '<small>' + esc(t.sector || "") + '</small><small>' + esc(t.px) + ' · 1D ' + pct(t.chg) + '</small>';
+          tip.style.left = dot._x + "px";
+          tip.style.top = (swarm.offsetTop + dot._y - dot.offsetHeight / 2) + "px";
+          tip.classList.add("on");
         }
-        render();
-        if (reduce) return;
-        el.addEventListener("pointerenter", function () { hover = true; });
-        el.addEventListener("pointerleave", function () { hover = false; drag = null; });
-        el.addEventListener("pointerdown", function (e) { drag = [e.clientX, e.clientY]; moved = 0; });
-        window.addEventListener("pointerup", function () { drag = null; });
-        el.addEventListener("pointermove", function (e) {
-          if (!drag) return;
-          var dx = e.clientX - drag[0], dy = e.clientY - drag[1];
-          moved += Math.abs(dx) + Math.abs(dy);
-          vy = dx * 0.0006; vx = -dy * 0.0006;
-          drag = [e.clientX, e.clientY];
+        function hideTip() { tip.classList.remove("on"); }
+        dots.forEach(function (d) {
+          d.addEventListener("pointerenter", function () { showTip(d); });
+          d.addEventListener("focus", function () { showTip(d); });
+          d.addEventListener("pointerleave", hideTip);
+          d.addEventListener("blur", hideTip);
         });
-        // A drag that ends over a node must not also open it.
-        el.addEventListener("click", function (e) { if (moved > 6) { e.preventDefault(); moved = 0; } }, true);
-        var visible = true;
-        if (io) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(el);
-        (function loop() {
-          if (!document.body.contains(el)) return;
-          if (visible) {
-            var k = hover && !drag ? 0.2 : 1;
-            ay += vy * k; ax = Math.max(-1, Math.min(1, ax + vx));
-            if (!drag) { vy += (0.0035 - vy) * 0.02; vx *= 0.92; }
-            render();
+
+        var cur = "1d", first = true;
+        function layout(w) {
+          cur = w;
+          var key = WKEY[w], b = breadth[w] || {}, span = b.span || 1;
+          var W = swarm.clientWidth, D = Math.max(22, Math.min(32, W / 15)), R = D / 2, pad = R + 2;
+          // Position along the axis, −1…1. hub.json picks linear or symmetric-log;
+          // symlog keeps a runaway mover from squeezing everyone onto the midline.
+          var c = span / 25;
+          var frac = b.scale === "symlog"
+            ? function (v) { return (v < 0 ? -1 : 1) * Math.log1p(Math.abs(v) / c) / Math.log1p(span / c); }
+            : function (v) { return v / span; };
+          var unfrac = b.scale === "symlog"
+            ? function (f) { return (f < 0 ? -1 : 1) * c * Math.expm1(Math.abs(f) * Math.log1p(span / c)); }
+            : function (f) { return f * span; };
+          var items = dots.map(function (d) {
+            var v = d._t[key];
+            return { d: d, v: v, x: v == null ? null : W / 2 + frac(v) * (W / 2 - pad) };
+          });
+          // Beeswarm dodge: walk left→right, give each bubble the y nearest the
+          // midline that clears every bubble already placed within reach.
+          var placed = [];
+          items.filter(function (it) { return it.x != null; })
+            .sort(function (a, b) { return a.x - b.x; })
+            .forEach(function (it) {
+              var near = placed.filter(function (p) { return Math.abs(p.x - it.x) < D; });
+              var y = 0;
+              for (var k = 0; k < 60; k++) {
+                y = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * (D * 0.5);
+                var ok = near.every(function (p) { var dx = p.x - it.x, dy = p.y - y; return dx * dx + dy * dy >= (D + 1.5) * (D + 1.5); });
+                if (ok) break;
+              }
+              it.y = y;
+              placed.push(it);
+            });
+          var maxY = placed.reduce(function (m, p) { return Math.max(m, Math.abs(p.y)); }, 0);
+          var H = Math.max(9 * 20, (maxY + R + 8) * 2);
+          swarm.style.height = H + "px";
+
+          items.forEach(function (it, i) {
+            var d = it.d;
+            d.style.setProperty("--d", D + "px");
+            if (it.x == null) {
+              // No value for this window: out of sight, out of reach — no
+              // pointer target over a visible bubble, nothing for a screen reader.
+              d.style.opacity = "0";
+              d.style.pointerEvents = "none";
+              d.tabIndex = -1;
+              d.setAttribute("aria-hidden", "true");
+              d._x = null;
+              return;
+            }
+            var mag = Math.min(1, Math.abs(frac(it.v)));
+            d.classList.toggle("up", it.v > 0);
+            d.classList.toggle("dn", it.v < 0);
+            d.classList.toggle("is-hot", mag > 0.55);
+            d.style.setProperty("--t", (0.12 + mag * 0.78).toFixed(3));
+            d.style.fontSize = (short(d._t.sym).length > 4 ? 0.42 : 0.5) + "rem";
+            d._x = it.x; d._y = H / 2 + it.y;
+            d.style.opacity = "1";
+            d.style.pointerEvents = "";
+            d.removeAttribute("aria-hidden");
+            d.tabIndex = 0;
+            d.setAttribute("aria-label", d._t.sym + " " + pct(it.v));
+            d.style.setProperty("--dl", first && !reduce ? (i * 0.018).toFixed(3) + "s" : "0s");
+            d.style.transform = "translate(" + it.x.toFixed(1) + "px," + d._y.toFixed(1) + "px)";
+          });
+          first = false;
+
+          // breadth bar + labels + extremes (values straight from hub.json)
+          var bar = $(".lp-breadth-bar", card).children;
+          bar[0].style.flexGrow = b.down || 0; bar[1].style.flexGrow = b.flat || 0; bar[2].style.flexGrow = b.up || 0;
+          $('[data-pulse="dn"]', card).innerHTML = '<b class="lp-dn">▼ ' + (b.down || 0) + '</b> ' + esc(pc.dec || "");
+          $('[data-pulse="up"]', card).innerHTML = esc(pc.adv || "") + ' <b class="lp-up">' + (b.up || 0) + ' ▲</b>';
+          var ticks = [-1, -0.5, 0, 0.5, 1];
+          axis.innerHTML = ticks.map(function (f) {
+            var x = W / 2 + f * (W / 2 - pad);
+            var tv = Math.abs(unfrac(f));
+            var label = f === 0 ? "0%" : (f > 0 ? "+" : "−") + tv.toFixed(tv < 10 ? 1 : 0) + "%";
+            return '<span style="left:' + (f === -1 ? 0 : f === 1 ? W : x).toFixed(1) + 'px">' + label + '</span>';
+          }).join("");
+          var tick = function (e, lbl) {
+            return e ? '<a href="' + esc(base + "reports/" + String(e.sym).toLowerCase() + "/") + '">' + esc(lbl) + ' <b>' + esc(e.sym) + '</b> <span class="' + tone(e.v) + '">' + pct(e.v) + '</span></a>' : "";
+          };
+          foot.innerHTML = tick(b.best, pc.best || "Best") + tick(b.worst, pc.worst || "Worst");
+        }
+
+        $$(".lp-seg button", card).forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            $$(".lp-seg button", card).forEach(function (x) { x.setAttribute("aria-selected", String(x === btn)); });
+            hideTip();
+            layout(btn.getAttribute("data-w"));
+          });
+        });
+        card.hidden = false;
+
+        // Start every bubble on the midline, then let it fly to its place.
+        if (!reduce) dots.forEach(function (d) { d.style.transform = "translate(" + (swarm.clientWidth / 2) + "px," + (swarm.clientHeight / 2 || 90) + "px) scale(.2)"; d.style.opacity = "0"; });
+        var go = function () { layout(cur); };
+        if (io && !reduce) {
+          var ob = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { ob.disconnect(); requestAnimationFrame(go); } }, { threshold: .25 });
+          ob.observe(card);
+        } else go();
+        var rt;
+        window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { if (document.body.contains(card)) layout(cur); }, 150); });
+      }
+
+      // ── analysis wheel ──
+      // Geometry only: each type gets a 30° segment; whether it is live and its
+      // count come from hub.json (types), the share arc is count / total.
+      function wheel(el, types) {
+        var lenses = [], fams = {}, wc = {};
+        try { lenses = JSON.parse(el.getAttribute("data-lenses")); fams = JSON.parse(el.getAttribute("data-fams")); wc = JSON.parse(el.getAttribute("data-copy")); } catch (e) { return; }
+        var count = {};
+        types.forEach(function (t) { count[t.slug] = t.count; });
+        var total = types.reduce(function (a, t) { return a + t.count; }, 0) || 1;
+        var svg = $("svg", el), core = $(".lp-core", el), NS = "http://www.w3.org/2000/svg";
+        var C0 = 200, RO = 170, RI = 108, n = lenses.length, step = 360 / n, gap = 1.6;
+        function pt(r, a) { var t = (a - 90) * Math.PI / 180; return [C0 + r * Math.cos(t), C0 + r * Math.sin(t)]; }
+        function arc(r1, r2, a1, a2) {
+          var p1 = pt(r2, a1), p2 = pt(r2, a2), p3 = pt(r1, a2), p4 = pt(r1, a1), lg = a2 - a1 > 180 ? 1 : 0;
+          return "M" + p1 + "A" + r2 + "," + r2 + " 0 " + lg + " 1 " + p2 + "L" + p3 + "A" + r1 + "," + r1 + " 0 " + lg + " 0 " + p4 + "Z";
+        }
+        var html = '<circle class="lp-orbit" cx="200" cy="200" r="190"/>';
+        lenses.forEach(function (L, i) {
+          var a1 = i * step + gap / 2, a2 = (i + 1) * step - gap / 2, c = (fams[L[1]] || ["#9ca3af"])[0];
+          var live = (count[L[0]] || 0) > 0, mid = pt((RO + RI) / 2, (a1 + a2) / 2);
+          html += '<path class="lp-seg-arc' + (live ? '' : ' is-pipe') + '" tabindex="0" role="button" data-i="' + i + '" fill="' + c + '" style="--fam-c:' + c + '" d="' + arc(RI, RO, a1, a2) + '" aria-label="' + esc(L[2]) + '"/>';
+          html += '<text class="lp-seg-num' + (live ? '' : ' is-pipe') + '" x="' + mid[0].toFixed(1) + '" y="' + mid[1].toFixed(1) + '" text-anchor="middle" dominant-baseline="central">' + String(i + 1).padStart(2, "0") + '</text>';
+          if (live) {
+            var sh = Math.max(2, (count[L[0]] / total) * (step - gap));
+            var o1 = pt(RO + 12, a1), o2 = pt(RO + 12, a1 + sh);
+            html += '<path class="lp-share" stroke="' + c + '" d="M' + o1 + 'A' + (RO + 12) + ',' + (RO + 12) + ' 0 0 1 ' + o2 + '"/>';
           }
-          requestAnimationFrame(loop);
-        })();
+        });
+        html += '<circle class="lp-orbit-dot" r="3.5" cx="200" cy="10"><animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="24s" repeatCount="indefinite"/></circle>';
+        svg.innerHTML = html;
+        if (reduce) { var dot = $(".lp-orbit-dot", svg); if (dot) dot.remove(); }
+
+        // legend counts
+        lenses.forEach(function (L) {
+          var c = count[L[0]] || 0, i = $('[data-lens-n="' + L[0] + '"]');
+          if (i) i.textContent = c ? c.toLocaleString() : "·";
+          var b = $('.lp-lt[data-lens="' + L[0] + '"]');
+          if (b) b.classList.toggle("is-live", c > 0);
+        });
+
+        var segs = $$(".lp-seg-arc", svg), btns = $$(".lp-lt"), sel = -1, timer = null, user = false;
+        function select(i, byUser) {
+          if (byUser) {
+            user = true;
+            clearInterval(timer);
+            // Silent while the tour cycles; announce only what the reader picks.
+            core.setAttribute("aria-live", "polite");
+          }
+          if (i === sel) return;
+          sel = i;
+          var L = lenses[i], f = fams[L[1]] || ["#9ca3af", ""], c = count[L[0]] || 0;
+          el.classList.add("has-sel");
+          segs.forEach(function (s, k) { s.classList.toggle("is-on", k === i); });
+          btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === L[0])); });
+          core.classList.add("is-swap");
+          setTimeout(function () {
+            core.style.setProperty("--fam", f[0]);
+            $(".lp-core-fam", core).textContent = f[1];
+            $(".lp-core-name", core).textContent = L[2];
+            $(".lp-core-desc", core).textContent = L[3];
+            var nEl = $(".lp-core-n", core);
+            nEl.textContent = c ? c.toLocaleString() + " " + wc.live : wc.pipe;
+            nEl.classList.toggle("is-live", c > 0);
+            core.classList.remove("is-swap");
+          }, reduce ? 0 : 160);
+        }
+        segs.forEach(function (s) {
+          var i = +s.getAttribute("data-i");
+          s.addEventListener("pointerenter", function () { select(i, true); });
+          s.addEventListener("click", function () { select(i, true); });
+          s.addEventListener("focus", function () { select(i, true); });
+          s.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i, true); } });
+        });
+        btns.forEach(function (b) {
+          var i = lenses.findIndex(function (L) { return L[0] === b.getAttribute("data-lens"); });
+          b.addEventListener("click", function () { select(i, true); });
+          b.addEventListener("pointerenter", function () { select(i, true); });
+        });
+        el.hidden = false;
+        // Start on the busiest type, then tour the wheel until the reader takes over.
+        var start = 0;
+        lenses.forEach(function (L, i) { if ((count[L[0]] || 0) > (count[lenses[start][0]] || 0)) start = i; });
+        select(start, false);
+        if (!reduce) timer = setInterval(function () { if (!user && document.body.contains(el)) select((sel + 1) % n, false); else clearInterval(timer); }, 3200);
       }
 
       function hydrate(d) {
@@ -1270,24 +1667,36 @@
         var days = $("[data-hub-days]");
         if (days && d.retention_days != null) days.textContent = d.retention_days;
 
-        // 1. the exchange
-        if (h) {
-          var ask = $("[data-hub-ask]"), reply = $("[data-hub-reply]"), sub = $("[data-hub-reply-sub]");
-          ask.textContent = fill(copy.ask_t, { t: h.ticker });
-          var r1 = fill(copy.reply_t, { k: typeLabel(h), t: h.ticker, d: h.date });
-          var r2 = fill(copy.reply_s, { p: (h.currency ? h.currency + " " : "") + h.price, y: pct(h.ytd), o: pct(h.chg_1y) });
+        // 1. the terminal — re-run the CLI for the featured report
+        var term = $("[data-hub-term]");
+        if (term && h) {
+          var kind = String(h.type || "").replace(/_/g, "-");
+          var price = (h.currency ? h.currency + " " : "") + h.price;
+          var summary =
+            '<b>' + esc(h.ticker) + '</b>  ' + esc(price) +
+            '  <span class="lp-dim">YTD</span> <span class="' + tone(h.ytd) + '">' + pct(h.ytd) + '</span>' +
+            '  <span class="lp-dim">1Y</span> <span class="' + tone(h.chg_1y) + '">' + pct(h.chg_1y) + '</span>\n' +
+            '<span class="lp-ok">→</span> ' + esc(copy.t_saved || "saved") + ' <a href="' + esc(base + h.href) + '">' + esc(h.href) + '</a>';
           setTimeout(function () {
-            type(reply, r1, 18, function () { sub.hidden = false; type(sub, r2, 10); });
-          }, reduce ? 0 : 700);
+            session(term, "python scripts/generate_analysis.py " + h.ticker + " --analysis-type " + kind, [
+              [copy.t_fetch, "yfinance · SEC EDGAR"],
+              [copy.t_write, h.model || h.provider || typeLabel(h)],
+              [copy.t_pub, h.date]
+            ], summary);
+          }, reduce ? 0 : 650);
         }
 
         // 2. showcase
         var app = $("[data-hub-app]");
         if (app && h) showcase(app, h);
 
-        // 3. sphere
-        var sp = $("[data-hub-sphere]");
-        if (sp && d.tape) sphere(sp, d.tape);
+        // 6. analysis wheel
+        var wh = $("[data-hub-wheel]");
+        if (wh && d.types) wheel(wh, d.types);
+
+        // 3. market pulse
+        var pl = $("[data-hub-pulse]");
+        if (pl && d.tape && d.breadth) pulse(pl, d.tape, d.breadth);
 
         // 4. research — feature the newest report that is not the hero, list the rest
         var latest = (d.latest || []).filter(function (r) { return !h || r.href !== h.href; });

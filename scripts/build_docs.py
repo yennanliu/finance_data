@@ -2053,8 +2053,58 @@ def news_available(ticker: str) -> bool:
 HUB_LATEST_COUNT = 6
 
 
+# The landing page's market-pulse chart switches between these return windows
+# (label, tape key). Its counts and extremes are computed here, never in JS.
+HUB_BREADTH_WINDOWS = (("1d", "chg"), ("1m", "chg_1m"), ("ytd", "ytd"), ("1y", "chg_1y"))
+
+
+def _breadth(tape: "list[dict]", key: str) -> dict:
+    """Advancers / decliners / unchanged and the extremes for one return window.
+
+    Tickers with no value for the window are left out of every count."""
+    vals = [(t["sym"], t[key]) for t in tape if t.get(key) is not None]
+    if not vals:
+        return {"up": 0, "down": 0, "flat": 0, "best": None, "worst": None,
+                "span": None, "scale": "linear"}
+    best = max(vals, key=lambda v: v[1])
+    worst = min(vals, key=lambda v: v[1])
+    span = max(abs(best[1]), abs(worst[1]))
+    mags = sorted(abs(v) for _, v in vals)
+    q80 = mags[int(0.8 * (len(mags) - 1))]
+    return {
+        "up": sum(1 for _, v in vals if v > 0),
+        "down": sum(1 for _, v in vals if v < 0),
+        "flat": sum(1 for _, v in vals if v == 0),
+        "best": {"sym": best[0], "v": best[1]},
+        "worst": {"sym": worst[0], "v": worst[1]},
+        # Symmetric axis half-width: the largest move, so 0% sits in the middle.
+        "span": span,
+        # One runaway move (a +400% YTD) would squeeze every other ticker onto
+        # the midline of a linear axis. When the largest move is more than 3×
+        # the 80th-percentile move, the chart switches to a symmetric-log axis.
+        "scale": "symlog" if q80 and span > 3 * q80 else "linear",
+    }
+
+
+def _type_counts(files: "list[Path]") -> "list[dict]":
+    """Published-report count for every analysis type the pipeline defines.
+
+    Driven by ANALYSIS_TYPES, so the landing page's wheel always lists the
+    real twelve types; a type with no report in the retention window is shown
+    as "in pipeline" rather than left out."""
+    from analysis.config import ANALYSIS_TYPES
+    seen: "dict[str, int]" = {}
+    for f in files:
+        k = report_type_key(f)
+        seen[k] = seen.get(k, 0) + 1
+    return [{"slug": slug, "key": spec["filename_prefix"],
+             "count": seen.get(spec["filename_prefix"], 0)}
+            for slug, spec in ANALYSIS_TYPES.items()]
+
+
 def hub_payload() -> dict:
     tape: "list[dict]" = []
+    published: "list[Path]" = []
     reports: "list[dict]" = []
     type_keys: set = set()
     total = 0
@@ -2064,13 +2114,19 @@ def hub_payload() -> dict:
                          if f.suffix == ".md" and within_retention(f)])
         if not files:
             continue
+        # HTML reports (report-generator) count towards their type too.
+        published += [f for f in ticker_files(tk)
+                      if f.suffix in (".md", ".html") and within_retention(f)]
         meta = get_meta(tk)
         bars = store_bars(tk)
         stats = price_analytics.summary(bars) if bars else None
         chg = stats["returns"].get("1d") if stats else None
         if stats:
+            ret = stats["returns"]
             tape.append({"sym": tk.upper(), "px": _num(stats["last_close"]),
-                         "chg": chg, "href": f"reports/{tk}/"})
+                         "chg": chg, "chg_1m": ret.get("1m"), "ytd": stats.get("ytd"),
+                         "chg_1y": ret.get("1y"), "sector": meta["sector"],
+                         "href": f"reports/{tk}/"})
         for f in files:
             total += 1
             type_keys.add(report_type_key(f))
@@ -2124,6 +2180,8 @@ def hub_payload() -> dict:
                   "reports": total, "per_day": per_day, "latest_day": latest_day,
                   "types": len(type_keys), "news_tickers": news_tickers},
         "tape": tape,
+        "breadth": {w: _breadth(tape, key) for w, key in HUB_BREADTH_WINDOWS},
+        "types": _type_counts(published),
         "latest": latest,
         "hero": hero,
     }
