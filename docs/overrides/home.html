@@ -2,17 +2,25 @@
 
 {#-
   Landing page — an editorial "research magazine" front after
-  finlab.finance/en/blog: a masthead with a category rail, a featured report
-  card beside a list of the newest reports, then the coverage and pipeline
-  sections as feeds separated by hairlines.
+  finlab.finance/en/blog, with a livelier hero: an aurora-lit masthead whose
+  right half is the featured report drawn as a real price chart, a card grid
+  of the newest reports (each with its own sparkline), then the coverage and
+  pipeline feeds.
 
   One template serves both languages. home_zh.html only overrides
   `home_lang`; every visible string comes from COPY below, so the two pages
   cannot drift apart structurally.
 
-  Every figure is hydrated from hub.json (scripts/build_docs.py,
-  write_hub_payload). Slots that carry figures stay `hidden` until the payload
-  arrives, so a failed fetch shows nothing stale.
+  Data:
+    hub.json (scripts/build_docs.py, write_hub_payload) — tape, counts, the
+      featured report and the latest list, every figure computed in Python.
+    reports/<ticker>/kline.json — the OHLCV bars the ticker pages' candlestick
+      chart already reads. Only the closes are plotted here, as-is: no
+      statistic is derived in JS.
+  Slots that carry figures stay `hidden` until their data arrives, so a failed
+  fetch shows nothing stale. Motion (aurora drift, reveals, count-up, line
+  draw) is skipped under prefers-reduced-motion, and every reveal is gated on
+  the `lp-js` class so the page is fully visible with scripts off.
 -#}
 
 {% block home_lang %}en{% endblock %}
@@ -27,18 +35,29 @@
 .md-content__inner:has(> .lp-page) > .md-content__button { display: none; }
 
 .lp-page {
-  --lp-cover-a: #1e3a8a;
-  --lp-cover-b: #0f766e;
+  --lp-a: #10b981;   /* emerald */
+  --lp-b: #3b82f6;   /* blue    */
+  --lp-c: #8b5cf6;   /* violet  */
+  --lp-glass: rgba(255, 255, 255, .72);
+  --lp-glass-edge: rgba(255, 255, 255, .9);
+  --lp-aurora-o: .55;
+  position: relative;
   overflow-x: clip;
   color: var(--fp-text);
   font-size: 0.8rem;
   line-height: 1.6;
 }
+[data-md-color-scheme="slate"] .lp-page {
+  --lp-glass: rgba(17, 22, 34, .66);
+  --lp-glass-edge: rgba(255, 255, 255, .08);
+  --lp-aurora-o: .38;
+}
 
 .md-typeset .lp-page p { margin: 0; }
 
 .lp-con {
-  width: min(100%, 64rem);
+  position: relative;
+  width: min(100%, 66rem);
   margin: 0 auto;
   padding: 0 1.2rem;
 }
@@ -59,88 +78,352 @@
   text-wrap: balance;
 }
 
-/* ─── Masthead ─── */
-.lp-mast { padding: clamp(1.75rem, 4vw, 2.75rem) 0 1.4rem; }
+/* ─── Hero ─── */
+.lp-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  overflow-clip-margin: 1rem;
+  padding: clamp(2rem, 5vw, 3.6rem) 0 clamp(2rem, 4vw, 3rem);
+}
+
+/* Aurora: three blurred colour fields drifting behind a faded chart grid. */
+.lp-aurora {
+  position: absolute;
+  inset: -20% -10% -10%;
+  z-index: -2;
+  pointer-events: none;
+  opacity: var(--lp-aurora-o);
+  filter: blur(60px) saturate(1.2);
+}
+.lp-aurora span {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  mix-blend-mode: normal;
+  animation: lp-drift 22s ease-in-out infinite alternate;
+}
+.lp-aurora span:nth-child(1) { left: 48%; top: -12%; background: radial-gradient(closest-side, var(--lp-a), transparent); }
+.lp-aurora span:nth-child(2) { left: 66%; top: 18%;  background: radial-gradient(closest-side, var(--lp-b), transparent); animation-duration: 28s; animation-delay: -6s; }
+.lp-aurora span:nth-child(3) { left: 30%; top: 30%;  background: radial-gradient(closest-side, var(--lp-c), transparent); opacity: .55; animation-duration: 34s; animation-delay: -12s; }
+@keyframes lp-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-6%, 4%, 0) scale(1.08); }
+  100% { transform: translate3d(4%, -3%, 0) scale(.95); }
+}
+
+.lp-grid-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--fp-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fp-border) 1px, transparent 1px);
+  background-size: 2.4rem 2.4rem;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 60% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 60% 35%, #000 20%, transparent 75%);
+  opacity: .7;
+}
+
+.lp-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
 
 .lp-kicker {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.9rem;
-  color: var(--fp-kicker);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
+  background: var(--lp-glass);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--fp-text-secondary);
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
 }
-.lp-kicker::before {
-  content: "";
-  width: 0.4rem;
-  height: 0.4rem;
+.lp-pulse {
+  position: relative;
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 50%;
-  background: currentcolor;
+  background: var(--lp-a);
 }
+.lp-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--lp-a);
+  animation: lp-ping 2s cubic-bezier(0, 0, .2, 1) infinite;
+}
+@keyframes lp-ping { 75%, 100% { transform: scale(2.6); opacity: 0; } }
 
 .md-typeset .lp-page .lp-title {
-  max-width: 22ch;
-  font-size: clamp(1.75rem, 4.6vw, 2.9rem) !important;
-  letter-spacing: -0.035em !important;
-  line-height: 1.06 !important;
+  font-size: clamp(1.9rem, 5vw, 3.3rem) !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.02 !important;
 }
+.md-typeset .lp-page .lp-title em {
+  font-style: normal;
+  background: linear-gradient(100deg, var(--lp-a) 0%, var(--lp-b) 55%, var(--lp-c) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: lp-sheen 9s ease-in-out infinite alternate;
+}
+@keyframes lp-sheen { to { background-position: 100% 0; } }
 
 .lp-deck {
-  max-width: 34rem;
-  margin-top: 0.9rem !important;
+  max-width: 32rem;
+  margin-top: 1rem !important;
   color: var(--fp-text-secondary);
   font-size: 0.85rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
-.lp-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
-  margin-top: 1.6rem;
-}
-
-.lp-rail { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.lp-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
 
 .lp-pill,
 .lp-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-height: 2.1rem;
-  padding: 0 0.85rem;
+  gap: 0.4rem;
+  min-height: 2.2rem;
+  padding: 0 0.9rem;
   border: 1px solid var(--fp-border-strong);
   border-radius: var(--fp-pill);
-  background: var(--fp-bg-card);
+  background: var(--lp-glass);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   color: var(--fp-badge-color) !important;
   font-size: 0.75rem;
   line-height: 1;
   white-space: nowrap;
   text-decoration: none !important;
-  transition: border-color .16s, background-color .16s, color .16s, transform .18s var(--fp-ease);
+  transition: border-color .16s, background-color .16s, color .16s, transform .2s var(--fp-ease), box-shadow .2s;
 }
-.lp-pill:hover { border-color: #9aa4b5; background: var(--fp-bg-raised); color: var(--fp-text) !important; }
+.lp-pill:hover { border-color: #9aa4b5; color: var(--fp-text) !important; transform: translateY(-1px); }
 
 .lp-btn {
-  padding: 0 1.1rem;
+  padding: 0 1.15rem;
   border-color: var(--fp-btn-accent-bg);
   background: var(--fp-btn-accent-bg);
   color: var(--fp-btn-accent-fg) !important;
+  box-shadow: 0 8px 22px -8px var(--fp-btn-accent-glow), 0 0 0 0 rgba(16, 185, 129, 0);
 }
-.lp-btn:hover { transform: translateY(-1px); opacity: .9; }
+.lp-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px var(--fp-btn-accent-glow), 0 0 0 4px rgba(16, 185, 129, .18); }
+.lp-btn .lp-arr { transition: transform .2s var(--fp-ease); }
+.lp-btn:hover .lp-arr, .lp-pill:hover .lp-arr { transform: translateX(3px); }
 
-.lp-pill:focus-visible, .lp-btn:focus-visible, .lp-feat:focus-visible, .lp-row:focus-visible, .lp-more:focus-visible {
+.lp-rail { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+.lp-rail .lp-pill { min-height: 1.9rem; font-size: 0.7rem; padding: 0 0.75rem; }
+
+.lp-pill:focus-visible, .lp-btn:focus-visible, .lp-viz-card:focus-visible, .lp-rcard:focus-visible, .lp-more:focus-visible {
   outline: 2px solid var(--fp-text);
   outline-offset: 3px;
 }
 
+/* ─── Hero visual: the featured report as a live price card ─── */
+.lp-viz { position: relative; padding: 1.4rem 0.6rem 1.6rem; }
+.lp-viz[hidden] { display: none; }
+
+.lp-viz-card {
+  position: relative;
+  display: block;
+  padding: 1.1rem 1.15rem 1rem;
+  border: 1px solid var(--lp-glass-edge);
+  border-radius: 1.2rem;
+  background: var(--lp-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(18px) saturate(1.3);
+  color: inherit !important;
+  text-decoration: none !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .6) inset,
+    0 30px 60px -20px rgba(15, 23, 42, .28),
+    0 0 0 1px var(--fp-border);
+  transform: perspective(1400px) rotateY(-5deg) rotateX(3deg);
+  transition: transform .6s var(--fp-ease), box-shadow .6s;
+}
+.lp-viz-card:hover {
+  transform: perspective(1400px) rotateY(0) rotateX(0) translateY(-4px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 40px 80px -24px rgba(15, 23, 42, .35), 0 0 0 1px var(--fp-border-strong);
+}
+
+.lp-viz-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 0.6rem; }
+.lp-viz-id { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+.lp-viz-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, var(--lp-a), var(--lp-b));
+  color: #fff;
+  font-family: var(--fp-font-display);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 6px 16px -6px var(--lp-b);
+}
+.lp-viz-sym { display: block; white-space: nowrap; font-family: var(--fp-font-display); font-size: 0.95rem; font-weight: 500; line-height: 1.1; }
+.lp-viz-sub { display: block; color: var(--fp-text-muted); font-size: 0.64rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-viz-tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--fp-pill);
+  background: rgba(16, 185, 129, .12);
+  color: var(--fp-kicker);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+.lp-viz-px { display: flex; align-items: baseline; gap: 0.6rem; margin-top: 0.9rem; }
+.lp-viz-price {
+  font-family: var(--fp-font-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.lp-viz-cur { color: var(--fp-text-muted); font-size: 0.66rem; }
+.lp-chg {
+  display: inline-flex;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--fp-pill);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--fp-accent-dim);
+}
+.lp-chg.lp-up { background: rgba(16, 185, 129, .12); }
+.lp-chg.lp-dn { background: rgba(239, 68, 68, .12); }
+
+.lp-up { color: var(--fp-green) !important; }
+.lp-dn { color: var(--fp-red) !important; }
+
+/* Chart */
+.lp-chart { position: relative; margin: 0.8rem -0.2rem 0; }
+.lp-chart svg { display: block; width: 100%; height: 8.5rem; overflow: visible; }
+.lp-chart[data-state="loading"] svg { opacity: 0; }
+.lp-chart-line {
+  fill: none;
+  stroke: url(#lp-stroke);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.lp-chart-area { fill: url(#lp-fill); }
+.lp-chart-dot { fill: var(--lp-a); }
+.lp-chart-halo { fill: var(--lp-a); opacity: .25; transform-box: fill-box; transform-origin: center; animation: lp-halo 2.2s ease-out infinite; }
+@keyframes lp-halo { 0% { transform: scale(1); opacity: .35; } 100% { transform: scale(3.2); opacity: 0; } }
+.lp-chart-axis { display: flex; justify-content: space-between; margin-top: 0.3rem; color: var(--fp-text-muted); font-size: 0.58rem; font-variant-numeric: tabular-nums; }
+
+.lp-viz-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+.lp-viz-metrics > span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.6rem;
+  background: var(--fp-accent-dim);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+.lp-viz-metrics i { font-style: normal; color: var(--fp-text-muted); font-size: 0.58rem; }
+
+.lp-viz-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--fp-border);
+}
+.lp-viz-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-size: 0.74rem;
+  color: var(--fp-text);
+}
+.lp-viz-go {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--fp-pill);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg);
+  font-size: 0.64rem;
+  transition: transform .2s var(--fp-ease);
+}
+.lp-viz-card:hover .lp-viz-go { transform: translateX(2px); }
+
+/* Floating stat chips around the card */
+.lp-float {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.8rem 0.5rem 0.55rem;
+  border: 1px solid var(--lp-glass-edge);
+  border-radius: 0.9rem;
+  background: var(--lp-glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 36px -14px rgba(15, 23, 42, .3), 0 0 0 1px var(--fp-border);
+  animation: lp-bob 6s ease-in-out infinite;
+}
+.lp-float--a { top: -0.2rem; right: -0.6rem; }
+.lp-float--b { bottom: -0.1rem; left: -1.2rem; animation-delay: -3s; }
+.lp-float-ic {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.55rem;
+  color: #fff;
+  font-size: 0.75rem;
+  background: linear-gradient(135deg, var(--lp-b), var(--lp-c));
+}
+.lp-float--b .lp-float-ic { background: linear-gradient(135deg, var(--lp-a), #14b8a6); }
+.lp-float b { display: block; font-family: var(--fp-font-display); font-size: 0.95rem; font-weight: 400; line-height: 1; letter-spacing: -0.02em; }
+.lp-float small { display: block; color: var(--fp-text-muted); font-size: 0.58rem; line-height: 1.3; }
+@keyframes lp-bob { 50% { transform: translateY(-6px); } }
+
 /* ─── Market tape (hub.json) ─── */
 .lp-tape {
+  position: relative;
   border-block: 1px solid var(--fp-border);
+  background: var(--lp-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -148,277 +431,258 @@
 .lp-tape[hidden] { display: none; }
 .lp-tape-track {
   display: flex;
-  gap: 2rem;
+  gap: 0.6rem;
   width: max-content;
   padding: 0.55rem 0;
-  animation: lp-scroll 60s linear infinite;
+  animation: lp-scroll 70s linear infinite;
 }
-.lp-tape-track:hover { animation-play-state: paused; }
+.lp-tape:hover .lp-tape-track { animation-play-state: paused; }
 @keyframes lp-scroll { to { transform: translateX(-50%); } }
 
 .lp-tick {
   display: inline-flex;
+  align-items: center;
   gap: 0.45rem;
-  font-size: 0.7rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  font-size: 0.68rem;
   color: var(--fp-text-secondary) !important;
   text-decoration: none !important;
   font-variant-numeric: tabular-nums;
+  transition: border-color .15s, transform .15s;
 }
+.lp-tick::before { content: ""; width: 0.35rem; height: 0.35rem; border-radius: 50%; background: var(--fp-text-muted); }
+.lp-tick.is-up::before { background: var(--fp-green); }
+.lp-tick.is-dn::before { background: var(--fp-red); }
 .lp-tick b { color: var(--fp-text); font-weight: 500; }
-.lp-tick:hover b { text-decoration: underline; text-underline-offset: 3px; }
-
-.lp-up { color: var(--fp-green) !important; }
-.lp-dn { color: var(--fp-red) !important; }
+.lp-tick:hover { border-color: var(--fp-border-strong); transform: translateY(-1px); }
 
 /* ─── Feeds (sections) ─── */
-.lp-feed { padding: clamp(2rem, 5vw, 3.2rem) 0; border-top: 1px solid var(--fp-border); }
-.lp-feed--first { border-top: 0; padding-top: 1.6rem; }
+.lp-feed { position: relative; padding: clamp(2.2rem, 5vw, 3.4rem) 0; }
+.lp-feed + .lp-feed { border-top: 1px solid var(--fp-border); }
+
+.lp-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  background: linear-gradient(90deg, var(--lp-a), var(--lp-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .lp-feed-head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: clamp(1rem, 2.5vw, 1.4rem);
+  margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
 }
 .md-typeset .lp-page .lp-feed-head h2 {
-  font-size: clamp(1.3rem, 2.6vw, 1.75rem) !important;
-  letter-spacing: -0.02em !important;
-  line-height: 1.2 !important;
+  font-size: clamp(1.35rem, 2.8vw, 1.9rem) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.15 !important;
 }
-.lp-blurb { margin-top: 0.25rem !important; color: var(--fp-text-muted); font-size: 0.8rem; max-width: 36rem; }
+.lp-blurb { margin-top: 0.3rem !important; color: var(--fp-text-muted); font-size: 0.8rem; max-width: 36rem; }
 
 .lp-more {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   color: var(--fp-text) !important;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   white-space: nowrap;
   text-decoration: none !important;
   transition: gap .16s var(--fp-ease);
 }
 .lp-more:hover { gap: 0.6rem; }
 
-/* ─── Featured report + side list ─── */
-.lp-feed-body {
+/* ─── Latest research — card grid with sparklines ─── */
+.lp-rgrid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: clamp(0.8rem, 2.4vw, 1.4rem);
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
 }
-.lp-feed-body:has(> .lp-feat[hidden]) { grid-template-columns: 1fr; }
 
-.lp-feat {
+.lp-rcard {
+  --lp-ink: #2563eb;
+  --lp-wash: #eef4ff;
   position: relative;
   display: flex;
-  min-height: clamp(15rem, 26vw, 19rem);
-  border-radius: var(--fp-radius);
-  overflow: hidden;
-  isolation: isolate;
-  color: #fff !important;
-  text-decoration: none !important;
-  box-shadow: var(--fp-shadow-lg);
-  background: linear-gradient(135deg, var(--lp-cover-a), var(--lp-cover-b));
-}
-.lp-feat[hidden] { display: none; }
-
-/* A quiet chart-paper grid stands in for a cover image. */
-.lp-feat::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px);
-  background-size: 2.2rem 2.2rem;
-  transition: transform .5s ease;
-}
-.lp-feat:hover::before { transform: scale(1.04); }
-
-.lp-feat-scrim {
-  display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.45rem;
-  width: 100%;
-  padding: clamp(1.1rem, 2.5vw, 1.5rem);
-  background: linear-gradient(to top, rgba(3, 7, 15, .92), rgba(3, 7, 15, .7) 35%, rgba(3, 7, 15, .2) 75%, rgba(3, 7, 15, .05));
-}
-
-.lp-feat-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: auto; }
-.lp-feat-sym {
-  font-family: var(--fp-font-display);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-.lp-feat-px { color: #eaeef4; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
-
-.lp-feat-kicker { color: #6ee7b7; font-size: 0.7rem; letter-spacing: 0.05em; }
-
-.md-typeset .lp-page .lp-feat h3 {
-  display: -webkit-box;
-  max-width: 28rem;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  font-size: clamp(1.15rem, 2.2vw, 1.45rem) !important;
-  line-height: 1.18 !important;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, .55);
-}
-
-.lp-feat-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.9rem;
-  color: #f1f4f8;
-  font-size: 0.7rem;
-  font-variant-numeric: tabular-nums;
-}
-.lp-feat-meta i { font-style: normal; color: #b7c0cf; margin-right: 0.2rem; }
-.lp-feat .lp-up { color: #6ee7b7 !important; }
-.lp-feat .lp-dn { color: #fca5a5 !important; }
-
-.lp-range { display: block; max-width: 20rem; margin-top: 0.2rem; }
-.lp-range-rail { display: block; position: relative; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .25); }
-.lp-range-dot {
-  position: absolute;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  margin-left: -5px;
-  border-radius: 50%;
-  background: #fff;
-  transform: translateY(-50%);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-  transition: left .4s ease;
-}
-.lp-range-ends { display: flex; justify-content: space-between; margin-top: 0.25rem; color: #b7c0cf; font-size: 0.6rem; font-variant-numeric: tabular-nums; }
-
-.lp-feat-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  align-self: flex-start;
-  margin-top: 0.35rem;
-  padding: 0.45rem 0.9rem;
-  border-radius: var(--fp-pill);
-  background: #fff;
-  color: #0c1320;
-  font-size: 0.7rem;
-  transition: transform .18s var(--fp-ease), background .18s;
-}
-.lp-feat:hover .lp-feat-btn { transform: translateY(-2px); background: #eef2f7; }
-
-.md-typeset .lp-side { display: flex; flex-direction: column; gap: 0.1rem; margin: 0; padding: 0; list-style: none; }
-.md-typeset .lp-side > li { margin: 0 !important; } /* beats [dir=ltr] .md-typeset ul li */
-
-.lp-row {
-  --lp-matte: #eef3f8;
-  --lp-ink: #1d4ed8;
-  display: grid;
-  grid-template-columns: 3.6rem minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem;
-  border-radius: var(--fp-radius-sm);
+  gap: 0.55rem;
+  min-height: 11rem;
+  padding: 1rem 1rem 0.9rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
   color: inherit !important;
   text-decoration: none !important;
-  transition: background .16s ease, transform .16s var(--fp-ease);
+  overflow: hidden;
+  box-shadow: var(--fp-shadow-sm);
+  transition: transform .25s var(--fp-ease), box-shadow .25s, border-color .25s;
 }
-.lp-row:hover { background: var(--fp-bg-raised); transform: translateX(3px); }
-.lp-row--fundamental_analysis { --lp-matte: #eef4ff; --lp-ink: #2563eb; }
-.lp-row--technical_analysis { --lp-matte: #edf7f4; --lp-ink: #0f766e; }
-.lp-row--market_news { --lp-matte: #f3f0ff; --lp-ink: #6d28d9; }
-[data-md-color-scheme="slate"] .lp-row { --lp-matte: rgba(255, 255, 255, .06); }
-[data-md-color-scheme="slate"] .lp-row--fundamental_analysis { --lp-ink: #93c5fd; }
-[data-md-color-scheme="slate"] .lp-row--technical_analysis { --lp-ink: #5eead4; }
-[data-md-color-scheme="slate"] .lp-row--market_news { --lp-ink: #c4b5fd; }
+.lp-rcard:hover { transform: translateY(-4px); box-shadow: var(--fp-shadow); border-color: var(--fp-border-strong); }
+.lp-rcard--technical_analysis { --lp-ink: #0f766e; --lp-wash: #e6f6f1; }
+.lp-rcard--market_news { --lp-ink: #6d28d9; --lp-wash: #f1edff; }
+[data-md-color-scheme="slate"] .lp-rcard { --lp-ink: #93c5fd; --lp-wash: rgba(147, 197, 253, .1); }
+[data-md-color-scheme="slate"] .lp-rcard--technical_analysis { --lp-ink: #5eead4; --lp-wash: rgba(94, 234, 212, .1); }
+[data-md-color-scheme="slate"] .lp-rcard--market_news { --lp-ink: #c4b5fd; --lp-wash: rgba(196, 181, 253, .1); }
 
-.lp-thumb {
+/* A coloured top edge that sweeps in on hover. */
+.lp-rcard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lp-ink), transparent);
+  transform: scaleX(.15);
+  transform-origin: 0 50%;
+  transition: transform .4s var(--fp-ease);
+}
+.lp-rcard:hover::before { transform: scaleX(1); }
+
+.lp-rcard-top { display: flex; align-items: center; gap: 0.55rem; }
+.lp-rcard-sym {
   display: grid;
   place-items: center;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--fp-border);
-  border-radius: 0.45rem;
-  background: var(--lp-matte);
+  min-width: 2.6rem;
+  height: 1.7rem;
+  padding: 0 0.45rem;
+  border-radius: 0.5rem;
+  background: var(--lp-wash);
   color: var(--lp-ink);
   font-family: var(--fp-font-display);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: -0.01em;
-  overflow: hidden;
 }
-.lp-row-body { display: grid; gap: 0.15rem; min-width: 0; }
-.lp-row-title {
+.lp-rcard-type { color: var(--fp-text-muted); font-size: 0.64rem; }
+.lp-rcard-top .lp-chg { margin-left: auto; }
+.lp-rcard-title {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  font-family: var(--fp-font-display);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   color: var(--fp-text);
-  font-size: 0.8rem;
-  line-height: 1.35;
 }
-.lp-row-meta { color: var(--fp-text-muted); font-size: 0.68rem; }
-.lp-row-arrow { color: var(--fp-text-muted); font-size: 0.8rem; transition: transform .16s var(--fp-ease); }
-.lp-row:hover .lp-row-arrow { transform: translateX(2px); color: var(--fp-text); }
+.lp-spark { display: block; width: 100%; height: 2.4rem; margin-top: auto; overflow: visible; }
+.lp-spark path { fill: none; stroke: var(--lp-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.lp-spark .lp-spark-area { stroke: none; fill: var(--lp-wash); }
+.lp-rcard-foot { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--fp-text-muted); font-size: 0.62rem; font-variant-numeric: tabular-nums; }
+
+.lp-rcard--all {
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--fp-font-display);
+  font-size: 0.95rem;
+}
+.lp-rcard--all::before { display: none; }
 
 /* ─── Figures ─── */
 .lp-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+.lp-stat {
+  position: relative;
+  padding: 1.15rem 1.2rem;
   border: 1px solid var(--fp-border);
   border-radius: var(--fp-radius);
   background: var(--fp-bg-card);
-  box-shadow: var(--fp-shadow-sm);
   overflow: hidden;
 }
-.lp-stat { padding: 1.1rem 1.2rem; }
-.lp-stat + .lp-stat { border-left: 1px solid var(--fp-border); }
+.lp-stat::after {
+  content: "";
+  position: absolute;
+  right: -2.5rem;
+  top: -2.5rem;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--lp-glow, rgba(16, 185, 129, .18)), transparent);
+}
+.lp-stat:nth-child(2) { --lp-glow: rgba(59, 130, 246, .18); }
+.lp-stat:nth-child(3) { --lp-glow: rgba(139, 92, 246, .18); }
+.lp-stat:nth-child(4) { --lp-glow: rgba(245, 158, 11, .18); }
 .lp-stat-num {
   font-family: var(--fp-font-display);
-  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  font-size: clamp(1.7rem, 3.8vw, 2.4rem);
   font-weight: 300;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-.lp-stat-lbl { margin-top: 0.45rem !important; color: var(--fp-text-secondary); font-size: 0.72rem; line-height: 1.4; }
+.lp-stat-lbl { margin-top: 0.5rem !important; color: var(--fp-text-secondary); font-size: 0.72rem; line-height: 1.4; }
 
-/* ─── Coverage cards ─── */
+/* ─── Coverage cards — spotlight follows the pointer (--mx/--my) ─── */
 .lp-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
   gap: 0.8rem;
 }
 .lp-card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
   padding: 1rem 1.05rem 1.05rem;
   border: 1px solid var(--fp-border);
   border-radius: var(--fp-radius);
-  background: var(--fp-bg-card);
-  box-shadow: var(--fp-shadow-sm);
-  transition: transform .18s var(--fp-ease), box-shadow .18s;
+  background:
+    radial-gradient(14rem circle at var(--mx) var(--my), rgba(59, 130, 246, .08), transparent 60%),
+    var(--fp-bg-card);
+  transition: transform .25s var(--fp-ease), box-shadow .25s, border-color .25s;
 }
-.lp-card:hover { transform: translateY(-3px); box-shadow: var(--fp-shadow); }
+.lp-card:hover { transform: translateY(-3px); box-shadow: var(--fp-shadow); border-color: var(--fp-border-strong); }
 .lp-card-icon {
   display: grid;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  margin-bottom: 0.7rem;
-  border-radius: 0.55rem;
-  background: var(--fp-bg-raised);
-  border: 1px solid var(--fp-border);
-  font-size: 0.9rem;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.6rem;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, .16), rgba(59, 130, 246, .16));
+  box-shadow: inset 0 0 0 1px var(--fp-border);
+  transition: transform .3s var(--fp-ease);
 }
+.lp-card:hover .lp-card-icon { transform: rotate(-6deg) scale(1.08); }
+.lp-card:nth-child(3n + 2) .lp-card-icon { background: linear-gradient(135deg, rgba(59, 130, 246, .16), rgba(139, 92, 246, .16)); }
+.lp-card:nth-child(3n) .lp-card-icon { background: linear-gradient(135deg, rgba(139, 92, 246, .16), rgba(236, 72, 153, .14)); }
 .lp-card-name { font-family: var(--fp-font-display); font-size: 0.9rem; letter-spacing: -0.01em; color: var(--fp-text); }
 .lp-card-desc { margin-top: 0.3rem !important; color: var(--fp-text-secondary); font-size: 0.72rem; line-height: 1.5; }
 
-/* ─── Pipeline steps ─── */
-.lp-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; counter-reset: lp-step; }
+/* ─── Pipeline steps — joined by a gradient rail ─── */
+.lp-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+.lp-steps::before {
+  content: "";
+  position: absolute;
+  left: 1.6rem;
+  right: 1.6rem;
+  top: 1.55rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--lp-a), var(--lp-b), var(--lp-c));
+  opacity: .5;
+}
 .lp-step {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
@@ -427,7 +691,22 @@
   border-radius: var(--fp-radius);
   background: var(--fp-bg-card);
 }
-.lp-step-num { color: var(--fp-text-muted); font-size: 0.68rem; letter-spacing: 0.04em; }
+.lp-step-node {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-bottom: 0.35rem;
+  border-radius: 50%;
+  color: #fff;
+  font-family: var(--fp-font-display);
+  font-size: 0.72rem;
+  background: linear-gradient(135deg, var(--lp-a), var(--lp-b));
+  box-shadow: 0 0 0 5px var(--fp-bg-card), 0 6px 16px -4px var(--lp-b);
+}
+.lp-step:nth-child(2) .lp-step-node { background: linear-gradient(135deg, var(--lp-b), var(--lp-c)); }
+.lp-step:nth-child(3) .lp-step-node { background: linear-gradient(135deg, var(--lp-c), #ec4899); }
+.lp-step-num { color: var(--fp-text-muted); font-size: 0.66rem; letter-spacing: 0.04em; }
 .lp-step-title { font-family: var(--fp-font-display); font-size: 0.95rem; letter-spacing: -0.01em; line-height: 1.3; color: var(--fp-text); }
 .lp-step-desc { color: var(--fp-text-secondary); font-size: 0.74rem; line-height: 1.6; }
 .md-typeset .lp-step-code {
@@ -443,44 +722,87 @@
   word-break: break-word;
 }
 
-/* ─── Closing band ─── */
+/* ─── Closing band — animated conic border ─── */
+@property --lp-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .lp-cta {
-  margin: 0 0 clamp(2rem, 5vw, 3.2rem);
-  padding: clamp(1.6rem, 4vw, 2.4rem);
-  border-radius: var(--fp-radius);
-  background: linear-gradient(135deg, #0b1220, #111827 55%, #0f2a2a);
+  position: relative;
+  isolation: isolate;
+  margin: clamp(1rem, 3vw, 1.5rem) 0 clamp(2.2rem, 5vw, 3.4rem);
+  padding: clamp(1.8rem, 4.5vw, 2.8rem);
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #070b14, #0f172a 55%, #082a26);
   color: #fff;
-  box-shadow: var(--fp-shadow-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -24px rgba(15, 23, 42, .5);
+}
+.lp-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--lp-angle), transparent 0 60%, var(--lp-a), var(--lp-b), var(--lp-c), transparent 95%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: lp-spin 6s linear infinite;
+}
+@keyframes lp-spin { to { --lp-angle: 360deg; } }
+.lp-cta::after {
+  content: "";
+  position: absolute;
+  right: -10%;
+  top: -40%;
+  z-index: -1;
+  width: 60%;
+  height: 180%;
+  background: radial-gradient(closest-side, rgba(16, 185, 129, .28), transparent);
+  filter: blur(20px);
 }
 .md-typeset .lp-page .lp-cta h2 {
-  font-size: clamp(1.4rem, 3.4vw, 2.1rem) !important;
-  letter-spacing: -0.03em !important;
-  line-height: 1.12 !important;
-  max-width: 20ch;
+  font-size: clamp(1.5rem, 3.8vw, 2.4rem) !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.08 !important;
+  max-width: 18ch;
 }
-.lp-cta p { margin-top: 0.7rem !important; max-width: 32rem; color: #c9d1dd; font-size: 0.8rem; }
-.lp-cta .lp-rail { margin-top: 1.2rem; }
+.lp-cta p { margin-top: 0.8rem !important; max-width: 32rem; color: #c9d1dd; font-size: 0.8rem; }
+.lp-cta .lp-actions { margin-top: 1.4rem; }
 .lp-cta .lp-btn { background: #fff; border-color: #fff; color: #0c1320 !important; }
-.lp-cta .lp-pill { background: transparent; border-color: rgba(255, 255, 255, .25); color: #eaeef4 !important; }
-.lp-cta .lp-pill:hover { border-color: rgba(255, 255, 255, .6); background: rgba(255, 255, 255, .06); color: #fff !important; }
+.lp-cta .lp-pill { background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .22); color: #eaeef4 !important; }
+.lp-cta .lp-pill:hover { border-color: rgba(255, 255, 255, .6); color: #fff !important; }
+
+/* ─── Scroll reveal — only once JS has marked the page ─── */
+.lp-js .lp-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s var(--fp-ease), transform .7s var(--fp-ease);
+  transition-delay: var(--lp-d, 0s);
+}
+.lp-js .lp-reveal.is-in { opacity: 1; transform: none; }
 
 /* ─── Responsive ─── */
-@media (max-width: 56rem) {
-  .lp-feed-body { grid-template-columns: 1fr; }
+@media (max-width: 60rem) {
+  .lp-hero-grid { grid-template-columns: 1fr; }
+  .lp-viz { max-width: 34rem; }
+  .lp-viz-card { transform: none; }
+  .lp-rgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lp-steps { grid-template-columns: 1fr; }
+  .lp-steps::before { left: 2.1rem; right: auto; top: 1.6rem; bottom: 1.6rem; width: 2px; height: auto; background: linear-gradient(var(--lp-a), var(--lp-b), var(--lp-c)); }
   .lp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lp-stat:nth-child(3) { border-left: 0; }
-  .lp-stat:nth-child(n + 3) { border-top: 1px solid var(--fp-border); }
 }
-@media (max-width: 30rem) {
+@media (max-width: 34rem) {
   .lp-con { padding: 0 0.8rem; }
   .lp-feed-head { flex-direction: column; align-items: flex-start; }
-  .lp-row { grid-template-columns: 3rem minmax(0, 1fr); }
-  .lp-row-arrow { display: none; }
+  .lp-rgrid { grid-template-columns: 1fr; }
+  .lp-float--a { right: 0; }
+  .lp-float--b { left: 0; }
+  .lp-viz-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lp-tape-track { animation: none; }
-  .lp-feat::before, .lp-row, .lp-card, .lp-btn, .lp-more { transition: none; }
+  .lp-aurora span, .lp-pulse::after, .lp-title em, .lp-float, .lp-chart-halo, .lp-cta::before, .lp-tape-track { animation: none !important; }
+  .lp-js .lp-reveal { opacity: 1; transform: none; transition: none; }
+  .lp-viz-card { transform: none; }
 }
 </style>
 {% endblock %}
@@ -491,18 +813,27 @@
   "en": {
     "labels": {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"},
     "kicker": "Daily · Automated · Open access",
-    "title": "Equity research that writes itself before the open",
+    "title_pre": "Equity research that writes itself ",
+    "title_em": "before the open",
+    "title_post": "",
     "deck": "Fundamental, technical, DCF and filing analysis for US and Taiwan tickers, generated every morning by frontier models from live market data. No paywall.",
-    "rail": [["reports/", "All reports"], ["data/", "Market data"], ["market_news/", "Market news"], ["#lp-coverage", "Coverage"], ["#lp-how", "How it works"]],
     "cta": "Read today's reports",
-    "latest_h": "Latest research",
-    "latest_sub": "Straight from the pipeline — not cached, not edited.",
+    "cta2": "Explore market data",
+    "rail": [["market_news/", "Market news"], ["#lp-coverage", "Coverage"], ["#lp-how", "How it works"]],
+    "featured": "Featured",
+    "chart": "6-month close",
+    "read": "Read",
+    "f_run": "analyses in the latest run",
+    "f_tickers": "tickers covered",
+    "latest_eye": "Latest",
+    "latest_h": "Fresh off the pipeline",
+    "latest_sub": "The newest reports — not cached, not edited.",
     "view_all": "View all",
-    "read": "Read research",
-    "browse": "Browse all reports",
-    "m_price": "Price", "m_vol": "Vol 1Y", "m_range": "52W",
+    "browse": "Browse all reports →",
+    "m_vol": "Vol 1Y",
     "stats": [["tickers", "Tickers with published research"], ["per_day", "Analyses in the latest daily run"], ["types", "Report types in production"]],
     "free": "Cost to read. Always free.",
+    "cov_eye": "Coverage",
     "cov_h": "Twelve lenses on one stock",
     "cov_sub": "Each report type targets a different signal — price action, SEC filings, competitive position.",
     "cov": [
@@ -519,12 +850,13 @@
       ["⚡", "Options Analysis", "IV, Greeks, put/call skew, and strategy selection for the current setup."],
       ["💳", "Dividend Analysis", "Dividends, buybacks, M&A, and the quality of FCF deployment."]
     ],
+    "how_eye": "Under the hood",
     "how_h": "Daily, automated, built from source data",
     "how_sub": "No human editor touches these reports. Each one is assembled, interpreted and published before the market opens.",
     "steps": [
-      ["Step 01 · Data fetch", "Live data from market feeds and EDGAR", "yfinance collects OHLCV, financials and earnings; SEC EDGAR scrapers pull the latest filings into one structured context package.", "yfinance + SEC EDGAR → data_fetch.py → context"],
-      ["Step 02 · AI analysis", "A frontier model reads the numbers and writes", "Gemini by default, with OpenAI and Claude as fallbacks, under a domain-specific prompt. A nightly QA pass grades every output.", "prompts/*.txt + context → llm.py"],
-      ["Step 03 · Publish", "GitHub Actions ships the run every morning", "One cron job per ticker and report type. Reports land in this MkDocs site and go live on GitHub Pages within minutes.", "daily_analysis.yml → MkDocs → Pages"]
+      ["Data fetch", "Live data from market feeds and EDGAR", "yfinance collects OHLCV, financials and earnings; SEC EDGAR scrapers pull the latest filings into one structured context package.", "yfinance + SEC EDGAR → data_fetch.py → context"],
+      ["AI analysis", "A frontier model reads the numbers and writes", "Gemini by default, with OpenAI and Claude as fallbacks, under a domain-specific prompt. A nightly QA pass grades every output.", "prompts/*.txt + context → llm.py"],
+      ["Publish", "GitHub Actions ships the run every morning", "One cron job per ticker and report type. Reports land in this MkDocs site and go live on GitHub Pages within minutes.", "daily_analysis.yml → MkDocs → Pages"]
     ],
     "end_h": "Research that runs while you sleep.",
     "end_sub": "Dozens of analyses published automatically every morning. Zero subscription, zero paywall — just open it.",
@@ -534,18 +866,27 @@
   "zh": {
     "labels": {"fundamental_analysis": "基本面", "technical_analysis": "技術面", "market_news": "市場新聞"},
     "kicker": "每日 · 自動化 · 開放存取",
-    "title": "在開盤前自動寫好的股票研究",
+    "title_pre": "",
+    "title_em": "在開盤前",
+    "title_post": "自動寫好的股票研究",
     "deck": "涵蓋美股與台股的基本面、技術面、DCF 與財報文件分析，每天清晨由前沿模型依即時市場資料生成。無付費牆。",
-    "rail": [["reports/", "全部報告"], ["data/", "市場數據"], ["market_news/", "市場新聞"], ["#lp-coverage", "涵蓋範圍"], ["#lp-how", "運作方式"]],
     "cta": "閱讀今日報告",
-    "latest_h": "最新研究",
-    "latest_sub": "直接來自生成流程 — 未經快取，未經編輯。",
+    "cta2": "瀏覽市場數據",
+    "rail": [["market_news/", "市場新聞"], ["#lp-coverage", "涵蓋範圍"], ["#lp-how", "運作方式"]],
+    "featured": "精選",
+    "chart": "近六個月收盤價",
+    "read": "閱讀",
+    "f_run": "篇分析於最新一輪生成",
+    "f_tickers": "檔標的",
+    "latest_eye": "最新",
+    "latest_h": "剛出爐的研究",
+    "latest_sub": "最新報告 — 未經快取，未經編輯。",
     "view_all": "查看全部",
-    "read": "閱讀報告",
-    "browse": "瀏覽全部報告",
-    "m_price": "價格", "m_vol": "波動率 1Y", "m_range": "52 週",
+    "browse": "瀏覽全部報告 →",
+    "m_vol": "波動率 1Y",
     "stats": [["tickers", "已發布研究的標的數"], ["per_day", "最新一輪生成的分析篇數"], ["types", "運作中的報告類型"]],
     "free": "閱讀費用。永遠免費。",
+    "cov_eye": "涵蓋範圍",
     "cov_h": "十二種視角，洞察一檔股票",
     "cov_sub": "每一種報告類型鎖定不同的訊號 — 價格走勢、SEC 文件、競爭地位。",
     "cov": [
@@ -562,12 +903,13 @@
       ["⚡", "選擇權分析", "隱含波動率、Greeks、買賣權偏斜與策略選擇。"],
       ["💳", "股利分析", "股利、庫藏股、併購與自由現金流運用品質。"]
     ],
+    "how_eye": "幕後運作",
     "how_h": "每日、自動化、源於原始資料",
     "how_sub": "沒有任何人工編輯經手這些報告。每一份都在開盤前完成彙整、解讀並發布。",
     "steps": [
-      ["步驟 01 · 資料抓取", "從市場行情與 EDGAR 彙整即時資料", "yfinance 蒐集 OHLCV、財務與財報資料，SEC EDGAR 爬蟲擷取最新文件，整理為結構化脈絡封包。", "yfinance + SEC EDGAR → data_fetch.py → context"],
-      ["步驟 02 · AI 分析", "前沿模型讀懂數字並撰寫報告", "預設為 Gemini，並以 OpenAI 與 Claude 作為備援，搭配領域專屬提示；每晚另有 QA 流程為產出評分。", "prompts/*.txt + context → llm.py"],
-      ["步驟 03 · 發布", "GitHub Actions 每天清晨發布整輪報告", "每個標的與報告類型各一個排程任務。報告寫入本 MkDocs 網站，數分鐘內發布至 GitHub Pages。", "daily_analysis.yml → MkDocs → Pages"]
+      ["資料抓取", "從市場行情與 EDGAR 彙整即時資料", "yfinance 蒐集 OHLCV、財務與財報資料，SEC EDGAR 爬蟲擷取最新文件，整理為結構化脈絡封包。", "yfinance + SEC EDGAR → data_fetch.py → context"],
+      ["AI 分析", "前沿模型讀懂數字並撰寫報告", "預設為 Gemini，並以 OpenAI 與 Claude 作為備援，搭配領域專屬提示；每晚另有 QA 流程為產出評分。", "prompts/*.txt + context → llm.py"],
+      ["發布", "GitHub Actions 每天清晨發布整輪報告", "每個標的與報告類型各一個排程任務。報告寫入本 MkDocs 網站，數分鐘內發布至 GitHub Pages。", "daily_analysis.yml → MkDocs → Pages"]
     ],
     "end_h": "在你沉睡時運轉的研究。",
     "end_sub": "每天清晨自動發布數十篇分析。零訂閱，零付費牆 — 打開即看。",
@@ -578,19 +920,80 @@
 {%- set C = COPY[lang] if lang in COPY else COPY["en"] -%}
 <div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ C.labels | tojson }}'>
 
-  <!-- ── Masthead ── -->
-  <header class="lp-mast">
-    <div class="lp-con">
-      <div class="lp-kicker">{{ C.kicker }}</div>
-      <h1 class="lp-title">{{ C.title }}</h1>
-      <p class="lp-deck">{{ C.deck }}</p>
-      <div class="lp-toolbar">
-        <nav class="lp-rail" aria-label="{{ 'Sections' if lang == 'en' else '網站區塊' }}">
+  <!-- ── Hero ── -->
+  <header class="lp-hero">
+    <div class="lp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="lp-grid-bg" aria-hidden="true"></div>
+    <div class="lp-con lp-hero-grid">
+      <div>
+        <div class="lp-kicker lp-reveal"><span class="lp-pulse" aria-hidden="true"></span>{{ C.kicker }}</div>
+        <h1 class="lp-title lp-reveal" style="--lp-d:.05s">{{ C.title_pre }}<em>{{ C.title_em }}</em>{{ C.title_post }}</h1>
+        <p class="lp-deck lp-reveal" style="--lp-d:.12s">{{ C.deck }}</p>
+        <div class="lp-actions lp-reveal" style="--lp-d:.18s">
+          <a class="lp-btn" href="reports/">{{ C.cta }} <span class="lp-arr" aria-hidden="true">→</span></a>
+          <a class="lp-pill" href="data/">{{ C.cta2 }} <span class="lp-arr" aria-hidden="true">→</span></a>
+        </div>
+        <nav class="lp-rail lp-reveal" style="--lp-d:.24s" aria-label="{{ 'Sections' if lang == 'en' else '網站區塊' }}">
           {%- for href, label in C.rail %}
           <a class="lp-pill" href="{{ href }}">{{ label }}</a>
           {%- endfor %}
         </nav>
-        <a class="lp-btn" href="reports/">{{ C.cta }} <span aria-hidden="true">→</span></a>
+      </div>
+
+      <!-- Featured report, filled from hub.json + the ticker's kline.json -->
+      <div class="lp-viz lp-reveal" style="--lp-d:.2s" data-hub-hero hidden>
+        <a class="lp-viz-card" href="reports/">
+          <span class="lp-viz-top">
+            <span class="lp-viz-id">
+              <span class="lp-viz-mark" data-hub-field="mark">—</span>
+              <span style="min-width:0">
+                <span class="lp-viz-sym" data-hub-field="ticker">—</span>
+                <span class="lp-viz-sub"><span data-hub-field="sector">—</span></span>
+              </span>
+            </span>
+            <span class="lp-viz-tag"><span class="lp-pulse" aria-hidden="true"></span>{{ C.featured }} · <span data-hub-field="kind">—</span></span>
+          </span>
+          <span class="lp-viz-px">
+            <span class="lp-viz-price" data-hub-field="price">—</span>
+            <span class="lp-viz-cur" data-hub-field="currency"></span>
+            <span class="lp-chg" data-hub-field="1d">—</span>
+          </span>
+          <span class="lp-chart" data-hub-chart data-state="loading" aria-label="{{ C.chart }}">
+            <svg viewBox="0 0 600 170" preserveAspectRatio="none" role="img" aria-label="{{ C.chart }}">
+              <defs>
+                <linearGradient id="lp-stroke" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#10b981"/>
+                </linearGradient>
+                <linearGradient id="lp-fill" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#10b981" stop-opacity=".28"/><stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path class="lp-chart-area" d=""/>
+              <path class="lp-chart-line" d=""/>
+              <circle class="lp-chart-halo" r="5" cx="-10" cy="-10"/>
+              <circle class="lp-chart-dot" r="3.5" cx="-10" cy="-10"/>
+            </svg>
+            <span class="lp-chart-axis"><span data-hub-field="from">—</span><span>{{ C.chart }}</span><span data-hub-field="to">—</span></span>
+          </span>
+          <span class="lp-viz-metrics">
+            <span><i>1M</i><span data-hub-field="1m">—</span></span>
+            <span><i>YTD</i><span data-hub-field="ytd">—</span></span>
+            <span><i>1Y</i><span data-hub-field="1y">—</span></span>
+            <span><i>{{ C.m_vol }}</i><span data-hub-field="vol">—</span></span>
+          </span>
+          <span class="lp-viz-foot">
+            <span class="lp-viz-title" data-hub-field="title">—</span>
+            <span class="lp-viz-go">{{ C.read }} <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
+        <div class="lp-float lp-float--a" aria-hidden="true">
+          <span class="lp-float-ic">✦</span>
+          <span><b data-hub-num="per_day">—</b><small>{{ C.f_run }}</small></span>
+        </div>
+        <div class="lp-float lp-float--b" aria-hidden="true">
+          <span class="lp-float-ic">◎</span>
+          <span><b data-hub-num="tickers">—</b><small>{{ C.f_tickers }}</small></span>
+        </div>
       </div>
     </div>
   </header>
@@ -601,43 +1004,18 @@
   </div>
 
   <!-- ── Latest research ── -->
-  <section class="lp-feed lp-feed--first" id="lp-latest">
+  <section class="lp-feed" id="lp-latest">
     <div class="lp-con">
-      <div class="lp-feed-head">
+      <div class="lp-feed-head lp-reveal">
         <div>
+          <span class="lp-eyebrow">{{ C.latest_eye }}</span>
           <h2>{{ C.latest_h }}</h2>
           <p class="lp-blurb">{{ C.latest_sub }}</p>
         </div>
         <a class="lp-more" href="reports/">{{ C.view_all }} <span aria-hidden="true">→</span></a>
       </div>
-
-      <div class="lp-feed-body">
-        <a class="lp-feat" href="reports/" data-hub-hero hidden>
-          <span class="lp-feat-scrim">
-            <span class="lp-feat-top">
-              <span class="lp-feat-sym" data-hub-field="ticker">—</span>
-              <span class="lp-feat-px"><span data-hub-field="price">—</span> · <span data-hub-field="sector">—</span></span>
-            </span>
-            <span class="lp-feat-kicker" data-hub-field="kind">—</span>
-            <h3 data-hub-field="title">—</h3>
-            <span class="lp-feat-meta">
-              <span><i>1D</i><span data-hub-field="1d">—</span></span>
-              <span><i>1M</i><span data-hub-field="1m">—</span></span>
-              <span><i>YTD</i><span data-hub-field="ytd">—</span></span>
-              <span><i>1Y</i><span data-hub-field="1y">—</span></span>
-              <span><i>{{ C.m_vol }}</i><span data-hub-field="vol">—</span></span>
-            </span>
-            <span class="lp-range" aria-label="{{ C.m_range }}">
-              <span class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></span>
-              <span class="lp-range-ends"><span data-hub-field="low">—</span><span>{{ C.m_range }}</span><span data-hub-field="high">—</span></span>
-            </span>
-            <span class="lp-feat-btn">{{ C.read }} <span aria-hidden="true">→</span></span>
-          </span>
-        </a>
-
-        <ul class="lp-side" data-hub-latest>
-          <li><a class="lp-row" href="reports/"><span class="lp-thumb">↗</span><span class="lp-row-body"><span class="lp-row-title">{{ C.browse }}</span></span><span class="lp-row-arrow" aria-hidden="true">→</span></a></li>
-        </ul>
+      <div class="lp-rgrid" data-hub-latest>
+        <a class="lp-rcard lp-rcard--all" href="reports/">{{ C.browse }}</a>
       </div>
     </div>
   </section>
@@ -647,9 +1025,9 @@
     <div class="lp-con">
       <div class="lp-stats">
         {%- for key, label in C.stats %}
-        <div class="lp-stat"><div class="lp-stat-num" data-hub-num="{{ key }}">—</div><p class="lp-stat-lbl">{{ label }}</p></div>
+        <div class="lp-stat lp-reveal" style="--lp-d:{{ loop.index0 * 0.07 }}s"><div class="lp-stat-num" data-hub-num="{{ key }}" data-count>—</div><p class="lp-stat-lbl">{{ label }}</p></div>
         {%- endfor %}
-        <div class="lp-stat"><div class="lp-stat-num">$0</div><p class="lp-stat-lbl">{{ C.free }}</p></div>
+        <div class="lp-stat lp-reveal" style="--lp-d:.21s"><div class="lp-stat-num">$0</div><p class="lp-stat-lbl">{{ C.free }}</p></div>
       </div>
     </div>
   </section>
@@ -657,8 +1035,9 @@
   <!-- ── Coverage ── -->
   <section class="lp-feed" id="lp-coverage">
     <div class="lp-con">
-      <div class="lp-feed-head">
+      <div class="lp-feed-head lp-reveal">
         <div>
+          <span class="lp-eyebrow">{{ C.cov_eye }}</span>
           <h2>{{ C.cov_h }}</h2>
           <p class="lp-blurb">{{ C.cov_sub }}</p>
         </div>
@@ -666,7 +1045,7 @@
       </div>
       <div class="lp-cards">
         {%- for icon, name, desc in C.cov %}
-        <div class="lp-card"><span class="lp-card-icon" aria-hidden="true">{{ icon }}</span><p class="lp-card-name">{{ name }}</p><p class="lp-card-desc">{{ desc }}</p></div>
+        <div class="lp-card lp-reveal" style="--lp-d:{{ (loop.index0 % 4) * 0.06 }}s"><span class="lp-card-icon" aria-hidden="true">{{ icon }}</span><p class="lp-card-name">{{ name }}</p><p class="lp-card-desc">{{ desc }}</p></div>
         {%- endfor %}
       </div>
     </div>
@@ -675,15 +1054,17 @@
   <!-- ── How it works ── -->
   <section class="lp-feed" id="lp-how">
     <div class="lp-con">
-      <div class="lp-feed-head">
+      <div class="lp-feed-head lp-reveal">
         <div>
+          <span class="lp-eyebrow">{{ C.how_eye }}</span>
           <h2>{{ C.how_h }}</h2>
           <p class="lp-blurb">{{ C.how_sub }}</p>
         </div>
       </div>
       <div class="lp-steps">
         {%- for num, title, desc, code in C.steps %}
-        <div class="lp-step">
+        <div class="lp-step lp-reveal" style="--lp-d:{{ loop.index0 * 0.1 }}s">
+          <span class="lp-step-node">{{ loop.index }}</span>
           <div class="lp-step-num">{{ num }}</div>
           <p class="lp-step-title">{{ title }}</p>
           <p class="lp-step-desc">{{ desc }}</p>
@@ -696,11 +1077,11 @@
 
   <!-- ── Closing band ── -->
   <div class="lp-con">
-    <section class="lp-cta">
+    <section class="lp-cta lp-reveal">
       <h2>{{ C.end_h }}</h2>
       <p>{{ C.end_sub }}</p>
-      <div class="lp-rail">
-        <a class="lp-btn" href="reports/">{{ C.end_cta }} <span aria-hidden="true">→</span></a>
+      <div class="lp-actions">
+        <a class="lp-btn" href="reports/">{{ C.end_cta }} <span class="lp-arr" aria-hidden="true">→</span></a>
         {%- for href, label in C.end_alt %}
         <a class="lp-pill" href="{{ href }}"{% if href.startswith('http') %} target="_blank" rel="noopener"{% endif %}>{{ label }}</a>
         {%- endfor %}
@@ -714,103 +1095,216 @@
 {% block scripts %}
 {{ super() }}
 <script>
-  // ── Landing-page hydration ──────────────────────────────────────────────
-  // The market tape, the headline counts, the featured report and the latest
-  // list are read from hub.json, which scripts/build_docs.py derives from the
-  // price store and the published report set at build time. Everything here
-  // only fills slots the static markup already has; if the fetch fails the
-  // page stays as rendered, with the tape and featured card hidden.
+  // ── Landing page ─────────────────────────────────────────────────────────
+  // 1. hydration from hub.json (tape, counts, featured report, latest grid)
+  // 2. price lines from reports/<ticker>/kline.json — closes plotted as-is
+  // 3. motion: scroll reveal, count-up, pointer spotlight
+  // Everything only fills slots the static markup already has; on a failed
+  // fetch the page stays as rendered with the data slots hidden.
   (function () {
-    var root = document.querySelector(".lp-page");
-    if (!root || !window.fetch) return;
-    var src = root.getAttribute("data-hub-src");
-    var base = root.getAttribute("data-hub-base") || "";
-    var labels = {};
-    try { labels = JSON.parse(root.getAttribute("data-hub-labels") || "{}"); } catch (e) {}
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    function esc(s) {
-      return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-      });
-    }
-    function pct(v) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + "%"; }
-    function tone(v) { return v == null ? "" : (v >= 0 ? "lp-up" : "lp-dn"); }
-    function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
-    function set(scope, field, text) {
-      var el = scope.querySelector('[data-hub-field="' + field + '"]');
-      if (el) el.textContent = text == null || text === "" ? "—" : text;
-      return el;
-    }
-    function metric(scope, field, v) {
-      var el = set(scope, field, pct(v));
-      if (el) { el.classList.remove("lp-up", "lp-dn"); if (tone(v)) el.classList.add(tone(v)); }
-    }
+    function init() {
+      var root = document.querySelector(".lp-page");
+      if (!root || root.hasAttribute("data-lp-ready")) return;
+      root.setAttribute("data-lp-ready", "");
+      root.classList.add("lp-js");
 
-    function hydrate(d) {
-      var stats = d.stats || {};
+      var src = root.getAttribute("data-hub-src");
+      var base = root.getAttribute("data-hub-base") || "";
+      var labels = {};
+      try { labels = JSON.parse(root.getAttribute("data-hub-labels") || "{}"); } catch (e) {}
 
-      // 1. tape — duplicated once so the marquee loops seamlessly
-      var tape = root.querySelector("[data-hub-tape]");
-      if (tape && d.tape && d.tape.length) {
-        var html = d.tape.map(function (t) {
-          return '<a class="lp-tick" href="' + esc(base + t.href) + '"><b>' + esc(t.sym) + '</b>' +
-            '<span>' + esc(t.px) + '</span>' +
-            (t.chg == null ? "" : '<span class="' + tone(t.chg) + '">' + pct(t.chg) + "</span>") + "</a>";
-        }).join("");
-        tape.querySelector(".lp-tape-track").innerHTML = html + html;
-        tape.hidden = false;
-      }
+      // ── reveal ──
+      var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -8% 0px" }) : null;
+      function watch(el) { if (io && !reduce) io.observe(el); else el.classList.add("is-in"); }
+      Array.prototype.forEach.call(root.querySelectorAll(".lp-reveal"), watch);
 
-      // 2. headline counts
-      Array.prototype.forEach.call(root.querySelectorAll("[data-hub-num]"), function (el) {
-        var v = stats[el.getAttribute("data-hub-num")];
-        if (v != null && v !== "") el.textContent = typeof v === "number" ? v.toLocaleString() : v;
+      // ── spotlight ──
+      Array.prototype.forEach.call(root.querySelectorAll(".lp-card"), function (c) {
+        c.addEventListener("pointermove", function (ev) {
+          var r = c.getBoundingClientRect();
+          c.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+          c.style.setProperty("--my", (ev.clientY - r.top) + "px");
+        });
       });
 
-      // 3. featured report — the newest report that has a priced ticker
-      var card = root.querySelector("[data-hub-hero]");
-      var h = d.hero;
-      if (card && h) {
-        set(card, "ticker", h.ticker);
-        set(card, "sector", h.sector);
-        set(card, "kind", typeLabel(h) + " · " + h.date);
-        set(card, "title", h.title || (h.ticker + " — " + typeLabel(h)));
-        set(card, "price", (h.currency ? h.currency + " " : "") + h.price);
-        metric(card, "1d", h.chg_1d);
-        metric(card, "1m", h.chg_1m);
-        metric(card, "ytd", h.ytd);
-        metric(card, "1y", h.chg_1y);
-        set(card, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
-        set(card, "low", h.low_52w == null ? "—" : Number(h.low_52w).toFixed(2));
-        set(card, "high", h.high_52w == null ? "—" : Number(h.high_52w).toFixed(2));
-        var dot = card.querySelector('[data-hub-field="pos"]');
-        if (dot) dot.style.left = (h.range_position == null ? 50 : Math.max(0, Math.min(100, h.range_position))).toFixed(1) + "%";
-        card.setAttribute("href", base + h.href);
-        card.hidden = false;
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
+      }
+      function pct(v) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + "%"; }
+      function tone(v) { return v == null ? "" : (v >= 0 ? "lp-up" : "lp-dn"); }
+      function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
+      function set(scope, field, text) {
+        var el = scope.querySelector('[data-hub-field="' + field + '"]');
+        if (el) el.textContent = text == null || text === "" ? "—" : text;
+        return el;
+      }
+      function metric(scope, field, v) {
+        var el = set(scope, field, pct(v));
+        if (el) { el.classList.remove("lp-up", "lp-dn"); if (tone(v)) el.classList.add(tone(v)); }
       }
 
-      // 4. latest list — skips the report already featured
-      var list = root.querySelector("[data-hub-latest]");
-      if (list && d.latest && d.latest.length) {
-        var rows = d.latest.filter(function (r) { return !h || r.href !== h.href; }).slice(0, 5);
-        list.innerHTML = rows.map(function (r) {
-          return '<li><a class="lp-row lp-row--' + esc(r.type) + '" href="' + esc(base + r.href) + '">' +
-            '<span class="lp-thumb">' + esc(r.ticker) + '</span>' +
-            '<span class="lp-row-body">' +
-              '<span class="lp-row-title">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</span>' +
-              '<span class="lp-row-meta">' + esc(typeLabel(r)) + ' · ' + esc(r.date) +
-                (r.chg == null ? "" : ' · <span class="' + tone(r.chg) + '">' + pct(r.chg) + '</span>') +
+      // ── count-up (integers only; anything else is shown as given) ──
+      function countTo(el, v) {
+        if (typeof v !== "number" || reduce || !io) { el.textContent = typeof v === "number" ? v.toLocaleString() : v; return; }
+        el.textContent = "0";
+        var ob = new IntersectionObserver(function (es) {
+          if (!es[0].isIntersecting) return;
+          ob.disconnect();
+          var t0 = performance.now(), dur = 1100;
+          (function step(t) {
+            var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            el.textContent = Math.round(v * e).toLocaleString();
+            if (k < 1) requestAnimationFrame(step);
+          })(t0);
+        });
+        ob.observe(el);
+      }
+
+      // ── kline.json → path data. Pure plotting of the closes, no statistics ──
+      var klineCache = {};
+      function kline(ticker) {
+        var k = String(ticker).toLowerCase();
+        if (!klineCache[k]) {
+          klineCache[k] = fetch(base + "reports/" + encodeURIComponent(k) + "/kline.json")
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (d) { return (d.bars || []).slice(-126); });
+        }
+        return klineCache[k];
+      }
+      function paths(bars, w, h, pad) {
+        var cs = bars.map(function (b) { return b.c; });
+        var lo = Math.min.apply(null, cs), hi = Math.max.apply(null, cs), span = hi - lo || 1;
+        var pts = cs.map(function (c, i) {
+          return [(i / (cs.length - 1)) * w, pad + (1 - (c - lo) / span) * (h - pad * 2)];
+        });
+        var line = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("");
+        return { line: line, area: line + "L" + w + " " + h + "L0 " + h + "Z", last: pts[pts.length - 1] };
+      }
+
+      function drawHero(card, ticker) {
+        var box = card.querySelector("[data-hub-chart]");
+        if (!box) return;
+        kline(ticker).then(function (bars) {
+          if (bars.length < 2) return;
+          var p = paths(bars, 600, 170, 10);
+          var line = box.querySelector(".lp-chart-line");
+          box.querySelector(".lp-chart-area").setAttribute("d", p.area);
+          line.setAttribute("d", p.line);
+          ["lp-chart-dot", "lp-chart-halo"].forEach(function (c) {
+            var el = box.querySelector("." + c);
+            el.setAttribute("cx", p.last[0]); el.setAttribute("cy", p.last[1]);
+          });
+          set(box, "from", bars[0].t);
+          set(box, "to", bars[bars.length - 1].t);
+          box.setAttribute("data-state", "ready");
+          if (!reduce && line.getTotalLength) {
+            var len = line.getTotalLength();
+            line.style.strokeDasharray = len;
+            line.style.strokeDashoffset = len;
+            line.getBoundingClientRect();
+            line.style.transition = "stroke-dashoffset 1.6s cubic-bezier(.25,1,.5,1)";
+            line.style.strokeDashoffset = "0";
+          }
+        }).catch(function () { box.hidden = true; });
+      }
+
+      function drawSpark(svg, ticker) {
+        kline(ticker).then(function (bars) {
+          if (bars.length < 2) return;
+          var p = paths(bars, 200, 40, 3);
+          svg.innerHTML = '<path class="lp-spark-area" d="' + p.area + '"/><path d="' + p.line + '"/>';
+        }).catch(function () { svg.remove(); });
+      }
+
+      function hydrate(d) {
+        var stats = d.stats || {};
+
+        // tape — duplicated once so the marquee loops seamlessly
+        var tape = root.querySelector("[data-hub-tape]");
+        if (tape && d.tape && d.tape.length) {
+          var html = d.tape.map(function (t) {
+            return '<a class="lp-tick ' + (t.chg == null ? "" : t.chg >= 0 ? "is-up" : "is-dn") + '" href="' + esc(base + t.href) + '"><b>' + esc(t.sym) + '</b>' +
+              '<span>' + esc(t.px) + '</span>' +
+              (t.chg == null ? "" : '<span class="' + tone(t.chg) + '">' + pct(t.chg) + "</span>") + "</a>";
+          }).join("");
+          tape.querySelector(".lp-tape-track").innerHTML = html + html;
+          tape.hidden = false;
+        }
+
+        // counts
+        Array.prototype.forEach.call(root.querySelectorAll("[data-hub-num]"), function (el) {
+          var v = stats[el.getAttribute("data-hub-num")];
+          if (v == null || v === "") return;
+          if (el.hasAttribute("data-count")) countTo(el, v);
+          else el.textContent = typeof v === "number" ? v.toLocaleString() : v;
+        });
+
+        // featured report
+        var card = root.querySelector("[data-hub-hero]");
+        var h = d.hero;
+        if (card && h) {
+          set(card, "mark", h.ticker);
+          set(card, "ticker", h.ticker);
+          set(card, "sector", h.sector);
+          set(card, "kind", typeLabel(h));
+          set(card, "title", h.title || (h.ticker + " — " + typeLabel(h)));
+          set(card, "price", h.price);
+          set(card, "currency", h.currency || "");
+          metric(card, "1d", h.chg_1d);
+          metric(card, "1m", h.chg_1m);
+          metric(card, "ytd", h.ytd);
+          metric(card, "1y", h.chg_1y);
+          set(card, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
+          card.querySelector(".lp-viz-card").setAttribute("href", base + h.href);
+          card.hidden = false;
+          drawHero(card, h.ticker);
+        }
+
+        // latest grid — skips the report already featured
+        var grid = root.querySelector("[data-hub-latest]");
+        if (grid && d.latest && d.latest.length) {
+          var rows = d.latest.filter(function (r) { return !h || r.href !== h.href; }).slice(0, 5);
+          grid.innerHTML = rows.map(function (r, i) {
+            return '<a class="lp-rcard lp-reveal lp-rcard--' + esc(r.type) + '" style="--lp-d:' + (i % 3) * 0.07 + 's" href="' + esc(base + r.href) + '" data-ticker="' + esc(r.ticker) + '">' +
+              '<span class="lp-rcard-top"><span class="lp-rcard-sym">' + esc(r.ticker) + '</span>' +
+                '<span class="lp-rcard-type">' + esc(typeLabel(r)) + '</span>' +
+                (r.chg == null ? "" : '<span class="lp-chg ' + tone(r.chg) + '">' + pct(r.chg) + '</span>') +
               '</span>' +
-            '</span><span class="lp-row-arrow" aria-hidden="true">→</span></a></li>';
-        }).join("") + list.innerHTML;
+              '<span class="lp-rcard-title">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</span>' +
+              '<svg class="lp-spark" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"></svg>' +
+              '<span class="lp-rcard-foot"><span>' + esc(r.date) + '</span><span>' + esc(r.model || "") + '</span></span>' +
+            '</a>';
+          }).join("") + grid.innerHTML;
+          var sparkIO = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (!e.isIntersecting) return;
+              sparkIO.unobserve(e.target);
+              drawSpark(e.target.querySelector(".lp-spark"), e.target.getAttribute("data-ticker"));
+            });
+          }, { rootMargin: "200px" }) : null;
+          Array.prototype.forEach.call(grid.querySelectorAll(".lp-rcard[data-ticker]"), function (c) {
+            watch(c);
+            if (sparkIO) sparkIO.observe(c); else drawSpark(c.querySelector(".lp-spark"), c.getAttribute("data-ticker"));
+          });
+        }
       }
+
+      if (!src || !window.fetch) return;
+      fetch(src, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
+        .then(hydrate)
+        .catch(function () { /* static page stands; nothing stale is shown */ });
     }
 
-    if (!src) return;
-    fetch(src, { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
-      .then(hydrate)
-      .catch(function () { /* static page stands; nothing stale is shown */ });
+    init();
+    // navigation.instant swaps pages without a reload; re-run on arrival.
+    if (typeof document$ !== "undefined") document$.subscribe(init);
   })();
 </script>
 {% endblock %}
