@@ -6,7 +6,12 @@ name: Tests
 
 on:
   push:
-    branches: ["**"]
+    # main only. `"**"` ran the whole matrix twice for every commit on a PR
+    # branch — once for the push, once for pull_request — and the concurrency
+    # group below cannot dedupe them (refs/heads/x vs refs/pull/N/merge).
+    # PR branches are covered by pull_request; a branch with no PR yet can
+    # still be run via workflow_dispatch.
+    branches: [main]
     # Kept identical to the pull_request list below. GitHub's workflow parser
     # does not officially support YAML anchors, so this stays duplicated rather
     # than risk the trigger silently never matching.
@@ -14,15 +19,17 @@ on:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
-      - ".github/actions/python-env/**"
-      - ".github/workflows/tests.yml"
+      # All of .github, not just this file: test_workflows.py lints every
+      # workflow, so a cron/case edit must run it.
+      - ".github/**"
   pull_request:
     paths:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
-      - ".github/actions/python-env/**"
-      - ".github/workflows/tests.yml"
+      # All of .github, not just this file: test_workflows.py lints every
+      # workflow, so a cron/case edit must run it.
+      - ".github/**"
   workflow_dispatch:
 
 # Cancel superseded runs on the same ref to save CI minutes.
@@ -46,6 +53,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        # Everything except the three generated-content trees (~870 MB of the
+        # ~1.1 GB tip; the suite builds its fixtures under tmp_path and never
+        # reads them). Non-cone patterns, because 10-k/ and 10-q/ must stay:
+        # test_workflows.py inspects their ticker directories. Sparse checkout
+        # also makes actions/checkout fetch with --filter=blob:none, so the
+        # excluded blobs are never downloaded.
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ai_gen_report/
+            !/notebook_llm/
+            !/investor_day/
 
       - name: Set up Python and dependencies
         uses: ./.github/actions/python-env

@@ -66,6 +66,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      # Keep puppeteer's own download. It fetches chrome-headless-shell, which
+      # boots far faster than the runner's full Google Chrome; pointing mmdc at
+      # /usr/bin/google-chrome saved ~6s here but made every render ~4x slower.
       - name: Install mermaid-cli
         run: npm install -g @mermaid-js/mermaid-cli
 

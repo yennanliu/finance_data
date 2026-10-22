@@ -1,6 +1,6 @@
 name: Set up Python environment
 description: >
-  Set up Python with the pip cache enabled and install the given packages.
+  Set up Python and install the given packages with uv.
   Centralises the setup-python + pip install pair that every job in this repo
   repeats, and quotes requirement specifiers correctly (see below).
 
@@ -20,11 +20,26 @@ inputs:
 runs:
   using: composite
   steps:
+    # No `cache: pip`. Installs go through uv below, so pip's cache was never
+    # read — and setup-python keyed it on pyproject.toml, which says nothing
+    # about the per-job package lists this action actually installs.
     - name: Set up Python ${{ inputs.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
-        cache: pip
+
+    # uv resolves and installs the same PyPI specifiers as pip, several times
+    # faster: it downloads in parallel and links from its own store instead of
+    # unpacking every wheel (the pip step was ~20-27s of every job, and the
+    # generators run ~100 times a day). No uv cache either. Every job installs
+    # a different package list, so a shared key would only hold whichever job
+    # saved first, and a cold PyPI download is already about as fast as a
+    # cache restore.
+    - name: Set up uv
+      if: inputs.packages != ''
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: false
 
     - name: Install ${{ inputs.packages }}
       if: inputs.packages != ''
@@ -33,10 +48,14 @@ runs:
         PACKAGES: ${{ inputs.packages }}
       run: |
         set -euo pipefail
-        python -m pip install --upgrade pip
         # Piped through xargs rather than interpolated into the command line:
         # unquoted `pip install pytest>=7.0` makes the shell read `>=7.0` as a
         # redirect, so the package installs UNPINNED and the runner grows a
-        # junk file named `=7.0`. xargs hands each specifier to pip as one
+        # junk file named `=7.0`. xargs hands each specifier to uv as one
         # argv entry, with no redirection or globbing.
-        printf '%s\n' "$PACKAGES" | xargs --no-run-if-empty python -m pip install
+        #
+        # --system installs into the setup-python interpreter above (first
+        # `python` on PATH), so every later `python …` / `mkdocs` step sees the
+        # packages exactly as it did with pip. No `pip install --upgrade pip`
+        # either: nothing calls pip any more.
+        printf '%s\n' "$PACKAGES" | xargs --no-run-if-empty uv pip install --system

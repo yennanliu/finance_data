@@ -22,6 +22,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -31,6 +32,13 @@ SRC_STOCK = ROOT / "ai_gen_report" / "stock"
 # On CI runners headless chromium must launch with --no-sandbox; the workflow
 # writes a puppeteer config and points PUPPETEER_CONFIG at it.
 _PUPPETEER = os.environ.get("PUPPETEER_CONFIG", "")
+# Each mmdc call boots its own headless Chromium, so the gate was ~70s of
+# serial browser startups. They now run concurrently, capped at 4: each
+# Chromium needs far more than one core's worth of memory and startup I/O, so
+# "one per logical core" would boot dozens on a large runner. A starved render
+# that hits its 60s timeout reads as a failure, and a spurious failure on the
+# sanitized side would be reported as a regression.
+_RENDER_WORKERS = min(4, os.cpu_count() or 2)
 
 
 def _load_build_docs():
@@ -109,6 +117,12 @@ def main() -> None:
     mmdc = shutil.which("mmdc")
     if not mmdc:
         fail("mmdc not on PATH — install @mermaid-js/mermaid-cli to validate diagrams")
+    # Canary. If mmdc cannot launch a browser at all, every diagram "fails"
+    # raw AND sanitized, which this gate counts as LLM garbage rather than a
+    # regression — so a broken renderer would pass silently.
+    if not renders(mmdc, "graph TD\n  A --> B\n"):
+        fail("mmdc could not render a trivial diagram — the renderer is broken, "
+             "so the Mermaid gate would prove nothing")
     bd = _load_build_docs()
 
     doc_mds = [p for p in (DOCS / "reports").rglob("*.md") if p.name != "index.md"]
@@ -131,6 +145,9 @@ def main() -> None:
                     return d / name
         return None
 
+    # Collect every (raw, sanitized) pair first, then render them all in one
+    # concurrent pass. A diagram the sanitizer left untouched is rendered once.
+    blocks: list[tuple[Path, str, str]] = []
     for doc in doc_mds:
         ticker = doc.parent.name
         src = find_source(ticker, doc.name)
@@ -140,18 +157,24 @@ def main() -> None:
         # gate can never scan for a diagram shape they no longer recognise.
         for raw in bd._MERMAID_FENCE_RE.findall(
                 src.read_text(encoding="utf-8", errors="ignore")):
-            total += 1
-            san = bd.sanitize_mermaid(raw)
-            raw_ok = renders(mmdc, raw)
-            san_ok = renders(mmdc, san) if san != raw else raw_ok
-            if raw_ok and not san_ok:
-                regressions.append((src, raw, san))
-            elif not raw_ok and san_ok:
-                fixed += 1
-            elif not raw_ok and not san_ok:
-                still_broken += 1
-            else:
-                ok += 1
+            blocks.append((src, raw, bd.sanitize_mermaid(raw)))
+
+    unique = sorted({d for _, raw, san in blocks for d in (raw, san)})
+    with ThreadPoolExecutor(max_workers=_RENDER_WORKERS) as pool:
+        rendered = dict(zip(unique, pool.map(lambda d: renders(mmdc, d), unique)))
+
+    for src, raw, san in blocks:
+        total += 1
+        raw_ok = rendered[raw]
+        san_ok = rendered[san]
+        if raw_ok and not san_ok:
+            regressions.append((src, raw, san))
+        elif not raw_ok and san_ok:
+            fixed += 1
+        elif not raw_ok and not san_ok:
+            still_broken += 1
+        else:
+            ok += 1
 
     print(f"\nMermaid on sampled pages: {total} blocks | "
           f"already-ok {ok} | fixed {fixed} | still-broken (LLM garbage) {still_broken} | "
