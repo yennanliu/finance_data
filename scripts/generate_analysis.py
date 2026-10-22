@@ -30,7 +30,7 @@ the next run creates fundamental_analysis_2026-02-22-2.md, then -3, etc.
 
 Requirements
 ------------
-  pip install anthropic openai yfinance
+  uv sync    (installs every provider SDK and yfinance from uv.lock)
 
 Environment
 -----------

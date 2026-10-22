@@ -5,26 +5,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-# Install dependencies
-pip install -e ".[dev]"
+# Install dependencies into .venv from uv.lock (uv also fetches the Python in
+# .python-version, 3.11, if it is not installed)
+uv sync --extra dev
 
 # Run all tests
-pytest tests/ -v
+uv run pytest tests/ -v
 
 # Run a single test file
-pytest tests/test_llm.py -v
+uv run pytest tests/test_llm.py -v
 
-# NOTE: .python-version pins 3.9 (often not installed locally). The suite is
-# verified under Python 3.13 — if `pytest` can't find an interpreter, run it
-# explicitly, e.g. `python3.13 -m pytest tests/ -v`. Tests are fully offline
-# (network/SDK/selenium boundaries are mocked); no API keys required.
+# NOTE: Python >=3.10 is required (the code uses `X | Y` annotations); CI runs
+# 3.11 and 3.13. Tests are fully offline (network/SDK/selenium boundaries are
+# mocked); no API keys required. After editing dependencies in pyproject.toml,
+# run `uv lock` and commit uv.lock — tests.yml installs with `--locked` and
+# fails on a stale lockfile.
 
 # Generate analysis locally
-python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider claude
-python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider openai
+uv run python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider claude
+uv run python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider openai
 
-# Build and preview docs site
-python3 scripts/build_docs.py && mkdocs serve
+# Build and preview docs site (MkDocs toolchain is not in uv.lock; see README)
+uv pip install "mkdocs-material==9.5.*" mkdocs-awesome-pages-plugin minify-html
+uv run python scripts/build_docs.py && uv run mkdocs serve
 
 # Trigger GitHub Actions workflow via CLI
 gh workflow run daily_analysis.yml -f ticker=MSFT -f analysis_type=technical-analysis
@@ -63,7 +66,7 @@ scripts/generate_analysis.py
 - `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid, series averages); with `fundamental_analytics.py` it powers the **Market Data** section (`docs/data/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
 - `.github/workflows/daily_analysis.yml` — 61 cron slots/day (36 fundamental + 25 technical), one ticker per slot
-- `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + pip install), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
+- `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + `uv pip install`; there is no pip step anywhere in CI), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
 
 ### Adding a new analysis type
 1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`, including its `prompt_file` (the template's basename — `PROMPT_MAP` is derived from this field, so there is no second map to edit)

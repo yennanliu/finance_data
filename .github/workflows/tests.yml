@@ -19,6 +19,8 @@ on:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
+      - "uv.lock"
+      - ".python-version"
       # All of .github, not just this file: test_workflows.py lints every
       # workflow, so a cron/case edit must run it.
       - ".github/**"
@@ -27,6 +29,8 @@ on:
       - "scripts/**"
       - "tests/**"
       - "pyproject.toml"
+      - "uv.lock"
+      - ".python-version"
       # All of .github, not just this file: test_workflows.py lints every
       # workflow, so a cron/case edit must run it.
       - ".github/**"
@@ -67,29 +71,23 @@ jobs:
             !/notebook_llm/
             !/investor_day/
 
-      - name: Set up Python and dependencies
-        uses: ./.github/actions/python-env
+      # Installs from uv.lock, so CI tests exactly the versions `uv sync`
+      # gives a developer, rather than whatever PyPI resolved that morning.
+      # --locked fails the job if uv.lock is out of date with pyproject.toml
+      # instead of silently re-resolving. The project has no build-system, so
+      # uv treats it as a virtual project: dependencies are installed, the repo
+      # itself is not, and imports resolve via [tool.pytest.ini_options]
+      # pythonpath exactly as before. Unlike the cron jobs, the cache pays off
+      # here: one lockfile means one stable cache key.
+      - name: Set up uv and Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
-          # Explicit install (not `pip install -e .`) — there is no build-system
-          # backend declared, and the suite only needs the runtime deps + pytest.
-          # Imports resolve via [tool.pytest.ini_options] pythonpath, no install.
-          # selenium / webdriver-manager / playwright are intentionally omitted:
-          # those code paths are mocked and never imported by the tests.
-          # Jinja2 is here on its own, not via MkDocs: test_language_switcher.py
-          # renders the theme overrides in docs/overrides/partials/, and pulling
-          # the whole mkdocs-material toolchain in for one pure-Python renderer
-          # would cost more than the tests it unlocks.
-          packages: >-
-            pytest>=7.0
-            pytest-mock>=3.0
-            Jinja2>=3.1
-            anthropic>=0.40.0
-            openai>=1.0.0
-            google-genai>=1.0.0
-            yfinance>=0.2.40
-            beautifulsoup4>=4.14.2
-            requests>=2.32.5
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --extra dev
 
       - name: Run test suite
-        run: python -m pytest tests/ -v
+        run: uv run --no-sync pytest tests/ -v

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 WORKFLOWS = Path(__file__).resolve().parent.parent / ".github" / "workflows"
+ACTIONS = WORKFLOWS.parent / "actions"
 
 # Workflows that fan a single job out over one cron slot per ticker.
 SCHEDULED_FANOUT = ["daily_analysis.yml", "daily_market_news.yml"]
@@ -154,19 +155,24 @@ def test_pip_installs_go_through_the_shared_action():
     """`pip install pytest>=7.0` unquoted makes the shell read `>=7.0` as a
     redirect: the package installs UNPINNED and a junk file named `=7.0`
     appears. .github/actions/python-env passes specifiers via xargs, so route
-    installs through it rather than reintroducing that bug per workflow."""
+    installs through it rather than reintroducing that bug per workflow.
+
+    That covers `uv pip install` too, and plain pip in any form: CI installs
+    with uv everywhere, so a stray `python -m pip` is a slow path back in."""
     offenders = []
-    for p in sorted(WORKFLOWS.glob("*.yml")):
+    for p in sorted(WORKFLOWS.glob("*.yml")) + sorted(ACTIONS.glob("*/action.yml")):
         for line in p.read_text(encoding="utf-8").splitlines():
             # Comments may legitimately *discuss* pip install (e.g. explaining
             # why a job no longer runs one); only real commands count.
             if line.lstrip().startswith("#"):
                 continue
-            if "pip install" in line:
-                offenders.append(f"{p.name}: {line.strip()}")
+            if p.parent.name == "python-env" and "uv pip install --system" in line:
+                continue  # the one sanctioned install
+            if "pip install" in line or "-m pip" in line:
+                offenders.append(f"{p.parent.name}/{p.name}: {line.strip()}")
     assert not offenders, (
         "use ./.github/actions/python-env (its `packages:` input) instead of a "
-        f"raw `pip install` in a run block: {offenders}"
+        f"raw pip / `uv pip install` in a run block: {offenders}"
     )
 
 

@@ -1,7 +1,7 @@
 name: Set up Python environment
 description: >
   Set up Python and install the given packages with uv.
-  Centralises the setup-python + pip install pair that every job in this repo
+  Centralises the setup-python + package install pair that every job in this repo
   repeats, and quotes requirement specifiers correctly (see below).
 
 inputs:
