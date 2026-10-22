@@ -806,180 +806,8 @@ body { background: var(--fp-bg); }
   max-width: 88rem;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Report / Inner Page — Typography & Readability
-   Editorial rhythm after finlab.finance: light Space Grotesk headings with
-   tight tracking, DM Sans body at a calm 18px / 1.75. Material's root
-   font-size is 20px, so every rem below is ×20, not ×16.
-   ══════════════════════════════════════════════════════════════ */
-
-.md-typeset {
-  font-size: 0.9rem;
-  line-height: 1.75;
-  color: var(--fp-prose);
-  font-feature-settings: "ss01", "cv11";
-}
-
-.md-typeset p {
-  margin-bottom: 1.15rem;
-}
-
-.md-content__inner {
-  padding-top: 2.25rem !important;
-  padding-bottom: 5rem !important;
-}
-
-/* ── h1 — report title, masthead style ──
-   A solid ink fill, never a clipped gradient: the gradient used to paint
-   twemoji flags black on the dark scheme. */
-.md-typeset h1 {
-  font-family: var(--fp-font-display) !important;
-  font-size: clamp(1.6rem, 3.4vw, 2.4rem) !important;
-  font-weight: 300 !important;
-  letter-spacing: -0.035em !important;
-  line-height: 1.08 !important;
-  color: var(--fp-text) !important;
-  background: none !important;
-  -webkit-text-fill-color: currentcolor !important;
-  text-wrap: balance;
-  margin-bottom: 1.5rem !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
-}
-
-/* ── h2 — section heading. No rule of its own: generated reports already
-   separate chapters with `---`, styled as a hairline below. ── */
-.md-typeset h2 {
-  font-family: var(--fp-font-display) !important;
-  font-size: clamp(1.25rem, 2.4vw, 1.6rem) !important;
-  font-weight: 300 !important;
-  letter-spacing: -0.02em !important;
-  line-height: 1.2 !important;
-  color: var(--fp-text) !important;
-  margin-top: 2.75rem !important;
-  margin-bottom: 1rem !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
-}
-
-.md-typeset hr {
-  margin: 2.25rem 0;
-  border-bottom: 1px solid var(--fp-border);
-}
-.md-typeset hr + h2 { margin-top: 0 !important; }
-
-/* ── h3 — subsection headings ── */
-.md-typeset h3 {
-  font-family: var(--fp-font-display) !important;
-  font-size: 1.1rem !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.015em !important;
-  color: var(--fp-text) !important;
-  margin-top: 2.25rem !important;
-  margin-bottom: 0.75rem !important;
-}
-
-/* ── h4 ── */
-.md-typeset h4 {
-  font-size: 0.95rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0 !important;
-  color: var(--fp-text) !important;
-  margin-top: 1.75rem !important;
-}
-
-.md-typeset strong { color: var(--fp-text); font-weight: 600; }
-
-/* ── Tables — hairline card, raised header row ── */
-.md-typeset table:not([class]) {
-  border: 1px solid var(--fp-border);
-  border-radius: 0.7rem;
-  overflow: hidden;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--fp-bg-card);
-  font-size: 0.8rem;
-  width: 100%;
-  margin: 1.25rem 0;
-  box-shadow: var(--fp-shadow-sm);
-}
-
-.md-typeset table:not([class]) thead tr {
-  background: var(--fp-bg-raised);
-}
-
-.md-typeset table:not([class]) th {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--fp-text-muted) !important;
-  border-bottom: 1px solid var(--fp-border) !important;
-  padding: 0.65rem 1rem !important;
-}
-
-.md-typeset table:not([class]) td {
-  border-bottom: 1px solid var(--fp-border-dim) !important;
-  padding: 0.7rem 1rem !important;
-  color: var(--fp-prose);
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.md-typeset table:not([class]) tbody tr:hover td {
-  background: var(--fp-bg-raised);
-}
-
-.md-typeset table:not([class]) tr:last-child td {
-  border-bottom: none !important;
-}
-
-.md-typeset table:not([class]) a {
-  color: var(--fp-text) !important;
-  font-weight: 500;
-  text-decoration: none !important;
-}
-
-.md-typeset table:not([class]) a:hover {
-  color: var(--md-typeset-a-color) !important;
-  text-decoration: underline !important;
-}
-
-/* ── Blockquote → quiet pull-note ── */
-.md-typeset blockquote {
-  border-left: 2px solid var(--fp-text) !important;
-  background: transparent !important;
-  border-radius: 0;
-  padding: 0.25rem 0 0.25rem 1.1rem !important;
-  margin: 1.75rem 0 !important;
-  color: var(--fp-text-secondary) !important;
-  font-size: 0.95rem !important;
-  line-height: 1.65;
-}
-
-.md-typeset blockquote strong {
-  color: var(--fp-text) !important;
-}
-
-/* ── Inline code ── */
-.md-typeset code:not(.highlight code) {
-  background: var(--fp-bg-raised) !important;
-  border: 1px solid var(--fp-border) !important;
-  color: var(--fp-text) !important;
-  border-radius: 0.3rem;
-  padding: 0.1em 0.35em !important;
-  font-size: 0.85em !important;
-}
-
-/* ── Admonitions — flat card, coloured rail ── */
-.md-typeset .admonition,
-.md-typeset details {
-  border-radius: 0.7rem !important;
-  border-left-width: 3px !important;
-  background: var(--fp-bg-card) !important;
-  box-shadow: var(--fp-shadow-sm) !important;
-  font-size: 0.85rem !important;
-}
+/* Article typography and tables (headings, body, lists, tables, quotes,
+   code, admonitions) live in report.css, loaded after this file. */
 
 /* ── Left nav — a quiet index rail ──
    navigation.sections renders every ticker as a bold section label with
@@ -1031,20 +859,6 @@ body { background: var(--fp-bg); }
 
 /* Breadcrumbs are navigation, not body links: no resting underline. */
 .md-typeset .crumbs a { text-decoration: none !important; }
-
-/* ── List items — more spacing ── */
-.md-typeset ul li,
-.md-typeset ol li {
-  margin-bottom: 0.4rem;
-  line-height: 1.8;
-}
-
-/* ── Code blocks ── */
-.md-typeset .highlight pre {
-  font-size: 0.9rem !important;
-  line-height: 1.65 !important;
-  border-radius: 8px !important;
-}
 
 /* ══════════════════════════════════════════════════════════════
    MkDocs Material — General Overrides for Inner Pages (continued)
@@ -1243,16 +1057,6 @@ body { background: var(--fp-bg); }
   box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
 }
 
-/* Make table rows clickable on report pages */
-.md-typeset table tbody tr {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.md-typeset table tbody tr:hover {
-  background-color: var(--fp-accent-dim);
-}
-
 /* Ticker pill style (inner pages) */
 .ticker {
   display: inline-block;
@@ -1404,41 +1208,6 @@ body,
    Mobile — Reading scale & typography
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Body text: 16px minimum prevents iOS auto-zoom on tap */
-  .md-typeset {
-    font-size: 1rem;
-    line-height: 1.85;
-  }
-
-  /* Headings — scale down proportionally but stay large */
-  .md-typeset h1 { font-size: 2rem !important; }
-  .md-typeset h2 { font-size: 1.55rem !important; }
-  .md-typeset h3 { font-size: 1.2rem !important; }
-
-  /* h2 green accent line — smaller on mobile */
-  .md-typeset h2::before { width: 1.25rem; }
-
-  /* Tables — horizontal scroll is handled by the .md-table-scroll wrapper
-     (responsive-tables.js); here we just tune type scale for small screens. */
-  .md-typeset table:not([class]) {
-    font-size: 0.9rem;
-  }
-
-  .md-typeset table:not([class]) th {
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
-
-  /* Keep long cell text readable instead of forcing an extreme table width. */
-  .md-typeset table:not([class]) td {
-    min-width: 7rem;
-  }
-
-  /* Wider tap targets for table rows */
-  .md-typeset table tbody tr td {
-    padding: 0.65rem 0.9rem;
-  }
-
   /* Navigation drawer — larger tap targets. Same selector as the desktop
      rule so the media query, not specificity, decides. */
   .md-nav--primary .md-nav__item .md-nav__link {
@@ -1546,14 +1315,6 @@ body,
 .md-typeset video,
 .md-typeset canvas {
   max-width: 100%;
-}
-
-/* Tablet range (≈iPad portrait) — tables read better with a slightly smaller
-   scale and the scroll wrapper already prevents page overflow. */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .md-typeset table:not([class]) {
-    font-size: 0.92rem;
-  }
 }
 
 /* Respect device notches/rounded corners on the article padding (iOS). */

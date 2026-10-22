@@ -1,0 +1,285 @@
+/* ===========================================================================
+   report.css — article typography and tables
+
+   Everything a generated report renders as plain Markdown: headings, body,
+   lists, rules, quotes, code, admonitions and — most of all — tables, which
+   carry most of a report's figures. Loaded after extra.css and hub.css so it
+   is the one place these elements are styled.
+
+   Material's root font-size is 20px (and 125%+ on larger screens), so every
+   rem here is ×20: 0.82rem body ≈ 16.4px. Reports are mostly Traditional
+   Chinese, so line-height is set for CJK rather than Latin text.
+
+   Tables get two classes from javascripts/responsive-tables.js, which only
+   inspects cell text — it never computes a figure:
+     .is-num   a column whose cells are mostly figures → right-aligned, tabular
+     .is-pos / .is-neg   a cell that starts with an explicit +/− sign
+   =========================================================================== */
+
+/* ── body ─────────────────────────────────────────────────────────────────── */
+
+.md-typeset {
+  font-size: 0.82rem;
+  line-height: 1.85;
+  color: var(--fp-prose);
+  letter-spacing: 0.005em;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.md-typeset p { margin: 0 0 1em; }
+
+.md-content__inner {
+  padding-top: 2rem !important;
+  padding-bottom: 5rem !important;
+}
+
+.md-typeset strong { color: var(--fp-text); font-weight: 600; }
+
+/* ── headings ─────────────────────────────────────────────────────────────
+   Solid ink, never a clipped gradient (that painted twemoji black on dark).
+   Weights stay at 400–600: Space Grotesk has no CJK glyphs, and the system
+   CJK face it falls back to turns spindly at 300. */
+
+.md-typeset h1 {
+  font-family: var(--fp-font-display) !important;
+  font-size: clamp(1.45rem, 2.4vw, 1.95rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--fp-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentcolor !important;
+  text-wrap: balance;
+  margin: 0 0 1.25rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* h2 — a chapter: hairline underneath with a short accent segment on it */
+.md-typeset h2 {
+  position: relative;
+  font-family: var(--fp-font-display) !important;
+  font-size: 1.28rem !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--fp-text) !important;
+  margin: 2.6rem 0 1.1rem !important;
+  padding: 0 0 0.55rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--fp-border) !important;
+}
+.md-typeset h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 2.4rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--fp-green), #3b82f6);
+}
+
+/* h3 — a section: small accent bar before the text */
+.md-typeset h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--fp-font-body) !important;
+  font-size: 0.98rem !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  color: var(--fp-text) !important;
+  margin: 2rem 0 0.75rem !important;
+}
+.md-typeset h3::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 3px;
+  height: 0.95em;
+  border-radius: 2px;
+  background: var(--fp-green);
+}
+.md-typeset h3 > .headerlink { margin-left: 0; }
+
+.md-typeset h4 {
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  color: var(--fp-text-secondary) !important;
+  margin: 1.6rem 0 0.6rem !important;
+}
+
+.md-typeset h1 + h2, .md-typeset .rmeta + h2, .md-typeset .tkhero + h2 { margin-top: 1.4rem !important; }
+.md-typeset hr + h2 { margin-top: 0 !important; }
+
+/* ── rules, lists ─────────────────────────────────────────────────────────── */
+
+.md-typeset hr {
+  height: 1px;
+  margin: 2.2rem 0;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--fp-border) 12%, var(--fp-border) 88%, transparent);
+}
+
+.md-typeset ul li,
+.md-typeset ol li { margin-bottom: 0.35em; line-height: 1.8; }
+.md-typeset ul > li::marker { color: var(--fp-green); }
+.md-typeset ol > li::marker { color: var(--fp-text-muted); font-variant-numeric: tabular-nums; font-weight: 500; }
+.md-typeset li > ul, .md-typeset li > ol { margin-top: 0.35em; }
+
+/* ── quotes, code, admonitions ────────────────────────────────────────────── */
+
+.md-typeset blockquote {
+  margin: 1.4rem 0 !important;
+  padding: 0.8rem 1.05rem !important;
+  border-left: 3px solid var(--fp-green) !important;
+  border-radius: 0 0.6rem 0.6rem 0;
+  background: var(--fp-bg-raised) !important;
+  color: var(--fp-text-secondary) !important;
+  font-size: 0.8rem !important;
+  line-height: 1.75;
+}
+.md-typeset blockquote > :last-child { margin-bottom: 0; }
+.md-typeset blockquote strong { color: var(--fp-text) !important; }
+
+.md-typeset code:not(.highlight code) {
+  padding: 0.1em 0.38em !important;
+  border: 1px solid var(--fp-border) !important;
+  border-radius: 0.3rem;
+  background: var(--fp-bg-raised) !important;
+  color: var(--fp-text) !important;
+  font-size: 0.84em !important;
+}
+
+/* Fenced blocks — reports draw ASCII dashboards with box characters here. */
+.md-typeset .highlight,
+.md-typeset pre {
+  border-radius: 0.7rem;
+}
+.md-typeset .highlight pre,
+.md-typeset pre > code {
+  font-size: 0.68rem !important;
+  line-height: 1.55 !important;
+}
+.md-typeset .highlight pre {
+  border: 1px solid var(--fp-border);
+  border-radius: 0.7rem !important;
+  background: var(--fp-bg-raised);
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0.7rem !important;
+  border-left-width: 3px !important;
+  background: var(--fp-bg-card) !important;
+  box-shadow: var(--fp-shadow-sm) !important;
+  font-size: 0.8rem !important;
+}
+
+/* ── tables ──────────────────────────────────────────────────────────────── */
+
+.md-typeset table:not([class]) {
+  border: 1px solid var(--fp-border);
+  border-radius: 0.75rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow-sm);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  width: 100%;
+  margin: 1.4rem 0;
+}
+.md-typeset .md-table-scroll { margin: 0; border-radius: 0.75rem; }
+/* Material wraps every table in .md-typeset__scrollwrap, which carries the
+   vertical rhythm; the inner wrappers add none of their own. */
+.md-typeset .md-typeset__scrollwrap { margin-top: 1.2rem; margin-bottom: 1.4rem; }
+.md-typeset .md-table-scroll > table:not([class]) { margin: 0; }
+
+.md-typeset table:not([class]) th {
+  padding: 0.62rem 0.85rem !important;
+  border-bottom: 1px solid var(--fp-border-strong) !important;
+  background: var(--fp-bg-raised);
+  color: var(--fp-text-secondary) !important;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-align: left;
+  vertical-align: bottom;
+  line-height: 1.4;
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.6rem 0.85rem !important;
+  border-bottom: 1px solid var(--fp-border-dim) !important;
+  color: var(--fp-prose);
+  font-size: 0.74rem;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset table:not([class]) tr:last-child td { border-bottom: 0 !important; }
+
+/* Zebra, then hover on top of it. */
+.md-typeset table:not([class]) tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--fp-bg-raised) 70%, transparent); }
+.md-typeset table:not([class]) tbody tr { transition: background-color .15s ease; }
+.md-typeset table:not([class]) tbody tr:hover td { background: var(--fp-accent-dim); }
+
+/* The first column names the row: ink and a touch heavier. */
+.md-typeset table:not([class]) td:first-child {
+  color: var(--fp-text);
+  font-weight: 500;
+}
+.md-typeset table:not([class]) td strong { color: var(--fp-text); font-weight: 600; }
+
+/* Figure columns (tagged by responsive-tables.js). !important because
+   Material left-aligns every cell via [dir=ltr] … td:not([align]). */
+.md-typeset table:not([class]) .is-num {
+  text-align: right !important;
+  white-space: nowrap;
+}
+.md-typeset table:not([class]) td.is-pos,
+.md-typeset table:not([class]) td.is-pos strong { color: var(--fp-green); }
+.md-typeset table:not([class]) td.is-neg,
+.md-typeset table:not([class]) td.is-neg strong { color: var(--fp-red); }
+
+/* Rows that carry a link navigate on click (clickable-rows.js). */
+.md-typeset table tbody tr:has(a) { cursor: pointer; }
+
+.md-typeset table:not([class]) a {
+  color: var(--fp-text) !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.md-typeset table:not([class]) a:hover {
+  color: var(--md-typeset-a-color) !important;
+  text-decoration: underline !important;
+}
+
+/* ── small screens ───────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .md-typeset { font-size: 0.8rem; line-height: 1.8; }
+  .md-typeset h1 { font-size: 1.35rem !important; }
+  .md-typeset h2 { font-size: 1.12rem !important; margin-top: 2.1rem !important; }
+  .md-typeset h3 { font-size: 0.92rem !important; }
+  .md-typeset table:not([class]) { font-size: 0.7rem; }
+  .md-typeset table:not([class]) th { font-size: 0.64rem; }
+  .md-typeset table:not([class]) td { font-size: 0.7rem; padding: 0.55rem 0.7rem !important; }
+  /* Prose columns get room to read; the table scrolls sideways instead of
+     folding every sentence into a two-character column. */
+  .md-typeset table:not([class]) td:not(:first-child):not(.is-num) { min-width: 9em; }
+
+  /* Report meta bar: the older/newer stepper shares the row evenly and never
+     wraps its own label. */
+  .md-typeset .rmeta__nav { width: 100%; }
+  .md-typeset .rmeta__step { flex: 1 1 0; justify-content: center; white-space: nowrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset table:not([class]) tbody tr { transition: none; }
+}

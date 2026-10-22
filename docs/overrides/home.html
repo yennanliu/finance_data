@@ -168,64 +168,81 @@
 }
 .lp-hero-sub { color: var(--fp-text-secondary); font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 300; line-height: 1.6; margin-bottom: 2rem !important; animation-delay: .28s; }
 
-/* The exchange */
-.lp-chat {
-  width: min(100%, 23rem);
-  margin: 0 auto 2rem;
+/* The terminal — a macOS Terminal window running the repo's real CLI.
+   Always dark, like Terminal's default profile, in both site schemes. */
+.lp-term {
+  width: min(100%, 37rem);
+  margin: 0 auto 2.2rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
   text-align: left;
-  filter: drop-shadow(0 18px 28px rgba(17, 24, 39, .08));
+  background: rgba(17, 19, 24, .96);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, .55),
+    0 0 0 1.5px rgba(255, 255, 255, .06) inset,
+    0 30px 60px -18px rgba(15, 23, 42, .45),
+    0 12px 24px -12px rgba(15, 23, 42, .3);
   animation-delay: .43s;
+  transition: transform .3s var(--lp-ease), box-shadow .3s var(--lp-ease);
 }
-.lp-msg { display: flex; }
-.lp-msg--you { justify-content: flex-end; }
-.lp-msg--bot { align-items: flex-start; gap: 0.6rem; margin-top: 0.6rem; }
-.lp-bubble { border-radius: 18px; padding: 0.65rem 0.85rem; transition: transform .16s var(--lp-ease), box-shadow .16s var(--lp-ease); }
-.lp-bubble--you { max-width: 84%; border-bottom-right-radius: 6px; background: #030712; color: #fff; }
-.lp-bubble--bot {
-  flex: 1;
-  min-height: 7.4rem;
-  border-top-left-radius: 6px;
-  background: var(--fp-bg-card);
-  box-shadow: 0 1px 2px rgba(17, 24, 39, .05), 0 0 0 1px var(--fp-border);
-}
-.lp-chat:hover .lp-bubble--you { transform: translate(-2px, -1px); }
-.lp-chat:hover .lp-bubble--bot { transform: translate(2px, 1px); box-shadow: 0 12px 24px rgba(17, 24, 39, .08), 0 0 0 1px var(--fp-border); }
-.lp-who { font-size: 0.6rem; margin-bottom: 0.15rem !important; color: var(--fp-text-muted); }
-.lp-bubble--you .lp-who { color: #d1d5db; }
-.lp-said { font-size: 0.72rem; line-height: 1.55; }
-.lp-said-sub { margin-top: 0.4rem !important; color: var(--fp-text-secondary); font-size: 0.64rem; line-height: 1.55; }
-.lp-said-sub[hidden] { display: none; }
-.lp-avatar {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  margin-top: 0.2rem;
-  border-radius: 0.5rem;
-  background: #111827;
-  color: #fff;
-  font-size: 0.7rem;
-}
-.lp-caret { display: inline-block; width: 1px; height: 0.9em; margin-left: 1px; vertical-align: -0.1em; background: currentcolor; animation: lp-blink 1s steps(1) infinite; }
-@keyframes lp-blink { 50% { opacity: 0; } }
-.lp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.6rem; }
-.lp-chip {
-  display: inline-flex;
+.lp-term:hover { transform: translateY(-2px); }
+.lp-term-bar {
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--fp-pill);
-  background: var(--fp-accent-dim);
-  color: var(--fp-text-secondary);
-  font-size: 0.58rem;
-  opacity: 0;
-  transform: translateY(5px);
-  animation: lp-chip-in .4s var(--lp-ease) forwards;
-  animation-delay: var(--d);
+  height: 1.7rem;
+  padding: 0 0.6rem;
+  background: linear-gradient(#3a3a3d, #2c2c2f);
+  border-bottom: 1px solid #000;
 }
-.lp-chip::before { content: ""; width: 0.3rem; height: 0.3rem; border-radius: 50%; background: #059669; }
-@keyframes lp-chip-in { to { opacity: 1; transform: none; } }
+.lp-lights { display: flex; gap: 0.4rem; }
+.lp-lights i { width: 0.6rem; height: 0.6rem; border-radius: 50%; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, .25); }
+.lp-lights i:nth-child(1) { background: #ff5f57; }
+.lp-lights i:nth-child(2) { background: #febc2e; }
+.lp-lights i:nth-child(3) { background: #28c840; }
+.lp-term-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #a1a1aa;
+  font-size: 0.6rem;
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.lp-term-body {
+  min-height: 11.6rem;
+  padding: 0.7rem 0.85rem 0.85rem;
+  color: #e4e4e7;
+  font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "PingFang TC", monospace;
+  font-size: 0.64rem;
+  line-height: 1.75;
+}
+.lp-tl { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lp-tl[hidden] { display: none; }
+.lp-ps { color: #4ade80; }
+.lp-path { color: #60a5fa; }
+.lp-pr { color: #e4e4e7; }
+.lp-cmd { color: #fafafa; }
+.lp-flag { color: #fbbf24; white-space: nowrap; }
+.lp-step { display: grid; grid-template-columns: 1.1em 10.5em minmax(0, 1fr); gap: 0 0.5em; }
+.lp-ok { color: #4ade80; }
+.lp-spin { color: #fbbf24; }
+.lp-dim { color: #71717a; }
+.lp-sum { margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px dashed rgba(255, 255, 255, .1); }
+.lp-sum b { color: #fafafa; font-weight: 600; }
+.lp-term .lp-up { color: #4ade80 !important; }
+.lp-term .lp-dn { color: #f87171 !important; }
+.lp-term a { color: #93c5fd !important; text-decoration: none !important; border-bottom: 1px dotted rgba(147, 197, 253, .5); }
+.lp-term a:hover { border-bottom-style: solid; }
+.lp-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  background: #e4e4e7;
+  animation: lp-blink 1.05s steps(1) infinite;
+}
+@keyframes lp-blink { 50% { opacity: 0; } }
 
 .lp-hero-action { animation-delay: 1.1s; }
 .lp-scroll {
@@ -598,6 +615,8 @@
   .lp-ggrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 40rem) {
+  .lp-term-title { display: none; }
+  .lp-step { grid-template-columns: 1.1em 8em minmax(0, 1fr); }
   .lp-wrap { padding: 0 0.8rem; }
   .lp-ggrid { grid-template-columns: 1fr; }
   .lp-guide { min-height: 0; }
@@ -613,8 +632,8 @@
   .lp-row-a { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lp-in, .lp-chip { animation: none !important; opacity: 1; transform: none; filter: none; }
-  .lp-hero-ambient, .lp-scroll, .lp-caret, .lp-track { animation: none !important; }
+  .lp-in { animation: none !important; opacity: 1; transform: none; filter: none; }
+  .lp-hero-ambient, .lp-scroll, .lp-cursor, .lp-track { animation: none !important; }
   .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
@@ -628,14 +647,11 @@
     "kicker": "Finance Data Research Hub",
     "title": "AI-Powered Equity Research, Published Every Morning",
     "sub": "Research US and Taiwan stocks with daily reports, price history, filings, and news.",
-    "you": "You",
-    "bot": "Research Hub",
-    "ask": "Write today's research on the stocks I follow",
-    "ask_t": "Write today's research on {t}",
-    "reply": "Today's run is published. Open the reports to read it.",
-    "reply_t": "Published the {k} report for {t} on {d}.",
-    "reply_s": "Last close {p} · YTD {y} · 1Y {o}. Open it for the full analysis.",
-    "chips": ["Data fetched", "Report written", "Published"],
+    "term_title": "research-hub — zsh — 80×24",
+    "t_fetch": "fetch market data",
+    "t_write": "write report",
+    "t_pub": "publish",
+    "t_saved": "saved",
     "cta": "Read today's reports",
     "scroll": "Scroll down for more",
     "show_eye": "Live price context",
@@ -712,14 +728,11 @@
     "kicker": "財經資料研究中心",
     "title": "AI 驅動的股票研究，每天清晨發布",
     "sub": "以每日報告、價格歷史、財報文件與新聞，研究美股與台股。",
-    "you": "你",
-    "bot": "研究中心",
-    "ask": "幫我寫今天關注個股的研究",
-    "ask_t": "幫我寫 {t} 今天的研究",
-    "reply": "今日報告已發布，打開報告即可閱讀。",
-    "reply_t": "已於 {d} 發布 {t} 的{k}報告。",
-    "reply_s": "最新收盤 {p} · 今年以來 {y} · 1Y {o}。打開報告查看完整分析。",
-    "chips": ["資料已抓取", "報告已撰寫", "已發布"],
+    "term_title": "research-hub — zsh — 80×24",
+    "t_fetch": "抓取市場資料",
+    "t_write": "撰寫報告",
+    "t_pub": "發布",
+    "t_saved": "已存",
     "cta": "閱讀今日報告",
     "scroll": "向下捲動查看更多",
     "show_eye": "即時價格脈絡",
@@ -797,7 +810,7 @@
 <div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}"
      data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/"
      data-hub-labels='{{ C.labels | tojson }}'
-     data-hub-copy='{{ {"ask_t": C.ask_t, "reply_t": C.reply_t, "reply_s": C.reply_s, "copied": C.copied, "copy": C.copy_btn} | tojson }}'>
+     data-hub-copy='{{ {"t_fetch": C.t_fetch, "t_write": C.t_write, "t_pub": C.t_pub, "t_saved": C.t_saved, "copied": C.copied, "copy": C.copy_btn} | tojson }}'>
 
   <!-- ── 1. Hero ── -->
   <section class="lp-hero">
@@ -807,25 +820,19 @@
       <h1 class="lp-hero-title lp-in">{{ C.title }}</h1>
       <p class="lp-hero-sub lp-in">{{ C.sub }}</p>
 
-      <div class="lp-chat lp-in" aria-live="polite">
-        <div class="lp-msg lp-msg--you">
-          <div class="lp-bubble lp-bubble--you">
-            <p class="lp-who">{{ C.you }}</p>
-            <p class="lp-said" data-hub-ask>{{ C.ask }}</p>
-          </div>
+      {#- Static session: the generic command with neutral output. With data it
+          is re-run for the featured report (ticker, type, model, date, figures). -#}
+      <div class="lp-term lp-in" role="img" aria-label="{{ C.term_title }}">
+        <div class="lp-term-bar">
+          <span class="lp-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="lp-term-title">{{ C.term_title }}</span>
         </div>
-        <div class="lp-msg lp-msg--bot">
-          <span class="lp-avatar" aria-hidden="true">✦</span>
-          <div class="lp-bubble lp-bubble--bot">
-            <p class="lp-who">{{ C.bot }}</p>
-            <p class="lp-said" data-hub-reply>{{ C.reply }}</p>
-            <p class="lp-said-sub" data-hub-reply-sub hidden></p>
-            <div class="lp-chips">
-              {%- for chip in C.chips %}
-              <span class="lp-chip" style="--d:{{ 0.9 + loop.index0 * 0.12 }}s">{{ chip }}</span>
-              {%- endfor %}
-            </div>
-          </div>
+        <div class="lp-term-body" data-hub-term>
+          <div class="lp-tl"><span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> <span class="lp-cmd">python scripts/generate_analysis.py AAPL <span class="lp-flag">--analysis-type</span> fundamental-analysis</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_fetch }}</span><span class="lp-dim">yfinance · SEC EDGAR</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_write }}</span><span class="lp-dim">gemini → openai</span></div>
+          <div class="lp-tl lp-step"><span class="lp-ok">✓</span><span>{{ C.t_pub }}</span><span class="lp-dim">GitHub Pages</span></div>
+          <div class="lp-tl"><span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> <span class="lp-cursor"></span></div>
         </div>
       </div>
 
@@ -1125,17 +1132,37 @@
         ob.observe(el);
       }
 
-      // ── typing ──
-      function type(el, text, ms, then) {
-        if (reduce) { el.textContent = text; if (then) then(); return; }
+      // ── terminal session ──
+      var PROMPT = '<span class="lp-ps">you@research-hub</span> <span class="lp-path">~/finance_data</span> <span class="lp-pr">%</span> ';
+      function session(body, cmd, steps, summary) {
+        var flagged = esc(cmd).replace(/(--[\w-]+)/g, '<span class="lp-flag">$1</span>');
+        var html = '<div class="lp-tl">' + PROMPT + '<span class="lp-cmd" data-cmd></span><span class="lp-cursor" data-cur></span></div>' +
+          steps.map(function (st) {
+            return '<div class="lp-tl lp-step" hidden><span class="lp-spin">⠋</span><span>' + esc(st[0]) + '</span><span class="lp-dim">' + esc(st[1]) + '</span></div>';
+          }).join("") +
+          '<div class="lp-tl lp-sum" hidden>' + summary + '</div>' +
+          '<div class="lp-tl" hidden>' + PROMPT + '<span class="lp-cursor"></span></div>';
+        body.innerHTML = html;
+        var cmdEl = body.querySelector("[data-cmd]"), cur = body.querySelector("[data-cur]");
+        var rest = Array.prototype.slice.call(body.querySelectorAll(".lp-tl[hidden]"));
+        function finish() { cmdEl.innerHTML = flagged; cur.remove(); rest.forEach(function (el) { el.hidden = false; }); body.querySelectorAll(".lp-spin").forEach(function (s) { s.className = "lp-ok"; s.textContent = "✓"; }); }
+        if (reduce) return finish();
         var i = 0;
-        var caret = document.createElement("span");
-        caret.className = "lp-caret";
-        (function tick() {
-          el.textContent = text.slice(0, ++i);
-          el.appendChild(caret);
-          if (i < text.length) setTimeout(tick, ms);
-          else { setTimeout(function () { caret.remove(); }, 500); if (then) then(); }
+        (function typeCmd() {
+          cmdEl.textContent = cmd.slice(0, ++i);
+          if (i < cmd.length) return setTimeout(typeCmd, 22 + Math.random() * 30);
+          cmdEl.innerHTML = flagged;
+          cur.remove();
+          var k = 0, frames = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";
+          (function next() {
+            if (k >= rest.length) return;
+            var el = rest[k++];
+            el.hidden = false;
+            var sp = el.querySelector(".lp-spin");
+            if (!sp) return setTimeout(next, 260);
+            var f = 0, t = setInterval(function () { sp.textContent = frames[f++ % frames.length]; }, 70);
+            setTimeout(function () { clearInterval(t); sp.className = "lp-ok"; sp.textContent = "✓"; next(); }, 520 + Math.random() * 380);
+          })();
         })();
       }
 
@@ -1270,15 +1297,23 @@
         var days = $("[data-hub-days]");
         if (days && d.retention_days != null) days.textContent = d.retention_days;
 
-        // 1. the exchange
-        if (h) {
-          var ask = $("[data-hub-ask]"), reply = $("[data-hub-reply]"), sub = $("[data-hub-reply-sub]");
-          ask.textContent = fill(copy.ask_t, { t: h.ticker });
-          var r1 = fill(copy.reply_t, { k: typeLabel(h), t: h.ticker, d: h.date });
-          var r2 = fill(copy.reply_s, { p: (h.currency ? h.currency + " " : "") + h.price, y: pct(h.ytd), o: pct(h.chg_1y) });
+        // 1. the terminal — re-run the CLI for the featured report
+        var term = $("[data-hub-term]");
+        if (term && h) {
+          var kind = String(h.type || "").replace(/_/g, "-");
+          var price = (h.currency ? h.currency + " " : "") + h.price;
+          var summary =
+            '<b>' + esc(h.ticker) + '</b>  ' + esc(price) +
+            '  <span class="lp-dim">YTD</span> <span class="' + tone(h.ytd) + '">' + pct(h.ytd) + '</span>' +
+            '  <span class="lp-dim">1Y</span> <span class="' + tone(h.chg_1y) + '">' + pct(h.chg_1y) + '</span>\n' +
+            '<span class="lp-ok">→</span> ' + esc(copy.t_saved || "saved") + ' <a href="' + esc(base + h.href) + '">' + esc(h.href) + '</a>';
           setTimeout(function () {
-            type(reply, r1, 18, function () { sub.hidden = false; type(sub, r2, 10); });
-          }, reduce ? 0 : 700);
+            session(term, "python scripts/generate_analysis.py " + h.ticker + " --analysis-type " + kind, [
+              [copy.t_fetch, "yfinance · SEC EDGAR"],
+              [copy.t_write, h.model || h.provider || typeLabel(h)],
+              [copy.t_pub, h.date]
+            ], summary);
+          }, reduce ? 0 : 650);
         }
 
         // 2. showcase
