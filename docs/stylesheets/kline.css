@@ -8,7 +8,7 @@
   margin: 0 0 1.75rem;
   padding: 1rem 1.15rem 0.7rem;
   border: 1px solid var(--fp-border, #27272a);
-  border-radius: 16px;
+  border-radius: var(--fp-radius, 1rem);
   background:
     radial-gradient(120% 140% at 100% 0%, var(--fp-accent-glow, rgba(255,255,255,0.05)), transparent 60%),
     var(--fp-bg-card, #16161a);

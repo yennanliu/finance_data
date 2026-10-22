@@ -1,932 +1,712 @@
 {% extends "main.html" %}
 
-{% block tabs %}
-  {{ super() }}
-{% endblock %}
+{#-
+  Landing page — an editorial "research magazine" front after
+  finlab.finance/en/blog: a masthead with a category rail, a featured report
+  card beside a list of the newest reports, then the coverage and pipeline
+  sections as feeds separated by hairlines.
+
+  One template serves both languages. home_zh.html only overrides
+  `home_lang`; every visible string comes from COPY below, so the two pages
+  cannot drift apart structurally.
+
+  Every figure is hydrated from hub.json (scripts/build_docs.py,
+  write_hub_payload). Slots that carry figures stay `hidden` until the payload
+  arrives, so a failed fetch shows nothing stale.
+-#}
+
+{% block home_lang %}en{% endblock %}
 
 {% block styles %}
 {{ super() }}
 <style>
-/* ─── Landing page (home.html) — lp- prefix, uses --fp-* project tokens ─── */
+/* ─── Landing page — lp- prefix, uses the --fp-* tokens from extra.css ─── */
+
+.md-main__inner:has(.lp-page) { margin-top: 0; }
+.md-content__inner:has(> .lp-page) { padding-top: 0 !important; padding-bottom: 0 !important; margin: 0; }
+.md-content__inner:has(> .lp-page) > .md-content__button { display: none; }
 
 .lp-page {
-  overflow-x: hidden;
-  background: var(--fp-bg);
+  --lp-cover-a: #1e3a8a;
+  --lp-cover-b: #0f766e;
+  overflow-x: clip;
   color: var(--fp-text);
+  font-size: 0.8rem;
+  line-height: 1.6;
 }
 
-/* Reset MkDocs typeset defaults inside the landing page */
-.lp-page p, .lp-page h1, .lp-page h2, .lp-page h3, .lp-page h4 {
-  margin: 0;
-  line-height: inherit;
+.md-typeset .lp-page p { margin: 0; }
+
+.lp-con {
+  width: min(100%, 64rem);
+  margin: 0 auto;
+  padding: 0 1.2rem;
 }
 
-/* ─── Ticker strip ─── */
-.lp-ticker {
-  background: var(--fp-bg-alt);
-  border-bottom: 1px solid var(--fp-border);
-  height: 30px;
-  overflow: hidden;
-  display: flex;
+/* Material's typeset rules on headings are !important; the landing page
+   resets them once here rather than fighting them per element. */
+.md-typeset .lp-page h1,
+.md-typeset .lp-page h2,
+.md-typeset .lp-page h3 {
+  font-family: var(--fp-font-display) !important;
+  font-weight: 300 !important;
+  color: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  -webkit-text-fill-color: currentcolor !important;
+  text-wrap: balance;
+}
+
+/* ─── Masthead ─── */
+.lp-mast { padding: clamp(1.75rem, 4vw, 2.75rem) 0 1.4rem; }
+
+.lp-kicker {
+  display: inline-flex;
   align-items: center;
-  /* break out of MkDocs typeset padding */
-  margin: 0 -0.8rem;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  color: var(--fp-kicker);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+.lp-kicker::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentcolor;
 }
 
-.lp-ticker-track {
+.md-typeset .lp-page .lp-title {
+  max-width: 22ch;
+  font-size: clamp(1.75rem, 4.6vw, 2.9rem) !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.06 !important;
+}
+
+.lp-deck {
+  max-width: 34rem;
+  margin-top: 0.9rem !important;
+  color: var(--fp-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.lp-toolbar {
   display: flex;
-  gap: 2.5rem;
-  animation: lp-scroll 50s linear infinite;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-top: 1.6rem;
+}
+
+.lp-rail { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+.lp-pill,
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.1rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  color: var(--fp-badge-color) !important;
+  font-size: 0.75rem;
+  line-height: 1;
   white-space: nowrap;
-  padding: 0 2.5rem 0 0;
+  text-decoration: none !important;
+  transition: border-color .16s, background-color .16s, color .16s, transform .18s var(--fp-ease);
+}
+.lp-pill:hover { border-color: #9aa4b5; background: var(--fp-bg-raised); color: var(--fp-text) !important; }
+
+.lp-btn {
+  padding: 0 1.1rem;
+  border-color: var(--fp-btn-accent-bg);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+}
+.lp-btn:hover { transform: translateY(-1px); opacity: .9; }
+
+.lp-pill:focus-visible, .lp-btn:focus-visible, .lp-feat:focus-visible, .lp-row:focus-visible, .lp-more:focus-visible {
+  outline: 2px solid var(--fp-text);
+  outline-offset: 3px;
 }
 
-.lp-ticker-track:hover { animation-play-state: paused; }
-
-@keyframes lp-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+/* ─── Market tape (hub.json) ─── */
+.lp-tape {
+  border-block: 1px solid var(--fp-border);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
+.lp-tape[hidden] { display: none; }
+.lp-tape-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  padding: 0.55rem 0;
+  animation: lp-scroll 60s linear infinite;
+}
+.lp-tape-track:hover { animation-play-state: paused; }
+@keyframes lp-scroll { to { transform: translateX(-50%); } }
 
 .lp-tick {
   display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-}
-
-.lp-tick-sym { color: var(--fp-text); font-weight: 700; }
-.lp-tick-px  { color: var(--fp-text-muted); }
-.lp-tick-up  { color: var(--fp-green); }
-.lp-tick-dn  { color: var(--fp-red); }
-.lp-tick-sep { color: var(--fp-border); user-select: none; margin: 0 0.5rem; }
-
-/* ─── Container ─── */
-.lp-con {
-  max-width: 1140px;
-  margin: 0 auto;
-  width: min(100%, 1140px);
-  padding: 0 1.5rem;
-}
-
-/* ─── Full-bleed bands ─── */
-.lp-band {
-  margin: 0 -0.8rem;
-}
-
-/* ─── Hero ─── */
-.lp-hero {
-  padding: 5rem 0 4rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.lp-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 700px 500px at 15% 60%, rgba(34,197,94,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 85% 20%, rgba(120,119,198,0.03) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.lp-hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 4rem;
-  align-items: center;
-}
-
-.lp-eyebrow {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-green);
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.lp-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  background: var(--fp-green);
-  flex-shrink: 0;
-}
-
-.lp-h1 {
-  font-size: clamp(2rem, 4vw, 3.25rem) !important;
-  font-weight: 800 !important;
-  line-height: 1.12 !important;
-  letter-spacing: -0.035em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 1.5rem !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-}
-
-.lp-typewriter {
-  display: block;
-  color: var(--fp-green);
-  min-height: 1.2em;
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-}
-
-.lp-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  background: var(--fp-green);
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: lp-blink 0.9s step-end infinite;
-  border-radius: 1px;
-}
-
-@keyframes lp-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.lp-desc {
-  font-size: 1rem !important;
+  gap: 0.45rem;
+  font-size: 0.7rem;
   color: var(--fp-text-secondary) !important;
-  line-height: 1.75 !important;
-  max-width: 500px;
-  margin-bottom: 2rem !important;
+  text-decoration: none !important;
+  font-variant-numeric: tabular-nums;
 }
+.lp-tick b { color: var(--fp-text); font-weight: 500; }
+.lp-tick:hover b { text-decoration: underline; text-underline-offset: 3px; }
 
-.lp-actions {
+.lp-up { color: var(--fp-green) !important; }
+.lp-dn { color: var(--fp-red) !important; }
+
+/* ─── Feeds (sections) ─── */
+.lp-feed { padding: clamp(2rem, 5vw, 3.2rem) 0; border-top: 1px solid var(--fp-border); }
+.lp-feed--first { border-top: 0; padding-top: 1.6rem; }
+
+.lp-feed-head {
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 1rem;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 1.25rem;
+  margin-bottom: clamp(1rem, 2.5vw, 1.4rem);
 }
-
-.lp-btn-primary {
-  background: var(--fp-green) !important;
-  color: #09090b !important;
-  font-weight: 700;
-  font-size: 0.9375rem;
-  padding: 0.7rem 1.75rem;
-  border-radius: 5px;
-  text-decoration: none !important;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
-  display: inline-block;
+.md-typeset .lp-page .lp-feed-head h2 {
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
 }
+.lp-blurb { margin-top: 0.25rem !important; color: var(--fp-text-muted); font-size: 0.8rem; max-width: 36rem; }
 
-.lp-btn-primary:hover {
-  background: #16a34a !important;
-  box-shadow: 0 0 24px rgba(34,197,94,0.3);
-  transform: translateY(-1px);
-  color: #09090b !important;
-}
-
-.lp-btn-ghost {
-  color: var(--fp-text-secondary) !important;
-  font-size: 0.9375rem;
-  text-decoration: none !important;
+.lp-more {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  transition: color 0.15s, gap 0.15s;
-}
-
-.lp-btn-ghost:hover { color: var(--fp-text) !important; gap: 0.6rem; }
-
-.lp-hero-note {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.75rem !important;
-  color: var(--fp-text-muted) !important;
-  margin: 0 !important;
-}
-
-/* ─── Report card (hero visual) ─── */
-.lp-rcard {
-  background: var(--fp-bg-card);
-  border: 1px solid var(--fp-border);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 24px 64px rgba(0,0,0,0.5),
-    0 0 80px rgba(34,197,94,0.05);
-  transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
-}
-
-.lp-rcard:hover {
-  transform: perspective(1200px) rotateY(-2deg) rotateX(0.5deg);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 32px 80px rgba(0,0,0,0.5),
-    0 0 100px rgba(34,197,94,0.08);
-}
-
-.lp-rcard-bar {
-  background: var(--fp-bg-alt);
-  padding: 0.625rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--fp-border);
-  gap: 0.75rem;
-}
-
-.lp-rcard-ticker {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--fp-text);
-  letter-spacing: 0.05em;
-}
-
-.lp-rcard-type {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  color: var(--fp-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.lp-live {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-green);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.lp-live::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--fp-green);
-  animation: fp-pulse 1.5s infinite;
-}
-
-.lp-rcard-body { padding: 1.125rem; }
-
-.lp-rcard-hl {
-  font-size: 0.9375rem !important;
-  font-weight: 700 !important;
   color: var(--fp-text) !important;
-  line-height: 1.4 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.625rem;
-  margin-bottom: 1rem;
-}
-
-.lp-metric {
-  background: var(--fp-bg);
-  border: 1px solid var(--fp-border-dim);
-  border-radius: 5px;
-  padding: 0.5rem 0.625rem;
-}
-
-.lp-metric-lbl {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fp-text-muted);
-  margin-bottom: 0.2rem;
-}
-
-.lp-metric-val {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--fp-text);
-}
-
-.lp-metric-val.g { color: var(--fp-green); }
-.lp-metric-val.r { color: var(--fp-red); }
-.lp-metric-val.a { color: var(--fp-yellow); }
-
-.lp-excerpt {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.65 !important;
-  border-left: 2px solid var(--fp-green);
-  padding-left: 0.75rem;
-  font-style: italic;
-  margin-bottom: 0 !important;
-}
-
-.lp-rcard-foot {
-  border-top: 1px solid var(--fp-border);
-  padding: 0.625rem 1.125rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.lp-tags { display: flex; gap: 0.4rem; }
-
-.lp-ctag {
-  background: rgba(34,197,94,0.12);
-  color: var(--fp-green);
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.lp-model-label {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-}
-
-/* ─── Stats strip ─── */
-.lp-stats-inner {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.lp-stat {
-  padding: 2rem 1.5rem;
-  text-align: center;
-  position: relative;
-}
-
-.lp-stat + .lp-stat { border-left: 1px solid var(--fp-border); }
-
-.lp-stat-num {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 2.25rem !important;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--fp-text) !important;
-  line-height: 1;
-  margin-bottom: 0.4rem !important;
-}
-
-.lp-stat-num span { color: var(--fp-green); }
-
-.lp-stat-lbl {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.4;
-  margin: 0 !important;
-}
-
-/* ─── Generic section spacing ─── */
-.lp-section { padding: 5rem 0; }
-
-.lp-sec-eye {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-green);
-  margin-bottom: 0.75rem;
-}
-
-.lp-sec-h {
-  font-size: clamp(1.6rem, 2.8vw, 2.25rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.75rem !important;
-  line-height: 1.2 !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-}
-
-.lp-sec-sub {
-  font-size: 1rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.7 !important;
-  max-width: 560px;
-  margin-bottom: 3rem !important;
-}
-
-/* ─── Analysis types grid ─── */
-.lp-an-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--fp-border);
-  border-radius: 8px;
-  overflow: hidden;
-  gap: 1px;
-  background: var(--fp-border);
-}
-
-.lp-an-card {
-  background: var(--fp-bg-card);
-  padding: 1.25rem;
-  transition: background 0.2s;
-}
-
-.lp-an-card:hover { background: var(--fp-bg-card-hover); }
-
-.lp-an-icon {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  display: block;
-  line-height: 1;
-}
-
-.lp-an-name {
-  font-size: 0.8125rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.375rem !important;
-}
-
-.lp-an-desc {
-  font-size: 0.75rem !important;
-  color: var(--fp-text-muted) !important;
-  line-height: 1.55 !important;
-  margin: 0 !important;
-}
-
-/* ─── How it works ─── */
-.lp-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
-  margin-top: 3rem;
-}
-
-.lp-step-num {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fp-text-muted);
-  margin-bottom: 1rem;
-  border-top: 1px solid var(--fp-border);
-  padding-top: 1rem;
-}
-
-.lp-step-title {
-  font-size: 1.0625rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 0.625rem !important;
-  line-height: 1.35 !important;
-}
-
-.lp-step-desc {
-  font-size: 0.875rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.7 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-step-code {
-  background: var(--fp-bg);
-  border: 1px solid var(--fp-border);
-  border-radius: 4px;
-  padding: 0.5rem 0.75rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  color: #90c4a0;
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-/* ─── Latest reports grid ─── */
-.lp-reports {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.lp-rp {
-  background: var(--fp-bg-card);
-  border: 1px solid var(--fp-border);
-  border-radius: 8px;
-  padding: 1.125rem;
-  text-decoration: none !important;
-  color: inherit;
-  display: block;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-}
-
-.lp-rp:hover {
-  border-color: var(--fp-green);
-  box-shadow: 0 0 24px rgba(34,197,94,0.08);
-  transform: translateY(-2px);
-}
-
-.lp-rp-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-
-.lp-rp-ticker {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 1.125rem !important;
-  font-weight: 700 !important;
-  color: var(--fp-text) !important;
-  line-height: 1;
-  margin: 0 !important;
-}
-
-.lp-rp-co {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.75rem;
-  color: var(--fp-text-muted);
-  margin-top: 0.25rem;
-}
-
-.lp-rp-chg {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.8rem;
   white-space: nowrap;
-}
-
-.lp-rp-chg.g { color: var(--fp-green); }
-.lp-rp-chg.r { color: var(--fp-red); }
-
-.lp-rp-sum {
-  font-size: 0.8125rem !important;
-  color: var(--fp-text-secondary) !important;
-  line-height: 1.65 !important;
-  margin-bottom: 1rem !important;
-}
-
-.lp-rp-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.lp-rp-date {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-}
-
-/* ─── CTA ─── */
-.lp-cta {
-  text-align: center;
-  padding: 6rem 0;
-  background:
-    radial-gradient(ellipse 900px 400px at 50% 0%, rgba(34,197,94,0.07) 0%, transparent 70%),
-    var(--fp-bg);
-}
-
-.lp-cta-h {
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.035em !important;
-  color: var(--fp-text) !important;
-  margin-bottom: 1rem !important;
-  line-height: 1.2 !important;
-  background: none !important;
-  -webkit-text-fill-color: var(--fp-text) !important;
-}
-
-.lp-cta-sub {
-  color: var(--fp-text-secondary) !important;
-  font-size: 1rem !important;
-  max-width: 480px;
-  margin: 0 auto 2.5rem !important;
-  line-height: 1.7 !important;
-}
-
-.lp-cta-acts {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.lp-btn-outline {
-  color: var(--fp-text-secondary) !important;
-  font-size: 0.9375rem;
-  padding: 0.7rem 1.5rem;
-  border: 1px solid var(--fp-border);
-  border-radius: 5px;
   text-decoration: none !important;
-  transition: border-color 0.15s, color 0.15s;
-  display: inline-block;
+  transition: gap .16s var(--fp-ease);
 }
+.lp-more:hover { gap: 0.6rem; }
 
-.lp-btn-outline:hover {
-  border-color: var(--fp-text-muted);
-  color: var(--fp-text) !important;
+/* ─── Featured report + side list ─── */
+.lp-feed-body {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(0.8rem, 2.4vw, 1.4rem);
+  align-items: stretch;
 }
+.lp-feed-body:has(> .lp-feat[hidden]) { grid-template-columns: 1fr; }
 
-/* ─── Dividers ─── */
-.lp-divider {
-  border: none;
-  border-top: 1px solid var(--fp-border);
-  margin: 0 -0.8rem;
-}
-
-.lp-alt-bg {
-  background: var(--fp-bg-alt);
-  margin: 0 -0.8rem;
-  padding: 0 0.8rem;
-}
-
-/* ─── Responsive ─── */
-@media (max-width: 900px) {
-  .lp-hero-inner { grid-template-columns: 1fr; }
-  .lp-card-hide { display: none; }
-  .lp-stats-inner { grid-template-columns: repeat(2, 1fr); }
-  .lp-stat + .lp-stat { border-left: none; border-top: 1px solid var(--fp-border); }
-  .lp-an-grid { grid-template-columns: repeat(2, 1fr); }
-  .lp-steps { grid-template-columns: 1fr; gap: 0; }
-  .lp-reports { grid-template-columns: 1fr; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lp-ticker-track { animation: none; }
-  .lp-cursor { animation: none; }
-  .lp-live::before { animation: none; }
-}
-
-/* ─── Hydrated slots ─── */
-/* The tape and the hero card carry no numbers of their own: they are filled
-   from hub.json and stay hidden until it arrives, so nothing stale is shown. */
-.lp-ticker[hidden], .lp-rcard-wrap[hidden] { display: none; }
-
-.lp-tick { text-decoration: none !important; color: inherit; }
-.lp-tick:hover .lp-tick-sym { color: var(--fp-green); }
-
-.lp-rcard-type { display: flex; flex-wrap: wrap; gap: 0 0.4rem; }
-
-.lp-range {
-  margin: 1rem 0 0;
-}
-.lp-range-lbl {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fp-text-muted);
-  margin-bottom: 0.35rem;
-}
-.lp-range-rail {
+.lp-feat {
   position: relative;
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(to right, var(--fp-red), var(--fp-text-muted), var(--fp-green));
-  opacity: 0.85;
+  display: flex;
+  min-height: clamp(15rem, 26vw, 19rem);
+  border-radius: var(--fp-radius);
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff !important;
+  text-decoration: none !important;
+  box-shadow: var(--fp-shadow-lg);
+  background: linear-gradient(135deg, var(--lp-cover-a), var(--lp-cover-b));
 }
+.lp-feat[hidden] { display: none; }
+
+/* A quiet chart-paper grid stands in for a cover image. */
+.lp-feat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px);
+  background-size: 2.2rem 2.2rem;
+  transition: transform .5s ease;
+}
+.lp-feat:hover::before { transform: scale(1.04); }
+
+.lp-feat-scrim {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  width: 100%;
+  padding: clamp(1.1rem, 2.5vw, 1.5rem);
+  background: linear-gradient(to top, rgba(3, 7, 15, .92), rgba(3, 7, 15, .7) 35%, rgba(3, 7, 15, .2) 75%, rgba(3, 7, 15, .05));
+}
+
+.lp-feat-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: auto; }
+.lp-feat-sym {
+  font-family: var(--fp-font-display);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.lp-feat-px { color: #eaeef4; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+
+.lp-feat-kicker { color: #6ee7b7; font-size: 0.7rem; letter-spacing: 0.05em; }
+
+.md-typeset .lp-page .lp-feat h3 {
+  display: -webkit-box;
+  max-width: 28rem;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem) !important;
+  line-height: 1.18 !important;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, .55);
+}
+
+.lp-feat-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  color: #f1f4f8;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+.lp-feat-meta i { font-style: normal; color: #b7c0cf; margin-right: 0.2rem; }
+.lp-feat .lp-up { color: #6ee7b7 !important; }
+.lp-feat .lp-dn { color: #fca5a5 !important; }
+
+.lp-range { display: block; max-width: 20rem; margin-top: 0.2rem; }
+.lp-range-rail { display: block; position: relative; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .25); }
 .lp-range-dot {
   position: absolute;
   top: 50%;
-  width: 11px;
-  height: 11px;
-  margin-left: -5.5px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
   border-radius: 50%;
+  background: #fff;
   transform: translateY(-50%);
-  background: var(--fp-text);
-  border: 2px solid var(--fp-bg-card);
-  box-shadow: 0 0 0 1px var(--fp-border);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
   transition: left .4s ease;
 }
-.lp-range-ends {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.3rem;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.625rem;
-  color: var(--fp-text-muted);
-  font-variant-numeric: tabular-nums;
-}
+.lp-range-ends { display: flex; justify-content: space-between; margin-top: 0.25rem; color: #b7c0cf; font-size: 0.6rem; font-variant-numeric: tabular-nums; }
 
-.lp-rp-sum {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+.lp-feat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--fp-pill);
+  background: #fff;
+  color: #0c1320;
+  font-size: 0.7rem;
+  transition: transform .18s var(--fp-ease), background .18s;
+}
+.lp-feat:hover .lp-feat-btn { transform: translateY(-2px); background: #eef2f7; }
+
+.md-typeset .lp-side { display: flex; flex-direction: column; gap: 0.1rem; margin: 0; padding: 0; list-style: none; }
+.md-typeset .lp-side > li { margin: 0 !important; } /* beats [dir=ltr] .md-typeset ul li */
+
+.lp-row {
+  --lp-matte: #eef3f8;
+  --lp-ink: #1d4ed8;
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem;
+  border-radius: var(--fp-radius-sm);
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: background .16s ease, transform .16s var(--fp-ease);
+}
+.lp-row:hover { background: var(--fp-bg-raised); transform: translateX(3px); }
+.lp-row--fundamental_analysis { --lp-matte: #eef4ff; --lp-ink: #2563eb; }
+.lp-row--technical_analysis { --lp-matte: #edf7f4; --lp-ink: #0f766e; }
+.lp-row--market_news { --lp-matte: #f3f0ff; --lp-ink: #6d28d9; }
+[data-md-color-scheme="slate"] .lp-row { --lp-matte: rgba(255, 255, 255, .06); }
+[data-md-color-scheme="slate"] .lp-row--fundamental_analysis { --lp-ink: #93c5fd; }
+[data-md-color-scheme="slate"] .lp-row--technical_analysis { --lp-ink: #5eead4; }
+[data-md-color-scheme="slate"] .lp-row--market_news { --lp-ink: #c4b5fd; }
+
+.lp-thumb {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--fp-border);
+  border-radius: 0.45rem;
+  background: var(--lp-matte);
+  color: var(--lp-ink);
+  font-family: var(--fp-font-display);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   overflow: hidden;
 }
-.lp-rp--all {
+.lp-row-body { display: grid; gap: 0.15rem; min-width: 0; }
+.lp-row-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--fp-text);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.lp-row-meta { color: var(--fp-text-muted); font-size: 0.68rem; }
+.lp-row-arrow { color: var(--fp-text-muted); font-size: 0.8rem; transition: transform .16s var(--fp-ease); }
+.lp-row:hover .lp-row-arrow { transform: translateX(2px); color: var(--fp-text); }
+
+/* ─── Figures ─── */
+.lp-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow-sm);
+  overflow: hidden;
+}
+.lp-stat { padding: 1.1rem 1.2rem; }
+.lp-stat + .lp-stat { border-left: 1px solid var(--fp-border); }
+.lp-stat-num {
+  font-family: var(--fp-font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.lp-stat-lbl { margin-top: 0.45rem !important; color: var(--fp-text-secondary); font-size: 0.72rem; line-height: 1.4; }
+
+/* ─── Coverage cards ─── */
+.lp-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  gap: 0.8rem;
+}
+.lp-card {
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow-sm);
+  transition: transform .18s var(--fp-ease), box-shadow .18s;
+}
+.lp-card:hover { transform: translateY(-3px); box-shadow: var(--fp-shadow); }
+.lp-card-icon {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-bottom: 0.7rem;
+  border-radius: 0.55rem;
+  background: var(--fp-bg-raised);
+  border: 1px solid var(--fp-border);
+  font-size: 0.9rem;
+}
+.lp-card-name { font-family: var(--fp-font-display); font-size: 0.9rem; letter-spacing: -0.01em; color: var(--fp-text); }
+.lp-card-desc { margin-top: 0.3rem !important; color: var(--fp-text-secondary); font-size: 0.72rem; line-height: 1.5; }
+
+/* ─── Pipeline steps ─── */
+.lp-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; counter-reset: lp-step; }
+.lp-step {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 9rem;
-  font-weight: 700;
-  color: var(--fp-text) !important;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
+}
+.lp-step-num { color: var(--fp-text-muted); font-size: 0.68rem; letter-spacing: 0.04em; }
+.lp-step-title { font-family: var(--fp-font-display); font-size: 0.95rem; letter-spacing: -0.01em; line-height: 1.3; color: var(--fp-text); }
+.lp-step-desc { color: var(--fp-text-secondary); font-size: 0.74rem; line-height: 1.6; }
+.md-typeset .lp-step-code {
+  margin: auto 0 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.5rem;
+  background: var(--fp-bg-raised);
+  border: 1px solid var(--fp-border);
+  color: var(--fp-text-secondary);
+  font-family: var(--md-code-font);
+  font-size: 0.62rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ─── Closing band ─── */
+.lp-cta {
+  margin: 0 0 clamp(2rem, 5vw, 3.2rem);
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+  border-radius: var(--fp-radius);
+  background: linear-gradient(135deg, #0b1220, #111827 55%, #0f2a2a);
+  color: #fff;
+  box-shadow: var(--fp-shadow-lg);
+}
+.md-typeset .lp-page .lp-cta h2 {
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.12 !important;
+  max-width: 20ch;
+}
+.lp-cta p { margin-top: 0.7rem !important; max-width: 32rem; color: #c9d1dd; font-size: 0.8rem; }
+.lp-cta .lp-rail { margin-top: 1.2rem; }
+.lp-cta .lp-btn { background: #fff; border-color: #fff; color: #0c1320 !important; }
+.lp-cta .lp-pill { background: transparent; border-color: rgba(255, 255, 255, .25); color: #eaeef4 !important; }
+.lp-cta .lp-pill:hover { border-color: rgba(255, 255, 255, .6); background: rgba(255, 255, 255, .06); color: #fff !important; }
+
+/* ─── Responsive ─── */
+@media (max-width: 56rem) {
+  .lp-feed-body { grid-template-columns: 1fr; }
+  .lp-steps { grid-template-columns: 1fr; }
+  .lp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-stat:nth-child(3) { border-left: 0; }
+  .lp-stat:nth-child(n + 3) { border-top: 1px solid var(--fp-border); }
+}
+@media (max-width: 30rem) {
+  .lp-con { padding: 0 0.8rem; }
+  .lp-feed-head { flex-direction: column; align-items: flex-start; }
+  .lp-row { grid-template-columns: 3rem minmax(0, 1fr); }
+  .lp-row-arrow { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-tape-track { animation: none; }
+  .lp-feat::before, .lp-row, .lp-card, .lp-btn, .lp-more { transition: none; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="lp-page" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"} | tojson }}'>
+{%- set lang = self.home_lang() | trim -%}
+{%- set COPY = {
+  "en": {
+    "labels": {"fundamental_analysis": "Fundamental", "technical_analysis": "Technical", "market_news": "Market News"},
+    "kicker": "Daily · Automated · Open access",
+    "title": "Equity research that writes itself before the open",
+    "deck": "Fundamental, technical, DCF and filing analysis for US and Taiwan tickers, generated every morning by frontier models from live market data. No paywall.",
+    "rail": [["reports/", "All reports"], ["data/", "Market data"], ["market_news/", "Market news"], ["#lp-coverage", "Coverage"], ["#lp-how", "How it works"]],
+    "cta": "Read today's reports",
+    "latest_h": "Latest research",
+    "latest_sub": "Straight from the pipeline — not cached, not edited.",
+    "view_all": "View all",
+    "read": "Read research",
+    "browse": "Browse all reports",
+    "m_price": "Price", "m_vol": "Vol 1Y", "m_range": "52W",
+    "stats": [["tickers", "Tickers with published research"], ["per_day", "Analyses in the latest daily run"], ["types", "Report types in production"]],
+    "free": "Cost to read. Always free.",
+    "cov_h": "Twelve lenses on one stock",
+    "cov_sub": "Each report type targets a different signal — price action, SEC filings, competitive position.",
+    "cov": [
+      ["📊", "Fundamental Analysis", "Revenue, margins, balance sheet, and long-term earnings drivers."],
+      ["📈", "Technical Analysis", "Price action, MAs, RSI, MACD, volume, and chart pattern detection."],
+      ["💰", "DCF Valuation", "Intrinsic value modeling with multi-scenario sensitivity analysis."],
+      ["📄", "10-K Digest", "Annual report summaries — risks, strategy, and management commentary."],
+      ["🎯", "Catalyst Calendar", "Upcoming earnings, product events, and macro catalysts with expected impact."],
+      ["🏆", "Competitor Analysis", "Competitive moat assessment, market share, and industry positioning."],
+      ["📞", "Earnings Call Analysis", "Management tone, guidance signals, and sentiment from transcripts."],
+      ["🏦", "Institutional Ownership", "13F analysis — smart-money moves and ownership concentration shifts."],
+      ["👔", "Insider Trading", "Form 4 review — who's buying and selling, and what the pattern signals."],
+      ["📉", "Short Interest", "Short float, days-to-cover, and squeeze potential from borrow data."],
+      ["⚡", "Options Analysis", "IV, Greeks, put/call skew, and strategy selection for the current setup."],
+      ["💳", "Dividend Analysis", "Dividends, buybacks, M&A, and the quality of FCF deployment."]
+    ],
+    "how_h": "Daily, automated, built from source data",
+    "how_sub": "No human editor touches these reports. Each one is assembled, interpreted and published before the market opens.",
+    "steps": [
+      ["Step 01 · Data fetch", "Live data from market feeds and EDGAR", "yfinance collects OHLCV, financials and earnings; SEC EDGAR scrapers pull the latest filings into one structured context package.", "yfinance + SEC EDGAR → data_fetch.py → context"],
+      ["Step 02 · AI analysis", "A frontier model reads the numbers and writes", "Gemini by default, with OpenAI and Claude as fallbacks, under a domain-specific prompt. A nightly QA pass grades every output.", "prompts/*.txt + context → llm.py"],
+      ["Step 03 · Publish", "GitHub Actions ships the run every morning", "One cron job per ticker and report type. Reports land in this MkDocs site and go live on GitHub Pages within minutes.", "daily_analysis.yml → MkDocs → Pages"]
+    ],
+    "end_h": "Research that runs while you sleep.",
+    "end_sub": "Dozens of analyses published automatically every morning. Zero subscription, zero paywall — just open it.",
+    "end_cta": "Open the research hub",
+    "end_alt": [["data/", "Explore market data"], ["https://github.com/yennanliu/finance_data", "View on GitHub"]]
+  },
+  "zh": {
+    "labels": {"fundamental_analysis": "基本面", "technical_analysis": "技術面", "market_news": "市場新聞"},
+    "kicker": "每日 · 自動化 · 開放存取",
+    "title": "在開盤前自動寫好的股票研究",
+    "deck": "涵蓋美股與台股的基本面、技術面、DCF 與財報文件分析，每天清晨由前沿模型依即時市場資料生成。無付費牆。",
+    "rail": [["reports/", "全部報告"], ["data/", "市場數據"], ["market_news/", "市場新聞"], ["#lp-coverage", "涵蓋範圍"], ["#lp-how", "運作方式"]],
+    "cta": "閱讀今日報告",
+    "latest_h": "最新研究",
+    "latest_sub": "直接來自生成流程 — 未經快取，未經編輯。",
+    "view_all": "查看全部",
+    "read": "閱讀報告",
+    "browse": "瀏覽全部報告",
+    "m_price": "價格", "m_vol": "波動率 1Y", "m_range": "52 週",
+    "stats": [["tickers", "已發布研究的標的數"], ["per_day", "最新一輪生成的分析篇數"], ["types", "運作中的報告類型"]],
+    "free": "閱讀費用。永遠免費。",
+    "cov_h": "十二種視角，洞察一檔股票",
+    "cov_sub": "每一種報告類型鎖定不同的訊號 — 價格走勢、SEC 文件、競爭地位。",
+    "cov": [
+      ["📊", "基本面分析", "營收、利潤率、資產負債表，以及長期獲利驅動因素。"],
+      ["📈", "技術分析", "價格走勢、均線、RSI、MACD、成交量與型態辨識。"],
+      ["💰", "DCF 估值", "內在價值模型，搭配多情境敏感度分析。"],
+      ["📄", "10-K 摘要", "年度報告摘要 — 風險、策略與管理層評論。"],
+      ["🎯", "催化劑日曆", "即將公布的財報、產品活動與總經催化劑及其預期影響。"],
+      ["🏆", "競爭對手分析", "競爭護城河評估、市場佔有率與產業定位。"],
+      ["📞", "財報電話會議分析", "管理層語氣、指引訊號與逐字稿中的情緒。"],
+      ["🏦", "機構持股", "13F 分析 — 聰明錢動向與持股集中度變化。"],
+      ["👔", "內部人交易", "Form 4 檢視 — 誰在買賣，以及型態傳達的訊號。"],
+      ["📉", "放空餘額", "放空比例、回補天數與借券資料隱含的軋空潛力。"],
+      ["⚡", "選擇權分析", "隱含波動率、Greeks、買賣權偏斜與策略選擇。"],
+      ["💳", "股利分析", "股利、庫藏股、併購與自由現金流運用品質。"]
+    ],
+    "how_h": "每日、自動化、源於原始資料",
+    "how_sub": "沒有任何人工編輯經手這些報告。每一份都在開盤前完成彙整、解讀並發布。",
+    "steps": [
+      ["步驟 01 · 資料抓取", "從市場行情與 EDGAR 彙整即時資料", "yfinance 蒐集 OHLCV、財務與財報資料，SEC EDGAR 爬蟲擷取最新文件，整理為結構化脈絡封包。", "yfinance + SEC EDGAR → data_fetch.py → context"],
+      ["步驟 02 · AI 分析", "前沿模型讀懂數字並撰寫報告", "預設為 Gemini，並以 OpenAI 與 Claude 作為備援，搭配領域專屬提示；每晚另有 QA 流程為產出評分。", "prompts/*.txt + context → llm.py"],
+      ["步驟 03 · 發布", "GitHub Actions 每天清晨發布整輪報告", "每個標的與報告類型各一個排程任務。報告寫入本 MkDocs 網站，數分鐘內發布至 GitHub Pages。", "daily_analysis.yml → MkDocs → Pages"]
+    ],
+    "end_h": "在你沉睡時運轉的研究。",
+    "end_sub": "每天清晨自動發布數十篇分析。零訂閱，零付費牆 — 打開即看。",
+    "end_cta": "開啟研究中心",
+    "end_alt": [["data/", "瀏覽市場數據"], ["https://github.com/yennanliu/finance_data", "在 GitHub 上查看"]]
+  }
+} -%}
+{%- set C = COPY[lang] if lang in COPY else COPY["en"] -%}
+<div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}" data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/" data-hub-labels='{{ C.labels | tojson }}'>
 
-  <!-- ── Ticker strip (filled from hub.json) ── -->
-  <div class="lp-ticker" data-hub-tape hidden>
-    <div class="lp-ticker-track"></div>
+  <!-- ── Masthead ── -->
+  <header class="lp-mast">
+    <div class="lp-con">
+      <div class="lp-kicker">{{ C.kicker }}</div>
+      <h1 class="lp-title">{{ C.title }}</h1>
+      <p class="lp-deck">{{ C.deck }}</p>
+      <div class="lp-toolbar">
+        <nav class="lp-rail" aria-label="{{ 'Sections' if lang == 'en' else '網站區塊' }}">
+          {%- for href, label in C.rail %}
+          <a class="lp-pill" href="{{ href }}">{{ label }}</a>
+          {%- endfor %}
+        </nav>
+        <a class="lp-btn" href="reports/">{{ C.cta }} <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Market tape (hub.json) ── -->
+  <div class="lp-tape" data-hub-tape hidden>
+    <div class="lp-tape-track"></div>
   </div>
 
-  <!-- ── Hero ── -->
-  <section class="lp-hero">
+  <!-- ── Latest research ── -->
+  <section class="lp-feed lp-feed--first" id="lp-latest">
     <div class="lp-con">
-      <div class="lp-hero-inner">
-
+      <div class="lp-feed-head">
         <div>
-          <div class="lp-eyebrow">Daily · Automated · Open Access</div>
-          <h1 class="lp-h1">
-            Deep research on<br>
-            <span class="lp-typewriter" id="lp-tw" data-phrases='["US equities.","Taiwan ETFs.","semiconductors.","defense tech.","every morning.","12 lenses each."]'>US equities<span class="lp-cursor"></span></span>
-          </h1>
-          <p class="lp-desc">Institutional-grade stock analysis generated automatically every morning — fundamental, technical, DCF, 10-K digests, and more — for <b data-hub="tickers">dozens of</b> US and Taiwan tickers, written by frontier LLMs from live market data.</p>
-          <div class="lp-actions">
-            <a href="reports/" class="lp-btn-primary">Read Today's Reports</a>
-            <a href="#lp-how" class="lp-btn-ghost">How it works →</a>
-          </div>
-          <p class="lp-hero-note"><span data-hub="per_day">—</span> analyses in the latest run &nbsp;·&nbsp; <span data-hub="types">12</span> report types live &nbsp;·&nbsp; No paywall</p>
+          <h2>{{ C.latest_h }}</h2>
+          <p class="lp-blurb">{{ C.latest_sub }}</p>
         </div>
+        <a class="lp-more" href="reports/">{{ C.view_all }} <span aria-hidden="true">→</span></a>
+      </div>
 
-        <div class="lp-card-hide lp-rcard-wrap" data-hub-hero hidden>
-          <div class="lp-rcard">
-            <div class="lp-rcard-bar">
-              <div>
-                <div class="lp-rcard-ticker"><span data-hub-field="ticker">—</span> <span style="color:var(--fp-text-muted);font-weight:400;font-size:0.75rem">· <span data-hub-field="sector">—</span></span></div>
-                <div class="lp-rcard-type"><span data-hub-field="kind">—</span></div>
-              </div>
-              <div class="lp-live">Live</div>
-            </div>
-            <div class="lp-rcard-body">
-              <p class="lp-rcard-hl" data-hub-field="title">—</p>
-              <div class="lp-metrics">
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">Price</div>
-                  <div class="lp-metric-val" data-hub-field="price">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1D</div>
-                  <div class="lp-metric-val" data-hub-field="1d">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1M</div>
-                  <div class="lp-metric-val" data-hub-field="1m">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">YTD</div>
-                  <div class="lp-metric-val" data-hub-field="ytd">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">1Y</div>
-                  <div class="lp-metric-val" data-hub-field="1y">—</div>
-                </div>
-                <div class="lp-metric">
-                  <div class="lp-metric-lbl">Vol (1Y)</div>
-                  <div class="lp-metric-val a" data-hub-field="vol">—</div>
-                </div>
-              </div>
-              <div class="lp-range">
-                <div class="lp-range-lbl">52W Range</div>
-                <div class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></div>
-                <div class="lp-range-ends"><span data-hub-field="low">—</span><span data-hub-field="high">—</span></div>
-              </div>
-            </div>
-            <a class="lp-rcard-foot" data-hub-field="link" href="reports/" style="text-decoration:none">
-              <div class="lp-tags">
-                <span class="lp-ctag" data-hub-field="tag-type">—</span>
-                <span class="lp-ctag" data-hub-field="tag-sector">—</span>
-              </div>
-              <span class="lp-model-label" data-hub-field="model">—</span>
-            </a>
-          </div>
-        </div>
+      <div class="lp-feed-body">
+        <a class="lp-feat" href="reports/" data-hub-hero hidden>
+          <span class="lp-feat-scrim">
+            <span class="lp-feat-top">
+              <span class="lp-feat-sym" data-hub-field="ticker">—</span>
+              <span class="lp-feat-px"><span data-hub-field="price">—</span> · <span data-hub-field="sector">—</span></span>
+            </span>
+            <span class="lp-feat-kicker" data-hub-field="kind">—</span>
+            <h3 data-hub-field="title">—</h3>
+            <span class="lp-feat-meta">
+              <span><i>1D</i><span data-hub-field="1d">—</span></span>
+              <span><i>1M</i><span data-hub-field="1m">—</span></span>
+              <span><i>YTD</i><span data-hub-field="ytd">—</span></span>
+              <span><i>1Y</i><span data-hub-field="1y">—</span></span>
+              <span><i>{{ C.m_vol }}</i><span data-hub-field="vol">—</span></span>
+            </span>
+            <span class="lp-range" aria-label="{{ C.m_range }}">
+              <span class="lp-range-rail"><span class="lp-range-dot" data-hub-field="pos" style="left:50%"></span></span>
+              <span class="lp-range-ends"><span data-hub-field="low">—</span><span>{{ C.m_range }}</span><span data-hub-field="high">—</span></span>
+            </span>
+            <span class="lp-feat-btn">{{ C.read }} <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
 
+        <ul class="lp-side" data-hub-latest>
+          <li><a class="lp-row" href="reports/"><span class="lp-thumb">↗</span><span class="lp-row-body"><span class="lp-row-title">{{ C.browse }}</span></span><span class="lp-row-arrow" aria-hidden="true">→</span></a></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- ── Stats ── -->
-  <hr class="lp-divider">
-  <div class="lp-alt-bg">
+  <!-- ── Figures ── -->
+  <section class="lp-feed" aria-label="{{ 'At a glance' if lang == 'en' else '概覽' }}">
     <div class="lp-con">
-      <div class="lp-stats-inner">
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="tickers">—</div>
-          <p class="lp-stat-lbl">Tickers with published research</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="per_day">—</div>
-          <p class="lp-stat-lbl">Analyses in the latest daily run</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num" data-hub-num="types">—</div>
-          <p class="lp-stat-lbl">Report types in production</p>
-        </div>
-        <div class="lp-stat">
-          <div class="lp-stat-num">0<span>$</span></div>
-          <p class="lp-stat-lbl">Cost to read. Always free.</p>
-        </div>
+      <div class="lp-stats">
+        {%- for key, label in C.stats %}
+        <div class="lp-stat"><div class="lp-stat-num" data-hub-num="{{ key }}">—</div><p class="lp-stat-lbl">{{ label }}</p></div>
+        {%- endfor %}
+        <div class="lp-stat"><div class="lp-stat-num">$0</div><p class="lp-stat-lbl">{{ C.free }}</p></div>
       </div>
     </div>
-  </div>
-  <hr class="lp-divider">
+  </section>
 
-  <!-- ── Analysis types ── -->
-  <section class="lp-section" id="lp-analysis">
+  <!-- ── Coverage ── -->
+  <section class="lp-feed" id="lp-coverage">
     <div class="lp-con">
-      <div class="lp-sec-eye">Coverage</div>
-      <h2 class="lp-sec-h">Twelve lenses. One stock.</h2>
-      <p class="lp-sec-sub">Each analysis type targets a different signal — from price action to SEC filings to competitive position. All generated fresh from live data, never from cached summaries.</p>
-
-      <div class="lp-an-grid">
-        <div class="lp-an-card"><span class="lp-an-icon">📊</span><p class="lp-an-name">Fundamental Analysis</p><p class="lp-an-desc">Revenue, margins, balance sheet, and long-term earnings drivers.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📈</span><p class="lp-an-name">Technical Analysis</p><p class="lp-an-desc">Price action, MAs, RSI, MACD, volume, and chart pattern detection.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">💰</span><p class="lp-an-name">DCF Valuation</p><p class="lp-an-desc">Intrinsic value modeling with multi-scenario sensitivity analysis.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📄</span><p class="lp-an-name">10-K Digest</p><p class="lp-an-desc">Annual report summaries — risks, strategy, and management commentary from SEC filings.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🎯</span><p class="lp-an-name">Catalyst Calendar</p><p class="lp-an-desc">Upcoming earnings, product events, and macro catalysts with expected price impact.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🏆</span><p class="lp-an-name">Competitor Analysis</p><p class="lp-an-desc">Competitive moat assessment, market share, and industry positioning.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📞</span><p class="lp-an-name">Earnings Call Analysis</p><p class="lp-an-desc">Management tone, forward guidance signals, and hidden sentiment from transcripts.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">🏦</span><p class="lp-an-name">Institutional Ownership</p><p class="lp-an-desc">13F filing analysis — track smart money moves and ownership concentration shifts.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">👔</span><p class="lp-an-name">Insider Trading</p><p class="lp-an-desc">Form 4 filing review — who's buying and selling, and what the pattern signals.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">📉</span><p class="lp-an-name">Short Interest</p><p class="lp-an-desc">Short float, days-to-cover, and short squeeze potential from borrow data.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">⚡</span><p class="lp-an-name">Options Analysis</p><p class="lp-an-desc">IV, Greeks, put/call skew, and strategy selection for the current market setup.</p></div>
-        <div class="lp-an-card"><span class="lp-an-icon">💳</span><p class="lp-an-name">Dividend Analysis</p><p class="lp-an-desc">Capital allocation: dividends, buybacks, M&amp;A activity, and FCF deployment quality.</p></div>
+      <div class="lp-feed-head">
+        <div>
+          <h2>{{ C.cov_h }}</h2>
+          <p class="lp-blurb">{{ C.cov_sub }}</p>
+        </div>
+        <a class="lp-more" href="reports/">{{ C.view_all }} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="lp-cards">
+        {%- for icon, name, desc in C.cov %}
+        <div class="lp-card"><span class="lp-card-icon" aria-hidden="true">{{ icon }}</span><p class="lp-card-name">{{ name }}</p><p class="lp-card-desc">{{ desc }}</p></div>
+        {%- endfor %}
       </div>
     </div>
   </section>
 
   <!-- ── How it works ── -->
-  <hr class="lp-divider">
-  <div class="lp-alt-bg">
-    <section class="lp-section" id="lp-how">
-      <div class="lp-con">
-        <div class="lp-sec-eye">Under the Hood</div>
-        <h2 class="lp-sec-h">Daily. Automated. Built from source data.</h2>
-        <p class="lp-sec-sub">No human editors touch these reports. Every analysis runs from live market data and public filings — assembled, interpreted, and published before markets open each day.</p>
-
-        <div class="lp-steps">
-          <div class="lp-step">
-            <div class="lp-step-num">Step 01 &nbsp;·&nbsp; Data Fetch</div>
-            <p class="lp-step-title">Live data assembled from market feeds and EDGAR</p>
-            <p class="lp-step-desc">yfinance collects OHLCV, financials, and earnings data. SEC EDGAR scrapers pull the latest filings. Everything normalizes into a structured context package ready for the model.</p>
-            <pre class="lp-step-code">yfinance + SEC EDGAR → data_fetch.py → context.py</pre>
-          </div>
-          <div class="lp-step">
-            <div class="lp-step-num">Step 02 &nbsp;·&nbsp; AI Analysis</div>
-            <p class="lp-step-title">A frontier model reads the numbers and writes the report</p>
-            <p class="lp-step-desc">The context goes to the configured model — Gemini by default, with OpenAI and Claude as fallbacks — under a domain-specific prompt. The model runs the full analysis, draws Mermaid charts, and produces structured markdown; a nightly QA pass grades the output.</p>
-            <pre class="lp-step-code">prompts/*.txt + context → llm.py → gemini | openai | claude</pre>
-          </div>
-          <div class="lp-step">
-            <div class="lp-step-num">Step 03 &nbsp;·&nbsp; Publish</div>
-            <p class="lp-step-title">GitHub Actions publishes the whole run every morning</p>
-            <p class="lp-step-desc">Cron-triggered GitHub Actions run one analysis job per ticker and report type. Reports land in the MkDocs site and publish to GitHub Pages within minutes of generation.</p>
-            <pre class="lp-step-code">daily_analysis.yml → MkDocs → GitHub Pages</pre>
-          </div>
+  <section class="lp-feed" id="lp-how">
+    <div class="lp-con">
+      <div class="lp-feed-head">
+        <div>
+          <h2>{{ C.how_h }}</h2>
+          <p class="lp-blurb">{{ C.how_sub }}</p>
         </div>
+      </div>
+      <div class="lp-steps">
+        {%- for num, title, desc, code in C.steps %}
+        <div class="lp-step">
+          <div class="lp-step-num">{{ num }}</div>
+          <p class="lp-step-title">{{ title }}</p>
+          <p class="lp-step-desc">{{ desc }}</p>
+          <pre class="lp-step-code">{{ code }}</pre>
+        </div>
+        {%- endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Closing band ── -->
+  <div class="lp-con">
+    <section class="lp-cta">
+      <h2>{{ C.end_h }}</h2>
+      <p>{{ C.end_sub }}</p>
+      <div class="lp-rail">
+        <a class="lp-btn" href="reports/">{{ C.end_cta }} <span aria-hidden="true">→</span></a>
+        {%- for href, label in C.end_alt %}
+        <a class="lp-pill" href="{{ href }}"{% if href.startswith('http') %} target="_blank" rel="noopener"{% endif %}>{{ label }}</a>
+        {%- endfor %}
       </div>
     </section>
   </div>
-  <hr class="lp-divider">
-
-  <!-- ── Latest reports ── -->
-  <section class="lp-section" id="lp-reports">
-    <div class="lp-con">
-      <div class="lp-sec-eye">Latest</div>
-      <h2 class="lp-sec-h">Today's reports</h2>
-      <p class="lp-sec-sub">Generated this morning from live market data. Not cached. Not edited. These are the actual outputs from the pipeline.</p>
-
-      <div class="lp-reports" data-hub-latest>
-        <a href="reports/" class="lp-rp lp-rp--all">Browse all reports →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CTA ── -->
-  <hr class="lp-divider">
-  <section class="lp-cta">
-    <div class="lp-con">
-      <h2 class="lp-cta-h">Research that runs<br>while you sleep.</h2>
-      <p class="lp-cta-sub">Dozens of analyses published automatically every morning. Zero subscription. Zero paywall. Just open it.</p>
-      <div class="lp-cta-acts">
-        <a href="reports/" class="lp-btn-primary">Open the Research Hub ↗</a>
-        <a href="https://github.com/yennanliu/finance_data" target="_blank" rel="noopener" class="lp-btn-outline">View on GitHub</a>
-      </div>
-    </div>
-  </section>
 
 </div>
 {% endblock %}
@@ -934,42 +714,12 @@
 {% block scripts %}
 {{ super() }}
 <script>
-  (function () {
-    var el = document.getElementById("lp-tw");
-    if (!el) return;
-
-    var phrases;
-    try { phrases = JSON.parse(el.getAttribute("data-phrases")); } catch (e) { phrases = null; }
-    if (!phrases || !phrases.length) return;
-
-    var pi = 0, ci = 0, deleting = false, wait = 0;
-
-    function tick() {
-      var target = phrases[pi];
-      if (!deleting) {
-        ci++;
-        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
-        if (ci === target.length) { deleting = true; wait = 28; }
-      } else {
-        if (wait-- > 0) { setTimeout(tick, 80); return; }
-        ci--;
-        el.innerHTML = target.slice(0, ci) + '<span class="lp-cursor"></span>';
-        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
-      }
-      setTimeout(tick, deleting ? 45 : 90);
-    }
-
-    tick();
-  })();
-</script>
-
-<script>
   // ── Landing-page hydration ──────────────────────────────────────────────
-  // The market tape, the headline counts, the hero card and "latest reports"
-  // are read from hub.json, which scripts/build_docs.py derives from the price
-  // store and the published report set at build time. Everything here only
-  // fills slots the static markup already has; if the fetch fails the page
-  // stays as rendered, with the tape and hero card hidden (never stale data).
+  // The market tape, the headline counts, the featured report and the latest
+  // list are read from hub.json, which scripts/build_docs.py derives from the
+  // price store and the published report set at build time. Everything here
+  // only fills slots the static markup already has; if the fetch fails the
+  // page stays as rendered, with the tape and featured card hidden.
   (function () {
     var root = document.querySelector(".lp-page");
     if (!root || !window.fetch) return;
@@ -983,9 +733,8 @@
         return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
       });
     }
-    function pct(v, d) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(d == null ? 2 : d) + "%"; }
-    function arrow(v) { return v == null ? "" : (v >= 0 ? "▲ " : "▼ "); }
-    function toneCls(v) { return v == null ? "" : (v >= 0 ? "g" : "r"); }
+    function pct(v) { return v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + "%"; }
+    function tone(v) { return v == null ? "" : (v >= 0 ? "lp-up" : "lp-dn"); }
     function typeLabel(r) { return labels[r.type] || r.type_label || r.type; }
     function set(scope, field, text) {
       var el = scope.querySelector('[data-hub-field="' + field + '"]');
@@ -994,7 +743,7 @@
     }
     function metric(scope, field, v) {
       var el = set(scope, field, pct(v));
-      if (el) { el.classList.remove("g", "r"); if (toneCls(v)) el.classList.add(toneCls(v)); }
+      if (el) { el.classList.remove("lp-up", "lp-dn"); if (tone(v)) el.classList.add(tone(v)); }
     }
 
     function hydrate(d) {
@@ -1004,29 +753,21 @@
       var tape = root.querySelector("[data-hub-tape]");
       if (tape && d.tape && d.tape.length) {
         var html = d.tape.map(function (t) {
-          return '<a class="lp-tick" href="' + esc(base + t.href) + '">' +
-            '<span class="lp-tick-sym">' + esc(t.sym) + '</span>' +
-            '<span class="lp-tick-px">' + esc(t.px) + '</span>' +
-            (t.chg == null ? "" : '<span class="lp-tick-' + (t.chg >= 0 ? "up" : "dn") + '">' + arrow(t.chg) + pct(t.chg) + "</span>") +
-            '</a><span class="lp-tick-sep">·</span>';
+          return '<a class="lp-tick" href="' + esc(base + t.href) + '"><b>' + esc(t.sym) + '</b>' +
+            '<span>' + esc(t.px) + '</span>' +
+            (t.chg == null ? "" : '<span class="' + tone(t.chg) + '">' + pct(t.chg) + "</span>") + "</a>";
         }).join("");
-        tape.querySelector(".lp-ticker-track").innerHTML = html + html;
+        tape.querySelector(".lp-tape-track").innerHTML = html + html;
         tape.hidden = false;
       }
 
-      // 2. counts — plain slots, and the big stat digits (last digit accented)
-      Array.prototype.forEach.call(root.querySelectorAll("[data-hub]"), function (el) {
-        var v = stats[el.getAttribute("data-hub")];
-        if (v != null && v !== "") el.textContent = typeof v === "number" ? v.toLocaleString() : v;
-      });
+      // 2. headline counts
       Array.prototype.forEach.call(root.querySelectorAll("[data-hub-num]"), function (el) {
         var v = stats[el.getAttribute("data-hub-num")];
-        if (v == null) return;
-        var s = String(v);
-        el.innerHTML = esc(s.slice(0, -1)) + "<span>" + esc(s.slice(-1)) + "</span>";
+        if (v != null && v !== "") el.textContent = typeof v === "number" ? v.toLocaleString() : v;
       });
 
-      // 3. hero card — the newest report that has a priced ticker
+      // 3. featured report — the newest report that has a priced ticker
       var card = root.querySelector("[data-hub-hero]");
       var h = d.hero;
       if (card && h) {
@@ -1042,33 +783,26 @@
         set(card, "vol", h.vol_1y == null ? "—" : h.vol_1y.toFixed(1) + "%");
         set(card, "low", h.low_52w == null ? "—" : Number(h.low_52w).toFixed(2));
         set(card, "high", h.high_52w == null ? "—" : Number(h.high_52w).toFixed(2));
-        var dot = card.querySelector("[data-hub-field=\"pos\"]");
+        var dot = card.querySelector('[data-hub-field="pos"]');
         if (dot) dot.style.left = (h.range_position == null ? 50 : Math.max(0, Math.min(100, h.range_position))).toFixed(1) + "%";
-        set(card, "model", h.model || h.provider);
-        set(card, "tag-type", typeLabel(h));
-        set(card, "tag-sector", h.sector);
-        var link = card.querySelector('[data-hub-field="link"]');
-        if (link) link.setAttribute("href", base + h.href);
+        card.setAttribute("href", base + h.href);
         card.hidden = false;
       }
 
-      // 4. latest reports
-      var grid = root.querySelector("[data-hub-latest]");
-      if (grid && d.latest && d.latest.length) {
-        grid.innerHTML = d.latest.slice(0, 6).map(function (r) {
-          return '<a href="' + esc(base + r.href) + '" class="lp-rp">' +
-            '<div class="lp-rp-top"><div>' +
-              '<p class="lp-rp-ticker">' + esc(r.ticker) + '</p>' +
-              '<div class="lp-rp-co">' + esc(r.name) + '</div>' +
-            '</div>' +
-            (r.chg == null ? "" : '<span class="lp-rp-chg ' + toneCls(r.chg) + '">' + arrow(r.chg) + pct(r.chg) + '</span>') +
-            '</div>' +
-            '<p class="lp-rp-sum">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</p>' +
-            '<div class="lp-rp-foot">' +
-              '<div class="lp-tags"><span class="lp-ctag">' + esc(typeLabel(r)) + '</span></div>' +
-              '<span class="lp-rp-date">' + esc(r.date) + (r.model ? " · " + esc(r.model) : "") + '</span>' +
-            '</div></a>';
-        }).join("");
+      // 4. latest list — skips the report already featured
+      var list = root.querySelector("[data-hub-latest]");
+      if (list && d.latest && d.latest.length) {
+        var rows = d.latest.filter(function (r) { return !h || r.href !== h.href; }).slice(0, 5);
+        list.innerHTML = rows.map(function (r) {
+          return '<li><a class="lp-row lp-row--' + esc(r.type) + '" href="' + esc(base + r.href) + '">' +
+            '<span class="lp-thumb">' + esc(r.ticker) + '</span>' +
+            '<span class="lp-row-body">' +
+              '<span class="lp-row-title">' + esc(r.title || (r.ticker + " — " + typeLabel(r))) + '</span>' +
+              '<span class="lp-row-meta">' + esc(typeLabel(r)) + ' · ' + esc(r.date) +
+                (r.chg == null ? "" : ' · <span class="' + tone(r.chg) + '">' + pct(r.chg) + '</span>') +
+              '</span>' +
+            '</span><span class="lp-row-arrow" aria-hidden="true">→</span></a></li>';
+        }).join("") + list.innerHTML;
       }
     }
 

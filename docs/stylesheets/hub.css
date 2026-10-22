@@ -17,15 +17,13 @@
    1px --fp-border, --fp-bg-card, a large radius.
    =========================================================================== */
 
-:root {
-  --hub-radius: 14px;
-  --hub-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  --hub-glow: rgba(34, 197, 94, 0.10);
+/* Declared on the scheme element, not :root: the --fp-* values they read are
+   set per scheme on <body>, and a custom property resolves where declared. */
+[data-md-color-scheme] {
+  --hub-radius: var(--fp-radius, 1rem);
+  --hub-shadow: var(--fp-shadow, 0 10px 30px rgba(0, 0, 0, 0.35));
+  --hub-glow: var(--fp-accent-dim, rgba(17, 24, 39, 0.06));
   --hub-mono: var(--md-code-font, ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace);
-}
-[data-md-color-scheme="default"] {
-  --hub-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
-  --hub-glow: rgba(22, 163, 74, 0.10);
 }
 
 /* ── lead + legend ─────────────────────────────────────────────────────────── */
@@ -592,3 +590,156 @@
   .md-typeset .rmeta__nav { width: 100%; }
   .md-typeset .rmeta__step { flex: 1 1 0; justify-content: center; }
 }
+
+/* ===========================================================================
+   Editorial pass (finlab.finance/en/blog)
+
+   Same markup, new grammar: figures set in light Space Grotesk rather than
+   heavy mono, ink (not green) as the interaction colour, pill controls and
+   1rem cards that lift on hover. Kept as one block so the structural rules
+   above stay readable on their own.
+   =========================================================================== */
+
+.md-typeset .hub-lead { font-size: 0.95rem; color: var(--fp-text-secondary); }
+
+/* stats strip → a row of quiet figures separated by hairlines */
+.md-typeset .hub-stats {
+  border-radius: var(--hub-radius);
+  box-shadow: var(--fp-shadow-sm);
+}
+.md-typeset .hub-stat { background: var(--fp-bg-card); padding: 1rem 1.15rem; }
+.md-typeset .hub-stat__v {
+  font-family: var(--fp-font-display);
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+}
+.md-typeset .hub-stat__k {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fp-text-secondary);
+}
+
+.md-typeset .hub-notice {
+  border-left: 0;
+  border-radius: var(--fp-radius-sm);
+  background: var(--fp-bg-raised);
+  border: 1px solid var(--fp-border);
+}
+
+/* filter → a pill search field, focus ring in ink */
+.md-typeset .hub-filter__input {
+  border-radius: var(--fp-pill);
+  border-color: var(--fp-border-strong);
+  font-size: 0.8rem;
+  min-height: 2.2rem;
+}
+.md-typeset .hub-filter__input:hover { border-color: #9aa4b5; }
+.md-typeset .hub-filter__input:focus {
+  border-color: var(--fp-text);
+  box-shadow: 0 0 0 3px var(--fp-accent-dim);
+}
+.md-typeset .hub-toolbar__meta { font-family: inherit; letter-spacing: 0; }
+
+/* cards */
+.md-typeset .hub-grid { gap: 1rem; }
+.md-typeset .hub-card {
+  padding: 1.05rem 1.1rem 1rem;
+  box-shadow: var(--fp-shadow-sm);
+  transition: border-color .18s, transform .18s var(--fp-ease), box-shadow .18s;
+}
+.md-typeset .hub-card:hover,
+.md-typeset .hub-card:focus-within {
+  border-color: var(--fp-border-strong);
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow);
+  transform: translateY(-3px);
+}
+.md-typeset .hub-card__link:focus-visible { outline-color: var(--fp-text); }
+.md-typeset .hub-card__mark,
+.md-typeset .rmeta__mark {
+  border-radius: var(--fp-radius-sm);
+  background: var(--fp-bg-raised);
+}
+.md-typeset .hub-card__sym,
+.md-typeset .rmeta__sym {
+  font-family: var(--fp-font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.md-typeset .hub-card__chg {
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: var(--fp-pill);
+  padding: 0.15rem 0.55rem;
+}
+.md-typeset .hub-card__chg.is-up { background: color-mix(in srgb, var(--fp-green) 10%, transparent); }
+.md-typeset .hub-card__chg.is-down { background: color-mix(in srgb, var(--fp-red) 10%, transparent); }
+.md-typeset .hub-badge {
+  font-family: inherit;
+  font-weight: 400;
+  background: var(--fp-bg-card);
+  border-color: var(--fp-border-strong);
+  color: var(--fp-badge-color) !important;
+}
+.md-typeset a.hub-badge:hover {
+  border-color: var(--fp-btn-accent-bg);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+}
+.md-typeset .hub-card__latest { font-family: inherit; }
+
+/* report meta bar */
+.md-typeset .rmeta {
+  background: var(--fp-bg-card);
+  box-shadow: var(--fp-shadow-sm);
+}
+.md-typeset .rmeta__step {
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  border-color: var(--fp-border-strong);
+  padding: 0.35rem 0.85rem;
+}
+.md-typeset .rmeta__step b { font-family: inherit; font-weight: 500; }
+.md-typeset a.rmeta__step:hover {
+  border-color: var(--fp-btn-accent-bg);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+}
+.md-typeset a.rmeta__step:hover b { color: inherit; }
+.md-typeset .rmeta__chip {
+  font-family: inherit;
+  font-weight: 400;
+  color: var(--fp-badge-color);
+}
+.md-typeset .rmeta__chip i { letter-spacing: 0.02em; text-transform: none; font-size: 0.65rem; }
+.md-typeset .rmeta__chip--type {
+  border-color: var(--fp-btn-accent-bg);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg);
+}
+
+/* breadcrumbs — FinLab's small sentence-case trail with chevrons */
+.crumbs {
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.crumbs li:first-child::before { display: none; }
+.crumbs li + li::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 1.5px solid var(--fp-text-muted);
+  border-top: 1.5px solid var(--fp-text-muted);
+  transform: rotate(45deg);
+  opacity: 0.6;
+  margin-right: 0.15rem;
+}
+.crumbs a:hover { color: var(--fp-text); text-decoration: underline; text-underline-offset: 3px; }
+
+.crumbs li[aria-current] { color: var(--fp-text); }
+.rp-progress { background: var(--fp-text) !important; }

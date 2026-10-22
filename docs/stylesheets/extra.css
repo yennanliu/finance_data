@@ -1,250 +1,277 @@
 /* ══════════════════════════════════════════════════════════════
    Finance Data Research Hub — Custom Styles
-   Inspired by openpua.ai dark aesthetic
-   Supports both light and dark modes
+   Editorial "research magazine" look after finlab.finance/en/blog:
+   near-white paper, ink type, light Space Grotesk display headings over a
+   DM Sans body, hairline borders, 1rem cards and pill-shaped controls.
+   Light is the default scheme; dark mirrors every token below.
    ══════════════════════════════════════════════════════════════ */
 
-/* ── System font stack (replaces Google Fonts / Noto Sans TC network request) ── */
+/* ── Fonts ──
+   DM Sans / Space Grotesk are Latin-only and loaded (display=swap) from
+   overrides/main.html; CJK glyphs fall through to the platform stack, so the
+   ZH tree pays nothing extra. */
 :root {
-  --md-text-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
-    "Hiragino Sans GB", "Microsoft JhengHei", sans-serif;
+  --fp-font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang TC", "Hiragino Sans GB", "Microsoft JhengHei", sans-serif;
+  --fp-font-display: "Space Grotesk", "DM Sans", -apple-system, BlinkMacSystemFont,
+    "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --md-text-font: "DM Sans";
+  --md-text-font-family: var(--fp-font-body);
   --md-code-font: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --fp-radius: 1rem;
+  --fp-radius-sm: 0.7rem;
+  --fp-pill: 999px;
+  --fp-ease: cubic-bezier(.25, 1, .5, 1);
 }
 
-/* ── Dark mode variables (default) ── */
-[data-md-color-scheme="slate"] {
-  --fp-bg: #09090b;
-  --fp-bg-alt: #111113;
-  --fp-bg-card: #16161a;
-  --fp-bg-card-hover: #1c1c21;
-  --fp-border: #27272a;
-  --fp-border-dim: #1e1e22;
-  --fp-text: #fafafa;
-  --fp-text-secondary: #a1a1aa;
-  --fp-text-muted: #71717a;
-  --fp-accent: #a1a1aa;
-  --fp-accent-dim: rgba(161, 161, 170, 0.15);
-  --fp-accent-glow: rgba(255, 255, 255, 0.06);
-  --fp-green: #22c55e;
-  --fp-red: #ef4444;
-  --fp-yellow: #eab308;
-  --fp-title-from: #ffffff;
-  --fp-title-to: #71717a;
-  --fp-section-title-from: #ffffff;
-  --fp-section-title-to: #a1a1aa;
-  --fp-btn-accent-bg: #fafafa;
-  --fp-btn-accent-fg: #09090b;
-  --fp-btn-accent-glow: rgba(255, 255, 255, 0.15);
-  --fp-badge-border: rgba(255, 255, 255, 0.15);
-  --fp-badge-bg: rgba(255, 255, 255, 0.04);
-  --fp-badge-color: #a1a1aa;
-  --fp-dot-color: #fafafa;
-  --fp-shimmer-edge: #71717a;
-  --fp-shimmer-mid: #fafafa;
-  --fp-hero-glow-1: rgba(255, 255, 255, 0.04);
-  --fp-hero-glow-2: rgba(120, 119, 198, 0.03);
-  --fp-step-circle-border: rgba(255, 255, 255, 0.2);
-  --fp-step-circle-bg: rgba(255, 255, 255, 0.04);
-  --fp-ticker-bg: rgba(161, 161, 170, 0.12);
-  --fp-ticker-border: rgba(161, 161, 170, 0.15);
-  --fp-ticker-color: #d4d4d8;
-  --fp-card-accent-border: #a1a1aa;
-  --fp-card-icon-color: #d4d4d8;
-  --fp-link-color: #d4d4d8;
-  --fp-glow-line: rgba(255, 255, 255, 0.3);
-
-  /* MkDocs Material overrides */
-  --md-default-bg-color: #09090b;
-  --md-default-fg-color: #fafafa;
-  --md-primary-fg-color: #fafafa;
-  --md-primary-bg-color: #09090b;
-  --md-accent-fg-color: #7dd3fc;
-  /* Links need their own hue: the previous near-white made them
-     indistinguishable from body copy, so nothing looked clickable. */
-  --md-typeset-a-color: #60a5fa;
-  --fp-link-hover: #93c5fd;
+body,
+.md-typeset {
+  font-family: var(--fp-font-body);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Light mode variables ── */
+/* ── Light mode variables (default) ── */
 [data-md-color-scheme="default"] {
-  --fp-bg: #ffffff;
-  --fp-bg-alt: #f7f7f8;
+  --fp-bg: #fbfcfe;
+  --fp-bg-alt: #f4f6fa;
   --fp-bg-card: #ffffff;
-  --fp-bg-card-hover: #f4f4f5;
-  --fp-border: #e4e4e7;
-  --fp-border-dim: #f0f0f2;
-  --fp-text: #09090b;
-  --fp-text-secondary: #52525b;
-  --fp-text-muted: #71717a;
-  --fp-accent: #52525b;
-  --fp-accent-dim: rgba(82, 82, 91, 0.08);
-  --fp-accent-glow: rgba(0, 0, 0, 0.04);
-  --fp-green: #16a34a;
+  --fp-bg-card-hover: #f8fafc;
+  --fp-bg-raised: #f8fafc;
+  --fp-border: #e4e9f1;
+  --fp-border-dim: #eef1f6;
+  --fp-border-strong: #dbe1e8;
+  --fp-text: #111827;
+  --fp-prose: #374151;
+  --fp-text-secondary: #475569;
+  --fp-text-muted: #667085;
+  --fp-accent: #111827;
+  --fp-accent-dim: rgba(17, 24, 39, 0.06);
+  --fp-accent-glow: rgba(17, 24, 39, 0.03);
+  --fp-green: #059669;
   --fp-red: #dc2626;
-  --fp-yellow: #ca8a04;
-  --fp-title-from: #09090b;
-  --fp-title-to: #71717a;
-  --fp-section-title-from: #18181b;
-  --fp-section-title-to: #52525b;
-  --fp-btn-accent-bg: #18181b;
+  --fp-yellow: #b45309;
+  --fp-kicker: #047857;
+  --fp-title-from: #111827;
+  --fp-title-to: #111827;
+  --fp-section-title-from: #111827;
+  --fp-section-title-to: #111827;
+  --fp-btn-accent-bg: #111827;
   --fp-btn-accent-fg: #ffffff;
-  --fp-btn-accent-glow: rgba(0, 0, 0, 0.2);
-  --fp-badge-border: rgba(0, 0, 0, 0.12);
-  --fp-badge-bg: rgba(0, 0, 0, 0.03);
-  --fp-badge-color: #52525b;
-  --fp-dot-color: #18181b;
-  --fp-shimmer-edge: #71717a;
-  --fp-shimmer-mid: #18181b;
-  --fp-hero-glow-1: rgba(0, 0, 0, 0.02);
-  --fp-hero-glow-2: rgba(120, 119, 198, 0.03);
-  --fp-step-circle-border: rgba(0, 0, 0, 0.15);
-  --fp-step-circle-bg: rgba(0, 0, 0, 0.03);
-  --fp-ticker-bg: rgba(0, 0, 0, 0.05);
-  --fp-ticker-border: rgba(0, 0, 0, 0.08);
-  --fp-ticker-color: #18181b;
-  --fp-card-accent-border: #18181b;
-  --fp-card-icon-color: #18181b;
-  --fp-link-color: #18181b;
-  --fp-glow-line: rgba(0, 0, 0, 0.15);
+  --fp-btn-accent-glow: rgba(15, 23, 42, 0.16);
+  --fp-badge-border: #dbe1e8;
+  --fp-badge-bg: #ffffff;
+  --fp-badge-color: #334155;
+  --fp-dot-color: #111827;
+  --fp-shimmer-edge: #667085;
+  --fp-shimmer-mid: #111827;
+  --fp-hero-glow-1: transparent;
+  --fp-hero-glow-2: transparent;
+  --fp-step-circle-border: #dbe1e8;
+  --fp-step-circle-bg: #ffffff;
+  --fp-ticker-bg: #ffffff;
+  --fp-ticker-border: #dbe1e8;
+  --fp-ticker-color: #111827;
+  --fp-card-accent-border: #111827;
+  --fp-card-icon-color: #111827;
+  --fp-link-color: #111827;
+  --fp-glow-line: rgba(17, 24, 39, 0.12);
+  --fp-header-bg: rgba(255, 255, 255, 0.9);
+  --fp-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --fp-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+  --fp-shadow-lg: 0 10px 28px rgba(15, 23, 42, 0.16);
 
   /* MkDocs Material overrides */
-  --md-primary-fg-color: #18181b;
+  --md-default-bg-color: #fbfcfe;
+  --md-default-fg-color: #111827;
+  --md-default-fg-color--light: #475569;
+  --md-default-fg-color--lighter: #98a2b3;
+  --md-default-fg-color--lightest: #e4e9f1;
+  --md-primary-fg-color: #111827;
   --md-primary-bg-color: #ffffff;
-  --md-accent-fg-color: #1d4ed8;
+  --md-accent-fg-color: #2563eb;
+  --md-typeset-color: #374151;
   --md-typeset-a-color: #2563eb;
+  --md-footer-bg-color: #ffffff;
+  --md-footer-bg-color--dark: #fbfcfe;
+  --md-footer-fg-color: #111827;
+  --md-footer-fg-color--light: #475569;
+  --md-footer-fg-color--lighter: #667085;
   --fp-link-hover: #1d4ed8;
 }
 
+/* ── Dark mode variables ── */
+[data-md-color-scheme="slate"] {
+  --fp-bg: #0a0d14;
+  --fp-bg-alt: #0e121b;
+  --fp-bg-card: #111622;
+  --fp-bg-card-hover: #161c2a;
+  --fp-bg-raised: #151b27;
+  --fp-border: #232a38;
+  --fp-border-dim: #1a202c;
+  --fp-border-strong: #2e3646;
+  --fp-text: #f3f5f8;
+  --fp-prose: #c9cfd8;
+  --fp-text-secondary: #a3acba;
+  --fp-text-muted: #7d8696;
+  --fp-accent: #f3f5f8;
+  --fp-accent-dim: rgba(255, 255, 255, 0.08);
+  --fp-accent-glow: rgba(255, 255, 255, 0.03);
+  --fp-green: #34d399;
+  --fp-red: #f87171;
+  --fp-yellow: #fbbf24;
+  --fp-kicker: #6ee7b7;
+  --fp-title-from: #f3f5f8;
+  --fp-title-to: #f3f5f8;
+  --fp-section-title-from: #f3f5f8;
+  --fp-section-title-to: #f3f5f8;
+  --fp-btn-accent-bg: #f3f5f8;
+  --fp-btn-accent-fg: #0a0d14;
+  --fp-btn-accent-glow: rgba(255, 255, 255, 0.12);
+  --fp-badge-border: #2e3646;
+  --fp-badge-bg: #111622;
+  --fp-badge-color: #c9cfd8;
+  --fp-dot-color: #f3f5f8;
+  --fp-shimmer-edge: #7d8696;
+  --fp-shimmer-mid: #f3f5f8;
+  --fp-hero-glow-1: transparent;
+  --fp-hero-glow-2: transparent;
+  --fp-step-circle-border: #2e3646;
+  --fp-step-circle-bg: #111622;
+  --fp-ticker-bg: #111622;
+  --fp-ticker-border: #2e3646;
+  --fp-ticker-color: #f3f5f8;
+  --fp-card-accent-border: #f3f5f8;
+  --fp-card-icon-color: #f3f5f8;
+  --fp-link-color: #f3f5f8;
+  --fp-glow-line: rgba(255, 255, 255, 0.14);
+  --fp-header-bg: rgba(10, 13, 20, 0.82);
+  --fp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --fp-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --fp-shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.5);
+
+  /* MkDocs Material overrides */
+  --md-default-bg-color: #0a0d14;
+  --md-default-fg-color: #f3f5f8;
+  --md-default-fg-color--light: #a3acba;
+  --md-default-fg-color--lighter: #5d6677;
+  --md-default-fg-color--lightest: #232a38;
+  --md-primary-fg-color: #f3f5f8;
+  --md-primary-bg-color: #0a0d14;
+  --md-accent-fg-color: #93c5fd;
+  --md-typeset-color: #c9cfd8;
+  /* Links need their own hue so they never read as body copy. */
+  --md-typeset-a-color: #60a5fa;
+  --md-footer-bg-color: #0a0d14;
+  --md-footer-bg-color--dark: #0a0d14;
+  --md-footer-fg-color: #f3f5f8;
+  --md-footer-fg-color--light: #a3acba;
+  --md-footer-fg-color--lighter: #7d8696;
+  --fp-link-hover: #93c5fd;
+}
+
+body { background: var(--fp-bg); }
+
 /* ══════════════════════════════════════════════════════════════
-   MkDocs Material Header — Black/White
+   Header — frosted paper bar, ink wordmark, pill controls
    ══════════════════════════════════════════════════════════════ */
-[data-md-color-scheme="slate"] .md-header {
-  background-color: #09090b;
-  border-bottom: 1px solid #1e1e22;
+.md-header,
+.md-tabs {
+  background-color: var(--fp-header-bg) !important;
+  color: var(--fp-text) !important;
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  backdrop-filter: saturate(1.4) blur(12px);
+  box-shadow: none !important;
 }
 
-/* Dark mode header text visibility fix */
-[data-md-color-scheme="slate"] .md-header .md-header__title,
-[data-md-color-scheme="slate"] .md-header .md-header__topic,
-[data-md-color-scheme="slate"] .md-header .md-header__button,
-[data-md-color-scheme="slate"] .md-header .md-logo,
-[data-md-color-scheme="slate"] .md-header .md-search__icon,
-[data-md-color-scheme="slate"] .md-header .md-icon,
-[data-md-color-scheme="slate"] .md-header .md-ellipsis {
-  color: #fafafa;
+.md-header {
+  border-bottom: 0;
 }
 
-[data-md-color-scheme="slate"] .md-search__input {
-  background-color: #1e1e22;
-  color: #fafafa;
+.md-header__inner {
+  height: 3.2rem; /* 64px */
 }
 
-[data-md-color-scheme="slate"] .md-search__input::placeholder {
-  color: #a1a1aa;
+.md-header .md-header__title,
+.md-header .md-header__topic,
+.md-header .md-header__button,
+.md-header .md-logo,
+.md-header .md-search__icon,
+.md-header .md-icon,
+.md-header .md-ellipsis {
+  color: var(--fp-text);
 }
 
-/* Home button in header */
+.md-header__title {
+  font-family: var(--fp-font-display);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Header "Home" link (injected by overrides/main.html) — quiet text link. */
 .md-header__home-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.75rem;
-  margin-right: 0.5rem;
-  border-radius: 0.375rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  gap: 0.3rem;
+  min-height: 2.2rem;
+  padding: 0 0.7rem;
+  margin-right: 0.25rem;
+  border-radius: var(--fp-pill);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--fp-text-secondary) !important;
   text-decoration: none !important;
-  transition: background 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 
-[data-md-color-scheme="slate"] .md-header__home-btn {
-  color: #fafafa;
-  background: transparent;
+.md-header__home-btn:hover {
+  color: var(--fp-text) !important;
+  background: var(--fp-accent-dim);
 }
 
-[data-md-color-scheme="slate"] .md-header__home-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+/* Search — a bordered pill like FinLab's toolbar controls. */
+.md-search__form {
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card) !important;
+  border: 1px solid var(--fp-border-strong);
+  box-shadow: none !important;
+  transition: border-color 0.16s;
 }
 
-[data-md-color-scheme="default"] .md-header__home-btn {
-  color: #18181b;
-  background: transparent;
+.md-search__form:hover {
+  border-color: #9aa4b5;
 }
 
-[data-md-color-scheme="default"] .md-header__home-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
+.md-search__input {
+  color: var(--fp-text) !important;
+  background: transparent !important;
+  font-size: 0.7rem;
 }
 
-[data-md-color-scheme="default"] .md-header {
-  background-color: #ffffff;
-  color: #18181b;
-  border-bottom: 1px solid #e4e4e7;
-  box-shadow: none;
+.md-search__input::placeholder {
+  color: var(--fp-text-muted) !important;
 }
 
-[data-md-color-scheme="default"] .md-header .md-header__title,
-[data-md-color-scheme="default"] .md-header .md-header__topic,
-[data-md-color-scheme="default"] .md-header .md-header__button,
-[data-md-color-scheme="default"] .md-header .md-logo,
-[data-md-color-scheme="default"] .md-header .md-search__icon,
-[data-md-color-scheme="default"] .md-header .md-icon {
-  color: #18181b;
-}
-
-[data-md-color-scheme="default"] .md-tabs {
-  background-color: #f7f7f8;
-  border-bottom: 1px solid #e4e4e7;
-}
-
-[data-md-color-scheme="default"] .md-tabs__link {
-  color: #52525b;
-}
-
-/* Material marks the active tab on the <li> (.md-tabs__item--active); the
-   --active class on the link itself only exists in some layouts, so match both. */
-[data-md-color-scheme="default"] .md-tabs__item--active .md-tabs__link,
-[data-md-color-scheme="default"] .md-tabs__link--active,
-[data-md-color-scheme="default"] .md-tabs__link:hover {
-  color: #18181b;
-}
-
-[data-md-color-scheme="slate"] .md-tabs {
-  background-color: #111113;
-  border-bottom: 1px solid #1e1e22;
-}
-
-[data-md-color-scheme="slate"] .md-tabs__link {
-  color: #a1a1aa;
-  opacity: 1;
-}
-
-[data-md-color-scheme="slate"] .md-tabs__item--active .md-tabs__link,
-[data-md-color-scheme="slate"] .md-tabs__link--active,
-[data-md-color-scheme="slate"] .md-tabs__link:hover {
-  color: #fafafa;
+[data-md-toggle="search"]:checked ~ .md-header .md-search__form {
+  border-radius: var(--fp-radius-sm) var(--fp-radius-sm) 0 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   Top navigation — larger, tappable, obvious hit targets
-   Material's default tabs are 0.7rem text with no hover surface, so the
-   sections read as flat labels. Give each one padding, a hover pill and an
-   active underline so picking a section is unambiguous.
+   Section tabs — a category rail of pills
+   Material's tabs are flat 0.7rem labels with no hit surface. Each section
+   here is a bordered pill; the current one fills with ink, exactly like the
+   category rail on finlab.finance/en/blog.
    ══════════════════════════════════════════════════════════════ */
-.md-header__title {
-  font-size: 1rem;
-  font-weight: 650;
-}
-
 .md-tabs {
-  /* Height follows the padded links instead of Material's fixed 2.4rem. */
   height: auto;
+  border-bottom: 1px solid var(--fp-border);
 }
 
 .md-tabs__list {
   display: flex;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.3rem 0;
+  gap: 0.4rem;
+  padding: 0.25rem 0 0.7rem;
 }
 
 .md-tabs__item {
@@ -254,58 +281,39 @@
 }
 
 .md-tabs__link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   margin: 0;
-  padding: 0.6rem 0.9rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 550;
-  letter-spacing: 0.01em;
+  min-height: 1.9rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
+  background: var(--fp-bg-card);
+  color: var(--fp-badge-color) !important;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0;
   opacity: 1;
-  transition: background 0.15s, color 0.15s;
+  transition: border-color 0.16s, background-color 0.16s, color 0.16s;
+}
+
+.md-tabs__link:hover {
+  border-color: #9aa4b5;
+  background: var(--fp-bg-raised);
+  color: var(--fp-text) !important;
 }
 
 .md-tabs__link:focus-visible {
-  outline: 2px solid var(--md-typeset-a-color);
-  outline-offset: -2px;
+  outline: 2px solid var(--fp-text);
+  outline-offset: 3px;
 }
 
 .md-tabs__item--active > .md-tabs__link,
 .md-tabs__link--active {
-  position: relative;
-  font-weight: 700;
-}
-
-/* Underline marker on the current section. */
-.md-tabs__item--active > .md-tabs__link::after,
-.md-tabs__link--active::after {
-  content: "";
-  position: absolute;
-  left: 0.9rem;
-  right: 0.9rem;
-  bottom: 0.28rem;
-  height: 2px;
-  border-radius: 2px;
-  background: currentcolor;
-}
-
-[data-md-color-scheme="default"] .md-tabs__link:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-[data-md-color-scheme="default"] .md-tabs__item--active > .md-tabs__link,
-[data-md-color-scheme="default"] .md-tabs__link--active {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-[data-md-color-scheme="slate"] .md-tabs__link:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-[data-md-color-scheme="slate"] .md-tabs__item--active > .md-tabs__link,
-[data-md-color-scheme="slate"] .md-tabs__link--active {
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--fp-btn-accent-bg);
+  background: var(--fp-btn-accent-bg);
+  color: var(--fp-btn-accent-fg) !important;
+  font-weight: 400;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -780,10 +788,10 @@
   flex-shrink: 0;
 }
 
+/* Breadcrumbs now sit straight above the title, as on finlab.finance. */
 .ip-divider {
-  height: 1px;
-  background: var(--fp-border);
-  margin-bottom: 2rem;
+  height: 0;
+  margin-bottom: 0.5rem;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -798,113 +806,126 @@
 
 /* ══════════════════════════════════════════════════════════════
    Report / Inner Page — Typography & Readability
+   Editorial rhythm after finlab.finance: light Space Grotesk headings with
+   tight tracking, DM Sans body at a calm 18px / 1.75. Material's root
+   font-size is 20px, so every rem below is ×20, not ×16.
    ══════════════════════════════════════════════════════════════ */
 
-/* Base body text — 17px for comfortable long-form reading */
 .md-typeset {
-  font-size: 1.0625rem;
-  line-height: 1.9;
-  color: var(--fp-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--fp-prose);
+  font-feature-settings: "ss01", "cv11";
 }
 
 .md-typeset p {
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.15rem;
 }
 
-/* Content inner — generous vertical breathing room */
 .md-content__inner {
-  padding-top: 3rem !important;
-  padding-bottom: 6rem !important;
+  padding-top: 2.25rem !important;
+  padding-bottom: 5rem !important;
 }
 
-/* ── h1 — report title, landing-page gradient style ── */
+/* ── h1 — report title, masthead style ──
+   A solid ink fill, never a clipped gradient: the gradient used to paint
+   twemoji flags black on the dark scheme. */
 .md-typeset h1 {
-  font-size: clamp(2.5rem, 5vw, 3.75rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
+  font-family: var(--fp-font-display) !important;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.035em !important;
   line-height: 1.08 !important;
-  background: linear-gradient(to bottom, var(--fp-title-from) 30%, var(--fp-title-to) 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  margin-bottom: 2.5rem !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
-}
-
-/* ── h2 — landing-page section style with green accent line ── */
-.md-typeset h2 {
-  font-size: 2rem !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
   color: var(--fp-text) !important;
-  margin-top: 4.5rem !important;
-  margin-bottom: 1.25rem !important;
+  background: none !important;
+  -webkit-text-fill-color: currentcolor !important;
+  text-wrap: balance;
+  margin-bottom: 1.5rem !important;
   padding-bottom: 0 !important;
   border-bottom: none !important;
 }
 
-/* Green accent line above each h2 — mirrors landing page section eyebrow */
-.md-typeset h2::before {
-  content: '';
-  display: block;
-  width: 1.75rem;
-  height: 2px;
-  background: var(--fp-green);
-  border-radius: 1px;
-  margin-bottom: 1rem;
+/* ── h2 — section heading. No rule of its own: generated reports already
+   separate chapters with `---`, styled as a hairline below. ── */
+.md-typeset h2 {
+  font-family: var(--fp-font-display) !important;
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+  color: var(--fp-text) !important;
+  margin-top: 2.75rem !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
 }
+
+.md-typeset hr {
+  margin: 2.25rem 0;
+  border-bottom: 1px solid var(--fp-border);
+}
+.md-typeset hr + h2 { margin-top: 0 !important; }
 
 /* ── h3 — subsection headings ── */
 .md-typeset h3 {
-  font-size: 1.4rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
+  font-family: var(--fp-font-display) !important;
+  font-size: 1.1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   color: var(--fp-text) !important;
-  margin-top: 2.75rem !important;
-  margin-bottom: 0.875rem !important;
+  margin-top: 2.25rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
 /* ── h4 ── */
 .md-typeset h4 {
-  font-size: 1.15rem !important;
+  font-size: 0.95rem !important;
   font-weight: 600 !important;
+  letter-spacing: 0 !important;
   color: var(--fp-text) !important;
-  margin-top: 2rem !important;
+  margin-top: 1.75rem !important;
 }
 
-/* ── Table styling — card-like, more readable ── */
+.md-typeset strong { color: var(--fp-text); font-weight: 600; }
+
+/* ── Tables — hairline card, raised header row ── */
 .md-typeset table:not([class]) {
   border: 1px solid var(--fp-border);
-  border-radius: 10px;
+  border-radius: 0.7rem;
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   background: var(--fp-bg-card);
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   width: 100%;
-  margin: 1.5rem 0;
+  margin: 1.25rem 0;
+  box-shadow: var(--fp-shadow-sm);
 }
 
 .md-typeset table:not([class]) thead tr {
-  background: var(--fp-bg-alt);
+  background: var(--fp-bg-raised);
 }
 
 .md-typeset table:not([class]) th {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--fp-text-muted) !important;
   border-bottom: 1px solid var(--fp-border) !important;
-  padding: 0.75rem 1.25rem !important;
+  padding: 0.65rem 1rem !important;
 }
 
 .md-typeset table:not([class]) td {
   border-bottom: 1px solid var(--fp-border-dim) !important;
-  padding: 0.85rem 1.35rem !important;
-  color: var(--fp-text-secondary);
-  font-size: 1rem;
+  padding: 0.7rem 1rem !important;
+  color: var(--fp-prose);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.md-typeset table:not([class]) tbody tr:hover td {
+  background: var(--fp-bg-raised);
 }
 
 .md-typeset table:not([class]) tr:last-child td {
@@ -913,25 +934,25 @@
 
 .md-typeset table:not([class]) a {
   color: var(--fp-text) !important;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none !important;
 }
 
 .md-typeset table:not([class]) a:hover {
-  color: var(--fp-green) !important;
+  color: var(--md-typeset-a-color) !important;
   text-decoration: underline !important;
 }
 
-/* ── Blockquote → info-strip ── */
+/* ── Blockquote → quiet pull-note ── */
 .md-typeset blockquote {
-  border-left: 3px solid var(--fp-green) !important;
-  background: var(--fp-bg-card) !important;
-  border-radius: 0 8px 8px 0;
-  padding: 1rem 1.5rem !important;
-  margin: 2rem 0 !important;
+  border-left: 2px solid var(--fp-text) !important;
+  background: transparent !important;
+  border-radius: 0;
+  padding: 0.25rem 0 0.25rem 1.1rem !important;
+  margin: 1.75rem 0 !important;
   color: var(--fp-text-secondary) !important;
-  font-size: 1rem !important;
-  line-height: 1.75;
+  font-size: 0.95rem !important;
+  line-height: 1.65;
 }
 
 .md-typeset blockquote strong {
@@ -940,35 +961,74 @@
 
 /* ── Inline code ── */
 .md-typeset code:not(.highlight code) {
-  background: var(--fp-bg-card) !important;
+  background: var(--fp-bg-raised) !important;
   border: 1px solid var(--fp-border) !important;
-  color: var(--fp-green) !important;
-  border-radius: 4px;
-  padding: 0.15em 0.4em !important;
-  font-size: 0.88em !important;
+  color: var(--fp-text) !important;
+  border-radius: 0.3rem;
+  padding: 0.1em 0.35em !important;
+  font-size: 0.85em !important;
 }
 
-/* ── Admonition improvements ── */
+/* ── Admonitions — flat card, coloured rail ── */
 .md-typeset .admonition,
 .md-typeset details {
-  border-radius: 8px !important;
+  border-radius: 0.7rem !important;
   border-left-width: 3px !important;
   background: var(--fp-bg-card) !important;
-  font-size: 0.97rem !important;
+  box-shadow: var(--fp-shadow-sm) !important;
+  font-size: 0.85rem !important;
 }
 
-/* ── Left nav — compact labels for more reading room ── */
+/* ── Left nav — a quiet index rail ──
+   navigation.sections renders every ticker as a bold section label with
+   1.25em of top margin, which read as a shouting list. Flatten it to one
+   weight, tight rhythm and a pill hover, like the FinLab research index. */
 .md-nav--primary .md-nav__item .md-nav__link {
-  font-size: 0.82rem;
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
+  margin-top: 0.15rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--fp-radius-sm);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--fp-text-secondary);
+  transition: background .15s, color .15s;
+}
+.md-nav--primary .md-nav__item--section {
+  margin: 0;
+}
+.md-nav--primary .md-nav__item--section > .md-nav__link {
+  font-weight: 400;
+  color: var(--fp-text-secondary);
+}
+.md-nav--primary .md-nav__link:hover {
+  background: var(--fp-accent-dim);
+  color: var(--fp-text);
+}
+.md-nav--primary .md-nav__link--active,
+.md-nav--primary .md-nav__item--active > .md-nav__link,
+.md-nav--primary .md-nav__link--active * {
+  background: var(--fp-accent-dim);
+  color: var(--fp-text) !important;
+  font-weight: 500;
+}
+.md-nav__title {
+  font-family: var(--fp-font-display);
+  font-weight: 400;
+  color: var(--fp-text);
 }
 
-/* ── ToC sidebar — comfortable size ── */
+/* ── ToC sidebar — small, muted, ink on the current heading ── */
 .md-nav--secondary .md-nav__link {
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: var(--fp-text-muted);
 }
+.md-nav--secondary .md-nav__link--active,
+.md-nav--secondary .md-nav__link:hover {
+  color: var(--fp-text);
+}
+
+/* Breadcrumbs are navigation, not body links: no resting underline. */
+.md-typeset .crumbs a { text-decoration: none !important; }
 
 /* ── List items — more spacing ── */
 .md-typeset ul li,
@@ -1377,10 +1437,10 @@ body,
     padding: 0.65rem 0.9rem;
   }
 
-  /* Navigation sidebar */
+  /* Navigation drawer — larger tap targets */
   .md-nav__item .md-nav__link {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.6rem;
   }
 
   /* Code blocks */
