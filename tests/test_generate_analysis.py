@@ -250,3 +250,36 @@ def test_other_types_are_not_rechecked(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: S88)
     path = pipeline.run_analysis("TSLA", "stock-eval", "gemini", "g", 100, tmp_path)
     assert "arithmetic_check" not in path.read_text(encoding="utf-8")
+
+
+# ── provenance ───────────────────────────────────────────────────────────────
+
+HEADER = ("# TSLA 基本面深度分析報告\n> **報告日期**：2026-10-22 ｜ **語言**：繁體中文 ｜ "
+          "**數據來源**：Yahoo Finance, Finviz, StockAnalysis, Roic.ai ｜ **分析師**：CFA\n")
+
+
+def test_front_matter_records_prompt_params_price_and_sources(tmp_path, monkeypatch):
+    status = {"yfinance_info": True, "sec_live": True, "finviz": False, "roic": False}
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {
+        "hist": None, "price_now": 374.58, "price_date": "2026-10-22", "source_status": status})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: HEADER)
+    path = pipeline.run_analysis("TSLA", "fundamental-analysis", "gemini", "g", 32000, tmp_path)
+    text = path.read_text(encoding="utf-8")
+    fm = text.split("---")[1]
+    assert f"prompt_sha256: {pipeline.prompt_fingerprint('fundamental-analysis', 'gemini')}" in fm
+    assert f"temperature: {pipeline.REPORT_TEMPERATURE}" in fm
+    assert "max_tokens: 32000" in fm
+    assert "price: 374.58" in fm and "price_date: 2026-10-22" in fm
+    assert "data_sources_failed: finviz, roic" in fm
+
+
+def test_header_lists_only_the_sources_that_answered():
+    out = pipeline.stamp_sources(HEADER, {"yfinance_info": True, "sec_live": True,
+                                          "finviz": False, "stockanalysis": False, "roic": False})
+    assert "**數據來源**：SEC 申報資料 (XBRL)、Yahoo Finance ｜ **分析師**" in out
+    assert "Finviz" not in out and "Roic.ai" not in out
+
+
+def test_header_left_alone_without_status():
+    assert pipeline.stamp_sources(HEADER, {}) == HEADER

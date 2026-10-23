@@ -24,7 +24,7 @@ import os
 import time
 from pathlib import Path
 
-from ..config import TODAY
+from ..config import REPORT_TEMPERATURE, TODAY
 from ..exceptions import LLMError, RefusalError
 from ..prompts import PROMPT_MAP
 from .logging_utils import setup_logger
@@ -387,7 +387,8 @@ def call_claude(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens)
+    return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
 
 
 def call_openai(ticker: str, context: str, analysis_type: str,
@@ -397,7 +398,8 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
+    return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
 
 
 def call_gemini(ticker: str, context: str, analysis_type: str,
@@ -407,7 +409,23 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
+    return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
+
+
+def prompt_fingerprint(analysis_type: str, provider: str) -> str:
+    """First 12 hex chars of SHA-256 over the prompt template and the system
+    message that provider receives, so reports can be grouped by prompt version."""
+    import hashlib
+
+    if provider == "openai":
+        system = _load_openai_system_message()
+    elif provider == "gemini":
+        system = _load_gemini_system_message()
+    else:
+        system = ""
+    blob = (PROMPT_MAP[analysis_type] + "\0" + system).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()[:12]
 
 
 def call_llm(ticker: str, context: str, analysis_type: str,
@@ -506,6 +524,6 @@ def run_with_fallback(attempts, run_one):
 __all__ = [
     "run_claude", "run_openai", "run_gemini",
     "call_claude", "call_openai", "call_gemini", "call_llm",
-    "run_with_fallback",
+    "run_with_fallback", "prompt_fingerprint",
     "OPENAI_MAX_TOKENS",
 ]

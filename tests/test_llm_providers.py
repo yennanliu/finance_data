@@ -331,3 +331,33 @@ def test_gemini_retries_on_repeated_heading(monkeypatch):
     out = call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 1000)
     assert out == LONG_OK
     assert len(gen.calls) == 2
+
+
+# ── report temperature / prompt fingerprint ──────────────────────────────────
+
+def test_reports_are_sampled_at_the_report_temperature(monkeypatch):
+    """0.7 gave AMD a WACC of 9.41% one day and 11.8% two days later."""
+    from scripts.analysis.config import REPORT_TEMPERATURE
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    oa = Scripted(FakeOpenAIResponse(LONG_OK))
+    an = Scripted(FakeAnthropicResponse(LONG_OK))
+    ge = Scripted(FakeGeminiResponse(LONG_OK))
+    install_openai(monkeypatch, oa)
+    install_anthropic(monkeypatch, an)
+    install_gemini(monkeypatch, ge)
+    call_openai("AAPL", "ctx", "fundamental-analysis", "gpt-4o", 16000)
+    call_claude("AAPL", "ctx", "fundamental-analysis", "claude-x", 8000)
+    call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
+    assert REPORT_TEMPERATURE < 0.7
+    assert oa.calls[0]["temperature"] == REPORT_TEMPERATURE
+    assert an.calls[0]["temperature"] == REPORT_TEMPERATURE
+    assert ge.calls[0]["config"].temperature == REPORT_TEMPERATURE
+
+
+def test_prompt_fingerprint_is_stable_and_tracks_the_system_message():
+    a = llm.prompt_fingerprint("fundamental-analysis", "gemini")
+    assert a == llm.prompt_fingerprint("fundamental-analysis", "gemini") and len(a) == 12
+    assert a != llm.prompt_fingerprint("fundamental-analysis", "openai")
+    assert a != llm.prompt_fingerprint("technical-analysis", "gemini")
