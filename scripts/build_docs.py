@@ -843,7 +843,7 @@ LANG_TEXT = {
         "meta_lang": "Language",
         "meta_generated": "Generated",
         "meta_nav_label": "Report navigation",
-        "meta_stale_dropped": "No longer updated: {ticker} is not on the daily {type} schedule. This is its last report, from {date} ({days} days ago).",
+        "meta_stale_dropped": "No longer updated: {ticker} is not on the daily {type} schedule. This is its last {type} report, from {date} ({days} days ago).",
         "meta_stale_old": "This is the newest {type} report for {ticker}, from {date} ({days} days ago).",
     },
     "zh": {
@@ -872,7 +872,7 @@ LANG_TEXT = {
         "meta_lang": "語言",
         "meta_generated": "生成",
         "meta_nav_label": "報告導覽",
-        "meta_stale_dropped": "已停止更新：{ticker} 不在每日{type}排程中。這是最後一份報告，日期 {date}（{days} 天前）。",
+        "meta_stale_dropped": "已停止更新：{ticker} 不在每日{type}排程中。這是最後一份{type}報告，日期 {date}（{days} 天前）。",
         "meta_stale_old": "這是 {ticker} 最新的{type}報告，日期 {date}（{days} 天前）。",
         "last_updated": "最後更新",
         "last_built": "最後建置",

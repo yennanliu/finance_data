@@ -349,7 +349,10 @@ def compute_technicals(hist) -> str:
         price_dir = "⬆" if price_20.iloc[-1] > price_20.iloc[0] else "⬇"
         rsi_dir = "⬆" if rsi_20.iloc[-1] > rsi_20.iloc[0] else "⬇"
         divergence = ""
-        if price_dir == "⬆" and rsi_dir == "⬇":
+        if rsi_20.iloc[0] != rsi_20.iloc[0] or rsi_20.iloc[-1] != rsi_20.iloc[-1]:
+            # A NaN end compares false and would read as a falling RSI.
+            divergence = "N/A（RSI 數據不足）"
+        elif price_dir == "⬆" and rsi_dir == "⬇":
             divergence = "⚠️ 頂背離 (Bearish Divergence)"
         elif price_dir == "⬇" and rsi_dir == "⬆":
             divergence = "⚠️ 底背離 (Bullish Divergence)"
@@ -415,7 +418,7 @@ def compute_technicals(hist) -> str:
 {ma_charts}
 
   ── 動能指標 ──
-  RSI(14):      {na(last_rsi)}  (Wilder)  {'🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
+  RSI(14):      {na(last_rsi)}  (Wilder)  {'N/A' if last_rsi != last_rsi else '🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
   RSI 背離:     {divergence}  (僅比較近20根K棒首尾的價格與RSI方向)
   MACD:         {na3(last_macd)}
   MACD Signal:  {na3(last_signal)}

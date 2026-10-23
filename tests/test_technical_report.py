@@ -299,3 +299,39 @@ def test_notice_only_on_the_newest_report(monkeypatch):
 def test_rsi_warm_up_is_printed_as_na_not_nan():
     out = compute_technicals(bars(30))            # a recent listing: 6 weeks
     assert "nan" not in out.lower().replace("nan%", "") and "N/A" in out
+
+
+def test_rsi_warm_up_is_not_called_neutral_or_divergent():
+    # 12 bars: RSI has no value yet, while the price is rising.
+    h = bars(12)
+    h["Close"] = h["Close"].sort_values().values
+    out = compute_technicals(h)
+    rsi_line = next(ln for ln in out.splitlines() if ln.strip().startswith("RSI(14)"))
+    assert "中性" not in rsi_line and "N/A" in rsi_line
+    assert "N/A（RSI 數據不足）" in out and "背離 (" not in out
+
+
+@pytest.mark.parametrize("cell, expected", [
+    ("**$435.00–$440.00**", 437.5),
+    ("**$718.35** (Fib 23.6%) 至 **$696.97** (S1) 分批", 707.66),
+    ("**$435.50** (確認站上後掛單)", 435.5),
+])
+def test_range_entry_uses_its_midpoint(cell, expected):
+    assert tq._entry_prices(cell)[0] == pytest.approx(expected, abs=0.01)
+
+
+def test_range_entry_rr_is_not_a_false_mismatch():
+    # Midpoint 437.5, stop 424, T1 450.61: (450.61-437.5)/(437.5-424) = 0.97.
+    text = report(rr="0.97（以 T1 計）").replace("**$435.50** | **$413.00**",
+                                             "**$435–$440** | **$413.00**")
+    assert tq.rr_mismatches(text) == []
+
+
+def test_range_entry_rr_from_either_end_is_accepted_but_not_a_wrong_one():
+    # SPCX 2026-10-14 computed from the top of its range ("以 $155.82 進場").
+    row = "**$435–$440** | **$413.00**"
+    end = report(rr="1.42（以 T1 計）").replace("**$435.50** | **$413.00**", row)
+    assert tq.rr_mismatches(end) == []          # from $435: (450.61-435)/(435-424) = 1.42
+    # Matches no entry/target pair: mid 0.97/3.70, $435 1.42/4.77, $440 0.66/2.97.
+    wrong = report(rr="2.30").replace("**$435.50** | **$413.00**", row)
+    assert tq.rr_mismatches(wrong) == [{"column": 1, "stated": 2.3, "recomputed": [0.97, 3.7]}]

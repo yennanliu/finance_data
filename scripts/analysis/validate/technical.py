@@ -21,6 +21,7 @@ HEADLINE_RE = re.compile(r"當前(?:基準)?價格\*\*[：:]\s*(?:NT)?\$?\s*([\d
 MONEY_RE = re.compile(r"\$\s*(-?\d[\d,]*(?:\.\d+)?)")
 LABEL_RE = re.compile(r"\b([RS][123])\b")
 RATIO_RE = re.compile(r"(\d+(?:\.\d+)?)\s*[:：]\s*(\d+(?:\.\d+)?)")
+RANGE_RE = re.compile(r"\$\s*(\d[\d,]*(?:\.\d+)?)\s*(?:[–—~～-]|至)\s*\$?\s*(\d[\d,]*(?:\.\d+)?)")
 
 
 def front_matter(text: str) -> dict:
@@ -55,6 +56,19 @@ def _cells(line: str) -> list:
 def _money(cell: str):
     m = MONEY_RE.search(cell)
     return float(m.group(1).replace(",", "")) if m else None
+
+
+def _entry_prices(cell: str) -> list:
+    """Entry prices a stated R/R may have been computed from: for a range
+    ("$435–$440", "$718.35 至 $696.97") its midpoint — what prompt rule 17
+    asks for — then either end, which reports written before that rule used
+    (and usually said so); otherwise the cell's single price."""
+    m = RANGE_RE.search(re.sub(r"\*|（[^）]*）|\([^)]*\)", "", cell))
+    if m:
+        lo, hi = (float(g.replace(",", "")) for g in m.groups())
+        return [(lo + hi) / 2, lo, hi]
+    single = _money(cell)
+    return [single] if single is not None else []
 
 
 def nan_values(text: str) -> list:
@@ -141,17 +155,22 @@ def rr_mismatches(text: str) -> list:
     out = []
     for col in range(1, len(rows["rr"])):
         try:
-            entry, stop = _money(rows["entry"][col]), _money(rows["stop"][col])
+            entries, stop = _entry_prices(rows["entry"][col]), _money(rows["stop"][col])
             stated = _ratio(rows["rr"][col])
             targets = [_money(rows[k][col]) for k in ("t1", "t2") if k in rows]
         except IndexError:
             continue
-        if not entry or not stop or entry == stop or not stated:
+        entries = [e for e in entries if e and e != stop]
+        if not entries or not stop or not stated:
             continue
-        calc = [round((t - entry) / (entry - stop), 2) for t in targets if t]
-        calc = [c for c in calc if c > 0]
-        if calc and not any(abs(stated - c) <= max(0.06, RR_TOLERANCE * c) for c in calc):
-            out.append({"column": col, "stated": stated, "recomputed": calc})
+
+        def ratios(entry):
+            calc = [round((t - entry) / (entry - stop), 2) for t in targets if t]
+            return [c for c in calc if c > 0]
+
+        if not any(abs(stated - c) <= max(0.06, RR_TOLERANCE * c)
+                   for e in entries for c in ratios(e)) and ratios(entries[0]):
+            out.append({"column": col, "stated": stated, "recomputed": ratios(entries[0])})
     return out
 
 
