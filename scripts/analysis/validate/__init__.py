@@ -1,6 +1,7 @@
 """Validation layer: post-hoc quality scanning of generated report files.
 
-Detects empty/refusal/too-short/cut-off/placeholder/HTML-leak/duplicate reports.
+Detects empty/refusal/too-short/cut-off/placeholder/HTML-leak/duplicate reports,
+and for fundamental reports missing chapters and §8.8 arithmetic errors.
 This is distinct from the *generation-time* refusal detection in
 :mod:`analysis.llm` — that decides whether to retry a live call; this inspects
 already-written report files. The ``check_report_quality.py`` CLI builds its
@@ -15,6 +16,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from ..utils.mermaid import mermaid_syntax_issues
+from .arithmetic import check as arithmetic_check, missing_chapters
 
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
 MIN_LINES = 80          # below this (after frontmatter) → TOO_SHORT
@@ -148,6 +150,19 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
     if mermaid_bad:
         issues.append("MERMAID")
         notes.append(f"mermaid={len(mermaid_bad)}× e.g. {mermaid_bad[0][:60]!r}")
+
+    # Fundamental reports only: the eleven chapters, and §8.8's weighted fair
+    # value against the sum of its own terms (25 of 36 reports were off).
+    if atype == "fundamental_analysis" and "REFUSAL" not in issues:
+        missing = missing_chapters(content)
+        if missing:
+            issues.append("MISSING_SECTIONS")
+            notes.append(f"missing_chapters={missing}")
+        arith = arithmetic_check(content)
+        if arith["status"] == "mismatch":
+            issues.append("ARITHMETIC")
+            notes.append(f"8.8 stated={arith['stated']} terms_sum={arith['total']} "
+                         f"diff={arith['diff_pct']}% weights={arith['weights_pct']}%")
 
     # CUTOFF — check last non-empty line
     lines = [l for l in text.splitlines() if l.strip()]

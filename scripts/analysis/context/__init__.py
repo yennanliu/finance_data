@@ -9,20 +9,86 @@ import textwrap
 from ..config import TODAY
 from ..utils.formatting import safe, pct, money, fmt_price, df_to_text
 from ..data.technicals import price_ascii_chart, compute_technicals
+from .fundamental_facts import render_facts
+
+
+def _ttm_sum(df, row: str):
+    """Sum of the four newest quarterly values of ``row`` (yfinance frames are
+    newest-first), or None unless all four are present."""
+    try:
+        if df is None or row not in df.index:
+            return None
+        vals = [float(v) for v in df.loc[row].iloc[:4]]
+    except (TypeError, ValueError):
+        return None
+    if len(vals) < 4 or any(v != v for v in vals):  # NaN check
+        return None
+    return sum(vals)
+
+
+def statement_ttm(data: dict) -> dict:
+    """TTM operating margin and free cash flow from the quarterly statements.
+
+    Yahoo's ``operatingMargins`` is the latest quarter only and its
+    ``freeCashflow`` is its own "levered" figure, not operating cash flow less
+    capex. Reports quoted both as TTM: TSLA's "TTM operating margin 1.4%" was
+    Q2 alone (TTM 4.2%), and VST's "$37M FCF" was $2.25B as OCF − capex.
+    """
+    revenue = _ttm_sum(data.get("income_q"), "Total Revenue")
+    op_income = _ttm_sum(data.get("income_q"), "Operating Income")
+    ocf = _ttm_sum(data.get("cashflow_q"), "Operating Cash Flow")
+    capex = _ttm_sum(data.get("cashflow_q"), "Capital Expenditure")  # negative
+    fcf = ocf + capex if ocf is not None and capex is not None else None
+    return {
+        "revenue": revenue,
+        "op_margin": op_income / revenue if op_income is not None and revenue else None,
+        "ocf": ocf,
+        "capex": -capex if capex is not None else None,
+        "fcf": fcf,
+    }
+
+
+def currency_mismatch(info: dict) -> "tuple[str, str] | None":
+    """(quote, statements) currencies when they differ, e.g. ('USD', 'TWD').
+
+    An ADR such as TSM or SKHY is priced in USD but reports in TWD / KRW, and
+    Yahoo's EV and price-to-sales ratios divide one by the other: TSM's report
+    printed "FCF Yield 56.25%" and "EV/EBITDA 4.08x".
+    """
+    quote, fin = info.get("currency"), info.get("financialCurrency")
+    if quote and fin and quote != fin:
+        return quote, fin
+    return None
 
 
 def _market_overview(info: dict, data: dict) -> str:
-    """Build market overview section."""
-    fcf = info.get('freeCashflow')
+    """Build market overview section.
+
+    Every field names the period it covers: an unlabelled quarterly figure next
+    to TTM statements gets read as TTM (see ``docs/FUNDAMENTAL_REPORT_REVIEW.md``
+    §12).
+    """
+    ttm = statement_ttm(data)
     mkt = info.get('marketCap')
-    try:
-        fcf_yield = f"{float(fcf)/float(mkt)*100:.2f}%" if fcf and mkt else "N/A"
-    except Exception:
-        fcf_yield = "N/A"
+    mismatch = currency_mismatch(info)
+    fin_ccy = info.get('financialCurrency') or info.get('currency') or "USD"
+    fcf_yield = "N/A"
+    if ttm["fcf"] is not None and mkt and not mismatch:
+        fcf_yield = f"{ttm['fcf'] / float(mkt) * 100:.2f}%"
+
+    def mixed(value):
+        return "N/A (price and statements in different currencies)" if mismatch else value
+
+    price_date = data.get('price_date') or "N/A"
+    ccy_note = ""
+    if mismatch:
+        ccy_note = (f"\n⚠ Quoted in {mismatch[0]} but statements are in {mismatch[1]}: "
+                    f"statement figures below are {mismatch[1]}; ratios that would mix the "
+                    f"two currencies are withheld.")
 
     return f"""
 ━━ MARKET DATA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Current Price:          {fmt_price(data['price_now'])}
+Last Close ({price_date}):  {fmt_price(data['price_now'])} {info.get('currency') or ''}{ccy_note}
 52W High:               {fmt_price(data['price_52w_high'])}
 52W Low:                {fmt_price(data['price_52w_low'])}
 Market Cap:             {money(info.get('marketCap'))}
@@ -39,35 +105,37 @@ Institution Own %:      {pct(info.get('heldPercentInstitutions'))}
 P/E  (Trailing):        {safe(info.get('trailingPE'))}
 P/E  (Forward):         {safe(info.get('forwardPE'))}
 PEG  Ratio:             {safe(info.get('pegRatio'))}
-P/S  Ratio:             {safe(info.get('priceToSalesTrailing12Months'))}
+P/S  Ratio (TTM):       {mixed(safe(info.get('priceToSalesTrailing12Months')))}
 P/B  Ratio:             {safe(info.get('priceToBook'))}
-EV / EBITDA:            {safe(info.get('enterpriseToEbitda'))}
-EV / Revenue:           {safe(info.get('enterpriseToRevenue'))}
+EV / EBITDA (TTM):      {mixed(safe(info.get('enterpriseToEbitda')))}
+EV / Revenue (TTM):     {mixed(safe(info.get('enterpriseToRevenue')))}
 EPS (TTM):              ${safe(info.get('trailingEps'))}
 EPS (Forward):          ${safe(info.get('forwardEps'))}
-FCF Yield:              {fcf_yield}
+FCF Yield (TTM, OCF − capex): {fcf_yield}
 
 ━━ PROFITABILITY & GROWTH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Revenue (TTM):          {money(info.get('totalRevenue'))}
-Revenue Growth (YoY):   {pct(info.get('revenueGrowth'))}
-Earnings Growth (YoY):  {pct(info.get('earningsGrowth'))}
-Earnings Growth (QoQ):  {pct(info.get('earningsQuarterlyGrowth'))}
-Gross Margin:           {pct(info.get('grossMargins'))}
-Operating Margin:       {pct(info.get('operatingMargins'))}
-EBITDA Margin:          {pct(info.get('ebitdaMargins'))}
-Net Profit Margin:      {pct(info.get('profitMargins'))}
-ROE:                    {pct(info.get('returnOnEquity'))}
-ROA:                    {pct(info.get('returnOnAssets'))}
+Revenue (TTM, {fin_ccy}):           {money(info.get('totalRevenue'))}
+Revenue Growth (LATEST QUARTER vs same quarter last year, not TTM): {pct(info.get('revenueGrowth'))}
+EPS Growth (LATEST QUARTER vs same quarter last year):              {pct(info.get('earningsGrowth'))}
+Net Income Growth (LATEST QUARTER vs same quarter last year):       {pct(info.get('earningsQuarterlyGrowth'))}
+Gross Margin (TTM):                 {pct(info.get('grossMargins'))}
+Operating Margin (TTM, statements): {pct(ttm['op_margin'])}
+Operating Margin (LATEST QUARTER):  {pct(info.get('operatingMargins'))}
+EBITDA Margin (TTM):                {pct(info.get('ebitdaMargins'))}
+Net Profit Margin (TTM):            {pct(info.get('profitMargins'))}
+ROE (TTM):                          {pct(info.get('returnOnEquity'))}
+ROA (TTM):                          {pct(info.get('returnOnAssets'))}
 
-━━ BALANCE SHEET SNAPSHOT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━ BALANCE SHEET & CASH FLOW ({fin_ccy}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Total Cash:             {money(info.get('totalCash'))}
 Total Debt:             {money(info.get('totalDebt'))}
 Net Cash / Debt:        {money((info.get('totalCash') or 0) - (info.get('totalDebt') or 0))}
 Debt/Equity:            {safe(info.get('debtToEquity'))}
 Current Ratio:          {safe(info.get('currentRatio'))}
 Quick Ratio:            {safe(info.get('quickRatio'))}
-Operating Cash Flow:    {money(info.get('operatingCashflow'))}
-Free Cash Flow:         {money(info.get('freeCashflow'))}
+Operating Cash Flow (TTM, statements): {money(ttm['ocf'])}
+Capital Expenditure (TTM, statements): {money(ttm['capex'])}
+Free Cash Flow (TTM) = OCF − capex:    {money(ttm['fcf'])}
 """
 
 
@@ -340,6 +408,7 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
 5Y Avg Dividend: {pct(info.get('fiveYearAvgDividendYield'))}
 """
     chart = price_ascii_chart(data["price_series"])
+    fin_ccy = info.get("financialCurrency") or info.get("currency") or "USD"
 
     # Additional data sources
     finviz_block = f"\n━━ FINVIZ SNAPSHOT (Cross-Reference) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{data.get('finviz_text', '  (no data)')}"
@@ -355,16 +424,21 @@ and historical data. Cross-reference ALL sources for your analysis — if one
 source shows N/A, check the others for that metric.
 """
 
+    # fundamental-analysis only: the pipeline attaches figures computed in
+    # Python (fundamental_facts) so the model quotes them instead of deriving.
+    facts_block = render_facts(data["report_facts"]) if data.get("report_facts") else ""
+
     return "\n".join([
         company_hdr,
+        facts_block,
         f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
         _market_overview(info, data),
         analyst_block,
-        f"\n━━ INCOME STATEMENT (Annual, last 4Y) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income'], inc_rows)}",
-        f"\n━━ INCOME STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
-        f"\n━━ BALANCE SHEET (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
-        f"\n━━ CASH FLOW STATEMENT (Annual) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
-        f"\n━━ CASH FLOW STATEMENT (Quarterly, last 4Q) ━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow_q'], cf_rows)}",
+        f"\n━━ INCOME STATEMENT (Annual, last 4Y, {fin_ccy}) ━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income'], inc_rows)}",
+        f"\n━━ INCOME STATEMENT (Quarterly, last 4Q, {fin_ccy}) ━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['income_q'], inc_q_rows)}",
+        f"\n━━ BALANCE SHEET (Annual, {fin_ccy}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['balance'], bs_rows)}",
+        f"\n━━ CASH FLOW STATEMENT (Annual, {fin_ccy}) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow'], cf_rows)}",
+        f"\n━━ CASH FLOW STATEMENT (Quarterly, last 4Q, {fin_ccy}) ━━━━━━━━━━━━━━━━━━━\n{df_to_text(data['cashflow_q'], cf_rows)}",
         cross_ref_note,
         finviz_block,
         stockanalysis_block,
@@ -375,4 +449,4 @@ source shows N/A, check the others for that metric.
     ])
 
 
-__all__ = ["build_context"]
+__all__ = ["build_context", "statement_ttm", "currency_mismatch"]

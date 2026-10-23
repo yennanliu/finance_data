@@ -8,6 +8,11 @@ TODAY = date.today().isoformat()
 DEFAULT_MODEL = "gemini-3.8-flash"
 DEFAULT_TOKENS = 32000
 
+# Sampling temperature for analysis reports. The runners default to 0.7; a
+# report whose job is reproducible arithmetic got a different WACC (9.41% →
+# 11.8%) and ROIC (10.9% → 15.6%) from day to day on near-identical inputs.
+REPORT_TEMPERATURE = 0.3
+
 # One entry per analysis type — the single place a new type is declared.
 # ``prompt_file`` names the template under analysis/prompts/ (the name rarely
 # matches the type verbatim), so adding a type never means editing a second
@@ -87,4 +92,4 @@ ANALYSIS_TYPES = {
     },
 }
 
-__all__ = ["TODAY", "DEFAULT_MODEL", "DEFAULT_TOKENS", "ANALYSIS_TYPES"]
+__all__ = ["TODAY", "DEFAULT_MODEL", "DEFAULT_TOKENS", "REPORT_TEMPERATURE", "ANALYSIS_TYPES"]

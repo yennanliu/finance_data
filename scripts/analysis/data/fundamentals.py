@@ -364,7 +364,46 @@ def fiscal_years(gaap: dict) -> list[tuple[str, str]]:
         for (start, end) in _facts(node, want_duration=True):
             if 350 < _days(start, end) < 380:
                 years.setdefault(end, start)
-    return [(years[e], e) for e in sorted(years)]
+    out = [(years[e], e) for e in sorted(years)]
+
+    # The fiscal year in progress has no annual span until its 10-K, so it was
+    # never listed and its 10-Q quarters never reached the store: in October
+    # 2026 AMD / TSLA / PLTR still stopped at 2025-12 although their 2026 10-Qs
+    # were filed. It starts the day after the last fiscal year ends; include it
+    # once a year-to-date fact starts there.
+    if out:
+        start = (date.fromisoformat(out[-1][1]) + timedelta(days=1)).isoformat()
+        if _has_ytd_from(gaap, start):
+            out.append((start, _year_after(start)))
+    return out
+
+
+def _has_ytd_from(gaap: dict, start: str) -> bool:
+    """Whether any revenue concept carries a sub-annual span from ``start``."""
+    limit = (date.fromisoformat(start) + timedelta(days=5)).isoformat()
+    for concept in DURATION_CONCEPTS["revenue"]:
+        node = gaap.get(concept)
+        if not node:
+            continue
+        for (s, e) in _facts(node, want_duration=True):
+            if start <= s <= limit and 80 < _days(s, e) < 350:
+                return True
+    return False
+
+
+def _year_after(start: str) -> str:
+    """Nominal end of a fiscal year beginning at ``start``: one year less a day.
+
+    Only a bound for :func:`discrete_quarters` and the source of the ``fy``
+    label (NVDA's year starting 2026-01-26 is FY2027, a calendar year starting
+    2026-01-01 is FY2026); the true end arrives with the 10-K.
+    """
+    d = date.fromisoformat(start)
+    try:
+        nxt = d.replace(year=d.year + 1)
+    except ValueError:  # 29 February
+        nxt = d.replace(year=d.year + 1, day=28)
+    return (nxt - timedelta(days=1)).isoformat()
 
 
 def discrete_quarters(facts: dict, fy_start: str, fy_end: str,
