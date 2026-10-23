@@ -1,5 +1,7 @@
 # Fundamental Report — Review Checklist
 
+*English · [繁體中文](FUNDAMENTAL_REPORT_REVIEW.zh-TW.md)*
+
 **Purpose:** list everything that shapes a `fundamental-analysis` report, from the
 data we fetch to the page we publish, so that each part can be reviewed on its
 own. Each section names the files involved, what to check, and any problems
@@ -9,6 +11,9 @@ already found in a real report.
 [`/reports/amd/fundamental_analysis_2026-10-21_gemini/`](https://yennj12.js.org/finance_data/reports/amd/fundamental_analysis_2026-10-21_gemini/)
 (source: `ai_gen_report/fundamental/amd/fundamental_analysis_2026-10-21_gemini.md`,
 75 KB, 11 chapters, 15 Mermaid blocks, 214 table rows).
+
+**Fact-checked:** the 2026-10-22 TSLA, AMD and PLTR reports, figure by figure,
+against SEC XBRL filings and market data. See [§12](#12-fact-check-tsla-amd-pltr-2026-10-22-reports-vs-sec-filings).
 
 ---
 
@@ -27,6 +32,7 @@ already found in a real report.
 | 9 | QA gates | `scripts/analysis/validate/__init__.py`, `review_report_quality.py`, `prompts/qa_review.txt` | Which of the defects above does QA actually catch? |
 | 10 | Publishing | `scripts/build_docs.py` (`report_meta_block`, `ticker_hero_block`, `parse_scenario_targets`, `scenario_rail`) | Does the published page show the report's numbers correctly? |
 | 11 | Schedule / cost | `.github/workflows/daily_analysis.yml`, `scripts/.ticker_schedule.json` | Is daily regeneration of every ticker worth it? |
+| 12 | Fact-check | SEC XBRL `companyfacts`, market close | Are the report's figures true? (TSLA / AMD / PLTR done in §12) |
 
 ---
 
@@ -34,6 +40,29 @@ already found in a real report.
 
 Files: `utils/data_fetch.py`, `context/__init__.py` (L312–378), `data/prices.py`, `data/fundamentals.py`
 
+- [ ] **🔴 Single-quarter fields that read as TTM** (confirmed in §12). The
+  `PROFITABILITY & GROWTH` block (`context/__init__.py:52–56`) passes yfinance
+  `info` fields with labels that don't say which period they cover.
+  `revenueGrowth`, `earningsGrowth` and `operatingMargins` all describe the
+  **latest quarter**. `earningsQuarterlyGrowth` is that quarter's change
+  *year over year*, but it is labelled "(QoQ)". The context also prints
+  TTM statements, so the model joins the two. All three reports write
+  "TTM 營收 … (YoY +X%)" (TTM revenue with a YoY rate) and "TTM 營業利益率 X%"
+  (TTM operating margin), using the quarterly values.
+  Fix: label each field with its period, or compute TTM growth and margins from
+  the statements ourselves.
+- [ ] **🔴 `Free Cash Flow` is yfinance's "levered FCF"**, not OCF − capex
+  (`context/__init__.py:70`). TSLA: $4.84B vs $5.76B. AMD: $8.84B vs $8.40B.
+  In the TSLA and AMD reports, the model then **made up a capex figure** so that
+  the FCF table adds up to the yfinance number. See §12.
+- [ ] **🔴 The SEC fundamentals store never holds the current fiscal year.**
+  `fundamentals.fiscal_years()` (`data/fundamentals.py:352`) returns only
+  *completed* fiscal years, and `discrete_quarters()` keeps quarters inside
+  them. Q1–Q3 of a year in progress are therefore always dropped. As of
+  2026-10-23, AMD / TSLA / PLTR stop at 2025-12. SEC already has their 2026
+  10-Qs (TSLA's Q3 was filed 2026-10-22). Every ticker's last row is its last
+  fiscal year-end, so the Market Data page is up to three quarters stale, and
+  `update_fundamentals.py` reports "unchanged".
 - [ ] **Inputs the prompt requires but the context does not supply.** The
   fundamental branch sends annual/quarterly IS, annual BS, annual + quarterly CF,
   `info` ratios, Finviz / StockAnalysis / Roic.ai text, earnings, upgrades and news.
@@ -164,6 +193,15 @@ can be checked deterministically with no LLM.
 - [ ] **Premium/discount sign.** AMD 10-21 says "DCF $576.45｜現價溢價 **+4.1%**" with
   the price at $552.72. Correct value: 552.72 / 576.45 − 1 = **−4.1%**, a
   *discount*. The sign is wrong in the TOC, in §1.0 and in the §1.5 ASCII box.
+- [ ] **🔴 The weighted fair value is the sum of its own terms.** TSLA
+  2026-10-22 prints `$147.71 + $16.43 + $42.53 + $57.36 + $60.21 = $334.34`.
+  Those terms add up to **$324.24**. AMD 2026-10-22 prints
+  `$229.76 + $110.32 + $77.75 + $95.73 + $63.76 = $580.45`, which adds up to
+  **$577.32**. Each product is right; only the total is wrong. The headline
+  value, the MOS and the rating all inherit the wrong total. Both reports'
+  §8.10 "複算檢核表" (recalculation checklist) re-check the *scenario* weights
+  but never re-add §8.8, and they still mark MOS as ✅ consistent. The prompt's
+  §8.10 list should include re-adding the §8.8 sum.
 - [ ] **MOS / upside** recompute from fair value and price, and agree between
   §1.0 and §8.8. (AMD 10-21 passes: 9.75% ≈ 9.7%, 10.8%.)
 - [ ] **Weights sum to 100%** in §8.6 (scenarios) and §8.8 (triangulation), and
@@ -214,6 +252,8 @@ AMD, five daily runs on near-identical financial data:
 | Missing chapter (e.g. no Ch.11) | ⚠️ only via generic `CUTOFF` | partially (`completeness`) |
 | Arithmetic / sign errors (§6) | ❌ | ❌ (not caught on AMD 10-21) |
 | Fabricated figures (not in context) | ❌ | ✅ sometimes (`mu`) |
+| Mislabelled period (quarter shown as TTM, §12) | ❌ | ❌ — the judge never sees the source data |
+| Balancing figures invented to match a total (§12) | ❌ | ❌ |
 | Prompt-example anchoring (`9.41%`) | ❌ — trivially addable | ❌ |
 | Run-to-run drift (§7) | ❌ | ❌ (grades one report at a time) |
 | Ch.1 ↔ Ch.8 disagreement | ❌ | ✅ (`consistency`) |
@@ -258,10 +298,124 @@ AMD, five daily runs on near-identical financial data:
 - [ ] No test asserts that the context contains every input the prompt names
   (peers, WACC inputs).
 
+## 12. Fact-check: TSLA, AMD, PLTR (2026-10-22 reports) vs SEC filings
+
+**Method.**
+
+- **Primary source:** SEC XBRL `companyfacts` (`data.sec.gov`). TTM =
+  previous fiscal year + current YTD − prior-year YTD. Balance-sheet items are
+  as at the latest 10-Q.
+- **Market data:** the close on the report date (`data/prices/<t>.csv`, which
+  matches yfinance), plus yfinance `info`, which is the same feed the pipeline
+  uses.
+- **Baseline period:** all three reports use TTM through **Q2 2026** (AMD's
+  quarter ended 06-27). TSLA filed its Q3 10-Q on 2026-10-22, the same day as
+  its report, so Q2 is the fair baseline for all three.
+
+Legend: ✅ matches (±1%) · ⚠️ small gap or definition choice · ❌ wrong.
+
+### 12.1 TSLA
+
+| Claim in report | Report | Actual | Source | |
+|---|---|---|---|---|
+| Price (10-22 close) | $374.58 | $374.58 | price store | ✅ |
+| TTM revenue | $103.62B | $103.62B | SEC | ✅ |
+| TTM revenue growth | YoY +25.5% | **+11.8%** ($103.62B vs $92.72B) | SEC | ❌ +25.5% is Q2's YoY |
+| Net income growth | "淨利潤年減 3.0%" (net income down 3.0% YoY) | TTM **−37.3%** ($3.80B vs $6.07B) | SEC | ❌ −3.0% is yfinance `earningsGrowth` (quarterly) |
+| TTM operating margin | 1.4% | **4.2%** ($4.37B / $103.62B) | SEC | ❌ 1.4% is Q2 alone |
+| 2025 R&D | $6.41B | $6.41B | SEC 10-K | ✅ |
+| Q2 2026 capex / FCF | $5.80B / −$1.10B | $5.79B / −$1.09B | SEC (YTD differencing) | ✅ |
+| TTM OCF | $18.68B | $18.69B | SEC | ✅ |
+| TTM capex | $13.84B | **$12.92B** | SEC | ❌ backed out so that OCF − capex = $4.84B |
+| TTM FCF | $4.84B | **$5.76B** (OCF − capex) | SEC | ❌ $4.84B is yfinance levered FCF |
+| Net cash | $27.44B | $43.52B cash+ST inv − $16.08B debt incl. leases | SEC / yfinance | ✅ |
+| Current ratio | 1.94x | 1.94x | SEC | ✅ |
+| Trailing / forward P/E | 346.8x / 171.1x | 346.8x / 171.1x | yfinance | ✅ |
+| Weighted fair value (§8.8) | $334.34 | **$324.24** (its own terms) | arithmetic | ❌ |
+| MOS | −12.0% | **−15.5%** with the corrected sum | arithmetic | ❌ |
+| DCF premium | +18.7% | 374.58 / 315.69 − 1 = +18.7% | arithmetic | ✅ |
+
+### 12.2 AMD
+
+| Claim in report | Report | Actual | Source | |
+|---|---|---|---|---|
+| Price (10-22 close) | $507.93 | $507.93 | price store | ✅ |
+| TTM revenue | $41.31B | $41.31B | SEC | ✅ |
+| TTM revenue growth | YoY +50.1% | **+39.5%** ($41.31B vs $29.60B) | SEC | ❌ +50.1% is Q2's YoY |
+| Q2 revenue, YoY / QoQ | $11.54B, +50.1% / +12.5% | $11.54B, +50.1% / +12.5% | SEC | ✅ |
+| FY2024 revenue | $25.79B | $25.79B | SEC | ✅ |
+| FY2024 operating margin | 8.1% | **7.4%** | SEC | ⚠️ |
+| TTM operating margin | 17.2% | **15.7%** ($6.49B / $41.31B) | SEC | ❌ 17.2% is Q2 alone |
+| Q2 diluted EPS | $1.39 | $1.38 | SEC | ⚠️ rounding |
+| Q2 EPS YoY | +159.5% | +155.6% (1.38 / 0.54) | SEC | ⚠️ yfinance `earningsGrowth` |
+| TTM OCF | $10.08B | $10.08B | SEC | ✅ |
+| TTM capex | $1.24B | **$1.68B** | SEC | ❌ backed out so that OCF − capex = $8.84B |
+| TTM FCF | $8.84B | **$8.40B** | SEC | ❌ yfinance levered FCF |
+| Cash + ST investments | $13.11B | $13.11B | SEC | ✅ |
+| Total debt | $4.28B | $3.23B (+ leases ≈ $4.28B) | SEC / yfinance | ⚠️ includes leases; not stated |
+| Net cash | $8.84B | $9.89B excl. leases / $8.84B incl. leases | | ⚠️ same as TTM FCF, by coincidence |
+| Weighted fair value (§8.8) | $580.45 | **$577.32** (its own terms) | arithmetic | ❌ |
+| MOS / upside | +12.5% / +14.3% | **+12.0% / +13.7%** with the corrected sum | arithmetic | ❌ (rating unchanged) |
+| DCF discount | −10.6% | 507.93 / 568.10 − 1 = −10.6% | arithmetic | ✅ (the 10-21 sign error is gone) |
+
+### 12.3 PLTR
+
+| Claim in report | Report | Actual | Source | |
+|---|---|---|---|---|
+| Price / market cap | $196.19 / $471.46B | $196.19 / $471.46B | price store / yfinance | ✅ |
+| TTM revenue | $6.16B | $6.16B | SEC | ✅ |
+| TTM revenue growth | YoY +92.8% | **+78.9%** ($6.16B vs $3.44B) | SEC | ❌ +92.8% is Q2's YoY |
+| TTM operating margin | 47.1% | **42.8%** ($2.64B / $6.16B) | SEC | ❌ 47.1% is Q2 alone |
+| TTM net income | $3.02B | $3.02B | SEC | ✅ |
+| TTM OCF / capex / FCF | $3.40B / $0.04B / $3.36B | $3.40B / $0.04B / $3.36B | SEC | ✅ computed correctly here |
+| FCF yield | 0.46% | **0.71%** ($3.36B / $471.46B) | arithmetic | ❌ 0.46% uses yfinance's $2.16B, which contradicts the report's own $3.36B |
+| Deferred revenue | $1.03B | $1.10B (`ContractWithCustomerLiability`) | SEC | ⚠️ not in context; from model memory |
+| Net cash | $9.20B | $9.41B cash+securities − $0.21B leases | SEC / yfinance | ✅ |
+| Current ratio | 7.23x | 7.23x | SEC | ✅ |
+| Weighted fair value (§8.8) | $182.20 | $182.13 (its own terms) | arithmetic | ⚠️ rounded up; the report says so ("≈") |
+| MOS / DCF premium | −7.7% / +11.8% | −7.7% / +11.8% | arithmetic | ✅ |
+
+### 12.4 What the fact-check shows
+
+1. **Copying is reliable; labelling and derivation are not.** Every figure that
+   appears verbatim in the context checks out: price, TTM revenue, net income,
+   OCF, cash, current ratio, P/E. The errors come from three places:
+   - **Mislabelled context fields.** 7 of the ❌ rows are a single-quarter
+     value presented as TTM. All three reports make this mistake the same way,
+     so it is a pipeline bug, not model randomness. Fix it in `context/__init__.py`.
+   - **Back-solved figures.** When yfinance's "FCF" doesn't equal OCF − capex,
+     the model invents a capex figure (TSLA +$0.92B, AMD −$0.44B) so the table
+     reconciles. No QA stage can catch this without the source data.
+   - **Arithmetic slips.** 2 of 3 reports have a wrong §8.8 total, and the MOS
+     inherits it.
+2. **Ratings mostly survive the corrections.** TSLA's MOS goes from −12.0% to
+   −15.5% (still Hold), and AMD's from +12.5% to +12.0% (still Buy). The
+   headline numbers a reader is most likely to quote are wrong in all three
+   reports, though. TTM revenue growth is overstated by 10.6–13.9pp. TTM
+   operating margin is off by 1.5–4.3pp: overstated for AMD and PLTR, and
+   understated for TSLA (1.4% vs 4.2%).
+3. **One cheap fix removes most ❌ rows.** Compute TTM growth, TTM margins and
+   FCF (OCF − capex) in Python from the statements already in the context, and
+   label every `info` field with its period. With those two changes, 12 of the
+   16 ❌ rows above would not have happened (7 period mislabels, 5 FCF / capex /
+   yield). The remaining 4 are the two §8.8
+   totals and the MOS values they feed, which is the stage-1 `ARITHMETIC` check
+   proposed in §6.
+
+The script used for this check (SEC TTM extraction) is small enough to become
+a stage-1 `FACTS` check. It would compare the report's §1.0 figures against
+the same SEC numbers, using the fundamentals store once that store's
+current-year bug (§1) is fixed.
+
 ---
 
 ## Suggested review order / follow-up PRs
 
+0. **Highest value, from the §12 fact-check:** in `context/__init__.py`, label
+   every yfinance `info` field with its period, and replace `Free Cash Flow`
+   with OCF − capex plus TTM growth and margins computed from the statements.
+   Separately, fix `fundamentals.fiscal_years()` so that the store includes
+   quarters of the current fiscal year.
 1. **Quick wins (prompt only):** remove the anchoring example numbers; make
    `gemini_system.txt` agree with the prompt (11 chapters, one length budget);
    spell out the Ch.11 TOC row; define rating thresholds.
