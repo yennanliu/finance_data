@@ -1,0 +1,27 @@
+
+============================================================
+Total scanned : 5991
+Bad reports   : 2397  (40.0%)
+
+Issue breakdown:
+  ARITHMETIC            1702
+  MISSING_SECTIONS       427
+  RR_MISMATCH            256
+  NAN_VALUE               14
+  REFUSAL                  3
+  TOO_SHORT                2
+  CUTOFF                   1
+
+Top 10 tickers by bad-report count:
+  onds           92 / 196  bad
+  grab           90 / 195  bad
+  rklb           90 / 197  bad
+  pl             88 / 196  bad
+  ktos           87 / 196  bad
+  tsla           83 / 196  bad
+  avav           80 / 195  bad
+  intc           79 / 198  bad
+  nbis           78 / 197  bad
+  amd            77 / 197  bad
+
+CSV written → qa/bad_reports_2026-10-23.csv
