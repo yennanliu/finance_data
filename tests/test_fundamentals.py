@@ -518,3 +518,50 @@ def test_committed_store_passes_its_own_gate():
     for path in sorted(F.STORE_DIR.glob("*.csv")):
         rows = F.parse(path.read_text(encoding="utf-8"))
         assert F.gate(rows, []) is None, f"{path.name}: {F.gate(rows, [])}"
+
+
+# ── stock splits and mixed-scale share counts ────────────────────────────────
+def test_split_ratio_matches_forward_and_reverse_splits():
+    assert F.split_ratio(20.1) == 20
+    assert F.split_ratio(9.98) == 10
+    assert F.split_ratio(0.1) == pytest.approx(0.1)       # 1:10 reverse split
+    assert F.split_ratio(1.4) is None                      # ordinary issuance
+    assert F.split_ratio(1000.0) is None                   # a dropped 10^3
+
+
+def test_a_split_beyond_the_step_limit_keeps_every_later_count():
+    """AMZN's 20:1 cleared the 10× guard and used to drop every later quarter."""
+    counts = {"2022-03-31": 0.51e9, "2022-06-30": 10.24e9,
+              "2022-09-30": 10.25e9, "2022-12-31": 10.24e9}
+    assert F._plausible_share_counts(counts) == counts
+
+
+def test_a_bad_first_count_no_longer_poisons_the_series():
+    """NVDA's FY2008 10-K tags its share count in thousands. Anchored on that
+    first point, the old running median rejected every correct count after it."""
+    counts = {"2008-01-27": 606_732.0, "2008-07-27": 555_417_000.0,
+              "2008-10-26": 564_536_000.0, "2009-01-25": 548_126.0,
+              "2009-04-26": 542_307_000.0, "2009-07-26": 546_639_000.0}
+    kept = F._plausible_share_counts(counts)
+    assert "2008-01-27" not in kept and "2009-01-25" not in kept
+    assert len(kept) == 4
+
+
+def test_a_split_in_the_last_two_quarters_keeps_both_counts():
+    """With several pre-split quarters behind it, the second post-split count's
+    centred window is still mostly pre-split; continuing the last kept count
+    has to vouch for it, or the newest market cap goes blank."""
+    counts = {f"2025-0{m}-30": v for m, v in
+              zip(range(1, 8), [1e9, 1e9, 1e9, 1e9, 1e9, 20e9, 20.1e9])}
+    assert F._plausible_share_counts(counts) == counts
+
+
+def test_two_adjacent_mis_scaled_counts_do_not_vouch_for_each_other():
+    """ONDS tags FY2025 Q4 and FY2026 Q1 both in thousands; 2.08× apart, they
+    look like a 2:1 split of each other and must still both be dropped."""
+    counts = {"2025-03-31": 105_004_818.0, "2025-06-30": 150_652_998.0,
+              "2025-09-30": 259_909_415.0, "2025-12-31": 221_769.0,
+              "2026-03-31": 461_706.0, "2026-06-30": 503_593_000.0}
+    kept = F._plausible_share_counts(counts)
+    assert "2025-12-31" not in kept and "2026-03-31" not in kept
+    assert kept["2026-06-30"] == 503_593_000.0

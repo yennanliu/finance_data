@@ -65,6 +65,13 @@ METRICS = (
     "cash_and_equiv", "short_term_investments",
     "long_term_debt", "short_term_debt",
     "total_assets", "total_equity",
+    # Added 2026-10 for the capital-return, ROIC-vs-WACC, financial-strength and
+    # DCF views (docs/PRICE_STORE_DESIGN.md §13). Appended, never interleaved, so
+    # every existing column keeps its position.
+    "sbc", "dividends_paid", "buybacks",
+    "interest_expense", "income_tax", "pretax_income",
+    "current_assets", "current_liabilities", "total_liabilities",
+    "retained_earnings", "goodwill", "intangibles",
 )
 
 # Column order is part of the on-disk contract (I1). Do not reorder.
@@ -196,6 +203,11 @@ def trim(rows: list[dict], years: int = KEEP_YEARS) -> list[dict]:
 # tag gives MSFT 14 quarters; the chain gives the full run.
 DURATION_CONCEPTS = {
     "revenue": (
+        # A bank's total net revenue (net interest income + non-interest
+        # income). Only a lender tags it, and for one the ASC 606 concept below
+        # is just fee income: SOFI's runs ~$150M a quarter against ~$1.1B of
+        # real revenue, which put its net margin above 100%.
+        "RevenuesNetOfInterestExpense",
         "RevenueFromContractWithCustomerExcludingAssessedTax",
         "RevenueFromContractWithCustomerIncludingAssessedTax",
         "Revenues", "SalesRevenueNet", "SalesRevenueGoodsNet",
@@ -221,6 +233,10 @@ DURATION_CONCEPTS = {
         "DepreciationDepletionAndAmortization",
         "DepreciationAmortizationAndAccretionNet",
         "DepreciationAndAmortization",
+        # Last resort, and slightly low (it leaves out amortisation): TSLA stopped
+        # tagging a combined D&A figure after 2018 in favour of a custom concept,
+        # and without this has no EBITDA for 29 of its 41 quarters.
+        "Depreciation",
     ),
     "ocf": (
         "NetCashProvidedByUsedInOperatingActivities",
@@ -229,6 +245,27 @@ DURATION_CONCEPTS = {
     "capex": (
         "PaymentsToAcquirePropertyPlantAndEquipment",
         "PaymentsToAcquireProductiveAssets",
+    ),
+    "sbc": (
+        "ShareBasedCompensation",
+        "AllocatedShareBasedCompensationExpense",
+    ),
+    # A company that pays no dividend and buys back no stock simply does not tag
+    # these, so they stay empty rather than reading 0 — see fmt_value.
+    "dividends_paid": (
+        "PaymentsOfDividends", "PaymentsOfDividendsCommonStock",
+        "PaymentsOfOrdinaryDividends",
+    ),
+    "buybacks": (
+        "PaymentsForRepurchaseOfCommonStock", "PaymentsForRepurchaseOfEquity",
+    ),
+    "interest_expense": (
+        "InterestExpense", "InterestExpenseNonoperating", "InterestExpenseDebt",
+    ),
+    "income_tax": ("IncomeTaxExpenseBenefit",),
+    "pretax_income": (
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
     ),
 }
 
@@ -247,6 +284,16 @@ INSTANT_CONCEPTS = {
     "total_equity": (
         "StockholdersEquity",
         "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+    ),
+    "current_assets": ("AssetsCurrent",),
+    "current_liabilities": ("LiabilitiesCurrent",),
+    # AMD, AMZN, INTC and ORCL never tag a Liabilities total; the analytics fall
+    # back to assets − equity for them rather than this module inventing a row.
+    "total_liabilities": ("Liabilities",),
+    "retained_earnings": ("RetainedEarningsAccumulatedDeficit",),
+    "goodwill": ("Goodwill",),
+    "intangibles": (
+        "IntangibleAssetsNetExcludingGoodwill", "FiniteLivedIntangibleAssetsNet",
     ),
 }
 
@@ -273,7 +320,8 @@ NON_CUMULATIVE = ("shares_diluted",)
 # yields -3.39B of revenue. Refusing the value lets the next concept in the
 # chain supply the period instead — which for KTOS FY2011 is exactly what
 # SalesRevenueNet does, with a cleanly reported Q4 the first concept lacked.
-NON_NEGATIVE = ("revenue", "shares_diluted", "rnd_expense", "sga_expense", "capex")
+NON_NEGATIVE = ("revenue", "shares_diluted", "rnd_expense", "sga_expense", "capex",
+                "sbc", "dividends_paid", "buybacks", "interest_expense")
 
 # Largest quarter-on-quarter change a share count can plausibly make. A money
 # figure that is mis-scaled by a factor of 1000 trips the gate (gross profit
@@ -288,6 +336,12 @@ NON_NEGATIVE = ("revenue", "shares_diluted", "rnd_expense", "sga_expense", "cape
 # it would not be. A genuine reverse split is the one legitimate way to trip
 # this, and omitting a quarter is the better error.
 MAX_SHARE_COUNT_STEP = 10.0
+
+# Split ratios a share count may legitimately jump by (and their reciprocals,
+# for reverse splits). 2:1 through 20:1 covers every split in this universe;
+# the tolerance absorbs a weighted average whose window straddles the split.
+SPLIT_RATIOS = (2, 3, 4, 5, 6, 7, 8, 10, 15, 20, 25, 30, 40, 50)
+SPLIT_TOLERANCE = 0.06
 
 
 # ── XBRL extraction ──────────────────────────────────────────────────────────
@@ -460,21 +514,66 @@ def discrete_quarters(facts: dict, fy_start: str, fy_end: str,
     return out
 
 
+def split_ratio(ratio: float) -> "float | None":
+    """The stock split a share-count ratio looks like, or None.
+
+    Matched against :data:`SPLIT_RATIOS` (and their reciprocals, for reverse
+    splits) within :data:`SPLIT_TOLERANCE`. A weighted average straddling the
+    split date blurs the ratio, so the tolerance is loose — but a factor of 1000
+    is not a split anyone does, which is what keeps ONDS's dropped digits out.
+    """
+    if ratio <= 0:
+        return None
+    for r in SPLIT_RATIOS:
+        for candidate in (r, 1.0 / r):
+            if abs(ratio / candidate - 1.0) <= SPLIT_TOLERANCE:
+                return candidate
+    return None
+
+
 def _plausible_share_counts(counts: dict) -> dict:
     """Drop share counts that jump by more than :data:`MAX_SHARE_COUNT_STEP`.
 
-    Anchored on the running median rather than the previous value, so one bad
-    figure cannot drag the rest of the series out with it.
+    Each count is checked against the median of the nine quarters centred on
+    it, so one bad figure cannot drag the rest of the series out with it — and,
+    unlike a running median, nor can a bad *first* figure. NVDA's 10-Ks for
+    FY2008-10 tag the annual count in thousands (606,732 against quarters of
+    ~555M); a running median anchored on that first point threw away every
+    correct count after it, leaving NVDA with no market cap at all.
+
+    A jump that matches a stock split against the previous kept count is kept
+    even when it clears the step limit (AMZN's 20:1). Splits were otherwise
+    indistinguishable from scale errors, and AMZN, AVGO, SOFI and TSLA lost
+    every share count after theirs.
     """
+    ends = sorted(counts)
+    values = [counts[e] for e in ends]
     kept: dict = {}
-    for end in sorted(counts):
-        value = counts[end]
-        if kept and value > 0:
-            ordered = sorted(kept.values())
-            median = ordered[len(ordered) // 2]
+    prev = None
+    for i, end in enumerate(ends):
+        value = values[i]
+        if value > 0:
+            window = sorted(values[max(0, i - 4):i + 5])
+            median = window[len(window) // 2]
             ratio = value / median if median else 0
-            if ratio > MAX_SHARE_COUNT_STEP or ratio < 1 / MAX_SHARE_COUNT_STEP:
+            plausible = 1 / MAX_SHARE_COUNT_STEP <= ratio <= MAX_SHARE_COUNT_STEP
+            # Continuing the last kept count also vouches for it: just after a
+            # split at the end of the series, the centred window is still
+            # mostly pre-split. `prev` is only ever a count that survived, so
+            # a mis-scaled one (ONDS's 221,769) is still far from it.
+            if prev and 1 / MAX_SHARE_COUNT_STEP <= value / prev <= MAX_SHARE_COUNT_STEP:
+                plausible = True
+            # A split from the last kept count vouches for it. A split to the
+            # *next* count vouches only for the very first count, whose window
+            # can be mostly post-split when history is short: anywhere else it
+            # lets two adjacent mis-scaled counts vouch for each other — ONDS
+            # tags 221,769 then 461,706 (thousands; ~260M and ~504M real),
+            # which is 2.08× apart and reads as a 2:1 split.
+            nxt = values[i + 1] if i + 1 < len(values) else None
+            if not plausible and not (prev and split_ratio(value / prev)) \
+                    and not (prev is None and nxt and split_ratio(nxt / value)):
                 continue
+            prev = value
         kept[end] = value
     return kept
 

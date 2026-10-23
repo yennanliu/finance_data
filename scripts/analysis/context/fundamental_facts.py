@@ -328,7 +328,7 @@ def render_facts(f: dict) -> str:
             f"  Net cash (− = net debt):               {amt(s.get('net_cash'))}",
         ]
         if s.get("roic_ttm") is not None:
-            lines.append(f"  ROIC (TTM, operating income ÷ (equity + debt − cash)): {_p(s['roic_ttm'])}")
+            lines.append(f"  ROIC (TTM, after-tax operating income ÷ (equity + debt − cash)): {_p(s['roic_ttm'])}")
         if s.get("roe_ttm") is not None:
             lines.append(f"  ROE (TTM):                             {_p(s['roe_ttm'])}")
         lines.append("  → If a figure above is N/A, say it is unavailable. Never back out a missing"

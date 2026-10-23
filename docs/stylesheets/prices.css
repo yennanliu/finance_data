@@ -386,3 +386,170 @@
     font-size: 0.72rem;
   }
 }
+
+/* ===========================================================================
+   Annual, strength and intrinsic-value views (build_docs.py §6c)
+   Static HTML/SVG: every coordinate is computed in Python, so these render
+   with JS off. Colours come from the --fp-series-* tokens in extra.css.
+   =========================================================================== */
+
+/* series colours: .fs-* fills a bar or legend swatch, .fl-* strokes a line */
+.fs-blue   { fill: var(--fp-series-blue);   background: var(--fp-series-blue); }
+.fs-amber  { fill: var(--fp-series-amber);  background: var(--fp-series-amber); }
+.fs-green  { fill: var(--fp-series-green);  background: var(--fp-series-green); }
+.fs-red    { fill: var(--fp-series-red);    background: var(--fp-series-red); }
+.fs-violet { fill: var(--fp-series-violet); background: var(--fp-series-violet); }
+.fs-pink   { fill: var(--fp-series-pink);   background: var(--fp-series-pink); }
+.fs-teal   { fill: var(--fp-series-teal);   background: var(--fp-series-teal); }
+.fs-ink    { fill: var(--fp-text);          background: var(--fp-text); }
+.pchart__key i.is-line { height: 2px; border-radius: 1px; }
+.fl-ink { stroke: var(--fp-text); stroke-width: 2; fill: none; }
+circle.fl-ink { fill: var(--fp-bg-card); }
+
+/* two cards to a row, like GuruFocus's Financials grid; one on a phone */
+.fgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 0 1rem;
+}
+.fgrid > .pchart { min-width: 0; }
+
+.fbars .pchart__legend { justify-content: flex-start; }
+.fbars .pchart__head { flex-wrap: wrap; }
+/* The SVG keeps a legible minimum width and scrolls inside its own card
+   rather than shrinking its labels to nothing or widening the page. */
+.fbars__scroll { flex: 1 1 auto; min-width: 0; overflow-x: auto; }
+.fbars__svg { display: block; width: 100%; min-width: 18rem; height: auto; }
+.fbars__svg rect:hover { opacity: 0.75; }
+.fbars__grid { stroke: var(--fp-border-dim); stroke-width: 1; }
+.fbars__grid.is-zero { stroke: var(--fp-border-hover); }
+.fbars__tick,
+.fbars__cat {
+  font-size: 17px;
+  fill: var(--fp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── valuation vs. its own history: one rail per multiple ── */
+.vrange {
+  margin: 0 0 1.5rem;
+  padding: 0.6rem 1.05rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
+}
+.vrange__row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(6rem, 1fr) 11rem;
+  grid-template-areas: "name track val" ". ends ends";
+  align-items: center;
+  gap: 0.1rem 0.8rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--fp-border-dim);
+  font-variant-numeric: tabular-nums;
+}
+.vrange__row:last-child { border-bottom: 0; }
+.vrange__name { grid-area: name; font-weight: 700; font-size: 0.78rem; color: var(--fp-text); }
+.vrange__track {
+  grid-area: track;
+  position: relative;
+  height: 0.5rem;
+  border-radius: var(--fp-pill);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--fp-green) 28%, transparent),
+    var(--fp-border-dim) 50%,
+    color-mix(in srgb, var(--fp-red) 28%, transparent));
+}
+.vrange__fill { position: absolute; inset: 0 auto 0 0; border-radius: inherit;
+  background: color-mix(in srgb, var(--fp-text) 10%, transparent); }
+.vrange__med { position: absolute; top: -0.2rem; width: 2px; height: 0.9rem;
+  margin-left: -1px; background: var(--fp-text-muted); }
+.vrange__now { position: absolute; top: 50%; width: 0.8rem; height: 0.8rem;
+  margin: -0.4rem 0 0 -0.4rem; border-radius: 50%;
+  background: var(--fp-text); border: 2px solid var(--fp-bg-card); }
+.vrange__now.is-out { background: var(--fp-red); }
+.vrange__val { grid-area: val; font-size: 0.76rem; color: var(--fp-text-secondary); }
+.vrange__val b { color: var(--fp-text); }
+.vrange__val i { font-style: normal; }
+.vrange__val i.is-cheap { color: var(--fp-green); }
+.vrange__val i.is-dear { color: var(--fp-red); }
+.vrange__ends { grid-area: ends; font-size: 0.68rem; color: var(--fp-text-muted); }
+
+/* ── financial-strength scorecard ── */
+.fscore {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+}
+.fscore__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "name tone" "val val" "note note";
+  gap: 0.15rem 0.5rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--fp-border);
+  border-left: 3px solid var(--fp-border-strong);
+  border-radius: var(--fp-radius-sm);
+  background: var(--fp-bg-card);
+}
+.fscore__item.is-good { border-left-color: var(--fp-green); }
+.fscore__item.is-fair { border-left-color: var(--fp-yellow); }
+.fscore__item.is-weak { border-left-color: var(--fp-red); }
+.fscore__name { grid-area: name; font-size: 0.72rem; font-weight: 700; color: var(--fp-text-secondary); }
+.fscore__tone { grid-area: tone; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.fscore__item.is-good .fscore__tone { color: var(--fp-green); }
+.fscore__item.is-fair .fscore__tone { color: var(--fp-yellow); }
+.fscore__item.is-weak .fscore__tone { color: var(--fp-red); }
+.fscore__val { grid-area: val; font-size: 1.15rem; color: var(--fp-text); font-variant-numeric: tabular-nums; }
+.fscore__note { grid-area: note; font-size: 0.66rem; line-height: 1.4; color: var(--fp-text-muted); }
+
+/* ── DCF result card and dial ── */
+.dcf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  background: var(--fp-bg-card);
+}
+.dcf__nums { display: flex; flex-wrap: wrap; gap: 0.8rem 1.6rem; align-items: flex-end; }
+.dcf__fig { display: flex; flex-direction: column; gap: 0.1rem; font-variant-numeric: tabular-nums; }
+.dcf__fig span { font-size: 0.7rem; font-weight: 700; color: var(--fp-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.dcf__fig b { font-family: var(--fp-font-display); font-size: 1.5rem; font-weight: 500; color: var(--fp-text); }
+.dcf__fig.is-fair b { font-size: 1.9rem; }
+.dcf__fig.is-up b { color: var(--fp-green); }
+.dcf__fig.is-down b { color: var(--fp-red); }
+.dcf__fig small { font-size: 0.68rem; color: var(--fp-text-muted); }
+.dcf__verdict {
+  flex: 0 0 auto;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--fp-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--fp-bg-card);
+}
+.dcf__verdict.is-sig_under { background: var(--fp-series-green); }
+.dcf__verdict.is-under { background: var(--fp-series-lime); }
+.dcf__verdict.is-over { background: var(--fp-series-amber); }
+.dcf__verdict.is-sig_over { background: var(--fp-series-red); }
+.dcf__gauge { width: 100%; height: auto; }
+.gz-sig_under { fill: var(--fp-series-green); }
+.gz-under { fill: var(--fp-series-lime); }
+.gz-over { fill: var(--fp-series-amber); }
+.gz-sig_over { fill: var(--fp-series-red); }
+.dcf__needle { stroke: var(--fp-text); stroke-width: 3; stroke-linecap: round; }
+.dcf__hub { fill: var(--fp-text); }
+.dcf__glabel { font-size: 11px; fill: var(--fp-text-muted); }
+
+@media screen and (max-width: 44em) {
+  .dcf { grid-template-columns: 1fr; }
+  .dcf__gauge { max-width: 15rem; justify-self: center; }
+  .vrange__row {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    grid-template-areas: "name track" "val val" "ends ends";
+  }
+}

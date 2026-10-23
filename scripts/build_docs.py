@@ -43,7 +43,7 @@ from pathlib import Path
 # plotly) to inside its functions, and both of these modules are pure standard
 # library — so the docs build stays dependency-light and offline.
 from analysis.data import (fundamental_analytics, fundamentals,
-                          price_analytics, prices)
+                          intrinsic_value, price_analytics, prices)
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).resolve().parent.parent
@@ -443,7 +443,7 @@ LANG_TEXT = {
         "md_tabs_hint": (
             "<b>{n} tabs</b> — the rest of this page is behind them. "
             "Click to switch between price history, financial statements, "
-            "valuation and the raw data."
+            "valuation, intrinsic value and the raw data."
         ),
         "md_back_to_index": "← Back to Market Data",
         "md_more": "Full price history, financial statements & CSV downloads",
@@ -601,8 +601,217 @@ LANG_TEXT = {
             ("Volatility", "Standard deviation of daily returns, annualised. A measure of how far the price typically wanders, not of which direction."),
             ("CAGR", "Compound annual growth rate: the single yearly rate that turns the first close into the last."),
             ("Max drawdown", "The deepest peak-to-trough fall in the stored history — the worst loss a buy-and-hold holder would have sat through."),
+            ("EBITDA", "Earnings before interest, tax, depreciation and amortisation: operating income plus D&A. A rough proxy for cash earnings before financing choices."),
+            ("SBC", "Stock-based compensation: pay in shares rather than cash. A real cost to shareholders through dilution, though it never leaves the bank account."),
+            ("WACC", "Weighted average cost of capital: the return lenders and shareholders together require, weighted by how much of each funds the business."),
+            ("Beta", "How much a stock moves with the market: 1.5 means it has tended to move 1.5% for every 1% market move. Drives the cost of equity."),
+            ("DCF", "Discounted cash flow: the value today of future per-share earnings or cash flow, each year discounted by the required return."),
+            ("Margin of safety", "(Fair value − price) ÷ fair value. Positive means trading below the model's value; negative means above it."),
+            ("Reverse DCF", "The growth rate today's price implies, found by running the DCF backwards from the price."),
+            ("Altman Z-score", "A weighted mix of five balance-sheet and earnings ratios that predicts financial distress. Above 2.99 safe, below 1.81 distress."),
+            ("Piotroski F-score", "Nine pass/fail tests of profitability, leverage and efficiency, year over year. 7–9 is strong, 0–3 weak."),
+            ("Percentile rank", "The share of a multiple's own history at or below today's reading. 90 means dearer than nine periods in ten."),
         ],
         "g_avg": "avg",
+        # ── Annual / strength / intrinsic-value views (section 6c) ──
+        "md_tab_intrinsic": "🎯 Intrinsic value",
+        "ax_fiscal_year": "Fiscal year",
+        "f_annual": "Annual overview",
+        "f_annual_desc": (
+            "Each complete fiscal year side by side — the long view the quarterly charts "
+            "below break down. Hover a bar for its exact figure. A series the company "
+            "never reports (a dividend it does not pay) is left out rather than drawn at zero."
+        ),
+        "fa_rev": "Revenue, EBITDA & net income",
+        "fa_rev_note": (
+            "Sales, operating earnings before depreciation (EBITDA), and the bottom "
+            "line. The gap between the bars is where costs, interest and tax go."
+        ),
+        "fa_cash_debt": "Cash vs. debt",
+        "fa_cash_debt_note": (
+            "Cash and short-term investments against total borrowings at each fiscal "
+            "year end. Green taller than red is a net-cash balance sheet."
+        ),
+        "fa_cash_flow": "Cash flow, dividends & stock compensation",
+        "fa_cash_flow_note": (
+            "Operating cash flow, what is left after capex (free cash flow), accounting "
+            "profit, cash paid as dividends, and stock-based compensation — a real cost "
+            "that never touches cash, so it flatters cash flow."
+        ),
+        "fa_payout": "Shareholder returns",
+        "fa_payout_note": (
+            "Free cash flow against what went back to shareholders as dividends and "
+            "buybacks. Returning more than the business generates has to be funded "
+            "by debt or the cash pile."
+        ),
+        "fa_roic": "ROIC vs. WACC",
+        "fa_roic_note": (
+            "After-tax return on invested capital against the weighted average cost "
+            "of that capital, each year. The line is the spread: above zero the business "
+            "creates value on every dollar invested, below zero it destroys it."
+        ),
+        "l_revenue": "Revenue",
+        "l_ebitda": "EBITDA",
+        "l_net_income": "Net income",
+        "l_cash": "Cash",
+        "l_debt": "Debt",
+        "l_ocf": "Operating cash flow",
+        "l_fcf": "Free cash flow",
+        "l_dividends": "Dividends",
+        "l_sbc": "Stock-based comp.",
+        "l_buybacks": "Buybacks",
+        "l_roic": "ROIC %",
+        "l_wacc": "WACC %",
+        "l_spread": "ROIC − WACC",
+        "vr_title": "Valuation vs. its own history",
+        "vr_desc": (
+            "Each multiple at today's price, on a rail running from its lowest to its "
+            "highest TTM reading in the stored history. The tick is the median. Green "
+            "is the cheapest third of its history, red the dearest — relative to "
+            "itself, not to the market."
+        ),
+        "vr_rank": "above {n:.0f}% of its history",
+        "vr_median": "median",
+        "f_strength": "Financial strength",
+        "f_strength_desc": (
+            "Balance-sheet ratios on the latest twelve months, each marked strong / "
+            "fair / weak against a conventional screening threshold. The thresholds are "
+            "rules of thumb: a utility and a software company carry debt differently."
+        ),
+        "fs_cash_to_debt": "Cash-to-debt",
+        "fs_cash_to_debt_note": "Cash and short-term investments ÷ total debt. Above 1 could repay everything today.",
+        "fs_equity_to_asset": "Equity-to-asset",
+        "fs_equity_to_asset_note": "Shareholders' equity ÷ total assets — how much of the balance sheet is owned outright.",
+        "fs_debt_to_equity": "Debt-to-equity",
+        "fs_debt_to_equity_note": "Total debt ÷ shareholders' equity. Higher means more of the business is financed by lenders.",
+        "fs_debt_to_ebitda": "Debt-to-EBITDA",
+        "fs_debt_to_ebitda_note": "Years of EBITDA it would take to repay all debt. Lenders get nervous above 4.",
+        "fs_interest_coverage": "Interest coverage",
+        "fs_interest_coverage_note": "Operating income ÷ interest expense. Below 3 a bad year threatens the interest bill.",
+        "fs_current_ratio": "Current ratio",
+        "fs_current_ratio_note": "Current assets ÷ current liabilities: can the next twelve months' bills be paid?",
+        "fs_altman_z": "Altman Z-score",
+        "fs_altman_z_note": "Bankruptcy-risk score. Above 2.99 is Altman's safe zone, below 1.81 distress.",
+        "fs_piotroski": "Piotroski F-score",
+        "fs_piotroski_note": "Nine pass/fail tests of profitability, leverage and efficiency, this year against last.",
+        "fs_no_debt": "No debt",
+        "tone_good": "Strong",
+        "tone_fair": "Fair",
+        "tone_weak": "Weak",
+        "pio_title": "Piotroski F-score — the nine tests",
+        "pio_test": "Test (this year vs. last)",
+        "pio_result": "Passed",
+        "pio_roa_positive": "Return on assets is positive",
+        "pio_ocf_positive": "Operating cash flow is positive",
+        "pio_roa_improving": "Return on assets improved",
+        "pio_accruals": "Operating cash flow exceeds net income",
+        "pio_leverage_falling": "Long-term debt ÷ assets fell",
+        "pio_liquidity_improving": "Current ratio improved",
+        "pio_no_dilution": "Share count did not grow",
+        "pio_gross_margin_improving": "Gross margin improved",
+        "pio_asset_turnover_improving": "Asset turnover improved",
+        "iv_dcf": "DCF fair value",
+        "iv_dcf_desc": (
+            "A two-stage discounted cash flow on a per-share base: ten years at a "
+            "growth-stage rate taken from the company's own history, ten more at a "
+            "terminal rate, each year discounted back to today. It answers \"what "
+            "is this worth if the past decade's growth roughly continues?\" — not "
+            "\"what will it do?\""
+        ),
+        "iv_fair_value": "Fair value",
+        "iv_price": "Price",
+        "iv_mos": "Margin of safety",
+        "iv_ratio": "price ÷ fair value = {r:.2f}×",
+        "iv_verdict_sig_under": "Significantly undervalued",
+        "iv_verdict_under": "Modestly undervalued",
+        "iv_verdict_over": "Modestly overvalued",
+        "iv_verdict_sig_over": "Significantly overvalued",
+        "iv_gauge_under": "Undervalued",
+        "iv_gauge_over": "Overvalued",
+        "iv_input": "Input",
+        "iv_value": "Value",
+        "iv_basis": "Based on",
+        "iv_basis_eps": "EPS (diluted, TTM)",
+        "iv_basis_fcf": "Free cash flow per share (TTM)",
+        "iv_base": "Per-share base",
+        "iv_discount": "Discount rate",
+        "iv_growth_stage": "Growth stage",
+        "iv_terminal_stage": "Terminal stage",
+        "iv_stage": "{years} years at {rate}",
+        "iv_growth_src": "{years}Y {metric} CAGR",
+        "iv_growth_clamped": "clamped from {raw}",
+        "iv_growth_none": "no positive growth history; modelled flat",
+        "iv_growth_value": "Growth-stage value",
+        "iv_terminal_value": "Terminal-stage value",
+        "iv_no_base_title": "No DCF for a loss-making company",
+        "iv_negative_base": (
+            "Both trailing EPS and free cash flow per share are negative. Discounting a "
+            "loss forward does not produce a low fair value, it produces a meaningless "
+            "one, so none is shown. Price ÷ sales on the Valuation tab is the usable "
+            "yardstick until one of them turns positive."
+        ),
+        "iv_reverse": "Reverse DCF — what the price implies",
+        "iv_reverse_desc": (
+            "Run the same model backwards: the growth-stage rate at which fair value "
+            "equals today's price. Compare it with what the company has actually "
+            "delivered. An implied rate far above the history means the price needs "
+            "the future to be much better than the past."
+        ),
+        "iv_implied": "Price implies",
+        "iv_hist": "Actual",
+        "iv_beyond": "> 100% / yr",
+        "iv_sens": "Sensitivity",
+        "iv_sens_desc": (
+            "Fair value as the discount rate (rows) and growth-stage rate (columns) move "
+            "around the base case, in bold. Green cells are above today's price of "
+            "{price}, red below. If only the corner cells justify the price, so does "
+            "only an optimistic set of assumptions."
+        ),
+        "iv_sens_corner": "Discount ↓ · Growth →",
+        "iv_per_share": "Per-share data",
+        "iv_per_share_desc": (
+            "Compound annual growth over five, three and one fiscal years, then the "
+            "last three fiscal years and the trailing twelve months, every figure per "
+            "diluted share and split-adjusted. Price is the close on each fiscal year "
+            "end, so its growth is a price return."
+        ),
+        "ps_eps": "EPS (diluted)",
+        "ps_revenue": "Revenue / share",
+        "ps_operating_income": "Operating income / share",
+        "ps_ebitda": "EBITDA / share",
+        "ps_fcf": "Free cash flow / share",
+        "ps_dividends": "Dividends / share",
+        "ps_book_value": "Book value / share",
+        "ps_price": "Price",
+        "iv_wacc": "Cost of capital (WACC)",
+        "iv_wacc_desc": (
+            "What investors require for funding the business, weighted by how it is "
+            "funded. Equity's cost comes from CAPM, with beta measured on three years "
+            "of weekly returns against {proxy}; debt's from the interest it actually "
+            "paid, after tax."
+        ),
+        "w_rf": "Risk-free rate (10Y Treasury, assumed)",
+        "w_beta": "Beta",
+        "w_erp": "Equity risk premium (assumed)",
+        "w_ke": "Cost of equity",
+        "w_kd": "Cost of debt (pre-tax)",
+        "w_tax": "Tax rate",
+        "w_weights": "Weights: equity / debt",
+        "w_roic_above": (
+            "ROIC over the last twelve months is **{roic}**, above the **{wacc}** "
+            "WACC: each dollar reinvested earns more than it costs."
+        ),
+        "w_roic_below": (
+            "ROIC over the last twelve months is **{roic}**, below the **{wacc}** "
+            "WACC: at today's returns, growth that needs capital destroys value."
+        ),
+        "iv_unavailable": "Not enough reported history to value this company yet.",
+        "iv_disclaimer": (
+            "A DCF is a model, not a measurement. Every output on this tab moves with "
+            "its assumptions — the discount rate, the growth rate, the risk-free rate, "
+            "the equity risk premium — all printed beside the result so you can redo it "
+            "with your own. Not investment advice."
+        ),
         # ── Hub index pages, report meta bar ──
         "hub_tickers": "Tickers covered",
         "hub_reports": "Reports published",
@@ -858,7 +1067,7 @@ LANG_TEXT = {
         "md_tab_data": "📥 資料與名詞",
         "md_tabs_hint": (
             "<b>共 {n} 個分頁</b>——本頁其餘內容都在其中，"
-            "點擊即可在股價走勢、財務報表、估值與原始資料之間切換。"
+            "點擊即可在股價走勢、財務報表、估值、內在價值與原始資料之間切換。"
         ),
         "md_back_to_index": "← 返回市場數據",
         "md_more": "完整股價歷史、財務報表與 CSV 下載",
@@ -992,8 +1201,185 @@ LANG_TEXT = {
             ("波動度 Volatility", "日報酬標準差之年化值。衡量價格通常擺盪的幅度，而非方向。"),
             ("年化報酬率 CAGR", "將期初收盤價變為期末收盤價所需的單一年度複合成長率。"),
             ("最大回撤", "資料期間內最深的高點至低點跌幅——長期持有者實際承受過的最大虧損。"),
+            ("EBITDA", "稅息折舊攤銷前獲利：營業利益加上折舊攤銷，是融資決策前現金獲利的粗略替代指標。"),
+            ("股票酬勞 SBC", "以股票而非現金支付的薪酬。雖不經過銀行帳戶，但會透過稀釋成為股東的真實成本。"),
+            ("WACC（加權平均資金成本）", "債權人與股東合計要求的報酬率，依兩者各自出資的比例加權。"),
+            ("Beta", "股價隨大盤波動的程度：1.5 代表大盤每動 1%，它往往動 1.5%。決定股權成本。"),
+            ("DCF（現金流折現）", "未來每股盈餘或現金流以要求報酬率逐年折現後，在今天的價值。"),
+            ("安全邊際", "（合理價值 − 股價）÷ 合理價值。為正代表股價低於模型價值，為負代表高於。"),
+            ("反向 DCF", "從今日股價倒推 DCF，求出股價所隱含的成長率。"),
+            ("Altman Z 分數", "由五項資產負債表與獲利比率加權組成、用以預測財務危機的分數。高於 2.99 安全，低於 1.81 危險。"),
+            ("Piotroski F 分數", "針對獲利、槓桿與效率的九項逐年通過／未通過檢驗。7–9 分為強，0–3 分為弱。"),
+            ("百分位排名", "倍數自身歷史中低於或等於今日讀數的比例。90 代表比十個期間中的九個都貴。"),
         ],
         "g_avg": "平均",
+        # ── 年度／財務體質／內在價值 ──
+        "md_tab_intrinsic": "🎯 內在價值",
+        "ax_fiscal_year": "會計年度",
+        "f_annual": "年度總覽",
+        "f_annual_desc": (
+            "逐一並列每個完整會計年度——即下方季度圖表所拆解的長期視角。"
+            "滑鼠移到長條上可看到精確數字。公司從未申報的項目（例如不發放的股利）"
+            "會直接省略，而不是畫成零。"
+        ),
+        "fa_rev": "營收、EBITDA 與淨利",
+        "fa_rev_note": "營收、折舊前營業獲利（EBITDA）與最終淨利。長條之間的落差，就是成本、利息與稅負的去處。",
+        "fa_cash_debt": "現金 vs. 負債",
+        "fa_cash_debt_note": "各會計年度末的現金與短期投資，對照總借款。綠色高於紅色即為淨現金的資產負債表。",
+        "fa_cash_flow": "現金流、股利與股票酬勞",
+        "fa_cash_flow_note": (
+            "營運現金流、扣除資本支出後的自由現金流、會計淨利、以現金發放的股利，"
+            "以及股票酬勞——這是不經過現金的真實成本，因此會美化現金流。"
+        ),
+        "fa_payout": "股東回饋",
+        "fa_payout_note": "自由現金流對照以股利與庫藏股回饋股東的金額。回饋超過本業產生的現金，就必須靠舉債或動用現金部位支應。",
+        "fa_roic": "ROIC vs. WACC",
+        "fa_roic_note": (
+            "每年的稅後投入資本報酬率，對照該資本的加權平均成本。折線為兩者之差："
+            "高於零代表每投入一元都在創造價值，低於零則是在毀損價值。"
+        ),
+        "l_revenue": "營收",
+        "l_ebitda": "EBITDA",
+        "l_net_income": "淨利",
+        "l_cash": "現金",
+        "l_debt": "負債",
+        "l_ocf": "營運現金流",
+        "l_fcf": "自由現金流",
+        "l_dividends": "股利",
+        "l_sbc": "股票酬勞",
+        "l_buybacks": "庫藏股",
+        "l_roic": "ROIC %",
+        "l_wacc": "WACC %",
+        "l_spread": "ROIC − WACC",
+        "vr_title": "估值 vs. 自身歷史",
+        "vr_desc": (
+            "以今日股價計算的各項倍數，放在一條從資料期間內最低到最高近四季讀數的軌道上，"
+            "刻度為中位數。綠色代表處於自身歷史最便宜的三分之一，紅色則為最昂貴的三分之一——"
+            "這是與自己比較，而非與大盤比較。"
+        ),
+        "vr_rank": "高於歷史 {n:.0f}% 的時間",
+        "vr_median": "中位數",
+        "f_strength": "財務體質",
+        "f_strength_desc": (
+            "以近四季計算的資產負債表比率，各自依常見篩選門檻標示為強／中／弱。"
+            "門檻僅為經驗法則：公用事業與軟體公司承擔負債的方式本就不同。"
+        ),
+        "fs_cash_to_debt": "現金負債比",
+        "fs_cash_to_debt_note": "現金與短期投資 ÷ 總負債。大於 1 代表今天就能償還全部借款。",
+        "fs_equity_to_asset": "權益資產比",
+        "fs_equity_to_asset_note": "股東權益 ÷ 總資產——資產負債表中真正屬於股東的比例。",
+        "fs_debt_to_equity": "負債權益比",
+        "fs_debt_to_equity_note": "總負債 ÷ 股東權益。越高代表越多業務是由債權人出資。",
+        "fs_debt_to_ebitda": "負債 / EBITDA",
+        "fs_debt_to_ebitda_note": "以 EBITDA 償還全部負債所需的年數。超過 4 年債權人就會開始緊張。",
+        "fs_interest_coverage": "利息保障倍數",
+        "fs_interest_coverage_note": "營業利益 ÷ 利息費用。低於 3 倍時，一個壞年度就可能付不出利息。",
+        "fs_current_ratio": "流動比率",
+        "fs_current_ratio_note": "流動資產 ÷ 流動負債：未來十二個月的帳單付得出來嗎？",
+        "fs_altman_z": "Altman Z 分數",
+        "fs_altman_z_note": "破產風險分數。高於 2.99 為安全區，低於 1.81 為危險區。",
+        "fs_piotroski": "Piotroski F 分數",
+        "fs_piotroski_note": "針對獲利、槓桿與效率的九項通過／未通過檢驗，今年對比去年。",
+        "fs_no_debt": "無負債",
+        "tone_good": "強",
+        "tone_fair": "中",
+        "tone_weak": "弱",
+        "pio_title": "Piotroski F 分數——九項檢驗",
+        "pio_test": "檢驗項目（今年 vs. 去年）",
+        "pio_result": "通過",
+        "pio_roa_positive": "資產報酬率為正",
+        "pio_ocf_positive": "營運現金流為正",
+        "pio_roa_improving": "資產報酬率改善",
+        "pio_accruals": "營運現金流高於淨利",
+        "pio_leverage_falling": "長期負債 ÷ 資產下降",
+        "pio_liquidity_improving": "流動比率改善",
+        "pio_no_dilution": "股數未增加",
+        "pio_gross_margin_improving": "毛利率改善",
+        "pio_asset_turnover_improving": "資產周轉率改善",
+        "iv_dcf": "DCF 合理價值",
+        "iv_dcf_desc": (
+            "以每股數字為基礎的兩階段現金流折現：前十年以公司自身歷史推得的成長率成長，"
+            "再以永續成長率延續十年，每一年都折現回今天。它回答的是「如果過去十年的成長大致延續，"
+            "這家公司值多少？」——而不是「它將會如何表現？」"
+        ),
+        "iv_fair_value": "合理價值",
+        "iv_price": "股價",
+        "iv_mos": "安全邊際",
+        "iv_ratio": "股價 ÷ 合理價值 = {r:.2f}×",
+        "iv_verdict_sig_under": "顯著低估",
+        "iv_verdict_under": "略為低估",
+        "iv_verdict_over": "略為高估",
+        "iv_verdict_sig_over": "顯著高估",
+        "iv_gauge_under": "低估",
+        "iv_gauge_over": "高估",
+        "iv_input": "輸入",
+        "iv_value": "數值",
+        "iv_basis": "基準",
+        "iv_basis_eps": "稀釋 EPS（近四季）",
+        "iv_basis_fcf": "每股自由現金流（近四季）",
+        "iv_base": "每股基準值",
+        "iv_discount": "折現率",
+        "iv_growth_stage": "成長期",
+        "iv_terminal_stage": "永續期",
+        "iv_stage": "{years} 年，年成長 {rate}",
+        "iv_growth_src": "{years} 年{metric}年複合成長率",
+        "iv_growth_clamped": "原為 {raw}，已限制於上下限內",
+        "iv_growth_none": "無正成長歷史，以零成長建模",
+        "iv_growth_value": "成長期價值",
+        "iv_terminal_value": "永續期價值",
+        "iv_no_base_title": "虧損公司不適用 DCF",
+        "iv_negative_base": (
+            "近四季 EPS 與每股自由現金流皆為負值。將虧損往未來折現得到的不是偏低的合理價值，"
+            "而是沒有意義的數字，因此不予顯示。在其中一項轉正之前，估值頁籤上的股價營收比"
+            "才是可用的衡量標準。"
+        ),
+        "iv_reverse": "反向 DCF——股價隱含了什麼",
+        "iv_reverse_desc": (
+            "將同一個模型倒過來算：在什麼成長率之下，合理價值會剛好等於今日股價。"
+            "再拿它與公司實際交出的成績比較。隱含成長率遠高於歷史，代表股價需要未來比過去好上許多。"
+        ),
+        "iv_implied": "股價隱含成長",
+        "iv_hist": "實際",
+        "iv_beyond": "> 每年 100%",
+        "iv_sens": "敏感度分析",
+        "iv_sens_desc": (
+            "折現率（列）與成長期成長率（欄）在基準情境（粗體）附近變動時的合理價值。"
+            "綠色高於今日股價 {price}，紅色則低於。若只有角落的格子能支撐股價，"
+            "代表只有一組樂觀的假設才能支撐它。"
+        ),
+        "iv_sens_corner": "折現率 ↓ · 成長率 →",
+        "iv_per_share": "每股數據",
+        "iv_per_share_desc": (
+            "五年、三年與一年的年複合成長率，接著是最近三個會計年度與近四季，"
+            "所有數字皆為稀釋後每股、並已還原分割。股價為各會計年度末收盤價，因此其成長為價格報酬。"
+        ),
+        "ps_eps": "稀釋 EPS",
+        "ps_revenue": "每股營收",
+        "ps_operating_income": "每股營業利益",
+        "ps_ebitda": "每股 EBITDA",
+        "ps_fcf": "每股自由現金流",
+        "ps_dividends": "每股股利",
+        "ps_book_value": "每股淨值",
+        "ps_price": "股價",
+        "iv_wacc": "資金成本（WACC）",
+        "iv_wacc_desc": (
+            "投資人為提供資金所要求的報酬，依公司的資金結構加權。股權成本以 CAPM 計算，"
+            "beta 以三年週報酬對 {proxy} 衡量；負債成本則取實際支付的利息，並扣除稅盾。"
+        ),
+        "w_rf": "無風險利率（10 年期美債，假設值）",
+        "w_beta": "Beta",
+        "w_erp": "股權風險溢酬（假設值）",
+        "w_ke": "股權成本",
+        "w_kd": "負債成本（稅前）",
+        "w_tax": "稅率",
+        "w_weights": "權重：股權 / 負債",
+        "w_roic_above": "近四季 ROIC 為 **{roic}**，高於 **{wacc}** 的 WACC：每多投入一元，賺得比它的成本更多。",
+        "w_roic_below": "近四季 ROIC 為 **{roic}**，低於 **{wacc}** 的 WACC：以目前的報酬率，需要資本的成長反而會毀損價值。",
+        "iv_unavailable": "已申報的歷史資料尚不足以評估這家公司。",
+        "iv_disclaimer": (
+            "DCF 是模型，不是量測。本頁籤的每一個結果都隨假設而變動——折現率、成長率、"
+            "無風險利率、股權風險溢酬——全部列於結果旁，方便你以自己的假設重算。非投資建議。"
+        ),
     }
 }
 
@@ -3366,9 +3752,15 @@ _FUND_ROWS_CACHE: "dict[str, list[dict]]" = {}
 
 
 def fundamental_rows(key: str) -> "list[dict]":
-    """Parsed store rows for one ticker, read at most once per build."""
+    """Parsed store rows for one ticker, read at most once per build.
+
+    Per-share figures are split-adjusted against the price store's split events
+    (fundamental_analytics.split_adjust) so every page divides a split-adjusted
+    price by a split-adjusted EPS. The CSV download is the store as filed.
+    """
     if key not in _FUND_ROWS_CACHE:
-        _FUND_ROWS_CACHE[key] = fundamentals.load_store(key, FUNDAMENTALS_DIR)
+        _FUND_ROWS_CACHE[key] = fundamental_analytics.split_adjust(
+            fundamentals.load_store(key, FUNDAMENTALS_DIR), store_bars(key))
     return _FUND_ROWS_CACHE[key]
 
 
@@ -3389,7 +3781,8 @@ def _derived_series(rows: "list[dict]", fn, key: str) -> "list[dict]":
 
 
 def fundamentals_payload_dict(key: str, rows: "list[dict]",
-                              bars: "list[dict]") -> dict:
+                              bars: "list[dict]",
+                              market_bars: "list[dict] | None" = None) -> dict:
     """Every series the financial charts draw, in one payload.
 
     Returned as a dict so the page builder can read the same series back — the
@@ -3399,6 +3792,10 @@ def fundamentals_payload_dict(key: str, rows: "list[dict]",
     quarters: a margin is meaningful either way, but a P/E built on one
     quarter's earnings would be four times too high, and a seasonal business's
     quarterly margin swings would drown the trend.
+
+    ``market_bars`` is the broad-market store (MARKET_PROXY) a beta is measured
+    against. Without it there is no WACC, and the ROIC-vs-WACC chart and the
+    WACC table are left off the page rather than drawn half-empty.
     """
     ttm = fundamental_analytics.ttm_series(rows)
     valuation = fundamental_analytics.valuation_series(rows, bars)
@@ -3460,6 +3857,19 @@ def fundamentals_payload_dict(key: str, rows: "list[dict]",
             payload[f"pe_band_{i}"] = bands["bands"][str(level)]
         payload["pe_levels"] = bands["levels"]
 
+    # Annual, strength and intrinsic-value views (section 6c).
+    annual = fundamental_analytics.annual_series(rows)
+    payload["annual"] = annual_payload(annual)
+    if bars:
+        latest = fundamental_analytics.ttm(rows)
+        today = (fundamental_analytics.multiples(latest, float(bars[-1]["close"]))
+                 if latest else None)
+        payload["valuation_ranges"] = fundamental_analytics.valuation_ranges(
+            valuation, today, bars[-1]["date"])
+        payload["roic_wacc"] = (intrinsic_value.roic_wacc_series(
+            annual, bars, market_bars) if market_bars else [])
+        payload["intrinsic"] = intrinsic_value.model(rows, bars, market_bars)
+
     return payload
 
 
@@ -3483,6 +3893,523 @@ def _money(v: "float | None") -> str:
 
 def _mult(v: "float | None") -> str:
     return "—" if v is None else f"{v:,.1f}×"
+
+
+# ── 6c. Annual, strength and intrinsic-value views ───────────────────────────
+# The GuruFocus-style additions to a Market Data page (docs/PRICE_STORE_DESIGN.md
+# §13): annual grouped-bar charts, where each multiple sits in its own history,
+# a financial-strength scorecard, and a DCF with its reverse and its
+# sensitivity grid.
+#
+# All of it is static HTML/SVG with every coordinate computed here, for the same
+# reason the report hero is: it renders with JS off and cannot disagree with the
+# numbers in fundamentals.json. Lightweight Charts has no grouped bars anyway —
+# overlapping histograms hide the smaller series behind the larger.
+
+# The broad-market price store a beta is measured against.
+MARKET_PROXY = "vti"
+
+
+def annual_payload(annual: "list[dict]") -> dict:
+    """Fiscal-year columns for the annual charts, aligned by index.
+
+    None where a year lacks the figure, so a chart leaves a gap rather than
+    drawing a zero-height bar that reads as "nothing".
+    """
+    fa = fundamental_analytics
+    cols: "dict[str, list]" = {"fy": [e["fy"] for e in annual],
+                               "period_end": [e["period_end"] for e in annual]}
+    for m in ("revenue", "net_income", "ocf", "sbc", "dividends_paid", "buybacks"):
+        cols[m] = [e.get(m) for e in annual]
+    cols["ebitda"] = [fa.ebitda(e) for e in annual]
+    cols["fcf"] = [fa.free_cash_flow(e) for e in annual]
+    cols["cash"] = [fa._add(e.get("cash_and_equiv"), e.get("short_term_investments"))
+                    for e in annual]
+    cols["debt"] = [fa.total_debt(e) for e in annual]
+    return cols
+
+
+def _nice_ticks(lo: float, hi: float, target: int = 5) -> "list[float]":
+    """Round axis ticks spanning lo…hi, on a 1 / 2 / 2.5 / 5 × 10ⁿ step."""
+    raw = (hi - lo) / (target - 1)
+    mag = 10 ** math.floor(math.log10(raw))
+    step = next(m * mag for m in (1, 2, 2.5, 5, 10) if m * mag >= raw)
+    start = math.floor(lo / step) * step
+    count = round((math.ceil(hi / step) * step - start) / step)
+    return [round(start + i * step, 9) for i in range(count + 1)]
+
+
+def _tick_label(v: float, fmt: str) -> str:
+    """Axis text: $30B / -$5B / 20%. Shorter than _money(), which is for values."""
+    if fmt == "percent":
+        return f"{v:g}%"
+    sign, a = ("-" if v < 0 else ""), abs(v)
+    for unit, size in (("T", 1e12), ("B", 1e9), ("M", 1e6), ("K", 1e3)):
+        if a >= size:
+            return f"{sign}${round(a / size, 2):g}{unit}"
+    return f"{sign}${a:g}"
+
+
+def _value_label(v: float, fmt: str) -> str:
+    return f"{v:.1f}%" if fmt == "percent" else _money(v)
+
+
+def annual_bars_svg(cats: "list[str]", series: "list[tuple]",
+                    line: "tuple | None" = None, fmt: str = "money") -> str:
+    """Grouped bars, one group per fiscal year, as an inline SVG.
+
+    ``series`` is ``[(label, colour, values)]`` with values aligned to ``cats``;
+    ``line`` is one more such tuple drawn as a polyline over the bars on the
+    same axis (ROIC − WACC). The y axis always includes zero, so a loss hangs
+    below the baseline instead of being clipped. Returns '' when there is
+    nothing to draw. Every bar carries a <title> with its exact value.
+    """
+    values = [v for _, _, vs in series for v in vs if v is not None]
+    if line:
+        values += [v for v in line[2] if v is not None]
+    if not cats or not values:
+        return ""
+    lo, hi = min(0.0, min(values)), max(0.0, max(values))
+    if hi == lo:
+        return ""
+    ticks = _nice_ticks(lo, hi)
+    bottom, top = ticks[0], ticks[-1]
+    W, H, L, R, T, B = 600, 260, 70, 12, 12, 30
+
+    def y(v: float) -> float:
+        return T + (top - v) / (top - bottom) * (H - T - B)
+
+    gw = (W - L - R) / len(cats)
+    bw = gw * 0.8 / len(series)
+    y0 = y(0.0)
+    out = [f'<svg class="fbars__svg" viewBox="0 0 {W} {H}" '
+           f'preserveAspectRatio="xMidYMid meet" aria-hidden="true">']
+    for tk in ticks:
+        out.append(f'<line class="fbars__grid{" is-zero" if tk == 0 else ""}" '
+                   f'x1="{L}" x2="{W - R}" y1="{y(tk):.1f}" y2="{y(tk):.1f}"/>')
+        out.append(f'<text class="fbars__tick" x="{L - 6}" y="{y(tk) + 4:.1f}" '
+                   f'text-anchor="end">{_esc(_tick_label(tk, fmt))}</text>')
+    for i, cat in enumerate(cats):
+        for j, (label, colour, vs) in enumerate(series):
+            v = vs[i]
+            if v is None:
+                continue
+            x = L + i * gw + gw * 0.1 + j * bw
+            yv = y(v)
+            out.append(
+                f'<rect class="fs-{colour}" x="{x:.1f}" y="{min(yv, y0):.1f}" '
+                f'width="{bw * 0.86:.1f}" height="{max(abs(yv - y0), 0.6):.1f}">'
+                f'<title>{_esc(cat)} · {_esc(label)}: {_esc(_value_label(v, fmt))}'
+                f'</title></rect>')
+        out.append(f'<text class="fbars__cat" x="{L + i * gw + gw / 2:.1f}" '
+                   f'y="{H - 8}" text-anchor="middle">{_esc(cat)}</text>')
+    if line:
+        label, colour, vs = line
+        pts = [(L + i * gw + gw / 2, y(v), v, cats[i])
+               for i, v in enumerate(vs) if v is not None]
+        if len(pts) > 1:
+            out.append(f'<polyline class="fl-{colour}" points="'
+                       + " ".join(f"{x:.1f},{yy:.1f}" for x, yy, _, _ in pts)
+                       + '"/>')
+        for x, yy, v, cat in pts:
+            out.append(f'<circle class="fl-{colour}" cx="{x:.1f}" cy="{yy:.1f}" r="3.2">'
+                       f'<title>{_esc(cat)} · {_esc(label)}: '
+                       f'{_esc(_value_label(v, fmt))}</title></circle>')
+    out.append("</svg>")
+    return "".join(out)
+
+
+def annual_chart(*, title: str, note: str, cats: "list[str]",
+                 series: "list[tuple]", line: "tuple | None" = None,
+                 fmt: str = "money", ylabel: str = "", xlabel: str = "") -> str:
+    """One annual grouped-bar card, framed like a price-charts.js card.
+
+    A single line of raw HTML: Markdown ends a raw block at the first blank
+    line, and the card sits inside an indented content tab. Series that are
+    empty for every year (a company that never paid a dividend) are dropped
+    from both the bars and the legend.
+    """
+    series = [s for s in series if any(v is not None for v in s[2])]
+    if line and not any(v is not None for v in line[2]):
+        line = None
+    svg = annual_bars_svg(cats, series, line, fmt) if series else ""
+    if not svg:
+        return ""
+    keys = "".join(f'<span class="pchart__key"><i class="fs-{c}"></i>{_esc(lbl)}</span>'
+                   for lbl, c, _ in series)
+    if line:
+        keys += (f'<span class="pchart__key"><i class="fs-{line[1]} is-line"></i>'
+                 f'{_esc(line[0])}</span>')
+    span = f"{cats[0]} – {cats[-1]}"
+    return (
+        f'<div class="pchart fbars" role="figure" aria-label="{_esc(title)}">'
+        f'<div class="pchart__head"><span class="pchart__title">{_esc(title)}</span>'
+        f'<span class="pchart__legend">{keys}</span></div>'
+        f'<p class="pchart__note">{_esc(note)}</p>'
+        f'<div class="pchart__plot">'
+        f'<span class="pchart__ylab pchart__ylab--left">{_esc(ylabel)}</span>'
+        f'<div class="fbars__scroll">{svg}</div></div>'
+        f'<div class="pchart__foot"><span class="pchart__xlab">{_esc(xlabel)}</span>'
+        f'<span class="pchart__span">{_esc(span)}</span></div></div>'
+    )
+
+
+def annual_block(payload: dict, lang: str) -> "list[str]":
+    """GuruFocus's Financials grid: five annual charts, two to a row."""
+    a = payload.get("annual") or {}
+    if not a.get("fy"):
+        return []
+    # Two-digit years: at half the content width a four-digit label per group
+    # collides with its neighbours.
+    cats = [f"FY{fy % 100:02d}" for fy in a["fy"]]
+    usd, fy_axis = t(lang, "ax_usd"), t(lang, "ax_fiscal_year")
+
+    def L(key: str) -> str:  # keeps each series tuple on one line
+        return t(lang, key)
+
+    cards = [
+        annual_chart(title=L("fa_rev"), note=L("fa_rev_note"), cats=cats,
+                     series=[(L("l_revenue"), "blue", a["revenue"]),
+                             (L("l_ebitda"), "amber", a["ebitda"]),
+                             (L("l_net_income"), "green", a["net_income"])],
+                     ylabel=usd, xlabel=fy_axis),
+        annual_chart(title=L("fa_cash_debt"), note=L("fa_cash_debt_note"),
+                     cats=cats,
+                     series=[(L("l_cash"), "green", a["cash"]),
+                             (L("l_debt"), "red", a["debt"])],
+                     ylabel=usd, xlabel=fy_axis),
+        annual_chart(title=L("fa_cash_flow"), note=L("fa_cash_flow_note"),
+                     cats=cats,
+                     series=[(L("l_ocf"), "amber", a["ocf"]),
+                             (L("l_fcf"), "blue", a["fcf"]),
+                             (L("l_net_income"), "green", a["net_income"]),
+                             (L("l_dividends"), "violet", a["dividends_paid"]),
+                             (L("l_sbc"), "pink", a["sbc"])],
+                     ylabel=usd, xlabel=fy_axis),
+        annual_chart(title=L("fa_payout"), note=L("fa_payout_note"), cats=cats,
+                     series=[(L("l_fcf"), "blue", a["fcf"]),
+                             (L("l_dividends"), "violet", a["dividends_paid"]),
+                             (L("l_buybacks"), "teal", a["buybacks"])],
+                     ylabel=usd, xlabel=fy_axis),
+    ]
+    rw = payload.get("roic_wacc") or []
+    if rw:
+        cards.append(annual_chart(
+            title=L("fa_roic"), note=L("fa_roic_note"),
+            cats=[f"FY{p['fy'] % 100:02d}" for p in rw],
+            series=[(L("l_roic"), "green", [p["roic"] for p in rw]),
+                    (L("l_wacc"), "red", [p["wacc"] for p in rw])],
+            line=(L("l_spread"), "ink", [p["spread"] for p in rw]),
+            fmt="percent", ylabel=t(lang, "ax_pct_plain"), xlabel=fy_axis))
+    cards = [c for c in cards if c]
+    if not cards:
+        return []
+    return [f"### {L('f_annual')}", "", L("f_annual_desc"), "",
+            '<div class="fgrid">' + "".join(cards) + "</div>", ""]
+
+
+# ── where each multiple sits in its own history ─────────────────────────────
+VALUATION_LABELS = (("pe", "P/E"), ("ps", "P/S"), ("pb", "P/B"),
+                    ("ev_sales", "EV/Sales"), ("ev_ebitda", "EV/EBITDA"))
+
+
+def valuation_range_block(ranges: dict, lang: str) -> "list[str]":
+    """One rail per multiple: its historical min…max, the median as a tick and
+    today's multiple as a dot — GuruFocus's valuation-rank bars.
+
+    A current multiple outside its own history (dearer than ever) is pinned to
+    the end of the rail and flagged, rather than stretching the rail so every
+    other mark collapses into one end of it.
+    """
+    rows = []
+    for key, label in VALUATION_LABELS:
+        r = (ranges or {}).get(key)
+        if not r:
+            continue
+        lo, hi = r["min"], r["max"]
+        span = (hi - lo) or 1.0
+
+        def at(v: float) -> float:
+            return max(0.0, min(100.0, (v - lo) / span * 100.0))
+
+        rank = r["rank"]
+        tone = "is-cheap" if rank <= 30 else "is-dear" if rank >= 70 else ""
+        out = " is-out" if not lo <= r["current"] <= hi else ""
+        rows.append(
+            f'<div class="vrange__row">'
+            f'<span class="vrange__name">{label}</span>'
+            f'<span class="vrange__track">'
+            f'<span class="vrange__fill" style="width:{at(r["current"]):.1f}%"></span>'
+            f'<span class="vrange__med" style="left:{at(r["median"]):.1f}%" '
+            f'title="{_esc(t(lang, "vr_median"))} {_mult(r["median"])}"></span>'
+            f'<span class="vrange__now{out}" style="left:{at(r["current"]):.1f}%"></span>'
+            f'</span>'
+            f'<span class="vrange__val"><b>{_mult(r["current"])}</b> '
+            f'<i class="{tone}">{_esc(t(lang, "vr_rank").format(n=rank))}</i></span>'
+            f'<span class="vrange__ends">{_mult(lo)} – {_mult(hi)} · '
+            f'{_esc(t(lang, "vr_median"))} {_mult(r["median"])}</span>'
+            f'</div>')
+    if not rows:
+        return []
+    return [f"### {t(lang, 'vr_title')}", "", t(lang, "vr_desc"), "",
+            '<div class="vrange">' + "".join(rows) + "</div>", ""]
+
+
+# ── financial strength ───────────────────────────────────────────────────────
+STRENGTH_KEYS = ("cash_to_debt", "equity_to_asset", "debt_to_equity",
+                 "debt_to_ebitda", "interest_coverage", "current_ratio",
+                 "altman_z", "piotroski")
+DEBT_RATIOS = ("cash_to_debt", "debt_to_equity", "debt_to_ebitda")
+
+
+def strength_block(fstats: dict, lang: str) -> "list[str]":
+    """The Financial Strength scorecard: eight ratios, each with its value,
+    a strong / fair / weak tone (fundamental_analytics.STRENGTH_ZONES) and one
+    line on what it measures, then the Piotroski tests behind the F-score."""
+    fa = fundamental_analytics
+    s = dict(fstats.get("strength_ttm") or {})
+    s["altman_z"] = fstats.get("altman_z")
+    pio = fstats.get("piotroski")
+    if not any(v is not None for v in s.values()) and not pio:
+        return []
+    no_debt = not s.get("debt")
+
+    items = []
+    for key in STRENGTH_KEYS:
+        value, tone_value = s.get(key), s.get(key)
+        if key == "piotroski":
+            if not pio or not pio["tested"]:
+                value = tone_value = None
+                shown = "—"
+            else:
+                tone_value = pio["score"] / pio["tested"]
+                shown = f'{pio["score"]} / {pio["tested"]}'
+        elif key in DEBT_RATIOS and no_debt:
+            shown, tone_value = t(lang, "fs_no_debt"), None
+        elif value is None:
+            shown = "—"
+        elif key == "interest_coverage":
+            shown = _mult(value)
+        else:
+            shown = _num(value)
+        tone = fa.strength_tone(key, tone_value)
+        if key in DEBT_RATIOS and no_debt:
+            tone = "good"
+        items.append(
+            f'<div class="fscore__item{f" is-{tone}" if tone else ""}">'
+            f'<span class="fscore__name">{_esc(t(lang, f"fs_{key}"))}</span>'
+            f'<b class="fscore__val">{_esc(shown)}</b>'
+            f'<span class="fscore__tone">{_esc(t(lang, f"tone_{tone}")) if tone else ""}</span>'
+            f'<span class="fscore__note">{_esc(t(lang, f"fs_{key}_note"))}</span>'
+            f'</div>')
+    body = [f"### {t(lang, 'f_strength')}", "", t(lang, "f_strength_desc"), "",
+            '<div class="fscore">' + "".join(items) + "</div>", ""]
+
+    if pio:
+        mark = {True: "✅", False: "❌", None: "—"}
+        body += [f'??? note "{t(lang, "pio_title")}"', "",
+                 f"    | {t(lang, 'pio_test')} | {t(lang, 'pio_result')} |",
+                 "    |---|---|"]
+        body += [f"    | {t(lang, f'pio_{k}')} | {mark[pio['tests'].get(k)]} |"
+                 for k in fa.PIOTROSKI_TESTS]
+        body.append("")
+    return body
+
+
+# ── intrinsic value ──────────────────────────────────────────────────────────
+GAUGE_ZONES = ((0.0, 0.7, "sig_under"), (0.7, 1.0, "under"),
+               (1.0, 1.3, "over"), (1.3, 2.0, "sig_over"))
+
+
+def dcf_gauge(price: float, fair: float, lang: str) -> str:
+    """Half-dial of price ÷ fair value, 0 → 2, with the needle on today.
+
+    The four bands are intrinsic_value.VERDICT_BANDS. A ratio past 2× pins the
+    needle to the right-hand stop; the figure itself is printed under the dial.
+    """
+    cx, cy, ro, ri = 120.0, 112.0, 100.0, 70.0
+
+    def xy(v: float, r: float) -> "tuple[float, float]":
+        a = math.pi * (1 - v / 2.0)
+        return cx + r * math.cos(a), cy - r * math.sin(a)
+
+    def pt(v: float, r: float) -> str:
+        return "{:.1f},{:.1f}".format(*xy(v, r))
+
+    arcs = "".join(
+        f'<path class="gz-{key}" d="M{pt(a, ro)} A{ro:g},{ro:g} 0 0 1 {pt(b, ro)} '
+        f'L{pt(b, ri)} A{ri:g},{ri:g} 0 0 0 {pt(a, ri)} Z"/>'
+        for a, b, key in GAUGE_ZONES)
+    ratio = price / fair
+    nx, ny = xy(max(0.0, min(2.0, ratio)), ro - 6)
+    return (
+        f'<svg class="dcf__gauge" viewBox="0 0 240 132" role="img" '
+        f'aria-label="{_esc(t(lang, "iv_ratio").format(r=ratio))}">{arcs}'
+        f'<line class="dcf__needle" x1="{cx:g}" y1="{cy:g}" '
+        f'x2="{nx:.1f}" y2="{ny:.1f}"/>'
+        f'<circle class="dcf__hub" cx="{cx:g}" cy="{cy:g}" r="5"/>'
+        f'<text class="dcf__glabel" x="14" y="128">{_esc(t(lang, "iv_gauge_under"))}</text>'
+        f'<text class="dcf__glabel" x="226" y="128" text-anchor="end">'
+        f'{_esc(t(lang, "iv_gauge_over"))}</text></svg>')
+
+
+def dcf_card(m: dict, lang: str) -> str:
+    """Fair value, price, margin of safety and the dial, as one raw-HTML line."""
+    b = m["bases"][m["primary"]]
+    fair, price, mos = b["fair_value"], m["price"], b["margin_of_safety"]
+    tone = "is-up" if mos >= 0 else "is-down"
+    return (
+        '<div class="dcf">'
+        '<div class="dcf__nums">'
+        f'<div class="dcf__fig is-fair"><span>{_esc(t(lang, "iv_fair_value"))}</span>'
+        f'<b>{_fmt_money(fair)}</b>'
+        f'<small>{_esc(t(lang, "iv_basis_" + m["primary"]))}</small></div>'
+        f'<div class="dcf__fig"><span>{_esc(t(lang, "iv_price"))}</span>'
+        f'<b>{_fmt_money(price)}</b><small>{_esc(m["price_date"])}</small></div>'
+        f'<div class="dcf__fig {tone}"><span>{_esc(t(lang, "iv_mos"))}</span>'
+        f'<b>{mos:+.1f}%</b>'
+        f'<small>{_esc(t(lang, "iv_ratio").format(r=price / fair))}</small></div>'
+        f'<span class="dcf__verdict is-{b["verdict"]}">'
+        f'{_esc(t(lang, "iv_verdict_" + b["verdict"]))}</span>'
+        '</div>'
+        f'{dcf_gauge(price, fair, lang)}'
+        '</div>'
+    )
+
+
+def _rate(v: "float | None", digits: int = 1) -> str:
+    """A fraction as a percentage: 0.194 → 19.4%."""
+    return "—" if v is None else f"{v * 100:.{digits}f}%"
+
+
+def _growth_source(g: dict, lang: str) -> str:
+    if g.get("metric") is None:
+        return t(lang, "iv_growth_none")
+    src = t(lang, "iv_growth_src").format(
+        years=g["years"], metric=t(lang, f"ps_{g['metric']}"))
+    if g["raw"] is not None and abs(g["raw"] - g["rate"]) > 1e-9:
+        src += " — " + t(lang, "iv_growth_clamped").format(raw=_rate(g["raw"]))
+    return src
+
+
+def _intrinsic_tab(payload: dict, fstats: "dict | None", lang: str) -> "list[str]":
+    """DCF, reverse DCF, sensitivity, per-share growth and WACC — GuruFocus's
+    DCF page, with every assumption printed next to what it produced."""
+    m = payload.get("intrinsic")
+    if not m:
+        return [t(lang, "iv_unavailable"), ""]
+    a, g = m["assumptions"], m["growth"]
+    body = [f"### {t(lang, 'iv_dcf')}", "", t(lang, "iv_dcf_desc"), ""]
+
+    primary = m["primary"]
+    if primary:
+        b = m["bases"][primary]
+        body += [
+            dcf_card(m, lang), "",
+            f"| {t(lang, 'iv_input')} | {t(lang, 'iv_value')} |",
+            "|---|---|",
+            f"| {t(lang, 'iv_basis')} | {t(lang, 'iv_basis_' + primary)}: "
+            f"**{_fmt_money(b['base'])}** |",
+            f"| {t(lang, 'iv_discount')} | {_rate(a['discount_rate'])} |",
+            f"| {t(lang, 'iv_growth_stage')} | "
+            f"{t(lang, 'iv_stage').format(years=a['growth_years'], rate=_rate(g['rate']))}"
+            f" ({_growth_source(g, lang)}) |",
+            f"| {t(lang, 'iv_terminal_stage')} | "
+            f"{t(lang, 'iv_stage').format(years=a['terminal_years'], rate=_rate(a['terminal_growth']))} |",
+            f"| {t(lang, 'iv_growth_value')} | {_fmt_money(b['growth_value'])} |",
+            f"| {t(lang, 'iv_terminal_value')} | {_fmt_money(b['terminal_value'])} |",
+            f"| **{t(lang, 'iv_fair_value')}** | **{_fmt_money(b['fair_value'])}** |",
+            "",
+        ]
+    else:
+        body += [f'!!! info "{t(lang, "iv_no_base_title")}"', "",
+                 f"    {t(lang, 'iv_negative_base')}", ""]
+
+    # Both bases side by side, with what today's price implies for each.
+    per = m["per_share"]["rows"]
+    body += [f"### {t(lang, 'iv_reverse')}", "", t(lang, "iv_reverse_desc"), "",
+             f"| {t(lang, 'iv_basis')} | {t(lang, 'iv_base')} | "
+             f"{t(lang, 'iv_fair_value')} | {t(lang, 'iv_mos')} | "
+             f"{t(lang, 'iv_implied')} | {t(lang, 'iv_hist')} 5Y | "
+             f"{t(lang, 'iv_hist')} 3Y |",
+             "|---|---|---|---|---|---|---|"]
+    for basis in ("eps", "fcf"):
+        b = m["bases"][basis]
+        hist = per["eps" if basis == "eps" else "fcf"]["cagr"]
+        implied = b["implied_growth"]
+        implied_txt = ("—" if b["base"] is None or b["base"] <= 0
+                       else f"**{_rate(implied)}**" if implied is not None
+                       else t(lang, "iv_beyond"))
+        body.append(
+            f"| {t(lang, 'iv_basis_' + basis)} | "
+            f"{'—' if b['base'] is None else _fmt_money(b['base'])} | "
+            f"{'—' if b['fair_value'] is None else _fmt_money(b['fair_value'])} | "
+            f"{_pct_cell(b['margin_of_safety'], 1)} | {implied_txt} | "
+            f"{_pct_cell(None if hist[5] is None else hist[5] * 100, 1)} | "
+            f"{_pct_cell(None if hist[3] is None else hist[3] * 100, 1)} |")
+    body.append("")
+
+    sens = m.get("sensitivity")
+    if sens:
+        price = m["price"]
+        body += [f"### {t(lang, 'iv_sens')}", "",
+                 t(lang, "iv_sens_desc").format(price=_fmt_money(price)), "",
+                 f"| {t(lang, 'iv_sens_corner')} | "
+                 + " | ".join(_rate(gr) for gr in sens["growth_rates"]) + " |",
+                 "|---|" + "---|" * len(sens["growth_rates"])]
+        for d, row in zip(sens["discount_rates"], sens["values"]):
+            cells = []
+            for gr, v in zip(sens["growth_rates"], row):
+                cls = "pos" if v >= price else "neg"
+                txt = f'<span class="{cls}">{_fmt_money(v)}</span>'
+                # growth_rates are rounded to 4 dp; the base-case rate is not.
+                if (abs(d - a["discount_rate"]) < 1e-9
+                        and abs(gr - round(g["rate"], 4)) < 1e-9):
+                    txt = f"**{txt}**"
+                cells.append(txt)
+            body.append(f"| **{_rate(d)}** | " + " | ".join(cells) + " |")
+        body.append("")
+
+    # Per-share data, GuruFocus's right-hand panel.
+    ps = m["per_share"]
+    fys = ps["fiscal_years"]
+    body += [f"### {t(lang, 'iv_per_share')}", "", t(lang, "iv_per_share_desc"), "",
+             f"| {t(lang, 'p_metric')} | 5Y | 3Y | 1Y | "
+             + " | ".join(f"FY{fy}" for fy in fys) + f" | {t(lang, 'f_ttm')} |",
+             "|---|---|---|---|" + "---|" * len(fys) + "---|"]
+    for metric in intrinsic_value.PER_SHARE + ("price",):
+        r = ps["rows"][metric]
+        if all(v is None for _, v in r["years"]) and r["ttm"] is None:
+            continue
+        growth = [_pct_cell(None if r["cagr"][n] is None else r["cagr"][n] * 100, 1)
+                  for n in intrinsic_value.GROWTH_WINDOWS]
+        values = [_num(v) for _, v in r["years"]]
+        body.append(f"| {t(lang, f'ps_{metric}')} | " + " | ".join(growth) + " | "
+                    + " | ".join(values) + f" | {_num(r['ttm'])} |")
+    body.append("")
+
+    w = m.get("wacc")
+    if w:
+        roic = ((fstats or {}).get("returns_ttm") or {}).get("roic")
+        body += [f"### {t(lang, 'iv_wacc')}", "", t(lang, "iv_wacc_desc").format(
+                     proxy=MARKET_PROXY.upper()), "",
+                 f"| {t(lang, 'iv_input')} | {t(lang, 'iv_value')} |", "|---|---|",
+                 f"| {t(lang, 'w_rf')} | {_rate(w['risk_free'], 2)} |",
+                 f"| {t(lang, 'w_beta')} | {w['beta']:.2f} |",
+                 f"| {t(lang, 'w_erp')} | {_rate(w['erp'], 2)} |",
+                 f"| {t(lang, 'w_ke')} | {_rate(w['cost_equity'], 2)} |",
+                 f"| {t(lang, 'w_kd')} | {_rate(w['cost_debt'], 2)} |",
+                 f"| {t(lang, 'w_tax')} | {_rate(w['tax_rate'], 1)} |",
+                 f"| {t(lang, 'w_weights')} | {_rate(w['weight_equity'], 1)} / "
+                 f"{_rate(w['weight_debt'], 1)} |",
+                 f"| **WACC** | **{_rate(w['wacc'], 2)}** |", ""]
+        if roic is not None:
+            key = "w_roic_above" if roic >= w["wacc"] * 100 else "w_roic_below"
+            body += [t(lang, key).format(roic=_pct_plain(roic, 1),
+                                         wacc=_rate(w["wacc"])), ""]
+
+    body += _disclaimer_block(lang, "iv_disclaimer")
+    return body
 
 
 # ── 6b. docs/data → the merged Market Data section ───────────────────────────
@@ -3681,9 +4608,10 @@ def _price_tab(bars: "list[dict]", analytics: dict, lang: str) -> "list[str]":
     return body
 
 
-def _financials_tab(lang: str) -> "list[str]":
-    """Statements and profitability. Every card names its axes and says in one
-    line what it is showing, so the page reads without prior vocabulary."""
+def _financials_tab(payload: dict, fstats: dict, lang: str) -> "list[str]":
+    """Annual overview, statements, profitability and financial strength. Every
+    card names its axes and says in one line what it is showing, so the page
+    reads without prior vocabulary."""
     src = "fundamentals.json"
     quarter, usd, pct = (t(lang, "ax_quarter"), t(lang, "ax_usd"),
                          t(lang, "ax_pct"))
@@ -3696,7 +4624,7 @@ def _financials_tab(lang: str) -> "list[str]":
             fmt2="percent", note=note, ylabel=usd, ylabel2=growth,
             xlabel=quarter)
 
-    return [
+    return annual_block(payload, lang) + [
         f"### {t(lang, 'f_statements')}",
         "",
         money_and_growth("revenue,revenue_yoy", t(lang, "f_revenue"),
@@ -3758,7 +4686,7 @@ def _financials_tab(lang: str) -> "list[str]":
                      color="green", note=t(lang, "f_ros_note"),
                      ylabel=pct, xlabel=quarter),
         "",
-    ]
+    ] + strength_block(fstats, lang)
 
 
 def _valuation_tab(payload: dict, lang: str) -> "list[str]":
@@ -3779,7 +4707,7 @@ def _valuation_tab(payload: dict, lang: str) -> "list[str]":
                             ylabel=mult_axis, xlabel=quarter,
                             ref=_avg(payload.get(series)), ref_label=avg)
 
-    body = [
+    body = valuation_range_block(payload.get("valuation_ranges") or {}, lang) + [
         f"### {t(lang, 'f_valuation')}",
         "",
         multiple("pe", t(lang, "f_pe"), t(lang, "f_pe_note"), "blue"),
@@ -3890,12 +4818,15 @@ def market_data_ticker_page(key: str, meta: dict, stats: "dict | None",
         tabs.append((t(lang, "md_tab_price"),
                      _price_tab(bars, analytics, lang)))
     if fstats:
-        tabs.append((t(lang, "md_tab_financials"), _financials_tab(lang)))
-        # Every multiple needs a share price, so the valuation tab is only
-        # meaningful when both stores are present.
+        tabs.append((t(lang, "md_tab_financials"),
+                     _financials_tab(payload, fstats, lang)))
+        # Every multiple needs a share price, so the valuation and intrinsic
+        # value tabs are only meaningful when both stores are present.
         if stats:
             tabs.append((t(lang, "md_tab_valuation"),
                          _valuation_tab(payload, lang)))
+            tabs.append((t(lang, "md_tab_intrinsic"),
+                         _intrinsic_tab(payload, fstats, lang)))
     tabs.append((t(lang, "md_tab_data"),
                  _data_tab(key, stats, fstats, price_csv_href,
                            fund_csv_href, lang)))
@@ -4001,6 +4932,9 @@ def build_market_data(lang: str = "en"):
     # absolutely from ZH — the same rule the ZH report index already follows.
     download_base = "" if lang == "en" else f"{SITE_BASE}/{MD_DIR}/"
 
+    # Every beta on the section is measured against the same market store.
+    market_bars = store_bars(MARKET_PROXY)
+
     index_rows: "list[str]" = []
     manifest: "list[dict]" = []
     zipped_price: "list[str]" = []
@@ -4036,7 +4970,7 @@ def build_market_data(lang: str = "en"):
             zipped_price.append(key)
 
         if fstats:
-            payload = fundamentals_payload_dict(key, rows, bars)
+            payload = fundamentals_payload_dict(key, rows, bars, market_bars)
             write(dst_dir / "fundamentals.json",
                   json.dumps(payload, separators=(",", ":"), default=float))
             if lang == "en":

@@ -149,8 +149,9 @@ def test_returns_on_capital_are_hand_checkable():
     assert r["roe"] == pytest.approx(20.0)   # net 100 / equity 500
     assert r["roa"] == pytest.approx(10.0)   # net 100 / assets 1000
     assert r["ros"] == pytest.approx(10.0)   # net 100 / revenue 1000
-    # invested capital = equity 500 + debt 200 - cash 100 = 600; op income 200
-    assert r["roic"] == pytest.approx(200.0 / 600.0 * 100.0)
+    # invested capital = equity 500 + debt 200 - cash 100 = 600; op income 200,
+    # taxed at the 21% statutory rate because no income tax is tagged: after-tax
+    assert r["roic"] == pytest.approx(200.0 * 0.79 / 600.0 * 100.0)
 
 
 def test_total_debt_tolerates_a_company_with_no_short_term_debt():
@@ -274,8 +275,11 @@ def test_committed_store_produces_sane_derived_values():
         if not t:
             continue
         m = FA.margins(t)
+        # The loss side is wide on purpose: IONQ's reported net income swings
+        # by $1-2B a quarter on ~$70M of revenue (non-cash revaluations), a
+        # genuine -553% TTM net margin. A unit error is ~1000x, far past this.
         for name, v in m.items():
-            assert v is None or -500.0 <= v <= 100.0, f"{key} {name} margin {v}"
+            assert v is None or -2000.0 <= v <= 100.0, f"{key} {name} margin {v}"
 
         bars = prices.load_store(key)
         if not bars:
@@ -286,3 +290,165 @@ def test_committed_store_produces_sane_derived_values():
         # mis-scaled share count would blow out.
         for name, v in mult.items():
             assert v is None or abs(v) < 10_000, f"{key} {name} = {v}"
+
+
+# ── split adjustment ─────────────────────────────────────────────────────────
+def test_split_adjust_restates_rows_filed_before_a_split():
+    """NVDA's quarter to April 2024 was filed before its 10:1 split; the
+    quarter after it, after. Only the earlier row is restated."""
+    rows = [row("2024-04-28", 2025, "Q1", eps_diluted=5.98, shares_diluted=2.49e9),
+            row("2024-07-28", 2025, "Q2", eps_diluted=0.67, shares_diluted=24.85e9)]
+    rows[0]["filed"], rows[1]["filed"] = "2024-05-29", "2024-08-28"
+    bars = [{"date": "2024-06-10", "close": 121.79, "split": 10.0}]
+    out = FA.split_adjust(rows, bars)
+    assert out[0]["eps_diluted"] == pytest.approx(0.598)
+    assert out[0]["shares_diluted"] == pytest.approx(24.9e9)
+    assert out[1] is rows[1]                       # untouched rows pass through
+    assert rows[0]["eps_diluted"] == 5.98          # the input is never mutated
+
+
+def test_split_adjust_compounds_successive_splits():
+    rows = [row("2020-03-31", 2020, "Q1", eps_diluted=8.0, shares_diluted=1.0)]
+    rows[0]["filed"] = "2020-04-30"
+    bars = [{"date": "2021-07-20", "close": 1, "split": 4.0},
+            {"date": "2024-06-10", "close": 1, "split": 10.0}]
+    out = FA.split_adjust(rows, bars)
+    assert out[0]["eps_diluted"] == pytest.approx(0.2)
+    assert out[0]["shares_diluted"] == pytest.approx(40.0)
+
+
+def test_split_adjust_without_splits_is_the_identity():
+    rows = four_quarters()
+    assert FA.split_adjust(rows, [bar("2025-01-02", 10.0)]) is rows
+
+
+# ── tax, NOPAT, ROIC ─────────────────────────────────────────────────────────
+def test_effective_tax_rate_and_its_fallback():
+    assert FA.effective_tax_rate({"income_tax": 25.0, "pretax_income": 100.0}) == 0.25
+    # A loss year and a one-off benefit have no usable rate …
+    assert FA.effective_tax_rate({"income_tax": 5.0, "pretax_income": -10.0}) is None
+    assert FA.effective_tax_rate({"income_tax": -40.0, "pretax_income": 100.0}) is None
+    # … so the statutory rate stands in.
+    assert FA.tax_rate({"income_tax": -40.0, "pretax_income": 100.0}) == 0.21
+
+
+def test_roic_uses_the_period_tax_rate_and_skips_negative_capital():
+    t = FA.ttm(four_quarters(income_tax=2.5, pretax_income=10.0))  # 25% rate
+    # NOPAT = 200 × 0.75 = 150; invested = 500 + 200 − 100 = 600
+    assert FA.returns_on_capital(t)["roic"] == pytest.approx(25.0)
+    flush = FA.ttm(four_quarters(cash_and_equiv=5000.0))
+    assert FA.returns_on_capital(flush)["roic"] is None
+
+
+# ── financial strength ───────────────────────────────────────────────────────
+def test_financial_strength_ratios_by_hand():
+    t = FA.ttm(four_quarters(interest_expense=5.0, current_assets=300.0,
+                             current_liabilities=200.0))
+    s = FA.financial_strength(t)
+    assert s["cash_to_debt"] == pytest.approx(0.5)        # 100 / 200
+    assert s["equity_to_asset"] == pytest.approx(0.5)     # 500 / 1000
+    assert s["debt_to_equity"] == pytest.approx(0.4)      # 200 / 500
+    assert s["debt_to_ebitda"] == pytest.approx(200 / 220)  # EBITDA 200 + 4×5
+    assert s["interest_coverage"] == pytest.approx(10.0)  # 200 / 20
+    assert s["current_ratio"] == pytest.approx(1.5)
+
+
+def test_financial_strength_without_debt_reports_no_debt_ratio():
+    s = FA.financial_strength(FA.ttm(four_quarters(long_term_debt=None)))
+    assert s["debt"] is None
+    assert s["cash_to_debt"] is None and s["debt_to_ebitda"] is None
+
+
+def test_altman_z_by_hand():
+    t = FA.ttm(four_quarters(current_assets=400.0, current_liabilities=200.0,
+                             retained_earnings=300.0, total_liabilities=500.0))
+    # WC/TA 0.2·1.2 + RE/TA 0.3·1.4 + EBIT/TA 0.2·3.3 + MVE/TL (10·50/500)·0.6
+    # + S/TA 1.0·1.0 = 0.24 + 0.42 + 0.66 + 0.6 + 1.0
+    assert FA.altman_z(t, 50.0) == pytest.approx(2.92)
+    assert FA.altman_z(t, None) is None
+
+
+def test_total_liabilities_falls_back_to_the_balance_sheet_identity():
+    assert FA.total_liabilities({"total_assets": 1000.0, "total_equity": 400.0}) == 600.0
+    assert FA.total_liabilities({"total_liabilities": 550.0,
+                                 "total_assets": 1000.0, "total_equity": 400.0}) == 550.0
+
+
+def test_piotroski_counts_only_testable_criteria():
+    prev = {"net_income": 50.0, "total_assets": 1000.0, "ocf": 40.0,
+            "long_term_debt": 300.0, "current_assets": 100.0,
+            "current_liabilities": 100.0, "shares_diluted": 10.0,
+            "revenue": 500.0, "gross_profit": None}
+    cur = dict(prev, net_income=80.0, ocf=120.0, long_term_debt=200.0,
+               current_assets=150.0, shares_diluted=11.0, revenue=600.0)
+    p = FA.piotroski(cur, prev)
+    assert p["tests"]["gross_margin_improving"] is None   # never tagged
+    assert p["tests"]["no_dilution"] is False             # 10 → 11 shares
+    assert p["tested"] == 8
+    assert p["score"] == 7
+
+
+def test_strength_tone_respects_direction():
+    assert FA.strength_tone("current_ratio", 2.0) == "good"
+    assert FA.strength_tone("current_ratio", 1.2) == "fair"
+    assert FA.strength_tone("current_ratio", 0.8) == "weak"
+    assert FA.strength_tone("debt_to_equity", 0.3) == "good"   # lower is better
+    assert FA.strength_tone("debt_to_equity", 2.0) == "weak"
+    assert FA.strength_tone("debt_to_equity", None) is None
+
+
+def test_summary_carries_strength_and_a_year_ago_piotroski():
+    rows = four_quarters() + [
+        row(e, 2026, f"Q{i + 1}", **{k: v for k, v in four_quarters()[i].items()
+                                     if k not in ("period_end", "fy", "fp", "form", "filed")})
+        for i, e in enumerate(["2026-03-31", "2026-06-30", "2026-09-30", "2026-12-31"])]
+    s = FA.summary(rows)
+    assert s["strength_ttm"]["equity_to_asset"] == pytest.approx(0.5)
+    assert s["piotroski"]["tested"] > 0
+    assert FA.summary(four_quarters())["piotroski"] is None   # no year-ago TTM
+
+
+# ── valuation ranges ─────────────────────────────────────────────────────────
+def test_valuation_ranges_rank_today_against_history():
+    series = {"pe": [{"t": f"2025-0{i}-30", "v": v}
+                     for i, v in enumerate([10.0, 20.0, 30.0, 40.0], start=1)],
+              "pb": [{"t": "2025-01-30", "v": 1.0}]}     # too short to rank
+    r = FA.valuation_ranges(series)
+    assert set(r) == {"pe"}
+    assert (r["pe"]["min"], r["pe"]["median"], r["pe"]["max"]) == (10.0, 25.0, 40.0)
+    assert r["pe"]["current"] == 40.0 and r["pe"]["rank"] == 100.0
+
+    today = FA.valuation_ranges(series, {"pe": 15.0}, "2026-01-02")
+    assert today["pe"]["current"] == 15.0
+    assert today["pe"]["rank"] == 25.0                   # only 10× is ≤ 15×
+    assert today["pe"]["as_of"] == "2026-01-02"
+    # A multiple undefined today (a loss) gets no marker at all.
+    assert FA.valuation_ranges(series, {"pe": None}) == {}
+
+
+def test_piotroski_leverage_test_needs_assets_on_both_sides():
+    """A missing total_assets is untestable, not a pass; debt-free both years is."""
+    base = {"net_income": 10.0, "ocf": 20.0, "shares_diluted": 10.0,
+            "revenue": 100.0, "total_assets": 1000.0}
+    no_assets = FA.piotroski(dict(base, total_assets=None), base)
+    assert no_assets["tests"]["leverage_falling"] is None
+    debt_free = FA.piotroski(base, dict(base))
+    assert debt_free["tests"]["leverage_falling"] is True
+
+
+def test_split_adjust_ignores_a_comparative_filing_date():
+    """GOOG's Q4-2020 row carries the 2023 10-K that re-reported its revenue;
+    the EPS in it is still the pre-split figure from the original 10-K."""
+    rows = [row("2020-12-31", 2020, "Q4", eps_diluted=22.23)]
+    rows[0]["filed"] = "2023-02-03"
+    out = FA.split_adjust(rows, [{"date": "2022-07-18", "close": 1, "split": 20.0}])
+    assert out[0]["eps_diluted"] == pytest.approx(1.1115)
+
+
+def test_piotroski_tone_matches_the_glossary_bands():
+    """Glossary: 7–9 strong, 0–3 weak — so 4 is fair, on 9 tests or on 8."""
+    assert FA.strength_tone("piotroski", 4 / 9) == "fair"
+    assert FA.strength_tone("piotroski", 4 / 8) == "fair"
+    assert FA.strength_tone("piotroski", 3 / 9) == "weak"
+    assert FA.strength_tone("piotroski", 3 / 8) == "weak"
+    assert FA.strength_tone("piotroski", 7 / 9) == "good"

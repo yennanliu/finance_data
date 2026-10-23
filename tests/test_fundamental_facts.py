@@ -71,7 +71,8 @@ def test_fcf_is_ocf_minus_capex_from_the_filings():
 def test_net_cash_and_roic_come_from_the_closing_quarter():
     s = statement_facts(_rows(), "2026-10-22")
     assert s["net_cash"] == pytest.approx(15e9)            # 20 + 5 − 10
-    assert s["roic_ttm"] == pytest.approx(4.9 / 35)        # OI ÷ (50 + 10 − 25)
+    # After-tax OI ÷ (50 + 10 − 25); no tax tagged, so the 21% default rate.
+    assert s["roic_ttm"] == pytest.approx(4.9 * 0.79 / 35, abs=1e-4)
 
 
 def test_stale_statements_are_not_quoted_as_current():

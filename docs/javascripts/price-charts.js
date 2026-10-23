@@ -559,7 +559,9 @@
     watchers.forEach(function (w) { w.disconnect(); });
     watchers = [];
 
-    var nodes = document.querySelectorAll(".pchart:not([data-pchart-ready])");
+    // [data-src]: the static annual cards build_docs.py emits share the card
+    // chrome (.pchart) but are finished SVG with nothing to fetch.
+    var nodes = document.querySelectorAll(".pchart[data-src]:not([data-pchart-ready])");
     // Lazy build. A chart inside a collapsed tab has a zero-width container, so
     // building it there lays it out against no pixels; waiting for it to be on
     // screen also keeps a twenty-chart page from doing twenty layouts at once.
