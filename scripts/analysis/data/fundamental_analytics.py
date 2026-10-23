@@ -456,8 +456,11 @@ def piotroski(cur: "dict", prev: "dict") -> "dict":
         "ocf_positive": gt(ocf, 0.0),
         "roa_improving": gt(roa(cur), roa(prev)),
         "accruals": gt(ocf, net),
-        "leverage_falling": (lt(lev(cur), lev(prev))
-                             if lev(cur) or lev(prev) else True),
+        # Untestable without assets on both sides; debt-free in both years
+        # counts as a pass (leverage cannot fall below zero).
+        "leverage_falling": (None if lev(cur) is None or lev(prev) is None
+                             else True if lev(cur) == lev(prev) == 0
+                             else lt(lev(cur), lev(prev))),
         "liquidity_improving": gt(cur_ratio(cur), cur_ratio(prev)),
         "no_dilution": None if sh_now is None or sh_then is None
         else sh_now <= sh_then,

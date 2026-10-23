@@ -222,8 +222,10 @@ def sensitivity(base: "float | None", growth: float,
     """Fair value over a grid of discount × growth rates around the base case.
 
     Rows are discount rates, columns growth rates; the centre cell is the base
-    case. Growth points are clamped to the same bounds the base case is, and a
-    duplicate that clamping produces is dropped.
+    case. Growth points are clamped to a band four points wider than the base
+    case's own [GROWTH_FLOOR, GROWTH_CAP], so a capped base case still shows
+    what slightly more (or less) growth would be worth; a duplicate that
+    clamping produces is dropped.
     """
     if base is None or base <= 0:
         return None

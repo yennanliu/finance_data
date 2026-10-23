@@ -421,3 +421,13 @@ def test_valuation_ranges_rank_today_against_history():
     assert today["pe"]["as_of"] == "2026-01-02"
     # A multiple undefined today (a loss) gets no marker at all.
     assert FA.valuation_ranges(series, {"pe": None}) == {}
+
+
+def test_piotroski_leverage_test_needs_assets_on_both_sides():
+    """A missing total_assets is untestable, not a pass; debt-free both years is."""
+    base = {"net_income": 10.0, "ocf": 20.0, "shares_diluted": 10.0,
+            "revenue": 100.0, "total_assets": 1000.0}
+    no_assets = FA.piotroski(dict(base, total_assets=None), base)
+    assert no_assets["tests"]["leverage_falling"] is None
+    debt_free = FA.piotroski(base, dict(base))
+    assert debt_free["tests"]["leverage_falling"] is True
