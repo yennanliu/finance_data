@@ -431,3 +431,12 @@ def test_piotroski_leverage_test_needs_assets_on_both_sides():
     assert no_assets["tests"]["leverage_falling"] is None
     debt_free = FA.piotroski(base, dict(base))
     assert debt_free["tests"]["leverage_falling"] is True
+
+
+def test_split_adjust_ignores_a_comparative_filing_date():
+    """GOOG's Q4-2020 row carries the 2023 10-K that re-reported its revenue;
+    the EPS in it is still the pre-split figure from the original 10-K."""
+    rows = [row("2020-12-31", 2020, "Q4", eps_diluted=22.23)]
+    rows[0]["filed"] = "2023-02-03"
+    out = FA.split_adjust(rows, [{"date": "2022-07-18", "close": 1, "split": 20.0}])
+    assert out[0]["eps_diluted"] == pytest.approx(1.1115)

@@ -27,7 +27,7 @@ Every helper here propagates absence rather than substituting a number.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 # Quarters in a trailing-twelve-month window.
 TTM_QUARTERS = 4
@@ -101,6 +101,10 @@ def _sub(a: "float | None", b: "float | None") -> "float | None":
 # ── split adjustment ─────────────────────────────────────────────────────────
 PER_SHARE_METRICS = ("eps_basic", "eps_diluted")
 
+# Latest an original 10-Q / 10-K lands after its period end (the 10-K deadline
+# for the smallest filers is 90 days).
+ORIGINAL_FILING_DAYS = 100
+
 
 def split_adjust(rows: "list[dict]", bars: "list[dict]") -> "list[dict]":
     """Restate per-share figures onto today's share basis.
@@ -116,6 +120,13 @@ def split_adjust(rows: "list[dict]", bars: "list[dict]") -> "list[dict]":
     end, decides the basis: a split between the two is already reflected in the
     filing. Returns new rows; the store's own rows are never mutated, and the
     CSV download stays exactly as filed.
+
+    The ``filed`` column is capped at :data:`ORIGINAL_FILING_DAYS` after the
+    period end. It records which filing supplied the *revenue* fact, and for a
+    differenced Q4 that can be a comparative column years later: GOOG's
+    2020-12-31 row says 2023-02-03, which put its pre-split $22.23 EPS after
+    the 2022 20:1 split and left it unadjusted. The EPS itself always comes
+    from the original filing, which lands within that window.
     """
     splits = [(b["date"], float(b["split"])) for b in bars or []
               if b.get("split")]
@@ -123,7 +134,9 @@ def split_adjust(rows: "list[dict]", bars: "list[dict]") -> "list[dict]":
         return rows
     out = []
     for r in rows:
-        basis = r.get("filed") or r["period_end"]
+        cap = (date.fromisoformat(r["period_end"])
+               + timedelta(days=ORIGINAL_FILING_DAYS)).isoformat()
+        basis = min(r.get("filed") or cap, cap)
         factor = 1.0
         for when, ratio in splits:
             if when > basis and ratio > 0:
