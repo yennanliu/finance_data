@@ -25,7 +25,7 @@ import time
 from pathlib import Path
 
 from ..config import TODAY
-from ..exceptions import LLMError
+from ..exceptions import LLMError, RefusalError
 from ..prompts import PROMPT_MAP
 from .logging_utils import setup_logger
 
@@ -60,6 +60,12 @@ _GEMINI_MAX_TOKENS = 65536
 def _is_refusal(text: str) -> bool:
     """Detect if a response is a model refusal (short + contains refusal phrase)."""
     return len(text) < 500 and any(p in text for p in _REFUSAL_PATTERNS)
+
+
+def _raise_refusal(ticker: str, text: str) -> None:
+    """Fail the attempt: a refusal must never be returned as a report."""
+    logger.error(f"All {_MAX_REFUSAL_RETRIES} refusal retries for {ticker} still refused.")
+    raise RefusalError(f"model refused after {_MAX_REFUSAL_RETRIES} retries: {text[:80]!r}")
 
 
 def _refusal_override_prefix(ticker: str, attempt: int) -> str:
@@ -189,7 +195,7 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
             usage = response.usage
             logger.info(f"Retry {retry}: input={usage.input_tokens}, output={usage.output_tokens}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     return text
 
@@ -262,7 +268,7 @@ def run_openai(ticker: str, prompt: str, system_message: str, *,
             logger.info(f"Retry {retry}: input={retry_usage.prompt_tokens}, "
                         f"output={retry_usage.completion_tokens}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     if usage.completion_tokens < effective_max_tokens * 0.7:
         pct = 100 * usage.completion_tokens // effective_max_tokens
@@ -368,7 +374,7 @@ def run_gemini(ticker: str, prompt: str, system_message: str, *,
             logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
                         f"output={usage.candidates_token_count}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     return text
 

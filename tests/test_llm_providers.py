@@ -16,7 +16,7 @@ from scripts.analysis.utils.llm import (
     _is_refusal, _refusal_override_prefix, _repeated_heading, _gemini_finish_reason,
     OPENAI_MAX_TOKENS,
 )
-from scripts.analysis.exceptions import LLMError
+from scripts.analysis.exceptions import LLMError, RefusalError
 
 pytestmark = pytest.mark.integration
 
@@ -208,6 +208,50 @@ def test_claude_retries_on_refusal_then_succeeds(monkeypatch):
     # the retry call carries a temperature + an override-prefixed prompt
     assert "temperature" in create.calls[1]
     assert "覆寫" in create.calls[1]["messages"][0]["content"]
+
+
+# ── persistent refusal raises (never returned as a report) ──────────────────
+
+def test_claude_persistent_refusal_raises(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    create = Scripted(FakeAnthropicResponse(REFUSAL))
+    install_anthropic(monkeypatch, create)
+    with pytest.raises(RefusalError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-x", 8000)
+    assert len(create.calls) == 1 + llm._MAX_REFUSAL_RETRIES
+
+
+def test_openai_persistent_refusal_raises(monkeypatch):
+    """MRVL 2026-10-22: the OpenAI fallback refused five times and the refusal
+    was saved and published as the report."""
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    create = Scripted(FakeOpenAIResponse(REFUSAL))
+    install_openai(monkeypatch, create)
+    with pytest.raises(RefusalError):
+        call_openai("MRVL", "ctx", "fundamental-analysis", "gpt-4o", 16000)
+
+
+def test_gemini_persistent_refusal_raises(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    install_gemini(monkeypatch, Scripted(FakeGeminiResponse(REFUSAL)))
+    with pytest.raises(RefusalError):
+        call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
+
+
+def test_refusal_error_is_not_terminal():
+    """A refusal must fall through to the next provider, not abort the chain."""
+    assert not llm._is_terminal_error(RefusalError("refused"))
+
+
+def test_refusal_falls_through_to_next_provider():
+    def run_one(provider, model):
+        if provider == "openai":
+            raise RefusalError("refused")
+        return LONG_OK
+
+    out, provider, _ = llm.run_with_fallback(
+        [("openai", "gpt-4o"), ("gemini", "gemini-2.5-flash")], run_one)
+    assert (out, provider) == (LONG_OK, "gemini")
 
 
 # ── OpenAI ───────────────────────────────────────────────────────────────────
