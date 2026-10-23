@@ -191,9 +191,9 @@ store.
   (August) is `gemini-3.7-flash`. No fallback to OpenAI occurred in the sample.
 - All 27 have the 9 chapters and the summary box, and no refusals or
   truncation. Mermaid blocks per report: 9–12.
-- Frontmatter carries no `price`, `price_date` or `data_sources_*` fields
-  (the fundamental reports gained them in #84). The page therefore cannot show
-  which session a technical report is based on, and QA cannot check it.
+- Front matter: the 27 sampled reports predate #84 and carry no `price`,
+  `price_date` or `data_sources_*`. Reports generated after #84 (e.g. META
+  10-23 02:54 UTC) do, because `provenance()` applies to every type.
 
 ---
 

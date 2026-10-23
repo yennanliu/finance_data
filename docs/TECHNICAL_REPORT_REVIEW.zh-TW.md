@@ -125,7 +125,7 @@ yfinance 歷史價格在每次除息日都會向前還原，因此舊報告的�
 
 - 27 份中 25 份為 `gemini-3.8-flash`；MRVL（7 月）為 `gemini-3.5-flash`，SKHY（8 月）為 `gemini-3.7-flash`。樣本中沒有發生 fallback 到 OpenAI。
 - 27 份都有 9 章與總結框，沒有拒答或截斷。每份 Mermaid 區塊數：9–12。
-- frontmatter 沒有 `price`、`price_date` 或 `data_sources_*` 欄位（基本面報告在 #84 加入）。因此頁面無法顯示技術報告基於哪個交易日，QA 也無從檢查。
+- frontmatter：抽樣的 27 份早於 #84，沒有 `price`、`price_date` 或 `data_sources_*`。#84 之後生成的報告（如 META 10-23 02:54 UTC）已有這些欄位，因為 `provenance()` 適用所有類型。
 
 ---
 
