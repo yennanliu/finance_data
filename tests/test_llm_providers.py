@@ -16,7 +16,7 @@ from scripts.analysis.utils.llm import (
     _is_refusal, _refusal_override_prefix, _repeated_heading, _gemini_finish_reason,
     OPENAI_MAX_TOKENS,
 )
-from scripts.analysis.exceptions import LLMError
+from scripts.analysis.exceptions import LLMError, RefusalError
 
 pytestmark = pytest.mark.integration
 
@@ -210,6 +210,50 @@ def test_claude_retries_on_refusal_then_succeeds(monkeypatch):
     assert "覆寫" in create.calls[1]["messages"][0]["content"]
 
 
+# ── persistent refusal raises (never returned as a report) ──────────────────
+
+def test_claude_persistent_refusal_raises(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    create = Scripted(FakeAnthropicResponse(REFUSAL))
+    install_anthropic(monkeypatch, create)
+    with pytest.raises(RefusalError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-x", 8000)
+    assert len(create.calls) == 1 + llm._MAX_REFUSAL_RETRIES
+
+
+def test_openai_persistent_refusal_raises(monkeypatch):
+    """MRVL 2026-10-22: the OpenAI fallback refused five times and the refusal
+    was saved and published as the report."""
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    create = Scripted(FakeOpenAIResponse(REFUSAL))
+    install_openai(monkeypatch, create)
+    with pytest.raises(RefusalError):
+        call_openai("MRVL", "ctx", "fundamental-analysis", "gpt-4o", 16000)
+
+
+def test_gemini_persistent_refusal_raises(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    install_gemini(monkeypatch, Scripted(FakeGeminiResponse(REFUSAL)))
+    with pytest.raises(RefusalError):
+        call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
+
+
+def test_refusal_error_is_not_terminal():
+    """A refusal must fall through to the next provider, not abort the chain."""
+    assert not llm._is_terminal_error(RefusalError("refused"))
+
+
+def test_refusal_falls_through_to_next_provider():
+    def run_one(provider, model):
+        if provider == "openai":
+            raise RefusalError("refused")
+        return LONG_OK
+
+    out, provider, _ = llm.run_with_fallback(
+        [("openai", "gpt-4o"), ("gemini", "gemini-2.5-flash")], run_one)
+    assert (out, provider) == (LONG_OK, "gemini")
+
+
 # ── OpenAI ───────────────────────────────────────────────────────────────────
 
 def test_openai_missing_key_raises(monkeypatch):
@@ -287,3 +331,33 @@ def test_gemini_retries_on_repeated_heading(monkeypatch):
     out = call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 1000)
     assert out == LONG_OK
     assert len(gen.calls) == 2
+
+
+# ── report temperature / prompt fingerprint ──────────────────────────────────
+
+def test_reports_are_sampled_at_the_report_temperature(monkeypatch):
+    """0.7 gave AMD a WACC of 9.41% one day and 11.8% two days later."""
+    from scripts.analysis.config import REPORT_TEMPERATURE
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    oa = Scripted(FakeOpenAIResponse(LONG_OK))
+    an = Scripted(FakeAnthropicResponse(LONG_OK))
+    ge = Scripted(FakeGeminiResponse(LONG_OK))
+    install_openai(monkeypatch, oa)
+    install_anthropic(monkeypatch, an)
+    install_gemini(monkeypatch, ge)
+    call_openai("AAPL", "ctx", "fundamental-analysis", "gpt-4o", 16000)
+    call_claude("AAPL", "ctx", "fundamental-analysis", "claude-x", 8000)
+    call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
+    assert REPORT_TEMPERATURE < 0.7
+    assert oa.calls[0]["temperature"] == REPORT_TEMPERATURE
+    assert an.calls[0]["temperature"] == REPORT_TEMPERATURE
+    assert ge.calls[0]["config"].temperature == REPORT_TEMPERATURE
+
+
+def test_prompt_fingerprint_is_stable_and_tracks_the_system_message():
+    a = llm.prompt_fingerprint("fundamental-analysis", "gemini")
+    assert a == llm.prompt_fingerprint("fundamental-analysis", "gemini") and len(a) == 12
+    assert a != llm.prompt_fingerprint("fundamental-analysis", "openai")
+    assert a != llm.prompt_fingerprint("technical-analysis", "gemini")

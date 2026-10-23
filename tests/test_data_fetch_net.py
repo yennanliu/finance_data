@@ -246,3 +246,65 @@ def test_fetch_data_insider_with_missing_values(monkeypatch):
     out = fetch_data("X")
     assert "Jane Doe" in out["insider_text"]          # section survived
     assert out["insider_text"] != "  (no data)"
+
+
+def _stub_scrapers(monkeypatch, finviz=None):
+    monkeypatch.setattr(data_fetch, "fetch_finviz", lambda t: finviz or {})
+    monkeypatch.setattr(data_fetch, "fetch_stockanalysis", lambda t: {})
+    monkeypatch.setattr(data_fetch, "fetch_roic", lambda t: {})
+
+
+def test_fetch_data_asks_yahoo_for_the_exchange_symbol(monkeypatch):
+    """A bare "0050" is a 404 on Yahoo: the 2026-10-22 0050 report got no price
+    or statements and valued the ETF at NT$195 from memory (it traded at 106.90)."""
+    import types as _types
+    seen = []
+
+    class _Recording(_FakeTicker):
+        def __init__(self, symbol):
+            seen.append(symbol)
+            super().__init__(symbol)
+
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: _types.SimpleNamespace(Ticker=_Recording))
+    _stub_scrapers(monkeypatch)
+    out = fetch_data("0050")
+    assert seen == ["0050.TW"]
+    assert (out["ticker"], out["symbol"]) == ("0050", "0050.TW")
+
+
+def test_fetch_data_records_which_sources_returned_data(monkeypatch):
+    import types as _types
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: _types.SimpleNamespace(Ticker=_FakeTicker))
+    _stub_scrapers(monkeypatch, finviz={"P/E": "20"})
+    status = fetch_data("AAPL")["source_status"]
+    assert status["yfinance_info"] and status["yfinance_prices"] and status["finviz"]
+    assert not status["roic"] and not status["stockanalysis"]
+    assert not status["yfinance_statements"]   # the fake's frames are empty
+
+
+def _tz_hist(dates, tz):
+    idx = pd.DatetimeIndex(pd.to_datetime(dates)).tz_localize(tz)
+    return pd.DataFrame({"Close": [100.0 + i for i in range(len(dates))]}, index=idx)
+
+
+def test_last_completed_close_skips_a_session_still_open():
+    from datetime import datetime
+    tz = "America/New_York"
+    hist = _tz_hist(["2026-10-21", "2026-10-22"], tz)
+    midday = datetime(2026, 10, 22, 13, 40, tzinfo=hist.index.tz)
+    assert data_fetch.last_completed_close(hist, now=midday) == (100.0, "2026-10-21")
+    evening = datetime(2026, 10, 22, 22, 47, tzinfo=hist.index.tz)
+    assert data_fetch.last_completed_close(hist, now=evening) == (101.0, "2026-10-22")
+
+
+def test_last_completed_close_uses_the_exchange_close_time():
+    """Taipei closes at 13:30, so a 14:00 bar dated today is final."""
+    from datetime import datetime
+    hist = _tz_hist(["2026-10-21", "2026-10-22"], "Asia/Taipei")
+    after = datetime(2026, 10, 22, 14, 0, tzinfo=hist.index.tz)
+    assert data_fetch.last_completed_close(hist, now=after)[1] == "2026-10-22"
+
+
+def test_last_completed_close_of_nothing_is_none():
+    assert data_fetch.last_completed_close(None) == (None, None)
+    assert data_fetch.last_completed_close(pd.DataFrame({"Close": []})) == (None, None)

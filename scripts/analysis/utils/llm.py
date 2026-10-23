@@ -24,8 +24,8 @@ import os
 import time
 from pathlib import Path
 
-from ..config import TODAY
-from ..exceptions import LLMError
+from ..config import REPORT_TEMPERATURE, TODAY
+from ..exceptions import LLMError, RefusalError
 from ..prompts import PROMPT_MAP
 from .logging_utils import setup_logger
 
@@ -60,6 +60,12 @@ _GEMINI_MAX_TOKENS = 65536
 def _is_refusal(text: str) -> bool:
     """Detect if a response is a model refusal (short + contains refusal phrase)."""
     return len(text) < 500 and any(p in text for p in _REFUSAL_PATTERNS)
+
+
+def _raise_refusal(ticker: str, text: str) -> None:
+    """Fail the attempt: a refusal must never be returned as a report."""
+    logger.error(f"All {_MAX_REFUSAL_RETRIES} refusal retries for {ticker} still refused.")
+    raise RefusalError(f"model refused after {_MAX_REFUSAL_RETRIES} retries: {text[:80]!r}")
 
 
 def _refusal_override_prefix(ticker: str, attempt: int) -> str:
@@ -189,7 +195,7 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
             usage = response.usage
             logger.info(f"Retry {retry}: input={usage.input_tokens}, output={usage.output_tokens}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     return text
 
@@ -262,7 +268,7 @@ def run_openai(ticker: str, prompt: str, system_message: str, *,
             logger.info(f"Retry {retry}: input={retry_usage.prompt_tokens}, "
                         f"output={retry_usage.completion_tokens}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     if usage.completion_tokens < effective_max_tokens * 0.7:
         pct = 100 * usage.completion_tokens // effective_max_tokens
@@ -368,7 +374,7 @@ def run_gemini(ticker: str, prompt: str, system_message: str, *,
             logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "
                         f"output={usage.candidates_token_count}, chars={len(text)}")
         if _is_refusal(text):
-            logger.warning(f"All {_MAX_REFUSAL_RETRIES} retries returned refusal. Returning last response.")
+            _raise_refusal(ticker, text)
 
     return text
 
@@ -381,7 +387,8 @@ def call_claude(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens)
+    return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
 
 
 def call_openai(ticker: str, context: str, analysis_type: str,
@@ -391,7 +398,8 @@ def call_openai(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
+    return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
 
 
 def call_gemini(ticker: str, context: str, analysis_type: str,
@@ -401,7 +409,23 @@ def call_gemini(ticker: str, context: str, analysis_type: str,
     prompt = PROMPT_MAP[analysis_type].format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
-    return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens)
+    return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
+                      temperature=REPORT_TEMPERATURE)
+
+
+def prompt_fingerprint(analysis_type: str, provider: str) -> str:
+    """First 12 hex chars of SHA-256 over the prompt template and the system
+    message that provider receives, so reports can be grouped by prompt version."""
+    import hashlib
+
+    if provider == "openai":
+        system = _load_openai_system_message()
+    elif provider == "gemini":
+        system = _load_gemini_system_message()
+    else:
+        system = ""
+    blob = (PROMPT_MAP[analysis_type] + "\0" + system).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()[:12]
 
 
 def call_llm(ticker: str, context: str, analysis_type: str,
@@ -500,6 +524,6 @@ def run_with_fallback(attempts, run_one):
 __all__ = [
     "run_claude", "run_openai", "run_gemini",
     "call_claude", "call_openai", "call_gemini", "call_llm",
-    "run_with_fallback",
+    "run_with_fallback", "prompt_fingerprint",
     "OPENAI_MAX_TOKENS",
 ]
