@@ -2005,3 +2005,18 @@ def test_dcf_gauge_needle_tracks_price_over_fair_value():
     assert needle_x(50.0) < needle_x(100.0) < needle_x(150.0)
     assert needle_x(100.0) == pytest.approx(120.0, abs=0.1)   # dead centre at 1×
     assert needle_x(900.0) == needle_x(200.0)                 # pinned past 2×
+
+
+def test_sensitivity_grid_bolds_the_base_case(monkeypatch, tmp_path):
+    _both_stores(monkeypatch, tmp_path, "nvda", periods=12)
+    rows = bd.fundamental_rows("nvda")
+    bars = bd.store_bars("nvda")
+    payload = bd.fundamentals_payload_dict("nvda", rows, bars)
+    m = payload["intrinsic"]
+    # Force a growth rate with more than four decimals, as a real CAGR has.
+    m["growth"]["rate"] = 0.123457
+    m["sensitivity"] = bd.intrinsic_value.sensitivity(
+        m["bases"][m["primary"]]["base"], 0.123457)
+    iv = "\n".join(bd._intrinsic_tab(payload, None, "en"))
+    sens = iv.split(bd.t("en", "iv_sens_corner"))[1].split("###")[0]
+    assert sens.count('**<span class="') == 1

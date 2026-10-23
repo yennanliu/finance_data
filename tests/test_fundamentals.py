@@ -508,3 +508,12 @@ def test_a_bad_first_count_no_longer_poisons_the_series():
     kept = F._plausible_share_counts(counts)
     assert "2008-01-27" not in kept and "2009-01-25" not in kept
     assert len(kept) == 4
+
+
+def test_a_split_in_the_last_two_quarters_keeps_both_counts():
+    """With several pre-split quarters behind it, the second post-split count's
+    centred window is still mostly pre-split; continuing the last kept count
+    has to vouch for it, or the newest market cap goes blank."""
+    counts = {f"2025-0{m}-30": v for m, v in
+              zip(range(1, 8), [1e9, 1e9, 1e9, 1e9, 1e9, 20e9, 20.1e9])}
+    assert F._plausible_share_counts(counts) == counts

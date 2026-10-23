@@ -4362,7 +4362,9 @@ def _intrinsic_tab(payload: dict, fstats: "dict | None", lang: str) -> "list[str
             for gr, v in zip(sens["growth_rates"], row):
                 cls = "pos" if v >= price else "neg"
                 txt = f'<span class="{cls}">{_fmt_money(v)}</span>'
-                if abs(d - a["discount_rate"]) < 1e-9 and abs(gr - g["rate"]) < 1e-9:
+                # growth_rates are rounded to 4 dp; the base-case rate is not.
+                if (abs(d - a["discount_rate"]) < 1e-9
+                        and abs(gr - round(g["rate"], 4)) < 1e-9):
                     txt = f"**{txt}**"
                 cells.append(txt)
             body.append(f"| **{_rate(d)}** | " + " | ".join(cells) + " |")

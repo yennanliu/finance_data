@@ -389,7 +389,9 @@ STRENGTH_ZONES = {
     "interest_coverage": (8.0, 3.0, True),
     "current_ratio": (1.5, 1.0, True),
     "altman_z": (2.99, 1.81, True),
-    "piotroski": (0.75, 0.45, True),   # share of testable criteria passed
+    # Share of testable criteria passed: 7/9 strong, 3/9 weak, 4–6 fair — the
+    # glossary's bands. 0.4 rather than 0.45 so that 4/9 (0.444) reads fair.
+    "piotroski": (0.75, 0.4, True),
 }
 
 

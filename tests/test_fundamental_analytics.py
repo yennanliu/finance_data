@@ -440,3 +440,12 @@ def test_split_adjust_ignores_a_comparative_filing_date():
     rows[0]["filed"] = "2023-02-03"
     out = FA.split_adjust(rows, [{"date": "2022-07-18", "close": 1, "split": 20.0}])
     assert out[0]["eps_diluted"] == pytest.approx(1.1115)
+
+
+def test_piotroski_tone_matches_the_glossary_bands():
+    """Glossary: 7–9 strong, 0–3 weak — so 4 is fair, on 9 tests or on 8."""
+    assert FA.strength_tone("piotroski", 4 / 9) == "fair"
+    assert FA.strength_tone("piotroski", 4 / 8) == "fair"
+    assert FA.strength_tone("piotroski", 3 / 9) == "weak"
+    assert FA.strength_tone("piotroski", 3 / 8) == "weak"
+    assert FA.strength_tone("piotroski", 7 / 9) == "good"

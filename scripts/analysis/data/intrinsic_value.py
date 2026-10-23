@@ -230,12 +230,18 @@ def sensitivity(base: "float | None", growth: float,
     if base is None or base <= 0:
         return None
     rates = [round(discount + s, 4) for s in d_steps if discount + s > 0]
-    growths = sorted({round(_clamp(growth + s, GROWTH_FLOOR - 0.04, GROWTH_CAP + 0.04), 4)
-                      for s in g_steps})
+    # Labels are rounded; values use the unrounded rate, so the centre cell is
+    # exactly the headline fair value rather than a few cents off it.
+    raw: "dict[float, float]" = {}
+    for s in g_steps:
+        g = _clamp(growth + s, GROWTH_FLOOR - 0.04, GROWTH_CAP + 0.04)
+        if s == 0.0 or round(g, 4) not in raw:
+            raw[round(g, 4)] = g
+    growths = sorted(raw)
     return {
         "discount_rates": rates,
         "growth_rates": growths,
-        "values": [[round(dcf(base, g, d)["fair_value"], 2) for g in growths]
+        "values": [[round(dcf(base, raw[g], d)["fair_value"], 2) for g in growths]
                    for d in rates],
     }
 

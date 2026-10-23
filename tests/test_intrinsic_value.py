@@ -209,3 +209,11 @@ def test_model_has_no_primary_basis_for_a_loss_maker():
 
 def test_model_needs_a_price():
     assert IV.model(_quarters(), []) is None
+
+
+def test_sensitivity_centre_cell_matches_an_unrounded_base_case():
+    g = 0.123457
+    s = IV.sensitivity(2.0, g)
+    assert round(g, 4) in s["growth_rates"]
+    centre = s["values"][2][s["growth_rates"].index(round(g, 4))]
+    assert centre == round(IV.dcf(2.0, g)["fair_value"], 2)

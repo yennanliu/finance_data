@@ -513,6 +513,12 @@ def _plausible_share_counts(counts: dict) -> dict:
             median = window[len(window) // 2]
             ratio = value / median if median else 0
             plausible = 1 / MAX_SHARE_COUNT_STEP <= ratio <= MAX_SHARE_COUNT_STEP
+            # Continuing the last kept count also vouches for it: just after a
+            # split at the end of the series, the centred window is still
+            # mostly pre-split. `prev` is only ever a count that survived, so
+            # a mis-scaled one (ONDS's 221,769) is still far from it.
+            if prev and 1 / MAX_SHARE_COUNT_STEP <= value / prev <= MAX_SHARE_COUNT_STEP:
+                plausible = True
             # A split either side vouches for it: the window around the last
             # pre-split quarter can be mostly post-split when history is short.
             nxt = values[i + 1] if i + 1 < len(values) else None
