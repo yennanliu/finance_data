@@ -35,42 +35,89 @@ def _cluster_levels(levels, tol_pct=0.015):
     return [sum(c) / len(c) for c in clusters]
 
 
+def complete(hist):
+    """``hist`` without bars that have no close. Yahoo publishes a new session's
+    bar with volume but NaN prices for a while after the close; reading it as
+    the latest bar turned every rolling indicator and level into NaN."""
+    if hist is None or hist.empty:
+        return hist
+    return hist[hist["Close"].notna()]
+
+
+def key_levels(hist) -> dict:
+    """Swing-pivot resistances/supports and the 52-week Fibonacci grid.
+
+    ``{"last", "resistance": [R1, R2, R3], "support": [S1, S2, S3],
+    "fib": [(label, price), …], "low", "high"}``, or ``{}`` without data.
+    The validator compares a report's R1–S3 with these (via front matter).
+    """
+    hist = complete(hist)
+    if hist is None or hist.empty:
+        return {}
+    close = hist["Close"]
+    high = hist["High"]
+    low = hist["Low"]
+
+    last = float(close.iloc[-1])
+
+    # ── Swing pivots (fractal highs/lows over last ~1y of daily bars) ──
+    window = 5
+    h = high.tail(252).reset_index(drop=True)
+    l = low.tail(252).reset_index(drop=True)
+    n = len(h)
+    swing_highs, swing_lows = [], []
+    for i in range(window, n - window):
+        seg_h = h.iloc[i - window:i + window + 1]
+        seg_l = l.iloc[i - window:i + window + 1]
+        if h.iloc[i] == seg_h.max():
+            swing_highs.append(float(h.iloc[i]))
+        if l.iloc[i] == seg_l.min():
+            swing_lows.append(float(l.iloc[i]))
+
+    # Resistances: clustered swing highs at/above current price (nearest first)
+    res = [lv for lv in _cluster_levels(swing_highs) if lv >= last]
+    res = sorted(res)[:3]
+    # Supports: clustered swing lows at/below current price (nearest first)
+    sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last]
+    sup = sorted(sup, reverse=True)[:3]
+
+    # ── Fibonacci retracement over the 52-week range ──
+    hi = float(high.tail(252).max())
+    lo = float(low.tail(252).min())
+    rng = hi - lo
+    fibs = [
+        ("0.0%  (52W High)", hi),
+        ("23.6%", hi - 0.236 * rng),
+        ("38.2%", hi - 0.382 * rng),
+        ("50.0%", hi - 0.500 * rng),
+        ("61.8%", hi - 0.618 * rng),
+        ("78.6%", hi - 0.786 * rng),
+        ("100.0% (52W Low)", lo),
+    ]
+
+    return {"last": last, "resistance": res, "support": sup, "fib": fibs,
+            "low": lo, "high": hi}
+
+
+def levels_summary(levels: dict) -> str:
+    """``"R1 562.23; R2 574.20; S1 496.75"`` for the report's front matter."""
+    parts = [f"R{i+1} {v:.2f}" for i, v in enumerate(levels.get("resistance", []))]
+    parts += [f"S{i+1} {v:.2f}" for i, v in enumerate(levels.get("support", []))]
+    return "; ".join(parts)
+
+
 def compute_levels(hist) -> str:
     """Compute swing-pivot support/resistance and Fibonacci retracement levels.
 
     All numbers are derived from the OHLCV data so the LLM can cite them
     verbatim instead of inventing precise-looking price levels.
     """
-    if hist is None or hist.empty:
-        return "  (no OHLC data for levels)"
     try:
-        close = hist["Close"]
-        high = hist["High"]
-        low = hist["Low"]
-
-        last = float(close.iloc[-1])
-
-        # ── Swing pivots (fractal highs/lows over last ~1y of daily bars) ──
-        window = 5
-        h = high.tail(252).reset_index(drop=True)
-        l = low.tail(252).reset_index(drop=True)
-        n = len(h)
-        swing_highs, swing_lows = [], []
-        for i in range(window, n - window):
-            seg_h = h.iloc[i - window:i + window + 1]
-            seg_l = l.iloc[i - window:i + window + 1]
-            if h.iloc[i] == seg_h.max():
-                swing_highs.append(float(h.iloc[i]))
-            if l.iloc[i] == seg_l.min():
-                swing_lows.append(float(l.iloc[i]))
-
-        # Resistances: clustered swing highs at/above current price (nearest first)
-        res = [lv for lv in _cluster_levels(swing_highs) if lv >= last]
-        res = sorted(res)[:3]
-        # Supports: clustered swing lows at/below current price (nearest first)
-        sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last]
-        sup = sorted(sup, reverse=True)[:3]
-
+        levels = key_levels(hist)
+        if not levels:
+            return "  (no OHLC data for levels)"
+        last, res, sup, fibs = (levels[k] for k in ("last", "resistance", "support", "fib"))
+        lo, hi = levels["low"], levels["high"]
         res_lines = [
             f"  R{i+1}:  ${lv:8.2f}   ({(lv/last-1)*100:+.2f}% from price)"
             for i, lv in enumerate(res)
@@ -80,19 +127,6 @@ def compute_levels(hist) -> str:
             for i, lv in enumerate(sup)
         ] or ["  (no swing-low support detected below current price)"]
 
-        # ── Fibonacci retracement over the 52-week range ──
-        hi = float(high.tail(252).max())
-        lo = float(low.tail(252).min())
-        rng = hi - lo
-        fibs = [
-            ("0.0%  (52W High)", hi),
-            ("23.6%", hi - 0.236 * rng),
-            ("38.2%", hi - 0.382 * rng),
-            ("50.0%", hi - 0.500 * rng),
-            ("61.8%", hi - 0.618 * rng),
-            ("78.6%", hi - 0.786 * rng),
-            ("100.0% (52W Low)", lo),
-        ]
         fib_lines = [
             f"  {label:<18} ${price:8.2f}"
             + ("  ◄ 現價附近" if abs(price - last) / last <= 0.01 else "")
@@ -174,8 +208,35 @@ def compute_moving_average_charts(hist) -> str:
         return f"  (MA chart error: {e})"
 
 
+def weekly_bars(hist):
+    """Weekly OHLCV, each week labelled by its **last trading day**.
+
+    ``resample("W")`` labels a week by its Sunday, so a report generated on a
+    Thursday cited the week in progress as "2026-10-25" — a date in the future.
+    """
+    import pandas as pd
+
+    g = hist.assign(Date=hist.index).groupby(pd.Grouper(freq="W"))
+    out = pd.DataFrame({
+        "Open": g["Open"].first(), "High": g["High"].max(), "Low": g["Low"].min(),
+        "Close": g["Close"].last(), "Volume": g["Volume"].sum(), "Date": g["Date"].last(),
+    }).dropna(subset=["Close", "Date"])
+    return out.set_index("Date")
+
+
+def ohlc_table(bars, title: str) -> str:
+    """Plain OHLCV rows, so candlestick claims can be checked against real bars."""
+    rows = [f"  ── {title} ──",
+            "  日期            開        高        低        收         成交量"]
+    for ts, b in bars.iterrows():
+        rows.append(f"  {str(ts)[:10]}  {b['Open']:>8.2f}  {b['High']:>8.2f}  "
+                    f"{b['Low']:>8.2f}  {b['Close']:>8.2f}  {b['Volume']:>13,.0f}")
+    return "\n".join(rows)
+
+
 def compute_technicals(hist) -> str:
     """Compute technical indicators from OHLCV history DataFrame."""
+    hist = complete(hist)
     if hist is None or hist.empty:
         return "  (no OHLC data)"
     try:
@@ -194,10 +255,13 @@ def compute_technicals(hist) -> str:
         ma50 = close.rolling(50).mean()
         ma200 = close.rolling(200).mean()
 
-        # RSI-14
+        # RSI-14, Wilder smoothing (α = 1/14) as every charting site uses. The
+        # 14-day simple mean used before (Cutler's RSI) read INTC at 14.5 where
+        # the standard RSI was 36.4, and called 7 of 24 tickers oversold that
+        # were not.
         delta = close.diff()
-        gain = delta.clip(lower=0).rolling(14).mean()
-        loss = (-delta.clip(upper=0)).rolling(14).mean()
+        gain = delta.clip(lower=0).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
+        loss = (-delta.clip(upper=0)).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
         rs = gain / loss.replace(0, float("nan"))
         rsi = 100 - (100 / (1 + rs))
 
@@ -222,7 +286,7 @@ def compute_technicals(hist) -> str:
             (high - prev_close).abs(),
             (low - prev_close).abs(),
         ], axis=1).max(axis=1)
-        atr14 = tr.rolling(14).mean()
+        atr14 = tr.ewm(alpha=1/14, adjust=False, min_periods=14).mean()  # Wilder
 
         # Stochastic %K/%D (14,3,3)
         low14 = low.rolling(14).min()
@@ -292,10 +356,11 @@ def compute_technicals(hist) -> str:
         else:
             divergence = "無明顯背離"
 
-        # Weekly OHLCV table (last 20 weeks)
-        weekly_close = close.resample("W").last().dropna().tail(20)
-        weekly_volume = volume.resample("W").sum().dropna().tail(20)
-        ohlcv_lines = ["  日期          收盤      RSI     MACD柱    週成交量"]
+        # Weekly table (last 20 weeks), each labelled by its last trading day
+        weekly = weekly_bars(hist)
+        weekly_close = weekly["Close"].tail(20)
+        weekly_volume = weekly["Volume"]
+        ohlcv_lines = ["  週末交易日    收盤      RSI     MACD柱    週成交量"]
         for wdt in weekly_close.index:
             wdt_str = wdt.strftime("%Y-%m-%d")
             wc = weekly_close.get(wdt, float("nan"))
@@ -312,13 +377,17 @@ def compute_technicals(hist) -> str:
             wv = weekly_volume.get(wdt, float("nan"))
             try:
                 ohlcv_lines.append(
-                    f"  {wdt_str}  {wc:>8.2f}  {wr:>6.1f}  {wm:>+8.3f}  {wv:>12,.0f}"
+                    f"  {wdt_str}  {wc:>8.2f}  "
+                    # RSI needs 14 bars: a recent listing's first weeks have none.
+                    + (f"{wr:>6.1f}" if wr == wr else f"{'N/A':>6}")
+                    + f"  {wm:>+8.3f}  {wv:>12,.0f}"
                 )
             except Exception:
                 pass
 
         na = lambda v: f"{v:.2f}" if v == v else "N/A"
         na3 = lambda v: f"{v:.3f}" if v == v else "N/A"
+        vol = lambda v: f"{v:,.0f}" if v == v else "N/A"
 
         vol_ratio = last_vol / last_avg_vol if last_avg_vol > 0 else float("nan")
         obv_trend = "OBV > MA → 量能支撐上漲" if last_obv > last_obv_ma else "OBV < MA → 量能疲弱"
@@ -335,7 +404,7 @@ def compute_technicals(hist) -> str:
   ── 當前技術指標快照 ──
   收盤價:       ${last:.2f}
   52W 高/低:    ${w52_high:.2f} / ${w52_low:.2f}  (目前位於52W區間 {w52_pct:.1f}%)
-  ATR(14):      ${na(last_atr)}  ({na(atr_pct)}% of price) — 每日波動參考
+  ATR(14):      ${na(last_atr)}  ({na(atr_pct)}% of price, Wilder) — 每日波動參考
 
   ── 均線系統 ──
   MA20:         ${na(last_ma20)}   {'▲ 上方' if last > last_ma20 else '▼ 下方'}
@@ -346,8 +415,8 @@ def compute_technicals(hist) -> str:
 {ma_charts}
 
   ── 動能指標 ──
-  RSI(14):      {na(last_rsi)}    {'🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
-  RSI 背離:     {divergence}
+  RSI(14):      {na(last_rsi)}  (Wilder)  {'🔴 超買 >70' if last_rsi > 70 else '🟢 超賣 <30' if last_rsi < 30 else '🟡 中性 30-70'}
+  RSI 背離:     {divergence}  (僅比較近20根K棒首尾的價格與RSI方向)
   MACD:         {na3(last_macd)}
   MACD Signal:  {na3(last_signal)}
   MACD Hist:    {last_hist_m:+.3f}  {'🟢 看多' if last_hist_m > 0 else '🔴 看空'}
@@ -365,12 +434,16 @@ def compute_technicals(hist) -> str:
 
   ── 成交量 ──
   最新成交量:   {last_vol:,.0f}
-  20日均量:     {last_avg_vol:,.0f}  (量比: {na(vol_ratio)}x)
-  50日均量:     {last_avg_vol50:,.0f}
+  20日均量:     {vol(last_avg_vol)}  (量比: {na(vol_ratio)}x)
+  50日均量:     {vol(last_avg_vol50)}
   OBV趨勢:      {obv_trend}
 {levels}
   ── 近20週收盤走勢 ──
 {chr(10).join(ohlcv_lines)}
+
+{ohlc_table(hist.tail(10), "近10根日K (開高低收)")}
+
+{ohlc_table(weekly.tail(8), "近8根週K (開高低收，以該週最後交易日標示)")}
 """
     except Exception as exc:
         return f"  (technical indicator error: {exc})"

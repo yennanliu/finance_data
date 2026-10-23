@@ -92,6 +92,13 @@ SEARCH_EXCLUDE_META = "search:\n  exclude: true"
 
 _DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
 
+# A ticker's newest daily-type report older than this gets a notice on its page.
+# MRVL and SKHY left the technical schedule, and their pages kept opening on
+# July and August reports with nothing to say they were no longer updated.
+STALE_REPORT_DAYS = 7
+SCHEDULE_FILE = ROOT / "scripts" / ".ticker_schedule.json"
+_SCHEDULE_KIND = {"fundamental_analysis": "fundamental", "technical_analysis": "technical"}
+
 
 def _file_date(f: Path) -> "date | None":
     """Parse a YYYY-MM-DD date embedded in a filename; None if absent/invalid."""
@@ -836,6 +843,8 @@ LANG_TEXT = {
         "meta_lang": "Language",
         "meta_generated": "Generated",
         "meta_nav_label": "Report navigation",
+        "meta_stale_dropped": "No longer updated: {ticker} is not on the daily {type} schedule. This is its last report, from {date} ({days} days ago).",
+        "meta_stale_old": "This is the newest {type} report for {ticker}, from {date} ({days} days ago).",
     },
     "zh": {
         "lang_name": "繁體中文",
@@ -863,6 +872,8 @@ LANG_TEXT = {
         "meta_lang": "語言",
         "meta_generated": "生成",
         "meta_nav_label": "報告導覽",
+        "meta_stale_dropped": "已停止更新：{ticker} 不在每日{type}排程中。這是最後一份報告，日期 {date}（{days} 天前）。",
+        "meta_stale_old": "這是 {ticker} 最新的{type}報告，日期 {date}（{days} 天前）。",
         "last_updated": "最後更新",
         "last_built": "最後建置",
         "sector": "產業",
@@ -2266,6 +2277,30 @@ def report_type_label(f: Path, lang: str) -> str:
     return key.replace("_", " ").replace("-", " ").title()
 
 
+def scheduled(ticker: str, kind: str) -> bool:
+    """Whether ``ticker`` is on the daily ``kind`` ('technical' / 'fundamental')
+    schedule. An unreadable schedule counts as scheduled: no notice is better
+    than a false "no longer updated"."""
+    try:
+        tickers = json.loads(SCHEDULE_FILE.read_text())["tickers"][kind]
+    except (OSError, ValueError, KeyError):
+        return True
+    return ticker.upper() in {t.upper() for t in tickers}
+
+
+def stale_notice(ticker: str, f: Path, lang: str) -> str:
+    """A line under the chip bar when ``f`` — the newest report of a daily
+    type — is more than ``STALE_REPORT_DAYS`` old; empty otherwise."""
+    kind = _SCHEDULE_KIND.get(report_type_key(f))
+    d = _file_date(f)
+    if not kind or d is None or (TODAY_DATE - d).days <= STALE_REPORT_DAYS:
+        return ""
+    key = "meta_stale_old" if scheduled(ticker, kind) else "meta_stale_dropped"
+    text = t(lang, key).format(ticker=ticker.upper(), type=report_type_label(f, lang),
+                               date=d.isoformat(), days=(TODAY_DATE - d).days)
+    return f'  <p class="rmeta__stale" role="note">{_esc(text)}</p>'
+
+
 def report_meta_block(ticker: str, meta: dict, f: Path, fields: dict, lang: str,
                       *, prev: "Path | None" = None, nxt: "Path | None" = None) -> str:
     """The chip bar + older/newer stepper that opens a dated report page.
@@ -2312,6 +2347,7 @@ def report_meta_block(ticker: str, meta: dict, f: Path, fields: dict, lang: str,
         '    </div>',
         '  </div>',
         f'  <div class="rmeta__chips">{"".join(chips)}</div>',
+        *([stale_notice(ticker, f, lang)] if nxt is None else []),
         '</nav>',
     ])
 

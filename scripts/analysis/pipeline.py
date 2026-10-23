@@ -22,6 +22,8 @@ from .context import build_context
 from .context.fundamental_facts import compute_facts
 from .data import report_inputs
 from .data.sources import fetch_data
+from .data.technicals import key_levels, levels_summary
+from .exceptions import DataFetchError
 from .llm import call_llm, prompt_fingerprint, run_with_fallback
 from .publish import GENERATED_BY as _GENERATED_BY, dedup_path, frontmatter
 from .utils.mermaid import sanitize_mermaid_blocks
@@ -87,6 +89,9 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
 
     print("[1/3] Fetching financial data from Yahoo Finance …")
     data = fetch_data(ticker)
+    if analysis_type == "technical-analysis":
+        require_price_history(ticker, data)
+        data["technical_levels"] = key_levels(data["hist"])
     if analysis_type == "fundamental-analysis":
         inputs = report_inputs.gather(ticker, data.get("info"))
         report_inputs.prefer_newer_close(data, inputs["bars"])
@@ -112,6 +117,20 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
                                 extra_fields=extra)
 
 
+def require_price_history(ticker: str, data: dict) -> None:
+    """Refuse to write a technical report without bars or a price.
+
+    A technical report is nothing but its price data. Without it the model
+    wrote one anyway: every 0050 report in October was "modelled" at ~$195
+    (actual NT$108) from an empty history, and eight 2026-10-23 reports were
+    built on a ``$nan`` close. A failed run publishes nothing, which is better.
+    """
+    hist = data.get("hist")
+    if hist is None or hist.empty or data.get("price_now") is None:
+        raise DataFetchError(f"{ticker}: no daily price history or close — "
+                             "not generating a technical report from nothing")
+
+
 # Display names for source_status keys, in header order. Keys that are inputs
 # to another source (price_store, peers, risk_free_rate) are not listed.
 _SOURCE_NAMES = (
@@ -135,6 +154,10 @@ def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int) -
     if data.get("price_now") is not None:
         fields["price"] = round(float(data["price_now"]), 4)
         fields["price_date"] = data.get("price_date") or "unknown"
+    if data.get("close_source"):
+        fields["close_source"] = data["close_source"]
+    if analysis_type == "technical-analysis" and data.get("technical_levels"):
+        fields["levels"] = f'"{levels_summary(data["technical_levels"])}"'
     status = data.get("source_status") or {}
     if status:
         fields["data_sources_ok"] = ", ".join(k for k, v in status.items() if v) or "none"
@@ -178,4 +201,4 @@ def recheck_valuation(report: str, facts: dict) -> "tuple[str, dict]":
 
 
 __all__ = ["run_analysis", "save_analysis_report", "recheck_valuation",
-           "provenance", "stamp_sources"]
+           "provenance", "stamp_sources", "require_price_history"]
