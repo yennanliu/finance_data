@@ -308,3 +308,58 @@ def test_last_completed_close_uses_the_exchange_close_time():
 def test_last_completed_close_of_nothing_is_none():
     assert data_fetch.last_completed_close(None) == (None, None)
     assert data_fetch.last_completed_close(pd.DataFrame({"Close": []})) == (None, None)
+
+
+# ── quote_close: the official close when the daily bar is empty ──────────────
+
+def _epoch(iso):
+    from datetime import datetime
+    return int(datetime.fromisoformat(iso).timestamp())
+
+
+def test_quote_close_reads_a_close_stamped_at_the_session_end():
+    """SKHY 2026-10-22: daily bar NaN, quote $131.69 at 16:00:00 ET."""
+    info = {"regularMarketPrice": 131.69, "exchangeTimezoneName": "America/New_York",
+            "regularMarketTime": _epoch("2026-10-22T20:00:00+00:00")}
+    assert data_fetch.quote_close(info) == (131.69, "2026-10-22")
+
+
+def test_quote_close_ignores_an_intraday_tick():
+    info = {"regularMarketPrice": 130.0, "exchangeTimezoneName": "America/New_York",
+            "regularMarketTime": _epoch("2026-10-22T17:40:00+00:00")}    # 13:40 ET
+    assert data_fetch.quote_close(info) == (None, None)
+
+
+def test_quote_close_uses_the_taipei_close_time():
+    """0050 2026-10-22: no daily bar at all, quote NT$106.90 at 13:30:04 Taipei."""
+    info = {"regularMarketPrice": 106.9, "exchangeTimezoneName": "Asia/Taipei",
+            "regularMarketTime": _epoch("2026-10-22T05:30:04+00:00")}
+    assert data_fetch.quote_close(info) == (106.9, "2026-10-22")
+
+
+@pytest.mark.parametrize("info", [{}, {"regularMarketPrice": None, "regularMarketTime": 1},
+                                  {"regularMarketPrice": "x", "regularMarketTime": 1}])
+def test_quote_close_without_a_usable_quote_is_none(info):
+    assert data_fetch.quote_close(info) == (None, None)
+
+
+def test_fetch_data_prefers_a_newer_quote_close_over_an_empty_bar(monkeypatch):
+    import types as _types
+
+    class _EmptyLastBar(_FakeTicker):
+        def __init__(self, symbol):
+            super().__init__(symbol)
+            self.info = {"regularMarketPrice": 131.69, "exchangeTimezoneName": "America/New_York",
+                         "regularMarketTime": _epoch("2026-10-22T20:00:00+00:00")}
+
+        def history(self, period="2y"):
+            idx = pd.DatetimeIndex(pd.to_datetime(["2026-10-20", "2026-10-21", "2026-10-22"])
+                                   ).tz_localize("America/New_York")
+            return pd.DataFrame({"Open": [1.0] * 3, "High": [1.0] * 3, "Low": [1.0] * 3,
+                                 "Close": [139.79, 143.25, float("nan")], "Volume": [1] * 3},
+                                index=idx)
+
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: _types.SimpleNamespace(Ticker=_EmptyLastBar))
+    _stub_scrapers(monkeypatch)
+    out = fetch_data("SKHY")
+    assert (out["price_now"], out["price_date"]) == (131.69, "2026-10-22")

@@ -379,6 +379,34 @@ def last_completed_close(hist, now=None):
     return float(closes.iloc[-1]), str(closes.index[-1])[:10]
 
 
+def quote_close(info: dict):
+    """``(price, 'YYYY-MM-DD')`` from Yahoo's regular-market quote, if it is a close.
+
+    Yahoo's daily history sometimes leaves the latest session's bar empty (all
+    NaN) or omits it, while the quote still carries the official close: on
+    2026-10-23 the SKHY report was given the 10-21 close ($143.25) although the
+    10-22 close ($131.69) was in ``regularMarketPrice``. A quote stamped before
+    the exchange's close is an intraday tick and is ignored.
+    """
+    from datetime import datetime, timezone
+    from zoneinfo import ZoneInfo
+
+    price, stamp = info.get("regularMarketPrice"), info.get("regularMarketTime")
+    tzname = info.get("exchangeTimezoneName")
+    try:
+        price = float(price)
+        tz = ZoneInfo(tzname) if tzname else timezone.utc
+        when = datetime.fromtimestamp(int(stamp), tz)
+    except (TypeError, ValueError, KeyError, OSError):
+        return None, None
+    if price != price or price <= 0:
+        return None, None
+    close_h, close_m = _SESSION_CLOSE.get(tzname or "", _DEFAULT_SESSION_CLOSE)
+    if (when.hour, when.minute) < (close_h, close_m):
+        return None, None
+    return price, when.date().isoformat()
+
+
 def fetch_data(ticker: str) -> dict:
     """Download fundamentals, price history, and news from Yahoo Finance."""
     yf = _get_yf()
@@ -408,6 +436,11 @@ def fetch_data(ticker: str) -> dict:
         hist = None
         price_now = price_52w_high = price_52w_low = price_date = None
         price_series = {}
+
+    # A newer close in the quote than in the daily bars: the bar was empty.
+    q_price, q_date = quote_close(info)
+    if q_date and (price_date is None or q_date > price_date):
+        price_now, price_date = q_price, q_date
 
     # financial statements
     def _safe_df(fn):
