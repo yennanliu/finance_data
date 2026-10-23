@@ -157,6 +157,43 @@ def test_fiscal_years_come_from_period_dates_not_fy_fp_labels():
     assert F.fiscal_years(gaap) == [("2024-01-29", "2025-01-26")]
 
 
+def test_the_fiscal_year_in_progress_is_included():
+    """AMD / TSLA / PLTR stopped at 2025-12 in October 2026.
+
+    The year in progress has no annual span until its 10-K, so only completed
+    years were listed and every 2026 10-Q quarter was dropped.
+    """
+    gaap = {"Revenues": {"units": {"USD": [
+        fact("2025-01-01", "2025-12-31", 94.83e9, form="10-K", filed="2026-01-29"),
+        fact("2026-01-01", "2026-03-31", 22.39e9, filed="2026-04-23"),
+        fact("2026-01-01", "2026-06-30", 50.62e9, filed="2026-07-23"),
+    ]}}}
+    assert F.fiscal_years(gaap) == [("2025-01-01", "2025-12-31"),
+                                    ("2026-01-01", "2026-12-31")]
+    rows = F.resolve({"facts": {"us-gaap": gaap}})
+    by_end = {r["period_end"]: r for r in rows}
+    assert by_end["2026-06-30"]["revenue"] == pytest.approx(28.23e9)
+    assert (by_end["2026-06-30"]["fy"], by_end["2026-06-30"]["fp"]) == (2026, "Q2")
+
+
+def test_a_52_week_year_in_progress_takes_the_next_fiscal_label():
+    """NVDA's year starting 2026-01-26 is FY2027, not FY2026."""
+    gaap = {"Revenues": {"units": {"USD": [
+        fact("2025-01-27", "2026-01-25", 215.9e9, form="10-K", filed="2026-02-25"),
+        fact("2026-01-26", "2026-04-26", 70.0e9, filed="2026-05-27"),
+    ]}}}
+    assert F.fiscal_years(gaap)[-1] == ("2026-01-26", "2027-01-25")
+    row_ = F.resolve({"facts": {"us-gaap": gaap}})[-1]
+    assert (row_["period_end"], row_["fy"], row_["fp"]) == ("2026-04-26", 2027, "Q1")
+
+
+def test_no_year_in_progress_before_its_first_10q():
+    gaap = {"Revenues": {"units": {"USD": [
+        fact("2025-01-01", "2025-12-31", 10.0, form="10-K"),
+    ]}}}
+    assert F.fiscal_years(gaap) == [("2025-01-01", "2025-12-31")]
+
+
 # ── Year-to-date reconstruction ──────────────────────────────────────────────
 def test_cumulative_metrics_are_recovered_by_differencing():
     """Cash flow is only ever reported year-to-date, never as a discrete quarter.
