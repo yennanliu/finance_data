@@ -554,3 +554,14 @@ def test_a_split_in_the_last_two_quarters_keeps_both_counts():
     counts = {f"2025-0{m}-30": v for m, v in
               zip(range(1, 8), [1e9, 1e9, 1e9, 1e9, 1e9, 20e9, 20.1e9])}
     assert F._plausible_share_counts(counts) == counts
+
+
+def test_two_adjacent_mis_scaled_counts_do_not_vouch_for_each_other():
+    """ONDS tags FY2025 Q4 and FY2026 Q1 both in thousands; 2.08× apart, they
+    look like a 2:1 split of each other and must still both be dropped."""
+    counts = {"2025-03-31": 105_004_818.0, "2025-06-30": 150_652_998.0,
+              "2025-09-30": 259_909_415.0, "2025-12-31": 221_769.0,
+              "2026-03-31": 461_706.0, "2026-06-30": 503_593_000.0}
+    kept = F._plausible_share_counts(counts)
+    assert "2025-12-31" not in kept and "2026-03-31" not in kept
+    assert kept["2026-06-30"] == 503_593_000.0

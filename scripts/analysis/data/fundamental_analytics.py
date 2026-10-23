@@ -29,6 +29,8 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
+from ..config.valuation import DEFAULT_TAX_RATE, TAX_RATE_BOUNDS
+
 # Quarters in a trailing-twelve-month window.
 TTM_QUARTERS = 4
 
@@ -55,13 +57,12 @@ LEVEL_METRICS = (
 )
 
 # The tax rate assumed when a period's own effective rate is unusable — a loss
-# year, or a one-off benefit that drives the rate negative. The US federal
-# statutory rate, which is what an analyst would pencil in.
-STATUTORY_TAX_RATE = 0.21
-
-# Bounds on an effective tax rate we will believe. Outside them the rate is a
-# one-off (a valuation-allowance release, a repatriation charge), not a rate.
-TAX_RATE_BOUNDS = (0.0, 0.5)
+# year, or a one-off benefit that drives the rate negative — and the bounds on
+# an effective rate we will believe (outside them it is a one-off such as a
+# valuation-allowance release, not a rate). Shared with the fundamental
+# report's fact block via config/valuation.py, so the Market Data pages and the
+# LLM reports tax the same company the same way.
+STATUTORY_TAX_RATE = DEFAULT_TAX_RATE
 
 
 # ── small helpers ────────────────────────────────────────────────────────────

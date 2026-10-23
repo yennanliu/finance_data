@@ -203,6 +203,11 @@ def trim(rows: list[dict], years: int = KEEP_YEARS) -> list[dict]:
 # tag gives MSFT 14 quarters; the chain gives the full run.
 DURATION_CONCEPTS = {
     "revenue": (
+        # A bank's total net revenue (net interest income + non-interest
+        # income). Only a lender tags it, and for one the ASC 606 concept below
+        # is just fee income: SOFI's runs ~$150M a quarter against ~$1.1B of
+        # real revenue, which put its net margin above 100%.
+        "RevenuesNetOfInterestExpense",
         "RevenueFromContractWithCustomerExcludingAssessedTax",
         "RevenueFromContractWithCustomerIncludingAssessedTax",
         "Revenues", "SalesRevenueNet", "SalesRevenueGoodsNet",
@@ -558,11 +563,15 @@ def _plausible_share_counts(counts: dict) -> dict:
             # a mis-scaled one (ONDS's 221,769) is still far from it.
             if prev and 1 / MAX_SHARE_COUNT_STEP <= value / prev <= MAX_SHARE_COUNT_STEP:
                 plausible = True
-            # A split either side vouches for it: the window around the last
-            # pre-split quarter can be mostly post-split when history is short.
+            # A split from the last kept count vouches for it. A split to the
+            # *next* count vouches only for the very first count, whose window
+            # can be mostly post-split when history is short: anywhere else it
+            # lets two adjacent mis-scaled counts vouch for each other — ONDS
+            # tags 221,769 then 461,706 (thousands; ~260M and ~504M real),
+            # which is 2.08× apart and reads as a 2:1 split.
             nxt = values[i + 1] if i + 1 < len(values) else None
             if not plausible and not (prev and split_ratio(value / prev)) \
-                    and not (nxt and split_ratio(nxt / value)):
+                    and not (prev is None and nxt and split_ratio(nxt / value)):
                 continue
             prev = value
         kept[end] = value

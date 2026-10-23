@@ -146,16 +146,16 @@ def test_default_growth_floors_a_shrinking_history_at_flat():
 # ── WACC ─────────────────────────────────────────────────────────────────────
 def test_wacc_by_hand():
     # cap = 10 × 100 = 1000, debt 250 → weights 0.8 / 0.2
-    # ke = 4.25% + 1.2 × 5.5% = 10.85%; kd = 10 / 250 = 4%; tax = 20 / 100 = 20%
-    # WACC = 0.8 × 10.85% + 0.2 × 4% × 0.8 = 8.68% + 0.64% = 9.32%
+    # ke = 4.25% + 1.2 × 5% = 10.25%; kd = 10 / 250 = 4%; tax = 20 / 100 = 20%
+    # WACC = 0.8 × 10.25% + 0.2 × 4% × 0.8 = 8.2% + 0.64% = 8.84%
     e = fy(2025, long_term_debt=250.0, interest_expense=10.0,
            income_tax=20.0, pretax_income=100.0)
     w = IV.wacc(e, 100.0, 1.2)
     assert w["weight_equity"] == pytest.approx(0.8)
-    assert w["cost_equity"] == pytest.approx(0.1085)
+    assert w["cost_equity"] == pytest.approx(0.1025)
     assert w["cost_debt"] == pytest.approx(0.04)
     assert w["tax_rate"] == pytest.approx(0.20)
-    assert w["wacc"] == pytest.approx(0.0932)
+    assert w["wacc"] == pytest.approx(0.0884)
 
 
 def test_wacc_without_debt_is_the_cost_of_equity():

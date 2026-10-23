@@ -275,8 +275,11 @@ def test_committed_store_produces_sane_derived_values():
         if not t:
             continue
         m = FA.margins(t)
+        # The loss side is wide on purpose: IONQ's reported net income swings
+        # by $1-2B a quarter on ~$70M of revenue (non-cash revaluations), a
+        # genuine -553% TTM net margin. A unit error is ~1000x, far past this.
         for name, v in m.items():
-            assert v is None or -500.0 <= v <= 100.0, f"{key} {name} margin {v}"
+            assert v is None or -2000.0 <= v <= 100.0, f"{key} {name} margin {v}"
 
         bars = prices.load_store(key)
         if not bars:

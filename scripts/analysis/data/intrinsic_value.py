@@ -25,6 +25,7 @@ returns None rather than a number for it.
 
 from __future__ import annotations
 
+from ..config.valuation import EQUITY_RISK_PREMIUM
 from . import fundamental_analytics as fa
 from . import price_analytics as pa
 
@@ -38,8 +39,11 @@ TERMINAL_GROWTH = 0.04      # growth in the terminal stage — roughly nominal G
 GROWTH_CAP = 0.20           # no business compounds faster than this for a decade
 GROWTH_FLOOR = 0.0          # a shrinking history is modelled as flat, not as decline
 
+# The equity risk premium is the house assumption in config/valuation.py, shared
+# with the fundamental report's fact block. The risk-free rate is a fixed
+# figure here because the docs build is offline; the report fetches ^TNX live,
+# so their WACCs can differ by the move in Treasury yields since this was set.
 RISK_FREE_RATE = 0.0425     # ~10-year US Treasury yield
-EQUITY_RISK_PREMIUM = 0.055 # long-run US equity premium over Treasuries
 MAX_COST_OF_DEBT = 0.15     # interest ÷ debt above this is a mis-tag, not a rate
 
 # The growth windows the per-share table reports, longest first. Not 10: the

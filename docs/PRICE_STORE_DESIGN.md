@@ -749,7 +749,8 @@ renders with JS off. They reuse the `.pchart` card chrome but carry no
 constant and the page prints each beside the figure it produced: discount rate
 10%, growth stage 10 years at the 5Y (else 3Y) EBITDA-per-share CAGR — falling
 back to revenue per share — clamped to 0–20%, terminal stage 10 years at 4%;
-WACC from CAPM with a 4.25% risk-free rate, a 5.5% equity risk premium and a
+WACC from CAPM with a 4.25% risk-free rate, the 5% equity risk premium shared with
+the report fact block (`config/valuation.py`) and a
 3-year weekly beta against `vti` (`price_analytics.beta`). A non-positive base
 has no fair value rather than a negative one. No analyst estimates are used, so
 GuruFocus's forecast bars have no equivalent here.
@@ -778,7 +779,17 @@ GuruFocus's forecast bars have no equivalent here.
 
 ### Known gaps
 
-- The store only emits quarters inside a *completed* fiscal year, so "TTM" is
-  the last fiscal year end plus nothing after it — up to three quarters stale.
+- ~~"TTM" up to three quarters stale~~ — closed by PR #84, which adds the
+  fiscal year in progress to `fundamentals.fiscal_years()`. Partial years are
+  left out of the annual charts (`annual_series` needs four quarters) but feed
+  every TTM figure.
+- Shared assumptions: the equity risk premium and tax-rate default/bounds come
+  from `config/valuation.py`, the same module the fundamental report's fact
+  block (PR #84) reads, so both quote one WACC recipe. The risk-free rate is
+  the exception — fixed here because the docs build is offline, fetched live
+  (^TNX) by the report.
+- SOFI is a lender: its revenue is `RevenuesNetOfInterestExpense` (net
+  interest + non-interest income), first in the revenue chain and tagged by no
+  other ticker in the universe.
 - AMD, GOOG, MRVL and MSFT tag depreciation only annually, so most of their
   quarters still lack EBITDA; GOOG also lacks most share counts.
