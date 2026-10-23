@@ -148,13 +148,14 @@ def annotate(text: str, result: dict) -> str:
         text = text.replace(s88, s88.rstrip("\n") + "\n" + block + "\n", 1)
 
     if result["status"] == "mismatch":
-        notice = (f"\n> ⚠️ **程式複算更正**：8.8 節加權合理價值應為 **{_money(result['total'])}**"
+        # A paragraph, not a quote: Python-Markdown merges two adjacent quotes
+        # even across a blank line, and the title is followed by the 報告日期 one.
+        notice = (f"\n**⚠️ 程式複算更正**：8.8 節加權合理價值應為 **{_money(result['total'])}**"
                   f"（報告寫 {_money(result['stated'])}）")
         if result["mos"] is not None:
-            notice += (f"；據此 MOS 為 **{result['mos']:+.1f}%**（報告寫 {result['stated_mos']:+.1f}%），"
-                       f"上行空間 **{result['upside']:+.1f}%**")
-        # Blank line after: the title is followed directly by the 報告日期 quote,
-        # which would otherwise merge into this one.
+            notice += (f"；以價格 {_money(result['price'])} 計，MOS 為 **{result['mos']:+.1f}%**、"
+                       f"上行空間 **{result['upside']:+.1f}%**（若用報告所寫的 "
+                       f"{_money(result['stated'])} 則 MOS 為 {result['stated_mos']:+.1f}%）")
         notice += "。報告其他段落引用的舊數值請以此為準。\n\n"
         text = re.sub(r"^(# [^\n]+\n)", lambda m: m.group(1) + notice, text, count=1, flags=re.M)
     return text

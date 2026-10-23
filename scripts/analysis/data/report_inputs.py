@@ -76,6 +76,22 @@ def peer_multiples(ticker: str) -> "list[dict]":
     return out
 
 
+def prefer_newer_close(data: dict, bars: "list[dict]") -> bool:
+    """Use the price store's last close when it is newer than Yahoo's.
+
+    Yahoo sometimes returns an empty (NaN) bar for the latest session, and
+    returns nothing at all for a symbol it does not know; the committed store
+    then holds the more recent close. Returns True if the price was replaced.
+    """
+    if not bars:
+        return False
+    last = bars[-1]
+    if data.get("price_now") is None or (data.get("price_date") or "") < last["date"]:
+        data["price_now"], data["price_date"] = float(last["close"]), last["date"]
+        return True
+    return False
+
+
 def gather(ticker: str) -> dict:
     """Everything :func:`fundamental_facts.compute_facts` needs beyond ``fetch_data``."""
     rows, status = store_rows(ticker)
@@ -91,4 +107,5 @@ def gather(ticker: str) -> dict:
             "peers": peers, "status": status}
 
 
-__all__ = ["gather", "store_rows", "risk_free_rate", "peer_multiples", "PEER_FIELDS"]
+__all__ = ["gather", "store_rows", "risk_free_rate", "peer_multiples",
+           "prefer_newer_close", "PEER_FIELDS"]

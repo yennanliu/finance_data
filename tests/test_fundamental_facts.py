@@ -188,3 +188,22 @@ def test_peers_skip_a_failing_lookup(monkeypatch):
     monkeypatch.setattr(report_inputs, "_get_yf", lambda: types.SimpleNamespace(Ticker=_T))
     peers = report_inputs.peer_multiples("TSLA")
     assert [p["ticker"] for p in peers] == ["F", "RIVN"]
+
+
+def test_the_price_store_wins_when_its_close_is_newer():
+    data = {"price_now": 386.47, "price_date": "2026-10-21"}
+    bars = [{"date": "2026-10-21", "close": 386.47}, {"date": "2026-10-22", "close": 374.58}]
+    assert report_inputs.prefer_newer_close(data, bars)
+    assert (data["price_now"], data["price_date"]) == (374.58, "2026-10-22")
+
+
+def test_the_price_store_fills_a_missing_yahoo_price():
+    data = {"price_now": None, "price_date": None}
+    assert report_inputs.prefer_newer_close(data, [{"date": "2026-10-22", "close": 106.9}])
+    assert data["price_now"] == 106.9
+
+
+def test_a_newer_yahoo_close_is_kept():
+    data = {"price_now": 374.58, "price_date": "2026-10-22"}
+    assert not report_inputs.prefer_newer_close(data, [{"date": "2026-10-21", "close": 386.47}])
+    assert data["price_now"] == 374.58

@@ -79,8 +79,9 @@ def test_annotate_flags_a_mismatch_under_the_title_and_in_8_8():
     text = s88(TSLA)
     out = A.annotate(text, A.check(text))
     title_end = out.index("\n", out.index("# TSLA")) + 1
-    assert out[title_end:].lstrip().startswith("> ⚠️ **程式複算更正**")
+    assert out[title_end:].lstrip().startswith("**⚠️ 程式複算更正**")
     assert "應為 **$324.23**" in out and "MOS 為 **-15.5%**" in out
+    assert "若用報告所寫的 $334.34 則 MOS 為 -12.0%" in out
     s = A.section(out, "8.8")
     assert "🔎 **程式複算" in s and "相差 +3.12%" in s
     assert "$334.34" in out           # the model's figure is left visible, not rewritten
@@ -95,3 +96,12 @@ def test_annotate_confirms_a_correct_total_without_a_title_notice():
 def test_annotate_leaves_an_unparsed_report_alone():
     text = "# X\n\n## 1. 摘要\n"
     assert A.annotate(text, A.check(text)) == text
+
+
+def test_title_notice_renders_apart_from_the_report_date_quote():
+    """Python-Markdown merges adjacent quotes, so the notice must not be one."""
+    markdown = pytest.importorskip("markdown")
+    text = s88(TSLA).replace("\n\n> **現價**", "\n> **報告日期**：x ｜ **現價**")
+    html = markdown.markdown(A.annotate(text, A.check(text, price=374.58)))
+    quote = html[html.index("<blockquote>"):html.index("</blockquote>")]
+    assert "程式複算更正" not in quote and "報告日期" in quote

@@ -89,6 +89,7 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
     data = fetch_data(ticker)
     if analysis_type == "fundamental-analysis":
         inputs = report_inputs.gather(ticker)
+        report_inputs.prefer_newer_close(data, inputs["bars"])
         data["source_status"] = {**data.get("source_status", {}), **inputs["status"]}
         data["report_facts"] = compute_facts(data, inputs)
     context = build_context(data, analysis_type)
