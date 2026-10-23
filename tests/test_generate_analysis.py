@@ -21,6 +21,20 @@ def _offline_report_inputs(monkeypatch):
         "store_rows": [], "bars": [], "risk_free": None, "peers": [], "fx": None, "status": {}})
 
 
+def _bars(n=60):
+    """A small daily OHLCV frame: technical runs now refuse to start without one."""
+    import pandas as pd
+    idx = pd.date_range("2026-07-01", periods=n, freq="B", tz="America/New_York")
+    close = pd.Series([100.0 + i * 0.5 for i in range(n)], index=idx)
+    return pd.DataFrame({"Open": close - 0.5, "High": close + 1, "Low": close - 1,
+                         "Close": close, "Volume": 1_000_000.0})
+
+
+def _priced(hist):
+    return {"hist": hist, "price_now": float(hist["Close"].iloc[-1]),
+            "price_date": str(hist.index[-1])[:10]}
+
+
 # ── save_report ──────────────────────────────────────────────────────────────
 
 def test_save_report_writes_markdown_with_frontmatter(tmp_path):
@@ -146,7 +160,7 @@ def test_main_sanitizes_broken_mermaid_end_to_end(monkeypatch, tmp_path):
         "    B --> C[樂觀情境 (機率: 40%)]\n"
         "```\n"
     )
-    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: _priced(_bars()))
     monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
     monkeypatch.setattr(pipeline, "call_llm",
                         lambda *a, **k: broken)
@@ -175,7 +189,10 @@ def test_main_sanitizes_broken_mermaid_end_to_end(monkeypatch, tmp_path):
 # come out as pure LLM output — for *every* analysis type, technical included.
 
 def _run_generate(monkeypatch, tmp_path, analysis_type, hist=None):
-    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": hist})
+    data = {"hist": hist}
+    if analysis_type == "technical-analysis":
+        data = _priced(hist if hist is not None else _bars())
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: data)
     monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
     monkeypatch.setattr(
         pipeline, "call_llm",
@@ -205,8 +222,7 @@ def test_generated_report_has_no_chart_markup(monkeypatch, tmp_path, analysis_ty
 def test_technical_report_writes_no_png(monkeypatch, tmp_path):
     """The PNG path is gone, so a technical run must leave no image behind — even
     when price history is present, which is what used to trigger it."""
-    hist = object()  # never touched: nothing consumes hist for chart rendering now
-    _run_generate(monkeypatch, tmp_path, "technical-analysis", hist=hist)
+    _run_generate(monkeypatch, tmp_path, "technical-analysis", hist=_bars())
     assert list(tmp_path.glob("*.png")) == []
 
 

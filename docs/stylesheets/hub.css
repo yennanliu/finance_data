@@ -490,6 +490,15 @@
   color: var(--fp-green, #22c55e);
   background: var(--hub-glow);
 }
+.md-typeset .rmeta__stale {
+  margin: 0.75rem 0 0;
+  padding: 0.45rem 0.75rem;
+  border-left: 3px solid var(--fp-yellow, #eab308);
+  border-radius: 0 var(--fp-radius-sm, 0.4rem) var(--fp-radius-sm, 0.4rem) 0;
+  background: var(--fp-badge-bg, rgba(255, 255, 255, .04));
+  font-size: 0.72rem;
+  color: var(--fp-text-secondary, #a1a1aa);
+}
 .md-typeset .rmeta__chip--dim {
   font-family: inherit;
   font-weight: 500;

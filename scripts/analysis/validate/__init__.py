@@ -1,7 +1,9 @@
 """Validation layer: post-hoc quality scanning of generated report files.
 
 Detects empty/refusal/too-short/cut-off/placeholder/HTML-leak/duplicate reports,
-and for fundamental reports missing chapters and §8.8 arithmetic errors.
+for fundamental reports missing chapters and §8.8 arithmetic errors, and for
+technical reports $nan values, a headline price / R1–S3 levels that differ
+from what the pipeline recorded, and R/R that does not recompute.
 This is distinct from the *generation-time* refusal detection in
 :mod:`analysis.llm` — that decides whether to retry a live call; this inspects
 already-written report files. The ``check_report_quality.py`` CLI builds its
@@ -17,6 +19,7 @@ from typing import List, Optional
 
 from ..utils.mermaid import mermaid_syntax_issues
 from .arithmetic import check as arithmetic_check, missing_chapters
+from .technical import check as technical_check
 
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
 MIN_LINES = 80          # below this (after frontmatter) → TOO_SHORT
@@ -163,6 +166,27 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
             issues.append("ARITHMETIC")
             notes.append(f"8.8 stated={arith['stated']} terms_sum={arith['total']} "
                          f"diff={arith['diff_pct']}% weights={arith['weights_pct']}%")
+
+    # Technical reports: a $nan the context leaked, a headline price that is not
+    # the close the pipeline recorded, R1–S3 that are not the computed levels,
+    # and a stated R/R its own entry/stop/targets do not give.
+    if atype == "technical_analysis" and "REFUSAL" not in issues:
+        tech = technical_check(text)
+        if tech["nan"]:
+            issues.append("NAN_VALUE")
+            notes.append(f"nan={len(tech['nan'])}× e.g. {tech['nan'][0]!r}")
+        if tech["price"]:
+            p = tech["price"]
+            issues.append("PRICE_MISMATCH")
+            notes.append(f"headline={p['stated']} recorded={p['price']} diff={p['diff_pct']}%")
+        if tech["levels"]:
+            issues.append("LEVEL_MISMATCH")
+            notes.append("levels=" + ", ".join(
+                f"{l['label']} {l['stated']}≠{l['computed']}" for l in tech["levels"]))
+        if tech["rr"]:
+            issues.append("RR_MISMATCH")
+            notes.append("rr=" + ", ".join(
+                f"stated {r['stated']} vs {r['recomputed']}" for r in tech["rr"]))
 
     # CUTOFF — check last non-empty line
     lines = [l for l in text.splitlines() if l.strip()]

@@ -407,6 +407,65 @@ def quote_close(info: dict):
     return price, when.date().isoformat()
 
 
+def complete_bars(hist, info: dict, now=None):
+    """``(hist, close_source)``: daily bars every indicator can be computed from.
+
+    After the US close Yahoo often publishes the new session's bar with volume
+    but NaN open/high/low/close. ``compute_technicals`` read that bar as the
+    latest, so on 2026-10-23 eight technical reports were given ``$nan`` for the
+    price, no MA/RSI/ATR/Bollinger values and no support/resistance levels, and
+    were written anyway. Bars without a close are dropped, as is a bar for a
+    session still in progress; if the quote carries a newer official close
+    (:func:`quote_close`), it is appended as that session's bar. ``close_source``
+    is ``"daily_bar"``, ``"quote"`` or ``None`` when no bar is left.
+    """
+    from datetime import datetime
+
+    import pandas as pd
+
+    info = info or {}
+    if hist is None or hist.empty:
+        return hist, None
+    dropped = hist[hist["Close"].isna()]
+    hist = hist[hist["Close"].notna()]
+    if hist.empty:
+        return hist, None
+    tz = getattr(hist.index, "tz", None)
+    if tz is not None:
+        local = (now or datetime.now(tz)).astimezone(tz)
+        close_h, close_m = _SESSION_CLOSE.get(str(tz), _DEFAULT_SESSION_CLOSE)
+        if (hist.index[-1].date() == local.date()
+                and (local.hour, local.minute) < (close_h, close_m)
+                and len(hist) > 1):
+            hist = hist.iloc[:-1]
+
+    q_price, q_date = quote_close(info)
+    if not q_date or q_date <= str(hist.index[-1])[:10]:
+        return hist, "daily_bar"
+    stamp = pd.Timestamp(q_date)
+    stamp = stamp.tz_localize(tz) if tz is not None else stamp
+    # The empty bar Yahoo published for this session still carries its volume.
+    same_day = dropped[[str(i)[:10] == q_date for i in dropped.index]]
+    volume = info.get("regularMarketVolume")
+    if volume is None and not same_day.empty:
+        volume = same_day["Volume"].iloc[-1]
+
+    def _num(key):
+        v = info.get(key)
+        return float(v) if isinstance(v, (int, float)) and v == v and v > 0 else q_price
+
+    bar = pd.DataFrame({
+        "Open": [_num("regularMarketOpen")],
+        "High": [max(_num("regularMarketDayHigh"), q_price)],
+        "Low": [min(_num("regularMarketDayLow"), q_price)],
+        "Close": [q_price],
+        "Volume": [float(volume) if volume is not None and volume == volume else 0.0],
+    }, index=pd.DatetimeIndex([stamp], name=hist.index.name))
+    for col in hist.columns.difference(bar.columns):
+        bar[col] = 0.0
+    return pd.concat([hist, bar[hist.columns]]), "quote"
+
+
 def fetch_data(ticker: str) -> dict:
     """Download fundamentals, price history, and news from Yahoo Finance."""
     yf = _get_yf()
@@ -425,7 +484,7 @@ def fetch_data(ticker: str) -> dict:
 
     # price history (2Y for richer technical context)
     try:
-        hist = t.history(period="2y")
+        hist, close_source = complete_bars(t.history(period="2y"), info)
         price_now, price_date = last_completed_close(hist)
         price_52w = hist.tail(252)
         price_52w_high = float(price_52w["High"].max()) if not hist.empty else None
@@ -433,7 +492,7 @@ def fetch_data(ticker: str) -> dict:
         monthly = hist["Close"].resample("ME").last().dropna()
         price_series = {str(k)[:7]: round(float(v), 2) for k, v in monthly.items()}
     except Exception:
-        hist = None
+        hist = close_source = None
         price_now = price_52w_high = price_52w_low = price_date = None
         price_series = {}
 
@@ -621,6 +680,7 @@ def fetch_data(ticker: str) -> dict:
         "news": (t.news or [])[:10],
         "price_now": price_now,
         "price_date": price_date,
+        "close_source": close_source,
         "source_status": source_status,
         "price_52w_high": price_52w_high,
         "price_52w_low": price_52w_low,
