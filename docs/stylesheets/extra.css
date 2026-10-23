@@ -77,6 +77,16 @@ body,
   --fp-link-color: #111827;
   --fp-glow-line: rgba(17, 24, 39, 0.12);
   --fp-header-bg: rgba(255, 255, 255, 0.9);
+  /* Chart series colours, shared by price-charts.js's palette and the static
+     annual / gauge SVGs build_docs.py emits (prices.css). */
+  --fp-series-blue: #2563eb;
+  --fp-series-amber: #f59e0b;
+  --fp-series-green: #16a34a;
+  --fp-series-red: #dc2626;
+  --fp-series-violet: #7c3aed;
+  --fp-series-pink: #db2777;
+  --fp-series-teal: #0d9488;
+  --fp-series-lime: #84cc16;
   --fp-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
   --fp-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
   --fp-shadow-lg: 0 10px 28px rgba(15, 23, 42, 0.16);
@@ -102,6 +112,14 @@ body,
 
 /* ── Dark mode variables ── */
 [data-md-color-scheme="slate"] {
+  --fp-series-blue: #60a5fa;
+  --fp-series-amber: #fbbf24;
+  --fp-series-green: #22c55e;
+  --fp-series-red: #ef4444;
+  --fp-series-violet: #a78bfa;
+  --fp-series-pink: #f472b6;
+  --fp-series-teal: #2dd4bf;
+  --fp-series-lime: #a3e635;
   --fp-bg: #0a0d14;
   --fp-bg-alt: #0e121b;
   --fp-bg-card: #111622;

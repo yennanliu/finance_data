@@ -964,7 +964,7 @@ def test_market_data_page_is_one_page_of_tabs(monkeypatch, tmp_path):
 
     page = (tmp_path / "docs" / "data" / "nvda" / "index.md").read_text(encoding="utf-8")
     for key in ("md_tab_overview", "md_tab_price", "md_tab_financials",
-                "md_tab_valuation", "md_tab_data"):
+                "md_tab_valuation", "md_tab_intrinsic", "md_tab_data"):
         assert f'=== "{bd.t("en", key)}"' in page, key
     # Both halves' charts are on it.
     assert 'data-src="analytics.json"' in page
@@ -972,7 +972,7 @@ def test_market_data_page_is_one_page_of_tabs(monkeypatch, tmp_path):
     # The tab bar is styled off this hook and must sit immediately before the
     # set, so the count in it has to match the tabs actually emitted.
     assert '<div class="tabcue">' in page
-    assert "<b>5 tabs</b>" in page
+    assert "<b>6 tabs</b>" in page
 
 
 def test_market_data_page_drops_the_tabs_it_has_no_store_for(monkeypatch, tmp_path):
@@ -1913,3 +1913,95 @@ def test_hub_css_lets_the_filter_hide_cards():
     the `hidden` attribute hub.js sets — the rule below has to exist."""
     css = (Path(__file__).resolve().parents[1] / "docs" / "stylesheets" / "hub.css").read_text(encoding="utf-8")
     assert re.search(r"\.hub-card\[hidden\]\s*\{\s*display:\s*none;", css)
+
+
+# ── annual, strength and intrinsic-value views (§6c) ─────────────────────────
+def test_nice_ticks_include_zero_and_round_steps():
+    assert bd._nice_ticks(0.0, 97.0) == [0, 25, 50, 75, 100]
+    ticks = bd._nice_ticks(-12.0, 30.0)
+    assert ticks[0] <= -12 and ticks[-1] >= 30 and 0 in ticks
+
+
+def test_annual_bars_svg_hangs_a_loss_below_the_baseline():
+    import re
+    svg = bd.annual_bars_svg(["FY24", "FY25"],
+                             [("Net income", "green", [-50.0, 100.0])])
+    rects = re.findall(r'<rect class="fs-green" x="[^"]+" y="([^"]+)" '
+                       r'width="[^"]+" height="([^"]+)"', svg)
+    (y_loss, h_loss), (y_gain, h_gain) = [(float(y), float(h)) for y, h in rects]
+    # The loss starts at the baseline and hangs down; the gain ends on it.
+    assert y_loss == pytest.approx(y_gain + h_gain, abs=0.2)
+    assert h_gain == pytest.approx(2 * h_loss, abs=0.2)
+    assert "<title>FY24 · Net income: -$50.00</title>" in svg
+
+
+def test_annual_chart_drops_a_series_the_company_never_reports():
+    card = bd.annual_chart(title="Cash flow", note="n", cats=["FY25"],
+                           series=[("FCF", "blue", [10.0]),
+                                   ("Dividends", "violet", [None])])
+    assert "FCF" in card and "Dividends" not in card
+    # Static card: no data-src, so price-charts.js leaves it alone.
+    assert "data-src" not in card
+    assert bd.annual_chart(title="x", note="n", cats=["FY25"],
+                           series=[("Dividends", "violet", [None])]) == ""
+
+
+def test_market_data_page_carries_the_new_views(monkeypatch, tmp_path):
+    _both_stores(monkeypatch, tmp_path, "nvda", periods=12)
+    rows = bd.fundamental_rows("nvda")
+    bars = bd.store_bars("nvda")
+    payload = bd.fundamentals_payload_dict("nvda", rows, bars)
+    fstats = bd.fundamental_analytics.summary(rows, bars)
+
+    fin = "\n".join(bd._financials_tab(payload, fstats, "en"))
+    assert '<div class="fgrid">' in fin and "fbars__svg" in fin
+    assert '<div class="fscore">' in fin
+
+    val = "\n".join(bd._valuation_tab(payload, "en"))
+    assert '<div class="vrange">' in val
+
+    iv = "\n".join(bd._intrinsic_tab(payload, fstats, "en"))
+    assert '<div class="dcf">' in iv and "dcf__gauge" in iv
+    assert bd.t("en", "iv_reverse") in iv
+    assert bd.t("en", "iv_per_share") in iv
+    # No market store in the fixture → no beta → no WACC table, not a broken one.
+    assert bd.t("en", "iv_wacc") not in iv
+
+
+def test_intrinsic_tab_explains_a_loss_maker_instead_of_valuing_it(monkeypatch, tmp_path):
+    _both_stores(monkeypatch, tmp_path, "nvda")
+    rows = [dict(r, eps_diluted=-1.0, ocf=-50.0) for r in bd.fundamental_rows("nvda")]
+    bars = bd.store_bars("nvda")
+    payload = bd.fundamentals_payload_dict("nvda", rows, bars)
+    iv = "\n".join(bd._intrinsic_tab(payload, None, "en"))
+    assert bd.t("en", "iv_no_base_title") in iv
+    assert '<div class="dcf">' not in iv
+
+
+def test_wacc_table_appears_with_a_market_store(monkeypatch, tmp_path):
+    _both_stores(monkeypatch, tmp_path, "nvda", "vti", periods=12)
+    rows = bd.fundamental_rows("nvda")
+    bars = bd.store_bars("nvda")
+    payload = bd.fundamentals_payload_dict("nvda", rows, bars, bd.store_bars("vti"))
+    assert payload["intrinsic"]["wacc"] is not None
+    iv = "\n".join(bd._intrinsic_tab(payload, None, "zh"))
+    assert bd.t("zh", "iv_wacc") in iv
+
+
+def test_strength_block_reads_no_debt_rather_than_a_dash():
+    fstats = {"strength_ttm": {"debt": None, "cash_to_debt": None,
+                               "equity_to_asset": 0.6, "current_ratio": 2.0},
+              "altman_z": 3.5, "piotroski": None}
+    block = "\n".join(bd.strength_block(fstats, "en"))
+    assert block.count(bd.t("en", "fs_no_debt")) == 3
+    assert "is-good" in block
+
+
+def test_dcf_gauge_needle_tracks_price_over_fair_value():
+    import re
+    def needle_x(price):
+        svg = bd.dcf_gauge(price, 100.0, "en")
+        return float(re.search(r'class="dcf__needle"[^>]*x2="([^"]+)"', svg).group(1))
+    assert needle_x(50.0) < needle_x(100.0) < needle_x(150.0)
+    assert needle_x(100.0) == pytest.approx(120.0, abs=0.1)   # dead centre at 1×
+    assert needle_x(900.0) == needle_x(200.0)                 # pinned past 2×

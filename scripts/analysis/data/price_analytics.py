@@ -311,7 +311,50 @@ def series_average(points: "list[dict]") -> "float | None":
     return round(sum(vals) / len(vals), 3) if vals else None
 
 
+# Beta is measured on weekly returns over three years: daily returns understate
+# it for thinly traded names (prices lag the market by a session), and five
+# years would leave every listing younger than that without one.
+BETA_STEP = 5            # sessions per return — one trading week
+BETA_SESSIONS = 3 * TRADING_DAYS_PER_YEAR
+BETA_MIN_RETURNS = 52    # a year of weekly returns, or no beta
+
+
+def beta(bars: "list[dict]", market: "list[dict]",
+         as_of: "str | None" = None) -> "float | None":
+    """Covariance of the ticker's returns with the market's, over the market's
+    variance — the CAPM beta.
+
+    Both series are cut to the sessions they share (so a holiday on one
+    exchange never pairs Monday with Tuesday), to the last
+    :data:`BETA_SESSIONS` of them on or before ``as_of``, and sampled every
+    :data:`BETA_STEP` sessions. None with fewer than :data:`BETA_MIN_RETURNS`
+    returns, or a market that never moved.
+    """
+    mkt = {b["date"]: float(b["close"]) for b in market}
+    shared = [(b["date"], float(b["close"]), mkt[b["date"]])
+              for b in bars if b["date"] in mkt
+              and (as_of is None or b["date"] <= as_of)]
+    shared = shared[-BETA_SESSIONS - 1:]
+    # Sampled back from the newest session, so the last return always ends on
+    # the as-of date rather than wherever a forward stride happens to land.
+    sampled = shared[::-1][::BETA_STEP][::-1]
+    xs, ys = [], []
+    for (_, a0, m0), (_, a1, m1) in zip(sampled, sampled[1:]):
+        if a0 > 0 and m0 > 0:
+            ys.append(a1 / a0 - 1.0)
+            xs.append(m1 / m0 - 1.0)
+    if len(xs) < BETA_MIN_RETURNS:
+        return None
+    mx, my = sum(xs) / len(xs), sum(ys) / len(ys)
+    var = sum((x - mx) ** 2 for x in xs)
+    if not var:
+        return None
+    cov = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    return round(cov / var, 3)
+
+
 __all__ = [
+    "BETA_STEP", "BETA_SESSIONS", "BETA_MIN_RETURNS", "beta",
     "TRADING_DAYS", "TRADING_DAYS_PER_YEAR", "VOL_WINDOW", "HIST_EDGES",
     "closes", "period_return", "ytd_return", "high_low",
     "drawdown_series", "max_drawdown", "daily_returns",

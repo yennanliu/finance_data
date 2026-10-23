@@ -481,3 +481,30 @@ def test_committed_store_passes_its_own_gate():
     for path in sorted(F.STORE_DIR.glob("*.csv")):
         rows = F.parse(path.read_text(encoding="utf-8"))
         assert F.gate(rows, []) is None, f"{path.name}: {F.gate(rows, [])}"
+
+
+# ── stock splits and mixed-scale share counts ────────────────────────────────
+def test_split_ratio_matches_forward_and_reverse_splits():
+    assert F.split_ratio(20.1) == 20
+    assert F.split_ratio(9.98) == 10
+    assert F.split_ratio(0.1) == pytest.approx(0.1)       # 1:10 reverse split
+    assert F.split_ratio(1.4) is None                      # ordinary issuance
+    assert F.split_ratio(1000.0) is None                   # a dropped 10^3
+
+
+def test_a_split_beyond_the_step_limit_keeps_every_later_count():
+    """AMZN's 20:1 cleared the 10× guard and used to drop every later quarter."""
+    counts = {"2022-03-31": 0.51e9, "2022-06-30": 10.24e9,
+              "2022-09-30": 10.25e9, "2022-12-31": 10.24e9}
+    assert F._plausible_share_counts(counts) == counts
+
+
+def test_a_bad_first_count_no_longer_poisons_the_series():
+    """NVDA's FY2008 10-K tags its share count in thousands. Anchored on that
+    first point, the old running median rejected every correct count after it."""
+    counts = {"2008-01-27": 606_732.0, "2008-07-27": 555_417_000.0,
+              "2008-10-26": 564_536_000.0, "2009-01-25": 548_126.0,
+              "2009-04-26": 542_307_000.0, "2009-07-26": 546_639_000.0}
+    kept = F._plausible_share_counts(counts)
+    assert "2008-01-27" not in kept and "2009-01-25" not in kept
+    assert len(kept) == 4

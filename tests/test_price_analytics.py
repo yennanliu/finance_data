@@ -10,6 +10,7 @@ Fully offline: pure stdlib in, plain data out.
 """
 
 import math
+from datetime import date, timedelta
 
 import pytest
 
@@ -226,3 +227,36 @@ def test_series_average_is_none_when_there_is_nothing_to_average():
     one sitting on the axis."""
     assert pa.series_average([]) is None
     assert pa.series_average([{"t": "2026-01-01", "v": None}]) is None
+
+
+# ── beta ─────────────────────────────────────────────────────────────────────
+def _beta_bars(n, scale=1.0, start=date(2023, 1, 2)):
+    """A zig-zag market and a ticker moving `scale` times as much each step."""
+    out, mkt, tkr = [], [], []
+    m = a = 100.0
+    for i in range(n):
+        d = (start + timedelta(days=i)).isoformat()
+        move = 0.01 if (i // 5) % 2 == 0 else -0.008
+        m *= 1 + move
+        a *= 1 + scale * move
+        mkt.append({"date": d, "close": m})
+        tkr.append({"date": d, "close": a})
+    return tkr, mkt
+
+
+def test_beta_of_a_levered_copy_of_the_market():
+    tkr, mkt = _beta_bars(600, scale=2.0)
+    assert pa.beta(tkr, mkt) == pytest.approx(2.0, abs=0.05)
+    assert pa.beta(mkt, mkt) == pytest.approx(1.0)
+
+
+def test_beta_needs_a_year_of_weekly_returns():
+    tkr, mkt = _beta_bars(200)              # 40 weekly returns
+    assert pa.beta(tkr, mkt) is None
+
+
+def test_beta_as_of_ignores_later_sessions():
+    tkr, mkt = _beta_bars(600, scale=2.0)
+    cut = tkr[400]["date"]
+    late = [dict(b, close=b["close"] * (3 if b["date"] > cut else 1)) for b in tkr]
+    assert pa.beta(late, mkt, as_of=cut) == pa.beta(tkr, mkt, as_of=cut)

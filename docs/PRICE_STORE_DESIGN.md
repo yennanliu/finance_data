@@ -722,3 +722,63 @@ asserted in `tests/js/price_charts_harness.mjs`.
   incremental build rewrites a multi-megabyte file on every run.
 - **Downloads live in the EN tree only.** They are language-neutral; duplicating
   ~5 MB of CSV for the ZH tree buys nothing.
+
+## 13. Annual, strength and intrinsic-value views (added 2026-10)
+
+Modelled on GuruFocus's summary, Financials grid and DCF pages, and built to the
+same rules as §12: every number is computed in Python and asserted in pytest,
+and the page only draws it.
+
+### What it adds
+
+| Where | View | Source |
+|---|---|---|
+| Financials tab, top | **Annual overview** — grouped bars per fiscal year: revenue / EBITDA / net income · cash vs. debt · OCF / FCF / net income / dividends / SBC · FCF vs. dividends + buybacks · ROIC vs. WACC (bars) with the spread (line) | `annual_series()`, `intrinsic_value.roic_wacc_series()` |
+| Financials tab, end | **Financial strength** — cash-to-debt, equity-to-asset, debt-to-equity, debt-to-EBITDA, interest coverage, current ratio, Altman Z, Piotroski F (with its nine tests) | `fundamental_analytics.financial_strength / altman_z / piotroski / strength_tone` |
+| Valuation tab, top | **Valuation vs. its own history** — one rail per multiple: min…max, median tick, today's multiple and its percentile rank | `fundamental_analytics.valuation_ranges()` |
+| New **Intrinsic value** tab | DCF card + dial, inputs table, reverse DCF on both bases vs. actual 5Y/3Y growth, discount × growth sensitivity grid, per-share data (5Y/3Y/1Y CAGR, last 3 FY, TTM), WACC build-up and ROIC-vs-WACC verdict | `intrinsic_value.model()` |
+
+The annual charts, rails, scorecard and dial are **static HTML/SVG** emitted by
+`build_docs.py` §6c — Lightweight Charts has no grouped bars, and static markup
+renders with JS off. They reuse the `.pchart` card chrome but carry no
+`data-src`, which is how `price-charts.js` knows to leave them alone.
+
+### The model and its assumptions
+
+`scripts/analysis/data/intrinsic_value.py` holds every assumption as a named
+constant and the page prints each beside the figure it produced: discount rate
+10%, growth stage 10 years at the 5Y (else 3Y) EBITDA-per-share CAGR — falling
+back to revenue per share — clamped to 0–20%, terminal stage 10 years at 4%;
+WACC from CAPM with a 4.25% risk-free rate, a 5.5% equity risk premium and a
+3-year weekly beta against `vti` (`price_analytics.beta`). A non-positive base
+has no fair value rather than a negative one. No analyst estimates are used, so
+GuruFocus's forecast bars have no equivalent here.
+
+### Store changes it needed
+
+- **Twelve new XBRL columns**, appended to `fundamentals.METRICS`: `sbc`,
+  `dividends_paid`, `buybacks`, `interest_expense`, `income_tax`,
+  `pretax_income`, `current_assets`, `current_liabilities`,
+  `total_liabilities`, `retained_earnings`, `goodwill`, `intangibles`. Every
+  store was rewritten once; no existing value changed.
+- **Share counts survive stock splits.** `_plausible_share_counts` now checks
+  each count against a centred nine-quarter median and accepts a jump that
+  matches a split ratio. Before, AMZN, AVGO, SOFI and TSLA lost every count
+  after their splits, and NVDA — whose FY2008 10-K tags shares in thousands —
+  lost all of them.
+- **`Depreciation` is the last D&A fallback**, giving TSLA EBITDA for 29 more
+  quarters.
+- **Per-share figures are split-adjusted on read**
+  (`fundamental_analytics.split_adjust`, applied in `build_docs.fundamental_rows`)
+  using the price store's `split` column and each row's filing date. The store
+  and its CSV download stay as filed. This also corrects the existing P/E
+  history and P/E bands, which divided a split-adjusted price by an unadjusted
+  EPS.
+- **ROIC is after tax**, as the glossary always said, so it can sit next to WACC.
+
+### Known gaps
+
+- The store only emits quarters inside a *completed* fiscal year, so "TTM" is
+  the last fiscal year end plus nothing after it — up to three quarters stale.
+- AMD, GOOG, MRVL and MSFT tag depreciation only annually, so most of their
+  quarters still lack EBITDA; GOOG also lacks most share counts.
