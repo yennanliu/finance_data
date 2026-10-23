@@ -214,3 +214,39 @@ def test_pipeline_no_longer_exposes_a_chart_builder():
     # A stale re-export would let the old embed creep back in unnoticed.
     assert not hasattr(pipeline, "build_technical_chart_embed")
     assert "build_technical_chart_embed" not in pipeline.__all__
+
+
+# ── §8.8 re-check ────────────────────────────────────────────────────────────
+
+S88 = """# TSLA 基本面深度分析報告
+
+## 1. 執行摘要
+
+### 8.8 估值三角驗證
+
+| **加權合理價值** | **$334.34** |
+
+`$328.25×45% + $164.25×10% + $283.50×15% + $382.40×15% + $401.40×15%`
+
+### 8.9 局限
+"""
+
+
+def test_fundamental_run_rechecks_8_8_and_records_it(tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None, "price_now": 374.58})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: S88)
+    path = pipeline.run_analysis("TSLA", "fundamental-analysis", "gemini", "g", 100, tmp_path)
+    text = path.read_text(encoding="utf-8")
+    assert "arithmetic_check: mismatch" in text
+    assert "weighted_fair_value_recomputed: 324.23" in text
+    assert "mos_recomputed_pct: -15.5" in text
+    assert "程式複算更正" in text
+
+
+def test_other_types_are_not_rechecked(tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: S88)
+    path = pipeline.run_analysis("TSLA", "stock-eval", "gemini", "g", 100, tmp_path)
+    assert "arithmetic_check" not in path.read_text(encoding="utf-8")

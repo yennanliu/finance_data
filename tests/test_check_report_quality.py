@@ -18,7 +18,52 @@ def _write(tmp_path, ticker, filename, body):
 
 
 def _good_body(lines=90):
-    return FM + "\n".join(f"## 段落 {i}\n這是分析內容第 {i} 行。" for i in range(lines))
+    """A well-formed fundamental report: chapters ## 1. … ## 11. plus prose."""
+    chapters = "\n".join(f"## {n}. 章節 {n}\n內容。" for n in range(1, 12))
+    return FM + chapters + "\n" + "\n".join(
+        f"### 段落 {i}\n這是分析內容第 {i} 行。" for i in range(lines))
+
+
+S88_BAD = """
+### 8.8 估值三角驗證與安全邊際
+
+| 估值方法 | 隱含每股價值 | 權重 |
+|---|---|---|
+| **加權合理價值** | **$334.34** | **100%** |
+
+`加權合理價值 = $328.25×45% + $164.25×10% + $283.50×15% + $382.40×15% + $401.40×15%`
+`= $147.71 + $16.43 + $42.53 + $57.36 + $60.21 = $334.34`
+
+### 8.9 局限
+"""
+
+
+def test_missing_chapters_are_flagged_for_fundamental_reports(tmp_path):
+    body = _good_body().replace("## 11. 章節 11\n", "")
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-01-01_claude.md", body)
+    issue = crq.parse_file(p)
+    assert "MISSING_SECTIONS" in issue.issues and "[11]" in issue.note
+
+
+def test_chapters_are_not_required_of_other_report_types(tmp_path):
+    body = FM + "\n".join(f"## 段落 {i}\n內容第 {i} 行。" for i in range(90))
+    p = _write(tmp_path, "aapl", "technical_analysis_2026-01-01_claude.md", body)
+    assert crq.parse_file(p).issues == []
+
+
+def test_a_mis_added_weighted_fair_value_is_flagged(tmp_path):
+    """TSLA 2026-10-22: the terms add up to $324.23, the report says $334.34."""
+    p = _write(tmp_path, "tsla", "fundamental_analysis_2026-01-01_claude.md",
+               _good_body() + S88_BAD)
+    issue = crq.parse_file(p)
+    assert "ARITHMETIC" in issue.issues
+    assert "terms_sum=324.23" in issue.note
+
+
+def test_a_correct_weighted_fair_value_passes(tmp_path):
+    body = _good_body() + S88_BAD.replace("$334.34", "$324.23")
+    p = _write(tmp_path, "tsla", "fundamental_analysis_2026-01-01_claude.md", body)
+    assert crq.parse_file(p).issues == []
 
 
 # ── parse_file per issue category ────────────────────────────────────────────
