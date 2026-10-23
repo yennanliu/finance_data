@@ -207,3 +207,79 @@ def test_a_newer_yahoo_close_is_kept():
     data = {"price_now": 374.58, "price_date": "2026-10-22"}
     assert not report_inputs.prefer_newer_close(data, [{"date": "2026-10-21", "close": 386.47}])
     assert data["price_now"] == 374.58
+
+
+# ── FX for ADRs whose statements are in another currency ─────────────────────
+KRW = {"pair": "KRWUSD=X", "rate": 1 / 1322.46, "date": "2026-10-23"}
+
+
+def _adr_inputs(fx):
+    return _inputs(rows=[], fx=fx)
+
+
+def _adr_data():
+    d = _data(currency="USD", financialCurrency="KRW", marketCap=100e9, totalDebt=20e12,
+              totalCash=80e12, totalRevenue=189.17e12)
+    d["cashflow_q"] = pd.DataFrame(
+        {pd.Timestamp(e): [v, -c] for e, v, c in [
+            ("2026-06-30", 65.41e12, 11.13e12), ("2026-03-31", 26.33e12, 7.87e12),
+            ("2025-12-31", 20.86e12, 12.25e12), ("2025-09-30", 14.32e12, 5.26e12)]},
+        index=["Operating Cash Flow", "Capital Expenditure"])
+    return d
+
+
+def test_fx_rate_converts_fcf_yield_for_an_adr():
+    """SKHY: ₩90.43T TTM FCF over a USD market cap needs the day's KRW rate."""
+    f = compute_facts(_adr_data(), _adr_inputs(KRW))
+    fcf_krw = (65.41 + 26.33 + 20.86 + 14.32 - 11.13 - 7.87 - 12.25 - 5.26) * 1e12   # ₩90.41T
+    assert f["fcf_yield"] == pytest.approx(fcf_krw / 1322.46 / 100e9, rel=1e-6)
+
+
+def test_fx_rate_lets_the_wacc_weight_converted_debt():
+    d = _adr_data()
+    d["income"] = pd.DataFrame({pd.Timestamp("2025-12-31"): [0.6e12]}, index=["Interest Expense"])
+    w = compute_facts(d, _adr_inputs(KRW))["wacc"]
+    assert w["pre_tax_cost_of_debt"] == pytest.approx(0.03)          # same-currency ratio
+    debt_usd = 20e12 / 1322.46
+    assert w["debt_weight"] == pytest.approx(debt_usd / (100e9 + debt_usd))
+
+
+def test_rendered_block_states_the_rate_and_converted_amounts():
+    text = render_facts(compute_facts(_adr_data(), _adr_inputs(KRW)))
+    assert "1 USD = 1,322.46 KRW" in text and "KRWUSD=X, 2026-10-23" in text
+    assert "do not assume another" in text
+    assert "(≈ " in text and " USD)" in text
+
+
+def test_without_fx_nothing_is_converted_and_assumed_rates_are_forbidden():
+    f = compute_facts(_adr_data(), _adr_inputs(None))
+    assert f["fcf_yield"] is None and f["wacc"]["wacc"] is None
+    text = render_facts(f)
+    assert "No FX rate is available" in text and "(≈ " not in text
+
+
+def test_fx_rate_lookup_uses_the_statement_to_quote_pair(monkeypatch):
+    import types
+    seen = []
+
+    class _T:
+        def __init__(self, sym):
+            seen.append(sym)
+
+        def history(self, period):
+            idx = pd.DatetimeIndex(["2026-10-23"])
+            return pd.DataFrame({"Close": [0.000756]}, index=idx)
+
+    monkeypatch.setattr(report_inputs, "_get_yf", lambda: types.SimpleNamespace(Ticker=_T))
+    assert report_inputs.fx_rate("KRW", "USD") == {"pair": "KRWUSD=X", "rate": 0.000756,
+                                                  "date": "2026-10-23"}
+    assert report_inputs.fx_rate("USD", "USD") is None and seen == ["KRWUSD=X"]
+
+
+def test_gather_reports_fx_status_only_when_currencies_differ(monkeypatch):
+    for name, value in [("store_rows", ([], {})), ("risk_free_rate", None),
+                        ("peer_multiples", []), ("fx_rate", None)]:
+        monkeypatch.setattr(report_inputs, name, lambda *a, _v=value: _v)
+    monkeypatch.setattr(report_inputs.prices, "load_store", lambda key: [])
+    assert "fx_rate" not in report_inputs.gather("AMD", {"currency": "USD", "financialCurrency": "USD"})["status"]
+    assert report_inputs.gather("SKHY", {"currency": "USD", "financialCurrency": "KRW"})["status"]["fx_rate"] is False

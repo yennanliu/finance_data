@@ -17,8 +17,8 @@ TODAY = ga.TODAY
 def _offline_report_inputs(monkeypatch):
     """The fundamental pipeline also gathers SEC / price-store / peer inputs;
     tests that stub fetch_data must not reach the network through it."""
-    monkeypatch.setattr(pipeline.report_inputs, "gather", lambda ticker: {
-        "store_rows": [], "bars": [], "risk_free": None, "peers": [], "status": {}})
+    monkeypatch.setattr(pipeline.report_inputs, "gather", lambda ticker, info=None: {
+        "store_rows": [], "bars": [], "risk_free": None, "peers": [], "fx": None, "status": {}})
 
 
 # ── save_report ──────────────────────────────────────────────────────────────

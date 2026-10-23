@@ -145,8 +145,13 @@ def history_multiples(rows, bars, ttm_row, price) -> "dict":
 
 
 # ── cost of capital ──────────────────────────────────────────────────────────
-def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free) -> "dict":
-    """CAPM cost of equity and a reference WACC, every component exposed."""
+def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free,
+                fx: "float | None" = None) -> "dict":
+    """CAPM cost of equity and a reference WACC, every component exposed.
+
+    ``fx`` (quote-currency units per statement-currency unit) converts debt so
+    an ADR's market cap and debt can be weighted; without it they cannot.
+    """
     beta = _f(info.get("beta"))
     ke = risk_free + beta * EQUITY_RISK_PREMIUM if risk_free is not None and beta is not None else None
 
@@ -174,7 +179,9 @@ def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free) -> "dict
         return out
     from . import currency_mismatch
     if currency_mismatch(info):
-        return out  # market cap (quote ccy) and debt (statement ccy) can't be weighted
+        if not fx:
+            return out  # market cap (quote ccy) and debt (statement ccy) can't be weighted
+        debt = debt * fx if debt is not None else None
     d = debt or 0.0
     we, wd = equity / (equity + d), d / (equity + d)
     if wd and kd is None:
@@ -218,10 +225,12 @@ def compute_facts(data: dict, inputs: dict) -> dict:
                             if stmt["cash"] is not None or stmt["debt"] is not None else None)
 
     mismatch = currency_mismatch(info)
+    fx = inputs.get("fx") if mismatch else None
+    rate = fx["rate"] if fx else (None if mismatch else 1.0)
     mkt = _f(info.get("marketCap"))
     fcf_yield = None
-    if stmt and stmt.get("fcf_ttm") is not None and mkt and not mismatch:
-        fcf_yield = stmt["fcf_ttm"] / mkt
+    if stmt and stmt.get("fcf_ttm") is not None and mkt and rate:
+        fcf_yield = stmt["fcf_ttm"] * rate / mkt
 
     return {
         "ticker": data.get("ticker"),
@@ -230,12 +239,14 @@ def compute_facts(data: dict, inputs: dict) -> dict:
         "currency": info.get("currency"),
         "statement_currency": info.get("financialCurrency") or info.get("currency"),
         "currency_mismatch": mismatch,
+        "fx": fx,
         "is_fund": is_fund,
         "statements": stmt,
         "fcf_yield": fcf_yield,
         "history": history_multiples(rows, inputs.get("bars"), stmt and stmt.get("_ttm_row"), price)
         if stmt and not mismatch else {},
-        "wacc": None if is_fund else wacc_inputs(info, data, stmt, inputs.get("risk_free")),
+        "wacc": None if is_fund else wacc_inputs(info, data, stmt, inputs.get("risk_free"),
+                                                 fx["rate"] if fx else None),
         "peers": inputs.get("peers") or [],
     }
 
@@ -274,15 +285,27 @@ def render_facts(f: dict) -> str:
         f"{_num(f.get('price'), 2)} {ccy}",
         "  → Use this price and say its date. Do not call it the report-date close unless the dates match.",
     ]
+    fx = f.get("fx")
     if f.get("currency_mismatch"):
         q, s = f["currency_mismatch"]
-        lines.append(f"Currency: quoted in {q}, statements in {s}. Never divide a {s} figure by a {q} "
-                     f"price or market cap (FCF yield, EV/EBITDA, P/S) without converting.")
+        if fx:
+            lines.append(f"Currency: quoted in {q}, statements in {s}. FX ({fx['pair']}, {fx['date']} close): "
+                         f"1 {q} = {1 / fx['rate']:,.2f} {s}. Use this rate for every conversion and "
+                         f"do not assume another; converted amounts are shown as (≈ … {q}).")
+        else:
+            lines.append(f"Currency: quoted in {q}, statements in {s}. No FX rate is available: never divide "
+                         f"a {s} figure by a {q} price or market cap (FCF yield, EV/EBITDA, P/S), and do not "
+                         f"convert with an assumed rate.")
     if f.get("is_fund"):
         lines.append("Instrument: fund/ETF — it has no income statement, cash flow or WACC. "
                      "Do not invent company financials; analyse holdings, fees, tracking and valuation of the index.")
     def amt(v) -> str:
-        return "N/A" if v is None else f"{money(v, prefix='')} {sccy}"
+        if v is None:
+            return "N/A"
+        text = f"{money(v, prefix='')} {sccy}"
+        if fx:
+            text += f" (≈ {money(v * fx['rate'], prefix='')} {ccy})"
+        return text
 
     s = f.get("statements")
     if s:

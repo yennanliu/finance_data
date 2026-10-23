@@ -118,3 +118,8 @@ def test_system_messages_defer_structure_to_the_prompt(name):
     assert "11 章" in text
     assert "7000–10000" in text
     assert "專業推演" not in text        # "fill gaps from your own knowledge" invited fabrication
+
+
+def test_fundamental_prompt_forbids_assumed_fx_rates():
+    """SKHY 2026-10-23 converted at a self-chosen 1,350 KRW/USD (actual 1,322)."""
+    assert "不得自行假設匯率" in load_prompt("fundamental")

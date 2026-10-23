@@ -76,6 +76,25 @@ def peer_multiples(ticker: str) -> "list[dict]":
     return out
 
 
+def fx_rate(statement_ccy: "str | None", quote_ccy: "str | None") -> "dict | None":
+    """Quote-currency units per statement-currency unit, for an ADR whose
+    statements are in another currency (SKHY: KRW → USD).
+
+    Without it the model picked its own rate (1,350 KRW/USD on 2026-10-23,
+    vs 1,322 that day). Returns ``{"pair", "rate", "date"}`` or None.
+    """
+    if not statement_ccy or not quote_ccy or statement_ccy == quote_ccy:
+        return None
+    pair = f"{statement_ccy}{quote_ccy}=X"
+    try:
+        hist = _get_yf().Ticker(pair).history(period="10d")
+        rate, day = last_completed_close(hist)
+    except Exception as exc:  # noqa: BLE001
+        print(f"  ⚠ FX rate {pair} unavailable: {exc}")
+        return None
+    return {"pair": pair, "rate": rate, "date": day} if rate else None
+
+
 def prefer_newer_close(data: dict, bars: "list[dict]") -> bool:
     """Use the price store's last close when it is newer than Yahoo's.
 
@@ -92,20 +111,28 @@ def prefer_newer_close(data: dict, bars: "list[dict]") -> bool:
     return False
 
 
-def gather(ticker: str) -> dict:
-    """Everything :func:`fundamental_facts.compute_facts` needs beyond ``fetch_data``."""
+def gather(ticker: str, info: "dict | None" = None) -> dict:
+    """Everything :func:`fundamental_facts.compute_facts` needs beyond ``fetch_data``.
+
+    ``info`` is ``fetch_data``'s Yahoo info; its currencies decide whether an
+    FX rate is needed.
+    """
+    info = info or {}
     rows, status = store_rows(ticker)
     bars = prices.load_store(prices.report_key(ticker))
     rf = risk_free_rate()
     peers = peer_multiples(ticker)
+    fx = fx_rate(info.get("financialCurrency"), info.get("currency"))
     status.update({
         "price_store": bool(bars),
         "risk_free_rate": rf is not None,
         "peers": bool(peers),
     })
+    if info.get("financialCurrency") and info.get("financialCurrency") != info.get("currency"):
+        status["fx_rate"] = fx is not None
     return {"store_rows": rows, "bars": bars, "risk_free": rf,
-            "peers": peers, "status": status}
+            "peers": peers, "fx": fx, "status": status}
 
 
 __all__ = ["gather", "store_rows", "risk_free_rate", "peer_multiples",
-           "prefer_newer_close", "PEER_FIELDS"]
+           "prefer_newer_close", "fx_rate", "PEER_FIELDS"]

@@ -88,7 +88,7 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
     print("[1/3] Fetching financial data from Yahoo Finance …")
     data = fetch_data(ticker)
     if analysis_type == "fundamental-analysis":
-        inputs = report_inputs.gather(ticker)
+        inputs = report_inputs.gather(ticker, data.get("info"))
         report_inputs.prefer_newer_close(data, inputs["bars"])
         data["source_status"] = {**data.get("source_status", {}), **inputs["status"]}
         data["report_facts"] = compute_facts(data, inputs)
