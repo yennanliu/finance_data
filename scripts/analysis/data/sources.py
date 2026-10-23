@@ -10,6 +10,7 @@ import time
 
 from ..exceptions import DataFetchError
 from ..utils.formatting import money
+from .prices import to_yf_symbol
 
 
 # ── HTTP helpers ─────────────────────────────────────────────────────
@@ -345,11 +346,47 @@ def _get_yf():
         raise DataFetchError("'yfinance' not installed. Run: uv sync") from exc
 
 
+# Local close of each exchange we cover; a bar dated today before this time is a
+# session still in progress, not a close.
+_SESSION_CLOSE = {"Asia/Taipei": (13, 30)}
+_DEFAULT_SESSION_CLOSE = (16, 0)  # New York
+
+
+def last_completed_close(hist, now=None):
+    """``(close, 'YYYY-MM-DD')`` of the last *finished* session in ``hist``.
+
+    yfinance's daily history includes today's bar while the market is open, so
+    ``Close.iloc[-1]`` mid-session is an intraday tick. Reports cite the price
+    as a close, so a bar dated today before the exchange's close is skipped.
+    A tz-naive index carries no session information and is taken as-is.
+    """
+    from datetime import datetime
+
+    if hist is None or hist.empty:
+        return None, None
+    closes = hist["Close"].dropna()
+    if closes.empty:
+        return None, None
+    tz = getattr(closes.index, "tz", None)
+    if tz is not None:
+        now = now or datetime.now(tz)
+        close_h, close_m = _SESSION_CLOSE.get(str(tz), _DEFAULT_SESSION_CLOSE)
+        last = closes.index[-1]
+        open_session = (last.date() == now.date()
+                        and (now.hour, now.minute) < (close_h, close_m))
+        if open_session and len(closes) > 1:
+            closes = closes.iloc[:-1]
+    return float(closes.iloc[-1]), str(closes.index[-1])[:10]
+
+
 def fetch_data(ticker: str) -> dict:
     """Download fundamentals, price history, and news from Yahoo Finance."""
     yf = _get_yf()
-    print(f"  → yfinance: {ticker}")
-    t = yf.Ticker(ticker)
+    # Yahoo needs the exchange suffix: a bare "0050" is a 404, which left the
+    # 0050 report with no price or statements at all, written from memory.
+    symbol = to_yf_symbol(ticker)
+    print(f"  → yfinance: {symbol}")
+    t = yf.Ticker(symbol)
     # .info is network-dependent and frequently raises (rate limits, bad
     # tickers, API drift); degrade to an empty dict rather than crash the run.
     try:
@@ -361,7 +398,7 @@ def fetch_data(ticker: str) -> dict:
     # price history (2Y for richer technical context)
     try:
         hist = t.history(period="2y")
-        price_now = float(hist["Close"].iloc[-1]) if not hist.empty else None
+        price_now, price_date = last_completed_close(hist)
         price_52w = hist.tail(252)
         price_52w_high = float(price_52w["High"].max()) if not hist.empty else None
         price_52w_low = float(price_52w["Low"].min()) if not hist.empty else None
@@ -369,7 +406,7 @@ def fetch_data(ticker: str) -> dict:
         price_series = {str(k)[:7]: round(float(v), 2) for k, v in monthly.items()}
     except Exception:
         hist = None
-        price_now = price_52w_high = price_52w_low = None
+        price_now = price_52w_high = price_52w_low = price_date = None
         price_series = {}
 
     # financial statements
@@ -520,21 +557,38 @@ def fetch_data(ticker: str) -> dict:
     except Exception as e:
         print(f"  ⚠ Roic.ai fetch failed: {e}")
 
+    # Which sources actually returned data: recorded in the report's front
+    # matter, so a header claiming Finviz/Roic.ai can be checked against it.
+    income = _safe_df(lambda: t.financials)
+    income_q = _safe_df(lambda: t.quarterly_financials)
+    cashflow_q = _safe_df(lambda: t.quarterly_cashflow)
+    source_status = {
+        "yfinance_info": bool(info),
+        "yfinance_prices": price_now is not None,
+        "yfinance_statements": income is not None or income_q is not None,
+        "finviz": bool(finviz_data),
+        "stockanalysis": any(stockanalysis_data.values()) if stockanalysis_data else False,
+        "roic": bool(roic_data),
+    }
+
     # ── Merge: backfill missing Yahoo info from Finviz ──
     info = _merge_finviz_into_info(info, finviz_data)
 
     return {
         "ticker": ticker,
+        "symbol": symbol,
         "info": info,
         "hist": hist,
-        "income": _safe_df(lambda: t.financials),
-        "income_q": _safe_df(lambda: t.quarterly_financials),
+        "income": income,
+        "income_q": income_q,
         "balance": _safe_df(lambda: t.balance_sheet),
         "balance_q": _safe_df(lambda: t.quarterly_balance_sheet),
         "cashflow": _safe_df(lambda: t.cashflow),
-        "cashflow_q": _safe_df(lambda: t.quarterly_cashflow),
+        "cashflow_q": cashflow_q,
         "news": (t.news or [])[:10],
         "price_now": price_now,
+        "price_date": price_date,
+        "source_status": source_status,
         "price_52w_high": price_52w_high,
         "price_52w_low": price_52w_low,
         "price_series": price_series,
