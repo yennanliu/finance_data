@@ -17,6 +17,8 @@ from pathlib import Path
 from .config import ANALYSIS_TYPES, TODAY
 from .config.providers import resolve_chain
 from .context import build_context
+from .context.fundamental_facts import compute_facts
+from .data import report_inputs
 from .data.sources import fetch_data
 from .llm import call_llm, run_with_fallback
 from .publish import GENERATED_BY as _GENERATED_BY, dedup_path, frontmatter
@@ -77,6 +79,10 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
 
     print("[1/3] Fetching financial data from Yahoo Finance …")
     data = fetch_data(ticker)
+    if analysis_type == "fundamental-analysis":
+        inputs = report_inputs.gather(ticker)
+        data["source_status"] = {**data.get("source_status", {}), **inputs["status"]}
+        data["report_facts"] = compute_facts(data, inputs)
     context = build_context(data, analysis_type)
 
     print(f"[2/3] Generating report (chain: {' → '.join(p for p, _ in attempts)}) …")

@@ -13,6 +13,14 @@ pytestmark = pytest.mark.integration
 TODAY = ga.TODAY
 
 
+@pytest.fixture(autouse=True)
+def _offline_report_inputs(monkeypatch):
+    """The fundamental pipeline also gathers SEC / price-store / peer inputs;
+    tests that stub fetch_data must not reach the network through it."""
+    monkeypatch.setattr(pipeline.report_inputs, "gather", lambda ticker: {
+        "store_rows": [], "bars": [], "risk_free": None, "peers": [], "status": {}})
+
+
 # ── save_report ──────────────────────────────────────────────────────────────
 
 def test_save_report_writes_markdown_with_frontmatter(tmp_path):

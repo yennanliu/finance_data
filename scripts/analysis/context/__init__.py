@@ -9,6 +9,7 @@ import textwrap
 from ..config import TODAY
 from ..utils.formatting import safe, pct, money, fmt_price, df_to_text
 from ..data.technicals import price_ascii_chart, compute_technicals
+from .fundamental_facts import render_facts
 
 
 def _ttm_sum(df, row: str):
@@ -423,8 +424,13 @@ and historical data. Cross-reference ALL sources for your analysis — if one
 source shows N/A, check the others for that metric.
 """
 
+    # fundamental-analysis only: the pipeline attaches figures computed in
+    # Python (fundamental_facts) so the model quotes them instead of deriving.
+    facts_block = render_facts(data["report_facts"]) if data.get("report_facts") else ""
+
     return "\n".join([
         company_hdr,
+        facts_block,
         f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
         _market_overview(info, data),
         analyst_block,
@@ -443,4 +449,4 @@ source shows N/A, check the others for that metric.
     ])
 
 
-__all__ = ["build_context"]
+__all__ = ["build_context", "statement_ttm", "currency_mismatch"]
