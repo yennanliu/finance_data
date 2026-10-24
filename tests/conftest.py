@@ -21,6 +21,21 @@ for _p in (_REPO_ROOT, _SCRIPTS):
         sys.path.insert(0, str(_p))
 
 
+# ── CI isolation ─────────────────────────────────────────────────────────────
+
+@pytest.fixture(autouse=True)
+def _no_real_step_summary(monkeypatch):
+    """Keep tests out of the real GitHub Actions run summary.
+
+    check_mermaid.py appends to ``$GITHUB_STEP_SUMMARY`` when it is set, and on
+    CI it always is. Tests that feed it a deliberately broken diagram used to
+    publish a "⚠️ broken snippet" table, with /tmp/pytest-of-runner paths, on
+    the summary page of whichever workflow ran pytest (tests.yml, release.yml).
+    A test that wants a summary sets its own path with ``monkeypatch.setenv``.
+    """
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+
 # ── Market-data fixtures ─────────────────────────────────────────────────────
 
 @pytest.fixture
