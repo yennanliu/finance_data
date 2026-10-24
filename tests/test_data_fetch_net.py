@@ -155,9 +155,38 @@ class _FakeTicker:
     quarterly_cashflow = property(lambda self: self._empty)
 
 
+class _FakeSearch:
+    def __init__(self, query, **kwargs):
+        self.news = [{"title": "n1"}, {"title": "n2"}]
+
+
+def test_yahoo_news_reads_search_not_ticker_news(monkeypatch):
+    import types as _types
+    calls = {}
+
+    def search(query, **kwargs):
+        calls.update(kwargs, query=query)
+        return _FakeSearch(query)
+
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: _types.SimpleNamespace(Search=search))
+    assert [n["title"] for n in data_fetch.yahoo_news("AAPL", count=5)] == ["n1", "n2"]
+    assert calls == {"query": "AAPL", "max_results": 0, "news_count": 5,
+                     "enable_fuzzy_query": False}
+
+
+def test_yahoo_news_fails_soft(monkeypatch):
+    import types as _types
+
+    def boom(*a, **k):
+        raise RuntimeError("yahoo down")
+
+    monkeypatch.setattr(data_fetch, "_get_yf", lambda: _types.SimpleNamespace(Search=boom))
+    assert data_fetch.yahoo_news("AAPL") == []
+
+
 def test_fetch_data_assembles_dict(monkeypatch):
     import types as _types
-    fake_yf = _types.SimpleNamespace(Ticker=_FakeTicker)
+    fake_yf = _types.SimpleNamespace(Ticker=_FakeTicker, Search=_FakeSearch)
     monkeypatch.setattr(data_fetch, "_get_yf", lambda: fake_yf)
     # stub the three web scrapers so no HTTP happens
     monkeypatch.setattr(data_fetch, "fetch_finviz", lambda t: {"P/E": "20"})
