@@ -65,3 +65,45 @@ def test_hook_is_registered_and_template_has_no_hardcoded_version():
     assert "scripts/mkdocs_release_hook.py" in (ROOT / "mkdocs.yml").read_text()
     main = (ROOT / "docs" / "overrides" / "main.html").read_text()
     assert "v1.0.0" not in main and "config.extra.release" in main
+
+
+# ── scripts/release_version.py (used by .github/workflows/release.yml) ────────
+
+_rspec = importlib.util.spec_from_file_location(
+    "release_version", ROOT / "scripts" / "release_version.py")
+rv = importlib.util.module_from_spec(_rspec)
+_rspec.loader.exec_module(rv)
+
+
+@pytest.mark.parametrize("bump,expected", [
+    ("patch", "1.4.3"), ("minor", "1.5.0"), ("major", "2.0.0"),
+    ("current", "1.4.2"), ("2.0.0rc1", "2.0.0rc1"),
+])
+def test_next_version(bump, expected):
+    assert rv.next_version("1.4.2", bump) == expected
+
+
+@pytest.mark.parametrize("bad", ["latest", "v1.2.3", "1.2"])
+def test_next_version_rejects_junk(bad):
+    with pytest.raises(ValueError):
+        rv.next_version("1.4.2", bad)
+
+
+def test_write_version_touches_only_the_project_lines(tmp_path):
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "finance-data"\nversion = "1.4.2"\n'
+        '[tool.x]\nversion = "9.9.9"\n')
+    lock = ('[[package]]\nname = "other"\nversion = "1.4.2"\n\n'
+            '[[package]]\nname = "finance-data"\nversion = "1.4.2"\n')
+    (tmp_path / "uv.lock").write_text(lock)
+    rv.write_version("1.5.0", tmp_path)
+    py = (tmp_path / "pyproject.toml").read_text()
+    assert 'version = "1.5.0"' in py and 'version = "9.9.9"' in py
+    assert (tmp_path / "uv.lock").read_text() == lock.replace(
+        'name = "finance-data"\nversion = "1.4.2"', 'name = "finance-data"\nversion = "1.5.0"')
+
+
+def test_repo_lockfile_carries_the_pyproject_version():
+    """release.yml rewrites both; they must agree or `uv sync --locked` fails."""
+    lock = (ROOT / "uv.lock").read_text()
+    assert f'name = "finance-data"\nversion = "{hook.read_version()}"' in lock

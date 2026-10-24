@@ -52,7 +52,7 @@ theme:
   font:
     text: false
     code: false
-  # Coloured tab icon (emerald chart tile). SVG for modern browsers; the PNGs
+  # Monochrome candlestick tile. SVG for modern browsers; the PNGs
   # beside it are the apple-touch-icon and the og:image (docs/overrides/main.html).
   favicon: assets/favicon.svg
   icon:
