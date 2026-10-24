@@ -3,12 +3,18 @@
 > AI 驅動的美股投資研究平台 — 基本面分析、技術分析、市場數據、SEC 文件，全部繁體中文。
 
 <p align="center">
-  <img src="docs/pic/demo_v2_1.png" width="80%" alt="Landing Page"/>
+  <img src="docs/pic/readme_home.webp" width="90%" alt="Landing page: the pipeline's real CLI running in a terminal"/>
 </p>
 
 <p align="center">
-  <img src="docs/pic/demo_v2_2.png" width="49%" alt="Analysis Reports Index"/>
-  <img src="docs/pic/demo_v2_3.png" width="49%" alt="Fundamental Analysis Report"/>
+  <img src="docs/pic/readme_market_pulse.webp" width="49%" alt="Market pulse: every covered ticker plotted by return"/>
+  <img src="docs/pic/readme_price_context.webp" width="49%" alt="Featured ticker's price history beside its latest report"/>
+</p>
+
+<p align="center">
+  <img src="docs/pic/readme_ticker.webp" width="32%" alt="Ticker page: KPI tiles, 52-week range and candlestick chart"/>
+  <img src="docs/pic/readme_market_data.webp" width="32%" alt="Market Data page: price, financials, valuation and intrinsic-value tabs"/>
+  <img src="docs/pic/readme_report.webp" width="32%" alt="Fundamental report in Traditional Chinese with the recomputed §8.8 notice"/>
 </p>
 
 **Live site:** [yennanliu.github.io/finance_data](https://yennanliu.github.io/finance_data/) (English + 繁體中文)
