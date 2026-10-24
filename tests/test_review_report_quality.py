@@ -1028,3 +1028,12 @@ def test_summary_states_how_many_reports_were_self_graded():
     out = io.StringIO()
     rrq.print_summary(rows, out=out)
     assert "Self-graded      : 1" in out.getvalue()
+
+
+def test_stage1_findings_are_not_scored_twice():
+    """2026-10-24: told to let stage-1 findings lower its scores, the judge
+    spent 20 issues restating §8.8 corrections the pipeline had already made,
+    and passed nothing."""
+    text = _rubric()
+    assert "不要寫進 issues，也不要因此扣分" in text
+    assert "應反映在" not in text

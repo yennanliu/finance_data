@@ -93,7 +93,9 @@ CUTOFF_SIGNALS = [
 FRONTMATTER_RE = re.compile(r"^---\n(.+?)\n---\n", re.DOTALL)
 DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
 FILENAME_RE = re.compile(
-    r"^(?P<atype>[a-z_]+)_(?P<date>\d{4}-\d{2}-\d{2})(?:-\d+)?(?:_(?P<provider>[a-z]+))?\.md$"
+    # The duplicate suffix comes before the provider or after it
+    # ("…_2026-10-23-2_gemini.md", "…_2026-10-23_gemini-2.md").
+    r"^(?P<atype>[a-z_]+)_(?P<date>\d{4}-\d{2}-\d{2})(?P<dup>-\d+)?(?:_(?P<provider>[a-z]+))?(?P<dup_after>-\d+)?\.md$"
 )
 
 
@@ -125,7 +127,7 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
         atype = m.group("atype")
         date = m.group("date")
         provider = m.group("provider") or "claude"
-        is_dup = bool(re.search(r"-\d+\.md$", path.name))
+        is_dup = bool(m.group("dup") or m.group("dup_after"))
     else:
         atype, date, provider, is_dup = "unknown", "", "unknown", False
 

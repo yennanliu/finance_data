@@ -254,10 +254,16 @@ def test_fundamental_run_rechecks_8_8_and_records_it(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: S88)
     path = pipeline.run_analysis("TSLA", "fundamental-analysis", "gemini", "g", 100, tmp_path)
     text = path.read_text(encoding="utf-8")
-    assert "arithmetic_check: mismatch" in text
+    assert "arithmetic_check: corrected" in text
+    assert "weighted_fair_value_stated: 334.34" in text      # the model's, kept
     assert "weighted_fair_value_recomputed: 324.23" in text
     assert "mos_recomputed_pct: -15.5" in text
     assert "程式複算更正" in text
+    # The table now carries the sum of its own terms; $334.34 survives only in
+    # the notices that say what was changed.
+    assert "| **加權合理價值** | **$324.23** |" in text
+    body = text.split("### 8.8", 1)[1].split("🔎", 1)[0]
+    assert "334.34" not in body
 
 
 def test_other_types_are_not_rechecked(tmp_path, monkeypatch):

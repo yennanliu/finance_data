@@ -200,8 +200,11 @@ jobs:
           LLM_SUMMARY="qa/llm_review_${TODAY}.txt"
           LLM_CSV="qa/llm_review_${TODAY}.csv"
 
-          # Count bad reports from CSV (subtract header line)
+          # Count bad reports from CSV (subtract header line). The summary
+          # leads with the recent slice, so its first "Bad reports" line is
+          # what the current code produced.
           BAD_COUNT=$(( $(wc -l < "$CSV") - 1 ))
+          RECENT_BAD=$(grep -m1 '^Bad reports' "$SUMMARY" | sed 's/^Bad reports *: *//')
 
           cat > "qa/README.md" << EOF
           # Report Quality Audit
@@ -214,7 +217,8 @@ jobs:
           | Field | Value |
           |-------|-------|
           | Last run | ${TODAY} |
-          | Bad reports found | ${BAD_COUNT} |
+          | Bad reports, last 2 days | ${RECENT_BAD} |
+          | Bad reports, all scanned | ${BAD_COUNT} |
           | CSV | [bad_reports_${TODAY}.csv](bad_reports_${TODAY}.csv) |
           | Full summary | [summary_${TODAY}.txt](summary_${TODAY}.txt) |
           | Retention | 10 most recent runs (older files pruned by \`scripts/prune_qa.py\`) |

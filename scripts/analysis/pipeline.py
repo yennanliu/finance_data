@@ -181,7 +181,11 @@ def stamp_sources(report: str, status: dict) -> str:
 
 
 def recheck_valuation(report: str, facts: dict) -> "tuple[str, dict]":
-    """Recompute §8.8 from the report's own terms and annotate the result.
+    """Recompute §8.8 from the report's own terms, correct and annotate.
+
+    A mis-added total whose weights sum to 100% is replaced by the sum of its
+    terms throughout the report (``arithmetic_check: corrected``); the model's
+    original stays in ``weighted_fair_value_stated`` and in the notice.
 
     MOS and upside use the price the context handed the model, so a report
     that quoted a different price is corrected too. Returns the annotated
@@ -195,8 +199,12 @@ def recheck_valuation(report: str, facts: dict) -> "tuple[str, dict]":
         if result["mos"] is not None:
             fields["mos_recomputed_pct"] = result["mos"]
     if result["status"] == "mismatch":
+        corrected = arithmetic.correct(report, result)
+        if corrected != report:
+            report, result = corrected, {**result, "status": "corrected"}
+            fields["arithmetic_check"] = "corrected"
         print(f"  ⚠ §8.8 weighted fair value {result['stated']} ≠ Σ terms "
-              f"{result['total']} ({result['diff_pct']:+.2f}%) — annotated")
+              f"{result['total']} ({result['diff_pct']:+.2f}%) — {result['status']}")
     return arithmetic.annotate(report, result), fields
 
 

@@ -10,7 +10,10 @@ inherit the wrong total.
 
 :func:`check` recomputes the total from the terms the report itself printed.
 It never second-guesses a term, only the addition, so a mismatch is always a
-plain arithmetic error. Pure standard library: the stage-1 audit imports it.
+plain arithmetic error. :func:`correct` then writes the recomputed total, MOS
+and upside back into the report: the notice-only approach left 22 of 35
+fundamental reports on 2026-10-23 opening with a banner saying their headline
+fair value was wrong. Pure standard library: the stage-1 audit imports it.
 """
 
 from __future__ import annotations
@@ -150,6 +153,88 @@ def valuation_mismatches(text: str, price, fair_value) -> "list[dict]":
     return out
 
 
+# Prompt rule 20: the rating is set by which of these MOS bands it falls in.
+RATING_BANDS = ((-25, "賣出"), (-10, "減碼"), (10, "持有"), (25, "買入"))
+_TOP_BAND = "強烈買入／買入（視 ROIC 與 WACC）"
+
+
+def rating_band(mos: float) -> str:
+    for upper, label in RATING_BANDS:
+        if mos < upper:
+            return label
+    return _TOP_BAND
+
+
+def _money_re(v: float) -> "re.Pattern":
+    """``$479.69`` / ``NT$1,068.84`` / ``\\$1,745`` as the report may have
+    printed ``v``, never the prefix of a longer number."""
+    forms = {f"{v:,.2f}", f"{v:.2f}"}
+    if v == int(v):
+        forms |= {f"{int(v):,}", str(int(v))}
+    alts = "|".join(re.escape(f) for f in sorted(forms, key=len, reverse=True))
+    return re.compile(r"(\\?\$\s?)(?:" + alts + r")(?!\d|[.,]\d)")
+
+
+_PCT_TOKEN = re.compile(r"([+\-−]?)(\d+(?:\.\d+)?)\s*(\\?%)")   # "\%" in LaTeX
+_MOS_LINE = re.compile(r"安全邊際|MOS")
+_UPSIDE_LINE = re.compile(r"上行空間|上漲空間")
+
+
+def correct(text: str, result: dict) -> str:
+    """Write the recomputed §8.8 total, MOS and upside back into the report.
+
+    Only for a ``mismatch`` whose weights sum to 100%, and whose stated total
+    is not itself one of the terms (see below): then the terms are a
+    complete weighted average and their sum is the fair value by definition.
+    The stated total is replaced wherever it is printed (it is repeated in the
+    TOC, §1.0 and the ASCII boxes). MOS and upside are replaced only near a
+    label naming them (or, for upside, beside the fair value), and only where
+    the figure equals the old value at the precision printed, so an unrelated
+    percentage on the same line survives. Intermediate steps of a derivation
+    (a "$3.26" difference) are not chased; the §8.8 block shows the sums.
+    """
+    if (result["status"] != "mismatch" or abs(result["weights_pct"] - 100) > 0.5
+            or result["mos"] is None):
+        return text
+    stated, total, price = result["stated"], result["total"], result["price"]
+    # Often the "total" is one of the terms carried down (TSLA, INTC and NVDA
+    # 2026-10-23 each printed a method's own value as the weighted one).
+    # Replacing it everywhere would rewrite that method's value too, so such
+    # a report keeps its figures and gets the notice instead.
+    if any(abs(v - stated) < 0.005 for v, _ in result["terms"]):
+        return text
+    text = _money_re(stated).sub(lambda m: m.group(1) + f"{total:,.2f}", text)
+
+    old = {"mos": (stated - price) / stated * 100, "upside": (stated - price) / price * 100}
+    new = {"mos": (total - price) / total * 100, "upside": (total - price) / price * 100}
+
+    def swap(line: str, keys: list) -> str:
+        def one(m):
+            sign, digits = m.group(1), m.group(2)
+            value = -float(digits) if sign in ("-", "−") else float(digits)
+            places = len(digits.partition(".")[2])
+            for k in keys:
+                if round(old[k], places) == value:
+                    v = new[k]
+                    prefix = ("−" if sign == "−" else "-") if v < 0 else ("+" if sign else "")
+                    return f"{prefix}{abs(v):.{places}f}{m.group(3)}"
+            return m.group(0)
+        return _PCT_TOKEN.sub(one, line)
+
+    # A figure's label can sit up to two lines above it (a derivation's
+    # "= ... = −9.7%" line), and an upside column beside the fair value
+    # ("| $471.23 | −8.8% |") carries no label at all.
+    fair_value = _money_re(total)
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        context = "\n".join(lines[max(0, i - 2):i + 1])
+        keys = (["mos"] if _MOS_LINE.search(context) else []) + \
+               (["upside"] if _UPSIDE_LINE.search(context) or fair_value.search(line) else [])
+        if keys:
+            lines[i] = swap(line, keys)
+    return "\n".join(lines)
+
+
 def missing_chapters(text: str, chapters=FUNDAMENTAL_CHAPTERS) -> "list[int]":
     """Chapter numbers with no ``## N.`` heading."""
     present = {int(n) for n in re.findall(r"^##\s+(\d{1,2})\.", text, re.M)}
@@ -163,11 +248,11 @@ def _money(v: float) -> str:
 def annotate(text: str, result: dict) -> str:
     """Insert the recomputation into the report.
 
-    Always appends a 「程式複算」 block to §8.8. On a mismatch it also puts a
-    one-line notice under the title, because the wrong total is repeated in the
-    executive summary a reader sees first. The model's own numbers are left as
-    written: a visible correction beats a silent rewrite of a figure that
-    appears in a dozen places.
+    Always appends a 「程式複算」 block to §8.8. On a ``corrected`` report (see
+    :func:`correct`) it adds a one-line notice under the title saying what was
+    changed, and warns when the change moves MOS into another rule-20 rating
+    band. On a ``mismatch`` it could not correct (weights not 100%) it leaves
+    the figures alone and the notice gives the recomputed value instead.
     """
     if result["status"] == "unparsed":
         return text
@@ -180,7 +265,10 @@ def annotate(text: str, result: dict) -> str:
     if result["mos"] is not None:
         lines.append(f"> 以價格 {_money(result['price'])} 計：MOS = **{result['mos']:+.1f}%**，"
                      f"上行空間 = **{result['upside']:+.1f}%**")
-    if result["status"] == "mismatch":
+    if result["status"] == "corrected":
+        lines.append(f"> ✏️ 模型原寫 {_money(result['stated'])}（與各項加總相差 {result['diff_pct']:+.2f}%），"
+                     f"本報告的合計、MOS 與上行空間已改為上方複算值。")
+    elif result["status"] == "mismatch":
         lines.append(f"> ⚠️ 本節寫的是 {_money(result['stated'])}，與各項加總相差 {result['diff_pct']:+.2f}%；"
                      f"以上方複算值為準。")
     else:
@@ -202,10 +290,20 @@ def annotate(text: str, result: dict) -> str:
                        f"上行空間 **{result['upside']:+.1f}%**（若用報告所寫的 "
                        f"{_money(result['stated'])} 則 MOS 為 {result['stated_mos']:+.1f}%）")
         notice += "。報告其他段落引用的舊數值請以此為準。\n\n"
-        text = re.sub(r"^(# [^\n]+\n)", lambda m: m.group(1) + notice, text, count=1, flags=re.M)
-    return text
+    elif result["status"] == "corrected":
+        notice = (f"\n**✏️ 程式複算更正**：8.8 節加權合理價值由模型原寫的 {_money(result['stated'])} "
+                  f"更正為 **{_money(result['total'])}**（各項加總），MOS "
+                  f"{result['stated_mos']:+.1f}% → **{result['mos']:+.1f}%**，全文已同步。")
+        before, after = rating_band(result["stated_mos"]), rating_band(result["mos"])
+        if before != after:
+            notice += (f" ⚠️ 更正後 MOS 落在規則 20 的「{after}」區間（原為「{before}」），"
+                       f"本報告的評級是依原數值給出的。")
+        notice += "\n\n"
+    else:
+        return text
+    return re.sub(r"^(# [^\n]+\n)", lambda m: m.group(1) + notice, text, count=1, flags=re.M)
 
 
 __all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
            "weighted_terms", "report_price", "check", "valuation_mismatches",
-           "missing_chapters", "annotate"]
+           "missing_chapters", "annotate", "correct", "rating_band", "RATING_BANDS"]
