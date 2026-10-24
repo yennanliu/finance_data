@@ -19,10 +19,11 @@ from __future__ import annotations
 import argparse
 import re
 import sys
-import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+from mkdocs_release_hook import project_field  # noqa: E402  (3.10-safe TOML read)
 BUMPS = ("major", "minor", "patch", "current")
 SEMVER = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:[-.]?(?:a|b|rc|alpha|beta)\.?\d*)?$")
 
@@ -55,7 +56,7 @@ def _replace_once(text: str, pattern: str, repl: str, what: str) -> str:
 def write_version(version: str, root: Path = ROOT) -> None:
     pyproject = root / "pyproject.toml"
     text = pyproject.read_text(encoding="utf-8")
-    name = tomllib.loads(text)["project"]["name"]
+    name = project_field(text, "name")
     pyproject.write_text(_replace_once(
         text, r'^(version\s*=\s*)"[^"]*"', rf'\g<1>"{version}"', "pyproject.toml"),
         encoding="utf-8")
@@ -71,9 +72,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("bump", help=f"one of {', '.join(BUMPS)}, or an explicit version")
     args = parser.parse_args(argv)
-    with (ROOT / "pyproject.toml").open("rb") as fh:
-        current = tomllib.load(fh)["project"]["version"]
     try:
+        current = project_field((ROOT / "pyproject.toml").read_text(encoding="utf-8"), "version")
         version = next_version(current, args.bump)
         if version != current:
             write_version(version)

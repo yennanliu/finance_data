@@ -15,18 +15,41 @@ break the site build.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
-import tomllib
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 (requires-python is >=3.10)
+    tomllib = None
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def project_field(text: str, key: str) -> str:
+    """`[project].<key>` from pyproject.toml text; KeyError if absent.
+
+    tomllib only exists from Python 3.11. On 3.10 a plain `key = "value"` line
+    inside the `[project]` table is read directly, which is all pyproject.toml
+    uses for `name` and `version`.
+    """
+    if tomllib is not None:
+        try:
+            return str(tomllib.loads(text)["project"][key])
+        except tomllib.TOMLDecodeError as exc:
+            raise KeyError(key) from exc
+    table = re.search(r"^\[project\][ \t]*$(.*?)(?=^\[|\Z)", text, re.MULTILINE | re.DOTALL)
+    m = table and re.search(rf'^{re.escape(key)}\s*=\s*"([^"]*)"', table.group(1), re.MULTILINE)
+    if not m:
+        raise KeyError(key)
+    return m.group(1)
+
+
 def read_version(pyproject: Path = ROOT / "pyproject.toml") -> str:
     try:
-        with pyproject.open("rb") as fh:
-            return str(tomllib.load(fh)["project"]["version"])
-    except (OSError, KeyError, tomllib.TOMLDecodeError):
+        return project_field(pyproject.read_text(encoding="utf-8"), "version")
+    except (OSError, KeyError):
         return "dev"
 
 

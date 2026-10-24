@@ -6,8 +6,8 @@ it), and no lookup may break the site build when git or the file is missing.
 """
 
 import importlib.util
+import re
 import subprocess
-import tomllib
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -23,9 +23,28 @@ _spec.loader.exec_module(hook)
 
 
 def test_version_comes_from_pyproject():
-    with (ROOT / "pyproject.toml").open("rb") as fh:
-        expected = tomllib.load(fh)["project"]["version"]
+    text = (ROOT / "pyproject.toml").read_text()
+    expected = re.search(r'^version = "([^"]*)"', text, re.MULTILINE).group(1)
     assert hook.read_version() == expected
+
+
+PYPROJECT = (
+    '[build]\nversion = "0.0.1"\n\n'
+    '[project]\nname = "finance-data"\nversion = "1.4.2"\n\n'
+    '[tool.x]\nversion = "9.9.9"\n'
+)
+
+
+@pytest.mark.parametrize("use_tomllib", [True, False], ids=["tomllib", "py310-fallback"])
+def test_project_field_reads_only_the_project_table(monkeypatch, use_tomllib):
+    if not use_tomllib:
+        monkeypatch.setattr(hook, "tomllib", None)
+    elif hook.tomllib is None:
+        pytest.skip("tomllib needs Python 3.11+")
+    assert hook.project_field(PYPROJECT, "version") == "1.4.2"
+    assert hook.project_field(PYPROJECT, "name") == "finance-data"
+    with pytest.raises(KeyError):
+        hook.project_field(PYPROJECT, "description")
 
 
 def test_unreadable_pyproject_falls_back_to_dev(tmp_path):
