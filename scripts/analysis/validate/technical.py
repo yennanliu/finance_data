@@ -12,7 +12,8 @@ from __future__ import annotations
 
 import re
 
-PRICE_TOLERANCE = 0.005   # headline price vs recorded close
+from .market_data import quote_mismatch
+
 LEVEL_TOLERANCE = 0.02    # dollars; levels are quoted to the cent
 RR_TOLERANCE = 0.05       # relative, with an absolute floor of 0.06
 
@@ -83,13 +84,7 @@ def headline_price(text: str):
 
 def price_mismatch(text: str, price) -> "dict | None":
     """The headline 當前價格 against the close the context was given."""
-    stated = headline_price(text)
-    if stated is None or not price:
-        return None
-    diff = stated / price - 1
-    if abs(diff) <= PRICE_TOLERANCE:
-        return None
-    return {"stated": stated, "price": price, "diff_pct": round(diff * 100, 2)}
+    return quote_mismatch(headline_price(text), price)
 
 
 def level_mismatches(text: str, levels: dict) -> list:

@@ -1,9 +1,16 @@
 """Validation layer: post-hoc quality scanning of generated report files.
 
-Detects empty/refusal/too-short/cut-off/placeholder/HTML-leak/duplicate reports,
-for fundamental reports missing chapters and §8.8 arithmetic errors, and for
-technical reports $nan values, a headline price / R1–S3 levels that differ
-from what the pipeline recorded, and R/R that does not recompute.
+Two families of checks, both listed in :data:`ISSUE_TYPES`:
+
+* **mechanical** — empty / refusal / too-short / cut-off / placeholder /
+  HTML-leak / duplicate / unrenderable Mermaid, for any report;
+* **structure and accuracy** (:func:`content_findings`) — a fundamental
+  report's eleven chapters; then the report against its own
+  figures (§8.8 sum, MOS, DCF premium, R/R), against the close and levels the
+  pipeline recorded in its front matter, and that close against the committed
+  price store (``market_data``). Background: ``docs/FUNDAMENTAL_REPORT_REVIEW.md``
+  and ``docs/TECHNICAL_REPORT_REVIEW.md``.
+
 This is distinct from the *generation-time* refusal detection in
 :mod:`analysis.llm` — that decides whether to retry a live call; this inspects
 already-written report files. The ``check_report_quality.py`` CLI builds its
@@ -18,8 +25,35 @@ from pathlib import Path
 from typing import List, Optional
 
 from ..utils.mermaid import mermaid_syntax_issues
-from .arithmetic import check as arithmetic_check, missing_chapters
-from .technical import check as technical_check
+from . import arithmetic, market_data, technical
+
+# Every issue code the scan can emit, in the order the CLI documents them.
+ISSUE_TYPES = {
+    # mechanical — any report type
+    "READ_ERROR": "the file could not be read",
+    "DUPLICATE": "same ticker+type+date with a -2 / -3 suffix",
+    "EMPTY": "the file is empty or whitespace only",
+    "NO_FRONTMATTER": "no YAML front matter block",
+    "REFUSAL": "the model refused instead of writing the report",
+    "TOO_SHORT": "fewer content lines than a real report has",
+    "PLACEHOLDER": "unfilled template placeholder ({ticker}, [INSERT …, $XXX)",
+    "HTML_LEAK": "raw HTML / Plotly boilerplate instead of Markdown",
+    "MERMAID": "a ```mermaid flowchart that will not render",
+    "CUTOFF": "ends mid-sentence or mid-code-block (truncated)",
+    # structure — fundamental
+    "MISSING_SECTIONS": "fundamental report lacks one of chapters ## 1. … ## 11.",
+    # accuracy — the report against its own figures
+    "ARITHMETIC": "a derived valuation (§8.8 total, MOS, DCF premium) does not "
+                  "recompute from the report's own figures",
+    "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
+    "NAN_VALUE": "a $nan / nan% leaked from an empty data bar",
+    # accuracy — the report against the market record
+    "PRICE_MISMATCH": "the price the report quotes is not the close it was given",
+    "LEVEL_MISMATCH": "a Ch.4 R1–S3 is not the computed level of the same label",
+    "STORE_MISMATCH": "the close the report was given is not the committed "
+                      "price store's close for that date",
+    "STALE_PRICE": "a newer completed session existed before the report date",
+}
 
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
 MIN_LINES = 80          # below this (after frontmatter) → TOO_SHORT
@@ -38,6 +72,10 @@ PLACEHOLDER_PATTERNS = [
     r"\{today\}",
     r"\[INSERT",
     r"<YOUR_",
+    # The prompts' own example figures, copied verbatim: "$XXX", "$XX.XX",
+    # "第 XX 百分位" (INTC and AVGO 2026-10-20/23, both OpenAI fallbacks).
+    r"\$X{2,}",
+    r"第\s?XX\s?百分位",
 ]
 HTML_LEAK_PATTERNS = [
     r"window\.PlotlyConfig",
@@ -154,39 +192,13 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
         issues.append("MERMAID")
         notes.append(f"mermaid={len(mermaid_bad)}× e.g. {mermaid_bad[0][:60]!r}")
 
-    # Fundamental reports only: the eleven chapters, and §8.8's weighted fair
-    # value against the sum of its own terms (25 of 36 reports were off).
-    if atype == "fundamental_analysis" and "REFUSAL" not in issues:
-        missing = missing_chapters(content)
-        if missing:
-            issues.append("MISSING_SECTIONS")
-            notes.append(f"missing_chapters={missing}")
-        arith = arithmetic_check(content)
-        if arith["status"] == "mismatch":
-            issues.append("ARITHMETIC")
-            notes.append(f"8.8 stated={arith['stated']} terms_sum={arith['total']} "
-                         f"diff={arith['diff_pct']}% weights={arith['weights_pct']}%")
-
-    # Technical reports: a $nan the context leaked, a headline price that is not
-    # the close the pipeline recorded, R1–S3 that are not the computed levels,
-    # and a stated R/R its own entry/stop/targets do not give.
-    if atype == "technical_analysis" and "REFUSAL" not in issues:
-        tech = technical_check(text)
-        if tech["nan"]:
-            issues.append("NAN_VALUE")
-            notes.append(f"nan={len(tech['nan'])}× e.g. {tech['nan'][0]!r}")
-        if tech["price"]:
-            p = tech["price"]
-            issues.append("PRICE_MISMATCH")
-            notes.append(f"headline={p['stated']} recorded={p['price']} diff={p['diff_pct']}%")
-        if tech["levels"]:
-            issues.append("LEVEL_MISMATCH")
-            notes.append("levels=" + ", ".join(
-                f"{l['label']} {l['stated']}≠{l['computed']}" for l in tech["levels"]))
-        if tech["rr"]:
-            issues.append("RR_MISMATCH")
-            notes.append("rr=" + ", ".join(
-                f"stated {r['stated']} vs {r['recomputed']}" for r in tech["rr"]))
+    # Accuracy: the report against the figures it was given and its own
+    # arithmetic. A refusal has neither, so it is not checked.
+    if "REFUSAL" not in issues:
+        for code, note in content_findings(atype, text, content, ticker, date):
+            if code not in issues:
+                issues.append(code)
+            notes.append(note)
 
     # CUTOFF — check last non-empty line
     lines = [l for l in text.splitlines() if l.strip()]
@@ -221,6 +233,67 @@ def parse_file(path: Path, min_lines: int = MIN_LINES) -> ReportIssue:
     )
 
 
+def _fmt(d: dict, *keys: str) -> str:
+    return " ".join(f"{k}={d[k]}" for k in keys)
+
+
+def content_findings(atype: str, text: str, content: str, ticker: str,
+                      date: str) -> "list[tuple[str, str]]":
+    """``(issue code, note)`` pairs from the type-specific checks for one report:
+    a fundamental report's chapters, then the accuracy checks.
+
+    Each accuracy check compares the report with something it cannot argue with: its
+    own figures, the close and levels the pipeline recorded in the front
+    matter, or the committed price store. Checks that cannot run (no front
+    matter price, no parseable table) stay silent.
+    """
+    fm = technical.front_matter(text)
+    try:
+        price = float(fm["price"]) if fm.get("price") else None
+    except ValueError:
+        price = None
+    out: "list[tuple[str, str]]" = []
+
+    if atype == "fundamental_analysis":
+        missing = arithmetic.missing_chapters(content)
+        if missing:
+            out.append(("MISSING_SECTIONS", f"missing_chapters={missing}"))
+        # §8.8 against the sum of its own terms (25 of 36 reports were off) …
+        a = arithmetic.check(content, price)
+        if a["status"] == "mismatch":
+            out.append(("ARITHMETIC", f"8.8 stated={a['stated']} terms_sum={a['total']} "
+                                      f"diff={a['diff_pct']}% weights={a['weights_pct']}%"))
+        # … and the headline MOS / premium against the report's own inputs.
+        for v in arithmetic.valuation_mismatches(content, a["price"], a["stated"]):
+            out.append(("ARITHMETIC", f"{v['metric']} stated={v['stated']}% "
+                                      f"expected={v['expected']}%"))
+        quoted = market_data.quote_mismatch(arithmetic.report_price(content), price)
+        if quoted:
+            out.append(("PRICE_MISMATCH", "quoted " + _fmt(quoted, "stated", "price", "diff_pct")))
+
+    if atype == "technical_analysis":
+        tech = technical.check(text)
+        if tech["nan"]:
+            out.append(("NAN_VALUE", f"nan={len(tech['nan'])}× e.g. {tech['nan'][0]!r}"))
+        if tech["price"]:
+            out.append(("PRICE_MISMATCH", "headline " + _fmt(tech["price"], "stated", "price", "diff_pct")))
+        if tech["levels"]:
+            out.append(("LEVEL_MISMATCH", "levels=" + ", ".join(
+                f"{l['label']} {l['stated']}≠{l['computed']}" for l in tech["levels"])))
+        if tech["rr"]:
+            out.append(("RR_MISMATCH", "rr=" + ", ".join(
+                f"stated {r['stated']} vs {r['recomputed']}" for r in tech["rr"])))
+
+    # Any report that recorded its close: is that close the market's?
+    record = market_data.check(fm, ticker, date)
+    if record["store"]:
+        out.append(("STORE_MISMATCH", "store " + _fmt(record["store"], "price", "store", "diff_pct")))
+    if record["stale"]:
+        out.append(("STALE_PRICE", f"price_date={fm.get('price_date')} "
+                                   f"newer_sessions={record['stale']}"))
+    return out
+
+
 def collect_reports(root: Path, since: Optional[str], until: Optional[str],
                     ticker_filter: Optional[str]) -> List[Path]:
     """Gather ``*.md`` report paths under ``root`` filtered by month/ticker."""
@@ -240,7 +313,7 @@ def collect_reports(root: Path, since: Optional[str], until: Optional[str],
 
 
 __all__ = [
-    "MIN_LINES", "REFUSAL_PATTERNS", "PLACEHOLDER_PATTERNS", "HTML_LEAK_PATTERNS",
+    "ISSUE_TYPES", "content_findings", "MIN_LINES", "REFUSAL_PATTERNS", "PLACEHOLDER_PATTERNS", "HTML_LEAK_PATTERNS",
     "CUTOFF_SIGNALS", "FRONTMATTER_RE", "DATE_RE", "FILENAME_RE",
     "ReportIssue", "parse_file", "collect_reports",
 ]

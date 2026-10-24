@@ -160,3 +160,29 @@ def test_collect_reports_filters(tmp_path):
     assert len(crq.collect_reports(tmp_path, "2026-02", None, None)) == 2
     # since + until window (2026-02 only)
     assert len(crq.collect_reports(tmp_path, "2026-02", "2026-02", None)) == 1
+
+
+def test_a_fundamental_report_quoting_another_price_is_flagged(tmp_path):
+    """0050 2026-10: 「現價 NT$195.00」 22 times while it was given NT$106.90."""
+    fm = "---\ntitle: x\nprice: 106.90\nprice_date: 2026-01-01\n---\n\n"
+    body = fm + _good_body()[len(FM):] + "\n現價 NT$195.00\n"
+    p = _write(tmp_path, "0050", "fundamental_analysis_2026-01-01_gemini.md", body)
+    issue = crq.parse_file(p)
+    assert "PRICE_MISMATCH" in issue.issues and "stated=195.0" in issue.note
+
+
+def test_copied_template_figures_are_placeholders(tmp_path):
+    """INTC 2026-10-20 printed 「加權合理價值 $XXX」 from the prompt's example."""
+    p = _write(tmp_path, "intc", "fundamental_analysis_2026-01-01_openai.md",
+               _good_body() + "\n| **安全邊際（MOS）** | -15%＝(加權合理價值 $XXX − 現價) |\n")
+    assert "PLACEHOLDER" in crq.parse_file(p).issues
+
+
+def test_every_emitted_issue_code_is_documented(tmp_path):
+    """The CLI prints ISSUE_TYPES beside each count; an undocumented code
+    would print with no description."""
+    import re
+    from pathlib import Path
+    src = (Path(crq.__file__).parent / "analysis/validate/__init__.py").read_text(encoding="utf-8")
+    emitted = set(re.findall(r'(?:issues\.append|out\.append)\(\(?"([A-Z_]+)"', src))
+    assert emitted and emitted <= set(crq.ISSUE_TYPES)
