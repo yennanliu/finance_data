@@ -1,10 +1,27 @@
 
 ============================================================
-Total scanned : 945
-Bad reports   : 365  (38.6%)
+
+Recent — last 2 UTC days (2026-10-23, 2026-10-24)
+Total scanned : 86
+Bad reports   : 30  (34.9%)
 
 Issue breakdown:
-  ARITHMETIC             327  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  ARITHMETIC              23  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE                3  same ticker+type+date with a -2 / -3 suffix
+  STALE_PRICE              2  a newer completed session existed before the report date
+  NAN_VALUE                2  a $nan / nan% leaked from an empty data bar
+  PLACEHOLDER              1  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
+  RR_MISMATCH              1  a stated R/R matches neither target from its own entry/stop
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 947
+Bad reports   : 399  (42.1%)
+
+Issue breakdown:
+  ARITHMETIC             343  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE               34  same ticker+type+date with a -2 / -3 suffix
   RR_MISMATCH             28  a stated R/R matches neither target from its own entry/stop
   MISSING_SECTIONS         4  fundamental report lacks one of chapters ## 1. … ## 11.
   PLACEHOLDER              3  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
@@ -15,15 +32,15 @@ Issue breakdown:
   CUTOFF                   1  ends mid-sentence or mid-code-block (truncated)
 
 Top 10 tickers by bad-report count:
+  pl             18 / 31   bad
   grab           17 / 31   bad
-  pl             16 / 31   bad
-  avav           15 / 31   bad
-  ktos           15 / 31   bad
-  avgo           14 / 31   bad
-  onds           14 / 31   bad
-  amd            13 / 31   bad
-  mrvl           13 / 15   bad
-  mu             13 / 15   bad
-  rklb           13 / 31   bad
+  avav           16 / 31   bad
+  avgo           16 / 32   bad
+  ktos           16 / 31   bad
+  onds           15 / 31   bad
+  vst            15 / 32   bad
+  amd            14 / 31   bad
+  rklb           14 / 31   bad
+  meta           13 / 31   bad
 
 CSV written → qa/bad_reports_2026-10-24.csv
