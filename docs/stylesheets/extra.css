@@ -276,6 +276,14 @@ body { background: var(--fp-bg); }
   .md-header__release { display: none; }
 }
 
+/* Language menu: the reader's current language (aria-current, set by
+   alternate.html and kept current by lang-switch.js) reads as selected. */
+.md-select__link[aria-current] {
+  font-weight: 700;
+  background: var(--fp-accent-dim);
+}
+.md-select__link[aria-current]::after { content: " ✓"; }
+
 /* Search — a bordered pill like FinLab's toolbar controls. */
 .md-search__form {
   border-radius: var(--fp-pill);

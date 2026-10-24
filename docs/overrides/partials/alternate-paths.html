@@ -1,0 +1,55 @@
+{#-
+  Where the language switcher sends a reader, as site-root-relative paths.
+
+  Used twice: alternate.html renders the 文A menu from it, and main.html
+  publishes the same two paths in <head> as <meta name="fp:alternate">.
+  The second copy exists because of navigation.instant: Material swaps the
+  page body and syncs <head> on every in-site click but never re-renders the
+  header, so the menu keeps the links of the first page loaded — usually the
+  home page, which is how 文A on a report "jumped back to the home page".
+  hub.js re-points the menu from those metas after each navigation.
+
+  The ZH tree mirrors this site's *index* pages only: build_docs.py writes one
+  localised index.md per section and per ticker, and leaves the dated report and
+  news leaves English-only. A leaf with no twin falls back to its parent index,
+  one directory up, which always exists in both trees.
+  tests/test_build_docs.py::test_every_unmirrored_page_has_a_mirrored_parent
+  asserts that invariant over a real build, because a wrong guess here 404s.
+-#}
+
+{#- "en" or "zh": which tree `page` is in. -#}
+{% macro page_lang(page) -%}
+  {{- "zh" if page and page.url and page.url.startswith("zh/") else "en" -}}
+{%- endmacro %}
+
+{#- The counterpart of `page` in tree `lang` ("en" / "zh…"). -#}
+{% macro alternate_path(page, lang) -%}
+  {#- Pages that exist in both trees but are not index.md. Kept explicit
+      rather than pattern-matched: the list is short and a wrong guess 404s. -#}
+  {%- set both_trees = ["scripts.md", "sec/10k.md", "sec/10q.md",
+                        "sec/13f.md", "sec/6k.md"] -%}
+
+  {#- MkDocs gives each tree's root index the url "." rather than "".
+      Normalised so the root is the empty prefix every path is built from —
+      "." would otherwise make the Chinese target "zh/." and lose its
+      trailing slash, costing a redirect. -#}
+  {%- set url = (page.url if page and page.url and page.url != "." else "") -%}
+  {%- set mirrored = page and (page.is_index or page.file.src_uri in both_trees
+                               or page.file.src_uri.startswith("zh/")) -%}
+
+  {#- The same page in each tree. "zh/" is stripped rather than replaced so a
+      ticker that happens to contain the substring is left alone. -#}
+  {%- set base = url[3:] if url.startswith("zh/") else url -%}
+
+  {#- No twin of its own → the directory it lives in, which has one. Trailing
+      slash first: page.url is "reports/avav/<leaf>/" under use_directory_urls,
+      and dropping the last *segment* is what turns it into "reports/avav/". A
+      single segment ("ARCHITECTURE/") has no parent but the site root, which
+      is both trees' index — so it lands there rather than nowhere. -#}
+  {%- if not mirrored -%}
+    {%- set parts = base.strip("/").split("/") -%}
+    {%- set base = (parts[:-1] | join("/") ~ "/") if parts | length > 1 else "" -%}
+  {%- endif -%}
+
+  {{- ("zh/" ~ base) if lang.startswith("zh") else base -}}
+{%- endmacro %}

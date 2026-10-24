@@ -195,3 +195,5 @@ extra_javascript:
   - javascripts/tab-anchors.js
   # Filter box on the section index card grids; reading progress on every page.
   - javascripts/hub.js
+  # Re-points the 文A language menu at the current page after instant navigation.
+  - javascripts/lang-switch.js

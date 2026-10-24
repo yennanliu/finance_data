@@ -31,6 +31,16 @@
   <meta name="twitter:title" content="{{ meta_title }}">
   <meta name="twitter:description" content="{{ meta_desc }}">
   <meta name="twitter:image" content="{{ og_image }}">
+  {#- The language switcher's targets for *this* page. The header holding the
+      switcher is not re-rendered on instant navigation but <head> is synced,
+      so hub.js re-points the 文A menu from these after every page change —
+      without them it keeps the first page's links. See alternate-paths.html. -#}
+  {% if page %}
+    {% from "partials/alternate-paths.html" import alternate_path, page_lang %}
+    <meta name="fp:alternate" data-lang="en" content="{{ alternate_path(page, 'en') | trim }}">
+    <meta name="fp:alternate" data-lang="zh" content="{{ alternate_path(page, 'zh') | trim }}">
+    <meta name="fp:lang" content="{{ page_lang(page) | trim }}">
+  {% endif %}
   {#- Display + body faces for the editorial theme (extra.css). Latin-only and
       display=swap, so text paints in the system stack first and CJK pages
       never wait on them. -#}
