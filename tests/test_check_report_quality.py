@@ -186,3 +186,30 @@ def test_every_emitted_issue_code_is_documented(tmp_path):
     src = (Path(crq.__file__).parent / "analysis/validate/__init__.py").read_text(encoding="utf-8")
     emitted = set(re.findall(r'(?:issues\.append|out\.append)\(\(?"([A-Z_]+)"', src))
     assert emitted and emitted <= set(crq.ISSUE_TYPES)
+
+
+def test_a_duplicate_suffix_after_the_provider_is_still_parsed(tmp_path):
+    """skhy/…_2026-10-23_gemini-2.md was read as type 'unknown' and skipped
+    every type-specific check."""
+    p = _write(tmp_path, "skhy", "fundamental_analysis_2026-10-23_gemini-2.md", _good_body())
+    issue = crq.parse_file(p)
+    assert (issue.analysis_type, issue.provider) == ("fundamental_analysis", "gemini")
+    assert "DUPLICATE" in issue.issues
+
+
+def test_recent_dates_cover_one_generation_cycle():
+    from datetime import date
+    assert crq.recent_dates(2, today=date(2026, 10, 24)) == {"2026-10-24", "2026-10-23"}
+
+
+def test_summary_leads_with_the_recent_slice(tmp_path, capsys, monkeypatch):
+    from datetime import datetime, timezone
+    today = datetime.now(timezone.utc).date().isoformat()
+    _write(tmp_path, "aapl", f"fundamental_analysis_{today}_gemini.md", FM + "短")
+    _write(tmp_path, "aapl", "fundamental_analysis_2020-01-01_gemini.md", FM + "短")
+    monkeypatch.setattr("sys.argv", ["x", "--root", str(tmp_path), "--summary"])
+    crq.main()
+    out = capsys.readouterr().out
+    recent, everything = out.split("All scanned reports")
+    assert "Recent — last 2 UTC days" in recent and "Total scanned : 1" in recent
+    assert "Total scanned : 2" in everything

@@ -26,6 +26,8 @@ Examples:
 import argparse
 import csv
 import sys
+from collections import Counter
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import List
 
@@ -40,6 +42,27 @@ AI_GEN_REPORT = Path(__file__).parent.parent / "ai_gen_report"
 DEFAULT_ROOTS = [AI_GEN_REPORT / "fundamental", AI_GEN_REPORT / "technical", AI_GEN_REPORT / "stock"]
 
 
+RECENT_DAYS = 2   # one generation cycle: report crons run 17:00–03:00 UTC
+
+
+def recent_dates(days: int, today=None) -> "set[str]":
+    """The last ``days`` UTC date stamps, today included."""
+    today = today or datetime.now(timezone.utc).date()
+    return {(today - timedelta(days=n)).isoformat() for n in range(days)}
+
+
+def print_breakdown(results: List[ReportIssue], title: str) -> None:
+    """Scanned / bad counts and per-issue counts for one slice of reports."""
+    bad = [r for r in results if r.is_bad()]
+    counts = Counter(i for r in bad for i in r.issues)
+    print(f"\n{title}")
+    print(f"Total scanned : {len(results)}")
+    print(f"Bad reports   : {len(bad)}  ({100*len(bad)/max(len(results),1):.1f}%)")
+    print("\nIssue breakdown:")
+    for issue, cnt in counts.most_common():
+        print(f"  {issue:<20} {cnt:>5}  {ISSUE_TYPES.get(issue, '')}")
+
+
 # ── main ───────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
@@ -51,6 +74,9 @@ def main():
     parser.add_argument("--since", metavar="YYYY-MM", help="Only files from this month onward")
     parser.add_argument("--until", metavar="YYYY-MM", help="Only files up to this month")
     parser.add_argument("--ticker", help="Filter to a single ticker")
+    parser.add_argument("--recent-days", type=int, default=RECENT_DAYS,
+                        help="Also summarise reports stamped in the last N UTC days — what "
+                             f"the current code produces (default: {RECENT_DAYS}; 0 to skip)")
     parser.add_argument("--csv", metavar="PATH", help="Write results to CSV file")
     parser.add_argument("--summary", action="store_true",
                         help="Print summary table only (no per-file listing)")
@@ -85,18 +111,15 @@ def main():
             print(f"{tag:<35} {r.date}  {r.ticker:<12} {r.analysis_type:<30} {r.path}{note}")
 
     # ── summary ────────────────────────────────────────────────────────────────
-    from collections import Counter
-    issue_counts: Counter = Counter()
-    for r in bad:
-        for i in r.issues:
-            issue_counts[i] += 1
-
+    # The recent slice first: the whole-corpus counts are dominated by reports
+    # written before a fix landed, so they say little about today's code.
     print(f"\n{'='*60}")
-    print(f"Total scanned : {len(results)}")
-    print(f"Bad reports   : {len(bad)}  ({100*len(bad)/max(len(results),1):.1f}%)")
-    print(f"\nIssue breakdown:")
-    for issue, cnt in issue_counts.most_common():
-        print(f"  {issue:<20} {cnt:>5}  {ISSUE_TYPES.get(issue, '')}")
+    if args.recent_days > 0:
+        dates = recent_dates(args.recent_days)
+        print_breakdown([r for r in results if r.date in dates],
+                        f"Recent — last {args.recent_days} UTC days ({', '.join(sorted(dates))})")
+        print(f"\n{'-'*60}")
+    print_breakdown(results, "All scanned reports")
 
     # per-ticker bad count
     ticker_bad: Counter = Counter(r.ticker for r in bad)

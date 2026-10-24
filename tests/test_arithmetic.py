@@ -141,3 +141,74 @@ def test_premium_words_carry_the_sign_when_the_number_does_not():
     text = "| DCF 內在價值評估 | 基準 DCF 每股內在價值 $246.20（溢價 10.2%） |\n"
     out = A.valuation_mismatches(text, 223.55, None)
     assert out and out[0]["stated"] == 10.2 and out[0]["expected"] < 0
+
+
+# ── correct(): write the recomputed total back (AMD 2026-10-23) ──────────────
+
+AMD = """# AMD 基本面深度分析報告
+
+| 1 | 執行摘要 | 評級 **🟡 持有** ｜ 加權合理價值 **$479.69** ｜ MOS **-7.7%** |
+
+| **安全邊際（MOS）** | **-7.7%** ＝ ($479.69 − $516.79) ÷ $479.69 ｜ 營收年增 7.7% |
+
+### 8.8 估值三角驗證
+
+| **加權合理價值** | **$479.69** | **-7.2%** | **100%** |
+
+`加權合理價值 = $403.07×40% + $520.00×30% + $480.00×20% + $560.00×10%`
+
+- **安全邊際 MOS** ＝ (加權合理價值 $479.69 − 現價 $516.79) ÷ 加權合理價值 $479.69
+  $= \\mathbf{-7.73\\%}$
+
+### 8.9 局限
+"""
+
+
+def _corrected(text, price=516.79):
+    r = A.check(text, price=price)
+    return r, A.correct(text, r)
+
+
+def test_correct_rewrites_the_total_mos_and_upside_everywhere():
+    r, out = _corrected(AMD)
+    total = f"${r['total']:,.2f}"                              # $469.23
+    assert "479.69" not in out
+    assert out.count(total) == 6
+    assert "MOS **-10.1%**" in out and "**-10.1%** ＝" in out  # TOC and §1.0
+    assert "| **-9.2%** |" in out                               # upside beside the value
+    assert r"\mathbf{-10.14\%}" in out                          # LaTeX, a line below its label
+    assert A.check(out, price=516.79)["status"] == "ok"
+
+
+def test_correct_leaves_unrelated_percentages_alone():
+    """The §1.0 row also carries a 7.7% growth rate; only -7.7% was the MOS."""
+    _, out = _corrected(AMD)
+    assert "營收年增 7.7%" in out
+
+
+def test_a_total_that_is_one_of_the_terms_is_not_rewritten():
+    """TSLA 2026-10-23 printed its relative-valuation term ($194.24) as the
+    weighted total; replacing it everywhere would rewrite that term too."""
+    text = AMD.replace("$480.00×20%", "$479.69×20%")
+    r, out = _corrected(text)
+    assert r["status"] == "mismatch" and out == text
+
+
+def test_weights_not_summing_to_100_are_not_rewritten():
+    text = AMD.replace("$560.00×10%", "$560.00×5%")
+    r, out = _corrected(text)
+    assert out == text
+
+
+def test_a_corrected_report_says_so_and_warns_on_a_rating_band_change():
+    r, out = _corrected(AMD)
+    note = A.annotate(out, {**r, "status": "corrected"})
+    head = note.split("### 8.8")[0]
+    assert "程式複算更正" in head and "$479.69" in head          # the model's figure, named
+    assert "「減碼」" in head and "「持有」" in head              # −7.7% → −10.1% crosses −10%
+    assert "已改為上方複算值" in note
+
+
+def test_rating_bands_follow_prompt_rule_20():
+    assert [A.rating_band(m) for m in (-30, -12, 0, 12)] == ["賣出", "減碼", "持有", "買入"]
+    assert A.rating_band(30).startswith("強烈買入")
