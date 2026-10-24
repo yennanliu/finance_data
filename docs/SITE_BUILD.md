@@ -220,6 +220,16 @@ trees and `mkdocs build --strict` ships them together.
       pins that every twin-less page sits directly inside a mirrored directory
     - `tests/test_language_switcher.py` renders the partial against MkDocs' own
       `url` filter
+
+    The path rule itself lives in `alternate-paths.html` (macros). `main.html`
+    uses it too, to publish each page's targets in `<head>` as
+    `<meta name="fp:alternate">`. That second copy exists because
+    `navigation.instant` syncs `<head>` on every in-site click but **never
+    re-renders the header**, so the menu kept the first-loaded page's links and
+    sent the reader to the other tree's home page.
+    `docs/javascripts/lang-switch.js` copies the metas onto the menu after each
+    navigation (pinned by `tests/test_lang_switch_js.py`), and the reader's
+    current language is marked `aria-current`.
 - **`docs/includes/`** is listed in `exclude_docs` in `mkdocs.yml`. It is a
   `pymdownx.snippets` source auto-appended to every page, not a page. When MkDocs
   published it anyway, it was the one directory on the site with no index for the

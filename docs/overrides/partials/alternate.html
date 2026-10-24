@@ -23,35 +23,12 @@
   asserts it over a real build, because a wrong guess here 404s.
 -#}
 
-{#- Pages that exist in both trees but are not index.md. Kept explicit rather
-    than pattern-matched: the list is short and a wrong guess here 404s. -#}
-{% set both_trees = ["scripts.md", "sec/10k.md", "sec/10q.md",
-                     "sec/13f.md", "sec/6k.md"] %}
-
-{#- MkDocs gives each tree's root index the url "." rather than "". Normalised
-    here so the root is the empty prefix every path below is built from — "."
-    would otherwise make the Chinese target "zh/." and lose its trailing
-    slash, costing a redirect. -#}
-{% set url = (page.url if page and page.url and page.url != "." else "") %}
-{% set mirrored = page and (page.is_index or page.file.src_uri in both_trees
-                            or page.file.src_uri.startswith("zh/")) %}
-
-{#- The same page in each tree. "zh/" is stripped rather than replaced so a
-    ticker that happens to contain the substring is left alone. -#}
-{% set base = url[3:] if url.startswith("zh/") else url %}
-
-{#- No twin of its own → the directory it lives in, which has one. Trailing
-    slash first: page.url is "reports/avav/<leaf>/" under use_directory_urls,
-    and dropping the last *segment* is what turns it into "reports/avav/". A
-    single segment ("ARCHITECTURE/") has no parent but the site root, which is
-    both trees' index — so it lands there rather than nowhere. -#}
-{% if not mirrored %}
-  {% set parts = base.strip("/").split("/") %}
-  {% set base = (parts[:-1] | join("/") ~ "/") if parts | length > 1 else "" %}
-{% endif %}
-
-{% set en_url = base %}
-{% set zh_url = "zh/" ~ base %}
+{#- The path rule lives in alternate-paths.html so main.html can publish the
+    same targets in <head> for instant navigation (see that file). -#}
+{% from "partials/alternate-paths.html" import alternate_path, page_lang %}
+{% set en_url = alternate_path(page, "en") | trim %}
+{% set zh_url = alternate_path(page, "zh") | trim %}
+{% set current = page_lang(page) | trim %}
 
 <div class="md-header__option">
   <div class="md-select">
@@ -71,8 +48,11 @@
           {% else %}
             {% set target = alt.link | url %}
           {% endif %}
+          {#- The language the reader is in is marked as such, so the open menu
+              shows which one is selected rather than two identical links. -#}
+          {% set selected = page and alt.lang.split("-")[0] == current %}
           <li class="md-select__item">
-            <a href="{{ target }}" hreflang="{{ alt.lang }}" class="md-select__link">
+            <a href="{{ target }}" hreflang="{{ alt.lang }}" class="md-select__link"{% if selected %} aria-current="true"{% endif %}>
               {{ alt.name }}
             </a>
           </li>

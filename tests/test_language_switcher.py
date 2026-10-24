@@ -156,3 +156,114 @@ def test_a_page_less_template_keeps_the_configured_links():
     hrefs = [l.split('href="')[1].split('"')[0]
              for l in html.splitlines() if 'href="' in l]
     assert hrefs == ["/finance_data/", "/finance_data/zh/"]
+
+
+# ── the selected language is marked as such ──────────────────────────────────
+
+def _current(url: str, *, src_uri: str, is_index: bool) -> "list[str]":
+    """hreflang of every switcher entry rendered with aria-current."""
+    env = Environment(loader=ChoiceLoader([
+        FileSystemLoader(str(PARTIALS.parent)),
+        DictLoader({".icons/material/translate.svg": "<svg/>"}),
+    ]))
+    env.filters["url"] = lambda path: _url_filter(path, url)
+    page = SimpleNamespace(url=url, is_index=is_index,
+                           file=SimpleNamespace(src_uri=src_uri))
+    html = env.get_template("partials/alternate.html").render(
+        page=page,
+        config=SimpleNamespace(
+            theme={"icon": {"alternate": "material/translate"}},
+            extra={"alternate": ALTERNATE}),
+        lang=SimpleNamespace(t=lambda key: key),
+    )
+    return [line.split('hreflang="')[1].split('"')[0]
+            for line in html.splitlines() if "aria-current" in line]
+
+
+def test_an_english_page_marks_english_as_selected():
+    assert _current("reports/avav/", src_uri="reports/avav/index.md",
+                    is_index=True) == ["en"]
+
+
+def test_a_zh_page_marks_chinese_as_selected():
+    assert _current("zh/reports/avav/", src_uri="zh/reports/avav/index.md",
+                    is_index=True) == ["zh-TW"]
+
+
+# ── the <head> copy of the targets, read after instant navigation ────────────
+#
+# Material's instant navigation never re-renders the header, so the switcher
+# above only holds for the first page loaded; after an in-site click it still
+# pointed at that page — usually home. main.html therefore publishes the same
+# targets in <head> (which *is* synced) and lang-switch.js copies them onto the
+# menu. These pin that the two copies come from one rule and cannot drift.
+
+MAIN = PARTIALS.parent / "main.html"
+
+PAGES = [
+    ("", "index.md", True),
+    ("zh/", "zh/index.md", True),
+    ("reports/avav/", "reports/avav/index.md", True),
+    ("zh/reports/avav/", "zh/reports/avav/index.md", True),
+    ("data/2330.tw/", "data/2330.tw/index.md", True),
+    ("scripts/", "scripts.md", False),
+    ("ARCHITECTURE/", "ARCHITECTURE.md", False),
+    ("reports/avav/fundamental_analysis_2026-09-18_gemini/",
+     "reports/avav/fundamental_analysis_2026-09-18_gemini.md", False),
+    ("market_news/nvda/market_news_2026-09-18_openai/",
+     "market_news/nvda/market_news_2026-09-18_openai.md", False),
+]
+
+
+def _head_metas(url: str, *, src_uri: str, is_index: bool) -> dict:
+    """Render main.html's alternate <meta> block; return {name/lang: content}."""
+    src = MAIN.read_text(encoding="utf-8")
+    start = src.index("{% if page %}\n    {% from \"partials/alternate-paths.html\"")
+    block = src[start:src.index("{% endif %}", start) + len("{% endif %}")]
+    env = Environment(loader=FileSystemLoader(str(PARTIALS.parent)))
+    page = SimpleNamespace(url=url, is_index=is_index,
+                           file=SimpleNamespace(src_uri=src_uri))
+    html = env.from_string(block).render(page=page)
+    out = {}
+    for line in html.splitlines():
+        if "<meta" not in line:
+            continue
+        content = line.split('content="')[1].split('"')[0]
+        key = (line.split('data-lang="')[1].split('"')[0]
+               if "data-lang" in line else line.split('name="')[1].split('"')[0])
+        out[key] = content
+    return out
+
+
+@pytest.mark.parametrize("url,src_uri,is_index", PAGES)
+def test_head_targets_match_the_rendered_switcher(url, src_uri, is_index):
+    """Resolved from the site root, each <meta> path is where the server-side
+    switcher sends the reader from that page."""
+    metas = _head_metas(url, src_uri=src_uri, is_index=is_index)
+    en, zh = _targets(url, src_uri=src_uri, is_index=is_index)
+    here = posixpath.join("/site", url or ".")
+    for rel, path in ((en, metas["en"]), (zh, metas["zh"])):
+        assert (posixpath.normpath(posixpath.join(here, rel))
+                == posixpath.normpath(posixpath.join("/site", path or ".")))
+
+
+def test_head_targets_for_a_report_stay_on_its_ticker():
+    metas = _head_metas(
+        "reports/avav/fundamental_analysis_2026-09-18_gemini/",
+        src_uri="reports/avav/fundamental_analysis_2026-09-18_gemini.md",
+        is_index=False)
+    assert metas == {"en": "reports/avav/", "zh": "zh/reports/avav/",
+                     "fp:lang": "en"}
+
+
+def test_head_targets_for_a_zh_page_name_its_tree():
+    metas = _head_metas("zh/data/2330.tw/", src_uri="zh/data/2330.tw/index.md",
+                        is_index=True)
+    assert metas == {"en": "data/2330.tw/", "zh": "zh/data/2330.tw/",
+                     "fp:lang": "zh"}
+
+
+def test_lang_switch_script_is_loaded():
+    """Without it the <head> targets are inert and the bug is back."""
+    mkdocs = (PARTIALS.parents[2] / "mkdocs.yml").read_text(encoding="utf-8")
+    assert "javascripts/lang-switch.js" in mkdocs
