@@ -69,6 +69,7 @@ scripts/generate_analysis.py
 - `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
 - `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid, series averages); with `fundamental_analytics.py` it powers the **Market Data** section (`docs/data/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
 - `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
+- `scripts/generate_market_news.py` — market-news sources: Yahoo (`sources.yahoo_news()`), four keyword RSS feeds and Perplexity Discover, merged and title-deduped; every source fails soft to `[]`. `perplexity.ai/discover` is Cloudflare-walled with no feed, so Perplexity is read keyless through Google News `site:perplexity.ai when:7d`, keeping only titles that name the ticker (case-sensitive) or the company's short name — the raw search is mostly other companies' articles and quote pages
 - `.github/workflows/daily_analysis.yml` — 61 cron slots/day (36 fundamental + 25 technical), one ticker per slot
 - `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + `uv pip install`; there is no pip step anywhere in CI), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
 

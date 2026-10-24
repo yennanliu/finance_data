@@ -66,6 +66,54 @@ def test_fetch_rss_respects_limit(monkeypatch):
     assert len(items) == 1
 
 
+# ── _fetch_perplexity ────────────────────────────────────────────────────────
+
+PPLX_XML = b"""<?xml version="1.0"?>
+<rss><channel>
+  <item><title>Tesla Executive Says Launching Cybercabs In Dallas - Perplexity</title></item>
+  <item><title>This Week in TSLA: Roadster Debut - Perplexity</title></item>
+  <item><title>Tesla, Inc. Stock Price: Quote, Forecast &amp; News (TSLA) - Perplexity</title></item>
+  <item><title>Capcom Co., Ltd. Price: Quote, Forecast (9697.T) - Perplexity</title></item>
+  <item><title>Morgan Stanley Raises Meta Price Target - Perplexity</title></item>
+  <item><title>Perplexity - Perplexity</title></item>
+  <item><title>Teslas tsla lowercase is not the ticker - Perplexity</title></item>
+</channel></rss>"""
+
+
+@pytest.mark.parametrize("name, short", [
+    ("Tesla, Inc.", "Tesla"),
+    ("NVIDIA Corporation", "NVIDIA"),
+    ("Advanced Micro Devices, Inc.", "Advanced Micro Devices"),
+    ("Smoore International Holdings Ltd", "Smoore International"),
+    ("", ""),
+])
+def test_short_name_strips_corporate_suffixes(name, short):
+    assert mn._short_name(name) == short
+
+
+def test_fetch_perplexity_keeps_only_articles_about_the_company(monkeypatch):
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
+    items = mn._fetch_perplexity("TSLA", "Tesla, Inc.")
+    assert [i["title"] for i in items] == [
+        "Tesla Executive Says Launching Cybercabs In Dallas",
+        "This Week in TSLA: Roadster Debut",
+    ]
+    assert all(i["publisher"] == "Perplexity" for i in items)
+
+
+def test_fetch_perplexity_ticker_only_without_company(monkeypatch):
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
+    assert [i["title"] for i in mn._fetch_perplexity("TSLA")] == ["This Week in TSLA: Roadster Debut"]
+
+
+def test_fetch_perplexity_fails_soft(monkeypatch):
+    def boom(*a, **k):
+        raise ConnectionError("down")
+
+    monkeypatch.setattr(mn, "urlopen", boom)
+    assert mn._fetch_perplexity("TSLA", "Tesla, Inc.") == []
+
+
 # ── fetch_news (dedup + sort) ────────────────────────────────────────────────
 
 def test_fetch_news_dedupes_and_sorts(monkeypatch):
@@ -89,9 +137,32 @@ def test_fetch_news_dedupes_and_sorts(monkeypatch):
     assert times == sorted(times, reverse=True)
 
 
+def test_fetch_news_merges_perplexity(monkeypatch):
+    monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
+    monkeypatch.setattr(mn, "_fetch_rss", lambda *a, **k: [
+        {"title": "Shared Story", "providerPublishTime": 10},
+    ])
+    seen = {}
+
+    def fake_pplx(ticker, company=""):
+        seen["company"] = company
+        return [
+            {"title": "shared story", "providerPublishTime": 20},  # dup of the RSS item
+            {"title": "Perplexity Exclusive", "providerPublishTime": 30},
+        ]
+
+    monkeypatch.setattr(mn, "_fetch_perplexity", fake_pplx)
+    out = mn.fetch_news("AAPL", "Apple Inc.")
+    titles = [i["title"].lower() for i in out]
+    assert seen["company"] == "Apple Inc."
+    assert titles[0] == "perplexity exclusive"
+    assert titles.count("shared story") == 1
+
+
 def test_fetch_news_with_every_source_empty(monkeypatch):
     monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
     monkeypatch.setattr(mn, "_fetch_rss", lambda *a, **k: [])
+    monkeypatch.setattr(mn, "_fetch_perplexity", lambda *a, **k: [])
     assert mn.fetch_news("AAPL") == []
 
 
@@ -124,7 +195,7 @@ def test_build_prompt_contains_ticker_and_sections():
 def test_generate_report_writes_file(monkeypatch, tmp_path):
     monkeypatch.setattr(mn.yf, "Ticker", lambda t: types.SimpleNamespace())
     monkeypatch.setattr(mn, "fetch_ticker_info", lambda t, obj=None: {"name": "Apple"})
-    monkeypatch.setattr(mn, "fetch_news", lambda t: [{"title": "x"}])
+    monkeypatch.setattr(mn, "fetch_news", lambda t, company="": [{"title": "x"}])
     called = {}
 
     def fake_openai(prompt, model, max_tokens):
@@ -141,3 +212,10 @@ def test_generate_report_writes_file(monkeypatch, tmp_path):
     assert "provider: openai" in text
     assert "report body" in text
     assert called["provider"] == "openai"
+
+
+def test_fetch_ticker_info_null_short_name_falls_back_to_ticker():
+    # Yahoo can send an explicit null shortName with no longName; a None name
+    # would reach _short_name() and abort the whole news fetch.
+    obj = types.SimpleNamespace(info={"longName": None, "shortName": None})
+    assert mn.fetch_ticker_info("ONDS", obj)["name"] == "ONDS"

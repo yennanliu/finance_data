@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
+from functools import partial
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -47,6 +48,16 @@ RSS_FEEDS = [
 RSS_PER_FEED_LIMIT = 5  # top N headlines per feed
 
 _USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)"
+
+# Perplexity Discover (perplexity.ai/discover) has no feed and sits behind a
+# Cloudflare challenge, but Google News indexes its articles. A site: search
+# matches the ticker anywhere on a page (sidebars, quote widgets), so the whole
+# feed is scanned and only titles naming the company are kept.
+PERPLEXITY_FEED = "https://news.google.com/rss/search?q={query}+site:perplexity.ai+when:7d&hl=en-US&gl=US&ceid=US:en"
+PERPLEXITY_SCAN_LIMIT = 100
+
+_CORP_SUFFIX = re.compile(r",?\s+(?:inc|corp|corporation|co|company|ltd|limited|plc|holdings?|group)\.?$", re.I)
+_QUOTE_PAGE = re.compile(r"\bPrice: Quote\b")
 
 
 def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
@@ -98,25 +109,55 @@ def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEE
     return items
 
 
-def fetch_news(ticker: str) -> list[dict]:
-    """Collect news from yfinance + keyword-searched RSS feeds, deduplicate, and return."""
+def _short_name(company: str) -> str:
+    """'Tesla, Inc.' → 'Tesla', 'NVIDIA Corporation' → 'NVIDIA'."""
+    while (stripped := _CORP_SUFFIX.sub("", company).strip()) != company:
+        company = stripped
+    return company
+
+
+def _fetch_perplexity(ticker: str, company: str = "") -> list[dict]:
+    """Perplexity Discover articles whose title names *ticker* or *company*."""
+    names = [rf"\b(?-i:{re.escape(ticker)})\b"]  # case-sensitive: tickers like ON, IT
+    if short := _short_name(company):
+        names.append(rf"\b{re.escape(short)}\b")
+    about_company = re.compile("|".join(names), re.I)
+
+    items = _fetch_rss(PERPLEXITY_FEED, "Perplexity", ticker, limit=PERPLEXITY_SCAN_LIMIT)
+    kept = []
+    for item in items:
+        item["title"] = item["title"].removesuffix(" - Perplexity")
+        if about_company.search(item["title"]) and not _QUOTE_PAGE.search(item["title"]):
+            kept.append(item)
+    return kept[:RSS_PER_FEED_LIMIT]
+
+
+def fetch_news(ticker: str, company: str = "") -> list[dict]:
+    """Collect news from yfinance + RSS feeds + Perplexity, deduplicate, and return.
+
+    Every web source fails soft (returns []), so one going down narrows the
+    report instead of aborting it.
+    """
     yf_items = yahoo_news(ticker)
     source_counts: dict[str, int] = {"yfinance": len(yf_items)}
 
-    rss_items: list[dict] = []
-    with ThreadPoolExecutor(max_workers=len(RSS_FEEDS)) as pool:
-        futures = {pool.submit(_fetch_rss, url, name, ticker): name for name, url in RSS_FEEDS}
+    web_sources = {name: partial(_fetch_rss, url, name, ticker) for name, url in RSS_FEEDS}
+    web_sources["Perplexity"] = partial(_fetch_perplexity, ticker, company)
+
+    web_items: list[dict] = []
+    with ThreadPoolExecutor(max_workers=len(web_sources)) as pool:
+        futures = {pool.submit(fetch): name for name, fetch in web_sources.items()}
         for fut in as_completed(futures):
             name = futures[fut]
             batch = fut.result()
             source_counts[name] = len(batch)
-            rss_items.extend(batch)
+            web_items.extend(batch)
 
     parts = [f"{src}: {n}" for src, n in source_counts.items()]
     print(f"      Sources → {', '.join(parts)}")
 
     # Combine & deduplicate by normalised title
-    all_items = yf_items + rss_items
+    all_items = yf_items + web_items
     seen_titles: set[str] = set()
     unique: list[dict] = []
     for item in all_items:
@@ -136,7 +177,7 @@ def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
         t = ticker_obj or yf.Ticker(ticker)
         info = t.info or {}
         return {
-            "name": info.get("longName") or info.get("shortName", ticker),
+            "name": info.get("longName") or info.get("shortName") or ticker,
             "sector": info.get("sector", "N/A"),
             "industry": info.get("industry", "N/A"),
             "current_price": info.get("currentPrice") or info.get("regularMarketPrice", "N/A"),
@@ -310,9 +351,9 @@ def generate_report(
     print(f"[1/4] Fetching ticker info for {ticker}…")
     info = fetch_ticker_info(ticker)
 
-    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds)…")
-    news_items = fetch_news(ticker)
-    print(f"      Found {len(news_items)} news items (from yfinance + RSS feeds).")
+    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds + Perplexity)…")
+    news_items = fetch_news(ticker, info.get("name", ""))
+    print(f"      Found {len(news_items)} unique news items.")
 
     if news_items:
         valid_titles = sum(1 for item in news_items if item.get("title", "").strip())
