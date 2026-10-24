@@ -266,6 +266,15 @@ def test_fundamental_run_rechecks_8_8_and_records_it(tmp_path, monkeypatch):
     assert "334.34" not in body
 
 
+def test_a_rewrite_that_does_not_recheck_clean_is_not_marked_corrected():
+    """A total printed to one decimal ("$334.3") is not matched by correct(),
+    which would still rewrite MOS around it; that must stay a mismatch."""
+    report = S88.replace("**$334.34**", "**$334.3**") + "\n| **安全邊際（MOS）** | **-12.0%** |\n"
+    out, fields = pipeline.recheck_valuation(report, {"price": 374.58})
+    assert fields["arithmetic_check"] == "mismatch"
+    assert "-12.0%" in out and "應為" in out
+
+
 def test_other_types_are_not_rechecked(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
     monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")

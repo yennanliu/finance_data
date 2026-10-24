@@ -200,7 +200,11 @@ def recheck_valuation(report: str, facts: dict) -> "tuple[str, dict]":
             fields["mos_recomputed_pct"] = result["mos"]
     if result["status"] == "mismatch":
         corrected = arithmetic.correct(report, result)
-        if corrected != report:
+        # Only a rewrite that now rechecks clean counts: a total printed in a
+        # form correct() does not match ("$334.3") would leave MOS rewritten
+        # around a total that still disagrees with its terms.
+        if (corrected != report and
+                arithmetic.check(corrected, price=facts.get("price"))["status"] == "ok"):
             report, result = corrected, {**result, "status": "corrected"}
             fields["arithmetic_check"] = "corrected"
         print(f"  ⚠ §8.8 weighted fair value {result['stated']} ≠ Σ terms "
