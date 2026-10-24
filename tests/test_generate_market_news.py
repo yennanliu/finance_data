@@ -212,3 +212,10 @@ def test_generate_report_writes_file(monkeypatch, tmp_path):
     assert "provider: openai" in text
     assert "report body" in text
     assert called["provider"] == "openai"
+
+
+def test_fetch_ticker_info_null_short_name_falls_back_to_ticker():
+    # Yahoo can send an explicit null shortName with no longName; a None name
+    # would reach _short_name() and abort the whole news fetch.
+    obj = types.SimpleNamespace(info={"longName": None, "shortName": None})
+    assert mn.fetch_ticker_info("ONDS", obj)["name"] == "ONDS"

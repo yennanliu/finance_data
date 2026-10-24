@@ -177,7 +177,7 @@ def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
         t = ticker_obj or yf.Ticker(ticker)
         info = t.info or {}
         return {
-            "name": info.get("longName") or info.get("shortName", ticker),
+            "name": info.get("longName") or info.get("shortName") or ticker,
             "sector": info.get("sector", "N/A"),
             "industry": info.get("industry", "N/A"),
             "current_price": info.get("currentPrice") or info.get("regularMarketPrice", "N/A"),
