@@ -249,6 +249,33 @@ body { background: var(--fp-bg); }
   background: var(--fp-accent-dim);
 }
 
+/* Header release pill (injected by overrides/main.html) — hairline mono chip. */
+.md-header__release {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 1.2rem;
+  padding: 0 0.5rem;
+  margin-right: 0.4rem;
+  border: 1px solid var(--fp-border-strong);
+  border-radius: var(--fp-pill);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fp-kicker) !important;
+  text-decoration: none !important;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.md-header__release:hover {
+  border-color: var(--fp-kicker);
+  background: var(--fp-accent-dim);
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-header__release { display: none; }
+}
+
 /* Search — a bordered pill like FinLab's toolbar controls. */
 .md-search__form {
   border-radius: var(--fp-pill);
