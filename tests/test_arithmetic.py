@@ -105,3 +105,39 @@ def test_title_notice_renders_apart_from_the_report_date_quote():
     html = markdown.markdown(A.annotate(text, A.check(text, price=374.58)))
     quote = html[html.index("<blockquote>"):html.index("</blockquote>")]
     assert "程式複算更正" not in quote and "報告日期" in quote
+
+
+# ── headline MOS and DCF premium (prompt rule 16) ────────────────────────────
+
+def dashboard(mos: str, premium: str, dcf: str = "$576.45") -> str:
+    return (f"| **DCF 內在價值（基準）** | **{dcf}** ｜ 現價溢價 **{premium}** |\n"
+            f"| **安全邊際（MOS）** | **{mos}** ＝ (加權合理價值 − 現價) ÷ 加權合理價值 |\n")
+
+
+def test_a_premium_with_the_wrong_sign_is_caught():
+    """AMD 2026-10-21: $552.72 against a $576.45 DCF is a 4.1% discount, but
+    the report printed +4.1% in three places."""
+    out = A.valuation_mismatches(dashboard("+9.7%", "+4.1%"), 552.72, 612.44)
+    assert out == [{"metric": "premium", "stated": 4.1, "expected": -4.1}]
+
+
+def test_a_mos_that_its_own_figures_do_not_give_is_caught():
+    """NVDA 2026-10-23: MOS +25% on a fair value its price puts at +38.0%."""
+    out = A.valuation_mismatches(dashboard("+25%", "-35.9%", "$328.95"), 210.96, 340.23)
+    assert [v["metric"] for v in out] == ["MOS"]
+    assert out[0]["expected"] == 38.0
+
+
+def test_consistent_figures_and_rounding_pass():
+    assert A.valuation_mismatches(dashboard("+10%", "−4%"), 552.72, 612.44) == []
+
+
+def test_an_unsigned_premium_is_not_guessed():
+    text = "| **DCF 內在價值（基準）** | $368.55 ｜ 現價折溢價 16% |\n"
+    assert A.valuation_mismatches(text, 321.68, None) == []
+
+
+def test_premium_words_carry_the_sign_when_the_number_does_not():
+    text = "| DCF 內在價值評估 | 基準 DCF 每股內在價值 $246.20（溢價 10.2%） |\n"
+    out = A.valuation_mismatches(text, 223.55, None)
+    assert out and out[0]["stated"] == 10.2 and out[0]["expected"] < 0

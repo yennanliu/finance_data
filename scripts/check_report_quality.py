@@ -3,18 +3,12 @@
 check_report_quality.py — Scan ai_gen_report/{fundamental,technical,stock}/ for
 low-quality AI reports.
 
-Bad-quality categories detected:
-  EMPTY        - file is empty or only whitespace
-  REFUSAL      - LLM refused the request ("抱歉", "I'm sorry", "I cannot", etc.)
-  TOO_SHORT    - content too short to be a real report (< MIN_LINES lines after frontmatter)
-  NO_FRONTMATTER - missing YAML frontmatter block
-  CUTOFF       - report appears truncated (ends mid-sentence / mid-code-block)
-  WRONG_LANG   - contains significant English in a report expected to be zh-TW
-  PLACEHOLDER  - has unfilled template placeholders (e.g. {ticker}, N/A blocks)
-  HTML_LEAK    - contains raw HTML / Plotly scripts instead of clean Markdown
-  MERMAID      - a ```mermaid flowchart has unrenderable syntax (unquoted parens
-                 in a node label, stray parenthetical after a node closer)
-  DUPLICATE    - same ticker+type+date with a -2 / -3 suffix (keeps the original)
+Every issue code it can emit, with a one-line description, is listed in
+``analysis.validate.ISSUE_TYPES`` and printed beside its count in the summary:
+mechanical failures (empty, refusal, truncated, placeholder, bad Mermaid …),
+a fundamental report's missing chapters, and accuracy — the report against
+its own arithmetic, the close and levels it was given, and the committed price
+store.
 
 Usage:
   python3 scripts/check_report_quality.py [--root PATH] [--min-lines N]
@@ -38,7 +32,7 @@ from typing import List
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis.validate import (  # noqa: F401
-    MIN_LINES, ReportIssue, parse_file, collect_reports,
+    ISSUE_TYPES, MIN_LINES, ReportIssue, parse_file, collect_reports,
 )
 
 # Default scan roots (repo-relative); the detection logic lives in analysis.validate.
@@ -102,7 +96,7 @@ def main():
     print(f"Bad reports   : {len(bad)}  ({100*len(bad)/max(len(results),1):.1f}%)")
     print(f"\nIssue breakdown:")
     for issue, cnt in issue_counts.most_common():
-        print(f"  {issue:<20} {cnt:>5}")
+        print(f"  {issue:<20} {cnt:>5}  {ISSUE_TYPES.get(issue, '')}")
 
     # per-ticker bad count
     ticker_bad: Counter = Counter(r.ticker for r in bad)

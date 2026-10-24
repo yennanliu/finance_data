@@ -960,9 +960,10 @@ def test_rubric_still_renders_with_every_placeholder():
     from analysis.prompts import load_prompt
     rendered = load_prompt("qa_review").format(
         ticker="AAPL", analysis_type="fundamental_analysis",
-        date="2026-09-17", provider="gemini", report="BODY")
+        date="2026-09-17", provider="gemini", pipeline_record="RECORD",
+        report="BODY")
     for placeholder in ("{ticker}", "{report}", "{provider}",
-                        "{analysis_type}", "{date}"):
+                        "{analysis_type}", "{date}", "{pipeline_record}"):
         assert placeholder not in rendered
     assert '"verdict"' in rendered      # JSON schema survived {{ }} escaping
     assert '"data_integrity"' in rendered
@@ -973,3 +974,57 @@ def test_rubric_overhead_stays_small_next_to_the_report():
     a per-report cost multiplied by ~117 reports a night."""
     overhead = len(_rubric()) - len("{report}")
     assert overhead < 6000, f"rubric grew to {overhead} chars"
+
+
+# ── pipeline record & reviewer independence ──────────────────────────────────
+# The judge never sees the generation context, so the close the report was
+# built on and stage 1's proven defects are handed to it as trusted facts.
+
+def test_the_judge_is_given_the_recorded_close_and_stage1_findings(tmp_path):
+    body = ("---\ntitle: x\nprovider: gemini\nprice: 516.79\n"
+            "price_date: 2026-10-23\ndata_sources_failed: finviz\n---\n\n"
+            "# 報告\n\n內容 $XXX\n")
+    p = _write(tmp_path, "amd", "fundamental_analysis_2026-10-23_gemini.md", body)
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()) as m:
+        rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    prompt = m.call_args.args[1]
+    record = prompt[:prompt.index("<report_data>")]   # outside the untrusted block
+    assert "516.79（2026-10-23）" in record
+    assert "finviz" in record
+    assert "PLACEHOLDER" in record
+
+
+def test_a_report_without_provenance_says_so(tmp_path):
+    p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md")
+    meta = rrq.parse_file(p)
+    record = rrq.pipeline_record(p.read_text(encoding="utf-8"), meta)
+    assert "未記錄" in record
+
+
+def test_the_default_reviewer_is_not_the_default_generator():
+    """Self-grading is the bias stage 2 must avoid: reports are written by
+    FALLBACK_CHAIN[0], so the judge must be another provider."""
+    from analysis.config.providers import FALLBACK_CHAIN
+    assert rrq.REVIEWER_PROVIDER == "openai"
+    assert rrq.REVIEWER_PROVIDER != FALLBACK_CHAIN[0]
+
+
+def test_the_nightly_run_pins_the_reviewer_and_never_self_grades():
+    from pathlib import Path
+    wf = (Path(__file__).parent.parent / ".github/workflows/qa_report_quality.yml"
+          ).read_text(encoding="utf-8")
+    assert "--provider openai" in wf
+    assert "--cross-provider" in wf
+    assert "google-genai" in wf     # the cross-provider runner's SDK
+
+
+def test_summary_states_how_many_reports_were_self_graded():
+    import io
+    rows = [rrq.ReviewResult(path="p", ticker="t", analysis_type="a", date="d",
+                             report_provider=gen, reviewer_provider="openai",
+                             reviewer_model="m", verdict="pass", score=4)
+            for gen in ("gemini", "openai")]
+    out = io.StringIO()
+    rrq.print_summary(rows, out=out)
+    assert "Self-graded      : 1" in out.getvalue()

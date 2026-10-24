@@ -1,4 +1,5 @@
-"""Re-check a fundamental report's §8.8 weighted fair value in Python.
+"""Re-check a fundamental report's valuation arithmetic in Python: the §8.8
+weighted fair value, and the headline MOS / DCF premium derived from it.
 
 25 of the 36 fundamental reports checked on 2026-10-22 printed a §8.8 weighted
 fair value that differs by more than 0.5% from the sum of their own
@@ -19,6 +20,8 @@ from collections import Counter
 
 # A mismatch above this is an error; below it, rounding.
 TOLERANCE_PCT = 0.5
+# MOS and the DCF premium are percentages, often printed to the whole point.
+TOLERANCE_PP = 1.0
 
 # Chapters every fundamental report must carry (prompts/fundamental.txt).
 FUNDAMENTAL_CHAPTERS = tuple(range(1, 12))
@@ -32,6 +35,12 @@ _STATED = re.compile(
     r"^\|\s*\**[★\s]*(?:綜合)?加權合理(?:價值|價格)[^|]*\|\s*\**\s*(?:NT)?\\?\$\s?" + _NUM, re.M
 )
 _RESULT = re.compile(r"=\s*\**\s*(?:\\mathbf\{)?(?:NT)?\\?\$\s?" + _NUM + r"\**\s*(?:（|\(|$|。|\s*≈)")
+_PCT = r"([+\-−]?\d+(?:\.\d+)?)\s*%"
+# §1.0 dashboard: "| **安全邊際（MOS）** | **-7.7%** ＝ ..."
+_MOS = re.compile(r"安全邊際[^|\n]{0,12}\|\s*\**\s*" + _PCT)
+# "DCF 內在價值（基準）** | **$403.07** ｜ 當前價格溢價 **+28.2%**"
+_PREMIUM = re.compile(r"DCF 內在價值[^\n]*?\$\s?" + _NUM
+                      + r"[^\n]*?(折溢價|溢價|折價)[^\d+\-−\n]{0,8}" + _PCT)
 _PRICE = re.compile(
     r"(?:現價|當前股價|目前股價|目前市價|當前市價)\**\s*[:：]?\s*(?:為\s*)?\**\s*(?:NT)?\$\s?" + _NUM
 )
@@ -105,6 +114,42 @@ def check(text: str, price: "float | None" = None) -> dict:
     return out
 
 
+def _signed(s: str) -> float:
+    return float(s.replace("−", "-"))
+
+
+def valuation_mismatches(text: str, price, fair_value) -> "list[dict]":
+    """The headline MOS and DCF premium against the report's own figures.
+
+    Prompt rule 16 fixes both: MOS = (§8.8 fair value − price) / fair value,
+    premium = price / DCF value − 1 (positive = price above value). AVGO
+    2026-10-23 printed a premium of +16% on a DCF of $368.55 at $321.68
+    (−12.7%); NVDA printed MOS +25% that its own figures make +35.9%. An
+    unsigned "折溢價 16%" says nothing about direction and is skipped.
+    """
+    out = []
+    if not price:
+        return out
+    m = _MOS.search(text)
+    if m and fair_value:
+        stated, expected = _signed(m.group(1)), (fair_value - price) / fair_value * 100
+        if abs(stated - expected) > TOLERANCE_PP:
+            out.append({"metric": "MOS", "stated": stated, "expected": round(expected, 1)})
+    m = _PREMIUM.search(text)
+    if m:
+        dcf, word, raw = _num(m.group(1)), m.group(2), m.group(3)
+        if raw[0] in "+-−":
+            stated = _signed(raw)
+        elif word != "折溢價":
+            stated = float(raw) if word == "溢價" else -float(raw)
+        else:
+            stated = None
+        expected = (price / dcf - 1) * 100 if dcf else None
+        if stated is not None and expected is not None and abs(stated - expected) > TOLERANCE_PP:
+            out.append({"metric": "premium", "stated": stated, "expected": round(expected, 1)})
+    return out
+
+
 def missing_chapters(text: str, chapters=FUNDAMENTAL_CHAPTERS) -> "list[int]":
     """Chapter numbers with no ``## N.`` heading."""
     present = {int(n) for n in re.findall(r"^##\s+(\d{1,2})\.", text, re.M)}
@@ -161,5 +206,6 @@ def annotate(text: str, result: dict) -> str:
     return text
 
 
-__all__ = ["TOLERANCE_PCT", "FUNDAMENTAL_CHAPTERS", "section", "weighted_terms",
-           "report_price", "check", "missing_chapters", "annotate"]
+__all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
+           "weighted_terms", "report_price", "check", "valuation_mismatches",
+           "missing_chapters", "annotate"]
