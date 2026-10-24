@@ -1,221 +1,202 @@
 # Project Architecture
 
-## Overview
+**finance_data** generates Traditional-Chinese investment research reports with
+LLMs, checks them, and publishes them with MkDocs to GitHub Pages, together with
+committed price and fundamentals datasets.
 
-**finance_data** is an automated US stock analysis system that generates investment research reports with AI-powered insights and interactive technical charts.
+Related docs:
+
+| Doc | Covers |
+|-----|--------|
+| [`REPORT_PIPELINE.md`](REPORT_PIPELINE.md) | How a report is produced and the safeguards on its figures |
+| [`SITE_BUILD.md`](SITE_BUILD.md) | `build_docs.py`, page anatomy, styling, release, bilingual site |
+| [`QA_AUDIT.md`](QA_AUDIT.md) | The nightly two-stage report audit |
+| [`RUNBOOK.md`](RUNBOOK.md) | Re-running failed crons, provider failures |
+| [`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md) | The OHLCV store and Market Data section |
+| [`FUNDAMENTALS_STORE_EVAL.md`](FUNDAMENTALS_STORE_EVAL.md) | The SEC fundamentals store |
+
+---
+
+## System overview
 
 ```
-Entry Points (scripts/)
-    ↓
-generate_analysis.py
-    ↓ (dispatches)
-    +→ analysis/ (package)
-        ├── config/
-        │   ├── __init__.py (ANALYSIS_TYPES, TODAY, model defaults)
-        │   └── providers.py (provider-specific defaults)
-        ├── utils/
-        │   ├── llm.py (Claude/OpenAI API wrappers)
-        │   ├── data_fetch.py (yfinance, Finviz, interactive charts)
-        │   ├── context.py (analysis context assembly)
-        │   ├── formatting.py (formatting utilities)
-        │   └── logging_utils.py (logging setup)
-        └── prompts/ (analysis type templates)
+            ┌──────────────── GitHub Actions (cron) ────────────────┐
+            │                                                       │
+ yfinance ─▶│ update_kline_data   → data/prices/<ticker>.csv        │
+ SEC XBRL ─▶│ update_fundamentals → data/fundamentals/<ticker>.csv  │
+            │                                                       │
+ scrapers ─▶│ daily_analysis      → ai_gen_report/{fundamental,     │
+ RSS/news ─▶│ daily_market_news       technical,stock,market_news}/ │
+            │                                                       │
+            │ qa_report_quality   → qa/                             │
+            │ deploy (04:00 UTC)  → build_docs.py → mkdocs → Pages  │
+            └───────────────────────────────────────────────────────┘
 ```
 
-## Key Components
+---
 
-### Config
-- **`config/__init__.py`** — `ANALYSIS_TYPES` dict (12 types), `DEFAULT_MODEL`, `DEFAULT_TOKENS`, `TODAY`
-- **`config/providers.py`** — Per-provider defaults (Claude / Gemini: 32k tokens; OpenAI: 16k, the gpt-4o ceiling). Documentation of what each paired model can emit — the budget actually sent is `--max-tokens` (default `DEFAULT_TOKENS` = 32000) or, in CI, `.ticker_schedule.json`.
+## Package layout (`scripts/analysis/`)
 
-### Data Fetching (`utils/data_fetch.py`)
-- `fetch_data(ticker)` — fetches OHLCV history + financials (yfinance, Finviz, StockAnalysis)
-- `compute_technicals(hist)` — ASCII technical indicators (MA, RSI, MACD, etc.)
+The library is layered: data → context → llm → pipeline → publish. Entry-point
+scripts in `scripts/` are thin CLIs over it.
 
-### Price store (`data/prices.py`)
-- `data/prices/<ticker>.csv` — committed 10-year OHLCV store, the single source of
-  truth for every chart on the site. Maintained by `scripts/update_prices.py`;
-  chart payloads are derived from it by `build_docs.py` at build time and are not
-  committed. Reports themselves carry no chart markup. See
-  [`PRICE_STORE_DESIGN.md`](PRICE_STORE_DESIGN.md).
-
-### Price analytics (`data/price_analytics.py`)
-- Pure-stdlib statistics derived from the store: period returns, 52-week band,
-  drawdown, rolling volatility, daily-return histogram, monthly-return grid.
-- Consumed by `build_docs.py`, alongside `fundamental_analytics.py`, to render
-  the **Market Data** section (`docs/data/`), which publishes both committed
-  stores as one browsable + downloadable dataset: a tabbed page per ticker
-  (Overview / Price / Financials / Valuation / Data), plus both raw CSVs, a bulk
-  ZIP and a JSON manifest. It replaced the separate Price Data and Financials
-  sections, whose URLs survive as redirect stubs.
-- The browser does no maths — `docs/javascripts/price-charts.js` only draws the
-  pre-computed series, which is what keeps the site's numbers testable in pytest.
-
-### LLM (`utils/llm.py`)
-- `call_claude(...)` — Claude API with rate-limit retries + refusal-override
-- `call_openai(...)` — OpenAI API with model-specific token caps + rate-limit retries
-- `call_llm(..., provider, ...)` — dispatcher function
-
-### Context Assembly (`utils/context.py`)
-- `build_context(data, analysis_type)` — assembles data blocks for the chosen analysis type (12 branches)
-
-### Entry Points
-
-#### `generate_analysis.py`
-```bash
-python scripts/generate_analysis.py TICKER [--analysis-type TYPE] [--provider claude|openai] [--model ID] [--max-tokens N]
 ```
-Generates AI-analyzed investment report with interactive candlestick chart.
-
-#### `generate_market_news.py`
-```bash
-python scripts/generate_market_news.py TICKER [--provider claude|openai]
+scripts/analysis/
+├── config/
+│   ├── __init__.py        ANALYSIS_TYPES (12), DEFAULT_MODEL, DEFAULT_TOKENS, REPORT_TEMPERATURE, TODAY
+│   ├── providers.py       PROVIDER_DEFAULTS, FALLBACK_CHAIN, resolve_chain()
+│   └── valuation.py       valuation assumptions and peer sets
+├── data/                  network + stores + pure analytics
+│   ├── sources.py         fetch_data(): yfinance + Finviz / StockAnalysis / Roic.ai; complete_bars()
+│   ├── technicals.py      indicators (Wilder RSI/ATR), weekly bars, R1–S3 levels
+│   ├── prices.py          committed OHLCV store (data/prices/), pure stdlib read path
+│   ├── fundamentals.py    committed SEC quarterly store (data/fundamentals/)
+│   ├── report_inputs.py   inputs for the VERIFIED FIGURES block
+│   ├── price_analytics.py         returns, drawdown, volatility, histograms, averages
+│   ├── fundamental_analytics.py   TTM, margins, multiples, split adjustment
+│   └── intrinsic_value.py         DCF, reverse DCF, sensitivity, WACC build-up
+├── context/
+│   ├── __init__.py        build_context(): one branch per analysis type
+│   └── fundamental_facts.py   VERIFIED FIGURES block (pure)
+├── llm/__init__.py        public LLM API (re-exports utils/llm.py)
+├── prompts/*.txt          one template per analysis type, plus system and QA prompts
+├── pipeline.py            run_analysis(): fetch → assemble → generate → recheck → publish
+├── publish.py             dedup_path(), frontmatter()
+├── validate/              report checks used by QA stage 1 and the pipeline
+│   ├── __init__.py        ISSUE_TYPES, parse_file, content_findings
+│   ├── arithmetic.py      §8.8 / MOS recheck and write-back
+│   ├── technical.py       NaN, price, level and R/R checks
+│   └── market_data.py     front-matter price vs the price store
+├── utils/
+│   ├── llm.py             run_claude / run_openai / run_gemini, call_llm, run_with_fallback
+│   ├── mermaid.py         Mermaid sanitising
+│   ├── formatting.py, logging_utils.py
+│   └── context.py, data_fetch.py   back-compat shims
+└── exceptions.py          AnalysisError, LLMError, RefusalError, DataFetchError, ConfigError
 ```
-Generates market news summary (reuses `analysis/utils/llm.py`).
 
-## Analysis Types (12 total)
+### Entry points (`scripts/`)
 
-| Type | Use Case |
+| Script | Purpose |
+|--------|---------|
+| `generate_analysis.py` | One report: `TICKER [--analysis-type T] [--provider claude\|openai\|gemini] [--model ID] [--max-tokens N] [--output-dir D]` |
+| `generate_market_news.py` | Daily news digest for one ticker (same provider flags) |
+| `generate_stock_watchlist.py` | Pre-market fundamental watchlist |
+| `build_docs.py` | Generates `docs/` (EN + ZH) from reports and stores |
+| `update_prices.py`, `update_fundamentals.py` | Refresh the committed stores |
+| `check_report_quality.py`, `check_mermaid.py`, `review_report_quality.py`, `prune_qa.py` | QA audit |
+| `download_10k_edgar.py`, `download_10q_edgar.py`, `download_10k_pdf.py`, `download_grab_6k*.py` | SEC filing downloaders |
+| `maintain_ai_gen_report.py` | `reorg` / `prune --before YYYY-MM-DD` |
+| `release_version.py`, `mkdocs_release_hook.py`, `mkdocs_minify_hook.py` | Release and build hooks |
+| `rerun_failed_cron.sh`, `trigger_analysis.sh` | Ops helpers (see `RUNBOOK.md`, `Makefile`) |
+
+---
+
+## Analysis types
+
+Defined in `ANALYSIS_TYPES`. Each entry's `prompt_file` names its template in
+`prompts/`. Output goes to `ai_gen_report/fundamental/` (fundamental),
+`ai_gen_report/technical/` (technical) or `ai_gen_report/stock/` (everything
+else), under `<ticker>/<filename_prefix>_<date>_<provider>.md` (e.g.
+`technical_analysis_2026-10-24_gemini.md`).
+
+| Type | Use case |
 |------|----------|
-| `fundamental-analysis` | Deep financials: P/E, debt, ROE, growth + DCF intrinsic value (assumption reasoning chain + step-by-step arithmetic + audit checklist) |
-| `technical-analysis` | Charts, MA, RSI, MACD, support/resistance |
-| `stock-eval` | Comprehensive: fundamental + valuation |
+| `fundamental-analysis` | Financials, growth, DCF + weighted fair value (11 chapters) |
+| `technical-analysis` | Trend, MA, RSI, MACD, support/resistance, trade plan |
+| `stock-eval` | Fundamental + valuation overview |
 | `stock-valuation` | DCF, EV/EBITDA, target price |
 | `economics-analysis` | Macro environment impact |
-| `sector-analysis` | Industry trends + peers |
-| `portfolio-review` | Holdings performance + allocation |
-| `earnings-call-analysis` | Sentiment + key themes from transcripts |
-| `insider-trading` | Form 4 filings & smart money moves |
-| `institutional-ownership` | 13F filings & smart money tracking |
-| `financial-report-analyst` | 8-phase SEC filing audit |
-| `report-generator` | Flexible HTML report builder |
+| `sector-analysis` | Industry trends and peers |
+| `portfolio-review` | Holdings performance and allocation |
+| `earnings-call-analysis` | Sentiment and key themes from transcripts |
+| `insider-trading` | Form 4 activity |
+| `institutional-ownership` | 13F holdings changes |
+| `financial-report-analyst` | SEC filing audit |
+| `report-generator` | Interactive HTML report |
 
-## Provider Configuration
+### Adding an analysis type
+
+1. Add an entry to `ANALYSIS_TYPES` in `config/__init__.py`, including its
+   `prompt_file`. `PROMPT_MAP` is derived from that field, so there is no second
+   map to edit.
+2. Create `prompts/<prompt_file>.txt` (placeholders: `{ticker}`,
+   `{financial_context}`, `{today}`).
+3. Add a context branch in `context/__init__.py`.
+4. Add the type to the `lenses` / `fams` COPY entries in
+   `docs/overrides/home.html` (the landing page's analysis wheel).
+5. Test: `uv run python scripts/generate_analysis.py AAPL --analysis-type <type>`.
+
+---
+
+## Providers
 
 ```python
 # scripts/analysis/config/providers.py
 PROVIDER_DEFAULTS = {
     "claude": {"default_model": "claude-sonnet-4-6", "default_tokens": 32000},
-    "openai": {"default_model": "gpt-4o", "default_tokens": 16000},   # gpt-4o ceiling
-    "gemini": {"default_model": "gemini-3.7-flash", "default_tokens": 32000},
+    "openai": {"default_model": "gpt-4o",            "default_tokens": 16000},  # gpt-4o ceiling
+    "gemini": {"default_model": "gemini-3.8-flash",  "default_tokens": 32000},
 }
+FALLBACK_CHAIN = ["gemini", "openai"]
 ```
 
-Only `default_model` is read by code (`resolve_chain`); `default_tokens` documents
-what each paired model can actually emit. The budget sent to the API comes from
-`--max-tokens` (default `DEFAULT_TOKENS` = 32000) or `.ticker_schedule.json` in CI.
-A full-length fundamental report (7000-10000 字, 11 chapters, Ch.8 DCF arithmetic)
-needs ~32k output tokens to finish in one shot. `max_tokens` is a ceiling, not a
-spend, so a generous value costs nothing on shorter reports. Two clamps apply:
-`run_openai` caps at the model's own limit (gpt-4o: 16,384, so the OpenAI fallback
-truncates full-length reports — use a gpt-5.6-* model to avoid that), and
-`run_gemini` caps at 65,536 while auto-retrying at that ceiling on truncation.
-
-## CI/CD: Daily Analysis Workflow
-
-**File:** `.github/workflows/daily_analysis.yml`
-
-**Schedule:** 21 tickers × 2 analysis types (fundamental + technical) = 42 daily jobs
-
-**Ticker List:** `scripts/.ticker_schedule.json` (data-driven)
-
-**Provider:** OpenAI (gpt-4o) by default
+CI reads its provider, model and token budget from `defaults` in
+`scripts/.ticker_schedule.json`. See [`REPORT_PIPELINE.md`](REPORT_PIPELINE.md#llm-layer)
+for retries, refusals and token clamps.
 
 ---
 
-## How to Add a New Analysis Type
+## CI/CD
 
-1. **Add to `ANALYSIS_TYPES`** in `scripts/analysis/config/__init__.py`:
-   ```python
-   "my-analysis": {
-       "filename_prefix": "my_analysis",
-       "label": "My Custom Analysis",
-       "ext": ".md",
-   }
-   ```
+| Workflow | Schedule (UTC) | What it does |
+|----------|----------------|--------------|
+| `daily_analysis.yml` | 61 slots, 17:00–03:00 | One ticker × type per slot: 36 fundamental + 25 technical |
+| `daily_market_news.yml` | 38 slots, 17:00–23:10 | One news digest per ticker |
+| `daily_stock_watchlist.yml` | 22:00 | Pre-market watchlist |
+| `qa_report_quality.yml` | 02:00 | Two-stage QA audit → `qa/` |
+| `cleanup_refusals.yml` | 02:00 | Removes refusal posts |
+| `update_fundamentals.yml` | Sun 03:00 | Refreshes `data/fundamentals/` from SEC companyfacts |
+| `update_kline_data.yml` | 03:30 | Refreshes `data/prices/` |
+| `deploy.yml` | 04:00, plus pushes that touch site config/assets | `build_docs.py` + `mkdocs build --strict` → GitHub Pages |
+| `daily_progress.yml` | 00:40 | Daily progress summary |
+| `prune_old_reports.yml` | 04:30 on the 1st | Deletes reports older than 90 days |
+| `download_10k.yml`, `download_10q.yml` | 1st of the month | SEC filings |
+| `scraper_smoke.yml` | Mon 06:00 | Live check of the web scrapers |
+| `advanced_analysis.yml` | manual | Earnings-call, insider, 13F and HTML reports |
+| `release.yml` | manual | Version bump, GitHub Release, deploy |
+| `sample_build.yml` | manual | Small smoke build of the site |
+| `tests.yml` | push / PR | pytest on Python 3.11 and 3.13 (`uv sync --locked`) |
 
-2. **Create prompt template** at `scripts/analysis/prompts/my_analysis.txt` with placeholders:
-   ```
-   {ticker}
-   {financial_context}
-   {today}
-   ```
+Shared steps live in composite actions under `.github/actions/`:
+`commit-and-push` (stage, commit, rebase-retry, push), `python-env`
+(setup-python + `uv pip install`; no workflow uses pip directly) and
+`build-site` (MkDocs install, generate, stamp, build). Change CI behaviour there
+rather than in each workflow.
 
-3. **Add context builder** in `scripts/analysis/utils/context.py`:
-   ```python
-   elif analysis_type == "my-analysis":
-       # Assemble relevant data blocks
-       context = f"Financial data:\n{data.get('...', '')}"
-       return context
-   ```
+### Adding a ticker to the daily schedule
 
-4. **Test:**
-   ```bash
-   python scripts/generate_analysis.py AAPL --analysis-type my-analysis
-   ```
-
----
-
-## How to Add a New Ticker to Daily Schedule
-
-1. **Edit** `scripts/.ticker_schedule.json`:
-   ```json
-   {
-     "fundamental": [..., "NEWTICKER"],
-     "technical": [..., "NEWTICKER"]
-   }
-   ```
-
-2. **Add cron entries** to `.github/workflows/daily_analysis.yml`:
-   ```yaml
-   - cron: "0 21 * * *"  # 21:00 UTC → fundamental
-   - cron: "10 23 * * *"  # 23:10 UTC → technical
-   ```
-
-3. **Commit & push** — workflow reads schedule.json at runtime
+1. Add it to `scripts/.ticker_schedule.json`. This list also drives the price
+   store's ticker universe.
+2. Add a `cron:` entry **and** a matching `case` arm in
+   `.github/workflows/daily_analysis.yml`. A scheduled run only knows its cron
+   string, so the arm is what maps it to a ticker. Do the same in
+   `daily_market_news.yml`.
+3. Run `uv run pytest tests/test_workflows.py`. It fails if a cron has no arm (or
+   an arm has no cron), or if two crons resolve to the same ticker and type. An
+   unmapped cron also fails the run itself rather than publishing a duplicate
+   report.
 
 ---
 
 ## Testing
 
-**Run unit tests:**
 ```bash
-pytest tests/ -v
+uv sync --extra dev
+uv run pytest tests/ -v
 ```
 
-**Test a single analysis locally:**
-```bash
-python scripts/generate_analysis.py MSFT --analysis-type technical-analysis
-```
-
-**Trigger CI manually:**
-```bash
-gh workflow run daily_analysis.yml -f ticker=MSFT -f analysis_type=technical-analysis
-```
-
----
-
-## Error Handling & Logging
-
-- **Exceptions:** `AnalysisError`, `LLMError`, `DataFetchError` defined in `analysis/exceptions.py`
-- **Logging:** Structured logging via `setup_logger()` in `analysis/utils/logging_utils.py`
-- **Top-level:** `main()` in entry points catches exceptions and exits(1) on failure
-
----
-
-## Performance Notes
-
-- **Chart generation:** Plotly HTML embed (~47KB per report) — no external files
-- **API calls:** Rate-limit retries with exponential backoff (30s base, up to 240s)
-- **Refusal handling:** Up to 5 retry attempts with escalating temperature (0.7 → 1.0 → 1.2)
-- **Data fetch:** Yfinance + 3 web scrapers (Finviz, StockAnalysis, ROIC.ai) — ~5-10s per ticker
-
----
-
-## Files & Permissions
-
-- `scripts/` — Runnable entry points
-- `scripts/analysis/` — Package library
-- `tests/` — pytest unit tests
-- `.github/workflows/` — CI/CD automation
-- `pyproject.toml` — Dependency declarations
+Tests are fully offline. Network, SDK and Selenium boundaries are mocked, so no
+API keys are needed. After changing dependencies in `pyproject.toml`, run
+`uv lock` and commit `uv.lock`: `tests.yml` installs with `--locked` and fails on
+a stale lockfile.

@@ -1,151 +1,107 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code in this repository. Detail lives in `docs/`, so read the
+relevant doc before changing that area:
+
+| Doc | Read before touching |
+|-----|----------------------|
+| `docs/ARCHITECTURE.md` | Package layout, analysis types, providers, CI workflows, adding a type or ticker |
+| `docs/REPORT_PIPELINE.md` | `pipeline.py`, `context/`, `data/sources.py`, `data/technicals.py`, `validate/arithmetic.py`, LLM layer, market news |
+| `docs/SITE_BUILD.md` | `build_docs.py`, `docs/overrides/`, stylesheets, JS, landing page, release, the ZH tree |
+| `docs/QA_AUDIT.md` | `check_report_quality.py`, `review_report_quality.py`, `validate/`, `prompts/qa_review.txt` |
+| `docs/PRICE_STORE_DESIGN.md` | `data/prices.py`, `price_analytics.py`, Market Data pages |
+| `docs/RUNBOOK.md` | Re-running failed crons, provider outages |
 
 ## Commands
 
 ```bash
-# Install dependencies into .venv from uv.lock (uv also fetches the Python in
-# .python-version, 3.11, if it is not installed)
-uv sync --extra dev
+uv sync --extra dev                    # .venv from uv.lock (Python 3.11 per .python-version)
+uv run pytest tests/ -v                # all tests; fully offline, no API keys
+uv run pytest tests/test_llm.py -v     # one file
 
-# Run all tests
-uv run pytest tests/ -v
-
-# Run a single test file
-uv run pytest tests/test_llm.py -v
-
-# NOTE: Python >=3.10 is required (the code uses `X | Y` annotations); CI runs
-# 3.11 and 3.13. Tests are fully offline (network/SDK/selenium boundaries are
-# mocked); no API keys required. After editing dependencies in pyproject.toml,
-# run `uv lock` and commit uv.lock — tests.yml installs with `--locked` and
-# fails on a stale lockfile.
-
-# Generate analysis locally
-uv run python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider claude
+uv run python scripts/generate_analysis.py AAPL --analysis-type fundamental-analysis --provider gemini
 uv run python scripts/generate_analysis.py MSFT --analysis-type technical-analysis --provider openai
 
-# Build and preview docs site (MkDocs toolchain is not in uv.lock; see README)
+# Docs site (MkDocs toolchain is not in uv.lock)
 uv pip install "mkdocs-material==9.5.*" mkdocs-awesome-pages-plugin minify-html
 uv run python scripts/build_docs.py && uv run mkdocs serve
 
-# Trigger GitHub Actions workflow via CLI
 gh workflow run daily_analysis.yml -f ticker=MSFT -f analysis_type=technical-analysis
-
-# Trigger analysis via Makefile (fires GitHub Actions workflows)
 make analyze TICKERS="NVDA TSLA" TYPES="fundamental-analysis,technical-analysis"
-make analyze-mag7
-make deep-dive TICKERS="NVDA"
 ```
 
-## Architecture
+- Python >= 3.10 is required (`X | Y` annotations). CI runs 3.11 and 3.13.
+- After editing dependencies in `pyproject.toml`, run `uv lock` and commit
+  `uv.lock`. `tests.yml` installs with `--locked` and fails on a stale lockfile.
 
-The codebase generates AI-powered investment research reports and publishes them via MkDocs to GitHub Pages. Full architecture is in `docs/ARCHITECTURE.md`.
+## Core flow
 
-### Core flow
 ```
-scripts/generate_analysis.py
-  → scripts/analysis/utils/data_fetch.py   (yfinance + web scrapers → OHLCV, financials)
-  → scripts/analysis/context/__init__.py   (assembles data into LLM-ready context, 12 branches)
-  → scripts/analysis/prompts/*.txt          (prompt templates, one per analysis type)
-  → scripts/analysis/utils/llm.py          (Claude or OpenAI API call)
-  → ai_gen_report/fundamental/<ticker>/<type>_<date>.md   (fundamental-analysis)
-  → ai_gen_report/technical/<ticker>/<type>_<date>.md     (technical-analysis, + chart PNGs)
-  → ai_gen_report/stock/<ticker>/<type>_<date>.md         (all other analysis types)
+scripts/generate_analysis.py → analysis.pipeline.run_analysis()
+  data/sources.py          fetch: yfinance + scrapers (complete bars only)
+  context/__init__.py      assemble: one branch per type (+ fundamental_facts.py VERIFIED FIGURES)
+  prompts/<type>.txt       template: {ticker} {financial_context} {today}
+  utils/llm.py             generate: run_with_fallback over FALLBACK_CHAIN (gemini → openai)
+  validate/arithmetic.py   recheck §8.8 and write the corrected sum back (fundamental)
+  → ai_gen_report/{fundamental|technical|stock}/<ticker>/<prefix>_<date>_<provider>.md
+scripts/build_docs.py      ai_gen_report/ + data/ → docs/ and docs/zh/ → mkdocs → GitHub Pages
 ```
 
-`scripts/build_docs.py` then mirrors `ai_gen_report/` into `docs/` and `docs/zh/` so MkDocs can serve them.
+All paths above are under `scripts/analysis/` unless shown otherwise.
 
-### Key files
-- `scripts/analysis/config/__init__.py` — `ANALYSIS_TYPES` dict (12 types), model/token defaults
-- `scripts/analysis/config/providers.py` — per-provider defaults (Claude: 8k tokens, OpenAI: 16k) plus `FALLBACK_CHAIN` + `resolve_chain()`: the ordered provider pool the generators try (currently gemini → openai; edit the list to add levels)
-- `scripts/analysis/utils/llm.py` — `run_with_fallback()` runs an ordered `(provider, model)` chain, returning the first success; context is fetched once and reused across fallback attempts
-- `scripts/analysis/context/__init__.py` — 12-branch context assembler; touch when adding analysis types (`utils/context.py` is a back-compat shim re-exporting it)
-- `scripts/analysis/utils/llm.py` — `call_llm()` dispatcher; handles rate-limit retries and refusal overrides. A model that still refuses after the last retry raises `RefusalError` (not terminal, so the chain falls through); returning the refusal is what published MRVL's one-line 2026-10-22 report. Reports are sampled at `REPORT_TEMPERATURE` (config)
-- **Fundamental reports get a VERIFIED FIGURES block** (`context/fundamental_facts.py`, pure; inputs from `data/report_inputs.py`, assumptions and peer sets in `config/valuation.py`): TTM figures from the SEC fundamentals store refreshed live from companyfacts, TTM-vs-prior-TTM growth kept apart from latest-quarter growth, FCF = OCF − capex, CAPM/WACC inputs, multiples vs own 5-year history, peer multiples. The prompt (rule 19) tells the model to quote it. Background: `docs/FUNDAMENTAL_REPORT_REVIEW.md` §12 — the model copies figures reliably and derives them badly
-- yfinance `info` fields are labelled with their period in the shared context: `revenueGrowth` / `earningsGrowth` / `earningsQuarterlyGrowth` / `operatingMargins` are the **latest quarter**, never TTM; Yahoo's `freeCashflow` is its "levered FCF" and is not passed on. Ratios mixing quote and statement currencies (ADRs: TSM, SKHY) are withheld. `fetch_data` asks Yahoo for `prices.to_yf_symbol(ticker)` — a bare `0050` is a 404
-- After generation, `pipeline.recheck_valuation()` recomputes §8.8's weighted fair value from the report's own `value × weight` terms (`validate/arithmetic.py`) and appends a 「程式複算」 block. On a mismatch whose weights sum to 100%, `arithmetic.correct()` **writes the sum back** — the stated total wherever printed, plus MOS / upside near their labels or beside the fair value, matched by value at the printed precision (`arithmetic_check: corrected`; the model's figure stays in `weighted_fair_value_stated` and in a one-line notice under the title, which also warns when the new MOS crosses a rule-20 rating band). The notice-only approach left 22 of 35 reports on 2026-10-23 opening with a banner saying their headline value was wrong. It does **not** correct when the stated total equals one of the terms (TSLA/INTC/NVDA printed a method's own value as the total, and a global replace would rewrite that term) or the weights are off — those keep the old 「應為」 notice. Intermediate derivation steps are not chased. Front matter records `arithmetic_check`, `prompt_sha256`, `temperature`, `max_tokens`, `price` / `price_date`, `data_sources_ok` / `data_sources_failed`
-- **Technical reports are built only from complete bars** (`data/sources.complete_bars`, `data/technicals.py`): Yahoo publishes a new session's bar with volume but NaN prices for a while after the close, which once gave eight reports a `$nan` close and no levels. Trailing NaN-close bars and an in-progress session are dropped, and a newer official close from the quote is appended (`close_source: quote` in front matter). `pipeline.require_price_history` aborts a technical run with no bars or price rather than let the model "model" one (0050 was, all of October). RSI and ATR use Wilder smoothing; weekly rows are labelled by their last trading day (never a future Sunday); the context carries the last 10 daily / 8 weekly OHLC bars, the only bars the prompt allows candlestick claims about. The computed R1–S3 are written to front matter as `levels`. Background: `docs/TECHNICAL_REPORT_REVIEW.md`
-- `scripts/analysis/data/prices.py` — the committed OHLCV store (`data/prices/<key>.csv`); pure-stdlib read path
-- `scripts/analysis/data/price_analytics.py` — pure-stdlib statistics derived from the store (returns, drawdown, rolling volatility, return histogram, monthly grid, series averages); with `fundamental_analytics.py` it powers the **Market Data** section (`docs/data/`). All chart maths lives here, never in JS — see `docs/PRICE_STORE_DESIGN.md` §12
-- `scripts/.ticker_schedule.json` — data-driven ticker list for daily CI jobs
-- `scripts/generate_market_news.py` — market-news sources: Yahoo (`sources.yahoo_news()`), four keyword RSS feeds and Perplexity Discover, merged and title-deduped; every source fails soft to `[]`. `perplexity.ai/discover` is Cloudflare-walled with no feed, so Perplexity is read keyless through Google News `site:perplexity.ai when:7d`, keeping only titles that name the ticker (case-sensitive) or the company's short name — the raw search is mostly other companies' articles and quote pages
-- `.github/workflows/daily_analysis.yml` — 61 cron slots/day (36 fundamental + 25 technical), one ticker per slot
-- `.github/actions/` — shared composite actions used by the workflows: `commit-and-push` (stage/commit/rebase-retry/push), `python-env` (setup-python + `uv pip install`; there is no pip step anywhere in CI), `build-site` (MkDocs install/generate/stamp/build). Change CI behaviour here rather than in each workflow
+## Rules that are easy to break
 
-### Adding a new analysis type
-1. Add entry to `ANALYSIS_TYPES` in `scripts/analysis/config/__init__.py`, including its `prompt_file` (the template's basename — `PROMPT_MAP` is derived from this field, so there is no second map to edit)
-2. Create prompt at `scripts/analysis/prompts/<prompt_file>.txt` (placeholders: `{ticker}`, `{financial_context}`, `{today}`)
-3. Add context-building branch in `scripts/analysis/context/__init__.py`
-4. Test: `python scripts/generate_analysis.py AAPL --analysis-type <type>`
+**Generation**
+- Never return a refusal as a report. `call_llm` raises `RefusalError` after the
+  last retry, so the chain falls through to the next provider.
+- The model copies figures well and derives them badly. Compute derived numbers
+  in Python (`fundamental_facts.py`) and have the prompt quote them.
+- yfinance `revenueGrowth`, `earningsGrowth`, `earningsQuarterlyGrowth` and
+  `operatingMargins` are **latest-quarter**, never TTM. Label them that way.
+- Fetch Yahoo with `prices.to_yf_symbol(ticker)`. A bare `0050` returns 404.
+- Technical runs abort without price bars (`require_price_history`). Never let
+  the model invent a price.
+- New report metadata goes in front matter. QA reads `price`, `price_date`,
+  `levels` and `arithmetic_check` from there.
 
-### Adding a new ticker to daily schedule
-1. Edit `scripts/.ticker_schedule.json` (drives the price store's ticker universe)
-2. Add a `cron:` entry **and** a matching `case` arm in `.github/workflows/daily_analysis.yml` — a scheduled run only knows its cron string, so the arm is what maps it to a ticker. Same for `daily_market_news.yml`
-3. `pytest tests/test_workflows.py` — fails if a cron has no arm (or an arm no cron), or if two crons resolve to the same ticker+analysis type; an unmapped cron also fails the run itself rather than silently publishing a duplicate TSLA report
+**Site**
+- `docs/` is mostly generated (see `.gitignore`). Edit `ai_gen_report/`, `data/`
+  and `scripts/`, not the output.
+- Chart and statistics maths lives in Python (`price_analytics.py`,
+  `fundamental_analytics.py`, `intrinsic_value.py`), never in JS.
+- Raw-HTML hrefs must be written against the page's directory URL. MkDocs
+  rewrites Markdown links, never raw ones.
+- Every UI string goes in `LANG_TEXT` in `build_docs.py`, in **both** `en` and
+  `zh`. The ZH tree mirrors index pages only, and the theme partials are written
+  against the `mkdocs-material==9.5.*` pin.
+- Colours are `--fp-*` tokens in `extra.css`. Report typography lives only in
+  `report.css`. Material's root font-size is 20px.
+- Never hardcode a release version in a template (`mkdocs_release_hook.py`
+  injects it).
 
-## Report output
-- Reports written as Markdown to `ai_gen_report/fundamental/<ticker>/`, `ai_gen_report/technical/<ticker>/`, or `ai_gen_report/stock/<ticker>/` depending on analysis type (see Core flow above)
-- `build_docs.py` merges all three per ticker and copies them into `docs/reports/<ticker>/` and `docs/zh/reports/<ticker>/`
-- `build_docs.py` also publishes `data/prices/` **and** `data/fundamentals/` together as `docs/data/` (**Market Data**) — an overview table plus one tabbed page per ticker: Overview (candles, returns, TTM figures) · Price (drawdown, volatility, return distribution, monthly heatmap) · Financials (statements, margins, returns on capital) · Valuation (P/E, P/S, P/B, EV multiples, P/E bands) · Data & glossary (both CSVs, JSON payloads, term definitions)
-- The Financials tab also opens with an **Annual overview** (GuruFocus-style grouped bars incl. ROIC vs. WACC) and ends with a **Financial strength** scorecard; the Valuation tab opens with each multiple's **range vs. its own history**; a sixth **Intrinsic value** tab carries a DCF, reverse DCF, sensitivity grid, per-share growth table and WACC build-up. Models live in `scripts/analysis/data/intrinsic_value.py` (every assumption a named constant, printed on the page); the views are static HTML/SVG from `build_docs.py` §6c with no `data-src`, so `price-charts.js` skips them. Per-share figures are split-adjusted on read (`fundamental_analytics.split_adjust`). See `docs/PRICE_STORE_DESIGN.md` §13
-- Every chart card carries a one-line explainer, captioned x/y axes and — for the valuation multiples and rolling volatility — a dashed line at the series' own historical average (`price_analytics.series_average`, computed in Python, never in JS)
-- The pre-merge URLs `docs/prices/<ticker>/` and `docs/fundamentals/<ticker>/` still exist as redirect stubs (`build_legacy_redirects()`), hidden from the nav via `.pages` `hide: true`
-- Each ticker's report index (`docs/reports/<ticker>/`) opens with a **hero** — `ticker_hero_block()` — before the candlestick chart: identity chips (ticker, sector, per-type report counts) plus KPI tiles read from `price_analytics.summary()` and a 52-week rail with the last close marked on it. The bear/base/bull spread under **Price Target** is drawn the same way (`scenario_rail()`). Both are static HTML with every position computed in Python as a percentage, so they render with JS off and can never disagree with the Market Data page. Styles live in `docs/stylesheets/ticker.css`; the company flag sits in the hero rather than the h1 because the h1's clipped gradient paints twemoji black on the dark scheme
-- The two CSV downloads carry an explicit `download` attribute. The URLs are fine (200 `text/csv`), but a browser *renders* `.json` and *navigates away and silently saves* `text/csv`, which reads as a dead link; the JSON payloads deliberately stay plain links so they still open in place
-- **Section indexes** (`docs/reports/`, `docs/market_news/`) are a stats strip (`hub_stats_block`), a one-line disclaimer, a filter box and a **card grid** (`hub_card`), all static HTML from `build_docs.py`; `docs/javascripts/hub.js` only toggles `hidden` on cards. Each card's badge opens the newest report of that type. The old per-ticker report dump below the table (thousands of links the ticker pages already carry) is gone
-- **Every dated report/news page opens with a meta bar** (`report_meta_block`) instead of the raw front-matter table: ticker back-link, older/newer stepper *within the same report type*, and type / date / model / language chips. It is raw HTML, so hrefs are written against the page's directory URL (`../`, `../<stem>/`) — MkDocs rewrites Markdown links, never raw ones. `copy_file(..., meta_block=...)` swaps it in; without it the table is still emitted (tests pin both)
-- **The landing page is data-driven.** `write_hub_payload()` derives `docs/hub.json` (gitignored) from the price store and the published report set — market tape, headline counts, the hero card and the six newest reports — and `overrides/home.html` hydrates its slots from it (`home_zh.html` inherits the script). Slots that carry figures stay `hidden` until the payload arrives, so a failed fetch shows nothing stale rather than the June mock numbers it used to hardcode
-- **Release version** is `[project].version` in `pyproject.toml`. Cut releases with the manual **Release** workflow (`gh workflow run release.yml -f bump=patch|minor|major|current`, or `-f version=X.Y.Z`; `-f dry_run=true` to preview): it runs the tests, bumps pyproject + `uv.lock` via `scripts/release_version.py`, commits to main, creates GitHub Release `vX.Y.Z` with generated notes and dispatches `deploy.yml`. `scripts/mkdocs_release_hook.py` publishes it with the commit SHA as `config.extra.release`, shown as a header pill and in the footer — never hardcode a version in a template. Favicon (SVG + PNG fallbacks), apple-touch-icon and the `og:image` share card live in `docs/assets/`; Open Graph / Twitter / theme-color meta are emitted in `overrides/main.html` `extrahead`, using each page's `description` front matter
-- Inner pages get a linked breadcrumb trail from `overrides/main.html` (`.crumbs`; Material's own `navigation.path` is Insiders-only) and a reading-progress bar (`hub.js`). Styles for all of the above live in `docs/stylesheets/hub.css`; Material's root font-size is 20px, so size in rem accordingly
-- **Visual language follows finlab.finance/en/blog** (editorial "research magazine"): light paper scheme by default (`mkdocs.yml` palette order, no `media:` keys), ink `#111827` on `#fbfcfe`, light Space Grotesk headings over a DM Sans body (Google Fonts, loaded in `overrides/main.html`), hairline borders, 1rem cards, pill controls with ink-filled active state. All colours are `--fp-*` tokens defined per scheme at the top of `extra.css` — add a token there rather than hardcoding a hex in a component. The landing page (`home.html`) is one template for both languages: `home_zh.html` only overrides `{% block home_lang %}` and the strings live in its `COPY` table
-- **Report pages are styled in one place: `docs/stylesheets/report.css`** (headings, body, lists, quotes, code, admonitions, tables), loaded last in `extra_css`. Don't reintroduce article typography into `extra.css` — the old scattered rules (including a mobile block that set body text to `1rem` = 20px) are what made reports read oversized. `responsive-tables.js` tags figure columns `.is-num` (≥60% of a column's cells read as numbers → right-aligned) and sign-led cells `.is-pos`/`.is-neg` by **text inspection only**; it never computes a value. Material left-aligns cells via `[dir=ltr] … td:not([align])`, hence the `!important` on `.is-num`
-- The landing-page hero is a **macOS Terminal window** running the repo's real CLI (`python scripts/generate_analysis.py <TICKER> --analysis-type …`); with `hub.json` it re-runs for the featured report and prints its model, date, figures and a link to it. Without data the static session stays
-- The landing page's **market pulse** is a beeswarm of every priced ticker on a diverging return axis with 1D / 1M / YTD / 1Y tabs. Each `hub.json` tape entry carries `chg`, `chg_1m`, `ytd`, `chg_1y`; `hub_payload()["breadth"]` (`_breadth()`) supplies per-window up/down/flat counts, best/worst, the axis half-width `span`, and `scale` — `symlog` when the largest move exceeds 3× the 80th-percentile move (one +400% YTD would otherwise pin every other bubble to the midline). JS only maps those to pixels and dodges overlaps
-- The landing page's **analysis wheel** lists the pipeline's real twelve types straight from `ANALYSIS_TYPES` via `hub_payload()["types"]` (`_type_counts()`, counting `.md` and `.html` reports in the retention window). Types with reports are drawn solid with their counts; the rest as outlines, "in pipeline". Names, families and descriptions live in the `lenses` / `fams` COPY entries in `home.html` — add one there when a type is added to `ANALYSIS_TYPES`
-- `docs/` is auto-generated — edit source files in `ai_gen_report/` and `scripts/`, not in `docs/`
-- `scripts/maintain_ai_gen_report.py` handles re-splitting (`reorg`) and pruning old dated reports (`prune --before YYYY-MM-DD`)
+**QA**
+- The reviewer must never be the generator. `REVIEWER_MODELS` is separate from
+  `resolve_chain()`, and the reviewer runs with `refusal_retry=False`.
+- The report under review is untrusted input (it contains scraped news).
+- Stage 2 is non-blocking and must never sit on stage 1's critical path.
+- Add a stage-1 check as a `content_findings()` pair plus an `ISSUE_TYPES`
+  entry, not inline in `parse_file`.
+- `qa_review.txt` is `.format()`ed, so escape JSON braces as `{{` `}}`.
 
-## Bilingual site (EN + `zh/`)
-The site is **one** MkDocs build: `docs/` is English and `docs/zh/` is Traditional Chinese, so `theme.language` is `en` everywhere and nothing about the ZH tree is automatic.
-- All UI copy lives in `LANG_TEXT` in `scripts/build_docs.py` (`t(lang, key)`); both halves must carry every key. Chart labels rendered by JS are localised separately in `docs/javascripts/price-charts.js` and `kline-chart.js`, which detect `/zh/` from the URL
-- `build_nav_pages()` lists `- zh` on the **EN** root `.pages`. Without it awesome-pages drops `docs/zh/` from the nav entirely (a `nav:` with no `...` is exhaustive) and every ZH page silently renders the *English* tab row, linking back into the English tree
-- Three theme overrides in `docs/overrides/partials/` make navigation language-aware, and are written against the `mkdocs-material==9.5.*` pin in `.github/actions/build-site/action.yml`:
-  - `tabs.html` / `nav.html` — on a ZH page, render the `zh` subtree as the tab row and sidebar, so both trees render identically. The subtree is found by URL prefix, not by title, so renaming it in `LANG_TEXT` cannot break the lookup
-  - `alternate.html` — maps the language switcher to *the same page* in the other tree instead of the site root. The ZH tree mirrors **index pages only** (dated report/news leaves are English-only), so a leaf with no twin of its own falls back **one directory up**, to its ticker/section index, which always has one — not to the site root, which is what made 文A from `/reports/avav/<report>/` look like it threw you back to the home page. Two tests hold it: `test_every_unmirrored_page_has_a_mirrored_parent` (build_docs) pins the invariant that every twin-less page sits directly inside a mirrored directory, and `tests/test_language_switcher.py` renders the partial itself against MkDocs' own `url` filter. A wrong guess here 404s.
-- `docs/includes/` is `exclude_docs`'d in `mkdocs.yml`: it is a `pymdownx.snippets` source auto-appended to every page, not a page, and MkDocs publishing it anyway left the one directory on the site with no index for the switcher to fall back to
-- The ZH tree therefore needs no separate deploy; `build_docs.py` writes both and `mkdocs build --strict` ships them together
+**CI**
+- Change shared CI behaviour in `.github/actions/` (`commit-and-push`,
+  `python-env`, `build-site`), not in each workflow. No workflow uses pip
+  directly.
 
-## QA audit
-`.github/workflows/qa_report_quality.yml` runs nightly at 02:00 UTC in **two stages**:
+## Common changes
 
-1. **Rule-based (free, deterministic, pure-stdlib)** — `check_report_quality.py` → `qa/bad_reports_<date>.csv` + `qa/summary_<date>.txt`, then `check_mermaid.py`. Detection logic lives in `scripts/analysis/validate/__init__.py`. This is the primary gate; it catches mechanical failures (empty, refusal, truncated, placeholders, bad Mermaid), and for fundamental reports `MISSING_SECTIONS` (## 1.–## 11.), `ARITHMETIC` (§8.8 total ≠ Σ its terms, > 0.5%; or the §1.0 MOS / DCF premium ≠ what its own fair value, DCF value and price give, > 1pp — `arithmetic.valuation_mismatches`) and `PRICE_MISMATCH` (quoted 現價 vs front-matter `price`); for technical reports (`validate/technical.py`) `NAN_VALUE`, `PRICE_MISMATCH` (headline vs front-matter `price`, > 0.5%), `LEVEL_MISMATCH` (a Ch.4 R1–S3 ≠ the front-matter `levels` of the same label) and `RR_MISMATCH` (stated R/R matches neither T1 nor T2 from its own entry/stop; a range entry may use its midpoint or either end). For any report with provenance (`validate/market_data.py`): `STORE_MISMATCH` (front-matter `price` ≠ `data/prices/` close on `price_date`, later splits undone; silent when the store has no bar yet) and `STALE_PRICE` (a store session dated strictly between `price_date` and the report date — it had closed). `PLACEHOLDER` also catches the prompts' example figures copied verbatim (`$XXX`, `第 XX 百分位`). Every code and its one-line description lives in `ISSUE_TYPES` (`validate/__init__.py`), printed beside its count; type-specific checks are `content_findings()` returning `(code, note)` pairs — add a check there, not inline in `parse_file`
-2. **LLM review (OpenAI, costs tokens)** — the judge is deliberately *not* the generator (gemini); the workflow passes `--provider openai --cross-provider` (OpenAI-fallback reports go to gemini; without `GEMINI_API_KEY` it drops the flag with a warning) and `test_the_default_reviewer_is_not_the_default_generator` pins it. The prompt carries a trusted `{pipeline_record}` block outside `<report_data>` (`pipeline_record()`: the close the report was given, failed data sources, stage-1 findings); the rubric tells the judge **not** to list or score stage-1 findings — the first live run, told to let them lower its scores, passed 0 of 133 and spent 20 issues restating §8.8 corrections — `review_report_quality.py` → `qa/llm_review_<date>.csv` + `.txt`. Grades what regex cannot see: fabricated numbers, shallow analysis, conclusion-vs-evidence contradictions, simplified-Chinese leakage. Scores 5 dimensions 1–5 and returns `pass`/`warn`/`fail`
+**New analysis type:** add it to `ANALYSIS_TYPES` (with `prompt_file`), create
+`prompts/<prompt_file>.txt`, add a branch in `context/__init__.py`, and add a
+`lenses` / `fams` entry in `docs/overrides/home.html`.
 
-Stage 1's summary leads with a **last-2-UTC-days slice** (`--recent-days`) before the all-corpus counts, and the README shows both: the corpus total is dominated by reports written before a fix landed. `FILENAME_RE` accepts the duplicate suffix on either side of the provider (`_2026-10-23_gemini-2.md` was read as type `unknown` and skipped every check; 34 such files exist).
+**New daily ticker:** add it to `scripts/.ticker_schedule.json`, then add a
+`cron:` **and** a matching `case` arm to `daily_analysis.yml` and
+`daily_market_news.yml`. Then run `uv run pytest tests/test_workflows.py`.
 
-Then `prune_qa.py --keep 10` trims `qa/` to the 10 most recent run dates (it prunes *any* dated file, so new artifact types need no change there), and the workflow regenerates `qa/README.md` and commits.
-
-Notes on stage 2:
-- **Reviewer models are deliberately separate from the generation chain.** `REVIEWER_MODELS` in `review_report_quality.py`, not `resolve_chain()` — otherwise changing the generator's OpenAI model would silently re-point the auditor. One entry per provider (a `--cross-provider` switch must not hand Gemini an OpenAI model id), each a cheap model because cost is driven by *input* volume, not the ~300-token verdict. `--model` applies only to `--provider`
-- **Rolling 2-day window** (`--days 2`), not "today": report-gen crons run 17:00–03:00 UTC, so one generation cycle straddles midnight and lands under two date stamps. A 1-day window silently skips the 17:00–23:00 batch (the majority of output)
-- **Non-blocking** — exits 0 even on `fail` verdicts, so a bad night still commits an audit trail. `--fail-on-fail` opts into exit 1
-- Per-report provider errors and unparseable responses become `ERROR` / `PARSE_ERROR` rows rather than aborting the run
-- `refusal_retry=False` is mandatory: the refusal-override prefix in `analysis/utils/llm.py` instructs the model to *write a report*, which would turn the grader into a generator
-- `--cross-provider` never lets a provider grade a report it generated (`parse_file` reads the generating provider from frontmatter). If no other provider has a key it exits 1 up front rather than silently self-grading
-- **Stage 2 never sits on stage 1's critical path.** `openai` is installed *after* stage 1 runs, and the install / key check / review steps are all gated and `continue-on-error` — a missing secret or PyPI hiccup annotates the run but still commits the stage-1 audit
-- **The report under review is untrusted input.** It is model output built partly from scraped news/RSS text, so an attacker-controlled headline can reach the judge. `REVIEWER_SYSTEM_MESSAGE` instructs the grader to ignore instructions inside `<report_data>`; the delimiters alone are not the boundary
-- **The model's verdict is reconciled against its own scores** (`_enforce_verdict`), only ever downgraded. A `pass` alongside `data_integrity=1` would otherwise be filtered out of the problem CSV and never trip `--fail-on-fail`
-- Malformed JSON *shapes* (a list under `dimensions`, a number under `issues`) raise `ValueError` → `PARSE_ERROR` row. `review_one`'s handler is deliberately broad: no single bad response may abort a 100-report batch
-- Skippable/tunable from the GitHub UI via the `llm_review`, `llm_review_model`, `llm_review_days` and `llm_review_limit` dispatch inputs. A blank input adds no flag, so scheduled runs keep the script defaults. `llm_review_limit` exists for cheap model comparisons: selection is sorted, so the same cap over the same `--days` grades the same reports under two different `llm_review_model` values
-- **stdout is this script's data channel, not a log channel.** The workflow tees stdout into the committed `qa/llm_review_<date>.txt`, but `analysis/utils/logging_utils.py` attaches its handler to *stdout* — so the first live run buried the summary under ~400 lines of per-call INFO noise and grew `qa/README.md` by 432 lines. `route_library_logs_to_stderr()` moves `analysis.*` handlers to stderr at the start of `main()`. Fixed locally rather than in the shared logger, because every other CLI wants its logs on stdout as ordinary CI output
-- **The judge is reproducible, but ~a third of its verdicts are boilerplate.** Two live `gpt-4o-mini` runs over the same 117 reports agreed closely — 34/12/71 then 36/6/75 pass/warn/fail, with per-dimension means within 0.04 — so the scores are stable, not noisy. The problem is their content: ~25 rows per run score **1 on all five dimensions** and carry near-identical template prose across unrelated tickers, only ~6 of which quote any figure. At least one is checkably false (msft flagged for `$XXX`/`N/A` placeholders that appear **nowhere** in its 79 KB). The other ~56 rows are grounded — 29 quote figures that do exist, and `mu`'s `$90.27B` TTM revenue is a genuine fabrication (actual ≈ $37B) that stage 1 passed clean. So the aggregate fail rate is not actionable, but the grounded subset is exactly what this stage is for
-- **`grounded` column / `verdict_is_grounded()`** implements that split: a `warn`/`fail` whose dimensions are *all* 1 **and** whose issues quote no figure traceable to the report is marked ungrounded. Such rows stay in the CSV for auditability but are excluded from the headline verdict counts and cannot trip `--fail-on-fail`. `pass` verdicts need no evidence, and an all-1s row that does cite a real figure is kept
-- A larger model has **not** been compared yet; `llm_review_limit` makes that cheap. On current evidence the boilerplate looks more like a prompt/scoring-rubric problem than raw model capability
-- Stage 2 also covers `ai_gen_report/market_news/`, which stage 1 currently does not (see `DEFAULT_ROOTS` in each)
-- Prompt/rubric: `scripts/analysis/prompts/qa_review.txt` (escape literal JSON braces as `{{` `}}` — the template is `.format()`ed)
-- **The rubric names three things that are explicitly NOT defects**, each traced to a wrong verdict in the third live run. Don't reintroduce them:
-  1. **Missing source citations.** Reports are generated from a financial-data context that never appears in the report body, so they structurally cannot cite figures inline. 38 of that run's 54 grounded fails complained about this — an unsatisfiable criterion the original rubric asked for verbatim (「具體數字是否有來源脈絡」). `data_integrity` now judges whether a *number is credible*, not whether a citation is present
-  2. **The report's own derived valuations.** 加權合理價值 / DCF 內在價值 / 目標價 / MOS are sourced to the report's own model, usually with assumptions shown in its DCF chapter — `amd`'s 「加權合理價值 $619.64」 is derived in its Ch.8, yet was failed as 來源不明. Criticise the *assumptions* instead
-  3. **Self-flagged data anomalies.** `soxq` was failed for a 31.0% dividend yield that its own report had already identified as distorted and restated at 1.15%. That is good practice and now scores up, not down
-- The rubric also states the evidence rule that `verdict_is_grounded()` enforces (low scores need a traceable quote), so a verdict is never quarantined for breaking a rule it was not given
+**Release:** `gh workflow run release.yml -f bump=patch` (or `minor`, `major`,
+`current`, or `-f version=X.Y.Z`; add `-f dry_run=true` to preview).

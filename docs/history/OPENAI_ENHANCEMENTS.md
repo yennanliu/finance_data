@@ -1,3 +1,5 @@
+> **Historical — superseded.** Written 2026-03, when OpenAI was the default provider. The token limits below are out of date: Gemini now leads the chain and budgets live in `scripts/analysis/config/providers.py`; see `docs/REPORT_PIPELINE.md` § LLM layer.
+
 # OpenAI Model Enhancements: Token Limits & Error Handling
 
 ## Overview

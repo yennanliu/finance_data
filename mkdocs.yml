@@ -25,8 +25,11 @@ validation:
 # nav-less /includes/abbreviations/ whose only content was a <abbr> glossary and
 # whose directory had no index, so the language switcher had nothing to fall back
 # to. snippets reads it straight off disk, so excluding it costs nothing.
+# history/ holds superseded write-ups for repo readers only; published, it would
+# be another index-less directory with no ZH twin for the switcher to fall back to.
 exclude_docs: |
   includes/
+  history/
 
 # ── Theme ────────────────────────────────────────────────────────────────────
 theme:

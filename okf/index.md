@@ -31,6 +31,7 @@ markdown body.
 - [SEC filings](datasets/sec-filings.md) — 10-K, 10-Q, 13-F, 6-K for 30+ companies
 - [Market news](datasets/market-news.md) — daily AI-curated news per ticker
 - [K-line / OHLCV data](datasets/kline-data.md) — per-ticker price series for charts
+- [Quarterly fundamentals](datasets/fundamentals.md) — per-ticker SEC quarterly statements
 
 ### References — [references/index.md](references/index.md)
 - [Analysis types](references/analysis-types.md) — the 12 report types and what each covers
@@ -43,8 +44,8 @@ scripts/generate_analysis.py
   → data_fetch (yfinance + web scrapers → OHLCV, financials)
   → context   (assembles LLM-ready context)
   → prompts/*.txt
-  → llm       (Claude / OpenAI / Gemini, with provider fallback)
-  → ai_gen_report/{fundamental,technical,stock}/<ticker>/<type>_<date>.md
+  → llm       (Gemini → OpenAI fallback chain; Claude on request)
+  → ai_gen_report/{fundamental,technical,stock}/<ticker>/<type>_<date>_<provider>.md
 scripts/build_docs.py  → mirrors reports into docs/ (EN) and docs/zh/ for MkDocs
 ```
 
