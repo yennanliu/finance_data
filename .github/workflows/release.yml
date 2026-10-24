@@ -1,0 +1,149 @@
+name: Release
+
+# Manually triggered release (Actions → Release → Run workflow).
+#
+#   1. re-runs the test suite on the tip of main
+#   2. bumps `[project].version` in pyproject.toml + uv.lock
+#      (scripts/release_version.py) and commits it to main
+#   3. publishes the GitHub Release vX.Y.Z on that commit, with notes generated
+#      from the merged PRs since the previous release
+#   4. dispatches deploy.yml, so the site's header pill and footer show the new
+#      version (scripts/mkdocs_release_hook.py reads it at build time)
+#
+# Pushes made with GITHUB_TOKEN never trigger other workflows, so step 4 is an
+# explicit dispatch rather than relying on deploy.yml's push trigger.
+# `dry_run` stops after the bump and prints what would have been released.
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump (`current` releases pyproject.toml's version as-is)"
+        type: choice
+        options: [patch, minor, major, current]
+        default: patch
+      version:
+        description: "Explicit version (e.g. 2.0.0 or 2.0.0rc1); overrides bump"
+        required: false
+        default: ""
+      prerelease:
+        description: "Mark as a pre-release"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Dry run: bump and test, but commit, tag and deploy nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # commit the bump, create the release + tag
+  actions: write    # dispatch deploy.yml
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Require main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Releases are cut from main only (this run is on ${GITHUB_REF_NAME})."
+          exit 1
+
+      # Same sparse checkout as tests.yml: the suite never reads the generated
+      # content trees, and the release commit only touches two files.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ai_gen_report/
+            !/notebook_llm/
+            !/investor_day/
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --extra dev
+
+      - name: Run test suite
+        run: uv run --no-sync pytest tests/ -q
+
+      - name: Bump version
+        id: bump
+        env:
+          BUMP: ${{ inputs.version || inputs.bump }}
+        run: |
+          set -euo pipefail
+          VERSION="$(uv run --no-sync python scripts/release_version.py "$BUMP")"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+          git diff --stat
+          # The lockfile must still satisfy `uv sync --locked` after the bump.
+          uv lock --check
+          echo "Releasing v${VERSION}"
+
+      - name: Check the tag is new
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null; then
+            echo "::error::${TAG} already exists. Pick a different bump or version."
+            exit 1
+          fi
+
+      - name: Dry-run summary
+        if: inputs.dry_run
+        env:
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          {
+            echo "### Dry run: would release \`${TAG}\`"
+            echo '```diff'
+            git diff
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit version bump
+        if: ${{ !inputs.dry_run }}
+        uses: ./.github/actions/commit-and-push
+        with:
+          paths: "pyproject.toml uv.lock"
+          message: "chore(release): ${{ steps.bump.outputs.tag }}"
+
+      # `current` with nothing to bump commits nothing; the release then sits
+      # on main's tip either way. --target pins the tag to the exact commit
+      # just pushed rather than whatever main is by the time the API call lands.
+      - name: Create GitHub Release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.bump.outputs.tag }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+          SHA="$(git rev-parse HEAD)"
+          FLAGS=()
+          if [ "$PRERELEASE" = "true" ]; then FLAGS+=(--prerelease); else FLAGS+=(--latest); fi
+          gh release create "$TAG" --target "$SHA" --title "$TAG" --generate-notes "${FLAGS[@]}"
+          {
+            echo "### Released [\`${TAG}\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${TAG})"
+            echo "Commit: \`${SHA:0:7}\` · deploy.yml dispatched"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Deploy the site
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

@@ -5,6 +5,32 @@
 {% endblock %}
 
 {% block extrahead %}
+  {#- Share / browser metadata. Material already emits description, canonical,
+      author and the SVG favicon (theme.favicon); this adds the PNG fallbacks,
+      the browser-chrome colour and Open Graph / Twitter cards so a shared link
+      unfurls with a title, summary and image instead of a bare URL. -#}
+  {% set on_zh = page and page.url and page.url.startswith("zh/") %}
+  {% set meta_title = config.site_name if not page or page.is_homepage or not page.title else page.title ~ " - " ~ config.site_name %}
+  {% set meta_desc = (page.meta.description if page and page.meta and page.meta.description else config.site_description) | striptags | trim %}
+  {% set og_image = config.site_url ~ "assets/og-image.png" %}
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'assets/favicon-32.png' | url }}">
+  <link rel="apple-touch-icon" href="{{ 'assets/apple-touch-icon.png' | url }}">
+  <meta name="theme-color" content="#fbfcfe" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:title" content="{{ meta_title }}">
+  <meta property="og:description" content="{{ meta_desc }}">
+  {% if page and page.canonical_url %}<meta property="og:url" content="{{ page.canonical_url }}">{% endif %}
+  <meta property="og:image" content="{{ og_image }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ config.site_name }}">
+  <meta property="og:locale" content="{{ 'zh_TW' if on_zh else 'en_US' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta_title }}">
+  <meta name="twitter:description" content="{{ meta_desc }}">
+  <meta name="twitter:image" content="{{ og_image }}">
   {#- Display + body faces for the editorial theme (extra.css). Latin-only and
       display=swap, so text paints in the system stack first and CJK pages
       never wait on them. -#}
@@ -47,6 +73,23 @@
         var title = header.querySelector(".md-header__title");
         if (title && title.parentNode) {
           title.parentNode.insertBefore(homeBtn, title.nextSibling);
+        }
+      }
+
+      // Release pill (config.extra.release, scripts/mkdocs_release_hook.py),
+      // after the home button; links to the commit the site was built from.
+      var release = {{ (config.extra.release or {}) | tojson }};
+      if (header && release.version && !header.querySelector(".md-header__release")) {
+        var pill = document.createElement(release.commit_url ? "a" : "span");
+        pill.className = "md-header__release";
+        pill.textContent = "v" + release.version;
+        if (release.commit_url) {
+          pill.href = release.commit_url;
+          pill.title = "Release v" + release.version + " · commit " + release.commit;
+        }
+        var anchor = header.querySelector(".md-header__home-btn") || header.querySelector(".md-header__title");
+        if (anchor && anchor.parentNode) {
+          anchor.parentNode.insertBefore(pill, anchor.nextSibling);
         }
       }
     }
@@ -108,7 +151,8 @@
   <div class="md-footer__build-info">
     <span>Build: __BUILD_DATE__</span>
     <span style="margin: 0 0.5rem;">|</span>
-    <span>v1.0.0</span>
+    {% set release = config.extra.release or {} %}
+    <span>v{{ release.version or "dev" }}{% if release.commit %} (<a href="{{ release.commit_url }}">{{ release.commit }}</a>){% endif %}</span>
     <span style="margin: 0 0.5rem;">|</span>
     <span>MkDocs Material</span>
   </div>

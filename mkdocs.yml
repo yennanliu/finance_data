@@ -52,6 +52,9 @@ theme:
   font:
     text: false
     code: false
+  # Monochrome bull-head tile. SVG for modern browsers; the PNGs
+  # beside it are the apple-touch-icon and the og:image (docs/overrides/main.html).
+  favicon: assets/favicon.svg
   icon:
     repo: fontawesome/brands/github
     logo: material/finance
@@ -93,6 +96,9 @@ plugins:
 
 hooks:
   - scripts/mkdocs_minify_hook.py
+  # config.extra.release: version from pyproject.toml + commit, for the header
+  # pill and the footer.
+  - scripts/mkdocs_release_hook.py
 
 # ── Markdown extensions ──────────────────────────────────────────────────────
 markdown_extensions:
