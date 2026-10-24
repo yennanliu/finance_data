@@ -11,7 +11,7 @@ Start at the bundle index and follow its links.
 ## Knowledge
 
 - [OKF knowledge bundle](https://yennanliu.github.io/finance_data/okf/index.md): entry point describing every dataset and reference in this project
-- [Datasets](https://yennanliu.github.io/finance_data/okf/datasets/index.md): analysis reports, SEC filings, market news, and k-line data
+- [Datasets](https://yennanliu.github.io/finance_data/okf/datasets/index.md): analysis reports, SEC filings, market news, k-line and quarterly fundamentals data
 - [Analysis types](https://yennanliu.github.io/finance_data/okf/references/analysis-types.md): the 12 report types produced per ticker
 - [Coverage](https://yennanliu.github.io/finance_data/okf/references/coverage.md): the tickers tracked daily
 

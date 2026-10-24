@@ -1,3 +1,5 @@
+> **Historical — superseded.** Written 2026-03 for the OpenAI-era, yfinance-only news generator. News now merges Yahoo, RSS feeds and Perplexity Discover and runs on the gemini → openai chain; see `docs/REPORT_PIPELINE.md` § Market news.
+
 # Market News Generation Improvements for OpenAI Model
 
 ## Problem Identified
