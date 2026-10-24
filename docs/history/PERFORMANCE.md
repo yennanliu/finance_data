@@ -1,3 +1,5 @@
+> **Historical — superseded.** Render-side performance notes from 2026-06 (MathJax, client-side Mermaid, theme features). These issues have since been addressed; kept for context.
+
 # Website Performance Analysis
 
 ## Root Causes of Slow Loading

@@ -1,3 +1,5 @@
+> **Historical — superseded.** Site performance investigation from 2026-06. Its fixes shipped; the current build is described in `docs/SITE_BUILD.md`.
+
 # Finance Data Hub — Performance & System Analysis
 
 **Target:** https://yennj12.js.org/finance_data/ (Cloudflare → GitHub Pages, MkDocs Material)
@@ -140,7 +142,7 @@ Verified with `mkdocs build --strict` (exit 0).
 
 ## 7. Related prior analysis & newly-surfaced gaps
 
-A prior page, [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md), already tracks render-side issues
+A prior page, [`PERFORMANCE.md`](PERFORMANCE.md), already tracks render-side issues
 this network-level pass did not measure — worth folding into the same backlog:
 - **MathJax loaded from `unpkg.com` CDN on every page** (200–300 KB, render-blocking; re-runs
   on each SPA navigation).

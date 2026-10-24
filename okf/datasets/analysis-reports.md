@@ -36,7 +36,7 @@ Published (per ticker, EN + ZH merged):
 ## Provenance
 
 Data is fetched via yfinance and web scrapers, assembled into an LLM context,
-and written by a provider-fallback chain (Gemini → OpenAI → Claude). Reports are
+and written by a provider-fallback chain (Gemini → OpenAI; Claude on request). Reports are
 AI-generated and are **not investment advice**.
 
 Related: [sec-filings.md](sec-filings.md) · [market-news.md](market-news.md)
