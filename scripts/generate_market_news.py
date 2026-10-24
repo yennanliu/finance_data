@@ -24,6 +24,7 @@ import yfinance as yf
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis.config.providers import resolve_chain
+from analysis.data.sources import yahoo_news
 from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
 from analysis.publish import GENERATED_BY, frontmatter
 
@@ -97,18 +98,10 @@ def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEE
     return items
 
 
-def fetch_news(ticker: str, ticker_obj: yf.Ticker | None = None) -> list[dict]:
+def fetch_news(ticker: str) -> list[dict]:
     """Collect news from yfinance + keyword-searched RSS feeds, deduplicate, and return."""
-    source_counts: dict[str, int] = {}
-
-    yf_items: list[dict] = []
-    try:
-        t = ticker_obj or yf.Ticker(ticker)
-        yf_items = t.news or []
-        source_counts["yfinance"] = len(yf_items)
-    except Exception as exc:
-        print(f"  [WARN] yfinance news fetch failed: {exc}", file=sys.stderr)
-        source_counts["yfinance"] = 0
+    yf_items = yahoo_news(ticker)
+    source_counts: dict[str, int] = {"yfinance": len(yf_items)}
 
     rss_items: list[dict] = []
     with ThreadPoolExecutor(max_workers=len(RSS_FEEDS)) as pool:
@@ -315,11 +308,10 @@ def generate_report(
     output_filename: str | None = None,
 ) -> None:
     print(f"[1/4] Fetching ticker info for {ticker}…")
-    ticker_obj = yf.Ticker(ticker)
-    info = fetch_ticker_info(ticker, ticker_obj)
+    info = fetch_ticker_info(ticker)
 
     print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds)…")
-    news_items = fetch_news(ticker, ticker_obj)
+    news_items = fetch_news(ticker)
     print(f"      Found {len(news_items)} news items (from yfinance + RSS feeds).")
 
     if news_items:

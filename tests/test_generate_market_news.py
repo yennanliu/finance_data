@@ -69,7 +69,7 @@ def test_fetch_rss_respects_limit(monkeypatch):
 # ── fetch_news (dedup + sort) ────────────────────────────────────────────────
 
 def test_fetch_news_dedupes_and_sorts(monkeypatch):
-    yf_obj = types.SimpleNamespace(news=[
+    monkeypatch.setattr(mn, "yahoo_news", lambda t: [
         {"title": "Same Headline", "providerPublishTime": 100},
         {"title": "Older News", "providerPublishTime": 50},
     ])
@@ -79,7 +79,7 @@ def test_fetch_news_dedupes_and_sorts(monkeypatch):
         {"title": "Breaking Latest", "providerPublishTime": 500},
     ] if name == "Google News" else [])
 
-    out = mn.fetch_news("AAPL", ticker_obj=yf_obj)
+    out = mn.fetch_news("AAPL")
     titles = [i["title"] for i in out]
     # duplicate collapsed (first occurrence kept), 3 unique remain
     assert titles.count("Same Headline") == 1
@@ -89,15 +89,10 @@ def test_fetch_news_dedupes_and_sorts(monkeypatch):
     assert times == sorted(times, reverse=True)
 
 
-def test_fetch_news_survives_yfinance_error(monkeypatch):
-    class Boom:
-        @property
-        def news(self):
-            raise RuntimeError("yf down")
-
+def test_fetch_news_with_every_source_empty(monkeypatch):
+    monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
     monkeypatch.setattr(mn, "_fetch_rss", lambda *a, **k: [])
-    out = mn.fetch_news("AAPL", ticker_obj=Boom())
-    assert out == []
+    assert mn.fetch_news("AAPL") == []
 
 
 # ── format_news_block / build_prompt ─────────────────────────────────────────
@@ -129,7 +124,7 @@ def test_build_prompt_contains_ticker_and_sections():
 def test_generate_report_writes_file(monkeypatch, tmp_path):
     monkeypatch.setattr(mn.yf, "Ticker", lambda t: types.SimpleNamespace())
     monkeypatch.setattr(mn, "fetch_ticker_info", lambda t, obj=None: {"name": "Apple"})
-    monkeypatch.setattr(mn, "fetch_news", lambda t, obj=None: [{"title": "x"}])
+    monkeypatch.setattr(mn, "fetch_news", lambda t: [{"title": "x"}])
     called = {}
 
     def fake_openai(prompt, model, max_tokens):

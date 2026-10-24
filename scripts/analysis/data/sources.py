@@ -346,6 +346,22 @@ def _get_yf():
         raise DataFetchError("'yfinance' not installed. Run: uv sync") from exc
 
 
+def yahoo_news(symbol: str, count: int = 10) -> list[dict]:
+    """Yahoo Finance headlines for *symbol*, newest first ([] on any failure).
+
+    ``Ticker.news`` reads Yahoo's ``/xhr/ncp`` endpoint, which now 404s, and
+    yfinance (still in 1.7.0) swallows that into ``[]`` -- every news block was
+    silently empty. The search endpoint behind ``yf.Search`` still serves news,
+    in the flat ``title`` / ``publisher`` / ``link`` / ``providerPublishTime``
+    shape the callers read.
+    """
+    try:
+        return _get_yf().Search(symbol, max_results=0, news_count=count,
+                                enable_fuzzy_query=False).news or []
+    except Exception:
+        return []
+
+
 # Local close of each exchange we cover; a bar dated today before this time is a
 # session still in progress, not a close.
 _SESSION_CLOSE = {"Asia/Taipei": (13, 30)}
@@ -677,7 +693,7 @@ def fetch_data(ticker: str) -> dict:
         "balance_q": _safe_df(lambda: t.quarterly_balance_sheet),
         "cashflow": _safe_df(lambda: t.cashflow),
         "cashflow_q": cashflow_q,
-        "news": (t.news or [])[:10],
+        "news": yahoo_news(symbol),
         "price_now": price_now,
         "price_date": price_date,
         "close_source": close_source,
