@@ -1,0 +1,41 @@
+
+============================================================
+
+Recent — last 2 UTC days (2026-10-25, 2026-10-26)
+Total scanned : 81
+Bad reports   : 8  (9.9%)
+
+Issue breakdown:
+  ARITHMETIC               8  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 1068
+Bad reports   : 412  (38.6%)
+
+Issue breakdown:
+  ARITHMETIC             354  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE               36  same ticker+type+date with a -2 / -3 suffix
+  RR_MISMATCH             28  a stated R/R matches neither target from its own entry/stop
+  PLACEHOLDER              4  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
+  MISSING_SECTIONS         4  fundamental report lacks one of chapters ## 1. … ## 11.
+  NAN_VALUE                3  a $nan / nan% leaked from an empty data bar
+  TOO_SHORT                2  fewer content lines than a real report has
+  STALE_PRICE              2  a newer completed session existed before the report date
+  REFUSAL                  1  the model refused instead of writing the report
+  CUTOFF                   1  ends mid-sentence or mid-code-block (truncated)
+
+Top 10 tickers by bad-report count:
+  pl             20 / 35   bad
+  ktos           18 / 35   bad
+  avav           17 / 35   bad
+  grab           17 / 35   bad
+  avgo           16 / 36   bad
+  onds           16 / 35   bad
+  rklb           15 / 35   bad
+  vst            15 / 36   bad
+  amd            14 / 35   bad
+  mrvl           14 / 17   bad
+
+CSV written → qa/bad_reports_2026-10-26.csv
