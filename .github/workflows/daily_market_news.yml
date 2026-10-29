@@ -46,6 +46,7 @@ on:
     - cron: "50 22 * * *"    # VTI
     - cron: "0 23 * * *"     # QQQ
     - cron: "10 23 * * *"    # ROBO
+    - cron: "20 23 * * *"    # UBER
 
   workflow_dispatch:
     inputs:
@@ -204,6 +205,7 @@ jobs:
               "50 22 * * *")  TICKER="VTI" ;;
               "0 23 * * *")   TICKER="QQQ" ;;
               "10 23 * * *")  TICKER="ROBO" ;;
+              "20 23 * * *")  TICKER="UBER" ;;
               # No silent default. A cron with no arm here used to fall through
               # to a TSLA report — an unnoticed duplicate rather than a visible
               # failure. Fail loudly so the gap gets fixed.
