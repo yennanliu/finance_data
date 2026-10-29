@@ -35,7 +35,7 @@ on:
     - cron: "40 20 * * *"    # SPCX fundamental
     - cron: "50 20 * * *"    # AVGO fundamental
     - cron: "0 21 * * *"     # NBIS fundamental
-    # ── Technical Analysis (21:30 - 01:30 UTC) ──
+    # ── Technical Analysis (21:30 - 01:40 UTC) ──
     - cron: "30 21 * * *"    # 0050 technical
     - cron: "40 21 * * *"    # 2330.tw technical
     - cron: "50 21 * * *"    # TSLA technical
@@ -61,7 +61,8 @@ on:
     - cron: "10 1 * * *"     # SPCX technical
     - cron: "20 1 * * *"     # AVGO technical
     - cron: "30 1 * * *"     # NBIS technical
-    # ── Additional Fundamental (02:00 - 03:40 UTC) ──
+    - cron: "40 1 * * *"     # UBER technical
+    # ── Additional Fundamental (02:00 - 03:50 UTC) ──
     - cron: "0 2 * * *"      # MU fundamental
     - cron: "10 2 * * *"     # SKHY fundamental
     - cron: "20 2 * * *"     # WDC fundamental
@@ -73,6 +74,7 @@ on:
     - cron: "20 3 * * *"     # VTI fundamental
     - cron: "30 3 * * *"     # QQQ fundamental
     - cron: "40 3 * * *"     # ROBO fundamental
+    - cron: "50 3 * * *"     # UBER fundamental
 
   workflow_dispatch:
     inputs:
@@ -270,6 +272,7 @@ jobs:
               "10 1 * * *")   TICKER="SPCX";    ANALYSIS_TYPE="technical-analysis" ;;
               "20 1 * * *")   TICKER="AVGO";    ANALYSIS_TYPE="technical-analysis" ;;
               "30 1 * * *")   TICKER="NBIS";    ANALYSIS_TYPE="technical-analysis" ;;
+              "40 1 * * *")   TICKER="UBER";    ANALYSIS_TYPE="technical-analysis" ;;
               # ── Additional Fundamental ─────────────────────────────
               "0 2 * * *")    TICKER="MU";      ANALYSIS_TYPE="fundamental-analysis" ;;
               "10 2 * * *")   TICKER="SKHY";    ANALYSIS_TYPE="fundamental-analysis" ;;
@@ -282,6 +285,7 @@ jobs:
               "20 3 * * *")   TICKER="VTI";     ANALYSIS_TYPE="fundamental-analysis" ;;
               "30 3 * * *")   TICKER="QQQ";     ANALYSIS_TYPE="fundamental-analysis" ;;
               "40 3 * * *")   TICKER="ROBO";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "50 3 * * *")   TICKER="UBER";    ANALYSIS_TYPE="fundamental-analysis" ;;
               # No silent default. A cron with no arm here used to fall through
               # to a TSLA fundamental report — an unnoticed duplicate rather
               # than a visible failure. Fail loudly so the gap gets fixed.

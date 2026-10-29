@@ -1,8 +1,8 @@
 name: QA Report Quality Check
 
 # Runs after all daily report-gen jobs complete.
-# Last report-gen cron: NBIS technical at 01:30 UTC
-# → QA runs at 02:00 UTC (30 min buffer)
+# Last technical report-gen cron: UBER technical at 01:40 UTC
+# → QA runs at 02:00 UTC (20 min buffer)
 
 on:
   schedule:
