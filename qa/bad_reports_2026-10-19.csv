@@ -1,5 +1,0 @@
-path,ticker,analysis_type,date,provider,issues,line_count,content_lines,note
-/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-09-08_openai.md,nbis,fundamental_analysis,2026-09-08,openai,REFUSAL,11,1,
-/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-10-14_openai.md,onds,fundamental_analysis,2026-10-14,openai,TOO_SHORT,86,76,content_lines=76
-/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/vst/fundamental_analysis_2026-10-14_openai.md,vst,fundamental_analysis,2026-10-14,openai,"TOO_SHORT,CUTOFF",11,1,content_lines=1; last_line='對不起，生成如此龐大且複雜的報告超出了我的處理能力。雖然無法提供符合所有詳細要求的完整報告，但我可以簡化處理，為您提供 VST 的基本分析和核心數據概括。若需要'
-/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/wdc/fundamental_analysis_2026-09-15_openai.md,wdc,fundamental_analysis,2026-09-15,openai,REFUSAL,11,1,
