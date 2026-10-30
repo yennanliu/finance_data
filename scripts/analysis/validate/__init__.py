@@ -6,8 +6,8 @@ Two families of checks, both listed in :data:`ISSUE_TYPES`:
   HTML-leak / duplicate / unrenderable Mermaid, for any report;
 * **structure and accuracy** (:func:`content_findings`) — a fundamental
   report's eleven chapters; then the report against its own
-  figures (§8.8 sum, MOS, DCF premium, R/R, each step of a ``$$`` equation
-  chain), against the close and levels the
+  figures (§8.8 sum, MOS, DCF premium, R/R, each step of a ``$$`` / ``$``
+  equation chain), against the close and levels the
   pipeline recorded in its front matter, and that close against the committed
   price store (``market_data``). Background: ``docs/FUNDAMENTAL_REPORT_REVIEW.md``
   and ``docs/TECHNICAL_REPORT_REVIEW.md``.
@@ -46,7 +46,7 @@ ISSUE_TYPES = {
     # accuracy — the report against its own figures
     "ARITHMETIC": "a derived valuation (§8.8 total, MOS, DCF premium) does not "
                   "recompute from the report's own figures",
-    "DERIVATION": "a step of a displayed $$ … $$ equation chain does not "
+    "DERIVATION": "a step of a $$ … $$ or $ … $ equation chain does not "
                   "recompute (a = b that is false)",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
     "NAN_VALUE": "a $nan / nan% leaked from an empty data bar",

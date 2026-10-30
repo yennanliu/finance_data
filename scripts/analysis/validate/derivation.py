@@ -1,4 +1,4 @@
-"""Re-check the worked equations a report prints in ``$$ … $$`` display math.
+"""Re-check the worked equations a report prints as ``$$ … $$`` or ``$ … $`` math.
 
 The model shows its work as chains like ``$a × w + $b × w = $x + $y = $S``,
 and breaks them in the middle. RKLB 2026-10-28 §8.8 printed
@@ -24,8 +24,14 @@ import re
 # the left side), plus this relative slack for rounded intermediates.
 TOLERANCE_REL = 0.001
 
-_FENCE = re.compile(r"^\s*(```|~~~).*?^\s*\1", re.M | re.S)
-_SPAN = re.compile(r"\$\$(.+?)\$\$", re.S)
+# Inline `$ … $` maths, told apart from prose prices ("$58.60 … $70"): no
+# space inside either delimiter, no unescaped `$` or newline inside, at least
+# one TeX command, and the closing `$` not followed by a digit. RKLB 2026-10-28
+# writes its whole nine-step DCF derivation this way, as do 325 reports.
+INLINE_MATH = (r"(?<![\\$])\$(?=[^\s$])((?:\\.|[^$\\\n])*?\\[a-zA-Z](?:\\.|[^$\\\n])*?)"
+               r"(?<=\S)\$(?![\d$])")
+# Code (left alone) | `$$ … $$` | `$ … $`.
+_MATH = re.compile(r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|\$\$(.+?)\$\$|" + INLINE_MATH, re.S)
 # Links compared for equality, and words that end a chain (an arrow or an
 # inequality says "leads to", not "equals").
 _LINK = re.compile(r"\\approx|≈|(?<![<>≤≥!\\])=")
@@ -34,7 +40,9 @@ _BREAK = re.compile(r"\\(?:implies|Rightarrow|rightarrow|longrightarrow|xrightar
                     r"(?![a-zA-Z])|[→⇒≤≥<>≠]|\\\\")
 _NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
 # Unit words glued to a figure. Mixed units in one chain are not compared.
-_UNIT = re.compile(r"(?<=\d)\s*(?:\\text\{\s*)?(B|M|K|T|bn|億|兆|萬|x|倍)(?:\s*\})?(?![A-Za-z])")
+# Only a `}` that closes `\text{` is consumed: "\mathbf{\$16.9M}" keeps its own.
+_UNIT_WORD = r"(B|M|K|T|bn|億|兆|萬|x|倍)"
+_UNIT = re.compile(r"(?<=\d)\s*(?:\\text\{\s*" + _UNIT_WORD + r"\s*\}|" + _UNIT_WORD + r"(?![A-Za-z]))")
 
 _OPS = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
         ast.Div: operator.truediv, ast.Pow: operator.pow,
@@ -70,6 +78,9 @@ def to_python(segment: str) -> "str | None":
     # "52\\text{週高點}": the figure is part of a label, not a quantity.
     if re.search(r"\d\s*\\text\{", s):
         return None
+    # "\\text{EV} + …": a label not followed by a figure names a variable.
+    if re.search(r"\\text\{[^{}]*\}(?!\s*(?:\\[,;! ]|\\quad)?\s*(?:\\\$|\$|NT|[-+−(]?\s*\d))", s):
+        return None
     s = _strip_wrappers(s)
     s = s.replace("NT\\$", "").replace("NT$", "").replace("\\$", "").replace("$", "")
     s = re.sub(r"\\(?:left|right|,|;|!|\s)", " ", s)
@@ -82,7 +93,7 @@ def to_python(segment: str) -> "str | None":
         s = re.sub(r"\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}", r"((\1)/(\2))", s)
     s = s.replace("{", "(").replace("}", ")").replace("[", "(").replace("]", ")")
     s = _NUMBER.sub(lambda m: m.group(0).replace(",", ""), s)
-    s = re.sub(r"(\d(?:\.\d+)?)\s*%", r"(\1/100)", s)
+    s = re.sub(r"(?<![\d.])(\d+(?:\.\d+)?)\s*%", r"(\1/100)", s)
     s = s.strip()
     if not re.search(r"\d", s) or not re.fullmatch(r"[\d\s.+\-*/()]+", s):
         return None
@@ -120,6 +131,10 @@ def agree(left: float, right: float, left_segment: str, right_segment: str) -> b
     slack = _rounding(left_segment) + _rounding(right_segment) + TOLERANCE_REL * abs(right) + 1e-9
     if abs(left - right) <= slack:
         return True
+    # A deduction step printed as negative: "Capex = $1,228.2M × 12% = −$147.4M".
+    if right < 0 < left and abs(left + right) <= slack and re.match(
+            r"\s*(?:\\mathbf\{|\*\*)?\s*[-−]", right_segment):
+        return True
     # A whole count floored from a ratio: "$1,500 ÷ $32.00 = 46 股".
     nums = _NUMBER.findall(right_segment)
     return (len(nums) == 1 and "." not in nums[0] and "%" not in right_segment
@@ -127,7 +142,7 @@ def agree(left: float, right: float, left_segment: str, right_segment: str) -> b
 
 
 def _units(segment: str) -> "set[str]":
-    return set(_UNIT.findall(segment))
+    return {a or b for a, b in _UNIT.findall(segment)}
 
 
 def chains(span: str) -> "list[list[str]]":
@@ -142,8 +157,31 @@ def chains(span: str) -> "list[list[str]]":
 
 
 def math_spans(text: str) -> "list[str]":
-    """Every ``$$ … $$`` span outside fenced code."""
-    return _SPAN.findall(_FENCE.sub("", text))
+    """Every ``$$ … $$`` and inline ``$ … $`` span outside code."""
+    return [body for body, _ in _spans(text)]
+
+
+_OPERATOR_END = re.compile(r"(?:[+\-−×÷*/]|\\(?:div|times|cdot))\s*$")
+
+
+def _spans(text: str) -> "list[tuple[str, bool]]":
+    """``(body, continued)`` for every math span. ``continued`` when the span
+    picks up an expression begun before it on the same line, so its first
+    figure is not the whole left side: QQQ 2026-10-21 wrote
+    "$\\$0.535 \\div$ 平均計息負債 $\\$12.50 = 4.28\\%$", META 2026-10-15
+    "$22.50 / $737.54 = \\mathbf{3.05\\%}$"."""
+    out, prev_end, prev_body = [], None, ""
+    for m in _MATH.finditer(text):
+        if m.group(1):
+            prev_end = None
+            continue
+        body = m.group(2) if m.group(2) is not None else m.group(3)
+        before = text[text.rfind("\n", 0, m.start()) + 1:m.start()]
+        same_line = prev_end is not None and "\n" not in text[prev_end:m.start()]
+        continued = bool(_OPERATOR_END.search(before)) or (same_line and bool(_OPERATOR_END.search(prev_body)))
+        out.append((body, continued))
+        prev_end, prev_body = m.end(), body
+    return out
 
 
 def _bad_links(segments: "list[str]") -> "list[int]":
@@ -167,9 +205,11 @@ def check(text: str) -> "list[dict]":
     """Every link of every displayed chain that does not hold:
     ``{"left", "right", "computed", "stated"}``."""
     out = []
-    for span in math_spans(text):
-        for segments in chains(span):
+    for span, continued in _spans(text):
+        for n, segments in enumerate(chains(span)):
             for i in _bad_links(segments):
+                if continued and n == 0 and i == 0:
+                    continue
                 out.append({"left": _clean(segments[i]), "right": _clean(segments[i + 1]),
                             "computed": evaluate(segments[i]), "stated": evaluate(segments[i + 1])})
     return out
@@ -224,7 +264,10 @@ def fix(text: str) -> "tuple[str, int]":
 
     def one_span(m: "re.Match") -> str:
         nonlocal total
-        span = m.group(1)
+        if m.group(1):
+            return m.group(1)
+        delim = "$$" if m.group(2) is not None else "$"
+        span = m.group(2) if m.group(2) is not None else m.group(3)
         pieces = _BREAK.split(span)
         seps = _BREAK.findall(span)
         rebuilt = []
@@ -236,16 +279,8 @@ def fix(text: str) -> "tuple[str, int]":
                 total += n
             rebuilt.append(segments[0] + "".join(l + s for l, s in zip(links, segments[1:])))
         out = rebuilt[0] + "".join(s + p for s, p in zip(seps, rebuilt[1:]))
-        return "$$" + out + "$$"
+        return delim + out + delim
 
-    # Code fences are left alone: split around them and repair the rest.
-    last, out = 0, []
-    for fm in _FENCE.finditer(text):
-        out.append(_SPAN.sub(one_span, text[last:fm.start()]))
-        out.append(fm.group(0))
-        last = fm.end()
-    out.append(_SPAN.sub(one_span, text[last:]))
-    return "".join(out), total
+    return _MATH.sub(one_span, text), total
 
-
-__all__ = ["TOLERANCE_REL", "check", "fix", "evaluate", "to_python", "chains", "math_spans", "agree"]
+__all__ = ["TOLERANCE_REL", "INLINE_MATH", "check", "fix", "evaluate", "to_python", "chains", "math_spans", "agree"]

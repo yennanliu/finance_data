@@ -103,7 +103,10 @@ appends a 「程式複算」 block.
 
 ### Equation chains (every report type)
 
-`validate/derivation.py` evaluates every `=` / `≈` link of each `$$ … $$` span.
+`validate/derivation.py` evaluates every `=` / `≈` link of each `$$ … $$` and
+inline `$ … $` span. Inline maths is told apart from prose prices by
+`INLINE_MATH`: no space inside either `$`, at least one TeX command, and no digit
+after the closing `$`.
 RKLB 2026-10-28 printed `$28.825 + … + $5.108 = $59.323 ≈ $58.90` and
 `\frac{$58.90 − $58.60}{$58.90} = \frac{+$0.72}{$58.90} = +0.5%`. Both ends of
 each chain were right and the middle was invented. `run_analysis` calls

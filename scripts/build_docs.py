@@ -2637,41 +2637,89 @@ def fix_static_chart_embed(content: str) -> str:
 
 
 # ── Display math ─────────────────────────────────────────────────────────────
-# Reports write their worked equations as `$$ … $$`, often straight after a
-# label line or in a list item, and sometimes mid-sentence. Arithmatex's `$$`
-# block syntax only matches a math-only paragraph, and its `$` inline syntax
-# would swallow every "$58.60 … $58.90" in the prose, so each span is rewritten
-# to `\( … \)` (arithmatex `round`, rendered by javascripts/math.js) before
-# Markdown sees it: `\$`, `_` and `*` inside stay math, not Markdown escapes
-# and emphasis. A span on a line of its own gets `\displaystyle`, which
-# math.js also reads as "give it its own row": minify-html collapses the
-# newline that would otherwise say so. A span split over lines
-# (`\begin{aligned}`) is joined; its `\\` row breaks carry the layout.
+# Reports write their worked equations as `$$ … $$` (often on a line of their
+# own) and as inline `$ … $` (RKLB's nine-step DCF derivation, one per list
+# item). Arithmatex's `$$` block syntax only matches a math-only paragraph, and
+# its `$` inline syntax would swallow every "$58.60 … $70" in the prose, so each
+# span is rewritten to `\( … \)` (arithmatex `round`, rendered by
+# javascripts/math.js) before Markdown sees it: `\$`, `_` and `*` inside stay
+# math, not Markdown escapes and emphasis. Inline spans are recognised by
+# derivation.INLINE_MATH, the same rule the stage-1 check uses. A `$$` span on
+# a line of its own gets `\displaystyle`, which math.js also reads as "give it
+# its own row": minify-html collapses the newline that would otherwise say so.
+# A span split over lines (`\begin{aligned}`) is joined; its `\\` row breaks
+# carry the layout. Bare `%`, `$` and (outside `\begin`) `&` are escaped.
+from analysis.validate.derivation import INLINE_MATH  # noqa: E402
+
 _DISPLAY_MATH_RE = re.compile(
-    r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|(^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(.+?)\$\$([ \t]*$)?",
+    r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|(^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(.+?)\$\$([ \t]*$)?|"
+    + INLINE_MATH,
     re.S | re.M,
 )
 
 
+def _tex(body: str) -> str:
+    """One TeX string from a span: lines joined, bare `%` / `$` escaped."""
+    body = " ".join(line.strip() for line in body.strip().splitlines())
+    # A bare % starts a TeX comment that swallows the closing brace of
+    # "\text{(佔營收 36%)}", and a bare $ is an error in math mode; the model
+    # always means a percent sign and a dollar sign.
+    body = re.sub(r"(?<!\\)([%$])", r"\\\1", body)
+    # "$1,228.2": TeX spaces a bare comma as punctuation ("1, 228.2"); {,} not.
+    body = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "{,}", body)
+    # "\text{D&A}": a bare & is a column break, legal only in an environment.
+    return body if "\\begin{" in body else re.sub(r"(?<!\\)&", r"\\&", body)
+
+
 def display_math(content: str) -> str:
-    r"""Rewrite each `$$ … $$` outside code as `\( … \)`, adding
-    `\displaystyle` to one that has its line to itself."""
-    if "$$" not in content:
+    r"""Rewrite each `$$ … $$` and inline `$ … $` outside code as `\( … \)`,
+    adding `\displaystyle` to a `$$` span that has its line to itself."""
+    if "$" not in content:
         return content
 
     def one(m: "re.Match") -> str:
         if m.group(1):
             return m.group(1)
+        if m.group(5) is not None:
+            return f"\\({_tex(m.group(5))}\\)"
         lead, tail = m.group(2), m.group(4)
-        body = " ".join(line.strip() for line in m.group(3).strip().splitlines())
-        # A bare % starts a TeX comment that swallows the closing brace of
-        # "\text{(佔營收 36%)}", and a bare $ is an error in math mode; the
-        # model always means a percent sign and a dollar sign.
-        body = re.sub(r"(?<!\\)([%$])", r"\\\1", body)
         style = "\\displaystyle " if lead is not None and tail is not None else ""
-        return f"{lead or ''}\\({style}{body}\\){tail or ''}"
+        return f"{lead or ''}\\({style}{_tex(m.group(3))}\\){tail or ''}"
 
     return _DISPLAY_MATH_RE.sub(one, content)
+
+
+# ── Lists after a paragraph line ─────────────────────────────────────────────
+# Reports start lists straight under a label line ("**逐步演算**：" then
+# "1. **營收** = …"), with no blank line between. Python-Markdown then reads the
+# whole list as the label's paragraph, so the nine DCF steps ran together on
+# one line (3,700 lists in 1,300 reports). A blank line is inserted before a
+# top-level list item that follows a paragraph line. Front matter, fenced code,
+# tables, quotes, headings and lines already inside a list are left alone.
+_LIST_ITEM_RE = re.compile(r"(?:\d+\.|[-*+])[ \t]+\S")
+_NOT_PARAGRAPH_RE = re.compile(r"\s|(?:\d+\.|[-*+])[ \t]|[|>#<]|$")
+
+
+def separate_lists(content: str) -> str:
+    """Insert the blank line Markdown needs before a list that follows a
+    paragraph line."""
+    lines = content.split("\n")
+    out: "list[str]" = []
+    fence = None
+    front = bool(lines) and lines[0] == "---"
+    for i, line in enumerate(lines):
+        if front:
+            out.append(line)
+            front = not (i > 0 and line == "---")
+            continue
+        m = re.match(r"\s*(```|~~~)", line)
+        if m:
+            fence = None if fence == m.group(1) else (fence or m.group(1))
+        elif (fence is None and out and _LIST_ITEM_RE.match(line)
+              and not _NOT_PARAGRAPH_RE.match(out[-1])):
+            out.append("")
+        out.append(line)
+    return "\n".join(out)
 
 
 # ── Legacy chart embeds ──────────────────────────────────────────────────────
@@ -2721,6 +2769,7 @@ def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = "",
         content = strip_legacy_chart_embed(content)
         content = fix_static_chart_embed(content)
         content = display_math(content)
+        content = separate_lists(content)
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
             merged = f"{extra_meta}\n{yaml_body}" if yaml_body else extra_meta
