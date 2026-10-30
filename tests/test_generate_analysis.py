@@ -275,6 +275,18 @@ def test_a_rewrite_that_does_not_recheck_clean_is_not_marked_corrected():
     assert "-12.0%" in out and "應為" in out
 
 
+def test_a_broken_equation_chain_is_repaired_and_recorded(tmp_path, monkeypatch):
+    chain = ("\n$$\\text{MOS} = \\frac{\\$58.90 - \\$58.60}{\\$58.90} = "
+             "\\frac{+\\$0.72}{\\$58.90} = \\mathbf{+0.5\\%}$$\n")
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: S88 + chain)
+    path = pipeline.run_analysis("TSLA", "stock-eval", "gemini", "g", 100, tmp_path)
+    text = path.read_text(encoding="utf-8")
+    assert "derivation_fixed: 1" in text
+    assert "\\frac{+\\$0.30}{\\$58.90}" in text
+
+
 def test_other_types_are_not_rechecked(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {"hist": None})
     monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")

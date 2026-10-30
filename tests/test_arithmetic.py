@@ -212,3 +212,84 @@ def test_a_corrected_report_says_so_and_warns_on_a_rating_band_change():
 def test_rating_bands_follow_prompt_rule_20():
     assert [A.rating_band(m) for m in (-30, -12, 0, 12)] == ["賣出", "減碼", "持有", "買入"]
     assert A.rating_band(30).startswith("強烈買入")
+
+
+# ── §8.8 product line ────────────────────────────────────────────────────────
+
+RKLB = s88("加權合理價值 = $57.65 × 50% + $65.00 × 25% + $35.20 × 10% + $52.00 × 10% + $102.15 × 5%\n\n"
+           "= $28.825 + $16.250 + $3.250 + $5.200 + $5.108 = $58.90", stated="$58.90")
+
+
+def test_fix_products_rewrites_a_wrong_product_to_its_terms():
+    r = A.check(RKLB)
+    assert r["status"] == "ok"
+    out = A.fix_products(RKLB, r)
+    assert "$28.825 + $16.250 + $3.520 + $5.200 + $5.108 = $58.90" in out
+
+
+def test_fix_products_leaves_a_line_whose_total_it_would_contradict():
+    """The products summing to the line's own total but not to the terms means
+    the run is something else (or the total is wrong): leave it."""
+    text = RKLB.replace("= $58.90\n", "= $58.63\n")
+    assert A.fix_products(text, A.check(text)) == text
+
+
+def test_fix_products_waits_for_a_correct_total():
+    text = RKLB.replace("**$58.90**", "**$60.00**")
+    r = A.check(text)
+    assert r["status"] == "mismatch"
+    assert A.fix_products(text, r) == text
+
+
+def test_fix_products_needs_the_runs_own_total():
+    text = RKLB.replace(" = $58.90\n", "\n")
+    assert A.fix_products(text, A.check(text)) == text
+
+
+def test_fix_products_keeps_a_line_whose_rewritten_products_would_not_add_up():
+    """The run's own total ($10.80) is not the terms' sum ($10.40): rewriting
+    the products would leave "$5.20 + $5.20 = $10.80"."""
+    text = s88("加權合理價值 = $10.40 × 50% + $10.40 × 50%\n\n= $5.00 + $5.80 = $10.80", stated="$10.40")
+    r = A.check(text)
+    assert r["status"] == "ok"
+    assert A.fix_products(text, r) == text
+
+
+
+# ── correct(): figures printed to a different rounding ───────────────────────
+
+MRVL = """# MRVL 基本面深度分析報告
+
+> **現價** $233.78
+
+| **預期報酬（基準情境 12M）** | −30.0%（價格向加權合理價值 $163.78 收斂） |
+
+### 8.8 估值三角驗證
+
+| 估值方法 | 價值 | 上行空間 | 權重 |
+|---|---|---|---|
+| DCF | $149.63 | −36.0% | 45% |
+| **加權合理價值** | **$163.78** | **−30.0%** | 100% |
+
+`加權合理價值 = $149.63×45% + $161.24×20% + $158.40×15% + $138.50×10% + $341.44×10%`
+
+- **隱含上行空間** = ($163.78 − $233.78) ÷ $233.78 = −$70.00 ÷ $233.78 = **−30.0%**
+
+### 8.9 局限
+"""
+
+
+def test_correct_rewrites_an_upside_printed_one_unit_off_and_its_difference():
+    """MRVL 2026-10-27: upside (−29.94%) printed −30.0%, beside a −$70.00
+    difference; both survived the exact-match rewrite."""
+    r = A.check(MRVL, price=233.78)
+    out = A.correct(MRVL, r)
+    assert "−30.0%" not in out and out.count("−26.7%") == 3
+    assert "−$62.44 ÷ $233.78" in out
+
+
+def test_correct_leaves_a_methods_own_upside_under_a_table_header():
+    """The DCF row's −36.0% is near no old figure, and a whole-percent weight
+    is never loosened; only the 加權合理價值 row changes."""
+    out = A.correct(MRVL, A.check(MRVL, price=233.78))
+    assert "| DCF | $149.63 | −36.0% | 45% |" in out

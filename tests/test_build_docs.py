@@ -654,6 +654,132 @@ def test_strip_legacy_chart_embed_leaves_clean_reports_alone():
     assert bd.strip_legacy_chart_embed(clean) == clean
 
 
+# ── display math ────────────────────────────────────────────────────────────
+
+def test_display_math_marks_an_own_line_equation_and_escapes_tex_specials():
+    text = ("**逐步演算**：\n$$\\text{MOS} = \\frac{\\$58.90 - \\$58.60}{\\$58.90} = 0.5%$$\n"
+            "- $$x_1 \\times 2$$\n")
+    out = bd.display_math(text)
+    assert "$$" not in out
+    assert "\\(\\displaystyle \\text{MOS} = \\frac{\\$58.90 - \\$58.60}{\\$58.90} = 0.5\\%\\)" in out
+    assert "- \\(\\displaystyle x_1 \\times 2\\)" in out     # a list item of its own
+
+
+def test_display_math_keeps_a_mid_sentence_span_inline_and_joins_lines():
+    out = bd.display_math("價值 $$a + b$$ 為合計。\n\n$$\\begin{aligned}\na &= 1 \\\\\nb &= 2\n\\end{aligned}$$\n")
+    assert "價值 \\(a + b\\) 為合計。" in out
+    assert "\\(\\displaystyle \\begin{aligned} a &= 1 \\\\ b &= 2 \\end{aligned}\\)" in out
+
+
+# RKLB 2026-10-28 §8.3: the nine-step DCF derivation, written as inline $ … $.
+_RKLB_STEPS = (
+    "1. **營收** = $\\$890.0\\text{M} \\times (1 + 38.0\\%) = \\mathbf{\\$1,228.2M}$\n"
+    "3. **稅** = 虧損年度以累積 NOL 抵減，計為 $\\mathbf{\\$0.0M}$\n"
+    "9. **折現因子** = $1 \\div (1 + 0.1235)^1 = \\mathbf{0.890}$ $\\rightarrow$ "
+    "**PV** = $-\\$213.4\\text{M} \\times 0.890 = \\mathbf{-\\$189.9M}$\n"
+)
+
+
+def test_display_math_converts_inline_dollar_math():
+    out = bd.display_math(_RKLB_STEPS)
+    assert "1. **營收** = \\(\\$890.0\\text{M} \\times (1 + 38.0\\%) = \\mathbf{\\$1{,}228.2M}\\)" in out
+    assert "計為 \\(\\mathbf{\\$0.0M}\\)" in out
+    assert ("= \\(1 \\div (1 + 0.1235)^1 = \\mathbf{0.890}\\) \\(\\rightarrow\\) "
+            "**PV** = \\(-\\$213.4\\text{M} \\times 0.890 = \\mathbf{-\\$189.9M}\\)") in out
+    # Every math dollar was consumed; only escaped ones (\\$, inside TeX) remain.
+    assert "$" not in out.replace("\\$", "")
+
+
+def test_display_math_braces_thousands_separators():
+    out = bd.display_math("= $\\$1,228.2\\text{M} \\times 2 = \\mathbf{\\$2,456.4M}$, $f(1,2) \\times 3$\n")
+    assert "\\$1{,}228.2" in out and "\\$2{,}456.4M" in out
+    assert "f(1,2)" in out                                   # an argument list keeps its comma
+
+
+def test_display_math_leaves_a_double_backtick_code_span_alone():
+    text = "例：`` $$\\frac{1}{2}$$ `` 與 ``a`b``\n"
+    assert bd.display_math(text) == text
+
+
+def test_display_math_escapes_a_percent_after_a_row_break():
+    """In "a \\\\% b" the backslashes are a row break; the % is still bare."""
+    out = bd.display_math("$$\\begin{aligned} a &= 1 \\\\% b \\end{aligned}$$\n")
+    assert "\\\\\\%" in out
+
+
+def test_display_math_escapes_an_ampersand_in_text_even_in_an_environment():
+    out = bd.display_math("$$\\begin{aligned} \\text{D&A} &= 1 \\end{aligned}$$\n")
+    assert "\\text{D\\&A} &= 1" in out
+
+
+def test_display_math_escapes_an_ampersand_outside_an_environment():
+    out = bd.display_math("EBITDA = $\\$12.75\\text{B} + \\text{D&A } \\$0.76\\text{B}$\n")
+    assert "\\text{D\\&A }" in out
+
+
+@pytest.mark.parametrize("prose", [
+    "現價 $58.60，目標價 $70.00，上行 19%。",
+    "區間 $45 – $60 之間",
+    "成本 $1.2B 與 $3.4B (\\text 未閉合",       # backslash, but a space before the closing $
+    "價格 $5 \\times 2 $6",                       # closing $ followed by a digit
+])
+def test_display_math_leaves_prose_prices_alone(prose):
+    assert bd.display_math(prose) == prose
+
+
+def test_display_math_renders_markdown_to_arithmatex_spans():
+    """End to end through Python-Markdown with the site's arithmatex config:
+    each step becomes one span whose TeX survives Markdown's escapes."""
+    markdown = pytest.importorskip("markdown")
+    html = markdown.markdown(bd.display_math(_RKLB_STEPS), extensions=["pymdownx.arithmatex"],
+                             extension_configs={"pymdownx.arithmatex": {
+                                 "generic": True, "inline_syntax": ["round"], "block_syntax": ["square"]}})
+    assert html.count('class="arithmatex"') == 5
+    assert "\\(\\$890.0\\text{M} \\times (1 + 38.0\\%) = \\mathbf{\\$1{,}228.2M}\\)" in html
+    assert "<li>" in html                                    # the numbered list survives
+
+
+def test_display_math_leaves_code_and_prices_alone():
+    text = "```\n$$1 + 1$$\n```\n現價 $58.60，目標 $70。`$$x$$`\n"
+    assert bd.display_math(text) == text
+
+
+# ── lists after a paragraph line ───────────────────────────────────────────
+
+def test_separate_lists_breaks_a_list_off_its_label_line():
+    text = "**逐步演算**：\n1. 營收\n2. EBIT\n\n說明：\n- a\n- b\n"
+    assert bd.separate_lists(text) == "**逐步演算**：\n\n1. 營收\n2. EBIT\n\n說明：\n\n- a\n- b\n"
+
+
+@pytest.mark.parametrize("text", [
+    "---\ntitle: x\nlevels:\n- 1\n---\n",            # front matter
+    "```\nlabel\n- not a list\n```\n",               # fenced code
+    "- a\n- b\n  continued\n- c\n",                  # already a list
+    "| a |\n- b\n",                                     # after a table row
+    "> quote\n- b\n",
+    "# 標題\n- b\n",
+    "價格 -5% 與\n-5% 下跌\n",                          # "-5%" is not an item
+])
+def test_separate_lists_leaves_other_blocks_alone(text):
+    assert bd.separate_lists(text) == text
+
+
+def test_separate_lists_tracks_fence_length():
+    """A ``` line inside a ```` fence is content: no blank line goes into the
+    code, and the list after the real close is still separated."""
+    text = "````\n```\nlabel\n- in code\n````\nlabel\n- item\n"
+    assert bd.separate_lists(text) == "````\n```\nlabel\n- in code\n````\nlabel\n\n- item\n"
+
+
+def test_rklb_nine_steps_render_as_a_list():
+    markdown = pytest.importorskip("markdown")
+    html = markdown.markdown(bd.separate_lists(bd.display_math(_RKLB_STEPS.replace("1. ", "**逐步演算**：\n1. ", 1))),
+                             extensions=["pymdownx.arithmatex"],
+                             extension_configs={"pymdownx.arithmatex": {
+                                 "generic": True, "inline_syntax": ["round"], "block_syntax": ["square"]}})
+    assert html.count("<li>") == 3 and "<ol" in html
+
+
 def test_copy_file_swaps_a_legacy_embed_for_the_widget(monkeypatch, tmp_path):
     _store_series(monkeypatch, tmp_path, "amd", 5)
     monkeypatch.setattr(bd, "ROOT", tmp_path)  # copy_file logs paths relative to ROOT

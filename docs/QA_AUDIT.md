@@ -18,7 +18,7 @@ change there. The workflow then regenerates `qa/README.md` and commits.
 ## Stage 1: rule-based checks
 
 Detection logic lives in `scripts/analysis/validate/` (`__init__.py`,
-`arithmetic.py`, `technical.py`, `market_data.py`). This is the primary gate.
+`arithmetic.py`, `derivation.py`, `technical.py`, `market_data.py`). This is the primary gate.
 
 Every issue code and its one-line description is in `ISSUE_TYPES`
 (`validate/__init__.py`) and is printed beside its count. Type-specific checks are
@@ -34,6 +34,7 @@ there, not inline in `parse_file`.
 | Fundamental | `MISSING_SECTIONS` | Any of `## 1.`–`## 11.` is absent |
 | Fundamental | `ARITHMETIC` | The §8.8 total differs from Σ of its terms by more than 0.5%, **or** the §1.0 MOS / DCF premium differs by more than 1pp from what the report's own fair value, DCF value and price give (`arithmetic.valuation_mismatches`) |
 | Fundamental | `PRICE_MISMATCH` | The quoted 現價 differs from the front-matter `price` |
+| Any | `DERIVATION` | A step of a `$$ … $$` or inline `$ … $` equation chain does not hold: `= $59.323 ≈ $58.90` where the terms sum to $58.903, or `($58.90 − $58.60) = $0.72` (`derivation.check`). The tolerance is each printed figure's rounding, propagated, plus 0.1%. Labels (`52\text{週}`), variables (`\text{EV}`), arrows and mixed units are skipped, as is the first link of a span that continues an expression begun before it on the line. A deduction printed negative (`= −$147.4M`) passes. |
 | Technical | `NAN_VALUE` | A `$nan` / `nan%` leaked from an empty data bar |
 | Technical | `PRICE_MISMATCH` | The headline price differs from the front-matter `price` by more than 0.5% |
 | Technical | `LEVEL_MISMATCH` | A Ch.4 R1–S3 differs from the front-matter `levels` entry with the same label |

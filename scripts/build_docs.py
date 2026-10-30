@@ -2636,6 +2636,104 @@ def fix_static_chart_embed(content: str) -> str:
     )
 
 
+# ── Display math ─────────────────────────────────────────────────────────────
+# Reports write their worked equations as `$$ … $$` (often on a line of their
+# own) and as inline `$ … $` (RKLB's nine-step DCF derivation, one per list
+# item). Arithmatex's `$$` block syntax only matches a math-only paragraph, and
+# its `$` inline syntax would swallow every "$58.60 … $70" in the prose, so each
+# span is rewritten to `\( … \)` (arithmatex `round`, rendered by
+# javascripts/math.js) before Markdown sees it: `\$`, `_` and `*` inside stay
+# math, not Markdown escapes and emphasis. Inline spans are recognised by
+# derivation.INLINE_MATH, the same rule the stage-1 check uses. A `$$` span on
+# a line of its own gets `\displaystyle`, which math.js also reads as "give it
+# its own row": minify-html collapses the newline that would otherwise say so.
+# A span split over lines (`\begin{aligned}`) is joined; its `\\` row breaks
+# carry the layout. Bare `%`, `$` and (outside `\begin`) `&` are escaped.
+from analysis.validate.derivation import CODE, INLINE_MATH  # noqa: E402
+
+_DISPLAY_MATH_RE = re.compile(
+    CODE + r"|(?P<lead>^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(?P<display>.+?)\$\$(?P<tail>[ \t]*$)?|"
+    + INLINE_MATH,
+    re.S | re.M,
+)
+# An unescaped special: preceded by an even number of backslashes, so the
+# "\\" row break in "a \\% b" does not count as escaping the %.
+_UNESCAPED = r"(?<!\\)((?:\\\\)*)"
+
+
+def _tex(body: str) -> str:
+    """One TeX string from a span: lines joined, bare `%` / `$` / `&` escaped."""
+    body = " ".join(line.strip() for line in body.strip().splitlines())
+    # A bare % starts a TeX comment that swallows the closing brace of
+    # "\text{(佔營收 36%)}", and a bare $ is an error in math mode; the model
+    # always means a percent sign and a dollar sign.
+    body = re.sub(_UNESCAPED + r"([%$])", r"\1\\\2", body)
+    # "$1,228.2": TeX spaces a bare comma as punctuation ("1, 228.2"); {,} not.
+    body = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "{,}", body)
+    # "\text{D&A}": a bare & is a column break. Inside \text it is always
+    # meant literally; elsewhere it is kept only in an environment (aligned).
+    body = re.sub(r"\\text\{[^{}]*\}",
+                  lambda m: re.sub(_UNESCAPED + "&", r"\1\\&", m.group(0)), body)
+    return body if "\\begin{" in body else re.sub(_UNESCAPED + "&", r"\1\\&", body)
+
+
+def display_math(content: str) -> str:
+    r"""Rewrite each `$$ … $$` and inline `$ … $` outside code as `\( … \)`,
+    adding `\displaystyle` to a `$$` span that has its line to itself."""
+    if "$" not in content:
+        return content
+
+    def one(m: "re.Match") -> str:
+        if m.group("code"):
+            return m.group("code")
+        if m.group("inline") is not None:
+            return f"\\({_tex(m.group('inline'))}\\)"
+        lead, tail = m.group("lead"), m.group("tail")
+        style = "\\displaystyle " if lead is not None and tail is not None else ""
+        return f"{lead or ''}\\({style}{_tex(m.group('display'))}\\){tail or ''}"
+
+    return _DISPLAY_MATH_RE.sub(one, content)
+
+
+# ── Lists after a paragraph line ─────────────────────────────────────────────
+# Reports start lists straight under a label line ("**逐步演算**：" then
+# "1. **營收** = …"), with no blank line between. Python-Markdown then reads the
+# whole list as the label's paragraph, so the nine DCF steps ran together on
+# one line (3,700 lists in 1,300 reports). A blank line is inserted before a
+# top-level list item that follows a paragraph line. Front matter, fenced code,
+# tables, quotes, headings and lines already inside a list are left alone.
+_LIST_ITEM_RE = re.compile(r"(?:\d+\.|[-*+])[ \t]+\S")
+_NOT_PARAGRAPH_RE = re.compile(r"\s|(?:\d+\.|[-*+])[ \t]|[|>#<]|$")
+
+
+def separate_lists(content: str) -> str:
+    """Insert the blank line Markdown needs before a list that follows a
+    paragraph line."""
+    lines = content.split("\n")
+    out: "list[str]" = []
+    fence = None
+    front = bool(lines) and lines[0] == "---"
+    for i, line in enumerate(lines):
+        if front:
+            out.append(line)
+            front = not (i > 0 and line == "---")
+            continue
+        m = re.match(r"\s*(`{3,}|~{3,})", line)
+        if m:
+            # Only a run of the same character, at least as long, closes it:
+            # a ``` line inside a ```` fence is content.
+            run = m.group(1)
+            if fence is None:
+                fence = run
+            elif run[0] == fence[0] and len(run) >= len(fence) and not line.strip()[len(run):].strip():
+                fence = None
+        elif (fence is None and out and _LIST_ITEM_RE.match(line)
+              and not _NOT_PARAGRAPH_RE.match(out[-1])):
+            out.append("")
+        out.append(line)
+    return "\n".join(out)
+
+
 # ── Legacy chart embeds ──────────────────────────────────────────────────────
 # Until 2026-08 every technical report baked its own chart into the committed
 # markdown: a collapsible static PNG plus a full Plotly HTML document (~46 KB of
@@ -2682,6 +2780,8 @@ def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = "",
             content = prerender_mermaid(content)
         content = strip_legacy_chart_embed(content)
         content = fix_static_chart_embed(content)
+        content = display_math(content)
+        content = separate_lists(content)
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
             merged = f"{extra_meta}\n{yaml_body}" if yaml_body else extra_meta

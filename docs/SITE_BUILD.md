@@ -96,6 +96,17 @@ which keeps the site's numbers testable in pytest. See
   directory URL (`../`, `../<stem>/`); MkDocs rewrites Markdown links, never raw
   ones. `copy_file(..., meta_block=...)` swaps it in. Without a meta block the
   table is still emitted, and tests pin both.
+- **Equations.** Reports write worked maths as `$$ … $$` and inline `$ … $`
+  LaTeX (about 6,500 spans in 330 reports). Before 2026-10-30 nothing rendered
+  it, so pages showed raw `\frac{…}`. `copy_file` runs `display_math()`, which
+  rewrites each span to `\( … \)` for `pymdownx.arithmatex` (generic, `round`
+  only). Inline spans are matched by `derivation.INLINE_MATH`, the same rule
+  stage-1 QA uses. Arithmatex's own `$` syntax stays off, because report prose
+  is full of prices. A `$$` span on a line of its own gets `\displaystyle`, and
+  `javascripts/math.js` gives it its own row: minify-html drops the newline that
+  would otherwise say so. Bare `%` (a TeX comment), `$` and, outside `\begin`,
+  `&` are escaped. `math.js` fetches KaTeX (pinned on jsDelivr) only on a page
+  with an `.arithmatex` element. `tests/js/math_harness.mjs` covers it.
 - **Inner pages** get a linked breadcrumb trail from `overrides/main.html`
   (`.crumbs`; Material's own `navigation.path` is Insiders-only) and a
   reading-progress bar from `hub.js`.

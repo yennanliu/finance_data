@@ -175,6 +175,7 @@ def _money_re(v: float) -> "re.Pattern":
     return re.compile(r"(\\?\$\s?)(?:" + alts + r")(?!\d|[.,]\d)")
 
 
+_MONEY_TOKEN = re.compile(r"(\\?\$\s?)" + _NUM + r"(?![\d.,]\d)")
 _PCT_TOKEN = re.compile(r"([+\-−]?)(\d+(?:\.\d+)?)\s*(\\?%)")   # "\%" in LaTeX
 _MOS_LINE = re.compile(r"安全邊際|MOS")
 _UPSIDE_LINE = re.compile(r"上行空間|上漲空間")
@@ -189,9 +190,11 @@ def correct(text: str, result: dict) -> str:
     The stated total is replaced wherever it is printed (it is repeated in the
     TOC, §1.0 and the ASCII boxes). MOS and upside are replaced only near a
     label naming them (or, for upside, beside the fair value), and only where
-    the figure equals the old value at the precision printed, so an unrelated
-    percentage on the same line survives. Intermediate steps of a derivation
-    (a "$3.26" difference) are not chased; the §8.8 block shows the sums.
+    the figure is within one unit in its last printed place of the old value
+    (a whole percent must round to it),
+    so an unrelated percentage on the same line survives. On those lines the
+    "fair value − price" difference a derivation prints ("−$70.00 ÷ $233.78")
+    is replaced too, unless the correction flips its sign.
     """
     if (result["status"] != "mismatch" or abs(result["weights_pct"] - 100) > 0.5
             or result["mos"] is None):
@@ -208,18 +211,38 @@ def correct(text: str, result: dict) -> str:
     old = {"mos": (stated - price) / stated * 100, "upside": (stated - price) / price * 100}
     new = {"mos": (total - price) / total * 100, "upside": (total - price) / price * 100}
 
-    def swap(line: str, keys: list) -> str:
+    def swap(line: str, keys: list, loose: bool) -> str:
         def one(m):
             sign, digits = m.group(1), m.group(2)
             value = -float(digits) if sign in ("-", "−") else float(digits)
             places = len(digits.partition(".")[2])
             for k in keys:
-                if round(old[k], places) == value:
+                # One unit in the last place: MRVL 2026-10-27 printed upside
+                # −30.0% for its −29.94%, and the exact match left it behind.
+                # Only on a line that itself names the figure or shows the
+                # fair value: under a table header, a method's own upside near
+                # the old total (AVAV's DCF row, +18.6%) is not the total's.
+                # A whole percent stays exact, or every "25%" weight near a
+                # 24.6% MOS would be rewritten.
+                slack = 10 ** -places + 1e-9 if places and loose else 0.5 * 10 ** -places + 1e-9
+                if abs(old[k] - value) <= slack:
                     v = new[k]
                     prefix = ("−" if sign == "−" else "-") if v < 0 else ("+" if sign else "")
                     return f"{prefix}{abs(v):.{places}f}{m.group(3)}"
             return m.group(0)
-        return _PCT_TOKEN.sub(one, line)
+        line = _PCT_TOKEN.sub(one, line)
+        return _MONEY_TOKEN.sub(gap, line) if loose else line
+
+    # The difference a derivation prints on the way ("= −$70.00 ÷ $233.78").
+    gap_old, gap_new = stated - price, total - price
+
+    def gap(m):
+        places = len(m.group(2).partition(".")[2])
+        if (gap_old * gap_new <= 0 or places == 0
+                or abs(_num(m.group(2)) - abs(gap_old)) > 10 ** -places + 1e-9):
+            return m.group(0)
+        body = f"{abs(gap_new):,.{places}f}" if "," in m.group(2) else f"{abs(gap_new):.{places}f}"
+        return m.group(1) + body
 
     # A figure's label can sit up to two lines above it (a derivation's
     # "= ... = −9.7%" line), and an upside column beside the fair value
@@ -231,8 +254,67 @@ def correct(text: str, result: dict) -> str:
         keys = (["mos"] if _MOS_LINE.search(context) else []) + \
                (["upside"] if _UPSIDE_LINE.search(context) or fair_value.search(line) else [])
         if keys:
-            lines[i] = swap(line, keys)
+            loose = bool(_MOS_LINE.search(line) or _UPSIDE_LINE.search(line) or fair_value.search(line))
+            lines[i] = swap(line, keys, loose)
     return "\n".join(lines)
+
+
+_AMOUNT = r"(?:NT)?(?:\\?\$\s?)?" + _NUM
+_RUN_TOTAL = re.compile(r"[`*\s]*=\s*[`*\s]*(?:\\mathbf\{)?\s*(?:NT)?\\?\$?\s?" + _NUM)
+
+
+def _half_ulp(digits: str) -> float:
+    return 0.5 * 10 ** -len(digits.partition(".")[2])
+
+
+def fix_products(text: str, result: dict) -> str:
+    """Rewrite §8.8's product line (``= $a + $b + … = $S``) so each product is
+    its term's ``value × weight``.
+
+    After :func:`correct` rewrites the total, a product the model got wrong is
+    left adding up to the old total: RKLB 2026-10-11 printed
+    ``30.44 + 12.50 + 11.78 + 26.64 = $78.08`` (the products sum to $81.36).
+    Only when the printed total already equals the sum of the terms (``ok``,
+    or after :func:`correct`), so the rewritten products add up to it; and
+    only a run of exactly ``len(terms)`` amounts joined by ``+``, each within
+    25% of its own product, followed by its own ``= $S`` that the rewritten
+    products, as printed, add up to. Each product keeps its printed precision.
+    """
+    terms, n = result["terms"], len(result["terms"])
+    s88 = section(text, "8.8")
+    if result["status"] not in ("ok", "corrected") or n < 2 or not s88:
+        return text
+    run = re.compile(r"(?<![\d.×*])" + r"\s*\+\s*".join([_AMOUNT] * n) + r"(?![\d.]|\s*(?:×|\\times|\*))")
+
+    def one(m: "re.Match") -> str:
+        # The same run in the same order: every amount near its own product.
+        if any(abs(_num(m.group(i + 1)) - v * w) > 0.25 * abs(v * w)
+               for i, (v, w) in enumerate(terms)):
+            return m.group(0)
+        # The line's own "= $S" must follow, and the rewritten products, as
+        # printed, must add up to it; otherwise the line is left as written.
+        after = _RUN_TOTAL.match(m.string, m.end())
+        if not after:
+            return m.group(0)
+        out, last, printed, slack = [], m.start(), 0.0, _half_ulp(after.group(1))
+        for i, (value, weight) in enumerate(terms):
+            start, end = m.span(i + 1)
+            digits = m.group(i + 1)
+            places = len(digits.partition(".")[2])
+            new = f"{value * weight:,.{places}f}" if "," in digits else f"{value * weight:.{places}f}"
+            if abs(_num(digits) - value * weight) <= 0.5 * 10 ** -places + 1e-6:
+                new = digits   # right to the precision printed
+            printed += _num(new)
+            slack += _half_ulp(digits)
+            out.append(m.string[last:start] + new)
+            last = end
+        if abs(printed - _num(after.group(1))) > slack + 1e-6:
+            return m.group(0)
+        out.append(m.string[last:m.end()])
+        return "".join(out)
+
+    fixed = run.sub(one, s88)
+    return text.replace(s88, fixed, 1) if fixed != s88 else text
 
 
 def missing_chapters(text: str, chapters=FUNDAMENTAL_CHAPTERS) -> "list[int]":
@@ -306,4 +388,4 @@ def annotate(text: str, result: dict) -> str:
 
 __all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
            "weighted_terms", "report_price", "check", "valuation_mismatches",
-           "missing_chapters", "annotate", "correct", "rating_band", "RATING_BANDS"]
+           "missing_chapters", "annotate", "correct", "fix_products", "rating_band", "RATING_BANDS"]
