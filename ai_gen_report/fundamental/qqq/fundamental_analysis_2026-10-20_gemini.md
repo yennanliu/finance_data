@@ -7,9 +7,16 @@ provider: gemini
 model: gemini-3.8-flash
 language: zh-TW
 generated_by: Google Gemini API (scripts/generate_analysis.py)
+arithmetic_check: mismatch
+weighted_fair_value_stated: 765.0
+weighted_fair_value_recomputed: 602.15
+mos_recomputed_pct: -19.3
 ---
 
 # QQQ 基本面深度分析報告
+
+**⚠️ 程式複算更正**：8.8 節加權合理價值應為 **$602.15**（報告寫 $765.00）；以價格 $718.36 計，MOS 為 **-19.3%**、上行空間 **-16.2%**（若用報告所寫的 $765.00 則 MOS 為 +6.1%）。報告其他段落引用的舊數值請以此為準。
+
 > **報告日期**：2026-10-20 ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance, Finviz, StockAnalysis, Roic.ai, Invesco ｜ **分析師**：CFA 級機構研究
 
 ---
@@ -844,6 +851,14 @@ $$\begin{aligned}
 ║  建議獲利減碼區間：> $780.00                                     ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
+
+> 🔎 **程式複算（Python，依本節各項自動重算）**
+>
+> 加權合理價值 = $752.12 × 45% + $762.00 × 25% + $732.00 × 10% = **$602.15**（權重合計 80%）
+>
+> 以價格 $718.36 計：MOS = **-19.3%**，上行空間 = **-16.2%**
+>
+> ⚠️ 本節寫的是 $765.00，與各項加總相差 +27.04%；以上方複算值為準。
 
 ### 8.9 DCF 模型的局限與失效條件
 

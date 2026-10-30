@@ -7,9 +7,16 @@ provider: gemini
 model: gemini-3.8-flash
 language: zh-TW
 generated_by: Google Gemini API (scripts/generate_analysis.py)
+arithmetic_check: mismatch
+weighted_fair_value_stated: 92.1
+weighted_fair_value_recomputed: 92.86
+mos_recomputed_pct: 13.8
 ---
 
 # ROBO 基本面深度分析報告
+
+**⚠️ 程式複算更正**：8.8 節加權合理價值應為 **$92.86**（報告寫 $92.10）；以價格 $80.08 計，MOS 為 **+13.8%**、上行空間 **+16.0%**（若用報告所寫的 $92.10 則 MOS 為 +13.1%）。報告其他段落引用的舊數值請以此為準。
+
 > **報告日期**：2026-10-09 ｜ **語言**：繁體中文 ｜ **數據來源**：Yahoo Finance, Finviz, StockAnalysis, Roic.ai ｜ **分析師**：CFA 級機構研究
 
 ---
@@ -837,6 +844,14 @@ graph LR
 ║  獲利調節減碼區間：> $105.00                                     ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
+
+> 🔎 **程式複算（Python，依本節各項自動重算）**
+>
+> 加權合理價值 = $94.77 × 40% + $94.50 × 25% + $89.20 × 15% + $91.50 × 10% + $88.00 × 10% = **$92.86**（權重合計 100%）
+>
+> 以價格 $80.08 計：MOS = **+13.8%**，上行空間 = **+16.0%**
+>
+> ⚠️ 本節寫的是 $92.10，與各項加總相差 -0.82%；以上方複算值為準。
 
 ### 8.9 DCF 模型的局限與失效條件
 

@@ -97,6 +97,15 @@ appends a 「程式複算」 block.
   rewrite that term) or when the weights don't sum to 100%. Those keep the
   「應為」 notice. Other derivation steps are left to `derivation.fix()`
   (below).
+- **Older reports.** `scripts/recheck_fundamental_reports.py` gives a report
+  written before this recheck existed what the pipeline would give it today:
+  `recheck_valuation` (correct, product line, annotation, front matter) for one
+  with no recheck or only a 「應為」 notice, then `derivation.fix` for all. It
+  rewrites a file only when the body changes and is idempotent. A report whose
+  §8.8 already adds up gets no recap block. Run on 2026-10-30, it corrected 300
+  reports and flagged 36 more it could not correct (stage-1 `ARITHMETIC` went
+  from 376 to 86). 31 corrections move MOS into another rule-20 band; their
+  notice says so, and their rating text is left as the model wrote it.
 - **Backfill 2026-10-30.** The 35 reports already marked `corrected` that still
   carried a stale MOS, upside or difference were re-run through `correct()`.
   Only decimal-percent and dollar changes were kept; whole percents and the
