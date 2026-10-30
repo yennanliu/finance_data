@@ -2649,26 +2649,32 @@ def fix_static_chart_embed(content: str) -> str:
 # its own row": minify-html collapses the newline that would otherwise say so.
 # A span split over lines (`\begin{aligned}`) is joined; its `\\` row breaks
 # carry the layout. Bare `%`, `$` and (outside `\begin`) `&` are escaped.
-from analysis.validate.derivation import INLINE_MATH  # noqa: E402
+from analysis.validate.derivation import CODE, INLINE_MATH  # noqa: E402
 
 _DISPLAY_MATH_RE = re.compile(
-    r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|(^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(.+?)\$\$([ \t]*$)?|"
+    CODE + r"|(?P<lead>^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(?P<display>.+?)\$\$(?P<tail>[ \t]*$)?|"
     + INLINE_MATH,
     re.S | re.M,
 )
+# An unescaped special: preceded by an even number of backslashes, so the
+# "\\" row break in "a \\% b" does not count as escaping the %.
+_UNESCAPED = r"(?<!\\)((?:\\\\)*)"
 
 
 def _tex(body: str) -> str:
-    """One TeX string from a span: lines joined, bare `%` / `$` escaped."""
+    """One TeX string from a span: lines joined, bare `%` / `$` / `&` escaped."""
     body = " ".join(line.strip() for line in body.strip().splitlines())
     # A bare % starts a TeX comment that swallows the closing brace of
     # "\text{(佔營收 36%)}", and a bare $ is an error in math mode; the model
     # always means a percent sign and a dollar sign.
-    body = re.sub(r"(?<!\\)([%$])", r"\\\1", body)
+    body = re.sub(_UNESCAPED + r"([%$])", r"\1\\\2", body)
     # "$1,228.2": TeX spaces a bare comma as punctuation ("1, 228.2"); {,} not.
     body = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "{,}", body)
-    # "\text{D&A}": a bare & is a column break, legal only in an environment.
-    return body if "\\begin{" in body else re.sub(r"(?<!\\)&", r"\\&", body)
+    # "\text{D&A}": a bare & is a column break. Inside \text it is always
+    # meant literally; elsewhere it is kept only in an environment (aligned).
+    body = re.sub(r"\\text\{[^{}]*\}",
+                  lambda m: re.sub(_UNESCAPED + "&", r"\1\\&", m.group(0)), body)
+    return body if "\\begin{" in body else re.sub(_UNESCAPED + "&", r"\1\\&", body)
 
 
 def display_math(content: str) -> str:
@@ -2678,13 +2684,13 @@ def display_math(content: str) -> str:
         return content
 
     def one(m: "re.Match") -> str:
-        if m.group(1):
-            return m.group(1)
-        if m.group(5) is not None:
-            return f"\\({_tex(m.group(5))}\\)"
-        lead, tail = m.group(2), m.group(4)
+        if m.group("code"):
+            return m.group("code")
+        if m.group("inline") is not None:
+            return f"\\({_tex(m.group('inline'))}\\)"
+        lead, tail = m.group("lead"), m.group("tail")
         style = "\\displaystyle " if lead is not None and tail is not None else ""
-        return f"{lead or ''}\\({style}{_tex(m.group(3))}\\){tail or ''}"
+        return f"{lead or ''}\\({style}{_tex(m.group('display'))}\\){tail or ''}"
 
     return _DISPLAY_MATH_RE.sub(one, content)
 
@@ -2712,9 +2718,15 @@ def separate_lists(content: str) -> str:
             out.append(line)
             front = not (i > 0 and line == "---")
             continue
-        m = re.match(r"\s*(```|~~~)", line)
+        m = re.match(r"\s*(`{3,}|~{3,})", line)
         if m:
-            fence = None if fence == m.group(1) else (fence or m.group(1))
+            # Only a run of the same character, at least as long, closes it:
+            # a ``` line inside a ```` fence is content.
+            run = m.group(1)
+            if fence is None:
+                fence = run
+            elif run[0] == fence[0] and len(run) >= len(fence) and not line.strip()[len(run):].strip():
+                fence = None
         elif (fence is None and out and _LIST_ITEM_RE.match(line)
               and not _NOT_PARAGRAPH_RE.match(out[-1])):
             out.append("")

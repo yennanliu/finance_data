@@ -696,6 +696,22 @@ def test_display_math_braces_thousands_separators():
     assert "f(1,2)" in out                                   # an argument list keeps its comma
 
 
+def test_display_math_leaves_a_double_backtick_code_span_alone():
+    text = "例：`` $$\\frac{1}{2}$$ `` 與 ``a`b``\n"
+    assert bd.display_math(text) == text
+
+
+def test_display_math_escapes_a_percent_after_a_row_break():
+    """In "a \\\\% b" the backslashes are a row break; the % is still bare."""
+    out = bd.display_math("$$\\begin{aligned} a &= 1 \\\\% b \\end{aligned}$$\n")
+    assert "\\\\\\%" in out
+
+
+def test_display_math_escapes_an_ampersand_in_text_even_in_an_environment():
+    out = bd.display_math("$$\\begin{aligned} \\text{D&A} &= 1 \\end{aligned}$$\n")
+    assert "\\text{D\\&A} &= 1" in out
+
+
 def test_display_math_escapes_an_ampersand_outside_an_environment():
     out = bd.display_math("EBITDA = $\\$12.75\\text{B} + \\text{D&A } \\$0.76\\text{B}$\n")
     assert "\\text{D\\&A }" in out
@@ -746,6 +762,13 @@ def test_separate_lists_breaks_a_list_off_its_label_line():
 ])
 def test_separate_lists_leaves_other_blocks_alone(text):
     assert bd.separate_lists(text) == text
+
+
+def test_separate_lists_tracks_fence_length():
+    """A ``` line inside a ```` fence is content: no blank line goes into the
+    code, and the list after the real close is still separated."""
+    text = "````\n```\nlabel\n- in code\n````\nlabel\n- item\n"
+    assert bd.separate_lists(text) == "````\n```\nlabel\n- in code\n````\nlabel\n\n- item\n"
 
 
 def test_rklb_nine_steps_render_as_a_list():

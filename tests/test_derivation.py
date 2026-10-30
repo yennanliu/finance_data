@@ -114,3 +114,25 @@ def test_percentages_of_any_width_evaluate(segment, value):
     """"12.0%" once became "1(2.0/100)": every rate of 10% or more was
     silently unevaluable and its step never checked."""
     assert D.evaluate(segment) == pytest.approx(value)
+
+
+def test_fix_does_not_use_a_continued_spans_first_figure_as_the_left_side():
+    """"$a ÷$ … $b = c = d$": b alone is not the left side, so c is not
+    re-solved to equal b."""
+    text = r"利息 $\$0.535 \div$ 負債 $\$12.50 = \$9.99 = \mathbf{\$12.50}$"
+    assert D.fix(text) == (text, 0)
+
+
+def test_the_whole_count_allowance_needs_a_division():
+    assert len(D.check(r"$$\text{價值} = \$2.8 = \$2$$")) == 1      # not a floor
+    assert len(D.check(r"$$\text{股數} = 2.80 \times 1.000 = 2$$")) == 1  # no division
+    assert D.check(r"$$\text{股數} = \$1,500 \div \$32.00 = 46$$") == []
+
+
+@pytest.mark.parametrize("code", [
+    "`` $$1 + 1 = 3$$ ``",
+    "```` \n```\n$$1 + 1 = 3$$\n```\n````",
+])
+def test_code_of_any_backtick_run_is_left_alone(code):
+    assert D.check(code) == []
+    assert D.fix(code) == (code, 0)

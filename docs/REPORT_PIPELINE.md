@@ -83,7 +83,10 @@ appends a 「程式複算」 block.
 - **Corrected.** On a mismatch whose weights sum to 100%, `arithmetic.correct()`
   writes the sum back: the stated total wherever it is printed, plus MOS /
   upside near their labels or beside the fair value, matched by value at the
-  printed precision. Front matter records `arithmetic_check: corrected`. The
+  printed precision. On a line that itself names MOS / upside or shows the fair
+  value, a decimal percent one unit off also matches (MRVL 2026-10-27 printed
+  −30.0% for −29.94%), and the "fair value − price" difference (−$70.00) is
+  rewritten too. Front matter records `arithmetic_check: corrected`. The
   model's figure is kept in `weighted_fair_value_stated` and in a one-line notice
   under the title. The notice also warns when the new MOS crosses a rule-20
   rating band.
@@ -92,13 +95,18 @@ appends a 「程式複算」 block.
 - **Not corrected** when the stated total equals one of the terms (TSLA, INTC
   and NVDA printed one method's value as the total, and a global replace would
   rewrite that term) or when the weights don't sum to 100%. Those keep the
-  「應為」 notice. Intermediate derivation steps are not chased.
+  「應為」 notice. Other derivation steps are left to `derivation.fix()`
+  (below).
+- **Backfill 2026-10-30.** The 35 reports already marked `corrected` that still
+  carried a stale MOS, upside or difference were re-run through `correct()`.
+  Only decimal-percent and dollar changes were kept; whole percents and the
+  「程式複算」 notice lines were left as written.
 
 - **Product line.** `arithmetic.fix_products()` then rewrites §8.8's
   `= $a + $b + … = $S` line so each product is its term's `value × weight`.
   It runs only once the total is right (`ok` or `corrected`), and only on a run
-  of exactly one amount per term, each within 25% of its product, whose own
-  `= $S` is the new sum. Otherwise a product the model got wrong keeps adding
+  of exactly one amount per term, each within 25% of its product, followed by
+  its own `= $S` that the rewritten products, as printed, add up to. Otherwise a product the model got wrong keeps adding
   up to the old total.
 
 ### Equation chains (every report type)
@@ -149,7 +157,7 @@ Every report records how it was made, so QA can check it later:
 | `close_source` | `quote` when the last close came from the quote, not a bar |
 | `levels` | Computed R1–S3 (technical) |
 | `arithmetic_check`, `weighted_fair_value_stated` | §8.8 recheck result (fundamental) |
-| `derivation_fixed` | Numbers `derivation.fix()` re-solved in a `$$` equation chain |
+| `derivation_fixed` | Numbers `derivation.fix()` re-solved in a `$$ … $$` or inline `$ … $` equation chain |
 | `data_sources_ok`, `data_sources_failed` | Which fetchers succeeded |
 | `prompt_sha256`, `temperature`, `max_tokens` | Reproducibility |
 

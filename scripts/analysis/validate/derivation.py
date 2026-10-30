@@ -28,10 +28,14 @@ TOLERANCE_REL = 0.001
 # space inside either delimiter, no unescaped `$` or newline inside, at least
 # one TeX command, and the closing `$` not followed by a digit. RKLB 2026-10-28
 # writes its whole nine-step DCF derivation this way, as do 325 reports.
-INLINE_MATH = (r"(?<![\\$])\$(?=[^\s$])((?:\\.|[^$\\\n])*?\\[a-zA-Z](?:\\.|[^$\\\n])*?)"
+INLINE_MATH = (r"(?<![\\$])\$(?=[^\s$])(?P<inline>(?:\\.|[^$\\\n])*?\\[a-zA-Z](?:\\.|[^$\\\n])*?)"
                r"(?<=\S)\$(?![\d$])")
-# Code (left alone) | `$$ … $$` | `$ … $`.
-_MATH = re.compile(r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|\$\$(.+?)\$\$|" + INLINE_MATH, re.S)
+# Code, left alone: a fence (closed only by the same run), or a code span of
+# any backtick-run length (CommonMark: "`` $$x$$ ``" is code too).
+CODE = (r"(?P<code>(?m:^[ \t]*(?P<fence>`{3,}|~{3,})).*?(?m:^[ \t]*(?P=fence))"
+        r"|(?<!`)(?P<tick>`+)(?!`)[^\n]*?(?<!`)(?P=tick)(?!`))")
+# Code | `$$ … $$` | `$ … $`.
+_MATH = re.compile(CODE + r"|\$\$(?P<display>.+?)\$\$|" + INLINE_MATH, re.S)
 # Links compared for equality, and words that end a chain (an arrow or an
 # inequality says "leads to", not "equals").
 _LINK = re.compile(r"\\approx|≈|(?<![<>≤≥!\\])=")
@@ -135,10 +139,11 @@ def agree(left: float, right: float, left_segment: str, right_segment: str) -> b
     if right < 0 < left and abs(left + right) <= slack and re.match(
             r"\s*(?:\\mathbf\{|\*\*)?\s*[-−]", right_segment):
         return True
-    # A whole count floored from a ratio: "$1,500 ÷ $32.00 = 46 股".
+    # A whole count floored from a ratio: "$1,500 ÷ $32.00 = 46 股". Only a
+    # division on the left and a bare count on the right, or "$2.8 = $2" passes.
     nums = _NUMBER.findall(right_segment)
-    return (len(nums) == 1 and "." not in nums[0] and "%" not in right_segment
-            and 0 <= left - right < 1)
+    return (len(nums) == 1 and "." not in nums[0] and not re.search(r"[%$]", right_segment)
+            and bool(re.search(r"÷|\\div|\\frac|/", left_segment)) and 0 <= left - right < 1)
 
 
 def _units(segment: str) -> "set[str]":
@@ -158,28 +163,28 @@ def chains(span: str) -> "list[list[str]]":
 
 def math_spans(text: str) -> "list[str]":
     """Every ``$$ … $$`` and inline ``$ … $`` span outside code."""
-    return [body for body, _ in _spans(text)]
+    return [body for _, body, _ in _spans(text)]
 
 
 _OPERATOR_END = re.compile(r"(?:[+\-−×÷*/]|\\(?:div|times|cdot))\s*$")
 
 
-def _spans(text: str) -> "list[tuple[str, bool]]":
-    """``(body, continued)`` for every math span. ``continued`` when the span
-    picks up an expression begun before it on the same line, so its first
-    figure is not the whole left side: QQQ 2026-10-21 wrote
+def _spans(text: str) -> "list[tuple[re.Match, str, bool]]":
+    """``(match, body, continued)`` for every math span. ``continued`` when
+    the span picks up an expression begun before it on the same line, so its
+    first figure is not the whole left side: QQQ 2026-10-21 wrote
     "$\\$0.535 \\div$ 平均計息負債 $\\$12.50 = 4.28\\%$", META 2026-10-15
     "$22.50 / $737.54 = \\mathbf{3.05\\%}$"."""
     out, prev_end, prev_body = [], None, ""
     for m in _MATH.finditer(text):
-        if m.group(1):
+        if m.group("code"):
             prev_end = None
             continue
-        body = m.group(2) if m.group(2) is not None else m.group(3)
+        body = m.group("display") if m.group("display") is not None else m.group("inline")
         before = text[text.rfind("\n", 0, m.start()) + 1:m.start()]
         same_line = prev_end is not None and "\n" not in text[prev_end:m.start()]
         continued = bool(_OPERATOR_END.search(before)) or (same_line and bool(_OPERATOR_END.search(prev_body)))
-        out.append((body, continued))
+        out.append((m, body, continued))
         prev_end, prev_body = m.end(), body
     return out
 
@@ -205,9 +210,11 @@ def check(text: str) -> "list[dict]":
     """Every link of every displayed chain that does not hold:
     ``{"left", "right", "computed", "stated"}``."""
     out = []
-    for span, continued in _spans(text):
-        for n, segments in enumerate(chains(span)):
+    for _, span, continued in _spans(text):
+        for n, part in enumerate(_BREAK.split(span)):
+            segments = _LINK.split(part)
             for i in _bad_links(segments):
+                # A continued span's first figure is not the whole left side.
                 if continued and n == 0 and i == 0:
                     continue
                 out.append({"left": _clean(segments[i]), "right": _clean(segments[i + 1]),
@@ -221,12 +228,14 @@ def _format_like(original: str, value: float) -> str:
     return body
 
 
-def _repair(segments: "list[str]") -> "tuple[list[str], int]":
+def _repair(segments: "list[str]", continued: bool = False) -> "tuple[list[str], int]":
     """Fix each middle segment that disagrees with both neighbours while they
-    agree with each other, by re-solving the one number it introduces."""
+    agree with each other, by re-solving the one number it introduces. In a
+    ``continued`` chain the first segment is not a whole left side, so it
+    never serves as the reference."""
     fixed = 0
     segments = list(segments)
-    for i in range(1, len(segments) - 1):
+    for i in range(2 if continued else 1, len(segments) - 1):
         prev, mid, nxt = segments[i - 1], segments[i], segments[i + 1]
         a, m, b = evaluate(prev), evaluate(mid), evaluate(nxt)
         if a is None or m is None or b is None:
@@ -260,27 +269,24 @@ def _repair(segments: "list[str]") -> "tuple[list[str], int]":
 def fix(text: str) -> "tuple[str, int]":
     """``text`` with every repairable chain repaired, and how many numbers
     were changed. Idempotent: a repaired chain holds."""
-    total = 0
-
-    def one_span(m: "re.Match") -> str:
-        nonlocal total
-        if m.group(1):
-            return m.group(1)
-        delim = "$$" if m.group(2) is not None else "$"
-        span = m.group(2) if m.group(2) is not None else m.group(3)
+    total, out, last = 0, [], 0
+    for m, span, continued in _spans(text):
+        delim = "$$" if m.group("display") is not None else "$"
         pieces = _BREAK.split(span)
         seps = _BREAK.findall(span)
         rebuilt = []
-        for part in pieces:
+        for n, part in enumerate(pieces):
             links = _LINK.findall(part)
             segments = _LINK.split(part)
             if len(segments) >= 3:
-                segments, n = _repair(segments)
-                total += n
+                segments, k = _repair(segments, continued and n == 0)
+                total += k
             rebuilt.append(segments[0] + "".join(l + s for l, s in zip(links, segments[1:])))
-        out = rebuilt[0] + "".join(s + p for s, p in zip(seps, rebuilt[1:]))
-        return delim + out + delim
+        body = rebuilt[0] + "".join(s + p for s, p in zip(seps, rebuilt[1:]))
+        out.append(text[last:m.start()] + delim + body + delim)
+        last = m.end()
+    out.append(text[last:])
+    return "".join(out), total
 
-    return _MATH.sub(one_span, text), total
 
-__all__ = ["TOLERANCE_REL", "INLINE_MATH", "check", "fix", "evaluate", "to_python", "chains", "math_spans", "agree"]
+__all__ = ["TOLERANCE_REL", "INLINE_MATH", "CODE", "check", "fix", "evaluate", "to_python", "chains", "math_spans", "agree"]
