@@ -2636,6 +2636,44 @@ def fix_static_chart_embed(content: str) -> str:
     )
 
 
+# ── Display math ─────────────────────────────────────────────────────────────
+# Reports write their worked equations as `$$ … $$`, often straight after a
+# label line or in a list item, and sometimes mid-sentence. Arithmatex's `$$`
+# block syntax only matches a math-only paragraph, and its `$` inline syntax
+# would swallow every "$58.60 … $58.90" in the prose, so each span is rewritten
+# to `\( … \)` (arithmatex `round`, rendered by javascripts/math.js) before
+# Markdown sees it: `\$`, `_` and `*` inside stay math, not Markdown escapes
+# and emphasis. A span on a line of its own gets `\displaystyle`, which
+# math.js also reads as "give it its own row": minify-html collapses the
+# newline that would otherwise say so. A span split over lines
+# (`\begin{aligned}`) is joined; its `\\` row breaks carry the layout.
+_DISPLAY_MATH_RE = re.compile(
+    r"(```.*?```|~~~.*?~~~|`[^`\n]*`)|(^[ \t]*(?:[-*+>]\s+|\d+\.\s+)*)?\$\$(.+?)\$\$([ \t]*$)?",
+    re.S | re.M,
+)
+
+
+def display_math(content: str) -> str:
+    r"""Rewrite each `$$ … $$` outside code as `\( … \)`, adding
+    `\displaystyle` to one that has its line to itself."""
+    if "$$" not in content:
+        return content
+
+    def one(m: "re.Match") -> str:
+        if m.group(1):
+            return m.group(1)
+        lead, tail = m.group(2), m.group(4)
+        body = " ".join(line.strip() for line in m.group(3).strip().splitlines())
+        # A bare % starts a TeX comment that swallows the closing brace of
+        # "\text{(佔營收 36%)}", and a bare $ is an error in math mode; the
+        # model always means a percent sign and a dollar sign.
+        body = re.sub(r"(?<!\\)([%$])", r"\\\1", body)
+        style = "\\displaystyle " if lead is not None and tail is not None else ""
+        return f"{lead or ''}\\({style}{body}\\){tail or ''}"
+
+    return _DISPLAY_MATH_RE.sub(one, content)
+
+
 # ── Legacy chart embeds ──────────────────────────────────────────────────────
 # Until 2026-08 every technical report baked its own chart into the committed
 # markdown: a collapsible static PNG plus a full Plotly HTML document (~46 KB of
@@ -2682,6 +2720,7 @@ def copy_file(src: Path, dst: Path, extra_meta: str = "", chart_block: str = "",
             content = prerender_mermaid(content)
         content = strip_legacy_chart_embed(content)
         content = fix_static_chart_embed(content)
+        content = display_math(content)
         if extra_meta:
             yaml_body, body = split_frontmatter(content)
             merged = f"{extra_meta}\n{yaml_body}" if yaml_body else extra_meta

@@ -115,6 +115,13 @@ markdown_extensions:
       permalink: true
       title: Table of Contents
   - tables
+  # Math from build_docs.display_math(), which rewrites every report `$$ … $$`
+  # to `\( … \)`. `$` delimiters stay off: report prose is full of prices.
+  # Rendered client-side by javascripts/math.js.
+  - pymdownx.arithmatex:
+      generic: true
+      inline_syntax: [round]
+      block_syntax: [square]
   - pymdownx.betterem
   - pymdownx.caret
   - pymdownx.critic
@@ -198,5 +205,7 @@ extra_javascript:
   - javascripts/tab-anchors.js
   # Filter box on the section index card grids; reading progress on every page.
   - javascripts/hub.js
+  # KaTeX for report equations, fetched only on a page that has one.
+  - javascripts/math.js
   # Re-points the 文A language menu at the current page after instant navigation.
   - javascripts/lang-switch.js

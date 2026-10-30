@@ -94,6 +94,25 @@ appends a 「程式複算」 block.
   rewrite that term) or when the weights don't sum to 100%. Those keep the
   「應為」 notice. Intermediate derivation steps are not chased.
 
+- **Product line.** `arithmetic.fix_products()` then rewrites §8.8's
+  `= $a + $b + … = $S` line so each product is its term's `value × weight`.
+  It runs only once the total is right (`ok` or `corrected`), and only on a run
+  of exactly one amount per term, each within 25% of its product, whose own
+  `= $S` is the new sum. Otherwise a product the model got wrong keeps adding
+  up to the old total.
+
+### Equation chains (every report type)
+
+`validate/derivation.py` evaluates every `=` / `≈` link of each `$$ … $$` span.
+RKLB 2026-10-28 printed `$28.825 + … + $5.108 = $59.323 ≈ $58.90` and
+`\frac{$58.90 − $58.60}{$58.90} = \frac{+$0.72}{$58.90} = +0.5%`. Both ends of
+each chain were right and the middle was invented. `run_analysis` calls
+`derivation.fix()` on every report. It changes one number only: the single new
+number in a middle step whose two neighbours agree, re-solved so the step holds
+($59.323 → $58.903, $0.72 → $0.30). Front matter records `derivation_fixed: N`.
+Any other broken link is left as written for stage-1 QA (`DERIVATION`). The
+prompt (rule 18) says every `=` must hold and `≈` is only for rounding.
+
 ---
 
 ## Technical reports
@@ -127,6 +146,7 @@ Every report records how it was made, so QA can check it later:
 | `close_source` | `quote` when the last close came from the quote, not a bar |
 | `levels` | Computed R1–S3 (technical) |
 | `arithmetic_check`, `weighted_fair_value_stated` | §8.8 recheck result (fundamental) |
+| `derivation_fixed` | Numbers `derivation.fix()` re-solved in a `$$` equation chain |
 | `data_sources_ok`, `data_sources_failed` | Which fetchers succeeded |
 | `prompt_sha256`, `temperature`, `max_tokens` | Reproducibility |
 

@@ -280,6 +280,20 @@
   .md-typeset .rmeta__step { flex: 1 1 0; justify-content: center; white-space: nowrap; }
 }
 
+/* ── equations ────────────────────────────────────────────────────────────── */
+
+/* A worked equation (javascripts/math.js) is often wider than a phone: it
+   scrolls sideways on its own instead of widening the page. */
+.md-typeset .arithmatex {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
+.md-typeset .arithmatex--line { display: block; margin: 0.5em 0; }
+.md-typeset .arithmatex .katex { font-size: 1.05em; }
+
 @media (prefers-reduced-motion: reduce) {
   .md-typeset table:not([class]) tbody tr { transition: none; }
 }

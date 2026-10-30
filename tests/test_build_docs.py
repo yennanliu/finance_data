@@ -654,6 +654,28 @@ def test_strip_legacy_chart_embed_leaves_clean_reports_alone():
     assert bd.strip_legacy_chart_embed(clean) == clean
 
 
+# ── display math ────────────────────────────────────────────────────────────
+
+def test_display_math_marks_an_own_line_equation_and_escapes_tex_specials():
+    text = ("**逐步演算**：\n$$\\text{MOS} = \\frac{\\$58.90 - \\$58.60}{\\$58.90} = 0.5%$$\n"
+            "- $$x_1 \\times 2$$\n")
+    out = bd.display_math(text)
+    assert "$$" not in out
+    assert "\\(\\displaystyle \\text{MOS} = \\frac{\\$58.90 - \\$58.60}{\\$58.90} = 0.5\\%\\)" in out
+    assert "- \\(\\displaystyle x_1 \\times 2\\)" in out     # a list item of its own
+
+
+def test_display_math_keeps_a_mid_sentence_span_inline_and_joins_lines():
+    out = bd.display_math("價值 $$a + b$$ 為合計。\n\n$$\\begin{aligned}\na &= 1 \\\\\nb &= 2\n\\end{aligned}$$\n")
+    assert "價值 \\(a + b\\) 為合計。" in out
+    assert "\\(\\displaystyle \\begin{aligned} a &= 1 \\\\ b &= 2 \\end{aligned}\\)" in out
+
+
+def test_display_math_leaves_code_and_prices_alone():
+    text = "```\n$$1 + 1$$\n```\n現價 $58.60，目標 $70。`$$x$$`\n"
+    assert bd.display_math(text) == text
+
+
 def test_copy_file_swaps_a_legacy_embed_for_the_widget(monkeypatch, tmp_path):
     _store_series(monkeypatch, tmp_path, "amd", 5)
     monkeypatch.setattr(bd, "ROOT", tmp_path)  # copy_file logs paths relative to ROOT

@@ -6,7 +6,8 @@ Two families of checks, both listed in :data:`ISSUE_TYPES`:
   HTML-leak / duplicate / unrenderable Mermaid, for any report;
 * **structure and accuracy** (:func:`content_findings`) — a fundamental
   report's eleven chapters; then the report against its own
-  figures (§8.8 sum, MOS, DCF premium, R/R), against the close and levels the
+  figures (§8.8 sum, MOS, DCF premium, R/R, each step of a ``$$`` equation
+  chain), against the close and levels the
   pipeline recorded in its front matter, and that close against the committed
   price store (``market_data``). Background: ``docs/FUNDAMENTAL_REPORT_REVIEW.md``
   and ``docs/TECHNICAL_REPORT_REVIEW.md``.
@@ -25,7 +26,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from ..utils.mermaid import mermaid_syntax_issues
-from . import arithmetic, market_data, technical
+from . import arithmetic, derivation, market_data, technical
 
 # Every issue code the scan can emit, in the order the CLI documents them.
 ISSUE_TYPES = {
@@ -45,6 +46,8 @@ ISSUE_TYPES = {
     # accuracy — the report against its own figures
     "ARITHMETIC": "a derived valuation (§8.8 total, MOS, DCF premium) does not "
                   "recompute from the report's own figures",
+    "DERIVATION": "a step of a displayed $$ … $$ equation chain does not "
+                  "recompute (a = b that is false)",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
     "NAN_VALUE": "a $nan / nan% leaked from an empty data bar",
     # accuracy — the report against the market record
@@ -285,6 +288,13 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
         if tech["rr"]:
             out.append(("RR_MISMATCH", "rr=" + ", ".join(
                 f"stated {r['stated']} vs {r['recomputed']}" for r in tech["rr"])))
+
+    # Any report's worked equations: does each "=" in a $$ chain hold?
+    steps = derivation.check(content)
+    if steps:
+        first = steps[0]
+        out.append(("DERIVATION", f"steps={len(steps)}× e.g. {first['left'][:60]} = "
+                                  f"{first['right'][:40]} (computes {first['computed']:.4g})"))
 
     # Any report that recorded its close: is that close the market's?
     record = market_data.check(fm, ticker, date)

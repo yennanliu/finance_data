@@ -235,6 +235,54 @@ def correct(text: str, result: dict) -> str:
     return "\n".join(lines)
 
 
+_AMOUNT = r"(?:NT)?(?:\\?\$\s?)?" + _NUM
+_RUN_TOTAL = re.compile(r"[`*\s]*=\s*[`*\s]*(?:\\mathbf\{)?\s*(?:NT)?\\?\$?\s?" + _NUM)
+
+
+def fix_products(text: str, result: dict) -> str:
+    """Rewrite §8.8's product line (``= $a + $b + … = $S``) so each product is
+    its term's ``value × weight``.
+
+    After :func:`correct` rewrites the total, a product the model got wrong is
+    left adding up to the old total: RKLB 2026-10-11 printed
+    ``30.44 + 12.50 + 11.78 + 26.64 = $78.08`` (the products sum to $81.36).
+    Only when the printed total already equals the sum of the terms (``ok``,
+    or after :func:`correct`), so the rewritten products add up to it; and
+    only a run of exactly ``len(terms)`` amounts joined by ``+``, each within
+    25% of its own product. Each product keeps its printed precision.
+    """
+    terms, n = result["terms"], len(result["terms"])
+    s88 = section(text, "8.8")
+    if result["status"] not in ("ok", "corrected") or n < 2 or not s88:
+        return text
+    run = re.compile(r"(?<![\d.×*])" + r"\s*\+\s*".join([_AMOUNT] * n) + r"(?![\d.]|\s*(?:×|\\times|\*))")
+
+    def one(m: "re.Match") -> str:
+        # The same run in the same order: every amount near its own product.
+        if any(abs(_num(m.group(i + 1)) - v * w) > 0.25 * abs(v * w)
+               for i, (v, w) in enumerate(terms)):
+            return m.group(0)
+        # The line's own "= $S" after the run must be the sum it will show.
+        after = _RUN_TOTAL.match(m.string, m.end())
+        if after and abs(_num(after.group(1)) - sum(v * w for v, w in terms)) > 0.01 * n:
+            return m.group(0)
+        out, last = [], m.start()
+        for i, (value, weight) in enumerate(terms):
+            start, end = m.span(i + 1)
+            digits = m.group(i + 1)
+            places = len(digits.partition(".")[2])
+            if abs(_num(digits) - value * weight) <= 0.5 * 10 ** -places + 1e-6:
+                continue   # right to the precision printed
+            new = f"{value * weight:,.{places}f}" if "," in digits else f"{value * weight:.{places}f}"
+            out.append(m.string[last:start] + new)
+            last = end
+        out.append(m.string[last:m.end()])
+        return "".join(out)
+
+    fixed = run.sub(one, s88)
+    return text.replace(s88, fixed, 1) if fixed != s88 else text
+
+
 def missing_chapters(text: str, chapters=FUNDAMENTAL_CHAPTERS) -> "list[int]":
     """Chapter numbers with no ``## N.`` heading."""
     present = {int(n) for n in re.findall(r"^##\s+(\d{1,2})\.", text, re.M)}
@@ -306,4 +354,4 @@ def annotate(text: str, result: dict) -> str:
 
 __all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
            "weighted_terms", "report_price", "check", "valuation_mismatches",
-           "missing_chapters", "annotate", "correct", "rating_band", "RATING_BANDS"]
+           "missing_chapters", "annotate", "correct", "fix_products", "rating_band", "RATING_BANDS"]

@@ -212,3 +212,30 @@ def test_a_corrected_report_says_so_and_warns_on_a_rating_band_change():
 def test_rating_bands_follow_prompt_rule_20():
     assert [A.rating_band(m) for m in (-30, -12, 0, 12)] == ["賣出", "減碼", "持有", "買入"]
     assert A.rating_band(30).startswith("強烈買入")
+
+
+# ── §8.8 product line ────────────────────────────────────────────────────────
+
+RKLB = s88("加權合理價值 = $57.65 × 50% + $65.00 × 25% + $35.20 × 10% + $52.00 × 10% + $102.15 × 5%\n\n"
+           "= $28.825 + $16.250 + $3.250 + $5.200 + $5.108 = $58.90", stated="$58.90")
+
+
+def test_fix_products_rewrites_a_wrong_product_to_its_terms():
+    r = A.check(RKLB)
+    assert r["status"] == "ok"
+    out = A.fix_products(RKLB, r)
+    assert "$28.825 + $16.250 + $3.520 + $5.200 + $5.108 = $58.90" in out
+
+
+def test_fix_products_leaves_a_line_whose_total_it_would_contradict():
+    """The products summing to the line's own total but not to the terms means
+    the run is something else (or the total is wrong): leave it."""
+    text = RKLB.replace("= $58.90\n", "= $58.63\n")
+    assert A.fix_products(text, A.check(text)) == text
+
+
+def test_fix_products_waits_for_a_correct_total():
+    text = RKLB.replace("**$58.90**", "**$60.00**")
+    r = A.check(text)
+    assert r["status"] == "mismatch"
+    assert A.fix_products(text, r) == text
