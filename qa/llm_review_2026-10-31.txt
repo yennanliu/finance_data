@@ -1,0 +1,65 @@
+
+============================================================
+Reports reviewed : 148
+Ungrounded       : 2  (all-ones scores citing nothing from the report — in the CSV, excluded below)
+Mean score       : 2.49 / 5
+
+Verdict breakdown (146 grounded):
+  pass               3
+  warn              74
+  fail              69
+
+Mean score by dimension:
+  data_integrity   2.49
+  completeness     3.38
+  depth            2.58
+  consistency      2.90
+  language         4.01
+
+Failed review (69):
+  0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的 '穿透每股內在價值為 116.80 TWD' 與 '現價折價 10.15%' 的計算不一致。
+  2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的營業利益率58.0%與58.7%存在矛盾。
+  amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $431.69 與 DCF 基準每股內在價值 $412.39 之間存在矛盾。
+  amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的 TTM 營收 $797.46B 與其他數據不一致，導致數據誠信問題。
+  avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-10-31_gemini.md
+      → 報告中提到的加權合理價值 $388.94 與後文計算的 $392.93 不一致。
+  grab         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/grab/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $3.76 與重新計算的 $3.82 不一致。
+  intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-10-30_gemini-2.md
+      → 報告中提到的加權合理價值 $60.28 與計算過程中的 $61.81 不一致。
+  intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $59.13 與後文計算的 $58.61 不一致。
+  ktos         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/ktos/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $34.42 與後文計算的 $32.67 不一致。
+  mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的 TTM ROIC 僅為 6.3%，低於 WACC 15.98%，顯示資本效率偏低，這與報告的買入評級相矛盾。
+  msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $593.63 與後文計算的 $596.76 不一致。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的營業利益率高達80.7%不符合行業常規，缺乏合理性。
+  nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $182.16 與複算結果 $184.38 不一致。
+  nu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $15.01 與後文計算的 $15.45 不一致。
+  nvda         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nvda/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的 TTM 營收 $302.97B 與最新單季營業利益率 66.2% 的數據不一致，且無法查證其來源。
+  onds         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $6.48 與程式複算的 $7.68 存在矛盾。
+  orcl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/orcl/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $168.00 與程式複算的 $172.49 相矛盾。
+  pl           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pl/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $14.12 與複算結果 $15.35 相矛盾。
+  pltr         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pltr/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $132.22 與後文計算的 $129.14 不一致。
+  qqq          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/qqq/fundamental_analysis_2026-10-30_gemini.md
+      → 報告中提到的加權合理價值 $712.35 與 DCF 內在價值 $718.52 之間存在矛盾。
+
+Ungrounded verdicts (2) — reviewer noise, not report defects:
+  nbis         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nbis/technical_analysis_2026-10-30_gemini.md
+  nu           fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nu/technical_analysis_2026-10-31_gemini.md
+
+CSV written → qa/llm_review_2026-10-31.csv (145 row(s))
