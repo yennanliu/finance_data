@@ -1,0 +1,46 @@
+
+============================================================
+
+Recent — last 2 UTC days (2026-11-06, 2026-11-07)
+Total scanned : 102
+Bad reports   : 23  (22.5%)
+
+Issue breakdown:
+  DERIVATION              14  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  ARITHMETIC               8  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE                6  same ticker+type+date with a -2 / -3 suffix
+  STALE_PRICE              1  a newer completed session existed before the report date
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 1817
+Bad reports   : 327  (18.0%)
+
+Issue breakdown:
+  DERIVATION             139  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  ARITHMETIC             126  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE               59  same ticker+type+date with a -2 / -3 suffix
+  RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
+  MISSING_SECTIONS         7  fundamental report lacks one of chapters ## 1. … ## 11.
+  PLACEHOLDER              6  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
+  STALE_PRICE              5  a newer completed session existed before the report date
+  NAN_VALUE                3  a $nan / nan% leaked from an empty data bar
+  TOO_SHORT                2  fewer content lines than a real report has
+  REFUSAL                  1  the model refused instead of writing the report
+  CUTOFF                   1  ends mid-sentence or mid-code-block (truncated)
+  LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
+
+Top 10 tickers by bad-report count:
+  pl             18 / 59   bad
+  tsla           16 / 59   bad
+  intc           15 / 60   bad
+  ktos           15 / 59   bad
+  amd            14 / 59   bad
+  0050           13 / 59   bad
+  avav           13 / 59   bad
+  nbis           13 / 60   bad
+  rklb           13 / 59   bad
+  onds           12 / 59   bad
+
+CSV written → qa/bad_reports_2026-11-07.csv
