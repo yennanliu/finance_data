@@ -97,16 +97,41 @@ jobs:
     concurrency:
       group: pages
       cancel-in-progress: false
-    timeout-minutes: 45      # must exceed the deploy-pages timeout below
+    # Two deploy attempts of up to 10 min each, plus job overhead.
+    timeout-minutes: 30
     steps:
+      # A normal deploy finishes in 10-40 s. When it does not, the Pages
+      # backend has stalled in `syncing_files` (2026-11-10: stuck for the full
+      # 10 min). deploy-pages caps `timeout` at 600000 ms (MAX_TIMEOUT in
+      # actions/deploy-pages src/internal/deployment.js), so a larger value
+      # only logs a warning and never buys more time. Instead the first
+      # attempt is allowed to fail and a second, fresh deployment is created.
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: deploy_first
+        continue-on-error: true
         uses: actions/deploy-pages@v4
         with:
-          # The site is large (~752 MB, tens of thousands of report files).
-          # deploy-pages' default 10-min timeout / 10-error tolerance is too
-          # tight for a sync this size, which surfaces as an intermittent
-          # "Deployment failed, try again later." during the syncing_files
-          # phase. Give the sync more room to complete.
-          timeout: 1800000      # 30 min (default 600000 = 10 min)
+          timeout: 600000       # the action's hard maximum (10 min)
           error_count: 25       # tolerate more transient sync errors (default 10)
+
+      # deploy-pages uses GITHUB_SHA as the deployment ID (pages_build_version).
+      # On timeout it cancels that deployment, and a new deployment created
+      # with the same ID never reports a status: the manual re-run of
+      # 2026-11-10 polled an empty status for 10 min. The retry therefore uses
+      # a unique build version, which the Pages API accepts as any string.
+      - name: Retry deploy to GitHub Pages
+        id: deploy_retry
+        if: steps.deploy_first.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        env:
+          GITHUB_SHA: ${{ github.sha }}-retry-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          timeout: 600000
+          error_count: 25
+
+      - name: Resolve page URL
+        id: deployment
+        run: echo "page_url=${FIRST_URL:-$RETRY_URL}" >> "$GITHUB_OUTPUT"
+        env:
+          FIRST_URL: ${{ steps.deploy_first.outputs.page_url }}
+          RETRY_URL: ${{ steps.deploy_retry.outputs.page_url }}
