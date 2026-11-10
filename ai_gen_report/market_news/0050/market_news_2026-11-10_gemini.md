@@ -14,133 +14,126 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-11-10
 
+---
+
 ## 🏢 公司概覽
-元大台灣卓越50證券投資信託基金（簡稱「元大台灣50」，臺灣證券交易所代碼：0050）成立於2003年，是台灣證券市場歷史最悠久、最具代表性的市值加權型指數股票型基金（ETF）。該基金主要追蹤臺灣50指數，成分股涵蓋台灣證券市場中市值最大、流動性最優異的前50家上市公司（如台積電、聯發科、鴻海等關鍵權值股）。作為台灣被動投資與資產配置的核心核心資產，0050的持股走勢與台股大盤指數呈現極高相關性，是觀察國際與本土資金配置台灣半導體、資通訊科技及整體經濟成長動能的關鍵指標。
+**元大台灣卓越50證券投資信託基金**（簡稱「元大台灣50」，臺灣證券交易所代碼：0050）是臺灣資本市場最具代表性與指標性的旗艦級指數股票型基金（ETF）。該基金追蹤「富時臺灣證券交易所臺灣50指數」（FTSE TWSE Taiwan 50 Index），成分股涵蓋臺灣市值最大、流動性最優質的 50 家上市公司，代表臺灣整體股票市場超過七成的市值權重。其核心配置高度集中於半導體晶圓代工龍頭、電子代工製造龍頭、IC 設計大廠以及主要金控集團，是機構法人、主權基金與一般零售投資人配置臺灣科技供應鏈核心資產與參與總體經濟成長的首選工具。
 
 ---
 
 ## 📝 新聞摘要總覽
-根據近期市場公開資訊與監控數據，台灣資本市場經歷劇烈波動，並帶動指數型工具的交易量與資金流向出現歷史性變化。2026年7月期間，台股大盤因面臨全球宏觀經濟調整與獲利了結賣壓，單月重挫達 3,000 點；然而，此輪罕見的急跌並未引發恐慌性拋售，反而引爆市場投資人大規模的逢低承接買盤。作為台灣旗艦級 ETF 的元大台灣50（0050）在此次市場震盪中展現極強的吸金效應，單月淨申購與資金流入突破 1,700 億新台幣，創下歷史單月最高吸金紀錄，凸顯長期投資者與機構法人對台灣權值資產長線基本面的堅定信心。
+本次新聞數據集呈現多元面向，涵蓋 0050 ETF 的基本面結構、市場估值修正後的散戶買盤動態、宏觀季節性回檔壓力，以及海外相似標的的比較分析。此外，數據中亦包含部分跨市場代碼重疊（如港股香港小輪 0050.HK）與美股非相關標的之雜訊，專業投資機構在量化篩選時需特別辨析。
 
-與此同時，媒體與外資機構分析指出，伴隨價格自波段高點滑落，0050 的評價水準與每單位交易價格回歸相對合理區間，進一步降低散戶與定期定額族群的進場門檻，使該檔標的在零售投資市場的吸引力顯著增強。在配息與總報酬維度方面，金融平台持續聚焦於 0050 在股利收益與長期資本利得之間的平衡表現，驗證其作為核心持股的防禦與成長雙重屬性。
+核心焦點首先落於 **Focus Taiwan** 所報導之市場回檔後的買進機會：報導指出，在股票市場出現階段性拉回後，臺灣「0050」ETF 的交易價格門檻降低，對於尋求長期資本增值與定期定額的投資人而言更具進場吸引力（affordable），反映出指數型標的在回檔修正階段具備強大的散戶與存股買盤支撐。隨後，**TradingView** 於 2026 年中發布的 ETF 檔案分析，再度聚焦 0050 的股利發放政策與長期年化回報率，確立其作為臺股高流動性與總回報核心載體的地位。
 
-然而，外圍市場環境依然充滿挑戰。9月份美股與全球金融市場的季節性轉弱信號引發跨國分析機構的警戒，提醒投資人警惕全球流動性收緊與科技股估值再調整對台灣出口導向型科技鏈的傳導壓力。此外，國際研究對台灣市場海外替代工具（如在美上市之 EWT）與在地龍頭 ETF（0050）的比較亦表明，投資人對資產配置的結構、費用率及成份股純度正進行更加嚴苛的檢視。整體而言，0050 在劇烈震盪中確立了「越跌越買」的結構性買盤支撐，但外圍總體經濟的不確定性仍需密切監控。
+宏觀環境層面，**Seeking Alpha** 指出「9 月市場疲弱：回檔格局具備實質殺傷力」（September Market Weakness: The Setup Has Teeth），警示歷史季節性弱勢與宏觀緊縮效應對風險資產可能形成的短期衝擊。而在國際比較方面，Seeking Alpha 針對臺灣在美掛牌的代表性 ETF（iShares MSCI Taiwan ETF，代碼：EWT）進行深入評估，直指「存在比 EWT 更好的選項」，間接凸顯出追蹤富時指數且深度貼合本地市場結構的 0050，在內扣費用、指數成分純度與匯率風險管理上，更受大中華與亞太投資人重視。
+
+總結而言，新聞流反映 0050 正處於總體宏觀季節性震盪與估值回檔後的逢低承接階段，其穩健的配息記錄與市場流動性持續鞏固其防禦與長線配置價值。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **恐慌時刻的結構性買盤確立，單月湧入千億級資金**：在台股面臨單月 3,000 點急殺的極端行情下，0050 創下单月吸納 1,700 億新台幣的歷史紀錄。這反映台灣投資人心態已從過去追高殺跌的散戶思維，轉變為藉由旗艦型 ETF 進行「越跌越加碼」的成熟被動投資邏輯，為其價格下檔提供強勁底部支撐。
-- **評價修正打破高價心理障礙，擴大零售投資人基盤**：隨著指數點位拉回，0050 每單位市價回檔至更平易近人的水準，顯著降低零股交易與定期定額族的配置門檻。這種「價格更親民」（more affordable）的效應加速了散戶資金進場，優化基金持有人結構。
-- **權值龍頭定價權進一步固化**：0050 單月巨額資金湧入，其背後的成分股調整與實物申購機制直接轉化為對台積電等權值股的被動買盤。這意味著指數化投資的繁榮正進一步推動台股結構向少數高市值、具國際競爭力的龍頭企業集中。
-- **全球總經季節性疲弱對科技權值構成外溢壓力**：國際機構對 9 月市場季節性下挫提出警訊，台股科技權值股受美股科技巨頭（如半導體產業鏈）聯動性極高，外部需求的暫時放緩可能延長大盤盤整修復的時間週期。
-- **境內外配置工具優勢分化**：海外分析對類似市場 ETF（如 EWT）的配置效率提出質疑，反觀聚焦於台灣本土上市大市值的 0050，在貼近現貨市場、成分股權重配置以及股息再投入機制上，展現出更具代表性的競爭優勢。
+- **回檔催生散戶與零股進場動能**：新聞顯示當 0050 股價隨大盤拉回時，其投資門檻實質下降，促使零股交易與定期定額買盤顯著擴增。此現象強化了 ETF 在下檔的承接買盤厚度，形成結構性的市場支撐墊。
+- **配息與總回報雙軌評價體系確立**：TradingView 針對 0050 股息與報酬率的深度檢視顯示，市場資金對 0050 的要求已從單純的「被動跟隨指數」轉向關注「總回報率（Total Return）與現金殖利率平衡」，尤其在成分股企業自由現金流穩健成長的背景下更顯突出。
+- **總體季節性逆風不可忽視**：Seeking Alpha 對 9 月及第 3 季末季節性弱勢的警示，暗示外部資金流向與外資法人持倉可能面臨再平衡調節。0050 作為權值股集合體，易直接承受國際被動型基金贖回的流動性壓力。
+- **與同類海外代理標的（EWT）形成顯著差異化**：海外分析指出 EWT 存在配置劣勢，這促使全球專業機構重新評估直接透過臺股掛牌的 0050 進行現貨配置的效益，有助於吸引更多長期外資直接進入臺灣本土市場。
+- **數據檢索存在市場代碼衝突雜訊**：新聞源中出現香港小輪（0050.HK）及其他美股代碼的干擾，凸顯機構投資者在進行大數據輿情監控與跨市場量化交易時，必須嚴格配置交易所後綴（如 TWSE:0050 與 0050.HK），以防流動性與定價信號誤讀。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-11-08 | HSBC Holdings plc (0005.HK) Stock Price, News, Quote & History — Yahoo News
-- 2026-10-29 | Hong Kong Ferry (Holdings) Company Limited (0050.HK) — Bing News
+- 2026-09-23 | Hong Kong Ferry (Holdings) Company Limited (0050.HK) — Bing News
 - 2026-09-06 | September Market Weakness: The Setup Has Teeth — Seeking Alpha
-- 2026-08-06 | Taiwan Stocks Plunge 3,000 Points in July, Sparking Buying Frenzy; 0050 Attracts Record NT$170 Billion in a Single Month — BigGo Finance
 - 2026-07-13 | 0050 ETF Profile: Dividends, Returns (TWSE:0050) — TradingView
-- 2026-06-09 | Yuanta/P-Shares Taiwan Top 50 ETF — Bing News (WSJ)
+- 2026-06-09 | Yuanta/P-Shares Taiwan Top 50 ETF — Bing News / The Wall Street Journal
 - 2025-06-18 | After stock slip, Taiwan's '0050' ETF becomes more affordable to investors — Focus Taiwan
 - 2025-01-14 | Blaize Holdings, Inc. (BZAI) Stock Price, Quote, News & Analysis — Seeking Alpha
 - 2024-07-29 | EWT: There Are Better Options Than This ETF — Seeking Alpha
 - 2019-07-26 | Why Video Game Companies Are Never Investable To Me — Seeking Alpha
 - 2019-07-07 | Elicio Therapeutics, Inc. (ELTX) Stock Price, Quote, News & Analysis — Seeking Alpha
-- 2018-03-12 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) performance history — Yahoo Finance UK
-- 2017-08-23 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada
-- 2017-05-20 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock price, news, quote and history — Yahoo Finance UK
-- 2017-04-15 | META_TITLE_QUOTE — Yahoo Finance
-
-*(註：新聞檢索中出現之 0005.HK、0050.HK 香港小輪、BZAI 及 ELTX 等標的，係因跨市場代碼重疊或資料關聯雜訊所致，本報告重點分析聚焦於台灣證交所上市之 0050 及其相關市場走勢。)*
+- 2018-03-12 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) performance history — Yahoo News
+- 2017-08-23 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) Stock Price, News, Quote & History — Google News
+- 2017-08-09 | 0050 ETF Price and Chart — TWSE:0050 — TradingView
+- 2017-07-10 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock historical prices and data — Yahoo News
+- 2017-05-20 | Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock price, news, quote and history — Google News
+- 2017-04-15 | META_TITLE_QUOTE — Yahoo News
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 台股7月重挫引發抄底潮，0050 單月吸金破紀錄達 1,700 億新台幣
-- **事件內容**：根據 BigGo Finance 報導，台股在2026年7月出現劇烈回檔，指數單月重挫約 3,000 點。然而，市場並未陷入持續性流動性緊縮，反而引發強烈的低接買盤；其中元大台灣50（0050）單月淨流入金額高達 1,700 億新台幣，創下該基金成立以來的歷史單月吸金紀錄。
-- **營運與財務影響**：對於發行商元大投信而言，資產管理規模（AUM）在單月內暴增 1,700 億新台幣，將直接帶動經理費收入的大幅提升，鞏固其在台灣資產管理領域的領先地位。
-- **市場與股價啟示**：歷史經驗顯示，當大型市值型 ETF 在指數重挫期間出現巨額淨申購，代表機構法人、壽險資金或長期散戶投資人積極進場建立核心部位。這 1,700 億新台幣的實質資金注入，為整體台股加權指數以及核心半導體、AI 伺服器供應鏈成分股提供了關鍵的流動性後盾。
+### 1. 估值修正引發普及化效應，強化底部買盤結構
+- **新聞來源**：Focus Taiwan（2025-06-18）
+- **核心內容**：報導指出，在臺股經歷波段回檔之際，0050 的價格修正使其對廣大投資人而言更具承接可行性（affordable），帶動零售投資人逢低介入。
+- **深度分析**：
+  0050 歷來為臺灣權值龍頭的代表，當大盤拉回導致 ETF 單位淨值下降時，投資人往往視之為低成本建倉優質資產的契機。這種行為模式在臺灣市場的定期定額（Dollar-Cost Averaging）族群中尤為顯著。對基金營運而言，這項動態帶來了持續的淨申購力道，不僅有助於平抑次級市場折價風險，更能在股價承壓時期擴大基金的資產規模（AUM），增強造市商在初級市場的套利流動性，降低系統性流動性緊縮的風險。
 
----
+### 2. 0050 ETF 概況分析：股利回報與長期年化收益檢視
+- **新聞來源**：TradingView（2026-07-13）
+- **核心內容**：針對 TWSE:0050 進行全面性體檢，重點剖析其成分股配息表現、現金股利發放歷史與長期複合年化回報率。
+- **深度分析**：
+  在當前高利率與全球經濟增長放緩的背景下，投資機構對於權益類資產的挑選標準日趨嚴格。TradingView 的剖析指出 0050 具備穩定的股利發放體系，配合成分股以科技硬體與晶圓製造龍頭為核心，使其既擁有資本利得爆發力，又具備防禦性股息收入。這種雙重屬性讓 0050 成為機構法人抵抗通膨衝擊與建構核心防禦部位的重要配置工具，強化了其作為臺股投資基準（Benchmark）的公信力。
 
-### 2. 股價回檔使 0050 投資門檻優化，帶動定期定額與零售買盤
-- **事件內容**：中央社（Focus Taiwan）報導指出，隨著台股波段回調，0050 的每單位交易價格自高檔回落，使該標的對於一般投資大眾顯得更為平易近人（more affordable）。
-- **結構性轉變**：0050 過去因長期走多，每股價格居高不下，部分小額投資人轉向高股息 ETF 或中小型標的。但當市場價格下修後，投資人再次意識到大盤市值型 ETF 的長線總報酬潛力。
-- **市場與股價啟示**：零股交易機制與定期定額扣款平台的普及，使得市價回檔成為零售資金擴大佈局的催化劑。零售買盤的廣泛進駐有助於平滑 ETF 的折溢價波動，並降低單一外資進出所帶來的劇烈震盪風險。
+### 3. 宏觀季節性拉回風險與流動性考驗
+- **新聞來源**：Seeking Alpha（2026-09-06）
+- **核心內容**：提出「9 月市場疲弱：回檔格局具備實質殺傷力」，深入探討歷史季節性效應與宏觀緊縮背景下，全球股票市場可能面臨的集中拋售風險。
+- **深度分析**：
+  歷史數據顯示，第 3 季季末通常是國際機構法人季底部位調整、獲利了結與避險情緒高漲的時點。0050 的成分股中外資持股比例極高，當國際宏觀避險情緒升高時，外資經常透過拋售權值成分股以調度全球流動性，導致 0050 短期承受沉重的貝塔（Beta）系統性下修壓力。投資人需審慎評估此類宏觀回檔對於高貝塔科技權值資產的估值壓縮效應。
 
----
-
-### 3. ETF 核心財務指標解析：股利分配與總報酬維度
-- **事件內容**：TradingView 針對 TWSE: 0050 釋出詳細的個股 Profile 分析，重點剖析其歷年配息政策（Dividends）與長期年化總報酬率（Returns）。
-- **財務視角分析**：0050 採取半年配息機制，其現金股利主要來自 50 家成分股企業的獲利分紅。儘管其殖利率水準通常不及純高股息型產品，但由於囊括台灣高成長動能的科技權值股，其資本利得表現長期大幅跑贏純配息導向的策略。
-- **市場與股價啟示**：專業財經平台對其報酬架構的深度覆蓋，反映當前市場資金在經歷市場大幅波動後，正重新聚焦於「總報酬率（Total Return）」而非僅關注短期現金流，這將進一步強化 0050 在核心資產配置中的不可替代性。
-
----
-
-### 4. 宏觀季節性逆風：Seeking Alpha 示警 9 月市場疲弱
-- **事件內容**：Seeking Alpha 宏觀研究報告指出，「September Market Weakness: The Setup Has Teeth」，深入分析了歷年 9 月份全球股票市場往往面臨的季節性調整與結構性風險。
-- **宏觀環境對 0050 的外溢效應**：0050 的主要權值股（如晶圓代工龍頭與電子組裝巨頭）具備高度全球化特徵，營收主要依賴歐美終端市場需求。若 9 月美股出現流動性緊縮或估值壓縮，外資對台股現貨與期貨的避險操作將直接衝擊 0050 價格走勢。
-- **投資決策意涵**：即使 7-8 月逢低承接買盤強勁，投資人仍須提防第三季末由全球總體經濟引起的二次探底風險，短線上應避免過度使用槓桿追價。
+### 4. 國際替代品評比：EWT 評等分歧突顯本土 0050 的相對價值
+- **新聞來源**：Seeking Alpha（2024-07-29）
+- **核心內容**：分析師提出「EWT: There Are Better Options Than This ETF」，質疑美股掛牌的 iShares MSCI Taiwan ETF 之配置性價比，並指出其結構性不足。
+- **深度分析**：
+  EWT 長期以來是海外投資人參與臺灣市場的主要管道，但其管理費率較高、指數編製方法對於某些科技龍頭的權重上限限制，往往導致其追蹤報酬偏離現貨市場最強勢的個股表現。該文章引發對 EWT 效率的質疑，間接提升了直接追蹤富時臺灣 50 指數、內扣費用結構合理且緊密貼合本土現貨市場流動性的 0050 的吸引力，有望推動國際長線資金繞過 ADR 或外幣 ETF，轉向直接配置臺灣本土 0050 現貨。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒**：🟡 **中性偏正面**
+**整體市場情緒**：🟡 **中性偏謹慎**
 
-| 因素分類 | 具體市場驅動指標 | 影響力評估 |
+| 評估維度 | 具體因素解析 | 影響權重 |
 | :--- | :--- | :--- |
-| 🟢 正面因素 | 單月吸金破紀錄 1,700 億新台幣，散戶與法人展現強烈逢低承接意願 | **高** |
-| 🟢 正面因素 | 評價拉回使進場成本更具吸引力，定期定額買盤持續擴大 | **中高** |
-| 🟢 正面因素 | 成分股基本面由 AI 與高階先進製程長期需求支撐 | **中** |
-| 🔴 負面因素 | 大盤單月急殺 3,000 點，技術面與籌碼面修復仍需時間盤整 | **高** |
-| 🔴 負面因素 | 全球金融市場面臨 9 月季節性回檔壓力，外資流向不確定性偏高 | **中** |
-
-**綜合評估依據**：
-台股雖然經歷了單月重挫 3,000 點的技術性破壞，但 0050 單月吸引 1,700 億新台幣的買盤，明確展現出資金對長線基本面的高度認可；下檔承接力道厚實，抵消了部分總經逆風的負面影響。市場正處於「籌碼快速換手至長線持有者」的打底階段，整體情緒保持理性且具防禦性。
+| **🟢 正面因素** | • 股價拉回降低進場門檻，零售與定期定額買盤承接力道強韌<br>• 配息紀錄良好，長期總回報體系具備跨週期吸引力<br>• 海外同業競爭品（EWT）面臨質疑，凸顯本地現貨 ETF 優勢 | 中高 |
+| **🔴 負面因素** | • 總體經濟與季節性拋售壓力（9 月效應）對大型權值股帶來下檔壓力<br>• 外資季底再平衡可能引發權重股短線拋售，抑制指數空間 | 中 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **成分股權重過度集中風險**：0050 單一第一大權值股（台積電）占比超過四至五成，基金淨值表現高度取決於半導體週期走向與先進製程資本支出進度，難以完全發揮分散個別產業波動的效果。
-- 🟡 **外資提款與地緣政治波動**：台灣加權指數與 0050 為外資調節新興市場流動性時的首要工具。在國際地緣政治升溫或美債殖利率反彈期間，容易面臨外資被動賣超的系統性風險。
-- 🟡 **全球終端消費需求與季節性調整**：Seeking Alpha 提示之 9 月市場疲弱可能導致全球消費性電子出貨不如預期，壓抑第四季企業財報展望，進而延後大盤技術面反彈的節奏。
-- 🟢 **配息率吸引力相對偏低**：在利率維持相對高檔的環境下，部分追求純現金流的零售資金可能流向債券 ETF 或高股息 ETF，造成短期邊際資金分流。
+- 🔴 **高集中度個股波動風險（集中度風險）**：0050 追蹤臺灣前 50 大企業，但單前半導體晶圓代工龍頭權重佔比極大。當全球半導體景氣循環下行或地緣政治風險上升時，單一龍頭個股的劇烈波動將直接牽動 0050 淨值，缺乏分散化保護。
+- 🟡 **國際宏觀資金撤出風險（流動性外溢）**：外資法人在臺股持有高度權重，在國際金融市場面臨季節性去槓桿（如 Seeking Alpha 所述之市場疲弱期）時，0050 成分股首當其衝成為外資提款工具，容易造成基金淨值偏離基本面。
+- 🟢 **跨市場代碼標註與量化交易誤判風險**：部分金融資訊終端（如搜尋結果所示）容易混淆港股「0050.HK」與臺股「0050.TW」。若量化演算法缺乏嚴格的交易所前綴校驗，可能在股利收益率與基本面估值運算上產生模型偏誤。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **千億抄底資金的籌碼沉澱進度**：關注 7 月湧入之 1,700 億新台幣資金是否轉為長線鎖碼部位，抑或在指數反彈至技術均線壓力區時出現短線獲利了結賣壓。
-2. **核心成分股業績與財測指引**：密切追蹤權值龍頭（台積電、聯發科等）最新公佈的月營收數據與海外法說會展望，確認 AI 運算及半導體景氣是否維持擴張軌道。
-3. **9月全球金融市場波動度變化**：觀察美股主要科技指數（費城半導體指數、那斯達克）在 9 月季節性轉弱期間的回檔幅度，以及新台幣匯率走勢是否引發外資被動型基金進一步調節。
+1. **宏觀季節性回檔後的籌碼沉澱進度**：密切追蹤 Seeking Alpha 所提及之季節性弱勢修正是否告一段落，觀察大盤在外資連續調節後是否出現量縮築底跡象。
+2. **零股交易量與散戶定期定額規模**：驗證 Focus Taiwan 報導中提及之「平價效應」是否持續轉化為具體的基金規模成長，作為判斷底部支撐力度的關鍵數據。
+3. **基金成分股除權息與收益分配公告**：追蹤 TradingView 所強調的配息指標，關注元大投信即將發布的每受益權單位評價與收益分配期程，評估現金流對防禦型資金的吸引力。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. HSBC Holdings plc (0005.HK) Stock Price, News, Quote & History — Yahoo News (2026-11-08)
-2. Hong Kong Ferry (Holdings) Company Limited (0050.HK) — Bing News (2026-10-29)
-3. September Market Weakness: The Setup Has Teeth — Seeking Alpha (2026-09-06)
-4. Taiwan Stocks Plunge 3,000 Points in July, Sparking Buying Frenzy; 0050 Attracts Record NT$170 Billion in a Single Month — BigGo Finance (2026-08-06)
-5. 0050 ETF Profile: Dividends, Returns (TWSE:0050) — TradingView (2026-07-13)
-6. Yuanta/P-Shares Taiwan Top 50 ETF — Bing News / WSJ (2026-06-09)
-7. After stock slip, Taiwan's '0050' ETF becomes more affordable to investors — Focus Taiwan (2025-06-18)
-8. Blaize Holdings, Inc. (BZAI) Stock Price, Quote, News & Analysis — Seeking Alpha (2025-01-14)
-9. EWT: There Are Better Options Than This ETF — Seeking Alpha (2024-07-29)
-10. Why Video Game Companies Are Never Investable To Me — Seeking Alpha (2019-07-26)
-11. Elicio Therapeutics, Inc. (ELTX) Stock Price, Quote, News & Analysis — Seeking Alpha (2019-07-07)
-12. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) performance history — Yahoo Finance UK (2018-03-12)
-13. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) Stock Price, News, Quote & History — Yahoo! Finance Canada (2017-08-23)
-14. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock price, news, quote and history — Yahoo Finance UK (2017-05-20)
-15. META_TITLE_QUOTE — Yahoo Finance (2017-04-15)
+1. Hong Kong Ferry (Holdings) Company Limited (0050.HK) — Bing News (2026-09-23)
+2. September Market Weakness: The Setup Has Teeth — Seeking Alpha (2026-09-06)
+3. 0050 ETF Profile: Dividends, Returns (TWSE:0050) — TradingView (2026-07-13)
+4. Yuanta/P-Shares Taiwan Top 50 ETF — The Wall Street Journal / Bing News (2026-06-09)
+5. After stock slip, Taiwan's '0050' ETF becomes more affordable to investors — Focus Taiwan (2025-06-18)
+6. Blaize Holdings, Inc. (BZAI) Stock Price, Quote, News & Analysis — Seeking Alpha (2025-01-14)
+7. EWT: There Are Better Options Than This ETF — Seeking Alpha (2024-07-29)
+8. Why Video Game Companies Are Never Investable To Me — Seeking Alpha (2019-07-26)
+9. Elicio Therapeutics, Inc. (ELTX) Stock Price, Quote, News & Analysis — Seeking Alpha (2019-07-07)
+10. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) performance history — Yahoo News (2018-03-12)
+11. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) Stock Price, News, Quote & History — Google News (2017-08-23)
+12. 0050 ETF Price and Chart — TWSE:0050 — TradingView (2017-08-09)
+13. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock historical prices and data — Yahoo News (2017-07-10)
+14. Yuanta/P-shares Taiwan Top 50 ETF (0050.TW) stock price, news, quote and history — Google News (2017-05-20)
+15. META_TITLE_QUOTE — Yahoo News (2017-04-15)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
