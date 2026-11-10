@@ -17,131 +17,127 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ---
 
 ## 🏢 公司概覽
-台灣積體電路製造股份有限公司（Taiwan Semiconductor Manufacturing Company Limited，簡稱台積電，股票代碼：2330.TW）是全球晶圓代工（Foundry）產業的絕對領先者，市佔率逾六成，在先進製程（3 奈米、2 奈米）及先進封裝（CoWoS / SoIC）領域更構築了近乎壟斷的競爭壁壘。身為全球科技硬體與人工智慧（AI）革命的關鍵核心，台積電為蘋果（Apple）、輝達（Nvidia）、超微（AMD）等國際科技巨頭提供代工服務。截至 2026 年 11 月 10 日，台積電於台灣證券交易所最新收盤報價為 2,235.0 新台幣，持續展現其身為全球 AI 基礎建設基石的高估值溢價能力。
+台灣積體電路製造股份有限公司（TSMC，台積電，TWSE: 2330）為全球純晶圓代工（Pure-play Foundry）龍頭，市佔率高居世界第一。台積電憑藉頂尖的先進製程技術（包含 3nm、2nm 世代）以及領先業界的 CoWoS（Chip-on-Wafer-on-Substrate）先進封裝技術，成為全球人工智慧（AI）、高效能運算（HPC）、5G 智慧型手機及雲端資料中心不可或缺的基石，主要客戶涵蓋 Nvidia、Apple、AMD 等科技巨頭。
 
 ---
 
 ## 📝 新聞摘要總覽
-回顧近期市場新聞，台積電在基本面、產業地位、地緣政治與資本籌措等多個維度釋出高度利多訊號，強化了其作為「AI 與 AGI（通用人工智慧）基礎建設浪潮必然贏家」的市場共識。
+台積電（2330.TW）近期在資本市場與產業面均展現強勁的領導實力。在財務表現方面，根據最新公布的 2026 年第一季財報電話會議紀錄，台積電繳出遠優於財測的營運成績：單季營收達到 359 億美元，季增 6.4%，毛利率攀升至 66.2%，單季每股盈餘（EPS）達到 22.08 新台幣；基於強勁需求，管理層正式調升全年美元營收成長指引。此外，第三季營收與獲利持續維持爆發式增長，台積電亦確立了 2026 至 2027 年 CoWoS 先進封裝產能目標，並計畫實施價格調漲，顯現出極高的客戶黏著度與卓越的定價話語權。
 
-財務業績方面，台積電於最新法說會公布的第一季營運數據驚豔市場：單季美元營收達到 359 億美元（季增 6.4%），毛利率大幅擴張至 66.2%，單季每股純益（EPS）達 22.08 新台幣，各項核心指標全面超越原先財務財測。基於終端 AI 晶片需求持續井噴，管理層更進一步調升了全年度美元營收的成長目標。此外，市場聚焦於先進封裝 CoWoS 的強勁發展，新聞指出公司確立了 2026 至 2027 年的積極擴產目標，並啟動計劃性價格調漲，顯示出台積電在供給極度吃緊情境下強大的產業議價權（Pricing Power）。
-
-總體經濟與產業數據方面，9 月全球晶片銷售額繳出年增 146.8% 的爆發性成長數據，雖引發短線投資人因擔憂週期頂部而出現獲利了結賣壓，但華爾街與國際金融機構普遍重申台積電等 AI 基礎設施核心標的將持續受惠於 AGI 資本支出擴張。在政治與政策面，美國期中選舉（Midterms）落幕後的政治格局明朗化，新聞指出台積電成為選舉後的重要受惠者，有助於降低晶片法案補貼與跨國設廠的不確定性。最後，在永續金融與資本支出支援上，台積電宣布將於 11 月 12 日在台灣櫃檯買賣中心掛牌發行規模達 148 億新台幣（約 4.5 億美元）的綠色債券，持續透過多元融資管道優化資本成本，支持其綠能轉型與擴產佈局。
+市場趨勢方面，全球主流財經媒體與分析機構將台積電評為全球 AI 與通用人工智慧（AGI）基礎設施擴建浪潮中「近乎必然的獲勝者」（Nearly Guaranteed Winner）。新聞亦指出，市場傳出台積電可能進一步跨足為 Nvidia 提供先進記憶體製造或客製化整合方案，這將進一步深化雙方技術綁定，鞏固其在 AI 伺服器供應鏈的核心中樞地位。在產業競爭面向，針對英特爾（Intel）與台積電的長期上漲空間比較，市場資金普遍偏好技術進程明朗、執行力穩定且獲利轉換效率極高的台積電。儘管台積電股價曾於 2026 年 9 月下旬重返每股 2,500 新台幣高峰，目前最新報價回檔至 2,285.0 新台幣進行高檔整理，但強勁的基本面、上調的財務指引以及先進封裝的結構性供不應求，持續為中長期股價提供強大支撐。
 
 ---
 
 ## 💡 關鍵洞察
-
-- **毛利率突破 66% 展現結構性定價霸權**：Q1 毛利率達到 66.2%，顯示台積電在先進製程（3nm/2nm）的良率優勢與高稼動率已抵消海外晶圓廠初期稀釋效應。定價權的強勢運作，使其能將能源與先進設備折舊成本完全轉嫁給客戶，維持超高毛利水準。
-- **CoWoS 調價確立先進封裝邁入「高利潤率常態」**：公司啟動 2026–2027 年 CoWoS 產能擴張與漲價策略，證明先進封裝不再只是晶圓代工的附屬加值服務，而是已轉化為具備高技術門檻與超額利潤的核心營收引擎。
-- **AGI 支出週期持續延長，去風險化預期落空**：全球 9 月晶片銷售年增 146.8% 與多篇機構研究證實，雲端巨頭（CSP）對算力的軍備競賽已由生成式 AI 演進至 AGI 階段，基礎建設投資動能比市場預期更深更廣，台積電近乎包辦全部先進加速晶片，實質業績轉化明確。
-- **美國期中選舉消除政策懸念，海外補貼與擴產路徑清晰**：期中選舉後的政策確定性提升，緩和了市場對跨國半導體戰略法規大幅更迭的焦慮，使台積電美國亞利桑那州等地的資本佈局與激勵措施得以按計劃推進。
-- **綠色融資深化資本效率與 ESG 護城河**：發行 148 億新台幣綠色債券不僅鎖定低成本長期資金，更能應對國際頂級客戶對 100% 綠電與淨零製造的嚴苛標準，將 ESG 要求轉化為排除潛在競爭對手的非關稅壁壘。
-- **獲利了結賣壓無損長期牛市基調**：短線晶片股雖因強勁數據引發短線「利多出盡」式回檔，但在台積電管理層全面上調全年美元成長指引的背書下，回檔屬於健康的籌碼換手與估值消化，長線基本面無虞。
+- **定價權與毛利率結構優化突破常規**：台積電 Q1 2026 毛利率高達 66.2%，且近期確認規劃調漲 CoWoS 價格。這證明即便面臨海外擴廠成本壓力，其對 AI/HPC 高階客戶的轉嫁能力與議價能力依然無懈可擊，毛利結構顯著優於傳統半導體週期頂部水準。
+- **AGI 基礎設施浪潮下的確定性資產**：多家外媒一致強調台積電在 AI 基礎建設中的獨佔優勢；不同於單一晶片設計商面臨架構更迭風險，台積電作為所有主流加速晶片的製造樞紐，實質上承接了整個 AGI 資本支出紅利。
+- **技術邊界拓展（先進封裝與潛在記憶體佈局）**：市場傳出台積電將為 Nvidia 切入先進記憶體領域，顯示先進封裝正在重新定義晶圓代工範疇。藉由將 Logic、HBM/先進記憶體深度整合，台積電正從純代工走向高附加價值的系統級封裝代工，進一步推高技術壁壘。
+- **全年營收指引上調提供高能見度**：管理層在第一季單季營收達 359 億美元之際上調全年美元營收預期，顯示客戶對先進製程與 CoWoS 產能之預訂已排至 2026–2027 年，消弭市場對短期資本支出過熱的疑慮。
+- **對比競爭對手（Intel）展現絕對護城河優勢**：在「INTC vs. TSM」的市場比較中，儘管競爭對手試圖在代工業務急起直追，但台積電在高良率、產能擴充速度及技術落地執行力上持續拉開差距，成為長線機構投資人的首選標的。
+- **股價高檔整固反映良性估值消化**：股價自 9 月份的 2,500 新台幣回檔至目前的 2,285 新台幣，主因短期漲多獲利了結與市場籌碼沉澱，基本面並未出現惡化跡象，拉回反倒提供優質防禦與再次進場的安全邊際。
 
 ---
 
 ## 📰 近期新聞總覽
-
-- **2026-11-09** | Taiwan Semiconductor Manufacturing Co., Ltd. | 2330.TW Stock Price & Real-time Quotes — *BigGo Finance*
-- **2026-11-08** | This Stock Is a Nearly Guaranteed Winner From the AI Infrastructure Buildout — *Yahoo Finance*
-- **2026-11-08** | TSMC Stock And 2 AI Infrastructure Shares Riding The AGI Spending Wave — *Yahoo Finance*
-- **2026-11-06** | Taiwan Semiconductor Just Won Big in The Midterms — *Yahoo Finance*
-- **2026-11-06** | TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — *Bing News*
-- **2026-11-05** | Two Days Before Today's Selloff, Data Put Global September Chip Sales Up 146.8% Year to Year — *Yahoo! Finance Canada*
-- **2026-11-04** | TSMC to list $450mn green bonds in Taiwan — *Bing News*
-- **2026-11-03** | TSMC (2330) Stock Price Today (TWSE), Market News — *TechGraph*
-- **2026-11-01** | Weekly Recap: Q3 revenue jump and CoWoS price hikes — *TradingView*
-- **2026-03-24** | Assessing Taiwan Semiconductor Manufacturing (TWSE:2330) Valuation After A Strong Year Of Share Price Momentum — *Bing News*
+- 2026-11-10 | INTC vs. TSM: Which Semiconductor Stock Has More Upside Now? — Yahoo Finance
+- 2026-11-08 | Taiwan Semiconductor Manufacturing Co., Ltd. | 2330.TW Stock Price & Real-time Quotes — BigGo Finance
+- 2026-11-08 | This Stock Is a Nearly Guaranteed Winner From the AI Infrastructure Buildout — Yahoo Finance
+- 2026-11-08 | TSMC Stock And 2 AI Infrastructure Shares Riding The AGI Spending Wave — Yahoo Finance
+- 2026-11-06 | TSMC rises on report of potential push into advanced memory for Nvidia — Yahoo Finance
+- 2026-11-06 | TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — Bing News
+- 2026-11-04 | Almonty: High Reward/Risk For This Tungsten And Molybdenum Producer (NASDAQ:ALM) — Seeking Alpha
+- 2026-11-01 | Weekly Recap: Q3 revenue jump and CoWoS price hikes — Bing News
+- 2026-10-31 | Novartis: Q3 2026 Earnings Confirm 'Hold' Recommendation Based On Balanced Approach (NVS) — Seeking Alpha
+- 2026-10-22 | Taiwan Semiconductor Manufacturing Company Limited (2330) — Bing News
+- 2026-10-19 | Taiwan's Stock Pickers Are Walking Out to Bet Their Own Money — Yahoo! Finance Canada
+- 2026-09-22 | Taiwan Semiconductor Manufacturing Reclaims NT$2,500 as Taiwan Stocks Surge Over 500 Points to Reclaim 48K — BigGo Finance
+- 2026-08-31 | Why the head of Taiwan’s stock exchange wants you to look past TSMC—and embrace the ‘technology island’ — Yahoo Finance
+- 2026-04-29 | Taiwan Semiconductor Manufacturing Co. Ltd. — Bing News
+- 2026-03-24 | Assessing Taiwan Semiconductor Manufacturing (TWSE:2330) Valuation After A Strong Year Of Share Price Momentum — Bing News
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. 2026 年第一季財報超預期與全年指引上修
-- **核心內容**：根據 Q1 2026 法說會逐字稿，台積電第一季交出營收 359 億美元、季增 6.4%、毛利率 66.2%、單季 EPS 22.08 新台幣的亮眼成績，三項數據全數超越先前財測高標。管理層同步上調了全年美元營收成長指引。
-- **營運與財務影響**：傳統上半年度為消費性電子淡季，但首季營收能實現 6.4% 的逆勢季增長，彰顯高效能運算（HPC）與 AI 相關營收的強勁抗週期能力。毛利率突破 66%，印證極高產能利用率（先進製程滿載）帶來規模經濟效益，強化自由現金流積累。
-- **股價意涵**：首季 EPS 22.08 新台幣奠定了全年獲利有望挑戰全新歷史高點的基礎，為目前 2,235.0 新台幣的股價提供了實質的每股獲利支撐，打破市場先前對於高基期下成長趨緩的質疑。
+### 1. Q1 2026 財報超預期與全年展望上修（2026-11-06）
+- **新聞核心內容**：台積電 Q1 2026 營收達 359 億美元（季增 6.4%），毛利率大幅擴張至 66.2%，單季每股盈餘達到 22.08 新台幣，均超越原先指引；管理層隨即上調全年美元營收成長目標。
+- **營運與財務影響**：
+  - 單季 359 億美元營收與 66.2% 的毛利率創下歷史級優異水準，證明先進節點產能利用率持續滿載，產品平均售價（ASP）具備強大支撐。
+  - 單季 EPS 22.08 新台幣奠定全年獲利高成長基調，上修全年美元營收指引代表來自 AI 晶片及高效能運算的需求並非短期虛火，具備清晰的跨年度延續性。
+- **股價意涵**：實質獲利大幅擊敗財測是消弭本益比偏高疑慮的最佳催化劑，有助於吸引長線價值基金與主權基金買盤進駐。
 
-### 2. AI 基礎建設唯一贏家定位與 CoWoS 漲價計畫
-- **核心內容**：多家國際財經媒體（Yahoo Finance 等）將台積電評為全球 AI 與 AGI 基礎設施浪潮中「近乎必然的贏家」；此外，週報指出公司針對 2026–2027 年制定了積極的 CoWoS 產能擴張計畫，並醞釀調漲先進封裝代工價格。
-- **營運與財務影響**：AI 晶片由 GPU 轉向複雜度更高的 ASIC 及次世代架構，先進封裝產能已是雲端服務商（CSP）與晶片設計商搶奪的關鍵資源。台積電掌握全球絕大多數高階封裝技術，計劃性漲價代表台積電能順利將設備投資與研發成本內部化，同時轉化為營運利潤，確保 2026–2027 年結構性成長具備高度能見度。
-- **股價意涵**：確立了長線「量價齊揚」（Volume & ASP 雙增）格局，機構投資人會將估值模型中的本益比（P/E）溢價進一步提高，消除市場對封裝供應瓶頸拖累出貨的疑慮。
+### 2. CoWoS 產能積極擴張與報價調漲計畫（2026-11-01）
+- **新聞核心內容**：外媒週報指出，台積電 Q3 營收與獲利爆發，並確立 2026–2027 年強勁的 CoWoS 先進封裝擴產目標，同時計畫對 CoWoS 進行價格調漲。
+- **營運與財務影響**：
+  - AI 晶片製程中，先進封裝產能為最大供需瓶頸。台積電敢於在產能擴張期宣布調價，直接印證客戶對其 CoWoS 解決方案的絕對依賴。
+  - 價格調漲將有效抵銷機台資本支出折舊費用，進一步鞏固先進封裝業務的營業利益率，成為晶圓製造本業外的第二成長曲線。
+- **股價意涵**：先進封裝成為台積電價值重估（Re-rating）的關鍵動能，市場對於 2026–2027 年的現金流預期進一步提升。
 
-### 3. 美國期中選舉落幕帶來政策確定性
-- **核心內容**：外媒報導「Taiwan Semiconductor Just Won Big in The Midterms」，指出台積電在美國期中選舉的政治格局重塑中成為主要受惠者。
-- **營運與財務影響**：美國期中選舉後的政局確立，為外國半導體製造商在美設廠與補貼政策帶來更高的穩定性。台積電在亞利桑那州多座晶圓廠的建設、投資抵減與營運補貼方案受到政治波動的干擾風險顯著下降，降低跨國營運的管理與合規摩擦成本。
-- **股價意涵**：地緣政治折價（Geopolitical Discount）是壓抑台積電長線估值的關鍵因素之一。政治局勢明朗化有助於外資法人降低風險權重，吸引長線價值基金回流。
+### 3. 傳進軍 Nvidia 先進記憶體供應鏈（2026-11-06）
+- **新聞核心內容**：市場傳出台積電可能推進與 Nvidia 合作的先進記憶體製造或架構整合，消息激勵市場買氣。
+- **營運與財務影響**：
+  - 次世代 AI 運算架構對記憶體頻寬的要求極高，若台積電跨足先進記憶體領域（如邏輯與記憶體更緊密的 3D 堆疊或客製化記憶體整合），將實質突破摩爾定律物理極限。
+  - 此舉將直接深化台積電與龍頭客戶 Nvidia 之間的護城河，拉高競爭對手（如三星、英特爾）在異質整合代工上的追趕難度。
+- **股價意涵**：技術領域的潛在突破打開了市場對台積電長線 TAM（潛在市場規模）的想像空間，激勵投資人給予更高估值溢價。
 
-### 4. 發行 148 億新台幣綠色債券強化資本結構
-- **核心內容**：台積電預計於 11 月 12 日在櫃買中心發行總值 148 億新台幣（約 4.5 億美元）的綠色債券。
-- **營運與財務影響**：在當前全球利率與資本成本維持一定水準的環境下，透過專案性綠色債券籌資，能有效鎖定極具競爭力的利率條件，專項用於綠能採購、水資源循環及先進節能製程設備升級。這不僅呼應其 RE100 目標，也確保製程產能符合全球客戶之嚴苛碳足跡認證。
-- **股價意涵**：落實 ESG 治理有助於維持台積電在各大國際 ESG 指數中的權重配置，避免國際永續基金的主動減碼風險。
+### 4. AGI 與 AI 基礎建設浪潮下的壟斷型定位 vs. 英特爾（2026-11-08 / 2026-11-10）
+- **新聞核心內容**：多篇分析將台積電列為 AI 與 AGI 基礎設施擴建的「幾乎保證獲利者」，並探討台積電相較於英特爾（INTC）的上漲潛力。
+- **營運與財務影響**：
+  - AGI 競賽推動科技巨頭不計成本採購算力晶片，台積電實質壟斷全球 5nm/3nm/2nm 先進製程晶圓供應。
+  - 對比英特爾仍在良率、獲利能力與代工客戶信任度間掙扎，台積電無論在自由現金流生成能力或技術交付可靠度上，均展現全面壓制之姿。
+- **股價意涵**：在全球科技股配置中，台積電持續成為科技型 ETF 與全球半導體配置的必備核心持股（Must-own Asset）。
 
 ---
 
 ## 📊 市場情緒評估
+**整體市場情緒：🟢 正面**
 
-**整體市場情緒**：🟢 **正面（Bullish）**
-
-| 維度 | 評估指標 | 具體分析依據 |
-| :--- | :--- | :--- |
-| **正面因素** | 🟢 財報全面超預期 | Q1 營收達 359 億美元、毛利率達 66.2%、EPS 達 22.08 新台幣，全年指引再度上修。 |
-| | 🟢 產業定價權發酵 | CoWoS 供不應求延續至 2027 年，公司具備直接漲價轉嫁成本的能力。 |
-| | 🟢 政策不確定性消除 | 美國期中選舉後政治局勢確立，晶片法案與海外補貼環境相對穩定。 |
-| **負面/審慎因素**| 🟡 短線銷售數據衝高震盪 | 9 月全球晶片銷售年增 146.8% 之後引發市場對高基期獲利了結的短線拋售。 |
-| | 🟡 資本支出高檔負擔 | 積極擴產 CoWoS 與綠能投資需持續仰賴大額融資（如發行 148 億綠債）。 |
-
-綜合評估，台積電的基本面表現與定價能力遠遠抵消了短線籌碼面獲利了結帶來的震盪，市場整體看好情緒濃厚且具基本面數據支撐。
+### 評估依據：
+- **正面因素**：
+  - **財務指標異常亮眼**：Q1 2026 毛利率高達 66.2%、單季 EPS 22.08 新台幣，全年營收展望獲調升。
+  - **強大產品定價權**：CoWoS 規劃漲價且 2026–2027 年產能目標明確，市場需求高度緊俏。
+  - **長期成長敘事清晰**：被全球市場公認為 AGI/AI 基礎建設擴建下的首選受益標的，且與 Nvidia 等頂級客戶技術合作持續拓寬。
+- **負面/中性因素**：
+  - **股價短期高檔承壓**：股價自先前重返的 2,500 新台幣高峰拉回至目前的 2,285 新台幣，市場在高估值下對短線漲幅進行消化盤整。
+  - **單一產業權重過高討論**：證交所主管層倡導關注整體科技島多元產業，反映市場對台積電單一標的過度集中產生部分關注。
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🟡 **中期半導體週期基期過高風險（風險等級：中）**：
-  9 月全球晶片銷售繳出年增 146.8% 的極端爆發力，市場隨即出現部分拋售，反映機構對未來成長率能否維持如此增速存在審慎評估。若後續終端需求增速放緩，恐面臨評價修正。
-- 🟡 **海外設廠進度與營運成本攤提（風險等級：中）**：
-  儘管美國期中選舉消除部分政治變數，但海外廠區建置之工會溝通、供應鏈本土化進度及折舊提列，仍可能在特定季度對毛利率構成邊際壓力。
-- 🟢 **資本融資與利息成本波動（風險等級：低）**：
-  台積電近期持續發行債券（如 148 億新台幣綠債），債務規模增加雖有助於擴充資本，但仍須密切追蹤全球利率走勢對整體財務利息支出之影響。
-- 🟢 **地緣政治外部性擾動（風險等級：低至中）**：
-  台積電作為全球核心供應鏈樞紐，跨國監管與高階 AI 晶片出口管制政策仍隨時受國際地緣博弈牽動。
+| 風險等級 | 風險類別 | 風險說明與潛在衝擊 |
+| :--- | :--- | :--- |
+| 🔴 **高風險** | 地緣政治與集中度風險 | 儘管全球市場極度依賴台積電，但地緣政治摩擦與生產基地高度集中於台灣的現實，始終是外資大規模配置時的核心對沖考量。 |
+| 🟡 **中風險** | 先進封裝與資本支出擴張執行風險 | 台積電制定極具野心的 2026–2027 CoWoS 擴產目標，龐大的資本投入伴隨機台到位速度、海外設廠成本及良率爬坡等執行挑戰。 |
+| 🟡 **中風險** | 客戶集中度與 AGI 資本支出週期波折 | 營收高度依賴頂級 AI 晶片客戶（如 Nvidia），若終端 AI 商業化變現速度放緩，可能引發雲端服務商（CSP）調整資本支出節奏。 |
+| 🟢 **低風險** | 同業競爭技術威脅 | 英特爾與其他代工廠短期內在高階製程良率與 CoWoS 等級先進封裝技術上仍難以匹敵，台積電市場份額短期內不具實質被替代性。 |
 
 ---
 
-## 🔮 短期關注重點
-
-1. **11 月 12 日綠色債券掛牌與定價細節**：
-   觀察 148 億新台幣綠債發行後的法人認購熱度與最終票面利率，此將反映機構投資人對台積電長期信用品質及財務穩健度的信心。
-2. **CoWoS 產能釋放與價格調整客戶反饋**：
-   持續追蹤輝達、超微等主要客戶對於 CoWoS 漲價計畫的接受度，以及 2026–2027 年擴產設備交期是否如期交付。
-3. **股價在 2,200–2,250 TWD 區間之技術支撐力道**：
-   檢視在財報利多與全球晶片銷售大增後，股價面對獲利了結賣壓時於 2,235.0 TWD 附近的量能變化，確認長線買盤承接力道。
+## 🔮 短期關注重點（未來 1–4 週）
+1. **CoWoS 漲價落實與產能供需細節**：追蹤供應鏈對於 2026–2027 年 CoWoS 產能擴張速度及調價生效時點的確認情況。
+2. **與 Nvidia 先進記憶體技術合作之後續動態**：觀察官方或科技研討會是否進一步釋出邏輯-記憶體整合代工之具體技術路徑。
+3. **法人機構目標價與獲利預估調升動向**：在全年美元營收成長指引上修後，各內外資券商是否相應上調 2026–2027 全年 EPS 預估及目標價。
+4. **股價於 2,200–2,300 新台幣區間的支撐力道**：檢視自 2,500 新台幣高點拉回後的籌碼換手狀況，確認技術面築底與反彈契機。
 
 ---
 
 ## 📌 新聞來源索引
-
-1. Taiwan Semiconductor Manufacturing Co., Ltd. | 2330.TW Stock Price & Real-time Quotes — *BigGo Finance* (2026-11-09)
-2. This Stock Is a Nearly Guaranteed Winner From the AI Infrastructure Buildout — *Yahoo Finance* (2026-11-08)
-3. TSMC Stock And 2 AI Infrastructure Shares Riding The AGI Spending Wave — *Yahoo Finance* (2026-11-08)
-4. Taiwan Semiconductor Just Won Big in The Midterms — *Yahoo Finance* (2026-11-06)
-5. TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — *Bing News* (2026-11-06)
-6. Two Days Before Today's Selloff, Data Put Global September Chip Sales Up 146.8% Year to Year — *Yahoo! Finance Canada* (2026-11-05)
-7. Almonty: High Reward/Risk For This Tungsten And Molybdenum Producer (NASDAQ:ALM) — *Seeking Alpha* (2026-11-04)
-8. TSMC to list $450mn green bonds in Taiwan — *Bing News* (2026-11-04)
-9. TSMC (2330) Stock Price Today (TWSE), Market News — *TechGraph* (2026-11-03)
-10. Palantir Q3: The Party Is Over (For Now) (Rating Downgrade) (NASDAQ:PLTR) — *Seeking Alpha* (2026-11-03)
-11. Weekly Recap: Q3 revenue jump and CoWoS price hikes — *TradingView* (2026-11-01)
-12. Taiwan Semiconductor Manufacturing Company Limited (2330) — *Bing News* (2026-10-22)
-13. Taiwan's Stock Pickers Are Walking Out to Bet Their Own Money — *Yahoo! Finance Canada* (2026-10-19)
-14. Why the head of Taiwan’s stock exchange wants you to look past TSMC—and embrace the ‘technology island’ — *Yahoo Finance* (2026-08-31)
-15. Assessing Taiwan Semiconductor Manufacturing (TWSE:2330) Valuation After A Strong Year Of Share Price Momentum — *Bing News* (2026-03-24)
-16. Here's Why TSMC Didn't Rise Despite Record Profits In Q3 2025 (NYSE:TSM) — *Seeking Alpha* (2025-10-23)
-17. VXUS: 51 Countries Against 1 (NASDAQ:VXUS) — *Seeking Alpha* (2024-12-09)
-18. How To Buy Samsung Stock And Should You (OTCMKTS:SSNLF) — *Seeking Alpha* (2021-02-04)
-19. 2330 Stock Price and Chart — TWSE:2330 — *TradingView* (2017-07-29)
-20. META_TITLE_QUOTE — *Yahoo Finance* (2016-07-15)
+1. INTC vs. TSM: Which Semiconductor Stock Has More Upside Now? — Yahoo Finance (2026-11-10)
+2. Taiwan Semiconductor Manufacturing Co., Ltd. | 2330.TW Stock Price & Real-time Quotes — BigGo Finance (2026-11-08)
+3. This Stock Is a Nearly Guaranteed Winner From the AI Infrastructure Buildout — Yahoo Finance (2026-11-08)
+4. TSMC Stock And 2 AI Infrastructure Shares Riding The AGI Spending Wave — Yahoo Finance (2026-11-08)
+5. TSMC rises on report of potential push into advanced memory for Nvidia — Yahoo Finance (2026-11-06)
+6. TAIWAN SEMICONDUCTOR MANUFACTUR (2330.TW) Q1 FY2026 earnings call transcript — Bing News (2026-11-06)
+7. Almonty: High Reward/Risk For This Tungsten And Molybdenum Producer (NASDAQ:ALM) — Seeking Alpha (2026-11-04)
+8. Weekly Recap: Q3 revenue jump and CoWoS price hikes — Bing News (2026-11-01)
+9. Novartis: Q3 2026 Earnings Confirm 'Hold' Recommendation Based On Balanced Approach (NVS) — Seeking Alpha (2026-10-31)
+10. Taiwan Semiconductor Manufacturing Company Limited (2330) — Bing News (2026-10-22)
+11. Taiwan's Stock Pickers Are Walking Out to Bet Their Own Money — Yahoo! Finance Canada (2026-10-19)
+12. Taiwan Semiconductor Manufacturing Reclaims NT$2,500 as Taiwan Stocks Surge Over 500 Points to Reclaim 48K — BigGo Finance (2026-09-22)
+13. Why the head of Taiwan’s stock exchange wants you to look past TSMC—and embrace the ‘technology island’ — Yahoo Finance (2026-08-31)
+14. Taiwan Semiconductor Manufacturing Co. Ltd. — Bing News (2026-04-29)
+15. Assessing Taiwan Semiconductor Manufacturing (TWSE:2330) Valuation After A Strong Year Of Share Price Momentum — Bing News (2026-03-24)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
