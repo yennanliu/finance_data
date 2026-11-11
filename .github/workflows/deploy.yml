@@ -94,6 +94,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    # Job-level permissions replace the workflow-level block, so all are
+    # listed. `actions: read` lets the retry step look up the artifact ID.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      actions: read
     concurrency:
       group: pages
       cancel-in-progress: false
@@ -114,20 +121,57 @@ jobs:
           timeout: 600000       # the action's hard maximum (10 min)
           error_count: 25       # tolerate more transient sync errors (default 10)
 
-      # deploy-pages uses GITHUB_SHA as the deployment ID (pages_build_version).
-      # On timeout it cancels that deployment, and a new deployment created
-      # with the same ID never reports a status: the manual re-run of
-      # 2026-11-10 polled an empty status for 10 min. The retry therefore uses
-      # a unique build version, which the Pages API accepts as any string.
+      # deploy-pages always sends GITHUB_SHA as pages_build_version (the
+      # deployment ID) and has no input to change it. A step-level `env:`
+      # override does not work either: the runner re-sets GITHUB_SHA from the
+      # github context for node actions (NodeScriptActionHandler.cs). On
+      # timeout deploy-pages cancels that deployment, and a new deployment with
+      # the same ID never reports a status: the manual re-run of 2026-11-10
+      # polled an empty status for 10 min. So the retry calls the same Pages
+      # API that deploy-pages uses, with a build version unique to this
+      # attempt (the API takes any unique string).
       - name: Retry deploy to GitHub Pages
         id: deploy_retry
         if: steps.deploy_first.outcome == 'failure'
-        uses: actions/deploy-pages@v4
         env:
-          GITHUB_SHA: ${{ github.sha }}-retry-${{ github.run_id }}-${{ github.run_attempt }}
-        with:
-          timeout: 600000
-          error_count: 25
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          BUILD_VERSION: ${{ github.sha }}-retry-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          artifact_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID/artifacts" \
+            --jq '.artifacts[] | select(.name == "github-pages") | .id')
+          # Same OIDC token core.getIDToken() fetches (no audience).
+          oidc_token=$(curl -sSf \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq -r '.value')
+          echo "Creating Pages deployment: artifact $artifact_id, version $BUILD_VERSION"
+          deployment_id=$(jq -n --argjson a "$artifact_id" --arg v "$BUILD_VERSION" \
+              --arg t "$oidc_token" '{artifact_id: $a, pages_build_version: $v, oidc_token: $t}' \
+            | gh api -X POST "repos/$REPO/pages/deployments" --input - --jq '.id // (.status_url // "" | split("/") | last) // empty')
+          # Same fallback chain as deploy-pages: id, then status_url, then version.
+          deployment_id=${deployment_id:-$BUILD_VERSION}
+
+          # Poll like deploy-pages: every 5 s for at most 10 min.
+          deadline=$(( $(date +%s) + 600 ))
+          while (( $(date +%s) < deadline )); do
+            sleep 5
+            status=$(gh api "repos/$REPO/pages/deployments/$deployment_id" --jq '.status' || echo "api_error")
+            echo "Current status: $status"
+            case "$status" in
+              succeed)
+                page_url=$(gh api "repos/$REPO/pages" --jq '.html_url')
+                echo "page_url=$page_url" >> "$GITHUB_OUTPUT"
+                exit 0 ;;
+              deployment_failed|deployment_perms_error|deployment_content_failed|deployment_cancelled|deployment_lost)
+                echo "::error::Pages deployment ended with status $status"
+                exit 1 ;;
+            esac
+          done
+          echo "::error::Retry deploy timed out after 10 min; cancelling $deployment_id"
+          gh api -X POST "repos/$REPO/pages/deployments/$deployment_id/cancel" || true
+          exit 1
 
       - name: Resolve page URL
         id: deployment
