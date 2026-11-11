@@ -7,11 +7,11 @@ an LLM to judge what regex cannot see.
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-11-10 |
-| Bad reports, last 2 days | 12  (13.5%) |
-| Bad reports, all scanned | 361 |
-| CSV | [bad_reports_2026-11-10.csv](bad_reports_2026-11-10.csv) |
-| Full summary | [summary_2026-11-10.txt](summary_2026-11-10.txt) |
+| Last run | 2026-11-11 |
+| Bad reports, last 2 days | 27  (23.9%) |
+| Bad reports, all scanned | 381 |
+| CSV | [bad_reports_2026-11-11.csv](bad_reports_2026-11-11.csv) |
+| Full summary | [summary_2026-11-11.txt](summary_2026-11-11.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -20,28 +20,30 @@ an LLM to judge what regex cannot see.
 
 ============================================================
 
-Recent — last 2 UTC days (2026-11-09, 2026-11-10)
-Total scanned : 89
-Bad reports   : 12  (13.5%)
+Recent — last 2 UTC days (2026-11-10, 2026-11-11)
+Total scanned : 113
+Bad reports   : 27  (23.9%)
 
 Issue breakdown:
-  DERIVATION               8  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
-  ARITHMETIC               4  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE               13  same ticker+type+date with a -2 / -3 suffix
+  DERIVATION              12  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  ARITHMETIC               6  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  STALE_PRICE              1  a newer completed session existed before the report date
 
 ------------------------------------------------------------
 
 All scanned reports
-Total scanned : 2002
-Bad reports   : 361  (18.0%)
+Total scanned : 2065
+Bad reports   : 381  (18.5%)
 
 Issue breakdown:
-  DERIVATION             160  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
-  ARITHMETIC             137  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
-  DUPLICATE               64  same ticker+type+date with a -2 / -3 suffix
+  DERIVATION             167  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  ARITHMETIC             141  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DUPLICATE               77  same ticker+type+date with a -2 / -3 suffix
   RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
   MISSING_SECTIONS         7  fundamental report lacks one of chapters ## 1. … ## 11.
   PLACEHOLDER              6  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
-  STALE_PRICE              5  a newer completed session existed before the report date
+  STALE_PRICE              6  a newer completed session existed before the report date
   NAN_VALUE                3  a $nan / nan% leaked from an empty data bar
   TOO_SHORT                2  fewer content lines than a real report has
   REFUSAL                  1  the model refused instead of writing the report
@@ -49,18 +51,18 @@ Issue breakdown:
   LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
 
 Top 10 tickers by bad-report count:
-  pl             19 / 65   bad
-  intc           17 / 65   bad
-  tsla           17 / 64   bad
-  amd            16 / 65   bad
-  ktos           16 / 65   bad
-  rklb           16 / 65   bad
-  avav           14 / 65   bad
-  nbis           14 / 66   bad
-  0050           13 / 65   bad
-  avgo           13 / 66   bad
+  pl             20 / 67   bad
+  intc           18 / 67   bad
+  amd            17 / 67   bad
+  rklb           17 / 67   bad
+  tsla           17 / 66   bad
+  ktos           16 / 67   bad
+  0050           15 / 67   bad
+  avav           15 / 67   bad
+  nbis           14 / 68   bad
+  spcx           14 / 68   bad
 
-CSV written → qa/bad_reports_2026-11-10.csv
+CSV written → qa/bad_reports_2026-11-11.csv
 ```
 
 ## Stage 2 — LLM review (`scripts/review_report_quality.py`)
@@ -73,78 +75,74 @@ given the close each report was built on and stage 1's findings.
 
 | Field | Value |
 |-------|-------|
-| CSV | [llm_review_2026-11-10.csv](llm_review_2026-11-10.csv) |
-| Full summary | [llm_review_2026-11-10.txt](llm_review_2026-11-10.txt) |
+| CSV | [llm_review_2026-11-11.csv](llm_review_2026-11-11.csv) |
+| Full summary | [llm_review_2026-11-11.txt](llm_review_2026-11-11.txt) |
 
 ```
 
 ============================================================
-Reports reviewed : 145
-Ungrounded       : 7  (all-ones scores citing nothing from the report — in the CSV, excluded below)
-Mean score       : 2.46 / 5
+Reports reviewed : 178
+Ungrounded       : 3  (all-ones scores citing nothing from the report — in the CSV, excluded below)
+Mean score       : 2.44 / 5
 
-Verdict breakdown (138 grounded):
-  pass               6
-  warn              62
-  fail              70
+Verdict breakdown (175 grounded):
+  pass               3
+  warn              82
+  fail              90
 
 Mean score by dimension:
-  data_integrity   2.36
-  completeness     3.33
-  depth            2.52
-  consistency      2.82
-  language         3.95
+  data_integrity   2.29
+  completeness     3.32
+  depth            2.50
+  consistency      2.79
+  language         3.93
 
-Failed review (70):
+Failed review (90):
+  0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的 'TTM 隱含本益比 26.07x' 與 '估值略高於歷史中位數' 之間存在矛盾。
   0050         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/0050/fundamental_analysis_2026-11-10_gemini.md
       → 報告中提到的加權合理價值111.00 TWD與現價97.45 TWD的安全邊際12.2%計算不一致，應為13.9%。
+  2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的營業利益率從58.0%上升至58.7%，但在不同章節中出現矛盾。
   2330.tw      fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/2330.tw/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的TTM營收達4.94兆TWD，但在不同章節中對於營收年增率的描述存在矛盾。
+      → 報告中提到的TTM營收達4.94兆TWD，與其他數據不一致。
   amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的加權合理價值 $388.94 與後續計算的 $399.14 不一致。
+      → 報告中提到的加權合理價值 $388.94 與後續計算的 $399.14 相矛盾。
+  amd          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-11-11_gemini.md
+      → 報告中提到的加權合理價值518.35與後文計算的512.71不一致。
+  amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的 TTM 營收 $797.46B 與最新季營業利益率 13.9% 之間的關聯性未明確說明。
   amzn         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的 TTM 營收 $797.46B 與年增 15.4% 的數據未能在其他章節中得到一致支持。
-  avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-11-09_gemini.md
-      → 報告中提到的加權合理價值 $394.19 與計算結果 $398.32 不一致。
+      → 報告中提到的 TTM 營收 $797.46B 與年增 15.4% 的數據未能在其他章節中得到一致性驗證。
+  avav         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avav/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的加權合理價值 $151.72 與後文計算的 $154.45 不一致。
+  avav         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avav/fundamental_analysis_2026-11-10_gemini.md
+      → 報告中提到的加權合理價值 $157.06 與後續計算的 $163.88 不一致。
+  avgo         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avgo/fundamental_analysis_2026-11-10_gemini.md
+      → 報告中提到的加權合理價值 $388.94 與 DCF 基準每股內在價值 $379.79 之間的差異未有合理解釋。
   goog         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/goog/fundamental_analysis_2026-11-10_gemini.md
       → 報告中提到的加權合理價值 $347.53 與後文計算的 $351.40 不一致。
+  grab         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/grab/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的加權合理價值 $4.42 與 DCF 基準每股內在價值 $4.48 之間存在矛盾。
   intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-11-10_gemini.md
       → 報告中提到的加權合理價值 $57.21 與後續計算的 $59.06 相矛盾。
-  meta         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/meta/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的加權合理價值 $786.10 與 DCF 內在價值 $792.42 之間存在矛盾。
-  mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-11-09_gemini.md
-      → 報告中提到的 ROIC 為 6.3%，但在其他地方提到的 WACC 為 16.01%，顯示出經濟價值增加為負值，這可能不合理。
+  intc         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/intc/fundamental_analysis_2026-11-11_gemini.md
+      → 報告中提到的加權合理價值 $57.50 與後續計算的 $56.24 不一致。
+  mrvl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-11-10_gemini.md
+      → 報告中提到的加權合理價值 $185.12 與後文計算的 $189.37 不一致。
+  msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-11-10_gemini-2.md
+      → 報告中提到的加權合理價值 $602.82 與 DCF 基準每股內在價值 $591.95 之間存在矛盾。
   msft         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/msft/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的 TTM 營收 $346.44B 與最新單季營收年增率 18.8% 之間的數據不一致。
-  nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-11-09_gemini.md
-      → 報告中提到的加權合理價值 $151.78 與複算結果 $156.10 存在矛盾。
+      → 報告中提到的 TTM ROIC 為 29.7%，但在其他地方提到的 WACC 為 10.06%，這樣的數據組合可能導致不合理的評估。
   nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-11-10_gemini.md
       → 報告中提到的加權合理價值 $163.66 與計算結果 $169.36 不一致。
-  nu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nu/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的最新單季營收年增率52.1%與TTM營收13.17B美元的數據未能在其他章節中得到一致性驗證。
-  nvda         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nvda/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的TTM營收$302.97B與最新季營收年增率105.9%所隱含的基期不合理，因為這意味著去年營收必須低於$147.5B，這對於NVIDIA來說是不可能的。
-  onds         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/onds/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的TTM營收年增率979.3%與最新季營收年增率1235.4%存在矛盾。
-  orcl         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/orcl/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的加權合理價值 $152.02 與後續計算的 $155.56 不一致。
-  pl           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pl/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的加權合理價值 $14.99 與後續計算的 $16.33 相矛盾。
-  pltr         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pltr/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中出現的數據如「TTM 營收 $7.29B（YoY +87.1%）」與「TTM 自由現金流（FCF）達到 $4.05B」缺乏合理性，且未提供來源。
-  qqq          fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/qqq/fundamental_analysis_2026-11-09_gemini.md
-      → 報告中出現的數據如加權合理價值 $745.02 與 DCF 每股內在價值 $755.70 之間存在矛盾。
-  rklb         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/rklb/fundamental_analysis_2026-11-10_gemini.md
-      → 報告中提到的加權合理價值 $38.15 與後續計算的 $42.79 相矛盾。
+  nbis         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/nbis/fundamental_analysis_2026-11-11_gemini.md
+      → 報告中提到的 P/S Ratio (TTM) 為 26.9x，與同業相比顯示顯著高溢價，但未提供具體數據來源。
 
-Ungrounded verdicts (7) — reviewer noise, not report defects:
-  meta         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/meta/technical_analysis_2026-11-10_gemini.md
-  nbis         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nbis/technical_analysis_2026-11-09_gemini.md
-  nvda         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nvda/technical_analysis_2026-11-09_gemini.md
+Ungrounded verdicts (3) — reviewer noise, not report defects:
+  2330.tw      fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/2330.tw/technical_analysis_2026-11-11_gemini.md
   onds         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/onds/technical_analysis_2026-11-10_gemini.md
-  tsla         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/tsla/technical_analysis_2026-11-09_gemini.md
-  tsm          fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/tsm/technical_analysis_2026-11-10_gemini.md
-  vst          fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/vst/technical_analysis_2026-11-09_gemini.md
+  orcl         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/orcl/technical_analysis_2026-11-10_gemini.md
 
-CSV written → qa/llm_review_2026-11-10.csv (139 row(s))
+CSV written → qa/llm_review_2026-11-11.csv (175 row(s))
 ```
