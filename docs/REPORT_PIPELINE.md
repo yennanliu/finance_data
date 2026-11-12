@@ -27,17 +27,26 @@ Code: `scripts/analysis/utils/llm.py`, re-exported as `analysis.llm`.
   provider to the front of the chain.
 - **Rate limits** are retried with exponential backoff (30 s base, 5 attempts).
 - **Refusals.** A short reply matching a refusal pattern is retried up to 5 times
-  with an override prefix and rising temperature. A model that still refuses
-  raises `RefusalError`. That error is not terminal, so the chain falls through
+  with an override prefix (and rising temperature where the model takes one).
+  A model that still refuses raises `RefusalError`, and so does a Claude
+  `stop_reason: "refusal"`, without retries. That error is not terminal, so the chain falls through
   to the next provider. Returning the refusal as a report is what published
   MRVL's one-line 2026-10-22 report.
 - **Sampling.** Reports are sampled at `REPORT_TEMPERATURE` (0.3, in
-  `config/__init__.py`).
+  `config/__init__.py`) where the model accepts it. Claude (API version
+  2026-10-21 rejects `temperature` on every model) and the OpenAI reasoning
+  families (`gpt-5*`, `gpt-6*`, o-series) run at their own default, and their
+  reports carry no `temperature` in front matter. See `accepts_temperature()`.
+- **Request shape.** `run_claude` streams (the SDK refuses a non-streaming call
+  with a 32k budget). `run_openai` sends reasoning models
+  `max_completion_tokens` plus 16k of headroom, since that cap also covers
+  reasoning tokens.
 - **Token budget.** The budget sent is `--max-tokens` (default `DEFAULT_TOKENS` =
   32000), or `defaults.max_tokens` in `.ticker_schedule.json` in CI. A full
   fundamental report (11 chapters, Ch.8 DCF arithmetic) needs ~32k output tokens.
   `run_openai` clamps to the model's own ceiling (`OPENAI_MAX_TOKENS`; gpt-4o is
-  16,384, so the OpenAI fallback truncates full-length reports). `run_gemini`
+  16,384, so the OpenAI fallback truncates full-length reports; the gpt-6
+  family is 128,000). `run_gemini`
   clamps to 65,536 and retries at that ceiling on truncation.
   `PROVIDER_DEFAULTS[*].default_tokens` documents what each model can emit; only
   `default_model` is read by code.

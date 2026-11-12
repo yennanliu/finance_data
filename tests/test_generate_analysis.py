@@ -312,6 +312,9 @@ def test_front_matter_records_prompt_params_price_and_sources(tmp_path, monkeypa
     fm = text.split("---")[1]
     assert f"prompt_sha256: {pipeline.prompt_fingerprint('fundamental-analysis', 'gemini')}" in fm
     assert f"temperature: {pipeline.REPORT_TEMPERATURE}" in fm
+    # Claude and the OpenAI reasoning models never receive it, so it is not recorded.
+    assert "temperature" not in pipeline.provenance({}, "fundamental-analysis", "claude", 32000, "claude-opus-5-5")
+    assert "temperature" not in pipeline.provenance({}, "fundamental-analysis", "openai", 32000, "gpt-6-luna")
     assert "max_tokens: 32000" in fm
     assert "price: 374.58" in fm and "price_date: 2026-10-22" in fm
     assert "data_sources_failed: finviz, roic" in fm
