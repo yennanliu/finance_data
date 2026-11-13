@@ -56,10 +56,15 @@ def main() -> int:
         default=os.environ.get("MODEL") or None,
         help="Model for the primary provider (default: $MODEL)",
     )
+    parser.add_argument(
+        "--analysis-type",
+        default=os.environ.get("ANALYSIS_TYPE") or None,
+        help="Analysis type, for its per-type default lead (default: $ANALYSIS_TYPE)",
+    )
     args = parser.parse_args()
 
     missing = []
-    for provider, model in resolve_chain(args.provider, args.model):
+    for provider, model in resolve_chain(args.provider, args.model, args.analysis_type):
         env_var, secret = PROVIDER_KEYS[provider]
         if os.environ.get(env_var):
             print(f"OK {provider} ({model}): {secret} is set")

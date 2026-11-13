@@ -139,10 +139,13 @@ PROVIDER_DEFAULTS = {
     "gemini": {"default_model": "gemini-3.8-flash",  "default_tokens": 32000},
 }
 FALLBACK_CHAIN = ["gemini", "openai"]
+TYPE_DEFAULTS = {"fundamental-analysis": {"provider": "openai", "model": "gpt-6-luna", "max_tokens": 64000}}
 ```
 
-CI reads its provider, model and token budget from `defaults` in
-`scripts/.ticker_schedule.json`. See [`REPORT_PIPELINE.md`](REPORT_PIPELINE.md#llm-layer)
+Scheduled CI runs pass no provider or model, so `resolve_chain()` decides:
+fundamental reports run on `openai:gpt-6-luna` with a 64,000-token budget and
+fall back to gemini, every
+other type starts at `FALLBACK_CHAIN[0]`. See [`REPORT_PIPELINE.md`](REPORT_PIPELINE.md#llm-layer)
 for retries, refusals and token clamps.
 
 ---

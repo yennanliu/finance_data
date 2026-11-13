@@ -85,7 +85,7 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
     report is recorded in the saved frontmatter.
     """
     output_dir = Path(output_dir)
-    attempts = resolve_chain(provider, model)
+    attempts = resolve_chain(provider, model, analysis_type)
 
     print("[1/3] Fetching financial data from Yahoo Finance …")
     data = fetch_data(ticker)

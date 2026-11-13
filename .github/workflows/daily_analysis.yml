@@ -101,11 +101,12 @@ on:
           - financial-report-analyst
           - stock-valuation
       provider:
-        description: "Primary AI provider (falls back through the configured chain)"
+        description: "Primary AI provider (auto = the analysis type's default; falls back through the configured chain)"
         required: false
-        default: "gemini"
+        default: "auto"
         type: choice
         options:
+          - auto
           - gemini
           - openai
           - claude
@@ -145,9 +146,9 @@ on:
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
       max_tokens:
-        description: "Max output tokens"
+        description: "Max output tokens (blank = the analysis type's default: fundamental 64000, others 32000)"
         required: false
-        default: "32000"
+        default: ""
 
 permissions:
   contents: write   # needed to commit & push generated report
@@ -202,9 +203,10 @@ jobs:
 
       # Scheduled runs know only their cron string, so map it to a ticker and
       # analysis type. Provider / model / max-tokens are left EMPTY for
-      # scheduled runs on purpose: the generator's own defaults (gemini,
-      # gemini-3.8-flash, 32000 tokens — see analysis/config) are the single
-      # source of truth, so this workflow no longer restates them.
+      # scheduled runs on purpose: the generator's own defaults (per analysis
+      # type: fundamental → openai gpt-6-luna, the rest → gemini-3.8-flash;
+      # 64000 / 32000 tokens — see analysis/config/providers.py) are the single source
+      # of truth, so this workflow no longer restates them.
       - name: Resolve analysis parameters
         id: params
         env:
@@ -223,6 +225,9 @@ jobs:
             ANALYSIS_TYPE="${IN_ANALYSIS_TYPE:-fundamental-analysis}"
             PROVIDER="$IN_PROVIDER"
             MODEL="$IN_MODEL"
+            # auto: leave both empty so the generator picks the type's default
+            # (fundamental → openai gpt-6-luna, everything else → gemini).
+            if [ "$PROVIDER" = "auto" ]; then PROVIDER=""; MODEL=""; fi
             MAX_TOKENS="$IN_MAX_TOKENS"
           else
             PROVIDER=""; MODEL=""; MAX_TOKENS=""
@@ -357,6 +362,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PROVIDER: ${{ steps.params.outputs.provider }}
           MODEL: ${{ steps.params.outputs.model }}
+          ANALYSIS_TYPE: ${{ steps.params.outputs.analysis_type }}
         run: python scripts/check_provider_keys.py
 
       # --output-dir is deliberately not passed: generate_analysis.py already
