@@ -47,7 +47,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis import ANALYSIS_TYPES, DEFAULT_MODEL, DEFAULT_TOKENS, TODAY
-from analysis.config.providers import resolve_chain
+from analysis.config.providers import resolve_chain, resolve_max_tokens
 from analysis.pipeline import run_analysis, save_analysis_report
 
 
@@ -83,15 +83,17 @@ def parse_args() -> argparse.Namespace:
         "--provider", default=None,
         choices=["claude", "openai", "gemini"],
         help="Primary AI provider; leads the fallback chain "
-             "(default: the configured chain, currently gemini → openai)",
+             "(default: the configured chain, gemini → openai; "
+             "fundamental-analysis leads with openai gpt-6-luna)",
     )
     p.add_argument(
         "--model", default=None,
         help="Model ID for the primary provider (default: that provider's default model)",
     )
     p.add_argument(
-        "--max-tokens", type=int, default=DEFAULT_TOKENS,
-        help=f"Max output tokens (default: {DEFAULT_TOKENS})",
+        "--max-tokens", type=int, default=None,
+        help=f"Max output tokens (default: {DEFAULT_TOKENS}; "
+             "fundamental-analysis: 64000)",
     )
     return p.parse_args()
 
@@ -109,13 +111,14 @@ def main() -> None:
     else:
         output_dir = Path("ai_gen_report/stock") / ticker.lower()
 
-    chain = " → ".join(f"{p}:{m}" for p, m in resolve_chain(args.provider, args.model))
+    chain = " → ".join(f"{p}:{m}" for p, m in resolve_chain(args.provider, args.model, analysis_type))
     label = ANALYSIS_TYPES[analysis_type]["label"]
     banner = f"  {ticker}  |  {label}  |  chain: {chain}  |  out: {output_dir}"
     sep = "=" * max(70, len(banner) + 4)
     print(f"\n{sep}\n{banner}\n{sep}\n")
 
-    run_analysis(ticker, analysis_type, args.provider, args.model, args.max_tokens, output_dir)
+    max_tokens = resolve_max_tokens(analysis_type, args.max_tokens)
+    run_analysis(ticker, analysis_type, args.provider, args.model, max_tokens, output_dir)
 
     print(f"\n{sep}\n  Done!\n{sep}\n")
 

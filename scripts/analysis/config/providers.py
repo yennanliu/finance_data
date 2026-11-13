@@ -54,6 +54,23 @@ PROVIDER_DEFAULTS = {
 # through to the next. Add levels by appending provider names here.
 FALLBACK_CHAIN = ["gemini", "openai"]
 
+# Per-analysis-type defaults. A type listed here starts its chain with this
+# provider/model when the run names no provider, and uses this model when the
+# run names that provider without a model. The rest of ``FALLBACK_CHAIN`` still
+# follows, so fundamental reports fall back to gemini. ``max_tokens`` replaces
+# ``config.DEFAULT_TOKENS`` when the run passes no ``--max-tokens``. Types not
+# listed start at ``FALLBACK_CHAIN[0]`` with ``DEFAULT_TOKENS``.
+TYPE_DEFAULTS = {
+    "fundamental-analysis": {
+        "provider": "openai",
+        "model": "gpt-6-luna",
+        # GPT-6 Luna emits up to 128k tokens. 64k for the visible report plus
+        # run_openai's 16k reasoning headroom stays well inside that, and the
+        # gemini fallback clamps it to its own 65,536 ceiling.
+        "max_tokens": 64000,
+    },
+}
+
 
 def resolve_model(provider, model=None):
     """Return the model id to use for ``provider``.
@@ -73,7 +90,7 @@ def resolve_model(provider, model=None):
     return config["default_model"]
 
 
-def resolve_chain(primary_provider=None, primary_model=None):
+def resolve_chain(primary_provider=None, primary_model=None, analysis_type=None):
     """Resolve the ordered list of ``(provider, model)`` attempts to try.
 
     ``primary_provider`` (optional) leads the chain — an explicit ``--provider``
@@ -81,6 +98,11 @@ def resolve_chain(primary_provider=None, primary_model=None):
     ``primary_model`` (optional) overrides the model of that first attempt only,
     and only when it belongs to that provider (see ``resolve_model``); every
     other provider uses its ``PROVIDER_DEFAULTS`` model.
+
+    ``analysis_type`` (optional) applies that type's ``TYPE_DEFAULTS`` lead:
+    it fills in a missing provider, and sets the model of its own provider
+    wherever that provider sits in the chain. An explicit ``--provider`` /
+    ``--model`` always wins.
 
     A model without a provider is rejected: applying it to the default lead
     provider would silently pair, say, ``gpt-4o`` with Gemini. Pass both.
@@ -94,6 +116,11 @@ def resolve_chain(primary_provider=None, primary_model=None):
             "(which provider is this model for?)"
         )
 
+    type_default = TYPE_DEFAULTS.get(analysis_type, {})
+    type_provider, type_model = type_default.get("provider"), type_default.get("model")
+    if not primary_provider:
+        primary_provider = type_provider
+
     order = ([primary_provider] if primary_provider else []) + [
         p for p in FALLBACK_CHAIN if p != primary_provider
     ]
@@ -103,8 +130,23 @@ def resolve_chain(primary_provider=None, primary_model=None):
         if provider in seen or provider not in PROVIDER_DEFAULTS:
             continue
         seen.add(provider)
-        model = resolve_model(
-            provider, primary_model if provider == primary_provider else None
-        )
+        if provider == primary_provider and primary_model:
+            wanted = primary_model
+        else:
+            # The type's own model applies wherever its provider sits in the
+            # chain, so a fundamental run led by gemini still falls back to
+            # gpt-6-luna rather than gpt-4o's 16k ceiling.
+            wanted = type_model if provider == type_provider else None
+        model = resolve_model(provider, wanted)
         attempts.append((provider, model))
     return attempts
+
+
+def resolve_max_tokens(analysis_type=None, max_tokens=None):
+    """Output-token budget for a run: an explicit ``max_tokens`` wins, then the
+    type's ``TYPE_DEFAULTS`` budget, then ``config.DEFAULT_TOKENS``."""
+    from . import DEFAULT_TOKENS
+
+    if max_tokens:
+        return max_tokens
+    return TYPE_DEFAULTS.get(analysis_type, {}).get("max_tokens", DEFAULT_TOKENS)
