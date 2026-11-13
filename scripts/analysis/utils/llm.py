@@ -72,6 +72,22 @@ def _openai_is_reasoning(model: str) -> bool:
     return model.startswith(_OPENAI_REASONING_PREFIXES)
 
 
+def _openai_ceiling(model: str) -> int:
+    """Output-token ceiling for ``model``.
+
+    A dated snapshot (``gpt-6-luna-2026-…``) takes its base model's limit. An
+    unlisted reasoning model gets 100k (the o-series limit, and the lowest among
+    those families) rather than the 16,384 chat default, which would strip the
+    reasoning headroom and cut the report budget in half.
+    """
+    if model in OPENAI_MAX_TOKENS:
+        return OPENAI_MAX_TOKENS[model]
+    for base in sorted(OPENAI_MAX_TOKENS, key=len, reverse=True):
+        if model.startswith(base + "-"):
+            return OPENAI_MAX_TOKENS[base]
+    return 100000 if _openai_is_reasoning(model) else 16384
+
+
 def accepts_temperature(provider: str, model: str) -> bool:
     """Whether a request to ``model`` carries the caller's temperature.
 
@@ -205,6 +221,10 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
         with client.messages.stream(**kwargs) as stream:
             message = stream.get_final_message()
         stop_reason = getattr(message, "stop_reason", None)
+        if stop_reason is None:
+            # The stream closed before the final message_delta: what was
+            # accumulated is a partial report, not a finished one.
+            raise LLMError(f"{model} stream ended before completion (no stop_reason)")
         if stop_reason == "refusal":
             # A safety-classifier decline (Claude 5.x). The override prefix
             # cannot change it, so skip the retries and let the chain move on.
@@ -244,6 +264,11 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
         if _is_refusal(text):
             _raise_refusal(ticker, text)
 
+    if not text.strip():
+        # e.g. the whole budget went to thinking. An empty string would count
+        # as success and be saved as the report.
+        raise LLMError(f"{model} returned no text "
+                       f"(stop_reason={getattr(response, 'stop_reason', None)})")
     return text
 
 
@@ -267,7 +292,7 @@ def run_openai(ticker: str, prompt: str, system_message: str, *,
     effective_max_tokens = max_tokens
     if cap_tokens:
         wanted = max_tokens + (_OPENAI_REASONING_HEADROOM if reasoning else 0)
-        effective_max_tokens = min(wanted, OPENAI_MAX_TOKENS.get(model, 16384))
+        effective_max_tokens = min(wanted, _openai_ceiling(model))
         if effective_max_tokens != max_tokens:
             logger.info(f"Adjusting max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
 

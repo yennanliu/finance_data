@@ -360,8 +360,20 @@ def test_openai_reasoning_models_get_completion_cap_and_no_temperature(monkeypat
     call_openai("AAPL", "ctx", "fundamental-analysis", model, 32000)
     sent = create.calls[0]
     assert "max_tokens" not in sent and "temperature" not in sent
-    ceiling = OPENAI_MAX_TOKENS.get(model, 16384)
+    ceiling = {"gpt-5.6-sol": 32768}.get(model, 128000 if model.startswith("gpt-6") else 100000)
+    assert llm._openai_ceiling(model) == ceiling
     assert sent["max_completion_tokens"] == min(32000 + llm._OPENAI_REASONING_HEADROOM, ceiling)
+
+
+@pytest.mark.parametrize("model,ceiling", [
+    ("gpt-6-luna-2026-10-01", 128000),   # snapshot takes its base model's limit
+    ("gpt-4o-mini-2024-07-18", 16384),
+    ("gpt-4-0613", 8192),
+    ("o4-mini", 100000),                 # unlisted reasoning model
+    ("gpt-4.1", 16384),                  # unlisted chat model
+])
+def test_openai_ceiling_resolves_snapshots_and_unlisted_models(model, ceiling):
+    assert llm._openai_ceiling(model) == ceiling
 
 
 def test_openai_chat_models_keep_max_tokens_and_temperature(monkeypatch):
@@ -391,6 +403,22 @@ def test_claude_classifier_refusal_raises_without_retrying(monkeypatch):
     assert not llm._is_terminal_error(RefusalError("x"))  # so the chain falls through
 
 
+def test_claude_incomplete_stream_raises_instead_of_returning_partial_text(monkeypatch):
+    """Text arrived but the stream closed before message_delta: no stop_reason."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    install_anthropic(monkeypatch, Scripted(FakeAnthropicResponse(LONG_OK, stop_reason=None)))
+    with pytest.raises(LLMError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-opus-5-5", 32000)
+
+
+@pytest.mark.parametrize("stop_reason", ["end_turn", "max_tokens"])
+def test_claude_empty_text_raises_instead_of_saving_nothing(monkeypatch, stop_reason):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    install_anthropic(monkeypatch, Scripted(FakeAnthropicResponse("  ", stop_reason=stop_reason)))
+    with pytest.raises(LLMError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-opus-5-5", 32000)
+
+
 @pytest.mark.parametrize("provider,model,ok", [
     ("gemini", "gemini-3.8-flash", True),
     ("openai", "gpt-4o", True),
@@ -412,8 +440,11 @@ def test_workflow_model_choices_all_belong_to_a_provider():
     prefixes = tuple(p for cfg in PROVIDER_DEFAULTS.values() for p in cfg["model_prefixes"])
     workflows = Path(__file__).resolve().parents[1] / ".github" / "workflows"
     for name in ("daily_analysis.yml", "advanced_analysis.yml", "daily_market_news.yml"):
-        ids = re.findall(r"^          - ((?:gpt-|claude-|gemini-|o\d)\S*)$",
-                         (workflows / name).read_text(), re.M)
+        # Every option of the `model` input, not just ids that already look
+        # right: a mistyped id must reach the prefix assertion below.
+        block = re.search(r"^      model:\n(.*?)^      max_tokens:", (workflows / name).read_text(),
+                          re.M | re.S).group(1)
+        ids = re.findall(r"^\s+- (\S+)$", block, re.M)
         for new in ("gpt-6-luna", "gpt-6.1-sol", "claude-haiku-5-5", "claude-sonnet-5-5",
                     "claude-opus-5-5"):
             assert new in ids, (name, new)
