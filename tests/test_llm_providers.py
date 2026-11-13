@@ -29,7 +29,8 @@ class _Usage:
 
 
 class FakeAnthropicResponse:
-    def __init__(self, text, input_tokens=10, output_tokens=999):
+    def __init__(self, text, input_tokens=10, output_tokens=999, stop_reason="end_turn"):
+        self.stop_reason = stop_reason
         self.content = [type("Block", (), {"text": text})()]
         self.usage = _Usage(input_tokens=input_tokens, output_tokens=output_tokens)
 
@@ -78,9 +79,24 @@ class Scripted:
 def install_anthropic(monkeypatch, create):
     mod = types.ModuleType("anthropic")
 
+    class _Stream:
+        """Stand-in for the SDK's ``messages.stream(...)`` context manager."""
+
+        def __init__(self, message):
+            self._message = message
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def get_final_message(self):
+            return self._message
+
     class Anthropic:
         def __init__(self, api_key=None):
-            self.messages = types.SimpleNamespace(create=create)
+            self.messages = types.SimpleNamespace(stream=lambda **kw: _Stream(create(**kw)))
 
     mod.RateLimitError = _RateLimit
     mod.Anthropic = Anthropic
@@ -205,8 +221,8 @@ def test_claude_retries_on_refusal_then_succeeds(monkeypatch):
     out = call_claude("AAPL", "ctx", "fundamental-analysis", "claude-x", 8000)
     assert out == LONG_OK
     assert len(create.calls) == 2
-    # the retry call carries a temperature + an override-prefixed prompt
-    assert "temperature" in create.calls[1]
+    # the retry carries an override-prefixed prompt, and never a temperature
+    assert "temperature" not in create.calls[1]
     assert "覆寫" in create.calls[1]["messages"][0]["content"]
 
 
@@ -333,6 +349,108 @@ def test_gemini_retries_on_repeated_heading(monkeypatch):
     assert len(gen.calls) == 2
 
 
+# ── newer models: request shape ──────────────────────────────────────────────
+
+@pytest.mark.parametrize("model", ["gpt-6-luna", "gpt-6.1-terra", "gpt-6.1-sol", "gpt-6-astra",
+                                   "gpt-5.6-sol", "o3"])
+def test_openai_reasoning_models_get_completion_cap_and_no_temperature(monkeypatch, model):
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    create = Scripted(FakeOpenAIResponse(LONG_OK))
+    install_openai(monkeypatch, create)
+    call_openai("AAPL", "ctx", "fundamental-analysis", model, 32000)
+    sent = create.calls[0]
+    assert "max_tokens" not in sent and "temperature" not in sent
+    ceiling = {"gpt-5.6-sol": 32768}.get(model, 128000 if model.startswith("gpt-6") else 100000)
+    assert llm._openai_ceiling(model) == ceiling
+    assert sent["max_completion_tokens"] == min(32000 + llm._OPENAI_REASONING_HEADROOM, ceiling)
+
+
+@pytest.mark.parametrize("model,ceiling", [
+    ("gpt-6-luna-2026-10-01", 128000),   # snapshot takes its base model's limit
+    ("gpt-4o-mini-2024-07-18", 16384),
+    ("gpt-4-0613", 8192),
+    ("o4-mini", 100000),                 # unlisted reasoning model
+    ("gpt-4.1", 16384),                  # unlisted chat model
+])
+def test_openai_ceiling_resolves_snapshots_and_unlisted_models(model, ceiling):
+    assert llm._openai_ceiling(model) == ceiling
+
+
+def test_openai_chat_models_keep_max_tokens_and_temperature(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    create = Scripted(FakeOpenAIResponse(LONG_OK))
+    install_openai(monkeypatch, create)
+    call_openai("AAPL", "ctx", "fundamental-analysis", "gpt-4o", 32000)
+    sent = create.calls[0]
+    assert sent["max_tokens"] == 16384 and "temperature" in sent
+    assert "max_completion_tokens" not in sent
+
+
+def test_openai_empty_response_raises_instead_of_saving_nothing(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    install_openai(monkeypatch, Scripted(FakeOpenAIResponse(None)))
+    with pytest.raises(LLMError):
+        call_openai("AAPL", "ctx", "fundamental-analysis", "gpt-6-luna", 32000)
+
+
+def test_claude_classifier_refusal_raises_without_retrying(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    create = Scripted(FakeAnthropicResponse("", stop_reason="refusal"))
+    install_anthropic(monkeypatch, create)
+    with pytest.raises(RefusalError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-opus-5-5", 32000)
+    assert len(create.calls) == 1
+    assert not llm._is_terminal_error(RefusalError("x"))  # so the chain falls through
+
+
+def test_claude_incomplete_stream_raises_instead_of_returning_partial_text(monkeypatch):
+    """Text arrived but the stream closed before message_delta: no stop_reason."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    install_anthropic(monkeypatch, Scripted(FakeAnthropicResponse(LONG_OK, stop_reason=None)))
+    with pytest.raises(LLMError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-opus-5-5", 32000)
+
+
+@pytest.mark.parametrize("stop_reason", ["end_turn", "max_tokens"])
+def test_claude_empty_text_raises_instead_of_saving_nothing(monkeypatch, stop_reason):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    install_anthropic(monkeypatch, Scripted(FakeAnthropicResponse("  ", stop_reason=stop_reason)))
+    with pytest.raises(LLMError):
+        call_claude("AAPL", "ctx", "fundamental-analysis", "claude-opus-5-5", 32000)
+
+
+@pytest.mark.parametrize("provider,model,ok", [
+    ("gemini", "gemini-3.8-flash", True),
+    ("openai", "gpt-4o", True),
+    ("openai", "gpt-6-luna", False),
+    ("openai", "gpt-6.1-sol", False),
+    ("claude", "claude-sonnet-4-6", False),
+    ("claude", "claude-opus-5-5", False),
+])
+def test_accepts_temperature(provider, model, ok):
+    assert llm.accepts_temperature(provider, model) is ok
+
+
+def test_workflow_model_choices_all_belong_to_a_provider():
+    """A dropdown id no provider claims is silently swapped for the default."""
+    import re
+    from pathlib import Path
+    from scripts.analysis.config.providers import PROVIDER_DEFAULTS
+
+    prefixes = tuple(p for cfg in PROVIDER_DEFAULTS.values() for p in cfg["model_prefixes"])
+    workflows = Path(__file__).resolve().parents[1] / ".github" / "workflows"
+    for name in ("daily_analysis.yml", "advanced_analysis.yml", "daily_market_news.yml"):
+        # Every option of the `model` input, not just ids that already look
+        # right: a mistyped id must reach the prefix assertion below.
+        block = re.search(r"^      model:\n(.*?)^      max_tokens:", (workflows / name).read_text(),
+                          re.M | re.S).group(1)
+        ids = re.findall(r"^\s+- (\S+)$", block, re.M)
+        for new in ("gpt-6-luna", "gpt-6.1-sol", "claude-haiku-5-5", "claude-sonnet-5-5",
+                    "claude-opus-5-5"):
+            assert new in ids, (name, new)
+        assert all(i.startswith(prefixes) for i in ids), name
+
+
 # ── report temperature / prompt fingerprint ──────────────────────────────────
 
 def test_reports_are_sampled_at_the_report_temperature(monkeypatch):
@@ -352,7 +470,7 @@ def test_reports_are_sampled_at_the_report_temperature(monkeypatch):
     call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
     assert REPORT_TEMPERATURE < 0.7
     assert oa.calls[0]["temperature"] == REPORT_TEMPERATURE
-    assert an.calls[0]["temperature"] == REPORT_TEMPERATURE
+    assert "temperature" not in an.calls[0]  # API version 2026-10-21 rejects it
     assert ge.calls[0]["config"].temperature == REPORT_TEMPERATURE
 
 

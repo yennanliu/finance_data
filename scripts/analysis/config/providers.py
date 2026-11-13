@@ -19,7 +19,7 @@ This module is the single source of truth for:
 #     needs roughly 32k output tokens to finish in one shot.
 #   * ``run_openai`` clamps to the model's own ceiling (``OPENAI_MAX_TOKENS``), so
 #     the gpt-4o default tops out at 16,384 and will truncate a full-length
-#     report's tail chapters. Switch the OpenAI default to a gpt-5.6-* model (32k
+#     report's tail chapters. Switch the OpenAI default to a gpt-6 model (128k
 #     capable) if the OpenAI fallback needs to produce complete reports.
 #   * ``run_gemini`` clamps to 65,536 and auto-retries at that ceiling when it
 #     detects truncation, so the primary path self-heals.
@@ -37,10 +37,8 @@ PROVIDER_DEFAULTS = {
         # as o1/o3/o4-mini. A single "gpt-" prefix made resolve_model treat
         # `--model o3` as a wrong-provider id and hand back gpt-4o instead —
         # a silent swap that stamps the report with a model nobody chose.
-        # (o-series ids now reach run_openai as asked; that call still sends
-        # max_tokens/temperature, which those models reject, so an o-series
-        # run fails loudly at the API. Supporting them for real means
-        # max_completion_tokens + no temperature override in run_openai.)
+        # run_openai sends the reasoning families (gpt-5*, gpt-6*, o-series)
+        # max_completion_tokens and no temperature, which is what they accept.
         "model_prefixes": ("gpt-", "o1", "o3", "o4"),
     },
     "gemini": {

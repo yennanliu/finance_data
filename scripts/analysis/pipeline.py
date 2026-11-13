@@ -24,7 +24,7 @@ from .data import report_inputs
 from .data.sources import fetch_data
 from .data.technicals import key_levels, levels_summary
 from .exceptions import DataFetchError
-from .llm import call_llm, prompt_fingerprint, run_with_fallback
+from .llm import accepts_temperature, call_llm, prompt_fingerprint, run_with_fallback
 from .publish import GENERATED_BY as _GENERATED_BY, dedup_path, frontmatter
 from .utils.mermaid import sanitize_mermaid_blocks
 from .validate import arithmetic, derivation
@@ -105,7 +105,7 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
         lambda p, m: call_llm(ticker, context, analysis_type, p, m, max_tokens),
     )
 
-    extra = provenance(data, analysis_type, used_provider, max_tokens)
+    extra = provenance(data, analysis_type, used_provider, max_tokens, used_model)
     if analysis_type == "fundamental-analysis":
         report = stamp_sources(report, data.get("source_status") or {})
         report, checks = recheck_valuation(report, data.get("report_facts") or {})
@@ -146,7 +146,8 @@ _SOURCE_NAMES = (
 )
 
 
-def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int) -> dict:
+def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int,
+               model: str = "") -> dict:
     """Front-matter fields that say how a report was produced: the prompt
     version, sampling parameters, the price it was given and which data
     sources actually answered."""
@@ -155,6 +156,10 @@ def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int) -
         "temperature": REPORT_TEMPERATURE,
         "max_tokens": max_tokens,
     }
+    if not accepts_temperature(provider, model):
+        # Claude and the OpenAI reasoning models sample at their own default;
+        # recording 0.3 would claim a setting the request never carried.
+        del fields["temperature"]
     if data.get("price_now") is not None:
         fields["price"] = round(float(data["price_now"]), 4)
         fields["price_date"] = data.get("price_date") or "unknown"

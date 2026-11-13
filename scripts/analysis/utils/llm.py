@@ -40,6 +40,11 @@ _MAX_REFUSAL_RETRIES = 5
 
 # OpenAI model token limits
 OPENAI_MAX_TOKENS = {
+    # GPT-6 family: 128k output (platform docs, 2026-11).
+    "gpt-6-astra": 128000,
+    "gpt-6.1-sol": 128000,
+    "gpt-6.1-terra": 128000,
+    "gpt-6-luna": 128000,
     # GPT-5.6 family supports large outputs; keep in step with the 32k/20k
     # max_tokens defaults used by the daily/advanced workflows.
     "gpt-5.6-sol": 32768,
@@ -50,6 +55,51 @@ OPENAI_MAX_TOKENS = {
     "gpt-4-turbo": 4096,
     "gpt-4": 8192,
 }
+
+# OpenAI reasoning families. On chat completions they take the output cap as
+# ``max_completion_tokens`` (``max_tokens`` is rejected) and reject a
+# non-default ``temperature``. Matched by prefix so a new snapshot in a known
+# family needs no edit here.
+_OPENAI_REASONING_PREFIXES = ("gpt-5", "gpt-6", "o1", "o3", "o4")
+# ``max_completion_tokens`` covers reasoning tokens as well as the visible
+# report, so a reasoning model asked for a 32k report on a 32k cap truncates
+# the tail. Add this much on top of the caller's budget (still clamped to the
+# model's own ceiling).
+_OPENAI_REASONING_HEADROOM = 16000
+
+
+def _openai_is_reasoning(model: str) -> bool:
+    return model.startswith(_OPENAI_REASONING_PREFIXES)
+
+
+def _openai_ceiling(model: str) -> int:
+    """Output-token ceiling for ``model``.
+
+    A dated snapshot (``gpt-6-luna-2026-…``) takes its base model's limit. An
+    unlisted reasoning model gets 100k (the o-series limit, and the lowest among
+    those families) rather than the 16,384 chat default, which would strip the
+    reasoning headroom and cut the report budget in half.
+    """
+    if model in OPENAI_MAX_TOKENS:
+        return OPENAI_MAX_TOKENS[model]
+    for base in sorted(OPENAI_MAX_TOKENS, key=len, reverse=True):
+        if model.startswith(base + "-"):
+            return OPENAI_MAX_TOKENS[base]
+    return 100000 if _openai_is_reasoning(model) else 16384
+
+
+def accepts_temperature(provider: str, model: str) -> bool:
+    """Whether a request to ``model`` carries the caller's temperature.
+
+    Claude never does: the Messages API rejects ``temperature`` from API
+    version 2026-10-21 (anthropic SDK 2.x) on every model, and Claude 4.7+
+    rejected it before that. OpenAI's reasoning families accept only the
+    default. Gemini and the older OpenAI chat models take it as given.
+    """
+    if provider == "openai":
+        return not _openai_is_reasoning(model)
+    return provider == "gemini"
+
 
 # Gemini 2.5 Flash supports up to 65,536 output tokens. Note: 2.5 models are
 # "thinking" models whose internal reasoning tokens are also billed against
@@ -143,7 +193,13 @@ def _get_anthropic():
 def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
                model: str, max_tokens: int, temperature: float | None = None,
                max_retries: int = 5, refusal_retry: bool = True) -> str:
-    """Call Claude with an arbitrary prompt; handle rate-limit + refusal retries."""
+    """Call Claude with an arbitrary prompt; handle rate-limit + refusal retries.
+
+    ``temperature`` is accepted so the three runners share a signature, but it
+    is never sent (see :func:`accepts_temperature`). The request is streamed:
+    the SDK refuses a non-streaming call whose ``max_tokens`` could run past
+    ten minutes, which a 32k report budget does.
+    """
     anthropic = _get_anthropic()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -154,7 +210,7 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
     client = anthropic.Anthropic(api_key=api_key)
     logger.info(f"Claude API call: model={model}, max_tokens={max_tokens}")
 
-    def _create(content: str, temp: float | None):
+    def _create(content: str):
         kwargs = {
             "model": model,
             "max_tokens": max_tokens,
@@ -162,14 +218,26 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
         }
         if system_message:
             kwargs["system"] = system_message
-        if temp is not None:
-            kwargs["temperature"] = temp
-        return client.messages.create(**kwargs)
+        with client.messages.stream(**kwargs) as stream:
+            message = stream.get_final_message()
+        stop_reason = getattr(message, "stop_reason", None)
+        if stop_reason is None:
+            # The stream closed before the final message_delta: what was
+            # accumulated is a partial report, not a finished one.
+            raise LLMError(f"{model} stream ended before completion (no stop_reason)")
+        if stop_reason == "refusal":
+            # A safety-classifier decline (Claude 5.x). The override prefix
+            # cannot change it, so skip the retries and let the chain move on.
+            raise RefusalError(f"{model} declined the request (stop_reason=refusal)")
+        if stop_reason == "max_tokens":
+            logger.warning(f"Claude response hit max_tokens ({max_tokens}); "
+                           f"the report for {ticker} may be truncated.")
+        return message
 
     base_delay = 30
     for attempt in range(1, max_retries + 1):
         try:
-            response = _create(prompt, temperature)
+            response = _create(prompt)
             break
         except anthropic.RateLimitError:
             if attempt == max_retries:
@@ -187,16 +255,20 @@ def run_claude(ticker: str, prompt: str, system_message: str | None = None, *,
             if not _is_refusal(text):
                 break
             override = _refusal_override_prefix(ticker, retry)
-            temp = min(0.7 + retry * 0.15, 1.0)
-            logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying with temp={temp:.2f}…")
+            logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying…")
             time.sleep(3)
-            response = _create(override + prompt, temp)
+            response = _create(override + prompt)
             text = "\n\n".join(b.text for b in response.content if hasattr(b, "text"))
             usage = response.usage
             logger.info(f"Retry {retry}: input={usage.input_tokens}, output={usage.output_tokens}, chars={len(text)}")
         if _is_refusal(text):
             _raise_refusal(ticker, text)
 
+    if not text.strip():
+        # e.g. the whole budget went to thinking. An empty string would count
+        # as success and be saved as the report.
+        raise LLMError(f"{model} returned no text "
+                       f"(stop_reason={getattr(response, 'stop_reason', None)})")
     return text
 
 
@@ -216,25 +288,37 @@ def run_openai(ticker: str, prompt: str, system_message: str, *,
         logger.error("OPENAI_API_KEY environment variable is not set")
         raise LLMError("OPENAI_API_KEY not configured")
 
+    reasoning = _openai_is_reasoning(model)
     effective_max_tokens = max_tokens
     if cap_tokens:
-        effective_max_tokens = min(max_tokens, OPENAI_MAX_TOKENS.get(model, 16384))
+        wanted = max_tokens + (_OPENAI_REASONING_HEADROOM if reasoning else 0)
+        effective_max_tokens = min(wanted, _openai_ceiling(model))
         if effective_max_tokens != max_tokens:
-            logger.info(f"Capping max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
+            logger.info(f"Adjusting max_tokens from {max_tokens} to {effective_max_tokens} for {model}")
 
     client = openai.OpenAI(api_key=api_key)
     logger.info(f"OpenAI API call: model={model}, max_tokens={effective_max_tokens}")
 
     def _create(content: str, temp: float):
-        return client.chat.completions.create(
-            model=model,
-            max_tokens=effective_max_tokens,
-            temperature=temp,
-            messages=[
+        kwargs = {
+            "model": model,
+            "messages": [
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": content},
             ],
-        )
+        }
+        if reasoning:
+            kwargs["max_completion_tokens"] = effective_max_tokens
+        else:
+            kwargs["max_tokens"] = effective_max_tokens
+            kwargs["temperature"] = temp
+        response = client.chat.completions.create(**kwargs)
+        if not response.choices[0].message.content:
+            # A reasoning model can spend the whole cap thinking and return no
+            # text. Raise so the chain falls through instead of saving nothing.
+            reason = getattr(response.choices[0], "finish_reason", None)
+            raise LLMError(f"{model} returned an empty response (finish_reason={reason})")
+        return response
 
     base_delay = 30
     for attempt in range(1, max_retries + 1):
@@ -524,6 +608,6 @@ def run_with_fallback(attempts, run_one):
 __all__ = [
     "run_claude", "run_openai", "run_gemini",
     "call_claude", "call_openai", "call_gemini", "call_llm",
-    "run_with_fallback", "prompt_fingerprint",
+    "run_with_fallback", "prompt_fingerprint", "accepts_temperature",
     "OPENAI_MAX_TOKENS",
 ]
