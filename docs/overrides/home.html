@@ -6,6 +6,9 @@
 
     1. hero        centred headline, a request/reply exchange whose reply is
                    filled from the featured report, a large CTA, a scroll cue
+    1b. watch      a recorded run (filing downloads, a workflow dispatch, a
+                   tour of this site) beside a chapter list that seeks the
+                   video and follows playback
     2. showcase    warm-black band: copy + pills, and a dark "app frame" that
                    plots the featured ticker's closes with 6M / 1Y / All tabs
     3. data        light band with glows: glass figures + a market-pulse
@@ -261,6 +264,42 @@
 .lp-scroll::before { content: ""; position: absolute; top: 0.25rem; width: 1px; height: 1.6rem; background: linear-gradient(transparent, var(--fp-text-muted)); }
 @keyframes lp-cue { 0%, 100% { transform: translateY(0); opacity: .7; } 50% { transform: translateY(5px); opacity: 1; } }
 .lp-hero-foot { display: flex; flex-grow: 1; flex-basis: 0; flex-direction: column; justify-content: flex-end; }
+
+/* ─── 1b. Watch — recorded demo + chapter list ─── */
+.lp-watch { background: var(--lp-soft); }
+.lp-watch .lp-head p.lp-kick { color: var(--fp-kicker); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.lp-watch-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(1.4rem, 4vw, 2.6rem); align-items: start; }
+.md-typeset .lp-page .lp-watch-player { display: block; margin: 0; border-radius: 0.8rem; overflow: hidden; background: #121314; box-shadow: 0 0 0 1px var(--fp-border), 0 30px 60px -24px rgba(15, 23, 42, .4); }
+.lp-watch-video { display: block; width: 100%; height: auto; aspect-ratio: var(--lp-ar); background: #121314; }
+.lp-watch-lead { color: var(--fp-text-secondary); font-size: 0.8rem; line-height: 1.7; margin-bottom: 0.9rem !important; }
+.md-typeset .lp-page ol.lp-chapters { display: grid; gap: 0.15rem; margin: 0; padding: 0; list-style: none; }
+.lp-chapter {
+  appearance: none;
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: none;
+  color: var(--fp-text-secondary);
+  font: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition: background .16s, color .16s;
+}
+.lp-chapter b { display: block; color: var(--fp-text); font-size: 0.78rem; font-weight: 500; }
+.lp-chapter-t { padding-top: 0.12rem; color: var(--fp-text-muted); font-size: 0.64rem; font-variant-numeric: tabular-nums; }
+.lp-chapter:hover, .lp-chapter.is-on { background: var(--fp-bg-card); color: var(--fp-text); }
+.lp-chapter.is-on .lp-chapter-t { color: var(--fp-kicker); }
+/* Progress through the active chapter; --lp-p is set from the video clock. */
+.lp-chapter::after { content: ""; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0; height: 2px; border-radius: 2px; background: var(--lp-a); transform: scaleX(var(--lp-p, 0)); transform-origin: left; opacity: 0; }
+.lp-chapter.is-on::after { opacity: 1; }
+.lp-watch-note { margin-top: 0.8rem !important; padding: 0 0.7rem; color: var(--fp-text-muted); font-size: 0.62rem; line-height: 1.6; }
 
 /* ─── 2. Showcase (warm-black) ─── */
 .lp-show { background: var(--lp-ink-band); color: #fff; padding: clamp(4rem, 9vw, 6.5rem) 0; }
@@ -734,7 +773,7 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 60rem) {
-  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell, .lp-wheel-grid { grid-template-columns: 1fr; }
+  .lp-show-grid, .lp-data-grid, .lp-res-grid, .lp-run-shell, .lp-wheel-grid, .lp-watch-grid { grid-template-columns: 1fr; }
   .lp-ggrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 40rem) {
@@ -759,7 +798,7 @@
   .lp-hero-ambient, .lp-scroll, .lp-cursor { animation: none !important; }
   /* The pulse bubbles and breadth bar would otherwise glide on every tab
      change, and the wheel's centre would cross-fade. */
-  .lp-seg-arc, .lp-dot, .lp-swarm, .lp-breadth-bar i, .lp-tip, .lp-core > * { transition: none !important; }
+  .lp-seg-arc, .lp-dot, .lp-swarm, .lp-breadth-bar i, .lp-tip, .lp-core > *, .lp-chapter { transition: none !important; }
   .lp-js .lp-rv { opacity: 1; transform: none; transition: none; }
 }
 </style>
@@ -780,6 +819,18 @@
     "t_saved": "saved",
     "cta": "Read today's reports",
     "scroll": "Scroll down for more",
+    "watch_kick": "Watch",
+    "watch_h": "From SEC filing to published report, in a minute",
+    "watch_p": "One recording of the real thing: the download scripts, the GitHub workflow, and the site they publish to.",
+    "watch_label": "Screen recording: SEC filing downloads in a terminal, a GitHub workflow run, then a tour of this site",
+    "watch_ch": [
+      ["Download filings", "Two scripts pull Netflix's latest 10-K and 10-Q reports from SEC EDGAR and save them as PDFs."],
+      ["Run the workflow", "One gh command dispatches the daily analysis for MSFT on GitHub Actions; every step comes back green."],
+      ["Open the hub", "The landing page: the featured ticker's price chart, the market pulse and the twelve analysis types."],
+      ["Read the report", "Filter the report index to MSFT, open its ticker page, then the report that workflow just published."],
+      ["Check the data", "Market Data for the same ticker: candles, then a decade of financials charted."]
+    ],
+    "watch_note": "Recorded 13 Nov 2026. Each part is sped up 1.3–1.5×, waits are cut (the workflow took 2 min 24 s), and a local home-directory path is shortened. Not investment advice.",
     "show_eye": "Live price context",
     "show_h": "Every report sits next to the price it was written against.",
     "show_p": "Each ticker page pairs its reports with the full price history. This is the featured ticker's own chart — switch the range to look further back.",
@@ -878,6 +929,18 @@
     "t_saved": "已存",
     "cta": "閱讀今日報告",
     "scroll": "向下捲動查看更多",
+    "watch_kick": "影片",
+    "watch_h": "一分鐘看完：從 SEC 文件到發布報告",
+    "watch_p": "一段照實錄下的影片：下載腳本、GitHub 工作流程，以及它們發布到的這個網站。",
+    "watch_label": "螢幕錄影：在終端機下載 SEC 文件、執行 GitHub 工作流程，接著瀏覽本網站",
+    "watch_ch": [
+      ["下載申報文件", "兩支腳本從 SEC EDGAR 抓取 Netflix 最新的 10-K 與 10-Q 報告，並存成 PDF。"],
+      ["執行工作流程", "一行 gh 指令在 GitHub Actions 觸發 MSFT 的每日分析，每個步驟都順利完成。"],
+      ["打開研究中心", "首頁：精選標的的走勢圖、市場脈動，以及十二種分析類型。"],
+      ["閱讀報告", "在報告索引篩選 MSFT、開啟標的頁面，再打開工作流程剛發布的那份報告。"],
+      ["查看數據", "同一標的的市場數據：K 線，以及十年財務數據圖表。"]
+    ],
+    "watch_note": "錄製於 2026 年 11 月 13 日。各段以 1.3–1.5 倍速播放，等待時間已剪去（工作流程實際耗時 2 分 24 秒），本機家目錄路徑已縮短。非投資建議。",
     "show_eye": "即時價格脈絡",
     "show_h": "每一份報告，都與撰寫當下的股價並列。",
     "show_p": "每個標的頁面都把報告與完整價格歷史放在一起。這是精選標的自己的走勢圖 — 切換區間可往回查看。",
@@ -966,6 +1029,10 @@
   }
 } -%}
 {%- set C = COPY[lang] if lang in COPY else COPY["en"] -%}
+{#- The recorded demo (docs/assets/video/). `starts` is each chapter's start in
+    seconds, in the order of COPY's watch_ch; re-time it whenever the video
+    changes. tests/test_home_demo_video.py holds the two together. -#}
+{%- set DEMO = {"src": "assets/video/site-demo.mp4", "poster": "assets/video/site-demo.jpg", "width": 1280, "height": 800, "starts": [0, 15, 29, 45, 58]} -%}
 {%- set CMD = "gh workflow run daily_analysis.yml \\\n  -f ticker=MSFT \\\n  -f analysis_type=technical-analysis" -%}
 <div class="lp-page" lang="{{ 'zh-Hant' if lang == 'zh' else 'en' }}"
      data-hub-src="{{ base_url }}/hub.json" data-hub-base="{{ base_url }}/"
@@ -1001,9 +1068,39 @@
       </div>
     </div>
     <div class="lp-hero-foot">
-      <a class="lp-scroll" href="#lp-show" aria-label="{{ C.scroll }}">
+      <a class="lp-scroll" href="#lp-watch" aria-label="{{ C.scroll }}">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </a>
+    </div>
+  </section>
+
+  <!-- ── 1b. Watch ── -->
+  <section class="lp-band lp-watch" id="lp-watch">
+    <div class="lp-wrap">
+      <div class="lp-head lp-rv">
+        <p class="lp-kick">▶ {{ C.watch_kick }}</p>
+        <h2>{{ C.watch_h }}</h2>
+      </div>
+      <div class="lp-watch-grid">
+        <figure class="lp-watch-player lp-rv">
+          {#- Raw src/poster: written against the site root, never the page. -#}
+          <video class="lp-watch-video" controls muted playsinline preload="none"
+                 poster="{{ base_url }}/{{ DEMO.poster }}" width="{{ DEMO.width }}" height="{{ DEMO.height }}"
+                 style="--lp-ar: {{ DEMO.width }} / {{ DEMO.height }}" aria-label="{{ C.watch_label }}" data-hub-video>
+            <source src="{{ base_url }}/{{ DEMO.src }}" type="video/mp4">
+          </video>
+        </figure>
+        <div class="lp-rv" style="--lp-d:.1s">
+          <p class="lp-watch-lead">{{ C.watch_p }}</p>
+          <ol class="lp-chapters">
+            {%- for name, desc in C.watch_ch %}
+            {%- set t = DEMO.starts[loop.index0] %}
+            <li><button type="button" class="lp-chapter" data-t="{{ t }}"><span class="lp-chapter-t">{{ t // 60 }}:{{ "%02d" | format(t % 60) }}</span><span><b>{{ name }}</b>{{ desc }}</span></button></li>
+            {%- endfor %}
+          </ol>
+          <p class="lp-watch-note">{{ C.watch_note }}</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1309,6 +1406,37 @@
         var done = function () { cbtn.textContent = copy.copied || "Copied"; setTimeout(function () { cbtn.textContent = copy.copy || "Copy"; }, 1600); };
         if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
       });
+
+      // ── recorded demo: the chapter list seeks the video and follows playback ──
+      var video = $("[data-hub-video]"), chapters = $$(".lp-chapter");
+      if (video && chapters.length) {
+        var starts = chapters.map(function (c) { return Number(c.getAttribute("data-t")); });
+        chapters.forEach(function (c, i) {
+          c.addEventListener("click", function () {
+            // preload="none": until the metadata is in, a seek is dropped and
+            // playback starts from 0, so seek again once it arrives.
+            var seek = function () { video.currentTime = starts[i]; };
+            if (video.readyState < 1) video.addEventListener("loadedmetadata", seek, { once: true });
+            seek();
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+          });
+        });
+        var sync = function () {
+          var t = video.currentTime, cur = -1;
+          if (t > 0 || !video.paused) starts.forEach(function (s, i) { if (t >= s) cur = i; });
+          chapters.forEach(function (c, i) {
+            var on = i === cur;
+            c.classList.toggle("is-on", on);
+            if (on) c.setAttribute("aria-current", "true"); else c.removeAttribute("aria-current");
+            if (on) {
+              var end = i + 1 < starts.length ? starts[i + 1] : (video.duration || starts[i] + 1);
+              c.style.setProperty("--lp-p", Math.min(1, Math.max(0, (t - starts[i]) / (end - starts[i]))).toFixed(3));
+            }
+          });
+        };
+        ["timeupdate", "seeked", "play", "loadedmetadata"].forEach(function (ev) { video.addEventListener(ev, sync); });
+      }
 
       // ── count-up ──
       function countTo(el, v) {
