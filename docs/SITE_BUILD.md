@@ -127,6 +127,7 @@ arrives, so a failed fetch shows nothing rather than stale numbers.
 | **Market pulse** — a beeswarm of every priced ticker on a diverging return axis, with 1D / 1M / YTD / 1Y tabs | Tape entries carry `chg`, `chg_1m`, `ytd`, `chg_1y`. `hub_payload()["breadth"]` (`_breadth()`) supplies up/down/flat counts, best/worst, the axis half-width `span`, and `scale` |
 | **Analysis wheel** — the pipeline's twelve types | `hub_payload()["types"]` (`_type_counts()`), from `ANALYSIS_TYPES`, counting `.md` and `.html` reports in the retention window |
 | Headline counts, hero card, six newest reports | `hub_payload()` |
+| **Watch** — a recorded demo beside a chapter list that seeks the video and follows playback | Static. `DEMO` in `home.html` names `docs/assets/video/site-demo.{mp4,jpg}` and times the chapters; `watch_ch` in `COPY` names them |
 
 - The pulse switches `scale` to `symlog` when the largest move exceeds 3× the
   80th-percentile move. Otherwise one +400% YTD would pin every other bubble to
@@ -136,6 +137,14 @@ arrives, so a failed fetch shows nothing rather than stale numbers.
   `lenses` / `fams` COPY entries in `home.html`. Add one there when a type is
   added to `ANALYSIS_TYPES`.
 - Landing-page styles and script live inside `home.html` itself.
+- The demo video is one real recording in three parts: the 10-K / 10-Q download
+  scripts and a `gh workflow run` in a terminal (asciinema, rendered with `agg`),
+  then a browser tour of a local build (headless Chromium). Keep it under 90
+  seconds, and say in `watch_note` what was sped up or cut. When it is
+  re-recorded, re-time `DEMO.starts`: `tests/test_home_demo_video.py` checks
+  that the files exist, the chapters ascend inside the video's length and both
+  languages name every chapter. Its `src` and `poster` are raw attributes, so
+  they are written against `base_url`; `/zh/` has no assets of its own.
 - `home.html` is one template for both languages. `home_zh.html` only overrides
   `{% block home_lang %}`, and the strings live in its `COPY` table.
 
