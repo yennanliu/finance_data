@@ -82,8 +82,15 @@ def test_fundamental_reports_lead_with_gpt_6_luna_then_fall_back_to_gemini():
     assert len(attempts) == 2
 
 
+def test_technical_reports_lead_with_gpt_6_luna_then_fall_back_to_gemini():
+    attempts = resolve_chain(analysis_type="technical-analysis")
+    assert attempts[0] == ("openai", "gpt-6-luna")
+    assert attempts[1] == ("gemini", PROVIDER_DEFAULTS["gemini"]["default_model"])
+    assert len(attempts) == 2
+
+
 def test_other_types_keep_the_gemini_lead():
-    assert resolve_chain(analysis_type="technical-analysis") == resolve_chain()
+    assert resolve_chain(analysis_type="stock-eval") == resolve_chain()
 
 
 def test_type_default_yields_to_an_explicit_provider_or_model():
@@ -94,6 +101,9 @@ def test_type_default_yields_to_an_explicit_provider_or_model():
     assert resolve_chain("openai", "gpt-4o", f)[0] == ("openai", "gpt-4o")
     # naming the type's own provider without a model still gets the type's model
     assert resolve_chain("openai", analysis_type=f)[0] == ("openai", "gpt-6-luna")
+    t = "technical-analysis"
+    assert resolve_chain("gemini", analysis_type=t)[0][0] == "gemini"
+    assert resolve_chain("openai", "gpt-4o", t)[0] == ("openai", "gpt-4o")
 
 
 def test_type_defaults_name_real_types_and_models_their_provider_owns():
@@ -112,8 +122,17 @@ def test_fundamental_budget_is_larger_and_fits_gpt_6_luna():
     budget = resolve_max_tokens("fundamental-analysis")
     assert budget == 64000 > DEFAULT_TOKENS
     assert budget + llm._OPENAI_REASONING_HEADROOM <= llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
-    assert resolve_max_tokens("technical-analysis") == DEFAULT_TOKENS
     assert resolve_max_tokens("fundamental-analysis", 8000) == 8000   # explicit wins
+
+
+def test_technical_keeps_the_default_budget():
+    from scripts.analysis.config import DEFAULT_TOKENS
+    from scripts.analysis.config.providers import resolve_max_tokens
+    from scripts.analysis.utils import llm
+
+    budget = resolve_max_tokens("technical-analysis")
+    assert budget == DEFAULT_TOKENS == resolve_max_tokens("stock-eval")
+    assert budget + llm._OPENAI_REASONING_HEADROOM <= llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
 
 
 def test_resolve_chain_honors_explicit_primary_model():

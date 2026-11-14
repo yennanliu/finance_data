@@ -69,9 +69,10 @@ template is `.format()`ed, so escape literal JSON braces as `{{` `}}`.
 
 ### Who grades what
 
-- The judge is deliberately **not** the generator. The generator defaults to
-  Gemini, and the workflow passes `--provider openai --cross-provider`. Reports
-  that fell back to OpenAI are graded by Gemini. Without `GEMINI_API_KEY` the
+- The judge is deliberately **not** the generator. The generator is
+  Gemini for most types and OpenAI for fundamental and technical reports
+  (`TYPE_DEFAULTS`), and the workflow passes `--provider openai --cross-provider`,
+  so every OpenAI-generated report is graded by Gemini. Without `GEMINI_API_KEY` the
   workflow drops `--cross-provider` with a warning.
   `test_the_default_reviewer_is_not_the_default_generator` pins this.
 - `--cross-provider` never lets a provider grade a report it generated.

@@ -204,8 +204,9 @@ jobs:
       # Scheduled runs know only their cron string, so map it to a ticker and
       # analysis type. Provider / model / max-tokens are left EMPTY for
       # scheduled runs on purpose: the generator's own defaults (per analysis
-      # type: fundamental → openai gpt-6-luna, the rest → gemini-3.8-flash;
-      # 64000 / 32000 tokens — see analysis/config/providers.py) are the single source
+      # type: fundamental and technical → openai gpt-6-luna, the rest →
+      # gemini-3.8-flash; fundamental 64000 tokens, others 32000 — see
+      # analysis/config/providers.py) are the single source
       # of truth, so this workflow no longer restates them.
       - name: Resolve analysis parameters
         id: params
@@ -226,7 +227,7 @@ jobs:
             PROVIDER="$IN_PROVIDER"
             MODEL="$IN_MODEL"
             # auto: leave both empty so the generator picks the type's default
-            # (fundamental → openai gpt-6-luna, everything else → gemini).
+            # (fundamental and technical → openai gpt-6-luna, everything else → gemini).
             if [ "$PROVIDER" = "auto" ]; then PROVIDER=""; MODEL=""; fi
             MAX_TOKENS="$IN_MAX_TOKENS"
           else

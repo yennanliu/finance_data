@@ -25,8 +25,8 @@ Code: `scripts/analysis/utils/llm.py`, re-exported as `analysis.llm`.
   `(provider, model)` attempts. `run_with_fallback()` returns the first success.
   The context is fetched once and reused across attempts. `--provider` moves a
   provider to the front of the chain. With no `--provider`, a type listed in
-  `TYPE_DEFAULTS` leads with its own pair: fundamental reports run on
-  `openai:gpt-6-luna`, then gemini.
+  `TYPE_DEFAULTS` leads with its own pair: fundamental and technical reports
+  run on `openai:gpt-6-luna`, then gemini.
 - **Rate limits** are retried with exponential backoff (30 s base, 5 attempts).
 - **Refusals.** A short reply matching a refusal pattern is retried up to 5 times
   with an override prefix (and rising temperature where the model takes one).
@@ -45,7 +45,7 @@ Code: `scripts/analysis/utils/llm.py`, re-exported as `analysis.llm`.
   reasoning tokens.
 - **Token budget.** The budget sent is `--max-tokens`. Without it,
   `resolve_max_tokens()` uses the type's `TYPE_DEFAULTS` budget (fundamental:
-  64000) and otherwise `DEFAULT_TOKENS` (32000). A full
+  64000) and otherwise `DEFAULT_TOKENS` (32000, which technical keeps). A full
   fundamental report (11 chapters, Ch.8 DCF arithmetic) needs ~32k output tokens.
   `run_openai` clamps to the model's own ceiling (`OPENAI_MAX_TOKENS`; gpt-4o is
   16,384, so the OpenAI fallback truncates full-length reports; the gpt-6
