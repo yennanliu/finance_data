@@ -42,7 +42,7 @@ scripts/generate_analysis.py → analysis.pipeline.run_analysis()
   context/__init__.py      assemble: one branch per type (+ fundamental_facts.py VERIFIED FIGURES)
   prompts/<type>.txt       template: {ticker} {financial_context} {today}
   utils/llm.py             generate: run_with_fallback over FALLBACK_CHAIN (gemini → openai;
-                           fundamental leads with openai gpt-6-luna via TYPE_DEFAULTS)
+                           fundamental and technical lead with openai gpt-6-luna via TYPE_DEFAULTS)
   validate/arithmetic.py   recheck §8.8 and write the corrected sum back (fundamental)
   → ai_gen_report/{fundamental|technical|stock}/<ticker>/<prefix>_<date>_<provider>.md
 scripts/build_docs.py      ai_gen_report/ + data/ → docs/ and docs/zh/ → mkdocs → GitHub Pages

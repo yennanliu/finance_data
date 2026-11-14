@@ -84,7 +84,7 @@ def parse_args() -> argparse.Namespace:
         choices=["claude", "openai", "gemini"],
         help="Primary AI provider; leads the fallback chain "
              "(default: the configured chain, gemini → openai; "
-             "fundamental-analysis leads with openai gpt-6-luna)",
+             "fundamental-analysis and technical-analysis lead with openai gpt-6-luna)",
     )
     p.add_argument(
         "--model", default=None,

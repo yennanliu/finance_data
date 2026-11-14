@@ -57,9 +57,10 @@ FALLBACK_CHAIN = ["gemini", "openai"]
 # Per-analysis-type defaults. A type listed here starts its chain with this
 # provider/model when the run names no provider, and uses this model when the
 # run names that provider without a model. The rest of ``FALLBACK_CHAIN`` still
-# follows, so fundamental reports fall back to gemini. ``max_tokens`` replaces
-# ``config.DEFAULT_TOKENS`` when the run passes no ``--max-tokens``. Types not
-# listed start at ``FALLBACK_CHAIN[0]`` with ``DEFAULT_TOKENS``.
+# follows, so fundamental and technical reports fall back to gemini.
+# ``max_tokens`` (optional) replaces ``config.DEFAULT_TOKENS`` when the run
+# passes no ``--max-tokens``. Types not listed start at ``FALLBACK_CHAIN[0]``
+# with ``DEFAULT_TOKENS``.
 TYPE_DEFAULTS = {
     "fundamental-analysis": {
         "provider": "openai",
@@ -68,6 +69,12 @@ TYPE_DEFAULTS = {
         # run_openai's 16k reasoning headroom stays well inside that, and the
         # gemini fallback clamps it to its own 65,536 ceiling.
         "max_tokens": 64000,
+    },
+    "technical-analysis": {
+        "provider": "openai",
+        "model": "gpt-6-luna",
+        # No ``max_tokens``: a technical report is far shorter than a
+        # fundamental one, so it keeps ``DEFAULT_TOKENS``.
     },
 }
 
@@ -134,8 +141,8 @@ def resolve_chain(primary_provider=None, primary_model=None, analysis_type=None)
             wanted = primary_model
         else:
             # The type's own model applies wherever its provider sits in the
-            # chain, so a fundamental run led by gemini still falls back to
-            # gpt-6-luna rather than gpt-4o's 16k ceiling.
+            # chain, so a fundamental or technical run led by gemini still
+            # falls back to gpt-6-luna rather than gpt-4o's 16k ceiling.
             wanted = type_model if provider == type_provider else None
         model = resolve_model(provider, wanted)
         attempts.append((provider, model))

@@ -68,7 +68,7 @@ The schedule is data-driven: [`scripts/.ticker_schedule.json`](scripts/.ticker_s
    companyfacts. Prices and fundamentals are kept as committed CSV stores in
    `data/`.
 2. **Analyse.** `scripts/generate_analysis.py` builds a context per analysis type
-   and calls the LLM chain (fundamental reports: OpenAI `gpt-6-luna` first, Gemini as fallback; other types: Gemini `gemini-3.8-flash` first, OpenAI as fallback).
+   and calls the LLM chain (fundamental and technical reports: OpenAI `gpt-6-luna` first, Gemini as fallback; other types: Gemini `gemini-3.8-flash` first, OpenAI as fallback).
    Reports land in `ai_gen_report/`.
 3. **Audit.** `qa_report_quality.yml` checks reports nightly. See
    [`docs/QA_AUDIT.md`](docs/QA_AUDIT.md).
