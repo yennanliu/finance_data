@@ -14,31 +14,35 @@ generated_by: Google Gemini API (scripts/generate_market_news.py)
 ## 📅 報告日期
 2026-11-14
 
+---
+
 ## 🏢 公司概覽
-Vistra Corp.（NYSE: VST）是美國規模領先的綜合公用事業與獨立發電商（IPP），業務橫跨零售電力與大型商用發電。公司旗下擁有高度多元的能源發電組合，涵蓋核能、天然氣、燃煤、公用事業規模太陽能以及大型電池儲能系統。隨著近年併購整合及核能資產擴充，Vistra 已轉型為全美低碳基載電力的核心供應商。在生成式 AI、大型語言模型訓練與雲端數據中心驅動的用電爆發潮中，Vistra 憑藉其充沛的基載發電能力與策略性地理佈局，成為科技巨頭追求可靠、清潔電力合約的關鍵合作夥伴。
+Vistra Corp.（NYSE: VST）是美國領先的綜合公用事業與大型獨立發電業者（IPP），旗下涵蓋商業發電、核能、天然氣、煤炭以及大型電池儲能系統，同時經營廣泛的零售電力業務（如 TXU Energy）。公司主要營運樞紐位於德州電力可靠性委員會（ERCOT）電網及 PJM 市場。受惠於生成式 AI 資料中心、晶片製造與電氣化驅動的電力需求激增，VST 已從傳統防禦型公用事業轉型為結合 AI 基礎設施算力電力供給的核心受益標的，兼具強勁現金流與高成長潛力。
 
 ---
 
 ## 📝 新聞摘要總覽
-近一週以來，市場圍繞 Vistra（VST）最新公佈的 2026 年第三季財報、AI 基礎設施用電前景以及資金流向展開了密集討論。Vistra 本季繳出創紀錄的調整後收益成績單，激勵股價在財報發布後迅速由約 124.80 美元反彈，並在 11 月 11 日收於 133.45 美元，目前穩定交投於 133.01 美元附近。儘管業績表現強勁，市場分析指出 VST 股價年內仍累計下跌約 17%，主因在於投資人先前對「AI 泡沫破裂（AI Bust）」的過度定價，以及德州電網（ERCOT）區域監管和電價波動風險的疑慮。
+近一週 Vistra Corp.（VST）之市場動態呈現「強勁基本面與短期情緒分歧交織」的格局。公司剛公布 2026 年第三季財報，營收表現超出華爾街預期，並創下歷史單季新高，管理層更隨之調升 2026 全年利潤指引中位數，推動股價在財報公布初期跳漲 3.8% 至約 124.80 美元，隨後進一步推升至最新收盤價 133.01 美元。在法說會中，管理層重點強調了自由現金流產生能力與回饋股東的資本配置計畫，儘管同時也對長期電力需求變數與德州市場波動提出審慎展望。
 
-然而，公用事業與電力板塊的整體基本面持續走強。同業 Constellation Energy（CEG）因上調全年財務指引，單週股價飆升 13%；Talen Energy 敲定高達 750 MW 的長期容量合約；New Era Energy & Digital（NUAI）亦在德州數據中心園區鎖定 207 MW 電力供應。此外，小型模組化反應爐（SMR）開發商 Oklo 財報帶動核能板塊集體走揚，皆印證了數據中心對穩定能源的剛性需求未曾冷卻。分析機構指出，Vistra 目前具備強勁的前瞻現金流生成能力與估值吸引力，當前股價已充分反映悲觀預期；不過，ETF 在 11 月 10 日呈現淨賣出，顯示短期資金面與德州區域風險仍對股價動能構成上方壓力。
+然而，市場評價面與資金流向呈現分歧。受大選後獨立發電商監管預期調整，以及知名創投人士 David Sacks 對「AI 資料中心建設管線可能乾涸」的警告影響，VST 在 11 月上旬面臨波動；且數據顯示 ETF 在 11 月 10 日呈現淨賣出，限制了短期動能。此外，部分觀點指出 VST 過去一年表現相對疲軟（今年迄今仍處於下跌約 17% 的修復期）。不過，買方與華爾街機構立場依舊正面：Siebert Williams Shank 認為當前估值已被過度打壓，重申具備高達 50% 的潛在上升空間；Seeking Alpha 分析亦指出，市場正過度定價一場「可能永遠不會到來的 AI 泡沫破裂」。與此同時，同業 Constellation Energy（CEG）上調指引後單週大漲 13%、Talen Energy 簽下 750 MW 長期協議、德州本地資料中心大單（如 NUAI 簽約 207 MW）陸續敲定，均再次驗證了資料中心對基載電力需求的結構性牛市依然穩固。
 
 ---
 
 ## 💡 關鍵洞察
 
-- **財報創紀錄確認營運底部，估值存在顯著折價修復空間**：Vistra 第三季交出歷史新高的調整後收益，緩解了市場對其獲利可持續性的擔憂。考量到年內約 17% 的回撤，現階段前瞻估值倍數（Forward Undervaluation）已極具吸引力，第三季財報極可能確立了中期價格底部。
-- **市場過度定價「AI 泡沫」，實體電力合約需求依舊強勁**：部分資金擔憂 AI 資本開支放緩，但同業如 Talen 簽署 750 MW 容量協議、New Era 敲定 207 MW 德州數據中心合約，在在證明超大規模雲端服務商（Hyperscalers）對基載電力的採購仍在加速落實，電力資產並未出現需求缺口。
-- **同行 Constellation 指引上修，形成公用事業重估外溢效應**：Constellation Energy（CEG）調高指引並錄得單週 13% 漲幅，確立了擁有核電與清潔基載資產的發電商在電力定價權上的優勢，為 VST 等同業提供了正向的同儕估值錨定（Peer Multiple Expansion）。
-- **核能與清潔能源板塊共振，深化長期資產溢價**：Oklo 財報引發的核能概念股熱潮，重新喚醒市場對全天候無碳電力（24/7 Clean Firm Power）稀缺性的認識，擁有實體核能機組營運經驗的 VST 將享有更高的長期終端價值。
-- **德州市場監管定價機制與資本外流形成短期阻力**：儘管基本面亮眼，ETF 資金在 11 月 10 日出現淨流出，且市場對德州 ERCOT 電網定價規則變動及尖峰負載風險抱持審慎態度，使短線反彈動能受到技術性壓制。
+- **營運基本面超越預期，盈利底部確立**：VST 第三季創紀錄的獲利與營收超越市場預期，並調升 2026 年獲利預測中位數，證明其發電機組在高電價與高負荷環境下的極佳獲利彈性，為今年以來回檔約 17% 的股價築起實質基本面底部。
+- **市場定價「AI 泡沫破裂」過度悲觀**：市場因擔憂 AI 資料中心建設放緩而拋售電力股，但 Seeking Alpha 與一線研究機構指出，實際算力需求瓶頸在於「電力供應不足」而非「需求消失」，當前估值回檔反為中長線買盤提供顯著的安全邊際。
+- **機構目標價具 50% 潛在溢價**：Siebert Williams Shank 等華爾街機構指出，VST 過去一年的橫盤與回檔已充分消化前期的暴漲預期，對比其自由現金流收益率與同業估值，目前具備 50% 以上的價值重估空間。
+- **同業重大簽約與財報驗證外溢效應**：Constellation Energy（CEG）因上調利潤指引單週飆升 13%，且 Talen Energy 敲定 750 MW 大規模長期容量合約，顯示科技巨頭與超大規模雲端商鎖定低碳/核能電力的競賽正在加速，VST 旗下的核電與天然氣機組合約重定價動能明確。
+- **資金面短期面臨被動型 ETF 賣壓調節**：11 月 10 日 ETF 資金呈現淨流出 VST，加上美國大選後政策重新評估與部分避險情緒，導致技術面上在 133–135 美元區間面臨短期賣壓封閉，需時間化解籌碼沉澱。
+- **德州本土電力供需緊張度持續加劇**：New Era Energy & Digital 於德州簽約高達 207 MW 的資料中心電力，突顯 ERCOT 電網正迎來前所未有的負載增長，VST 作為德州最大發電與零售龍頭，其邊際發電定價權進一步增強。
 
 ---
 
 ## 📰 近期新聞總覽
 
-- 2026-11-13 | Vistra (NYSE:VST): A Value Stock Built on Forward Undervaluation and Profitability — ChartMill
+- 2026-11-14 | Yahoo Finance - Stock Market Live, Quotes, Business & Finance News — Yahoo News
+- 2026-11-14 | Vistra Has Disappointed for a Year: Why Siebert Williams Shank Still Sees 50% Upside — TIKR
 - 2026-11-12 | New Era Energy & Digital Inc (NUAI) (Q3 2026) Earnings Call Highlights: $187 Million Cash, ... — GuruFocus.com
 - 2026-11-12 | Discerning The AI Industrial Buildout Through An Energy Lens — Seeking Alpha
 - 2026-11-12 | Do You Like Cash? Consider Vistra Stock — Trefis
@@ -50,107 +54,103 @@ Vistra Corp.（NYSE: VST）是美國規模領先的綜合公用事業與獨立�
 - 2026-11-12 | Vistra: The Market Is Pricing In An AI Bust That May Never Come — Seeking Alpha
 - 2026-11-12 | ETFs Are Net Sellers of Vistra (VST) on Nov. 10 — GuruFocus.com
 - 2026-11-12 | Vistra (VST) Stock Price Prediction: Earnings beat lifts the setup, but Texas risk and selling pressure cap momentum — Bing News
-- 2026-11-12 | VST Tillers Tractors Ltd (BOM:531266) (Q2 2027) Earnings Call Highlights — GuruFocus.com *(註：非美股 VST，屬同名印度農機企業)*
-- 2026-11-12 | What Is The Biggest Threat To Vistra Stock? — Trefis
-- 2026-11-11 | Elite Dividend Growth Machines On Sale (Up To 7% Yields) — Seeking Alpha
+- 2026-11-12 | VST Tillers Tractors Ltd (BOM:531266) (Q2 2027) Earnings Call Highlights: Power Tiller Momentum ... — GuruFocus.com
 - 2026-11-11 | Here's What Key Metrics Tell Us About Vistra (VST) Q3 Earnings — Yahoo Finance
-- 2026-11-11 | Vistra Corp. (VST) is attracting investor attention: Here is what you should know — Zacks / Bing News
+- 2026-11-11 | Vistra Corp. (VST) is attracting investor attention: Here is what you should know — Bing News
 - 2026-11-11 | Talen Signs 750 MW Long-Term Capacity Agreement — Yahoo Finance
-- 2026-11-10 | US Strategic Petroleum Reserve is projected to hit a new low before rebounding in late 2027 — Yahoo Finance
 - 2026-11-10 | The Most Important Market Shift Of The Decade Is Already Underway — Seeking Alpha
-- 2026-11-10 | US Gasoline Prices Drop Below $4 a Gallon After Months of Pain — Yahoo Finance
 - 2026-11-09 | Vistra Q3 Earnings Call Highlights Cash Flow Plans & Demand Risks — Yahoo Finance
-- 2026-11-09 | Vistra (VST) Stock Looks Reasonable As Its Five Year Run Continues — Yahoo Finance
+- 2026-11-09 | Vistra (VST) Stock Looks Reasonable As Its Five Year Run Continues — Bing News
+- 2026-11-09 | David Sacks Warns the AI Data Center Pipeline Could Dry Up. Here’s What’s at Stake — Yahoo Finance
 - 2026-11-08 | Nuclear stocks surge as Oklo results spark rally for reactors, uranium suppliers (OKLO:NYSE) — Seeking Alpha
 - 2026-11-06 | Vistra (VST) Stock Climbs After Record Q3 Earnings Power — Bing News
+- 2026-11-06 | Vistra stock soars after surprising Q3 sales results — Bing News
+- 2026-11-04 | VST, CEG Stocks Drop As Election Outcome Hits Merchant Power Generators — Yahoo Finance
 
 ---
 
 ## 🔍 重點新聞深度分析
 
-### 1. Q3 創紀錄財報發布與自由現金流展現
-- **核心內容**：Vistra 發布 2026 年第三季財報，調整後獲利創下歷史新高，帶動股價當日大漲 3.8% 至約 124.80 美元，並進一步延續至 133 美元區間。管理層在法說會中明確聚焦自由現金流（FCF）生成規劃與資本配置，展現了強韌的營運體質。
-- **營運與財務影響**：穩健的現金流讓 VST 具備充裕實力進行股東回饋（買回庫藏股及配息），同時提供足夠的資本支出彈性，用於改裝現有電廠、支持電網可靠性及擴大儲能佈局。
-- **投資啟示**：高現金流轉化率是公用事業抗跌與價值重估的基石，有力回擊了空頭對於公用事業高資本開支拖垮資產負債表的擔憂。
+### 1. 2026 Q3 財報擊敗預期並調升利潤指引
+- **事件內容**：VST 於 11 月 6 日公布第三季財報，營收與調整後獲利超越市場共識，寫下歷史最佳季度表現，並進一步調高 2026 年全年獲利中位數。財報發布後股價即刻跳漲 3.8% 至約 124.80 美元，奠定反彈基礎。
+- **營運與財務影響**：此結果證明其綜合公用事業模型（發電對沖零售）發揮了極高效率，且先前收購核電資產（Energy Harbor）的整合綜效開始顯現。強勁的自由現金流（FCF）不僅為股票回購與股利發放提供彈藥，也降低了資產負債表的再融資風險。
+- **股價評估**：確認了獲利拐點，打破了先前市場對獲利見頂的疑慮，支撐股價自 11 月初強勢修復至 133 美元水位。
 
-### 2. 「AI 泡沫」過度定價與估值重塑（Seeking Alpha / ChartMill）
-- **核心內容**：市場分析指出，VST 股價年內曾面臨達 17% 的回檔，主要源於資金對科技板塊 AI 資本支出回調的恐慌性外溢。然而，ChartMill 與 Seeking Alpha 同步指出，VST 目前處於前瞻性低估（Forward Undervaluation），市場正過度定價一場「可能永遠不會到來的 AI 崩潰」。
-- **產業與股價影響**：AI 算力擴充對電力的需求屬於多年期的基建循環。隨著實際供電合約陸續確認，市場情緒將從非理性的宏觀恐懼轉向檢視企業具體的電力交付能力，帶動估值倍數回歸合理水位。
+### 2. 估值偏低與 AI 泡沫擔憂：Siebert Williams Shank 喊漲 50%
+- **事件內容**：根據 TIKR 與 Seeking Alpha 報導，儘管今年以來股價仍有約 17% 的累計跌幅，但 Siebert Williams Shank 維持高度多頭看法，預期有 50% 上漲空間。Seeking Alpha 分析師則主張，市場正悲觀地替「AI 泡沫化」定價，這與現實能源缺口脫節。
+- **營運與財務影響**：科技巨擘（Hyperscalers）對全天候無碳電力（24/7 Firm Clean Power）的需求並未縮減。即便如 David Sacks 警告供應鏈管道有延遲風險，發電業者所持有的現成機組容量反而更加稀缺，提升了中長期電力採購合約（PPA）的談判溢價。
+- **股價評估**：市場情緒若從「過度擔憂 AI 資本支出萎縮」轉回「實體電力價值重估」，VST 本益比具備擴張空間，50% 的目標漲幅具備合理基本面支撐。
 
-### 3. 同儕合約落地與核能板塊共振（Constellation / Talen / Oklo）
-- **核心內容**：Talen Energy 宣布簽署 750 MW 長期容量協議；New Era Energy 取得德州 207 MW 數據中心供電合約；Constellation Energy 提高業績指引促使股價單週跳升 13%；Oklo 的財報更激發反應爐與核能供應鏈買盤。
-- **競爭優勢影響**：這些指標性事件確認了兩大趨勢：第一，數據中心直接與大型發電廠綁定長期 PPA（購電協議）已成行業標準；第二，具備零碳排、高產能利用率特性的核能資產具備高度稀缺溢價。Vistra 作為大型核電與多元發電資產擁有者，其機組商務價值水漲船高。
+### 3. 同業催化劑頻發：CEG 指引大增 13% 與 Talen 簽署 750 MW 協議
+- **事件內容**：同屬獨立發電龍頭的 Constellation Energy（CEG）上調指引激勵股價單週暴漲 13%；Talen Energy 宣布簽署高達 750 MW 的長期容量協議。此外，核電新創 Oklo 的熱潮亦帶動核能與公用事業板塊情緒。
+- **營運與財務影響**：同業的高價長約確立了發電市場的定價基準（Benchmark）。VST 擁有全美第二大非受規管核電站隊，CEG 與 Talen 的成功案例直接驗證了 VST 旗下 Comanche Peak 等核電廠未來簽訂後端「同址（Behind-the-Meter）資料中心」合約時的超額定價潛力。
+- **股價評估**：板塊整體風險溢價下降，同業估值錨定效應將推動資金回流 VST。
 
-### 4. 資金面短期賣壓與德州區域電網風險（ERCOT Exposure）
-- **核心內容**：儘管財報超預期，GuruFocus 報導指出 ETF 在 11 月 10 日成為 VST 的淨賣方，且技術分析指出股價在 133.45 美元收盤後盤後出現回檔至 130.80 美元的震盪，德州監管與電網定價機制風險依然是壓抑短線衝刺的關鍵。
-- **市場動態影響**：機構與被動型基金在季報出爐後進行部位微調與獲利了結。此外，Vistra 核心產能高度集中於德州 ERCOT 電網，該區域電價極端波動以及潛在的電網規費政策審查，使部分避險資金在反彈至壓力區時選擇先行減碼。
+### 4. 德州本土需求爆發與短期資金籌碼拉鋸
+- **事件內容**：New Era Energy & Digital 簽訂高達 207 MW 的德州園區電力合約；然而 GuruFocus 指出 11 月 10 日被動型 ETF 為 VST 淨賣方，且大選後獨立發電商板塊曾短暫受壓，導致股價在 133.45 美元收盤後盤後回落至 130.80 美元附近整理。
+- **營運與財務影響**：德州 ERCOT 電網是全美資料中心建設最激進的區域之一。VST 在德州深耕多年，207 MW 級別的需求落地僅是開端。但短期內，ETF 調倉與選舉後政策不確定性構成了主要的技術面逆風。
+- **股價評估**：多空在 130–135 美元區間激烈博弈，長期利多需消化短期 ETF 流出的賣壓。
 
 ---
 
 ## 📊 市場情緒評估
 
-**整體市場情緒**：🟢 **正面偏溫和**
+**整體市場情緒：🟡 中性偏多 (Moderate Bullish)**
 
-| 評估維度 | 訊號依據 | 影響分析 |
-| :--- | :--- | :--- |
-| **基本面 / 財報** | 🟢 強烈正面 | Q3 業績創紀錄，現金流充沛，前瞻本益比具備安全邊際 |
-| **產業趨勢** | 🟢 強烈正面 | 同儕（CEG、TLN）長期合約與調升指引，證實 AI 能源需求強韌 |
-| **資金流動性** | 🔴 短期負面 | ETF 於 11/10 淨賣出，顯示被動資金有調倉了結跡象 |
-| **監管與區域風險** | 🟡 中性審慎 | 德州 ERCOT 電網定價爭議與法規監管仍需時間消化 |
-
-**綜合結論**：基本面與產業景氣度處於高水平，但技術面與短期籌碼面需消化獲利了結盤，整體呈現「基本面扎實、震盪盤堅」的偏多態勢。
+| 評估維度 | 訊號 | 詳細說明 |
+| :--- | :---: | :--- |
+| **基本面支撐** | 🟢 正面 | Q3 獲利打破歷史紀錄，調升 2026 財年利潤指引中位數，現金流充沛 |
+| **產業定價環境** | 🟢 正面 | 同業（CEG、Talen）陸續開出亮眼財報與巨額合約，商業用電定價走升 |
+| **分析師共識** | 🟢 正面 | 券商重申 50% 上漲空間，認為市場對 AI 泡沫化的定價過度悲觀 |
+| **資金籌碼面** | 🔴 負面 | 11 月 10 日被動型 ETF 呈現淨賣出，限制財報利多後的向上衝刺動能 |
+| **宏觀與監管** | 🟡 中性 | 美國大選結果短期引發發電板塊波動；AI 資料中心擴建存在電網接網排隊爭議 |
 
 ---
 
 ## ⚠️ 主要風險因素
 
-- 🔴 **德州 ERCOT 市場監管與定價結構變更風險**：
-  Vistra 在德州擁有大量商用發電機組。ERCOT 市場的容量市場設計、電價上限（Cap）調整或針對大型數據中心並網規則的變更，可能削弱尖峰時段的利潤空間。
-- 🟡 **機構與被動型 ETF 資金部位調整壓力**：
-  數據顯示機構與 ETF 在高檔進行淨賣出操作。若大盤指數或科技板塊進入震盪調整，公用事業板塊中的高貝塔（Beta）個股可能承受被動拋售賣壓。
-- 🟢 **AI 基礎設施資本支出節奏放緩之情緒干擾**：
-  儘管實質電力合約持續簽署，但若市場對科技巨頭資本回報率（ROI）產生疑慮，可能引發市場對遠期電力採購需求的再評估，影響估值溢價。
+- 🔴 **高階 AI 資料中心電力管線推遲風險**：如知名創投 David Sacks 所示警，若電力接網延遲、審批阻滯或科技巨頭調降 AI 資本支出，恐導致原本預期的高溢價電力協議簽署進度不如預期。
+- 🟡 **德州 ERCOT 市場氣候與監管波動風險（Texas Risk）**：VST 獲利比重高度仰賴德州，德州極端天氣（寒流或熱浪）對即期電價波動極大，且德州立法與監管機構對資料中心排擠民生用電之審查日趨嚴格。
+- 🟡 **被動型資金與量化賣壓**：近期 ETF 的淨賣盤顯示機構投資人在年終前可能進行獲利了結或投資組合再平衡，恐使短期技術面承受均線反壓。
+- 🟢 **大選後政策重新定價風險**：聯邦或州層級對能源過渡補貼政策與發電廠排放法規的任何變動，短期內均會引發商人發電（Merchant Power）板塊的估值震盪。
 
 ---
 
 ## 🔮 短期關注重點
 
-1. **股價於 130–134 美元區間的支撐測試**：
-   觀察 VST 在財報跳空後能否站穩 130 美元關卡，並消化盤後拉回的賣壓。
-2. **與科技業者或超大規模數據中心的 PPA 長期協議催化**：
-   觀察管理層在 Q3 法說會後，是否在未來數週宣布類似 Talen Energy 的大型專屬發電或核能直接供應（Behind-the-Meter / Long-term Capacity）合約。
-3. **同業 Constellation (CEG) 上漲外溢效應持續性**：
-   追蹤公用事業與核能族群的資金輪動，評估分析師是否因同業指引上修而跟進調升 VST 的目標價與獲利預測。
+1. **同址（Behind-the-Meter）資料中心合約催化**：追蹤 VST 是否在 Comanche Peak 等核電廠址公布如同業 Talen、CEG 規模之大規模超大規模運算商（Hyperscaler）PPA 商業協議。
+2. **德州電網冬季備轉容量指標**：關注 ERCOT 於 11 月底至 12 月初公布的冬季電力可靠性展望，這將直接影響第四季天然氣與商業發電機組的容量定價。
+3. **130–135 美元支撐與阻力攻防**：技術面上，檢視股價能否在最新價 133.01 美元附近築底，並消化 11 月 10 日以來的 ETF 拋壓，突破 135 美元前波高點。
 
 ---
 
 ## 📌 新聞來源索引
 
-1. Vistra (NYSE:VST): A Value Stock Built on Forward Undervaluation and Profitability — ChartMill (2026-11-13)
-2. New Era Energy & Digital Inc (NUAI) (Q3 2026) Earnings Call Highlights — GuruFocus.com (2026-11-12)
-3. Discerning The AI Industrial Buildout Through An Energy Lens — Seeking Alpha (2026-11-12)
-4. Do You Like Cash? Consider Vistra Stock — Trefis (2026-11-12)
-5. Constellation Energy Soars 13% in a Week on a Guidance Raise — TIKR (2026-11-12)
-6. Is Constellation Energy Stock Increasing Your Market Risk? — Trefis (2026-11-12)
-7. New Era Energy & Digital contracts up to 207 MW of power for Texas data center campus — Proactive (2026-11-12)
-8. Vistra Is Still Down 17% This Year: Did Earnings Just Mark the Bottom? — TIKR (2026-11-12)
-9. Energy Transition Update - Holu Hou Energy Revolutionizes MDU Solar Adoption — Simply Wall St. (2026-11-12)
-10. Vistra: The Market Is Pricing In An AI Bust That May Never Come — Seeking Alpha (2026-11-12)
-11. ETFs Are Net Sellers of Vistra (VST) on Nov. 10 — GuruFocus.com (2026-11-12)
-12. Vistra (VST) Stock Price Prediction: Earnings beat lifts the setup, but Texas risk and selling pressure cap momentum — Bing News (2026-11-12)
-13. VST Tillers Tractors Ltd (BOM:531266) (Q2 2027) Earnings Call Highlights — GuruFocus.com (2026-11-12)
-14. What Is The Biggest Threat To Vistra Stock? — Trefis (2026-11-12)
-15. Elite Dividend Growth Machines On Sale (Up To 7% Yields) — Seeking Alpha (2026-11-11)
-16. Here's What Key Metrics Tell Us About Vistra (VST) Q3 Earnings — Yahoo Finance (2026-11-11)
-17. Vistra Corp. (VST) is attracting investor attention: Here is what you should know — Zacks / Bing News (2026-11-11)
-18. Talen Signs 750 MW Long-Term Capacity Agreement — Yahoo Finance (2026-11-11)
-19. US Strategic Petroleum Reserve is projected to hit a new low before rebounding in late 2027 — Yahoo Finance (2026-11-10)
-20. The Most Important Market Shift Of The Decade Is Already Underway — Seeking Alpha (2026-11-10)
-21. US Gasoline Prices Drop Below $4 a Gallon After Months of Pain — Yahoo Finance (2026-11-10)
-22. Vistra Q3 Earnings Call Highlights Cash Flow Plans & Demand Risks — Yahoo Finance (2026-11-09)
-23. Vistra (VST) Stock Looks Reasonable As Its Five Year Run Continues — Yahoo Finance (2026-11-09)
-24. Nuclear stocks surge as Oklo results spark rally for reactors, uranium suppliers — Seeking Alpha (2026-11-08)
-25. Vistra (VST) Stock Climbs After Record Q3 Earnings Power — Bing News (2026-11-06)
+1. Yahoo Finance - Stock Market Live, Quotes, Business & Finance News — Yahoo News (2026-11-14)
+2. Vistra Has Disappointed for a Year: Why Siebert Williams Shank Still Sees 50% Upside — TIKR (2026-11-14)
+3. New Era Energy & Digital Inc (NUAI) (Q3 2026) Earnings Call Highlights: $187 Million Cash, ... — GuruFocus.com (2026-11-12)
+4. Discerning The AI Industrial Buildout Through An Energy Lens — Seeking Alpha (2026-11-12)
+5. Do You Like Cash? Consider Vistra Stock — Trefis (2026-11-12)
+6. Constellation Energy Soars 13% in a Week on a Guidance Raise: “A Platform Heretofore Unseen” — TIKR (2026-11-12)
+7. Is Constellation Energy Stock Increasing Your Market Risk? — Trefis (2026-11-12)
+8. New Era Energy & Digital contracts up to 207 MW of power for Texas data center campus — Proactive (2026-11-12)
+9. Vistra Is Still Down 17% This Year: Did Earnings Just Mark the Bottom? — TIKR (2026-11-12)
+10. Energy Transition Update - Holu Hou Energy Revolutionizes MDU Solar Adoption — Simply Wall St. (2026-11-12)
+11. Vistra: The Market Is Pricing In An AI Bust That May Never Come — Seeking Alpha (2026-11-12)
+12. ETFs Are Net Sellers of Vistra (VST) on Nov. 10 — GuruFocus.com (2026-11-12)
+13. Vistra (VST) Stock Price Prediction: Earnings beat lifts the setup, but Texas risk and selling pressure cap momentum — Bing News (2026-11-12)
+14. VST Tillers Tractors Ltd (BOM:531266) (Q2 2027) Earnings Call Highlights: Power Tiller Momentum ... — GuruFocus.com (2026-11-12)
+15. Here's What Key Metrics Tell Us About Vistra (VST) Q3 Earnings — Yahoo Finance (2026-11-11)
+16. Vistra Corp. (VST) is attracting investor attention: Here is what you should know — Bing News (2026-11-11)
+17. Talen Signs 750 MW Long-Term Capacity Agreement — Yahoo Finance (2026-11-11)
+18. The Most Important Market Shift Of The Decade Is Already Underway — Seeking Alpha (2026-11-10)
+19. Vistra Q3 Earnings Call Highlights Cash Flow Plans & Demand Risks — Yahoo Finance (2026-11-09)
+20. Vistra (VST) Stock Looks Reasonable As Its Five Year Run Continues — Bing News (2026-11-09)
+21. David Sacks Warns the AI Data Center Pipeline Could Dry Up. Here’s What’s at Stake — Yahoo Finance (2026-11-09)
+22. Nuclear stocks surge as Oklo results spark rally for reactors, uranium suppliers (OKLO:NYSE) — Seeking Alpha (2026-11-08)
+23. Vistra (VST) Stock Climbs After Record Q3 Earnings Power — Bing News (2026-11-06)
+24. Vistra stock soars after surprising Q3 sales results — Bing News (2026-11-06)
+25. VST, CEG Stocks Drop As Election Outcome Hits Merchant Power Generators — Yahoo Finance (2026-11-04)
 
 ---
 *本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
