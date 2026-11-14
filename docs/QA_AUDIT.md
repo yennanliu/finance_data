@@ -39,6 +39,7 @@ there, not inline in `parse_file`.
 | Technical | `PRICE_MISMATCH` | The headline price differs from the front-matter `price` by more than 0.5% |
 | Technical | `LEVEL_MISMATCH` | A Ch.4 R1–S3 differs from the front-matter `levels` entry with the same label |
 | Technical | `RR_MISMATCH` | The stated R/R matches neither T1 nor T2 computed from its own entry and stop. A range entry may use its midpoint or either end |
+| Technical | `RR_TOO_LOW` | A Ch.8 strategy's reward/risk to T1, recomputed from its entry and stop, is below 1 : 1.5, or its T1 is the front-matter `price`. A column the report marks `不交易` is skipped (`technical.weak_strategies`, prompt rule 21) |
 | Any report with provenance | `STORE_MISMATCH` | Front-matter `price` ≠ the `data/prices/` close on `price_date`, with later splits undone. Silent when the store has no bar for that date yet |
 | Any report with provenance | `STALE_PRICE` | A store session is dated strictly between `price_date` and the report date, so a newer close existed |
 

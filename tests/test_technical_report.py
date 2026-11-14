@@ -271,7 +271,54 @@ def report(headline="412.35", r1="434.74", rr="1.31（以 T1 計）", tail="結�
 
 
 def test_clean_report_passes():
-    assert tq.check(report()) == {"nan": [], "price": None, "levels": [], "rr": []}
+    out = tq.check(report())
+    assert {k: out[k] for k in ("nan", "price", "levels", "rr")} == {
+        "nan": [], "price": None, "levels": [], "rr": []}
+
+
+# ── minimum reward/risk (prompt rule 21) ─────────────────────────────────────
+
+def test_a_strategy_below_the_minimum_reward_to_risk_is_flagged():
+    # Strategy A: (450.61 − 435.50) / (435.50 − 424.00) = 1.31; B is 1.55.
+    assert tq.weak_strategies(report()) == [
+        {"column": 1, "rr_t1": 1.31, "reason": "below_minimum"}]
+
+
+def test_the_check_recomputes_and_ignores_the_stated_ratio():
+    """Writing 1 : 4.52 (its T2 ratio) beside a 1.31 trade does not clear it."""
+    assert tq.weak_strategies(report(rr="4.52（以 T2 計）"))[0]["rr_t1"] == 1.31
+
+
+def test_a_short_is_measured_with_the_sign_reversed():
+    # NVDA 2026-11-14 strategy A: short 169.04, stop 184.93, T1 162.85.
+    text = report().replace("$435.50", "$169.04").replace("$424.00", "$184.93").replace(
+        "| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$162.85**")
+    assert tq.weak_strategies(text)[0] == {"column": 1, "rr_t1": 0.39, "reason": "below_minimum"}
+
+
+def test_a_first_target_at_the_current_price_is_flagged():
+    text = report().replace("| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$412.35**")
+    assert tq.weak_strategies(text, price=412.35)[0]["reason"] == "t1_is_current_price"
+    assert tq.check(text)["weak_rr"][0]["reason"] == "t1_is_current_price"   # price from front matter
+
+
+def test_a_column_the_report_declines_to_trade_is_not_flagged():
+    text = report().replace("| **進場價格** | **$435.50**",
+                            "| **進場價格** | 此價位不交易（風險報酬比 1 : 1.31 不足）$435.50")
+    assert tq.weak_strategies(text) == []
+
+
+def test_parse_file_reports_a_weak_strategy(tmp_path):
+    f = tmp_path / "tsm" / "technical_analysis_2026-10-23_gemini.md"
+    f.parent.mkdir()
+    f.write_text(report() + "\n" * 90, encoding="utf-8")
+    issues = parse_file(f).issues
+    assert "RR_TOO_LOW" in issues and "RR_MISMATCH" not in issues
+
+
+def test_prompt_sets_the_minimum_reward_to_risk():
+    prompt = load_prompt("technical")
+    assert "最低風險報酬比" in prompt and f"1 : {tq.MIN_RR:.2f}" in prompt and "不交易" in prompt
 
 
 def test_rr_to_t2_is_accepted_but_wrong_arithmetic_is_not():

@@ -16,6 +16,8 @@ from .market_data import quote_mismatch
 
 LEVEL_TOLERANCE = 0.02    # dollars; levels are quoted to the cent
 RR_TOLERANCE = 0.05       # relative, with an absolute floor of 0.06
+MIN_RR = 1.5              # reward/risk to T1 a recommended strategy must reach (prompt rule 21)
+NO_TRADE_RE = re.compile(r"不交易|不進場|不建議進場")
 
 NAN_RE = re.compile(r"\$\s*nan\b|\bnan\s*%|\bnan\s*\(當週\)", re.IGNORECASE)
 HEADLINE_RE = re.compile(r"當前(?:基準)?價格\*\*[：:]\s*(?:NT)?\$?\s*([\d,]+(?:\.\d+)?)")
@@ -126,13 +128,10 @@ def _ratio(cell: str):
     return b / a if a else None
 
 
-def rr_mismatches(text: str) -> list:
-    """Ch.8 strategy columns whose stated R/R matches neither
-    ``(T1 − entry) / (entry − stop)`` nor the same to T2 (sign-aware, so a
-    short's target below entry and stop above it also come out positive)."""
+def _strategy_rows(text: str) -> dict:
+    """The entry / T1 / T2 / stop / R:R rows of the Ch.8 strategy table."""
     # Rows are read from the one table that holds the R/R row: the scenario
     # tables above it also have 止損 / 目標 rows, in other columns.
-    rows = {}
     for table in re.findall(r"(?:^\|.*\n?)+", chapter(text, 8), re.M):
         found = {}
         for line in table.splitlines():
@@ -143,8 +142,15 @@ def rr_mismatches(text: str) -> list:
                     found[key] = cells
                     break
         if all(k in found for k in ("entry", "stop", "rr")):
-            rows = found
-            break
+            return found
+    return {}
+
+
+def rr_mismatches(text: str) -> list:
+    """Ch.8 strategy columns whose stated R/R matches neither
+    ``(T1 − entry) / (entry − stop)`` nor the same to T2 (sign-aware, so a
+    short's target below entry and stop above it also come out positive)."""
+    rows = _strategy_rows(text)
     if not rows:
         return []
     out = []
@@ -169,6 +175,38 @@ def rr_mismatches(text: str) -> list:
     return out
 
 
+def weak_strategies(text: str, price=None) -> list:
+    """Ch.8 strategy columns that are not worth taking: reward/risk to T1 below
+    ``MIN_RR``, or a T1 that is just the current price.
+
+    ``rr_mismatches`` asks whether a ratio is the one its prices give; this asks
+    whether the trade should have been offered. NVDA 2026-11-14 ranked first a
+    short at 1 : 0.39 with a stated 55% win rate — an expected loss — and took
+    the current close as its first target. A column the report itself marks
+    不交易 is the prompt's rule 21 working, and is not flagged.
+    """
+    rows = _strategy_rows(text)
+    if not rows or "t1" not in rows:
+        return []
+    out = []
+    for col in range(1, len(rows["rr"])):
+        try:
+            cells = [rows[k][col] for k in ("entry", "t1", "stop", "rr")]
+        except IndexError:
+            continue
+        if any(NO_TRADE_RE.search(c) for c in cells):
+            continue
+        entries, t1, stop = _entry_prices(cells[0]), _money(cells[1]), _money(cells[2])
+        if not entries or not t1 or not stop or entries[0] == stop:
+            continue
+        rr = round((t1 - entries[0]) / (entries[0] - stop), 2)
+        if price and abs(t1 - price) <= LEVEL_TOLERANCE:
+            out.append({"column": col, "rr_t1": rr, "reason": "t1_is_current_price"})
+        elif 0 < rr < MIN_RR:
+            out.append({"column": col, "rr_t1": rr, "reason": "below_minimum"})
+    return out
+
+
 def check(text: str) -> "dict[str, list | dict]":
     """All technical checks; empty values mean the check passed or could not run."""
     fm = front_matter(text)
@@ -181,8 +219,9 @@ def check(text: str) -> "dict[str, list | dict]":
         "price": price_mismatch(text, price),
         "levels": level_mismatches(text, parse_levels(fm.get("levels", ""))),
         "rr": rr_mismatches(text),
+        "weak_rr": weak_strategies(text, price),
     }
 
 
 __all__ = ["check", "nan_values", "price_mismatch", "level_mismatches",
-           "rr_mismatches", "parse_levels", "front_matter", "headline_price"]
+           "rr_mismatches", "weak_strategies", "MIN_RR", "parse_levels", "front_matter", "headline_price"]
