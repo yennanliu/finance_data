@@ -1,0 +1,65 @@
+
+============================================================
+Reports reviewed : 170
+Ungrounded       : 1  (all-ones scores citing nothing from the report — in the CSV, excluded below)
+Mean score       : 3.66 / 5
+
+Verdict breakdown (169 grounded):
+  pass              78
+  warn              62
+  fail              27
+  PARSE_ERROR        2
+
+Mean score by dimension:
+  data_integrity   3.79
+  completeness     4.22
+  depth            3.74
+  consistency      4.01
+  language         4.70
+
+Failed review (27):
+  avav         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/avav/fundamental_analysis_2026-11-13_gemini.md
+      → 報告中提到的加權合理價值 $146.46 與後文計算的 $145.48 不一致。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-13_openai.md
+      → 報告聲稱 MU 股價為 $798.44、市值 $903.37B、TTM 營收高達 $133.19B，與 Micron 真實規模（營收約數百億美元、股價百餘美元）嚴重脫節，屬嚴重數據幻覺。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-13_openai.md
+      → 數據存在極端且不合理之異常，記憶體製造商最新季度營業利益率達 79.6%、TTM 達 72.5% 且 ROIC 達 141.2%，背離半導體產業常理與現實。
+  soxx         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/soxx/fundamental_analysis_2026-11-13_openai.md
+      → 報告全篇大量充斥未填值的佔位符，如第 8.3 節自由現金流預測表中「FCFF」、「NOPAT」等全數填寫為「N/A」。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-13_gemini.md
+      → 報告中提到的目標價由 500 美元降至 200 美元，缺乏合理的數據支持，可能存在數據誠信問題。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-14_gemini.md
+      → 報告中提到輝達最新收盤價為 162.85 美元，但未提供來源，可能存在數據誠信問題。
+  soxq         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxq/market_news_2026-11-13_gemini.md
+      → 報告中提到的股價 82.71 美元未提供來源，可能存在數據誠信問題。
+  0050         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/0050/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的當前價格 $103.20 與報告日期的收盤價不一致，存在數據誠信問題。
+  2330.tw      technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/2330.tw/technical_analysis_2026-11-13_gemini.md
+      → 報告中出現的數據如 '當前價格：$2340.00 TWD' 與 '價格：2340.0' 不一致。
+  amd          technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/amd/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1 為 $498.70，但在其他部分提到的價格區間與此不一致。
+  avgo         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/avgo/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的阻力位 R1 ($366.55) 與 MA200 ($366.39) 的數據存在矛盾。
+  goog         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/goog/technical_analysis_2026-11-13_gemini.md
+      → 報告中出現了多處數據不一致，例如在技術評分卡中顯示的綜合評分為 35/100，但在其他部分卻未能一致反映此評分。
+  intc         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/intc/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1: $51.51 與阻力位 R1: $95.68 的數據未能在其他章節中得到一致的解釋。
+  ktos         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/ktos/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的 '52週區間位置僅 3.1%' 與其他數據不一致。
+  nu           technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nu/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1 $11.78 與 S2 $11.51 的解釋不一致，存在矛盾。
+  nvda         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nvda/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1 ($163.90) 與報告結論中的關鍵支撐不一致。
+  onds         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/onds/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1 為 $4.38，但在其他部分提到的目標價計算中卻出現了 $2.64，這造成了數據不一致。
+  orcl         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/orcl/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的支撐位 S1 ($122.76) 與阻力位 R1 ($147.63) 的計算過程不明確，缺乏數據支持。
+  pl           technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/pl/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的均線空頭排列（MA20 < MA50 < MA200）與其他指標的解讀存在矛盾。
+  pltr         technical_analysis           /home/runner/work/finance_data/finance_data/ai_gen_report/technical/pltr/technical_analysis_2026-11-13_gemini.md
+      → 報告中提到的 MA20 價格為 $183.26，但在其他部分提到價格低於 MA20，存在矛盾。
+
+Ungrounded verdicts (1) — reviewer noise, not report defects:
+  nbis         fail   /home/runner/work/finance_data/finance_data/ai_gen_report/technical/nbis/technical_analysis_2026-11-13_gemini.md
+
+CSV written → qa/llm_review_2026-11-14.csv (92 row(s))
