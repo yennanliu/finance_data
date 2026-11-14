@@ -92,6 +92,15 @@ After generation, `pipeline.recheck_valuation()` recomputes §8.8's weighted fai
 value from the report's own `value × weight` terms (`validate/arithmetic.py`) and
 appends a 「程式複算」 block.
 
+The terms are read from the §8.8 **table** (`arithmetic.table_terms`): the weight
+column is the one headed 權重, and a row's value is the first price before it.
+The one-line formula under the table is only the fallback for a report with no
+readable table. The formula alone left 104 of 1,315 reports `unparsed` whenever
+the model laid the sum out as bullets or LaTeX, and it passed reports that
+changed a term or a weight between the table and the sum (KTOS 2026-10-30
+listed $93.44 and summed with $45.00). A method printed `N/A` with a weight
+contributes no term, so the weights fall short of 100% and the total is flagged.
+
 - **Corrected.** On a mismatch whose weights sum to 100%, `arithmetic.correct()`
   writes the sum back: the stated total wherever it is printed, plus MOS /
   upside near their labels or beside the fair value, matched by value at the
@@ -159,8 +168,19 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
 - **No bars, no report.** `pipeline.require_price_history` aborts a technical run
   that has no bars or price, rather than let the model invent one (0050 was
   affected all through October).
-- **Indicators.** RSI and ATR use Wilder smoothing. Weekly rows are labelled by
-  their last trading day, never a future Sunday.
+- **Indicators.** RSI and ATR use Wilder smoothing. Weekly and monthly rows are
+  labelled by their last trading day, never a future Sunday or month end.
+- **Timeframes.** Every indicator is computed on the bars of the timeframe it is
+  named for (`technicals.timeframe_snapshot`). The context carries a 多時框指標
+  table (daily, weekly, monthly: trend average, RSI, MACD histogram, direction)
+  with an X/3 alignment line, and weekly and monthly tables whose columns say
+  週 / 月. The weekly table used to hold the daily RSI sampled on each Friday,
+  and reports quoted it as weekly. MACD is `N/A` below 35 bars, which is the
+  monthly case on the two years of history fetched. Prompt rule 20 forbids
+  calling a daily indicator weekly.
+- **Minimum reward/risk.** Prompt rule 21: a strategy below 1 : 1.50 to T1 is
+  written as 不交易, and T1 may not be the current close. Stage-1 QA recomputes
+  it (`RR_TOO_LOW`).
 - **Candlestick claims.** The context carries the last 10 daily and 8 weekly OHLC
   bars. The prompt allows candlestick claims about those bars only.
 - **Levels.** The computed R1–S3 are written to front matter as `levels`, which
