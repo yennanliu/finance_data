@@ -70,9 +70,67 @@ told to quote (rule 19 in `prompts/fundamental.txt`).
   - TTM figures from the SEC fundamentals store, refreshed live from companyfacts
   - TTM-vs-prior-TTM growth, kept apart from latest-quarter growth
   - FCF = OCF − capex
-  - CAPM / WACC inputs
+  - Cost of capital (adjusted beta, banded WACC)
   - Multiples vs their own 5-year history
   - Peer multiples
+  - The DCF model and the §8.8 method table (next section)
+
+### Valuation is computed, not chosen
+
+The 2026-11-14 review (`docs/REPORT_REVIEW.md`, F1, F2, F5, F6) found the
+conclusion resting on numbers the model picked: §8.8 weights (the DCF's ran from
+10% to 70%), a raw beta that put 12 of 30 discount rates at 15% or more, methods
+that returned the price they were testing, and DCF tables filled in by hand.
+`context/valuation.py` (pure) now computes all of it and the block carries it:
+
+- **Cost of capital.** Beta is Blume-adjusted (⅔ raw + ⅓) and held in 0.6–2.0.
+  A WACC outside 7%–14% is held at the bound and both figures are printed. A
+  company with debt and no reported interest gets Rf + 2% as cost of debt,
+  labelled as assumed; one with no beta gets 1.0, labelled the same way.
+- **DCF** (`data/intrinsic_value.fcff_dcf`). A 10-year FCFF model with a Gordon
+  terminal value: revenue growth starts at TTM growth (held in 0%–30%) and fades
+  to 3%; operating margin fades from TTM to the median of the last five fiscal
+  years; capex fades to 1.1 × D&A; FCFF = NOPAT + D&A − capex. The block prints
+  the yearly table, the bridge, a 5×5 WACC × g grid, three scenarios and a
+  reverse DCF (the year-1 growth and the constant margin the price implies).
+  Per-share value is `equity × price ÷ market cap`, so an ADR needs no share
+  count. The DCF is `N/A`, with the reason, for a lender, for a company with no
+  operating profit, and when an input is missing. The model does not build one
+  of its own.
+- **Methods.** Each relative method is the **peers' median** multiple (at least
+  two peers, outliers dropped) applied to the company's own figure: forward
+  P/E, EV/EBITDA, P/S, P/B. None reads the company's current multiple.
+- **Weights** are fixed by company type in `config/valuation.py` (profitable,
+  cyclical, unprofitable, financial). A method with no value drops out and the
+  rest are rescaled; analyst consensus is 10% and never more.
+- **Fair value, MOS and rating** follow from those rows by rule 20.
+
+The model copies these and explains them. Front matter records them
+(`valuation`, `fair_value_computed`, `rating_computed`, `dcf_value`) and stage-1
+QA compares the report's §8.8 table against `valuation`
+(`VALUATION_OVERRIDE`) and flags a DCF more than 50% from the price (`DCF_GAP`).
+
+The Market Data page's **Intrinsic value** tab uses a different model on
+purpose: a per-share earnings-power DCF at a flat 10% (`intrinsic_value.dcf`),
+which needs only EPS and so works for every ticker the store holds. The two
+figures answer different questions and will not match.
+
+### Funds and ETFs
+
+A `quoteType` of `ETF` or `MUTUALFUND` takes its own path through the same
+`fundamental-analysis` type:
+
+- `report_inputs.fund_profile()` reads cost, size, top holdings and sector
+  weights from Yahoo.
+- `context/fund_facts.py` (pure) adds concentration, premium to NAV, and price
+  returns against a benchmark from the price store (`config/benchmarks.py`).
+- The context is that block plus price history and news — no statements.
+- The prompt is `prompts/fundamental_etf.txt`: eight chapters, no DCF, WACC or
+  margin of safety, and a five-part score with a stated formula.
+- Front matter carries `instrument: fund`, and the §8.8 recheck is skipped.
+
+Run through the company template, the eight ETF reports of 2026-11-13 carried
+417–461 `N/A` each.
 
 ### yfinance field labelling
 
@@ -178,6 +236,11 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
   and reports quoted it as weekly. MACD is `N/A` below 35 bars, which is the
   monthly case on the two years of history fetched. Prompt rule 20 forbids
   calling a daily indicator weekly.
+- **Market context.** `technicals.market_context()` adds relative strength
+  against the market and sector benchmarks (from the price store, on the
+  sessions both series have), the gaps of the last 60 sessions with whether
+  each has been filled, and the next earnings date from Yahoo's calendar.
+  Prompt rule 22 requires each to be used and forbids filling a missing one.
 - **Minimum reward/risk.** Prompt rule 21: a strategy below 1 : 1.50 to T1 is
   written as 不交易, and T1 may not be the current close. Stage-1 QA recomputes
   it (`RR_TOO_LOW`).
@@ -198,6 +261,8 @@ Every report records how it was made, so QA can check it later:
 | `close_source` | `quote` when the last close came from the quote, not a bar |
 | `levels` | Computed R1–S3 (technical) |
 | `arithmetic_check`, `weighted_fair_value_stated` | §8.8 recheck result (fundamental) |
+| `valuation`, `fair_value_computed`, `rating_computed`, `dcf_value` | The methods (value and weight), fair value, rating and DCF value Python computed (fundamental, companies) |
+| `instrument` | `fund` when the report came from the ETF branch |
 | `derivation_fixed` | Numbers `derivation.fix()` re-solved in a `$$ … $$` or inline `$ … $` equation chain |
 | `data_sources_ok`, `data_sources_failed` | Which fetchers succeeded |
 | `prompt_sha256`, `temperature`, `max_tokens` | Reproducibility |

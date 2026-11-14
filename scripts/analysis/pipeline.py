@@ -19,6 +19,7 @@ import re
 from .config import ANALYSIS_TYPES, REPORT_TEMPERATURE, TODAY
 from .config.providers import resolve_chain
 from .context import build_context
+from .context import fund_facts, valuation
 from .context.fundamental_facts import compute_facts
 from .data import report_inputs
 from .data.sources import fetch_data
@@ -28,6 +29,9 @@ from .llm import accepts_temperature, call_llm, prompt_fingerprint, run_with_fal
 from .publish import GENERATED_BY as _GENERATED_BY, dedup_path, frontmatter
 from .utils.mermaid import sanitize_mermaid_blocks
 from .validate import arithmetic, derivation
+
+# Prompt for a fundamental-analysis run on an ETF or mutual fund.
+FUND_PROMPT = "fundamental_etf"
 
 
 def save_analysis_report(ticker: str, content: str, output_dir: Path,
@@ -92,24 +96,33 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
     if analysis_type == "technical-analysis":
         require_price_history(ticker, data)
         data["technical_levels"] = key_levels(data["hist"])
+    prompt_file = None
     if analysis_type == "fundamental-analysis":
         inputs = report_inputs.gather(ticker, data.get("info"))
         report_inputs.prefer_newer_close(data, inputs["bars"])
         data["source_status"] = {**data.get("source_status", {}), **inputs["status"]}
         data["report_facts"] = compute_facts(data, inputs)
+        if data["report_facts"]["is_fund"]:
+            # A fund is not a company: its own figures, context and prompt.
+            profile = report_inputs.fund_profile(ticker, data.get("info"))
+            data["source_status"]["fund_profile"] = bool(profile)
+            data["fund_facts"] = fund_facts.gather(data, profile)
+            prompt_file = FUND_PROMPT
     context = build_context(data, analysis_type)
 
     print(f"[2/3] Generating report (chain: {' → '.join(p for p, _ in attempts)}) …")
     report, used_provider, used_model = run_with_fallback(
         attempts,
-        lambda p, m: call_llm(ticker, context, analysis_type, p, m, max_tokens),
+        lambda p, m: call_llm(ticker, context, analysis_type, p, m, max_tokens,
+                              **({"prompt_file": prompt_file} if prompt_file else {})),
     )
 
-    extra = provenance(data, analysis_type, used_provider, max_tokens, used_model)
+    extra = provenance(data, analysis_type, used_provider, max_tokens, used_model, prompt_file)
     if analysis_type == "fundamental-analysis":
         report = stamp_sources(report, data.get("source_status") or {})
-        report, checks = recheck_valuation(report, data.get("report_facts") or {})
-        extra.update(checks)
+        if not prompt_file:           # a fund report has no §8.8 to recheck
+            report, checks = recheck_valuation(report, data.get("report_facts") or {})
+            extra.update(checks)
     report, repaired = derivation.fix(report)
     if repaired:
         extra["derivation_fixed"] = repaired
@@ -147,12 +160,13 @@ _SOURCE_NAMES = (
 
 
 def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int,
-               model: str = "") -> dict:
+               model: str = "", prompt_file: "str | None" = None) -> dict:
     """Front-matter fields that say how a report was produced: the prompt
     version, sampling parameters, the price it was given and which data
     sources actually answered."""
     fields = {
-        "prompt_sha256": prompt_fingerprint(analysis_type, provider),
+        "prompt_sha256": (prompt_fingerprint(analysis_type, provider, prompt_file) if prompt_file
+                          else prompt_fingerprint(analysis_type, provider)),
         "temperature": REPORT_TEMPERATURE,
         "max_tokens": max_tokens,
     }
@@ -160,6 +174,9 @@ def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int,
         # Claude and the OpenAI reasoning models sample at their own default;
         # recording 0.3 would claim a setting the request never carried.
         del fields["temperature"]
+    if data.get("fund_facts"):
+        # Stage-1 QA checks a fund report against the fund chapters, not 1–11.
+        fields["instrument"] = "fund"
     if data.get("price_now") is not None:
         fields["price"] = round(float(data["price_now"]), 4)
         fields["price_date"] = data.get("price_date") or "unknown"
@@ -167,6 +184,14 @@ def provenance(data: dict, analysis_type: str, provider: str, max_tokens: int,
         fields["close_source"] = data["close_source"]
     if analysis_type == "technical-analysis" and data.get("technical_levels"):
         fields["levels"] = f'"{levels_summary(data["technical_levels"])}"'
+    v = (data.get("report_facts") or {}).get("valuation") if analysis_type == "fundamental-analysis" else None
+    if v and v.get("methods"):
+        # What Python computed, for stage-1 QA to compare the report against.
+        fields["valuation"] = f'"{valuation.summary(v)}"'
+        fields["fair_value_computed"] = v["fair_value"]
+        fields["rating_computed"] = v["rating"]
+    if v and v["dcf"].get("available"):
+        fields["dcf_value"] = round(v["dcf"]["value"], 2)
     status = data.get("source_status") or {}
     if status:
         fields["data_sources_ok"] = ", ".join(k for k, v in status.items() if v) or "none"

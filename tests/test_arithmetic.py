@@ -116,6 +116,70 @@ def test_a_table_without_a_weight_column_falls_back_to_the_formula():
     assert A.check(s88(TSLA))["total"] == 324.23
 
 
+# ── the table against the methods Python computed ────────────────────────────
+
+VALUATION = "dcf 52.95 40%; fwd_pe 236.90 20%; ev_ebitda 314.40 20%; ps 216.20 10%; consensus 326.72 10%"
+
+
+def test_a_table_that_copies_the_computed_methods_has_no_override():
+    assert A.valuation_overrides(table_report(), VALUATION) == []
+    assert A.parse_valuation(VALUATION)[0] == ("dcf", 52.95, 0.40)
+    assert A.valuation_overrides(table_report(), "") == []          # an older report: no record
+
+
+def test_a_reweighted_or_replaced_method_is_an_override():
+    """ORCL 2026-11-14 was a Buy on a DCF 82% below its price, by its weights."""
+    reweighted = TABLE.replace("| −80.1% | 40% |", "| −80.1% | 20% |").replace(
+        "| −11.1% | 20% |", "| −11.1% | 40% |")
+    out = A.valuation_overrides(table_report(table=reweighted), VALUATION)
+    assert out == ["dcf 52.95@40% is 52.95@20% in table", "fwd_pe 236.90@20% is 236.90@40% in table"]
+    swapped = TABLE.replace("$326.72", "$120.00")
+    assert A.valuation_overrides(table_report(table=swapped), VALUATION) == [
+        "consensus 326.72@10% is 120.00@10% in table"]
+    assert A.valuation_overrides("# no chapter 8", VALUATION) == ["§8.8 table missing or unreadable"]
+
+
+def test_exchanging_two_labels_is_an_override_though_every_number_is_kept():
+    """Same values, same weights, but the DCF's figure now sits on the analyst
+    row: the numbers alone would pass."""
+    relabelled = TABLE.replace("**DCF 機率加權模型**", "@@").replace(
+        "分析師共識目標價", "**DCF 機率加權模型**").replace("@@", "分析師共識目標價")
+    out = A.valuation_overrides(table_report(table=relabelled), VALUATION)
+    assert out == ["dcf 52.95@40% is 326.72@10% in table", "consensus 326.72@10% is 52.95@40% in table"]
+
+
+def test_row_labels_name_their_method():
+    for label, key in [("DCF（基準）", "dcf"), ("同業 Forward P/E", "fwd_pe"), ("同業 EV/EBITDA", "ev_ebitda"),
+                       ("同業 P/S", "ps"), ("同業 P/B", "pb"), ("分析師共識目標價", "consensus"),
+                       ("FCF Yield 回推", None)]:
+        assert A.method_key(label) == key
+    extra = TABLE.replace("| P/S 回到中位數 |", "| FCF Yield 回推 |")
+    assert A.valuation_overrides(table_report(table=extra), VALUATION) == [
+        "ps 216.20@10% not in table", "extra row 216.20@10%"]
+
+
+def _fundamental_file(tmp_path, front_matter: str):
+    from scripts.analysis.validate import parse_file
+    f = tmp_path / "amzn" / "fundamental_analysis_2026-11-14_openai.md"
+    f.parent.mkdir(parents=True, exist_ok=True)
+    chapters = "\n\n".join(f"## {n}. 章" for n in range(1, 12))
+    body = table_report().replace("### 8.8", chapters + "\n\n### 8.8") + "內容\n" * 90
+    f.write_text("---\nticker: AMZN\nanalysis_type: fundamental-analysis\nprice: 266.66\n"
+                 + front_matter + "---\n\n" + body, encoding="utf-8")
+    return parse_file(f).issues
+
+
+def test_stage_1_flags_an_override_and_a_dcf_far_from_the_price(tmp_path):
+    clean = _fundamental_file(tmp_path, f'valuation: "{VALUATION}"\ndcf_value: 250.00\n')
+    assert "VALUATION_OVERRIDE" not in clean and "DCF_GAP" not in clean
+    other = VALUATION.replace("dcf 52.95 40%", "dcf 99.00 40%")
+    flagged = _fundamental_file(tmp_path, f'valuation: "{other}"\ndcf_value: 52.95\n')
+    assert "VALUATION_OVERRIDE" in flagged
+    assert "DCF_GAP" in flagged                       # 52.95 against 266.66 is −80%
+    assert "DCF_GAP" not in _fundamental_file(tmp_path, "")          # no record, no flag
+    assert "DCF_GAP" in _fundamental_file(tmp_path, "dcf_value: 0\n")   # a recorded zero is −100%
+
+
 def test_weights_that_do_not_sum_to_100_are_a_mismatch():
     r = A.check(s88("$100 × 50% + $100 × 40%", stated="$90.00"))
     assert r["weights_pct"] == 90.0 and r["status"] == "mismatch"

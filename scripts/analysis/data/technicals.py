@@ -339,6 +339,144 @@ def timeframe_block(hist) -> str:
     return "\n".join(rows)
 
 
+# ── market context: relative strength, gaps, the next earnings date ──────────
+# The 2026-11-14 review found no technical report that measured the stock
+# against a benchmark or named a dated event, and NVDA's 13% opening gap of
+# 2026-11-12 was described as a "long bullish candle". All three are facts
+# about the bars and the calendar, so they are computed here.
+RS_WINDOWS = (("1 個月", 21), ("3 個月", 63), ("6 個月", 126))
+RS_TREND_BARS = 50
+GAP_LOOKBACK = 60       # sessions searched for gaps
+GAP_MIN_PCT = 1.0       # smaller gaps are noise
+GAP_MAX_LISTED = 5
+
+
+def relative_strength(hist, bench_bars: "list[dict]",
+                      own_bars: "list[dict] | None" = None) -> "dict | None":
+    """Return of the stock against a benchmark over ``RS_WINDOWS``, on the
+    sessions both have, and whether the price ratio is above its own
+    ``RS_TREND_BARS``-session average (the stock is gaining on the benchmark).
+
+    ``bench_bars`` are price-store rows: split-adjusted closes, not adjusted
+    for dividends. ``hist`` is Yahoo's default history, which *is*
+    dividend-adjusted, so comparing the two credits the stock with every
+    distribution in the window and the benchmark with none. ``own_bars`` — the
+    stock's own store rows — puts both on the same basis and is used when
+    given; ``basis`` in the result says which was used. None when fewer than a
+    month of common sessions exists.
+    """
+    hist = complete(hist)
+    if not bench_bars or ((hist is None or hist.empty) and not own_bars):
+        return None
+    if own_bars:
+        mine = {b["date"]: float(b["close"]) for b in own_bars}
+        basis = "price"
+    else:
+        mine = {str(ts)[:10]: float(c) for ts, c in hist["Close"].items()}
+        basis = "mixed"
+    theirs = {b["date"]: float(b["close"]) for b in bench_bars}
+    dates = sorted(set(mine) & set(theirs))
+    if len(dates) <= RS_WINDOWS[0][1]:
+        return None
+    rows = []
+    for label, n in RS_WINDOWS:
+        if len(dates) <= n:
+            rows.append({"label": label, "stock": None, "benchmark": None, "excess": None})
+            continue
+        a, b = dates[-1 - n], dates[-1]
+        stock = (mine[b] / mine[a] - 1) * 100
+        bench = (theirs[b] / theirs[a] - 1) * 100
+        rows.append({"label": label, "stock": stock, "benchmark": bench, "excess": stock - bench})
+    ratio = [mine[d] / theirs[d] for d in dates]
+    trend = None
+    if len(ratio) >= RS_TREND_BARS:
+        avg = sum(ratio[-RS_TREND_BARS:]) / RS_TREND_BARS
+        trend = "相對走強（比值高於其 50 日均值）" if ratio[-1] > avg else "相對走弱（比值低於其 50 日均值）"
+    return {"as_of": dates[-1], "rows": rows, "trend": trend, "basis": basis}
+
+
+def price_gaps(hist, lookback: int = GAP_LOOKBACK, min_pct: float = GAP_MIN_PCT) -> "list[dict]":
+    """Gaps in the last ``lookback`` sessions, newest first.
+
+    A gap up is a session whose low is above the previous session's high; a
+    gap down, a high below the previous low. Its size is the empty range as a
+    percent of the previous close. It is filled once a later session trades
+    back through the far edge.
+    """
+    hist = complete(hist)
+    if hist is None or len(hist) < 2:
+        return []
+    h = hist.tail(lookback + 1)
+    highs, lows, closes = h["High"].tolist(), h["Low"].tolist(), h["Close"].tolist()
+    out = []
+    for i in range(1, len(h)):
+        if lows[i] > highs[i - 1]:
+            direction, lo, hi = "up", highs[i - 1], lows[i]
+            filled = any(low <= lo for low in lows[i + 1:])
+        elif highs[i] < lows[i - 1]:
+            direction, lo, hi = "down", highs[i], lows[i - 1]
+            filled = any(high >= hi for high in highs[i + 1:])
+        else:
+            continue
+        size = (hi - lo) / closes[i - 1] * 100
+        if size >= min_pct:
+            out.append({"date": str(h.index[i])[:10], "direction": direction,
+                        "low": lo, "high": hi, "size_pct": size, "filled": filled})
+    return out[::-1]
+
+
+def market_context(hist, key: "str | None" = None, earnings_date: "str | None" = None) -> str:
+    """The 市場脈絡 block: relative strength against the market and sector
+    benchmarks from the price store, recent gaps, and the next earnings date."""
+    from ..config.benchmarks import BENCHMARK_NAMES, market_benchmark, sector_benchmark
+    from . import prices
+
+    hist = complete(hist)
+    if hist is None or hist.empty:
+        return ""
+    rows = ["  ── 市場脈絡（相對強度、缺口、財報日；皆由程式計算）──"]
+    benches = []
+    for bench in (market_benchmark(key), sector_benchmark(key)) if key else ():
+        if bench and bench != (key or "").lower() and bench not in benches:
+            benches.append(bench)
+    found = False
+    own = prices.load_store(key) if benches else []
+    for bench in benches:
+        rs = relative_strength(hist, prices.load_store(bench), own)
+        if not rs:
+            continue
+        found = True
+        basis = ("價格報酬，不含股息" if rs["basis"] == "price" else
+                 "本股為含息調整價、基準為未調整價，期間內有配息時超額報酬會偏高")
+        rows.append(f"  相對強度 vs {BENCHMARK_NAMES.get(bench, bench.upper())}（至 {rs['as_of']}，{basis}）:")
+        rows.append("    期間       本股     基準     超額")
+        f = lambda v: "N/A" if v is None else f"{v:+.1f}%"
+        for r in rs["rows"]:
+            rows.append(f"    {r['label']:<8} {f(r['stock']):>7}  {f(r['benchmark']):>7}  {f(r['excess']):>7}")
+        rows.append(f"    比值趨勢: {rs['trend'] or 'N/A（共同交易日不足 50 日）'}")
+    if not found:
+        rows.append("  相對強度: N/A（無可用的基準資料）")
+
+    gaps = price_gaps(hist)
+    if gaps:
+        rows.append(f"  近 {GAP_LOOKBACK} 個交易日的跳空缺口（≥ {GAP_MIN_PCT:.0f}%，新到舊，最多列 {GAP_MAX_LISTED} 個）:")
+        for g in gaps[:GAP_MAX_LISTED]:
+            name = "向上跳空" if g["direction"] == "up" else "向下跳空"
+            rows.append(f"    {g['date']}  {name}  缺口區間 ${g['low']:.2f}–${g['high']:.2f}"
+                        f"（{g['size_pct']:.1f}%）  {'已回補' if g['filled'] else '未回補'}")
+    else:
+        rows.append(f"  近 {GAP_LOOKBACK} 個交易日的跳空缺口: 無（≥ {GAP_MIN_PCT:.0f}%）")
+
+    last = str(hist.index[-1])[:10]
+    if earnings_date:
+        from datetime import date
+        days = (date.fromisoformat(earnings_date) - date.fromisoformat(last)).days
+        rows.append(f"  下次財報日: {earnings_date}（距最新收盤日 {days} 個日曆天；Yahoo Finance，日期可能調整）")
+    else:
+        rows.append("  下次財報日: N/A（數據未提供）")
+    return "\n".join(rows)
+
+
 def indicator_table(bars, n: int, title: str, prefix: str, date_label: str) -> str:
     """Close, RSI(14), MACD histogram and volume of the last ``n`` bars, the
     indicators computed on these bars and named for their timeframe."""
@@ -364,8 +502,13 @@ def ohlc_table(bars, title: str) -> str:
     return "\n".join(rows)
 
 
-def compute_technicals(hist) -> str:
-    """Compute technical indicators from OHLCV history DataFrame."""
+def compute_technicals(hist, key: "str | None" = None,
+                       earnings_date: "str | None" = None) -> str:
+    """Compute technical indicators from OHLCV history DataFrame.
+
+    ``key`` (the report key) and ``earnings_date`` add the 市場脈絡 block; the
+    technical report passes them, other callers get the indicators alone.
+    """
     hist = complete(hist)
     if hist is None or hist.empty:
         return "  (no OHLC data)"
@@ -545,6 +688,8 @@ def compute_technicals(hist) -> str:
 {levels}
 
 {timeframe_block(hist)}
+
+{market_context(hist, key, earnings_date) if key else ""}
 
 {indicator_table(weekly, 20, "近20週收盤走勢（RSI、MACD 柱皆以週K計算）", "週", "週末交易日")}
 

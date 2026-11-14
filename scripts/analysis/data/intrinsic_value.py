@@ -250,6 +250,119 @@ def sensitivity(base: "float | None", growth: float,
     }
 
 
+# ── FCFF DCF (the fundamental report's §8) ───────────────────────────────────
+# A second model, and deliberately a separate one. The per-share model above
+# drives the Market Data page and needs only EPS. The report's chapter 8 is an
+# enterprise model — revenue, margin, tax, reinvestment, WACC, a Gordon terminal
+# value, then a bridge to equity — and the model used to fill its tables by
+# hand: NVDA 2026-11-14 printed a sensitivity grid that moved in uneven steps,
+# a worked cell that disagreed with the grid, and a reverse DCF of "approximate
+# trial values". These functions compute every cell; the report quotes them.
+def fade(start: float, end: float, years: int) -> "list[float]":
+    """``years`` values moving linearly from ``start`` (year 1) to ``end``."""
+    if years <= 1:
+        return [end] * max(years, 0)
+    step = (end - start) / (years - 1)
+    return [start + step * i for i in range(years)]
+
+
+def fcff_dcf(revenue: "float | None", growth: "list[float]", op_margin: "list[float] | None",
+             tax_rate: float, da_pct: "float | None", capex_pct: "list[float]",
+             wacc: "float | None", terminal_growth: float,
+             net_cash: float = 0.0) -> "dict | None":
+    """Enterprise DCF on free cash flow to the firm.
+
+    Per year: revenue grows by ``growth[t]``; EBIT = revenue × ``op_margin[t]``;
+    NOPAT = EBIT × (1 − tax); FCFF = NOPAT + D&A − capex, with D&A and capex as
+    shares of revenue. Terminal value is Gordon growth on the last year's FCFF.
+    Equity = enterprise value + ``net_cash`` (negative for net debt).
+
+    None when an input is missing, when revenue or margin is not positive (a
+    loss discounted forward is not a value) or when ``wacc`` does not exceed
+    ``terminal_growth`` (the Gordon formula has no meaning there).
+    """
+    if None in (revenue, op_margin, da_pct, wacc) or not growth:
+        return None
+    if (revenue <= 0 or min(op_margin) <= 0 or wacc <= terminal_growth
+            or not len(capex_pct) == len(op_margin) == len(growth)):
+        return None
+    years, rev, pv_sum = [], revenue, 0.0
+    for t, (g, cx, margin) in enumerate(zip(growth, capex_pct, op_margin), start=1):
+        rev *= 1.0 + g
+        ebit = rev * margin
+        nopat = ebit * (1.0 - tax_rate)
+        da, capex = rev * da_pct, rev * cx
+        fcff = nopat + da - capex
+        factor = 1.0 / (1.0 + wacc) ** t
+        pv_sum += fcff * factor
+        years.append({"year": t, "growth": g, "revenue": rev, "op_margin": margin, "ebit": ebit,
+                      "tax": ebit * tax_rate, "nopat": nopat, "da": da, "capex": capex,
+                      "capex_pct": cx, "fcff": fcff, "discount_factor": factor,
+                      "pv": fcff * factor})
+    last = years[-1]
+    if last["fcff"] <= 0:
+        return None      # a negative terminal cash flow capitalises to a negative firm
+    terminal = last["fcff"] * (1.0 + terminal_growth) / (wacc - terminal_growth)
+    pv_terminal = terminal * last["discount_factor"]
+    ev = pv_sum + pv_terminal
+    return {"years": years, "pv_sum": pv_sum, "terminal_value": terminal,
+            "pv_terminal": pv_terminal, "terminal_share": pv_terminal / ev if ev else None,
+            "enterprise_value": ev, "net_cash": net_cash, "equity_value": ev + net_cash,
+            "wacc": wacc, "terminal_growth": terminal_growth}
+
+
+def fcff_sensitivity(model, wacc_steps=(-0.02, -0.01, 0.0, 0.01, 0.02),
+                     g_steps=(-0.01, -0.005, 0.0, 0.005, 0.01)) -> "dict":
+    """Equity value over WACC × terminal growth around the base case.
+
+    ``model(wacc, terminal_growth)`` returns an :func:`fcff_dcf` result. Rows
+    are terminal growth, columns WACC, the centre cell the base case. A cell
+    where WACC does not exceed growth is None, never a number.
+    """
+    base = model(None, None)
+    waccs = [base["wacc"] + s for s in wacc_steps]
+    growths = [base["terminal_growth"] + s for s in g_steps]
+    values = []
+    for g in growths:
+        row = []
+        for w in waccs:
+            r = model(w, g) if w > g else None
+            row.append(r["equity_value"] if r else None)
+        values.append(row)
+    return {"waccs": waccs, "growths": growths, "values": values}
+
+
+SOLVE_TOLERANCE = 1e-6     # relative; the answer must reproduce the target this closely
+
+
+def solve(fn, target: float, lo: float, hi: float) -> "float | None":
+    """The ``x`` in ``lo…hi`` at which increasing ``fn(x)`` equals ``target``.
+
+    ``fn`` may return None where it has no value (a margin too thin to leave
+    any free cash flow); that counts as below every target, so the search moves
+    up past it. The candidate is then checked: where ``fn`` jumps from None
+    straight to a value above the target, bisection converges on that edge
+    without ever meeting the target, and the edge is not a solution.
+
+    None when ``fn`` cannot reach the target inside the range: a price that no
+    growth rate up to ``hi`` justifies is reported as such, not as a number.
+    """
+    below = float("-inf")
+    value = lambda x: below if fn(x) is None else fn(x)
+    if not value(lo) <= target <= value(hi):
+        return None
+    for _ in range(100):
+        mid = (lo + hi) / 2.0
+        if value(mid) < target:
+            lo = mid
+        else:
+            hi = mid
+    found = fn(hi)
+    if found is None or abs(found - target) > SOLVE_TOLERANCE * max(abs(target), 1.0):
+        return None
+    return hi
+
+
 # ── WACC ─────────────────────────────────────────────────────────────────────
 def wacc(entry: "dict", price: "float | None",
          beta: "float | None") -> "dict | None":
@@ -376,5 +489,6 @@ __all__ = [
     "PER_SHARE", "GROWTH_WINDOWS", "VERDICT_BANDS",
     "cagr", "per_share", "growth_table", "default_growth",
     "dcf", "margin_of_safety", "implied_growth", "sensitivity",
+    "fade", "fcff_dcf", "fcff_sensitivity", "solve",
     "wacc", "roic_wacc_series", "verdict", "model",
 ]
