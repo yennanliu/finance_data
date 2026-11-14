@@ -216,7 +216,10 @@ def test_generated_report_has_no_chart_markup(monkeypatch, tmp_path, analysis_ty
     for marker in ("candlestick-chart", "plot.ly", "plotly", "technical_chart_",
                    "<details", "靜態圖表"):
         assert marker not in text, f"{analysis_type} report still contains {marker!r}"
-    assert text.rstrip().endswith("body")   # LLM output is the whole body
+    # The LLM output is the whole body; only the pipeline's own 資料與來源 block follows it.
+    body = text.split("---\n\n", 1)[1]
+    assert body.split(pipeline.SOURCES_HEADING)[0].rstrip().rstrip("-").rstrip().endswith("body")
+    assert pipeline.SOURCES_HEADING in body
 
 
 def test_technical_report_writes_no_png(monkeypatch, tmp_path):

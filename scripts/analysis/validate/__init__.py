@@ -27,7 +27,7 @@ from typing import List, Optional
 
 from ..config.valuation import DCF_GAP_WARN
 from ..utils.mermaid import mermaid_syntax_issues
-from . import arithmetic, derivation, market_data, technical
+from . import arithmetic, derivation, market_data, scorecard, technical
 
 # Every issue code the scan can emit, in the order the CLI documents them.
 ISSUE_TYPES = {
@@ -54,6 +54,11 @@ ISSUE_TYPES = {
                           "computed (front matter `valuation`)",
     "DCF_GAP": "the computed DCF value is more than 50% away from the price: "
                "a reading to review, not an arithmetic error",
+    "RATING_GAP": "the report's rating is more than one notch from the rating "
+                  "computed from its margin of safety (prompt rule 20 allows one)",
+    "SIGNAL_CHANGED": "the technical composite was corrected across a signal threshold, "
+                      "so the strategy was written for a different band (front matter "
+                      "`signal_stated` ≠ `signal`)",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
     "RR_TOO_LOW": "a recommended strategy's reward/risk to T1 is below 1 : 1.5, "
                   "or its T1 is the current price",
@@ -67,6 +72,7 @@ ISSUE_TYPES = {
 }
 
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
+MAX_RATING_NOTCHES = 1  # how far a rating may sit from the computed one (prompt rule 20)
 MIN_LINES = 80          # below this (after frontmatter) → TOO_SHORT
 REFUSAL_PATTERNS = [
     r"抱歉[，,]?\s*(我無法|我不能|無法完成|無法為|我沒有辦法)",
@@ -302,8 +308,19 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
             dcf = None
         if dcf is not None and price and abs(dcf / price - 1) > DCF_GAP_WARN:
             out.append(("DCF_GAP", f"dcf={dcf} price={price} gap={(dcf / price - 1) * 100:+.0f}%"))
+        # Rule 20 lets the report move the computed rating one notch, with its
+        # reason. Read from the report itself, so an older report without a
+        # `rating` field is checked too.
+        stated = scorecard.stated_rating(content) or fm.get("rating")
+        gap = scorecard.rating_gap(stated, fm.get("rating_computed"))
+        if gap is not None and abs(gap) > MAX_RATING_NOTCHES:
+            out.append(("RATING_GAP", f"rating={stated} computed={fm['rating_computed']} notches={gap:+d}"))
 
     if atype == "technical_analysis":
+        if fm.get("signal_stated") and fm["signal_stated"] != fm.get("signal"):
+            out.append(("SIGNAL_CHANGED", f"stated={fm['signal_stated']} "
+                                          f"(score {fm.get('score_stated')}) "
+                                          f"computed={fm.get('signal')} (score {fm.get('score')})"))
         tech = technical.check(text)
         if tech["nan"]:
             out.append(("NAN_VALUE", f"nan={len(tech['nan'])}× e.g. {tech['nan'][0]!r}"))
