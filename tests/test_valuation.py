@@ -68,6 +68,23 @@ def test_solve_finds_the_input_and_reports_no_solution_out_of_range():
     assert iv.solve(lambda x: x * 10, 250.0, 0.0, 10.0) is None
 
 
+def test_solve_does_not_return_the_edge_where_values_begin_above_the_target():
+    """No value below x = 4, then values from 1,040 up: nothing equals 500, and
+    the edge bisection converges on is not an answer."""
+    stepped = lambda x: None if x < 4 else 1000 + x * 10
+    assert iv.solve(stepped, 500.0, 0.0, 10.0) is None
+    assert iv.solve(stepped, 1060.0, 0.0, 10.0) == pytest.approx(6.0)   # past the edge is fine
+
+
+def test_net_debt_above_enterprise_value_is_no_fair_value_and_no_rating():
+    drowned = dict(STMT, net_cash=-1e15)
+    d = V.build_dcf(drowned, 0.10, 0.20, 100.0, 1000e9, 1.0, "profitable")
+    assert not d["available"] and "net debt exceeds" in d["reason"]
+    # With only an EV-based method left and it negative too, there is nothing to rate.
+    v = V.build("test", {"marketCap": 1000e9}, drowned, WACC, [], 100.0, 1.0)
+    assert v["fair_value"] is None and v["mos_pct"] is None and v["rating"] is None
+
+
 # ── cost of capital ──────────────────────────────────────────────────────────
 def test_beta_is_blume_adjusted_and_held_in_a_band():
     assert V.adjusted_beta(1.6)[0] == pytest.approx(2 / 3 * 1.6 + 1 / 3)
@@ -236,7 +253,8 @@ def test_dcf_needs_an_fx_rate_when_currencies_differ():
     assert not V.build_dcf(STMT, 0.10, 0.20, 100.0, 1000e9, None, "profitable")["available"]
     usd = V.build_dcf(STMT, 0.10, 0.20, 100.0, 1000e9, 1.0, "profitable")["value"]
     # Statements in a currency worth half a quote-currency unit: half the value.
-    assert V.build_dcf(STMT, 0.10, 0.20, 100.0, 1000e9, 0.5, "profitable")["value"] == pytest.approx(usd / 2)
+    half = V.build_dcf(STMT, 0.10, 0.20, 100.0, 1000e9, 0.5, "profitable")
+    assert half["value"] == pytest.approx(usd / 2) and half["rate"] == 0.5
 
 
 # ── assembly ─────────────────────────────────────────────────────────────────

@@ -132,11 +132,30 @@ def test_a_reweighted_or_replaced_method_is_an_override():
     reweighted = TABLE.replace("| −80.1% | 40% |", "| −80.1% | 20% |").replace(
         "| −11.1% | 20% |", "| −11.1% | 40% |")
     out = A.valuation_overrides(table_report(table=reweighted), VALUATION)
-    assert "dcf 52.95@40% not in table" in out and "extra row 52.95@20%" in out
+    assert out == ["dcf 52.95@40% is 52.95@20% in table", "fwd_pe 236.90@20% is 236.90@40% in table"]
     swapped = TABLE.replace("$326.72", "$120.00")
     assert A.valuation_overrides(table_report(table=swapped), VALUATION) == [
-        "consensus 326.72@10% not in table", "extra row 120.00@10%"]
+        "consensus 326.72@10% is 120.00@10% in table"]
     assert A.valuation_overrides("# no chapter 8", VALUATION) == ["§8.8 table missing or unreadable"]
+
+
+def test_exchanging_two_labels_is_an_override_though_every_number_is_kept():
+    """Same values, same weights, but the DCF's figure now sits on the analyst
+    row: the numbers alone would pass."""
+    relabelled = TABLE.replace("**DCF 機率加權模型**", "@@").replace(
+        "分析師共識目標價", "**DCF 機率加權模型**").replace("@@", "分析師共識目標價")
+    out = A.valuation_overrides(table_report(table=relabelled), VALUATION)
+    assert out == ["dcf 52.95@40% is 326.72@10% in table", "consensus 326.72@10% is 52.95@40% in table"]
+
+
+def test_row_labels_name_their_method():
+    for label, key in [("DCF（基準）", "dcf"), ("同業 Forward P/E", "fwd_pe"), ("同業 EV/EBITDA", "ev_ebitda"),
+                       ("同業 P/S", "ps"), ("同業 P/B", "pb"), ("分析師共識目標價", "consensus"),
+                       ("FCF Yield 回推", None)]:
+        assert A.method_key(label) == key
+    extra = TABLE.replace("| P/S 回到中位數 |", "| FCF Yield 回推 |")
+    assert A.valuation_overrides(table_report(table=extra), VALUATION) == [
+        "ps 216.20@10% not in table", "extra row 216.20@10%"]
 
 
 def _fundamental_file(tmp_path, front_matter: str):
@@ -158,6 +177,7 @@ def test_stage_1_flags_an_override_and_a_dcf_far_from_the_price(tmp_path):
     assert "VALUATION_OVERRIDE" in flagged
     assert "DCF_GAP" in flagged                       # 52.95 against 266.66 is −80%
     assert "DCF_GAP" not in _fundamental_file(tmp_path, "")          # no record, no flag
+    assert "DCF_GAP" in _fundamental_file(tmp_path, "dcf_value: 0\n")   # a recorded zero is −100%
 
 
 def test_weights_that_do_not_sum_to_100_are_a_mismatch():

@@ -163,6 +163,25 @@ def test_no_price_gives_method_values_but_no_mos_or_rating():
     assert "MOS / 上行空間 / 評級: N/A — no price" in text
 
 
+def test_ebitda_is_not_operating_income_when_the_store_has_no_depreciation():
+    """fa.ebitda() reads a missing D&A as zero; AMD's "EBITDA" was its EBIT."""
+    from scripts.analysis.context.fundamental_facts import statement_facts as sf
+    assert sf(_rows(), "2026-10-22")["ebitda_ttm"] is None
+    assert sf(_rows(dep_amort=[0.5e9] * 8), "2026-10-22")["ebitda_ttm"] == pytest.approx(4.9e9 + 2.0e9)
+    f = compute_facts(_data(ebitda=6.9e9), _inputs())        # D&A found from Yahoo: 2.0e9
+    assert f["statements"]["ebitda_ttm"] == pytest.approx(6.9e9)
+
+
+def test_the_per_share_line_shows_the_fx_rate_it_used():
+    rows = _rows(dep_amort=[0.3e9] * 8)
+    same = render_facts(compute_facts(_data(), _inputs(rows=rows)))
+    assert "Per share = equity value × price ÷ market cap" in same
+    adr = _data(currency="USD", financialCurrency="TWD")
+    fx = {"pair": "TWDUSD=X", "rate": 0.031, "date": "2026-10-22"}
+    text = render_facts(compute_facts(adr, _inputs(rows=rows, fx=fx)))
+    assert "Per share = equity value × FX 0.031 USD per TWD × price ÷ market cap" in text
+
+
 def test_a_missing_dcf_input_is_said_not_guessed():
     f = compute_facts(_data(), _inputs())                    # the store rows carry no D&A
     assert not f["valuation"]["dcf"]["available"]

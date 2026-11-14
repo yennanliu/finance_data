@@ -146,6 +146,11 @@ def build_dcf(stmt: "dict | None", wacc: "float | None", tax_rate: float,
     if base is None:
         return unavailable("the forecast's last-year free cash flow is not positive "
                            "(capex above operating profit and D&A)")
+    if base["equity_value"] <= 0:
+        # Net debt above the enterprise value. A negative "fair value" would
+        # give a margin of safety over 100% and a Strong Buy on it.
+        return unavailable("net debt exceeds the modelled enterprise value, so the "
+                           "equity value is not positive")
 
     grid = iv.fcff_sensitivity(run)
     grid["values"] = [[None if v is None else v * per_share for v in row]
@@ -158,7 +163,8 @@ def build_dcf(stmt: "dict | None", wacc: "float | None", tax_rate: float,
         scenarios.append({"name": name, "start_growth": sg,
                           "op_margin": min(end_margin * m_mult, 0.95),
                           "wacc": wacc + w_add, "probability": prob,
-                          "value": r["equity_value"] * per_share if r else None})
+                          "value": (r["equity_value"] * per_share
+                                    if r and r["equity_value"] > 0 else None)})
     weighted = (sum(sc["value"] * sc["probability"] for sc in scenarios)
                 if all(sc["value"] is not None for sc in scenarios) else None)
 
@@ -168,7 +174,7 @@ def build_dcf(stmt: "dict | None", wacc: "float | None", tax_rate: float,
     implied_margin = iv.solve(lambda x: equity(run(flat_margin=x)), target, 0.005, 0.95)
 
     return {
-        "available": True, "model": base, "per_share": per_share,
+        "available": True, "model": base, "per_share": per_share, "rate": rate,
         "value": base["equity_value"] * per_share,
         "assumptions": {
             "years": FCFF_YEARS, "start_growth": start, "raw_growth": raw_growth,
@@ -316,8 +322,10 @@ def build(key: str, info: dict, stmt: "dict | None", wacc: "dict | None",
     values = method_values(info, stmt, peers, dcf, price, market_cap, rate)
     rows = weigh(kind, values)
     fair = round(sum(r["value"] * r["weight_pct"] / 100 for r in rows), 2) if rows else None
-    mos = round((fair - price) / fair * 100, 1) if fair and price else None
-    upside = round((fair - price) / price * 100, 1) if fair and price else None
+    # MOS divides by the fair value: only a positive one has a margin of safety.
+    measurable = fair is not None and fair > 0 and price is not None and price > 0
+    mos = round((fair - price) / fair * 100, 1) if measurable else None
+    upside = round((fair - price) / price * 100, 1) if measurable else None
     return {
         "archetype": kind, "dcf": dcf, "methods": rows, "fair_value": fair,
         "mos_pct": mos, "upside_pct": upside,

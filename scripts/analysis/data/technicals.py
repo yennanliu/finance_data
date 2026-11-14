@@ -351,18 +351,29 @@ GAP_MIN_PCT = 1.0       # smaller gaps are noise
 GAP_MAX_LISTED = 5
 
 
-def relative_strength(hist, bench_bars: "list[dict]") -> "dict | None":
+def relative_strength(hist, bench_bars: "list[dict]",
+                      own_bars: "list[dict] | None" = None) -> "dict | None":
     """Return of the stock against a benchmark over ``RS_WINDOWS``, on the
     sessions both have, and whether the price ratio is above its own
     ``RS_TREND_BARS``-session average (the stock is gaining on the benchmark).
 
-    ``bench_bars`` are price-store rows. None when fewer than a month of
-    common sessions exists.
+    ``bench_bars`` are price-store rows: split-adjusted closes, not adjusted
+    for dividends. ``hist`` is Yahoo's default history, which *is*
+    dividend-adjusted, so comparing the two credits the stock with every
+    distribution in the window and the benchmark with none. ``own_bars`` — the
+    stock's own store rows — puts both on the same basis and is used when
+    given; ``basis`` in the result says which was used. None when fewer than a
+    month of common sessions exists.
     """
     hist = complete(hist)
-    if hist is None or hist.empty or not bench_bars:
+    if not bench_bars or ((hist is None or hist.empty) and not own_bars):
         return None
-    mine = {str(ts)[:10]: float(c) for ts, c in hist["Close"].items()}
+    if own_bars:
+        mine = {b["date"]: float(b["close"]) for b in own_bars}
+        basis = "price"
+    else:
+        mine = {str(ts)[:10]: float(c) for ts, c in hist["Close"].items()}
+        basis = "mixed"
     theirs = {b["date"]: float(b["close"]) for b in bench_bars}
     dates = sorted(set(mine) & set(theirs))
     if len(dates) <= RS_WINDOWS[0][1]:
@@ -381,7 +392,7 @@ def relative_strength(hist, bench_bars: "list[dict]") -> "dict | None":
     if len(ratio) >= RS_TREND_BARS:
         avg = sum(ratio[-RS_TREND_BARS:]) / RS_TREND_BARS
         trend = "相對走強（比值高於其 50 日均值）" if ratio[-1] > avg else "相對走弱（比值低於其 50 日均值）"
-    return {"as_of": dates[-1], "rows": rows, "trend": trend}
+    return {"as_of": dates[-1], "rows": rows, "trend": trend, "basis": basis}
 
 
 def price_gaps(hist, lookback: int = GAP_LOOKBACK, min_pct: float = GAP_MIN_PCT) -> "list[dict]":
@@ -429,12 +440,15 @@ def market_context(hist, key: "str | None" = None, earnings_date: "str | None" =
         if bench and bench != (key or "").lower() and bench not in benches:
             benches.append(bench)
     found = False
+    own = prices.load_store(key) if benches else []
     for bench in benches:
-        rs = relative_strength(hist, prices.load_store(bench))
+        rs = relative_strength(hist, prices.load_store(bench), own)
         if not rs:
             continue
         found = True
-        rows.append(f"  相對強度 vs {BENCHMARK_NAMES.get(bench, bench.upper())}（至 {rs['as_of']}，價格報酬）:")
+        basis = ("價格報酬，不含股息" if rs["basis"] == "price" else
+                 "本股為含息調整價、基準為未調整價，期間內有配息時超額報酬會偏高")
+        rows.append(f"  相對強度 vs {BENCHMARK_NAMES.get(bench, bench.upper())}（至 {rs['as_of']}，{basis}）:")
         rows.append("    期間       本股     基準     超額")
         f = lambda v: "N/A" if v is None else f"{v:+.1f}%"
         for r in rs["rows"]:

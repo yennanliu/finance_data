@@ -53,7 +53,9 @@ def test_concentration_is_the_weight_of_the_listed_holdings():
 def test_performance_is_measured_on_sessions_both_series_have():
     fund = bars(300)
     bench = bars(299, start=200.0, step=1.0)          # the benchmark store is a session behind
-    rows = {r["label"]: r for r in fund_facts.performance(fund, bench)}
+    table, as_of = fund_facts.performance(fund, bench)
+    assert as_of == bench[-1]["date"] != fund[-1]["date"]     # the heading must say this date
+    rows = {r["label"]: r for r in table}
     one_month = rows["1 個月"]
     # 21 sessions back from the last common one (index 298): 398 vs 377, 498 vs 477.
     assert one_month["fund"] == pytest.approx((398 / 377 - 1) * 100)
@@ -72,6 +74,41 @@ def test_premium_to_nav_and_the_rendered_block():
     assert "no income statement" in text
 
 
+def test_the_performance_heading_carries_the_aligned_end_date():
+    fund, bench = bars(300), bars(299, start=200.0)
+    f = fund_facts.compute(data(), PROFILE, fund, bench, "vti")
+    assert f["performance_as_of"] == bench[-1]["date"] and f["as_of"] == fund[-1]["date"]
+    assert f"Price return (price store, to {bench[-1]['date']};" in fund_facts.render(f)
+
+
+def test_holdings_without_usable_weights_do_not_stop_the_report():
+    profile = dict(PROFILE, holdings=[{"symbol": "AAA", "name": "A", "weight": 0.0}])
+    text = fund_facts.render(fund_facts.compute(data(), profile, [], [], None))
+    assert "Concentration: N/A" in text
+
+
+def test_fee_and_drawdown_amounts_are_computed_not_left_to_the_model():
+    ill = fund_facts.illustration(0.0018, -35.6)
+    assert ill["fees"] == pytest.approx(1_000_000 * 0.0018 * 10)
+    assert ill["drawdown"] == pytest.approx(356_000)
+    assert fund_facts.illustration(None, None) == {"amount": 1_000_000, "years": 10,
+                                                    "fees": None, "drawdown": None}
+    f = fund_facts.compute(data(), PROFILE, bars(300), [], None)
+    assert "Worked example on 1,000,000 USD" in fund_facts.render(f) and "18,000 USD" in fund_facts.render(f)
+    prompt = load_prompt("fundamental_etf")
+    assert "Worked example" in prompt and "不計算總分或平均" in prompt and "算術平均" not in prompt
+
+
+def test_a_fund_report_that_misquotes_its_price_is_flagged(tmp_path):
+    f = tmp_path / "qqq" / "fundamental_analysis_2026-11-14_openai.md"
+    f.parent.mkdir()
+    head = "---\nticker: QQQ\nanalysis_type: fundamental-analysis\ninstrument: fund\nprice: 688.17\n---\n\n"
+    f.write_text(head + fund_report() + "現價：$688.17\n", encoding="utf-8")
+    assert "PRICE_MISMATCH" not in parse_file(f).issues
+    f.write_text(head + fund_report() + "現價：$200.00\n", encoding="utf-8")
+    assert "PRICE_MISMATCH" in parse_file(f).issues
+
+
 def test_a_fund_with_no_profile_says_na_and_forbids_memory():
     text = fund_facts.render(fund_facts.compute(data(), None, [], [], None))
     assert "Net expense ratio:          N/A" in text
@@ -88,6 +125,9 @@ def test_a_concentrated_fund_is_called_concentrated():
 def test_benchmarks_come_from_the_price_store_and_never_compare_a_fund_with_itself():
     assert market_benchmark("nvda") == "vti" and market_benchmark("2330.tw") == "0050"
     assert market_benchmark("vti") is None and market_benchmark("0050") is None
+    # A bare numeric symbol is a Taiwan listing; 0050.tw is 0050.
+    assert market_benchmark("2330") == "0050" and market_benchmark("0050.tw") is None
+    assert market_benchmark("2330.TW") == "0050"
     assert sector_benchmark("nvda") == "smh" and sector_benchmark("vst") is None
 
 

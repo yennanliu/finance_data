@@ -332,26 +332,35 @@ def fcff_sensitivity(model, wacc_steps=(-0.02, -0.01, 0.0, 0.01, 0.02),
     return {"waccs": waccs, "growths": growths, "values": values}
 
 
+SOLVE_TOLERANCE = 1e-6     # relative; the answer must reproduce the target this closely
+
+
 def solve(fn, target: float, lo: float, hi: float) -> "float | None":
     """The ``x`` in ``lo…hi`` at which increasing ``fn(x)`` equals ``target``.
 
     ``fn`` may return None where it has no value (a margin too thin to leave
     any free cash flow); that counts as below every target, so the search moves
-    up past it. None when ``fn`` cannot reach the target inside the range: a
-    price that no growth rate up to ``hi`` justifies is reported as such, not
-    as a number.
+    up past it. The candidate is then checked: where ``fn`` jumps from None
+    straight to a value above the target, bisection converges on that edge
+    without ever meeting the target, and the edge is not a solution.
+
+    None when ``fn`` cannot reach the target inside the range: a price that no
+    growth rate up to ``hi`` justifies is reported as such, not as a number.
     """
     below = float("-inf")
     value = lambda x: below if fn(x) is None else fn(x)
     if not value(lo) <= target <= value(hi):
         return None
-    for _ in range(80):
+    for _ in range(100):
         mid = (lo + hi) / 2.0
         if value(mid) < target:
             lo = mid
         else:
             hi = mid
-    return (lo + hi) / 2.0
+    found = fn(hi)
+    if found is None or abs(found - target) > SOLVE_TOLERANCE * max(abs(target), 1.0):
+        return None
+    return hi
 
 
 # ── WACC ─────────────────────────────────────────────────────────────────────

@@ -224,6 +224,26 @@ def test_relative_strength_ends_on_the_last_session_both_have():
     assert relative_strength(bars(15), store_bars(bars(15))) is None      # under a month
 
 
+def test_relative_strength_uses_one_price_basis_for_both_series(monkeypatch):
+    """Yahoo's history is dividend-adjusted and the store is not: against a
+    store benchmark the stock was credited with its distributions."""
+    h = bars(200)
+    adjusted = h.copy()
+    adjusted.loc[adjusted.index[:150], "Close"] *= 0.9        # a 10% distribution, backed out
+    own, bench = store_bars(h), store_bars(h)
+    mixed = relative_strength(adjusted, bench)
+    assert mixed["basis"] == "mixed" and mixed["rows"][1]["excess"] > 5      # false excess return
+    same = relative_strength(adjusted, bench, own)
+    assert same["basis"] == "price"
+    assert all(r["excess"] == pytest.approx(0.0) for r in same["rows"])
+
+    from analysis.data import prices
+    monkeypatch.setattr(prices, "load_store", lambda key, store_dir=None: bench if key == "vti" else [])
+    assert "本股為含息調整價" in market_context(adjusted, "pl", None)       # no store rows for the stock
+    monkeypatch.setattr(prices, "load_store", lambda key, store_dir=None: bench)
+    assert "價格報酬，不含股息" in market_context(adjusted, "pl", None)
+
+
 def test_a_gap_is_a_session_that_does_not_overlap_the_one_before():
     """NVDA 2026-11-12 opened 13% lower and never traded up to the prior low;
     the report called it a long bullish candle."""
@@ -274,6 +294,8 @@ def test_next_earnings_date_is_the_first_on_or_after_the_close():
 def test_prompt_requires_the_market_context_to_be_used():
     prompt = load_prompt("technical")
     assert "市場脈絡（相對強度、缺口、財報日）" in prompt and "Beta 與相對強度" in prompt
+    # The context counts days from the latest close; the rule asks for that same count.
+    assert "距最新收盤日" in prompt and "距今天數" not in prompt
 
 
 def test_context_carries_daily_and_weekly_ohlc():

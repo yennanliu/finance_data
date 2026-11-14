@@ -151,15 +151,36 @@ def parse_valuation(summary: str) -> "list[tuple[str, float, float]]":
     return out
 
 
+# How a §8.8 row label names its method. Order matters: "同業 Forward P/E"
+# must not be read as P/E-less "P/S" or "P/B".
+_METHOD_LABELS = (
+    ("dcf", re.compile(r"DCF|現金流折現", re.I)),
+    ("consensus", re.compile(r"共識|分析師|目標價")),
+    ("ev_ebitda", re.compile(r"EV\s*/\s*EBITDA", re.I)),
+    ("fwd_pe", re.compile(r"P\s*/\s*E|本益比", re.I)),
+    ("ps", re.compile(r"P\s*/\s*S|EV\s*/\s*Sales|營收比", re.I)),
+    ("pb", re.compile(r"P\s*/\s*B|淨值比", re.I)),
+)
+
+
+def method_key(label: str) -> "str | None":
+    """The valuation method a §8.8 row label names, or None."""
+    return next((key for key, pat in _METHOD_LABELS if pat.search(label)), None)
+
+
 def valuation_overrides(text: str, summary: str) -> "list[str]":
     """How the report's §8.8 table departs from the methods the pipeline
     computed and recorded in the front matter.
 
     The values and weights are Python's (``context/valuation.py``); the prompt
     tells the model to copy them. A report that reweights, swaps a value or
-    adds a method has put the conclusion back in the model's hands. Empty when
-    the front matter has no ``valuation`` (an older report) or the table
-    matches. A value matches within a cent or 0.1%.
+    adds a method has put the conclusion back in the model's hands. Each row
+    is matched to its method **by label** first: a table that kept every
+    number and exchanged the DCF and consensus labels has moved the values to
+    the wrong methods, and matching on numbers alone would pass it.
+
+    Empty when the front matter has no ``valuation`` (an older report) or the
+    table matches. A value matches within a cent or 0.1%.
     """
     expected = parse_valuation(summary)
     if not expected:
@@ -167,16 +188,18 @@ def valuation_overrides(text: str, summary: str) -> "list[str]":
     rows, _ = table_rows(section(text, "8.8"))
     if not rows:
         return ["§8.8 table missing or unreadable"]
-    left = [(v, w) for _, v, w in rows]
+    left = [(method_key(label), v, w) for label, v, w in rows]
     out = []
     for key, value, weight in expected:
-        hit = next((r for r in left if abs(r[0] - value) <= max(0.011, 0.001 * value)
-                    and abs(r[1] - weight) < 0.0051), None)
-        if hit:
-            left.remove(hit)
-        else:
+        row = next((r for r in left if r[0] == key), None)
+        if row is None:
             out.append(f"{key} {value:.2f}@{weight * 100:.0f}% not in table")
-    out += [f"extra row {v:.2f}@{w * 100:.0f}%" for v, w in left]
+            continue
+        left.remove(row)
+        if abs(row[1] - value) > max(0.011, 0.001 * value) or abs(row[2] - weight) >= 0.0051:
+            out.append(f"{key} {value:.2f}@{weight * 100:.0f}% is "
+                       f"{row[1]:.2f}@{row[2] * 100:.0f}% in table")
+    out += [f"extra row {v:.2f}@{w * 100:.0f}%" for _, v, w in left]
     return out
 
 
@@ -498,5 +521,5 @@ def annotate(text: str, result: dict) -> str:
 
 __all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "FUND_CHAPTERS", "section",
            "weighted_terms", "table_terms", "table_rows",
-           "parse_valuation", "valuation_overrides", "report_price", "check", "valuation_mismatches",
+           "parse_valuation", "valuation_overrides", "method_key", "report_price", "check", "valuation_mismatches",
            "missing_chapters", "annotate", "correct", "fix_products", "rating_band", "RATING_BANDS"]

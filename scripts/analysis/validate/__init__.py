@@ -272,6 +272,10 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
         missing = arithmetic.missing_chapters(content, arithmetic.FUND_CHAPTERS)
         if missing:
             out.append(("MISSING_SECTIONS", f"missing_fund_chapters={missing}"))
+        # The price it quotes is still checked; only the valuation checks are a company's.
+        quoted = market_data.quote_mismatch(arithmetic.report_price(content), price)
+        if quoted:
+            out.append(("PRICE_MISMATCH", "quoted " + _fmt(quoted, "stated", "price", "diff_pct")))
     elif atype == "fundamental_analysis":
         missing = arithmetic.missing_chapters(content)
         if missing:
@@ -296,7 +300,7 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
             dcf = float(fm["dcf_value"]) if fm.get("dcf_value") else None
         except ValueError:
             dcf = None
-        if dcf and price and abs(dcf / price - 1) > DCF_GAP_WARN:
+        if dcf is not None and price and abs(dcf / price - 1) > DCF_GAP_WARN:
             out.append(("DCF_GAP", f"dcf={dcf} price={price} gap={(dcf / price - 1) * 100:+.0f}%"))
 
     if atype == "technical_analysis":

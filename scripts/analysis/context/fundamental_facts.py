@@ -114,7 +114,11 @@ def statement_facts(rows: "list[dict]", as_of: "str | None") -> "dict | None":
         "capex_ttm": t.get("capex"),
         "fcf_ttm": fa.free_cash_flow(t),
         "da_ttm": t.get("dep_amort"),
-        "ebitda_ttm": fa.ebitda(t),
+        # Both parts or nothing: fa.ebitda() reads a missing D&A as zero, which
+        # handed AMD, MRVL and WDC their operating income as "EBITDA". Left
+        # None, _fill_from_yahoo() rebuilds it once it has found the D&A.
+        "ebitda_ttm": (fa.ebitda(t) if t.get("operating_income") is not None
+                       and t.get("dep_amort") is not None else None),
         # Complete fiscal years, oldest first, for the DCF's normalised margin.
         "op_margin_history": [m["operating"] / 100 for m in map(fa.margins, fa.annual_series(rows))
                               if m["operating"] is not None],
@@ -388,7 +392,8 @@ def render_dcf(d: dict, ccy: str, sccy: str, price) -> "list[str]":
         f"  Enterprise value:                   {bn(m['enterprise_value'])}",
         f"  + Net cash (− = net debt):          {bn(m['net_cash'])}",
         f"  = Equity value:                     {bn(m['equity_value'])}",
-        f"  Per share = equity value × price ÷ market cap (in {ccy}) = {_usd(d['value'], ccy)}"
+        "  Per share = equity value × " + (f"FX {d['rate']:.6g} {ccy} per {sccy} × " if d["rate"] != 1.0 else "")
+        + f"price ÷ market cap (in {ccy}) = {_usd(d['value'], ccy)}"
         f"   ({up(d['value'])} vs price)   ← the DCF base value for §8.5 and §8.8",
         "",
         "  Sensitivity, value per share (rows: terminal growth g; columns: WACC):",

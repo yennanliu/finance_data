@@ -22,6 +22,10 @@ WINDOWS = (("1 個月", "1m"), ("3 個月", "3m"), ("6 個月", "6m"),
            ("1 年", "1y"), ("3 年", "3y"), ("5 年", "5y"))
 # Share of assets in the ten largest holdings above which a fund is concentrated.
 CONCENTRATED_TOP10 = 0.50
+# The worked example in chapters 3 and 6: a holding of this size, in the
+# fund's currency, held this many years.
+ILLUSTRATION_AMOUNT = 1_000_000
+ILLUSTRATION_YEARS = 10
 
 
 def concentration(holdings: "list[dict]") -> "dict | None":
@@ -34,9 +38,14 @@ def concentration(holdings: "list[dict]") -> "dict | None":
             "hhi": sum(w * w for w in weights)}
 
 
-def performance(bars: "list[dict]", bench: "list[dict]") -> "list[dict]":
-    """Price return per window for the fund and the benchmark, on the dates
-    both have a bar for, so a store one session behind does not skew it."""
+def performance(bars: "list[dict]", bench: "list[dict]") -> "tuple[list[dict], str | None]":
+    """Price return per window for the fund and the benchmark, and the date
+    the windows end on.
+
+    Both are measured on the sessions they share, so when the benchmark's
+    store is a session behind the table ends a session earlier too, and says
+    so, rather than comparing two different end dates.
+    """
     if bench:
         common = {b["date"] for b in bars} & {b["date"] for b in bench}
         bars = [b for b in bars if b["date"] in common]
@@ -48,7 +57,22 @@ def performance(bars: "list[dict]", bench: "list[dict]") -> "list[dict]":
         m = pa.period_return(bench, days) if bench else None
         out.append({"label": label, "fund": f, "benchmark": m,
                     "excess": f - m if f is not None and m is not None else None})
-    return out
+    return out, (bars[-1]["date"] if bars else None)
+
+
+def illustration(expense_ratio: "float | None", max_drawdown_pct: "float | None") -> dict:
+    """What the cost and the worst drawdown mean on ``ILLUSTRATION_AMOUNT``.
+
+    Computed here so the report quotes it: ten years of fees at today's rate
+    with no return assumed, and the paper loss at the deepest drawdown.
+    """
+    return {
+        "amount": ILLUSTRATION_AMOUNT, "years": ILLUSTRATION_YEARS,
+        "fees": (ILLUSTRATION_AMOUNT * expense_ratio * ILLUSTRATION_YEARS
+                 if expense_ratio is not None else None),
+        "drawdown": (ILLUSTRATION_AMOUNT * abs(max_drawdown_pct) / 100
+                     if max_drawdown_pct is not None else None),
+    }
 
 
 def compute(data: dict, profile: "dict | None", bars: "list[dict]",
@@ -56,15 +80,18 @@ def compute(data: dict, profile: "dict | None", bars: "list[dict]",
     profile = profile or {}
     price, nav = data.get("price_now"), profile.get("nav")
     dd = pa.max_drawdown(bars) if bars else None
+    perf, perf_as_of = performance(bars, bench_bars or []) if bars else ([], None)
     return {
         "ticker": data.get("ticker"), "price": price, "price_date": data.get("price_date"),
         "currency": (data.get("info") or {}).get("currency"),
         "profile": profile,
         "premium": (price / nav - 1) if price and nav else None,
         "concentration": concentration(profile.get("holdings") or []),
-        "performance": performance(bars, bench_bars or []) if bars else [],
+        "performance": perf,
+        "performance_as_of": perf_as_of,       # last session both series have
         "benchmark": bench_key,
-        "as_of": bars[-1]["date"] if bars else None,
+        "as_of": bars[-1]["date"] if bars else None,   # the fund's own last bar: risk statistics
+        "illustration": illustration(profile.get("expense_ratio"), dd["pct"] if dd else None),
         "volatility_1y": pa.annualised_volatility(bars) if bars else None,
         "max_drawdown": dd,
         "cagr": pa.cagr(bars) if bars else None,
@@ -120,10 +147,13 @@ def render(f: dict) -> str:
         lines += ["", f"Largest holdings ({len(holdings)} listed):"]
         lines += [f"  {h['symbol']:<10} {h.get('name', '')[:38]:<38} {_p(h['weight'])}" for h in holdings]
         c = f["concentration"]
-        lines.append(f"  → The {c['count']} listed sum to {_p(c['total'], 1)} of assets; the largest is "
-                     f"{_p(c['largest'], 1)}. " + ("Concentrated: more than half the fund is in these names."
-                                                  if c["total"] > CONCENTRATED_TOP10 else
-                                                  "Diversified: these names are less than half the fund."))
+        if c:
+            lines.append(f"  → The {c['count']} listed sum to {_p(c['total'], 1)} of assets; the largest is "
+                         f"{_p(c['largest'], 1)}. " + ("Concentrated: more than half the fund is in these names."
+                                                      if c["total"] > CONCENTRATED_TOP10 else
+                                                      "Diversified: these names are less than half the fund."))
+        else:
+            lines.append("  → Concentration: N/A (no usable weights).")
     else:
         lines += ["", "Largest holdings: N/A (not provided). Do not list holdings from memory."]
     sectors = sorted((p.get("sectors") or {}).items(), key=lambda kv: -kv[1])
@@ -132,7 +162,7 @@ def render(f: dict) -> str:
     perf = f.get("performance") or []
     if perf:
         bench = BENCHMARK_NAMES.get(f.get("benchmark"), f.get("benchmark"))
-        lines += ["", f"Price return (price store, to {f.get('as_of')}; distributions not included)"
+        lines += ["", f"Price return (price store, to {f.get('performance_as_of')}; distributions not included)"
                       + (f", against {bench}:" if bench else ":"),
                   "  期間       本基金" + ("     基準      超額" if bench else "")]
         for row in perf:
@@ -148,9 +178,16 @@ def render(f: dict) -> str:
             f"  Maximum drawdown (stored history{span}): {worst}",
             f"  CAGR over the stored history: {growth}",
         ]
+    ill = f.get("illustration") or {}
+    if ill:
+        amt = lambda v: "N/A" if v is None else f"{v:,.0f} {ccy}"
+        lines += ["", f"Worked example on {ill['amount']:,} {ccy} (quote these; do not recompute):",
+                  f"  Fees over {ill['years']} years at today's expense ratio, no return assumed "
+                  f"(amount × ratio × years): {amt(ill['fees'])}",
+                  f"  Paper loss at the maximum drawdown (amount × drawdown): {amt(ill['drawdown'])}"]
     lines += ["", "→ A figure shown as N/A is unavailable: say so. Never fill it from memory, and never "
                   "invent tracking error, index methodology details or holdings that are not listed above."]
     return "\n".join(lines)
 
 
-__all__ = ["compute", "gather", "render", "concentration", "performance"]
+__all__ = ["compute", "gather", "render", "concentration", "performance", "illustration"]
