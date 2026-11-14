@@ -83,27 +83,43 @@ def swing_points(high, low, window: int = SWING_WINDOW) -> "tuple[list, list]":
     return highs, lows
 
 
-def _merge_levels(found: list, more: list, tol_pct: float = 0.015) -> list:
-    """``found`` plus each of ``more`` that is not within ``tol_pct`` of a level
-    already kept. The one-year levels keep their values when a side is widened."""
-    out = list(found)
-    for lv in more:
-        if all(abs(lv - kept) / (abs(kept) or 1.0) > tol_pct for kept in out):
-            out.append(lv)
-    return out
+def month_is_complete(last_bar) -> bool:
+    """Whether ``last_bar`` (a timestamp) is its month's last weekday, so no
+    further session can be added to that month.
+
+    Weekdays only: an exchange holiday on a month's last weekday (Good Friday
+    2024-03-29) reads as a month still in progress, which costs one session of
+    staleness and nothing else.
+    """
+    import pandas as pd
+
+    nxt = pd.Timestamp(last_bar) + pd.offsets.BDay(1)
+    return (nxt.year, nxt.month) != (last_bar.year, last_bar.month)
 
 
 def pivot_points(hist) -> "dict | None":
     """Classic floor pivots from the last **completed** month's high, low and
     close: ``P = (H + L + C) / 3``, ``R1 = 2P − L``, ``S1 = 2P − H``,
-    ``R2 = P + (H − L)``, ``S2 = P − (H − L)``. None without a completed month."""
-    months = monthly_bars(hist)
-    if len(months) < 2:
+    ``R2 = P + (H − L)``, ``S2 = P − (H − L)``. None without a completed month.
+
+    The newest monthly bar is the month in progress — except on that month's
+    last session, when it is complete and is the one the coming month's pivots
+    are built from. Taking the bar before it then would leave every month-end
+    report a month behind.
+    """
+    hist = complete(hist)
+    if hist is None or hist.empty:
         return None
-    bar = months.iloc[-2]
+    months = monthly_bars(hist)
+    at = -1 if month_is_complete(hist.index[-1]) else -2
+    # The first month of the history may be a partial one; it is used only
+    # when it is all there is, as before.
+    if len(months) < -at:
+        return None
+    bar = months.iloc[at]
     h, l, c = float(bar["High"]), float(bar["Low"]), float(bar["Close"])
     p = (h + l + c) / 3
-    return {"period_end": str(months.index[-2])[:10], "high": h, "low": l, "close": c,
+    return {"period_end": str(months.index[at])[:10], "high": h, "low": l, "close": c,
             "P": p, "PR1": 2 * p - l, "PS1": 2 * p - h, "PR2": p + (h - l), "PS2": p - (h - l)}
 
 
@@ -116,11 +132,16 @@ def key_levels(hist, long_bars=None) -> dict:
     (via front matter).
 
     Each side is searched in the last 252 sessions first. A side with fewer
-    than ``MIN_LEVELS`` is searched again over 504 and then 1260 sessions,
-    keeping what was already found; ``lookback`` records how far each side
-    went. ``long_bars`` is the longer history to widen into (the price store,
-    as a frame from :func:`bars_frame`); without it widening stops at the bars
-    ``hist`` has.
+    than ``MIN_LEVELS`` is searched again over 504 and then 1260 sessions;
+    ``lookback`` records how far each side went. ``long_bars`` is the longer
+    history to widen into (the price store, as a frame from
+    :func:`bars_frame`); without it widening stops at the bars ``hist`` has.
+
+    A widened side is rebuilt from the wider window alone, never merged with
+    the first pass. ``hist`` is dividend-adjusted and the store is not, so the
+    same swing sits at two slightly different prices in the two; merged, a
+    dividend payer's swing could be listed twice and satisfy ``MIN_LEVELS``
+    with one real level. ``basis`` records which series each side came from.
     """
     hist = complete(hist)
     if hist is None or hist.empty:
@@ -133,7 +154,7 @@ def key_levels(hist, long_bars=None) -> dict:
     wide = long_bars if long_bars is not None and len(long_bars) > len(hist) else hist
 
     sides = {"resistance": [], "support": []}
-    lookback = {}
+    lookback, basis = {}, {}
     for side in sides:
         found, used = [], 0
         for n in LEVEL_LOOKBACKS:
@@ -144,11 +165,11 @@ def key_levels(hist, long_bars=None) -> dict:
             used = len(window)
             highs, lows = swing_points(window["High"], window["Low"])
             if side == "resistance":
-                more = [lv for lv in _cluster_levels(highs) if lv >= last]
+                found = [lv for lv in _cluster_levels(highs) if lv >= last]
             else:
-                more = [lv for lv in _cluster_levels(lows) if lv <= last]
-            found = _merge_levels(found, more)
+                found = [lv for lv in _cluster_levels(lows) if lv <= last]
             lookback[side] = n if used == n else used
+            basis[side] = "store" if src is not hist else "fetched"
             if len(found) >= MIN_LEVELS:
                 break
         # Nearest first: resistances ascending, supports descending.
@@ -169,7 +190,7 @@ def key_levels(hist, long_bars=None) -> dict:
     ]
 
     return {"last": last, "resistance": sides["resistance"], "support": sides["support"],
-            "fib": fibs, "low": lo, "high": hi, "lookback": lookback,
+            "fib": fibs, "low": lo, "high": hi, "lookback": lookback, "basis": basis,
             "pivots": pivot_points(hist)}
 
 
@@ -208,6 +229,10 @@ def compute_levels(hist, long_bars=None) -> str:
             for label, price in fibs
         ]
 
+        from_store = [name for key, name in (("resistance", "阻力"), ("support", "支撐"))
+                      if levels["basis"].get(key) == "store"]
+        store_note = (f"\n  註: 放寬後的{'、'.join(from_store)}價位取自價格資料庫（實際成交價，未做股息調整）。"
+                      if from_store else "")
         pv = levels["pivots"]
         if pv:
             pivot_lines = [
@@ -229,7 +254,7 @@ def compute_levels(hist, long_bars=None) -> str:
 
   支撐位 (Support) — {span['support']}波段低點聚類：
 {chr(10).join(sup_lines)}
-  註: 每一側先找近一年；不足 {MIN_LEVELS} 個時依序放寬到近兩年、近五年，標題寫的是該側實際用到的期間。
+  註: 每一側先找近一年；不足 {MIN_LEVELS} 個時依序放寬到近兩年、近五年，標題寫的是該側實際用到的期間。{store_note}
 
   ── 斐波那契回調（52週區間 ${lo:.2f} → ${hi:.2f}）──
 {chr(10).join(fib_lines)}

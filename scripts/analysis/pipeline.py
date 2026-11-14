@@ -133,6 +133,17 @@ def run_analysis(ticker: str, analysis_type: str, provider: str | None,
         extra.update(score_fields(card))
         if card["total"] is not None:
             extra["signal"] = scorecard.signal(card["total"])
+            was = scorecard.signal(card["stated"]) if card.get("corrected") else None
+            if was and was != extra["signal"]:
+                # The strategy chapter was routed on the score the model
+                # printed. The composite is corrected; the prose is not, so the
+                # disagreement is recorded, shown to the reader and left for
+                # stage-1 QA to flag (SIGNAL_CHANGED).
+                extra["signal_stated"] = was
+                data["signal_change"] = {"from": was, "to": extra["signal"],
+                                         "stated": card["stated"], "score": card["total"]}
+                print(f"  ⚠ corrected composite moves the signal {was} → {extra['signal']}; "
+                      "chapter 8 was written for the stated score")
     report, repaired = derivation.fix(report)
     if repaired:
         extra["derivation_fixed"] = repaired
@@ -307,6 +318,12 @@ def data_sources_block(data: dict, analysis_type: str, provider: str, model: str
         if data.get("earnings_date"):
             rows.append(("下次財報日", f"{data['earnings_date']}（Yahoo Finance，日期可能調整）"))
         computed = "所有指標、R1–S3 與斐波那契價位、多時框方向、相對強度、缺口、歷史基準機率、綜合評分"
+        change = data.get("signal_change")
+        if change:
+            names = {"bullish": "偏多", "neutral": "中性", "bearish": "偏空"}
+            rows.append(("⚠️ 評分覆核", f"模型寫的綜合評分為 {change['stated']:g}（{names[change['from']]}），"
+                                        f"依六項子評分重算為 {change['score']}（{names[change['to']]}）。"
+                                        "第 8 章的策略方向是依原評分撰寫，與重算後的評分區間不一致，請以此為前提閱讀"))
     answered = [name for keys, name in _SOURCE_NAMES if any(status.get(k) for k in keys)]
     silent = [name for keys, name in _SOURCE_NAMES
               if any(k in status for k in keys) and not any(status.get(k) for k in keys)]

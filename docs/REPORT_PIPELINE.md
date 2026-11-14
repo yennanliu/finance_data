@@ -283,8 +283,11 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
   stage-1 QA compares with Ch.4. Each side is searched in the last 252 sessions
   first. A side with fewer than two levels is searched again over 504 and then
   1,260 sessions of the price store (`technicals.key_levels`), so a stock at a
-  52-week low still has supports. Classic monthly pivot points are listed
-  separately as 樞軸 P / PR1 / PS1 …, never as R1–S3.
+  52-week low still has supports. A widened side is rebuilt from the store
+  alone (traded prices, not dividend-adjusted), never merged with the fetched
+  bars, so one swing cannot be listed twice on two bases. Classic monthly pivot
+  points are listed separately as 樞軸 P / PR1 / PS1 …, never as R1–S3; on a
+  month's last session they come from that month.
 - **Studies.** `data/technical_studies.py` adds Ichimoku, a volume profile (POC
   and value area), VWAP anchored at the 52-week high and low, and the A/D line.
 - **Base rates.** `technical_studies.base_rates()` finds every past session in
@@ -296,7 +299,10 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
   this table. The model's own judgements are written 高／中／低.
 - **Scorecard.** One table of six sub-scores (0–100). `validate/scorecard.py`
   computes the composite and records `score` and `signal` (bullish at 60 or
-  above, bearish at 40 or below, the prompt's own routing thresholds).
+  above, bearish at 40 or below, the prompt's own routing thresholds). When
+  the corrected composite lands in a different band from the stated one, the
+  strategy text was written for the wrong band: `signal_stated` records it, the
+  資料與來源 table says so, and stage-1 QA raises `SIGNAL_CHANGED`.
 - **Shape.** The prompt asks for tables. It forbids hand-drawn ASCII charts and
   allows one Mermaid diagram. Each figure is stated in full once, in the
   chapter that owns it. The target is 400–550 lines.
@@ -313,7 +319,7 @@ Every report records how it was made, so QA can check it later:
 | `close_source` | `quote` when the last close came from the quote, not a bar |
 | `levels` | Computed R1–S3 (technical) |
 | `score`, `score_stated` | The scorecard composite Python computed from the sub-scores, and the one the report printed when it differed |
-| `signal` | `bullish`, `neutral` or `bearish`, from the technical `score` |
+| `signal`, `signal_stated` | `bullish`, `neutral` or `bearish`, from the technical `score`; the second is set only when the stated score fell in a different band |
 | `rating`, `fair_value` | The rating the report states (else the computed one) and its weighted fair value once rechecked (fundamental, companies) |
 | `arithmetic_check`, `weighted_fair_value_stated` | §8.8 recheck result (fundamental) |
 | `valuation`, `fair_value_computed`, `rating_computed`, `dcf_value` | The methods (value and weight), fair value, rating and DCF value Python computed (fundamental, companies) |

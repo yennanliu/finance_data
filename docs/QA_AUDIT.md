@@ -41,6 +41,7 @@ there, not inline in `parse_file`.
 | Technical | `NAN_VALUE` | A `$nan` / `nan%` leaked from an empty data bar |
 | Technical | `PRICE_MISMATCH` | The headline price differs from the front-matter `price` by more than 0.5% |
 | Technical | `LEVEL_MISMATCH` | A Ch.4 R1–S3 differs from the front-matter `levels` entry with the same label |
+| Technical | `SIGNAL_CHANGED` | Front-matter `signal_stated` differs from `signal`: the composite the model printed and the mean of its sub-scores fall in different bands (60 and 40), so Ch.8 was routed on a score that did not hold. The report says so in its 資料與來源 table |
 | Technical | `RR_MISMATCH` | The stated R/R matches neither T1 nor T2 computed from its own entry and stop. A range entry may use its midpoint or either end |
 | Technical | `RR_TOO_LOW` | A Ch.8 strategy's reward/risk to T1, recomputed from its entry and stop, is below 1 : 1.5, or its T1 is the front-matter `price`. A column the report marks `不交易` is skipped (`technical.weak_strategies`, prompt rule 21) |
 | Any report with provenance | `STORE_MISMATCH` | Front-matter `price` ≠ the `data/prices/` close on `price_date`, with later splits undone. Silent when the store has no bar for that date yet |

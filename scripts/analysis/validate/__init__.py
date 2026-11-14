@@ -56,6 +56,9 @@ ISSUE_TYPES = {
                "a reading to review, not an arithmetic error",
     "RATING_GAP": "the report's rating is more than one notch from the rating "
                   "computed from its margin of safety (prompt rule 20 allows one)",
+    "SIGNAL_CHANGED": "the technical composite was corrected across a signal threshold, "
+                      "so the strategy was written for a different band (front matter "
+                      "`signal_stated` ≠ `signal`)",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
     "RR_TOO_LOW": "a recommended strategy's reward/risk to T1 is below 1 : 1.5, "
                   "or its T1 is the current price",
@@ -314,6 +317,10 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
             out.append(("RATING_GAP", f"rating={stated} computed={fm['rating_computed']} notches={gap:+d}"))
 
     if atype == "technical_analysis":
+        if fm.get("signal_stated") and fm["signal_stated"] != fm.get("signal"):
+            out.append(("SIGNAL_CHANGED", f"stated={fm['signal_stated']} "
+                                          f"(score {fm.get('score_stated')}) "
+                                          f"computed={fm.get('signal')} (score {fm.get('score')})"))
         tech = technical.check(text)
         if tech["nan"]:
             out.append(("NAN_VALUE", f"nan={len(tech['nan'])}× e.g. {tech['nan'][0]!r}"))

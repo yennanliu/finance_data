@@ -52,9 +52,17 @@ def f_score(cur: "dict | None", prev: "dict | None") -> "dict | None":
     if not cur or not prev:
         return None
     out = fa.piotroski(cur, prev)
-    if not out["tested"]:
+    tests = dict(out["tests"])
+    if _f(cur.get("long_term_debt")) is None or _f(prev.get("long_term_debt")) is None:
+        # fa.piotroski reads a missing debt figure as no debt, which passes the
+        # leverage test for a company that simply did not tag it this year.
+        # A reported zero still counts; an absent figure is not a result.
+        tests["leverage_falling"] = None
+    tested = [v for v in tests.values() if v is not None]
+    if not tested:
         return None
-    return {**out, "period_end": cur.get("period_end"), "prior_period_end": prev.get("period_end")}
+    return {"score": sum(1 for v in tested if v), "tested": len(tested), "tests": tests,
+            "period_end": cur.get("period_end"), "prior_period_end": prev.get("period_end")}
 
 
 def dupont(row: "dict | None") -> "dict | None":
@@ -173,17 +181,25 @@ def bank_metrics(data: dict, info: dict, rate: "float | None" = 1.0) -> "dict | 
     nii, revenue = _ttm(inc, "Net Interest Income"), _ttm(inc, "Total Revenue")
     if nii is None or bal is None or not len(getattr(bal, "columns", [])):
         return None
-    latest = bal.columns[0]
+    # Balances of the quarter the four quarters of income end on. Yahoo can
+    # publish a newer balance sheet before the matching income statement; with
+    # no column for the income period the balance-based ratios are left out
+    # rather than formed across two periods.
+    end = str(inc.columns[0])[:10]
+    latest = _column(bal, end)
     assets_now = _cell(bal, "Total Assets", latest)
-    assets_then = next((_cell(bal, "Total Assets", c) for c in bal.columns[1:]
-                        if 330 <= _gap_days(str(c), str(latest)) <= 400), None)
+    lo, hi = fa.YEAR_APART_DAYS
+    assets_then = next((_cell(bal, "Total Assets", c) for c in bal.columns
+                        if latest is not None and str(c) < str(latest)
+                        and lo <= _gap_days(str(c), end) <= hi), None)
     avg_assets = (assets_now + assets_then) / 2 if assets_now and assets_then else None
     pretax, net = _ttm(inc, "Pretax Income"), _ttm(inc, "Net Income")
     tbv = _cell(bal, "Tangible Book Value", latest)
     mcap = _f(info.get("marketCap"))
     loans = _cell(bal, "Net Loan", latest)
     return {
-        "period_end": str(latest)[:10],
+        "period_end": end,
+        "balance_matched": latest is not None,
         "nii_ttm": nii,
         "nii_share": nii / revenue if revenue else None,
         "nim_proxy": nii / avg_assets if avg_assets else None,
@@ -273,6 +289,9 @@ def render(q: "dict | None") -> "list[str]":
             f"    放款淨額 ÷ 總資產:                            {_p(b['loans_to_assets'])}",
             "    淨沖銷率、逾放比、CET1: N/A — not in the data. Say so; do not quote them from memory.",
         ]
+        if not b.get("balance_matched", True):
+            lines.append(f"    Balance-based ratios are N/A: Yahoo has no balance sheet dated {b['period_end']}, "
+                         "the quarter the income figures end on.")
     return lines
 
 

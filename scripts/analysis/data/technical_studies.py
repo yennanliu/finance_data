@@ -142,14 +142,17 @@ def accumulation_distribution(hist, n: int = AD_TREND_BARS) -> "dict | None":
     clv = (((hist["Close"] - hist["Low"]) - (hist["High"] - hist["Close"])) / rng.where(rng > 0)).fillna(0.0)
     line = (clv * hist["Volume"]).cumsum()
     above = bool(line.iloc[-1] > line.rolling(n).mean().iloc[-1])
-    ad_up = bool(line.iloc[-1] > line.iloc[-1 - n])
-    price_up = bool(hist["Close"].iloc[-1] > hist["Close"].iloc[-1 - n])
-    if ad_up == price_up:
+    sign = lambda now, then: (now > then) - (now < then)      # +1 up, 0 flat, −1 down
+    ad = sign(float(line.iloc[-1]), float(line.iloc[-1 - n]))
+    price = sign(float(hist["Close"].iloc[-1]), float(hist["Close"].iloc[-1 - n]))
+    if ad == 0 or price == 0:
+        relation = "其中一項持平，無方向可比"          # an unchanged series is not a falling one
+    elif ad == price:
         relation = "與價格同向（確認）"
     else:
-        relation = "價跌而 A/D 上升（吸籌跡象）" if ad_up else "價漲而 A/D 下降（派發跡象）"
-    return {"bars": n, "above_average": above, "ad_up": ad_up, "price_up": price_up,
-            "relation": relation}
+        relation = "價跌而 A/D 上升（吸籌跡象）" if ad > 0 else "價漲而 A/D 下降（派發跡象）"
+    return {"bars": n, "above_average": above, "ad": ad, "price": price,
+            "ad_up": ad > 0, "price_up": price > 0, "relation": relation}
 
 
 def studies_block(hist) -> str:
@@ -190,8 +193,10 @@ def _studies_block(hist) -> str:
         rows.append("  錨定 VWAP: N/A（數據不足）")
     ad = accumulation_distribution(hist)
     if ad:
+        ad_word = {1: "上升", 0: "持平", -1: "下降"}[ad["ad"]]
+        price_word = {1: "上漲", 0: "持平", -1: "下跌"}[ad["price"]]
         rows.append(f"  A/D 線（近 {ad['bars']} 根）: {'高於' if ad['above_average'] else '不高於'}其 {ad['bars']} 日均值；"
-                    f"A/D {'上升' if ad['ad_up'] else '下降'}、價格{'上漲' if ad['price_up'] else '下跌'} → {ad['relation']}")
+                    f"A/D {ad_word}、價格{price_word} → {ad['relation']}")
     else:
         rows.append("  A/D 線: N/A（數據不足）")
     return "\n".join(rows)
@@ -261,16 +266,39 @@ def base_rates(close, horizons=BASE_RATE_HORIZONS) -> "dict | None":
             "sessions": len(values), "rows": rows}
 
 
+def history_closes(hist, long_bars=None):
+    """Closes for the base rates: the longer store history when there is one,
+    **carried through the newest fetched session**.
+
+    The committed store is refreshed nightly, so it can end a session or more
+    before ``hist``. Read alone it would call the store's last session
+    "today", and a state-changing session after it would be ignored. The
+    fetched closes dated after the store's last bar are appended; those are
+    the newest bars, which no later dividend has adjusted, so the two series
+    join on one basis. Dates are compared as calendar dates (the store index
+    is naive, ``hist`` is exchange-local).
+    """
+    import pandas as pd
+
+    hist = complete(hist)
+    if hist is None or hist.empty:
+        return None if long_bars is None or long_bars.empty else long_bars["Close"]
+    mine = pd.Series(hist["Close"].to_numpy(dtype=float),
+                     index=pd.DatetimeIndex([str(ts)[:10] for ts in hist.index]))
+    if long_bars is None or len(long_bars) <= len(hist):
+        return mine
+    store = long_bars["Close"].astype(float)
+    return pd.concat([store, mine[mine.index > store.index[-1]]])
+
+
 def base_rate_block(hist, long_bars=None) -> str:
-    """The 歷史基準機率 block. Uses ``long_bars`` (the price store) when it is
-    the longer history, else the fetched bars."""
+    """The 歷史基準機率 block, on :func:`history_closes`."""
     title = "  ── 歷史基準機率（本股過去處於與今日相同狀態後的實際報酬；由程式計算）──"
     try:
-        hist = complete(hist)
-        src = long_bars if long_bars is not None and hist is not None and len(long_bars) > len(hist) else hist
-        if src is None or src.empty:
+        closes = history_closes(hist, long_bars)
+        if closes is None or closes.empty:
             return ""
-        br = base_rates(src["Close"])
+        br = base_rates(closes)
     except Exception as exc:
         return f"{title}\n  N/A（計算錯誤: {exc}）"
     if not br:
@@ -297,4 +325,5 @@ def base_rate_block(hist, long_bars=None) -> str:
 
 
 __all__ = ["ichimoku", "volume_profile", "anchored_vwap", "vwap_anchors",
-           "accumulation_distribution", "studies_block", "base_rates", "base_rate_block"]
+           "accumulation_distribution", "studies_block", "base_rates", "base_rate_block",
+           "history_closes"]

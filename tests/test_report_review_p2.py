@@ -82,6 +82,19 @@ def test_pivot_points_use_the_last_completed_month():
     assert pivot_points(h.tail(5)) is None or pivot_points(h.tail(5))["period_end"] < str(h.index[-1])[:10]
 
 
+def test_pivot_points_use_the_month_that_just_closed_on_its_last_session():
+    """On a month's last session that month is complete: its bar, not the one
+    before it, is what the coming month's pivots are built from."""
+    h = bars(80, "2026-08-03")
+    h = h[h.index <= "2026-10-30"]                       # Friday, October's last weekday
+    month = h[h.index.to_period("M") == pd.Period("2026-10")]
+    pv = pivot_points(h)
+    assert pv["period_end"] == "2026-10-30" and pv["high"] == pytest.approx(month["High"].max())
+    day_before = pivot_points(h.iloc[:-1])               # Thursday: October still in progress
+    assert day_before["period_end"] == "2026-09-30"
+    assert pivot_points(h.tz_localize("America/New_York"))["period_end"] == "2026-10-30"
+
+
 def test_pivot_labels_are_not_read_as_swing_levels():
     """A report that lists 樞軸 PS1 in chapter 4 must not trip LEVEL_MISMATCH."""
     assert tq.LABEL_RE.search("樞軸 PS1") is None and tq.LABEL_RE.search("S1 近期支撐")
@@ -406,3 +419,136 @@ def test_fundamental_prompt_has_one_scorecard_and_conditional_sections():
     assert "唯一的評分卡與綜合評分" in p and "QUALITY FIGURES" in p and "LENDER METRICS" in p
     assert "不得**使用「資料包」" in p
     assert "照抄 DCF MODEL 的 Scenarios" in p
+
+
+# ── review of #108 ───────────────────────────────────────────────────────────
+
+def test_a_missing_debt_figure_is_not_a_leverage_pass():
+    """fa.piotroski reads a missing debt as zero, which "improves" on last year's debt."""
+    fs = quality.f_score(ttm("2026-06-30", long_term_debt=None), ttm("2025-06-30", long_term_debt=20.0))
+    assert fs["tests"]["leverage_falling"] is None and fs["tested"] == 8
+    assert fs["score"] == sum(1 for v in fs["tests"].values() if v)
+    zero = quality.f_score(ttm("2026-06-30", long_term_debt=0.0), ttm("2025-06-30", long_term_debt=20.0))
+    assert zero["tests"]["leverage_falling"] is True and zero["tested"] == 9     # a reported zero counts
+
+
+def test_lender_ratios_use_the_balance_sheet_of_the_income_period():
+    income_dates = ["2026-06-30", "2026-03-31", "2025-12-31", "2025-09-30", "2025-06-30"]
+    income = statements(income_dates, **{"Net Interest Income": [80.0, 70.0, 60.0, 50.0, 40.0],
+                                         "Total Revenue": [130.0, 120.0, 100.0, 90.0, 80.0],
+                                         "Pretax Income": [20.0, 20.0, 10.0, 5.0, 5.0],
+                                         "Net Income": [16.0, 16.0, 8.0, 4.0, 4.0]})
+    # Yahoo has published September's balance sheet; income still ends in June.
+    newer = statements(["2026-09-30", "2026-06-30", "2025-06-30"],
+                       **{"Total Assets": [9000.0, 5800.0, 5000.0],
+                          "Tangible Book Value": [999.0, 780.0, 700.0]})
+    b = quality.bank_metrics({"income_q": income, "balance_q": newer}, {"marketCap": 1560.0})
+    assert b["period_end"] == "2026-06-30" and b["tangible_book"] == 780.0
+    assert b["nim_proxy"] == pytest.approx(260 / 5400) and b["p_tbv"] == pytest.approx(2.0)
+    # No balance sheet for June at all: nothing is formed across two periods.
+    only_new = statements(["2026-09-30"], **{"Total Assets": [9000.0], "Tangible Book Value": [999.0]})
+    gone = quality.bank_metrics({"income_q": income, "balance_q": only_new}, {"marketCap": 1560.0})
+    assert gone["nim_proxy"] is None and gone["rotce"] is None and gone["p_tbv"] is None
+    assert gone["nii_share"] == pytest.approx(260 / 440)          # income-only ratios still stand
+    assert "no balance sheet dated 2026-06-30" in "\n".join(quality.render({"bank": gone, "lender": True}))
+
+
+def test_an_unchanged_ad_line_is_flat_not_falling():
+    flat = bars(60, slope=0.0, amp=0.0)                  # constant close, symmetric range
+    ad = ts.accumulation_distribution(flat)
+    assert ad["ad"] == 0 and ad["price"] == 0 and "持平" in ad["relation"]
+    out = ts.studies_block(flat)
+    assert "A/D 持平、價格持平" in out and "下降" not in out.split("A/D 線")[1]
+
+
+def test_base_rate_state_is_read_from_the_newest_fetched_session():
+    """The store ends a session early; the session it lacks is the one that changes the state."""
+    i = np.arange(700)
+    full = pd.DataFrame({"Close": 100 + 0.2 * i}, index=pd.date_range("2024-01-01", periods=700, freq="B"))
+    full.iloc[-1] = 60.0                                  # today's close breaks below the MA200
+    for col in ("Open", "High", "Low"):
+        full[col] = full["Close"]
+    full["Volume"] = 1e6
+    store = full.iloc[:-1]                                # the committed store has not seen today
+    fetched = full.tail(300).tz_localize("America/New_York")
+    closes = ts.history_closes(fetched, store)
+    assert len(closes) == 700 and closes.iloc[-1] == 60.0 and closes.index.is_monotonic_increasing
+    assert "MA200 下方" in ts.base_rates(closes)["state"]
+    assert "MA200 上方" in ts.base_rates(store["Close"])["state"]      # what was read before
+    assert "MA200 下方" in ts.base_rate_block(fetched, store)
+    assert len(ts.history_closes(fetched, None)) == 300
+
+
+def test_a_widened_side_is_on_one_price_basis():
+    """The store is not dividend-adjusted and the fetched bars are, so the same
+    swing sits at two prices; merged, it would be listed twice."""
+    from analysis.data.technicals import _cluster_levels, swing_points
+    recent, full = falling_year_after_a_range()
+    store = bars_frame(store_rows(full))
+    store[["Open", "High", "Low", "Close"]] *= 1.03      # the store's basis, 3% above the fetched one
+    lv = key_levels(recent, store)
+    assert lv["basis"]["support"] == "store"
+    window = store.tail(lv["lookback"]["support"])
+    _, lows = swing_points(window["High"], window["Low"])
+    from_store = sorted((x for x in _cluster_levels(lows) if x <= lv["last"]), reverse=True)[:3]
+    assert lv["support"] == from_store                    # every level from the one series
+    gaps = [abs(a - b) / b for a, b in zip(lv["support"], lv["support"][1:])]
+    assert all(g > 0.015 for g in gaps)                   # no near-duplicate pair
+
+
+def test_widened_levels_say_where_they_came_from():
+    from analysis.data.technicals import compute_levels
+    recent, full = falling_year_after_a_range()
+    store = bars_frame(store_rows(full))
+    assert key_levels(recent, store)["basis"]["support"] == "store"
+    note = compute_levels(recent, store)
+    assert "價位取自價格資料庫" in note and "支撐" in note.split("放寬後的")[1].split("價位取自")[0]
+    assert key_levels(bars())["basis"] == {"resistance": "fetched", "support": "fetched"}
+    assert "取自價格資料庫" not in compute_levels(bars())
+
+
+def test_a_dashboard_total_above_the_card_does_not_absorb_the_correction():
+    report = FUND.replace("| **綜合評分** | 7.5/10（引用 1.1） |", "| **綜合評分** | 7.5 |")
+    text, card = sc.fix(report, sc.FUNDAMENTAL)
+    assert card["corrected"] and text.count("| **綜合評分** | 7.2 |") == 1
+    assert "| **綜合評分** | **7.2** | 六項平均 |" in text      # the card's own total, too
+    assert sc.read(text, sc.FUNDAMENTAL)["stated"] == 7.2
+
+
+def test_a_correction_across_a_signal_band_is_recorded_and_flagged(monkeypatch, tmp_path):
+    h = bars().tz_localize("America/New_York")
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {
+        "hist": h, "price_now": float(h["Close"].iloc[-1]), "price_date": "2026-09-29",
+        "info": {"currency": "USD"}, "source_status": {"yfinance_prices": True}})
+    monkeypatch.setattr(pipeline, "long_history", lambda key: None)
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    card = TECH_CARD.replace("**40**", "**45**").replace("40/100", "45/100")   # says neutral; mean is 34
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: "# AMZN\n" + card)
+    path = pipeline.run_analysis("AMZN", "technical-analysis", "gemini", "g", 32000, tmp_path)
+    text = path.read_text(encoding="utf-8")
+    fm = tq.front_matter(text)
+    assert fm["signal"] == "bearish" and fm["signal_stated"] == "neutral"
+    assert "評分覆核" in text and "重算為 34（偏空）" in text
+    content = text.split("---\n\n", 1)[1]
+    codes = [c for c, _ in content_findings("technical_analysis", text, content, "AMZN", "2026-11-14")]
+    assert "SIGNAL_CHANGED" in codes
+
+
+def test_a_correction_inside_one_band_is_not_a_signal_change(monkeypatch, tmp_path):
+    h = bars().tz_localize("America/New_York")
+    monkeypatch.setattr(pipeline, "fetch_data", lambda ticker: {
+        "hist": h, "price_now": float(h["Close"].iloc[-1]), "price_date": "2026-09-29",
+        "info": {}, "source_status": {"yfinance_prices": True}})
+    monkeypatch.setattr(pipeline, "long_history", lambda key: None)
+    monkeypatch.setattr(pipeline, "build_context", lambda data, atype: "CONTEXT")
+    monkeypatch.setattr(pipeline, "call_llm", lambda *a, **k: "# AMZN\n" + TECH_CARD)   # 40 → 34, both bearish
+    text = pipeline.run_analysis("AMZN", "technical-analysis", "gemini", "g", 32000,
+                                 tmp_path).read_text(encoding="utf-8")
+    assert "signal_stated" not in tq.front_matter(text) and "評分覆核" not in text
+
+
+def test_overview_table_leaves_values_to_the_owning_chapter():
+    p = load_prompt("technical")
+    table = p[p.index("### 📊 核心指標速覽表"):p.index("### 🏆 技術評分卡")]
+    assert table.count("| 數值 |") == 1 and "| 當前價格 | 數值 |" in table
+    assert "見第 5 章" in table and "見第 2 章" in table and "見第 6 章" in table

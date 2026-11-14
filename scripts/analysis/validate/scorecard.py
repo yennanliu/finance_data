@@ -106,8 +106,10 @@ def _fmt(value: float, digits: int) -> str:
 
 
 def fix(text: str, spec: dict) -> "tuple[str, dict]":
-    """Write the computed composite over the stated one: on the scorecard's
-    total row, and wherever else a line restates it as ``N/scale`` or ``N 分``.
+    """Write the computed composite over the stated one: on every 綜合評分 row
+    that states it (the scorecard's own, and a dashboard row that repeats it
+    before or after the card), and wherever else a line restates it as
+    ``N/scale`` or ``N 分``.
     Returns the report and the :func:`read` result with ``"corrected": bool``.
 
     Only a number in one of those forms is touched, so another figure on the
@@ -125,13 +127,14 @@ def fix(text: str, spec: dict) -> "tuple[str, dict]":
                                   if len(digits) > 1 else r"(?:\.0+)?")
     bare = re.compile(rf"(?<![\d.]){old}(?![\d.])")
     scaled = re.compile(rf"(?<![\d.]){old}(?=\s*(?:/\s*{spec['scale']}\b|分))")
-    out, total_row_done = [], False
+    out = []
     for line in text.splitlines(keepends=True):
-        if not total_row_done and TOTAL_RE.search(line) and _score_in(
-                line, TOTAL_RE.search(line).group(0), spec["scale"]) == stated:
-            head, tail = line.split(TOTAL_RE.search(line).group(0), 1)
-            line = head + TOTAL_RE.search(line).group(0) + bare.sub(new, tail, count=1)
-            total_row_done = True
+        label = TOTAL_RE.search(line)
+        # Not "the first such row": a dashboard row above the card would take
+        # the correction and leave the card's own total as the model wrote it.
+        if label and _score_in(line, label.group(0), spec["scale"]) == stated:
+            head, tail = line.split(label.group(0), 1)
+            line = head + label.group(0) + bare.sub(new, tail, count=1)
         elif MENTION_RE.search(line):
             line = scaled.sub(new, line)
         out.append(line)
