@@ -274,9 +274,18 @@ INSTANT_CONCEPTS = {
         "CashAndCashEquivalentsAtCarryingValue",
         "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
     ),
+    # Current marketable securities go by several names, and a filer can change
+    # name mid-history. Balance-sheet lines first, footnote breakdowns after:
+    # AMZN, GOOG, META, PLTR and UBER tag MarketableSecuritiesCurrent, and NVDA
+    # did until it moved to DebtSecuritiesCurrent in fiscal 2026. Read with only
+    # the first and third tags, NVDA's "cash + short-term investments" was its
+    # $22B of cash alone and the report called a net-cash company net debt.
     "short_term_investments": (
         "ShortTermInvestments",
+        "MarketableSecuritiesCurrent",
         "AvailableForSaleSecuritiesDebtSecuritiesCurrent",
+        "DebtSecuritiesCurrent",
+        "AvailableForSaleSecuritiesCurrent",
     ),
     "long_term_debt": ("LongTermDebtNoncurrent", "LongTermDebt"),
     "short_term_debt": ("LongTermDebtCurrent", "DebtCurrent", "ShortTermBorrowings"),

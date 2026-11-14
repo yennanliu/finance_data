@@ -75,6 +75,58 @@ def weighted_terms(s88: str) -> "list[tuple[float, float]]":
     return best
 
 
+# The total row's label *starts* with these; "DCF 機率加權合理值" is a method.
+_TOTAL_ROW = re.compile(r"^[★\s]*(?:綜合)?加權|^合計|^總計")
+_WEIGHT_CELL = re.compile(r"(\d+(?:\.\d+)?)\s*\\?%")
+_VALUE_CELL = re.compile(r"(?:\$\s?" + _NUM + r"|" + _NUM + r"\s*(?:TWD|元))")
+
+
+def _row_cells(line: str) -> "list[str]":
+    return [re.sub(r"\*|\\", "", c).strip() for c in line.strip().strip("|").split("|")]
+
+
+def table_terms(s88: str) -> "tuple[list[tuple[float, float]], float | None]":
+    """``(value, weight)`` pairs read from the §8.8 table itself, and the total
+    its 加權合理價值 row states.
+
+    The weight column is found from the header (權重); a row's value is the
+    first price before it. Reading the table does not depend on how the model
+    laid out the sum underneath: one line, a bullet per term, or LaTeX. Six of
+    the 30 company reports of 2026-11-14 were ``unparsed`` for that reason
+    while their tables were well formed.
+
+    It also sees what the formula can hide. KTOS 2026-10-30 listed the analyst
+    target at $93.44 in the table, then summed with $45.00 "經去極端值調整" so
+    the formula reached the total already printed; MSFT 2026-11-04 changed the
+    weights instead. Both passed a check that only read the formula.
+
+    A method printed ``N/A`` with a weight (GRAB's FCF yield at 5%) has no
+    term, so the weights fall short of 100% and the total is flagged.
+    """
+    for table in re.findall(r"(?:^[ \t]*\|.*\n?)+", s88, re.M):
+        lines = table.splitlines()
+        header = _row_cells(lines[0])
+        wcol = next((i for i, c in enumerate(header) if "權重" in c), None)
+        if wcol is None:
+            continue
+        terms, stated = [], None
+        for line in lines[1:]:
+            cells = _row_cells(line)
+            if len(cells) <= wcol:
+                continue
+            value = next((m for c in cells[1:wcol] for m in [_VALUE_CELL.search(c)] if m), None)
+            price = _num(value.group(1) or value.group(2)) if value else None
+            if _TOTAL_ROW.search(cells[0]):
+                stated = price if stated is None else stated
+                continue
+            w = _WEIGHT_CELL.fullmatch(cells[wcol])
+            if w and price is not None and _num(w.group(1)):
+                terms.append((price, _num(w.group(1)) / 100))
+        if len(terms) >= 2 and stated is not None:
+            return terms, stated
+    return [], None
+
+
 def report_price(text: str) -> "float | None":
     """The price the report used: its most frequent 現價 figure."""
     found = _PRICE.findall(text)
@@ -88,9 +140,14 @@ def check(text: str, price: "float | None" = None) -> dict:
     it handed the model, so a misquoted price also shows up in MOS.
     """
     s88 = section(text, "8.8")
-    terms = weighted_terms(s88)
-    m = _STATED.search(s88)
-    stated = _num(m.group(1)) if m else None
+    # The table first: it is the report's own statement of values and weights.
+    # The prose formula is the fallback for a report with no table (NBIS) or
+    # one this cannot read.
+    terms, stated = table_terms(s88)
+    if not terms:
+        terms = weighted_terms(s88)
+        m = _STATED.search(s88)
+        stated = _num(m.group(1)) if m else None
     if stated is None:
         # No table row (NBIS): the total is the last "= $X" of the derivation.
         ends = [x for line in s88.splitlines() if not line.lstrip().startswith("|")
@@ -387,5 +444,5 @@ def annotate(text: str, result: dict) -> str:
 
 
 __all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
-           "weighted_terms", "report_price", "check", "valuation_mismatches",
+           "weighted_terms", "table_terms", "report_price", "check", "valuation_mismatches",
            "missing_chapters", "annotate", "correct", "fix_products", "rating_band", "RATING_BANDS"]

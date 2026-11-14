@@ -49,6 +49,8 @@ ISSUE_TYPES = {
     "DERIVATION": "a step of a $$ … $$ or $ … $ equation chain does not "
                   "recompute (a = b that is false)",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
+    "RR_TOO_LOW": "a recommended strategy's reward/risk to T1 is below 1 : 1.5, "
+                  "or its T1 is the current price",
     "NAN_VALUE": "a $nan / nan% leaked from an empty data bar",
     # accuracy — the report against the market record
     "PRICE_MISMATCH": "the price the report quotes is not the close it was given",
@@ -288,6 +290,9 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
         if tech["rr"]:
             out.append(("RR_MISMATCH", "rr=" + ", ".join(
                 f"stated {r['stated']} vs {r['recomputed']}" for r in tech["rr"])))
+        if tech["weak_rr"]:
+            out.append(("RR_TOO_LOW", "strategies=" + ", ".join(
+                f"col {w['column']} 1:{w['rr_t1']} ({w['reason']})" for w in tech["weak_rr"])))
 
     # Any report's worked equations: does each "=" in a $$ chain hold?
     steps = derivation.check(content)

@@ -60,6 +60,62 @@ def test_total_taken_from_the_derivation_when_there_is_no_table_row():
     assert (r["stated"], r["total"], r["status"]) == (228.0, 230.97, "mismatch")
 
 
+# ── the §8.8 table is read before the prose formula ─────────────────────────
+
+TABLE = """| 估值方法 | 隱含每股價值 | 上行空間（÷現價） | 權重 | 說明 |
+|----------|--------------|-------------------|------|------|
+| **DCF 機率加權模型** | **$52.95** | −80.1% | 40% | 現金流 |
+| 同業 Forward P/E | $236.90 | −11.1% | 20% | 21.7x |
+| EV/EBITDA | $314.40 | +17.9% | 20% | 同業倍數 |
+| P/S 回到中位數 | $216.20 | −18.9% | 10% | 3.0x |
+| 分析師共識目標價 | $326.72 | +22.5% | 10% | 60 位 |
+| **加權合理價值** | **{stated}** | **−30.4%** | **100%** | 加總 |
+"""
+
+
+def table_report(stated="$185.73", body="", table=TABLE):
+    return ("# AMZN 基本面深度分析報告\n\n> **現價** $266.66\n\n### 8.8 估值三角驗證\n\n"
+            + table.format(stated=stated) + "\n" + body + "\n\n### 8.9 局限\n")
+
+
+def test_a_sum_written_one_bullet_per_term_is_no_longer_unparsed():
+    """AMZN 2026-11-13: the table was well formed, the formula was bullets."""
+    body = "- DCF：$52.95×40%＝$21.180\n- Forward P/E：$236.90×20%＝$47.380"
+    assert A.weighted_terms(A.section(table_report(body=body), "8.8")) == []
+    r = A.check(table_report(body=body))
+    assert (r["status"], r["total"], r["weights_pct"]) == ("ok", 185.73, 100.0)
+    assert len(r["terms"]) == 5          # "DCF 機率加權模型" is a method, not the total
+
+
+def test_the_table_wins_over_a_formula_that_swaps_a_term():
+    """KTOS 2026-10-30 summed with a lower analyst target than its table listed,
+    so the formula reached the total already printed."""
+    body = "`$52.95 × 40% + $236.90 × 20% + $314.40 × 20% + $216.20 × 10% + $120.00 × 10%`"
+    r = A.check(table_report(stated="$165.06", body=body))
+    assert (r["status"], r["stated"], r["total"]) == ("mismatch", 165.06, 185.73)
+
+
+def test_a_method_without_a_value_keeps_its_weight_out_of_the_sum():
+    """GRAB 2026-11-13: FCF yield N/A at 5%, total stated as if weights were 100%."""
+    table = TABLE.replace("| P/S 回到中位數 | $216.20 | −18.9% | 10% |", "| FCF Yield | N/A | N/A | 10% |")
+    r = A.check(table_report(table=table))
+    assert r["weights_pct"] == 90.0 and r["status"] == "mismatch"
+
+
+def test_table_values_in_twd_and_an_approximate_total():
+    """2330.TW prints "1,500 TWD"; SPCX printed its total as 約 $25.28."""
+    table = ("| 估值方法 | 隱含每股價值 | 上行空間 | 權重 | 說明 |\n|---|---|---|---|---|\n"
+             "| DCF | **1,500 TWD** | −36.2% | 40% | x |\n| Forward P/E | **2,692 TWD** | +14.6% | 60% | x |\n"
+             "| **加權合理價值** | **{stated}** | −5% | **100%** | x |\n")
+    r = A.check(table_report(stated="約 2,215.20 TWD", table=table))
+    assert (r["status"], r["stated"], r["total"]) == ("ok", 2215.2, 2215.2)
+
+
+def test_a_table_without_a_weight_column_falls_back_to_the_formula():
+    assert A.table_terms(A.section(s88(TSLA), "8.8")) == ([], None)
+    assert A.check(s88(TSLA))["total"] == 324.23
+
+
 def test_weights_that_do_not_sum_to_100_are_a_mismatch():
     r = A.check(s88("$100 × 50% + $100 × 40%", stated="$90.00"))
     assert r["weights_pct"] == 90.0 and r["status"] == "mismatch"

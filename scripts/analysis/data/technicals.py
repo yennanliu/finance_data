@@ -208,20 +208,150 @@ def compute_moving_average_charts(hist) -> str:
         return f"  (MA chart error: {e})"
 
 
-def weekly_bars(hist):
-    """Weekly OHLCV, each week labelled by its **last trading day**.
+def period_bars(hist, freq: str):
+    """OHLCV resampled to ``freq`` ("W" or "ME"), each bar labelled by its
+    **last trading day**.
 
-    ``resample("W")`` labels a week by its Sunday, so a report generated on a
-    Thursday cited the week in progress as "2026-10-25" — a date in the future.
+    ``resample`` labels a week by its Sunday and a month by its last calendar
+    day, so a report generated on a Thursday cited the week in progress as
+    "2026-10-25" — a date in the future. The last bar is the period in progress.
     """
     import pandas as pd
 
-    g = hist.assign(Date=hist.index).groupby(pd.Grouper(freq="W"))
+    g = hist.assign(Date=hist.index).groupby(pd.Grouper(freq=freq))
     out = pd.DataFrame({
         "Open": g["Open"].first(), "High": g["High"].max(), "Low": g["Low"].min(),
         "Close": g["Close"].last(), "Volume": g["Volume"].sum(), "Date": g["Date"].last(),
     }).dropna(subset=["Close", "Date"])
     return out.set_index("Date")
+
+
+def weekly_bars(hist):
+    """Weekly OHLCV, each week labelled by its last trading day."""
+    return period_bars(hist, "W")
+
+
+def monthly_bars(hist):
+    """Monthly OHLCV, each month labelled by its last trading day."""
+    return period_bars(hist, "ME")
+
+
+def wilder_rsi(close, n: int = 14):
+    """RSI with Wilder smoothing (α = 1/n), NaN until ``n`` changes exist.
+
+    A window with gains and no loss at all is RSI 100, not a division by zero:
+    fourteen rising months is the strongest reading there is, and reporting it
+    as N/A would also blank that timeframe's direction. A window with no move
+    in either direction has no RSI.
+    """
+    delta = close.diff()
+    gain = delta.clip(lower=0).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    loss = (-delta.clip(upper=0)).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    rsi = 100 - (100 / (1 + gain / loss.where(loss > 0)))
+    return rsi.mask((loss == 0) & (gain > 0), 100.0)
+
+
+# 26 bars for the slow EMA plus 9 for the signal line. An EMA will return a
+# number from the first bar on; before this many it is mostly its seed value.
+MACD_MIN_BARS = 35
+
+
+def macd_histogram(close):
+    """MACD(12/26/9) histogram, all-NaN on fewer than ``MACD_MIN_BARS`` bars.
+
+    Two years of history is ~24 monthly bars, so a monthly MACD is honestly
+    N/A rather than a figure the model would quote as a signal.
+    """
+    macd = close.ewm(span=12, adjust=False).mean() - close.ewm(span=26, adjust=False).mean()
+    hist_m = macd - macd.ewm(span=9, adjust=False).mean()
+    return hist_m if len(close) >= MACD_MIN_BARS else hist_m * float("nan")
+
+
+# Each timeframe's trend average, chosen to span a similar stretch of calendar:
+# 50 days ≈ 10 weeks, 20 weeks ≈ 100 days, 10 months ≈ 200 days.
+TIMEFRAMES = (("日線", "D", 50), ("週線", "W", 20), ("月線", "ME", 10))
+
+
+def timeframe_snapshot(hist) -> "list[dict]":
+    """RSI, MACD histogram, trend average and direction per timeframe, each
+    computed on **that timeframe's own bars**.
+
+    The weekly table used to carry the daily RSI and MACD sampled on each
+    Friday. Reports then quoted them as weekly: NVDA's "週 RSI 24.9" was its
+    daily RSI, while the RSI of its weekly closes was 33 — not oversold.
+
+    Direction: 偏多 when the close is above the average and RSI > 50, 偏空 when
+    below and RSI < 50, 中性 otherwise, N/A when either input is missing.
+    """
+    hist = complete(hist)
+    if hist is None or hist.empty:
+        return []
+    nan = float("nan")
+    out = []
+    for label, freq, ma_n in TIMEFRAMES:
+        close = (hist if freq == "D" else period_bars(hist, freq))["Close"]
+        last = float(close.iloc[-1])
+        ma = float(close.rolling(ma_n).mean().iloc[-1]) if len(close) >= ma_n else nan
+        rsi = float(wilder_rsi(close).iloc[-1])
+        macd = float(macd_histogram(close).iloc[-1])
+        if ma != ma or rsi != rsi:
+            direction = "N/A"
+        elif last > ma and rsi > 50:
+            direction = "偏多"
+        elif last < ma and rsi < 50:
+            direction = "偏空"
+        else:
+            direction = "中性"
+        out.append({"label": label, "close": last, "ma_n": ma_n, "ma": ma,
+                    "rsi": rsi, "macd_hist": macd, "direction": direction})
+    return out
+
+
+def alignment(snapshot: "list[dict]") -> str:
+    """``"2/3 偏空"``: how many timeframes share the leading direction."""
+    bull = sum(1 for t in snapshot if t["direction"] == "偏多")
+    bear = sum(1 for t in snapshot if t["direction"] == "偏空")
+    total = len(snapshot)
+    if bull == bear:
+        return f"0/{total}（無一致方向）" if bull == 0 else f"{bull}/{total}（多空分歧）"
+    return f"{max(bull, bear)}/{total} {'偏多' if bull > bear else '偏空'}"
+
+
+def timeframe_block(hist) -> str:
+    """The multi-timeframe table of the technical context."""
+    snap = timeframe_snapshot(hist)
+    if not snap:
+        return ""
+    f2 = lambda v: f"{v:.2f}" if v == v else "N/A"
+    f3 = lambda v: f"{v:+.3f}" if v == v else "N/A"
+    rows = ["  ── 多時框指標（每個時框皆以該時框自己的 K 棒計算）──",
+            "  時框    收盤        趨勢均線            RSI(14)   MACD柱     方向"]
+    for t in snap:
+        side = "N/A" if t["ma"] != t["ma"] else "▲ 上方" if t["close"] > t["ma"] else "▼ 下方"
+        ma = f"MA{t['ma_n']} {f2(t['ma'])} {side}"
+        rows.append(f"  {t['label']}  {t['close']:>9.2f}   {ma:<22}{f2(t['rsi']):>7}  "
+                    f"{f3(t['macd_hist']):>9}   {t['direction']}")
+    rows += [f"  多時框一致性: {alignment(snap)}",
+             "  方向規則: 收盤 > 趨勢均線 且 RSI > 50 → 偏多；收盤 < 趨勢均線 且 RSI < 50 → 偏空；"
+             "其餘 → 中性；任一數值缺漏 → N/A",
+             "  註: 週線、月線的最後一根是進行中的 K 棒（截至最新交易日）。"
+             f"MACD 柱需至少 {MACD_MIN_BARS} 根 K 棒，不足則為 N/A。"]
+    return "\n".join(rows)
+
+
+def indicator_table(bars, n: int, title: str, prefix: str, date_label: str) -> str:
+    """Close, RSI(14), MACD histogram and volume of the last ``n`` bars, the
+    indicators computed on these bars and named for their timeframe."""
+    rsi, macd = wilder_rsi(bars["Close"]), macd_histogram(bars["Close"])
+    rows = [f"  ── {title} ──",
+            f"  {date_label}    收盤   {prefix}RSI(14)  {prefix}MACD柱    {prefix}成交量"]
+    for ts, b in bars.tail(n).iterrows():
+        r, m = rsi.get(ts, float("nan")), macd.get(ts, float("nan"))
+        rows.append(f"  {str(ts)[:10]}  {b['Close']:>8.2f}  "
+                    + (f"{r:>8.1f}" if r == r else f"{'N/A':>8}") + "  "
+                    + (f"{m:>+9.3f}" if m == m else f"{'N/A':>9}")
+                    + f"  {b['Volume']:>14,.0f}")
+    return "\n".join(rows)
 
 
 def ohlc_table(bars, title: str) -> str:
@@ -259,11 +389,7 @@ def compute_technicals(hist) -> str:
         # 14-day simple mean used before (Cutler's RSI) read INTC at 14.5 where
         # the standard RSI was 36.4, and called 7 of 24 tickers oversold that
         # were not.
-        delta = close.diff()
-        gain = delta.clip(lower=0).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
-        loss = (-delta.clip(upper=0)).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
-        rs = gain / loss.replace(0, float("nan"))
-        rsi = 100 - (100 / (1 + rs))
+        rsi = wilder_rsi(close)
 
         # MACD (12/26/9)
         ema12 = close.ewm(span=12, adjust=False).mean()
@@ -359,34 +485,10 @@ def compute_technicals(hist) -> str:
         else:
             divergence = "無明顯背離"
 
-        # Weekly table (last 20 weeks), each labelled by its last trading day
+        # Weekly and monthly tables carry indicators computed on their own
+        # bars; the daily ones sampled on a Friday are not weekly indicators.
         weekly = weekly_bars(hist)
-        weekly_close = weekly["Close"].tail(20)
-        weekly_volume = weekly["Volume"]
-        ohlcv_lines = ["  週末交易日    收盤      RSI     MACD柱    週成交量"]
-        for wdt in weekly_close.index:
-            wdt_str = wdt.strftime("%Y-%m-%d")
-            wc = weekly_close.get(wdt, float("nan"))
-            try:
-                idx_slice = rsi[rsi.index <= wdt]
-                wr = float(idx_slice.iloc[-1]) if not idx_slice.empty else float("nan")
-            except Exception:
-                wr = float("nan")
-            try:
-                idx_slice = hist_m[hist_m.index <= wdt]
-                wm = float(idx_slice.iloc[-1]) if not idx_slice.empty else float("nan")
-            except Exception:
-                wm = float("nan")
-            wv = weekly_volume.get(wdt, float("nan"))
-            try:
-                ohlcv_lines.append(
-                    f"  {wdt_str}  {wc:>8.2f}  "
-                    # RSI needs 14 bars: a recent listing's first weeks have none.
-                    + (f"{wr:>6.1f}" if wr == wr else f"{'N/A':>6}")
-                    + f"  {wm:>+8.3f}  {wv:>12,.0f}"
-                )
-            except Exception:
-                pass
+        monthly = monthly_bars(hist)
 
         na = lambda v: f"{v:.2f}" if v == v else "N/A"
         na3 = lambda v: f"{v:.3f}" if v == v else "N/A"
@@ -441,8 +543,12 @@ def compute_technicals(hist) -> str:
   50日均量:     {vol(last_avg_vol50)}
   OBV趨勢:      {obv_trend}
 {levels}
-  ── 近20週收盤走勢 ──
-{chr(10).join(ohlcv_lines)}
+
+{timeframe_block(hist)}
+
+{indicator_table(weekly, 20, "近20週收盤走勢（RSI、MACD 柱皆以週K計算）", "週", "週末交易日")}
+
+{indicator_table(monthly, 12, "近12個月收盤走勢（RSI、MACD 柱皆以月K計算）", "月", "月末交易日")}
 
 {ohlc_table(hist.tail(10), "近10根日K (開高低收)")}
 

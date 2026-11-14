@@ -332,6 +332,36 @@ def test_a_later_concept_supplies_a_period_the_first_one_could_not():
     assert q4["revenue"] == pytest.approx(0.213e9)
 
 
+def instant(end, val):
+    return {"end": end, "val": val, "form": "10-Q", "filed": "2026-01-31", "accn": "x"}
+
+
+def test_short_term_investments_follow_a_filer_that_renames_the_tag(facts_payload):
+    """NVDA tagged MarketableSecuritiesCurrent, then DebtSecuritiesCurrent."""
+    gaap = facts_payload["facts"]["us-gaap"]
+    gaap["MarketableSecuritiesCurrent"] = {"units": {"USD": [
+        instant("2025-03-31", 30e9), instant("2025-06-30", 40e9)]}}
+    gaap["DebtSecuritiesCurrent"] = {"units": {"USD": [
+        instant("2025-09-30", 37e9), instant("2025-12-31", 34e9)]}}
+    sti = {r["period_end"]: r["short_term_investments"] for r in F.resolve(facts_payload)}
+    assert sti == {"2025-03-31": 30e9, "2025-06-30": 40e9,
+                   "2025-09-30": 37e9, "2025-12-31": 34e9}
+
+
+def test_the_balance_sheet_line_beats_a_footnote_breakdown(facts_payload):
+    gaap = facts_payload["facts"]["us-gaap"]
+    gaap["ShortTermInvestments"] = {"units": {"USD": [instant("2025-03-31", 44e9)]}}
+    gaap["DebtSecuritiesCurrent"] = {"units": {"USD": [instant("2025-03-31", 12e9)]}}
+    q1 = next(r for r in F.resolve(facts_payload) if r["period_end"] == "2025-03-31")
+    assert q1["short_term_investments"] == 44e9
+
+
+def test_the_committed_store_holds_nvda_marketable_securities():
+    """The latest quarter was cash alone before the tag chain was widened."""
+    latest = F.load_store("nvda")[-1]
+    assert latest["short_term_investments"] and latest["short_term_investments"] > 0
+
+
 # ── Provenance / dedupe ──────────────────────────────────────────────────────
 def test_a_prompt_amendment_still_wins_over_a_year_later_comparative():
     """The rule is "closest filing after the period", not "the original".

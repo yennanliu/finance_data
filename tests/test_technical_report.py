@@ -17,8 +17,10 @@ import pytest
 import build_docs as bd
 from analysis import pipeline
 from analysis.data.sources import complete_bars
-from analysis.data.technicals import (compute_technicals, key_levels, levels_summary,
-                                      weekly_bars)
+from analysis.data.technicals import (MACD_MIN_BARS, alignment, compute_technicals,
+                                      key_levels, levels_summary, macd_histogram,
+                                      monthly_bars, timeframe_snapshot, weekly_bars,
+                                      wilder_rsi)
 from analysis.exceptions import DataFetchError
 from analysis.prompts import load_prompt
 from analysis.validate import parse_file
@@ -117,6 +119,81 @@ def test_weeks_are_labelled_by_their_last_trading_day():
     assert "2026-10-25" not in out
 
 
+def test_weekly_and_monthly_indicators_come_from_their_own_bars():
+    """The weekly table used to carry the daily RSI sampled on each Friday."""
+    h = bars(520)
+    daily, weekly, monthly = timeframe_snapshot(h)
+    assert [t["label"] for t in (daily, weekly, monthly)] == ["日線", "週線", "月線"]
+    assert weekly["rsi"] == pytest.approx(wilder_rsi(weekly_bars(h)["Close"]).iloc[-1])
+    assert monthly["rsi"] == pytest.approx(wilder_rsi(monthly_bars(h)["Close"]).iloc[-1])
+    assert weekly["macd_hist"] == pytest.approx(
+        macd_histogram(weekly_bars(h)["Close"]).iloc[-1])
+    assert abs(weekly["rsi"] - daily["rsi"]) > 1          # not the same series
+
+    out = compute_technicals(h)
+    table = out.split("近20週收盤走勢")[1].split("近12個月收盤走勢")[0]
+    assert "週RSI(14)" in table and "週MACD柱" in table
+    last_week = [ln for ln in table.splitlines() if ln.strip()[:4].isdigit()][-1]
+    assert f"{weekly['rsi']:.1f}" in last_week and f"{daily['rsi']:.1f}" not in last_week
+    assert "月RSI(14)" in out.split("近12個月收盤走勢")[1]
+
+
+def test_rsi_of_a_window_with_no_loss_is_100_not_na():
+    rising = pd.Series(np.arange(100.0, 130.0))
+    assert wilder_rsi(rising).iloc[-1] == 100.0
+    assert wilder_rsi(rising).iloc[:14].isna().all()            # still needs 14 changes
+    flat = wilder_rsi(pd.Series([100.0] * 30)).iloc[-1]
+    assert flat != flat                                         # no move: no RSI
+
+    h = bars(520)
+    for col in ("Open", "High", "Low", "Close"):
+        h[col] = np.linspace(100, 300, len(h))
+    snap = timeframe_snapshot(h)
+    assert [t["rsi"] for t in snap] == [100.0, 100.0, 100.0]
+    assert [t["direction"] for t in snap] == ["偏多"] * 3
+    assert "RSI(14):      100.00  (Wilder)  🔴 超買 >70" in compute_technicals(h)
+
+
+def test_macd_is_na_until_the_slow_ema_and_signal_have_enough_bars():
+    h = bars(520)                                 # two years is ~24 monthly bars
+    assert len(monthly_bars(h)) < MACD_MIN_BARS
+    monthly = timeframe_snapshot(h)[2]
+    assert monthly["macd_hist"] != monthly["macd_hist"]              # NaN
+    row = next(ln for ln in compute_technicals(h).splitlines() if ln.startswith("  月線"))
+    assert "N/A" in row
+    assert macd_histogram(weekly_bars(h)["Close"]).notna().all()     # ~104 weekly bars
+
+
+def test_months_are_labelled_by_their_last_trading_day():
+    monthly = monthly_bars(bars(30, start="2026-10-05"))            # Oct 5 … Nov 13
+    assert [str(i)[:10] for i in monthly.index] == ["2026-10-30", "2026-11-13"]
+
+
+def test_timeframe_direction_and_alignment():
+    snap = timeframe_snapshot(bars(520))
+    for t in snap:
+        want = ("偏多" if t["close"] > t["ma"] and t["rsi"] > 50 else
+                "偏空" if t["close"] < t["ma"] and t["rsi"] < 50 else "中性")
+        assert t["direction"] == want
+    tf = lambda *d: [{"direction": x} for x in d]
+    assert alignment(tf("偏空", "偏空", "中性")) == "2/3 偏空"
+    assert alignment(tf("偏多", "偏多", "偏多")) == "3/3 偏多"
+    assert alignment(tf("偏多", "偏空", "中性")) == "1/3（多空分歧）"
+    assert alignment(tf("中性", "N/A", "中性")) == "0/3（無一致方向）"
+    assert f"多時框一致性: {alignment(snap)}" in compute_technicals(bars(520))
+
+
+def test_a_short_history_reports_na_rather_than_failing():
+    out = compute_technicals(bars(30))            # a recent listing
+    assert "technical indicator error" not in out
+    assert next(ln for ln in out.splitlines() if ln.startswith("  月線")).rstrip().endswith("N/A")
+
+
+def test_prompt_forbids_calling_a_daily_indicator_weekly():
+    prompt = load_prompt("technical")
+    assert "時框標示" in prompt and "多時框一致性 X/3" in prompt
+
+
 def test_context_carries_daily_and_weekly_ohlc():
     out = compute_technicals(bars())
     assert "近10根日K (開高低收)" in out and "近8根週K" in out
@@ -210,7 +287,64 @@ def report(headline="412.35", r1="434.74", rr="1.31（以 T1 計）", tail="結�
 
 
 def test_clean_report_passes():
-    assert tq.check(report()) == {"nan": [], "price": None, "levels": [], "rr": []}
+    out = tq.check(report())
+    assert {k: out[k] for k in ("nan", "price", "levels", "rr")} == {
+        "nan": [], "price": None, "levels": [], "rr": []}
+
+
+# ── minimum reward/risk (prompt rule 21) ─────────────────────────────────────
+
+def test_a_strategy_below_the_minimum_reward_to_risk_is_flagged():
+    # Strategy A: (450.61 − 435.50) / (435.50 − 424.00) = 1.31; B is 1.55.
+    assert tq.weak_strategies(report()) == [
+        {"column": 1, "rr_t1": 1.31, "reason": "below_minimum"}]
+
+
+def test_the_check_recomputes_and_ignores_the_stated_ratio():
+    """Writing 1 : 4.52 (its T2 ratio) beside a 1.31 trade does not clear it."""
+    assert tq.weak_strategies(report(rr="4.52（以 T2 計）"))[0]["rr_t1"] == 1.31
+
+
+def test_a_short_is_measured_with_the_sign_reversed():
+    # NVDA 2026-11-14 strategy A: short 169.04, stop 184.93, T1 162.85.
+    text = report().replace("$435.50", "$169.04").replace("$424.00", "$184.93").replace(
+        "| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$162.85**")
+    assert tq.weak_strategies(text)[0] == {"column": 1, "rr_t1": 0.39, "reason": "below_minimum"}
+
+
+def test_a_ratio_that_only_rounds_up_to_the_minimum_is_still_flagged():
+    # (450.61 − 435.50) / (435.50 − 425.40) = 1.496, which prints as 1.5.
+    weak = tq.weak_strategies(report().replace("$424.00", "$425.40"))
+    assert weak == [{"column": 1, "rr_t1": 1.5, "reason": "below_minimum"}]
+    # … and exactly 1.5 passes: (450.50 − 435.50) / (435.50 − 425.50).
+    exact = report().replace("$424.00", "$425.50").replace(
+        "| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$450.50**")
+    assert tq.weak_strategies(exact) == []
+
+
+def test_a_first_target_at_the_current_price_is_flagged():
+    text = report().replace("| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$412.35**")
+    assert tq.weak_strategies(text, price=412.35)[0]["reason"] == "t1_is_current_price"
+    assert tq.check(text)["weak_rr"][0]["reason"] == "t1_is_current_price"   # price from front matter
+
+
+def test_a_column_the_report_declines_to_trade_is_not_flagged():
+    text = report().replace("| **進場價格** | **$435.50**",
+                            "| **進場價格** | 此價位不交易（風險報酬比 1 : 1.31 不足）$435.50")
+    assert tq.weak_strategies(text) == []
+
+
+def test_parse_file_reports_a_weak_strategy(tmp_path):
+    f = tmp_path / "tsm" / "technical_analysis_2026-10-23_gemini.md"
+    f.parent.mkdir()
+    f.write_text(report() + "\n" * 90, encoding="utf-8")
+    issues = parse_file(f).issues
+    assert "RR_TOO_LOW" in issues and "RR_MISMATCH" not in issues
+
+
+def test_prompt_sets_the_minimum_reward_to_risk():
+    prompt = load_prompt("technical")
+    assert "最低風險報酬比" in prompt and f"1 : {tq.MIN_RR:.2f}" in prompt and "不交易" in prompt
 
 
 def test_rr_to_t2_is_accepted_but_wrong_arithmetic_is_not():

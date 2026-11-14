@@ -32,13 +32,14 @@ there, not inline in `parse_file`.
 | All | `EMPTY`, `NO_FRONTMATTER`, `REFUSAL`, `TOO_SHORT`, `CUTOFF`, `HTML_LEAK`, `MERMAID`, `DUPLICATE`, `READ_ERROR` | Mechanical failures |
 | All | `PLACEHOLDER` | An unfilled template placeholder, including the prompts' example figures copied verbatim (`$XXX`, `第 XX 百分位`) |
 | Fundamental | `MISSING_SECTIONS` | Any of `## 1.`–`## 11.` is absent |
-| Fundamental | `ARITHMETIC` | The §8.8 total differs from Σ of its terms by more than 0.5%, **or** the §1.0 MOS / DCF premium differs by more than 1pp from what the report's own fair value, DCF value and price give (`arithmetic.valuation_mismatches`) |
+| Fundamental | `ARITHMETIC` | The §8.8 total differs from Σ of its terms by more than 0.5% or the weights of the valued methods do not sum to 100% (terms are read from the §8.8 table, the prose formula only as a fallback), **or** the §1.0 MOS / DCF premium differs by more than 1pp from what the report's own fair value, DCF value and price give (`arithmetic.valuation_mismatches`) |
 | Fundamental | `PRICE_MISMATCH` | The quoted 現價 differs from the front-matter `price` |
 | Any | `DERIVATION` | A step of a `$$ … $$` or inline `$ … $` equation chain does not hold: `= $59.323 ≈ $58.90` where the terms sum to $58.903, or `($58.90 − $58.60) = $0.72` (`derivation.check`). The tolerance is each printed figure's rounding, propagated, plus 0.1%. Labels (`52\text{週}`), variables (`\text{EV}`), arrows and mixed units are skipped, as is the first link of a span that continues an expression begun before it on the line. A deduction printed negative (`= −$147.4M`) passes. |
 | Technical | `NAN_VALUE` | A `$nan` / `nan%` leaked from an empty data bar |
 | Technical | `PRICE_MISMATCH` | The headline price differs from the front-matter `price` by more than 0.5% |
 | Technical | `LEVEL_MISMATCH` | A Ch.4 R1–S3 differs from the front-matter `levels` entry with the same label |
 | Technical | `RR_MISMATCH` | The stated R/R matches neither T1 nor T2 computed from its own entry and stop. A range entry may use its midpoint or either end |
+| Technical | `RR_TOO_LOW` | A Ch.8 strategy's reward/risk to T1, recomputed from its entry and stop, is below 1 : 1.5, or its T1 is the front-matter `price`. A column the report marks `不交易` is skipped (`technical.weak_strategies`, prompt rule 21) |
 | Any report with provenance | `STORE_MISMATCH` | Front-matter `price` ≠ the `data/prices/` close on `price_date`, with later splits undone. Silent when the store has no bar for that date yet |
 | Any report with provenance | `STALE_PRICE` | A store session is dated strictly between `price_date` and the report date, so a newer close existed |
 
