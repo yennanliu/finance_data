@@ -23,6 +23,7 @@ from ..config.valuation import (
 from ..data import fundamental_analytics as fa
 from ..data import prices
 from ..utils.formatting import money
+from . import quality
 from . import valuation as val
 
 FUND_TYPES = ("ETF", "MUTUALFUND")
@@ -128,6 +129,7 @@ def statement_facts(rows: "list[dict]", as_of: "str | None") -> "dict | None":
         "roic_ttm": ret["roic"] / 100 if ret["roic"] is not None else None,
         "roe_ttm": ret["roe"] / 100 if ret["roe"] is not None else None,
         "_ttm_row": t,
+        "_ttm_prior_row": prev,
     }
 
 
@@ -300,6 +302,11 @@ def compute_facts(data: dict, inputs: dict) -> dict:
         prices.report_key(data.get("ticker") or ""), info, stmt, wacc,
         inputs.get("peers") or [], price, rate)
 
+    # Quality figures: F-Score, DuPont, working-capital days; a lender's own
+    # metrics in place of the last. Not for a fund, which has no statements.
+    lender = bool(valuation) and valuation["archetype"] == "financial"
+    quality_figures = None if is_fund else quality.build(data, info, stmt, lender, rate)
+
     return {
         "ticker": data.get("ticker"),
         "price": price,
@@ -315,6 +322,7 @@ def compute_facts(data: dict, inputs: dict) -> dict:
         if stmt and not mismatch else {},
         "wacc": wacc,
         "valuation": valuation,
+        "quality": quality_figures,
         "peers": inputs.get("peers") or [],
     }
 
@@ -515,6 +523,7 @@ def render_facts(f: dict) -> str:
             lines.append(f"  ROE (TTM):                             {_p(s['roe_ttm'])}")
         lines.append("  → If a figure above is N/A, say it is unavailable. Never back out a missing"
                      " figure (e.g. capex) so that a table adds up.")
+    lines += quality.render(f.get("quality"))
     w = f.get("wacc")
     if w:
         lines += ["", "Cost of capital (use these; WACC is the discount rate of §6.2 and §8):",

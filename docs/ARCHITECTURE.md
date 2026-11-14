@@ -48,7 +48,8 @@ scripts/analysis/
 │   └── valuation.py       valuation assumptions and peer sets
 ├── data/                  network + stores + pure analytics
 │   ├── sources.py         fetch_data(): yfinance + Finviz / StockAnalysis / Roic.ai; complete_bars()
-│   ├── technicals.py      indicators (Wilder RSI/ATR), weekly bars, R1–S3 levels
+│   ├── technicals.py      indicators (Wilder RSI/ATR), weekly bars, R1–S3 levels, pivots
+│   ├── technical_studies.py   Ichimoku, volume profile, anchored VWAP, A/D, base rates
 │   ├── prices.py          committed OHLCV store (data/prices/), pure stdlib read path
 │   ├── fundamentals.py    committed SEC quarterly store (data/fundamentals/)
 │   ├── report_inputs.py   inputs for the VERIFIED FIGURES block
@@ -59,6 +60,7 @@ scripts/analysis/
 │   ├── __init__.py        build_context(): one branch per analysis type
 │   ├── fundamental_facts.py   VERIFIED FIGURES block (pure)
 │   ├── valuation.py           DCF, method values, fixed weights, fair value, rating (pure)
+│   ├── quality.py             F-Score, DuPont, working-capital days, lender metrics (pure)
 │   └── fund_facts.py          VERIFIED FUND FIGURES block for ETFs (pure)
 ├── llm/__init__.py        public LLM API (re-exports utils/llm.py)
 ├── prompts/*.txt          one template per analysis type, plus system and QA prompts
@@ -68,6 +70,7 @@ scripts/analysis/
 │   ├── __init__.py        ISSUE_TYPES, parse_file, content_findings
 │   ├── arithmetic.py      §8.8 / MOS recheck and write-back
 │   ├── technical.py       NaN, price, level and R/R checks
+│   ├── scorecard.py       scorecard composite, signal, stated rating
 │   └── market_data.py     front-matter price vs the price store
 ├── utils/
 │   ├── llm.py             run_claude / run_openai / run_gemini, call_llm, run_with_fallback

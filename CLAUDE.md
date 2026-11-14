@@ -72,6 +72,9 @@ All paths above are under `scripts/analysis/` unless shown otherwise.
   the model invent a price.
 - New report metadata goes in front matter. QA reads `price`, `price_date`,
   `levels` and `arithmetic_check` from there.
+- A report has one scorecard. The model gives sub-scores; Python computes the
+  composite (`validate/scorecard.py`). A probability written as a percentage
+  must come from a computed base rate, never from the model.
 
 **Site**
 - `docs/` is mostly generated (see `.gitignore`). Edit `ai_gen_report/`, `data/`

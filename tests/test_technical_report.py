@@ -499,7 +499,7 @@ def test_prompt_defines_na_rr_composite_and_candles():
     assert "(目標價 T1 − 進場價) ÷ (進場價 − 止損價)" in p
     assert "六項子評分" in p and "算術平均" in p
     assert "近10根日K" in p and "近8根週K" in p
-    assert "500–700 行" in p and "300–500" not in p
+    assert "400–550 行" in p and "500–700" not in p
     assert "| 月份 | 收盤價 | K線形態 |" not in p
 
 

@@ -115,6 +115,39 @@ purpose: a per-share earnings-power DCF at a flat 10% (`intrinsic_value.dcf`),
 which needs only EPS and so works for every ticker the store holds. The two
 figures answer different questions and will not match.
 
+### Quality figures
+
+`context/quality.py` (pure) adds a `QUALITY FIGURES` section to the block, which
+the prompt copies into §4.2, §6.3 and §6.4:
+
+- **Piotroski F-Score**: latest TTM against the TTM a year earlier, with each of
+  the nine tests shown. A test with a missing input is left out, so the score
+  can read 6 / 8.
+- **DuPont**: net margin × asset turnover × equity multiplier, on TTM flows and
+  closing balances, so the product is the ROE quoted elsewhere.
+- **Working-capital days**: DSO, DIO, DPO and the cash conversion cycle, now and
+  a year earlier. Flows come from the SEC store. Receivables, inventory and
+  payables come from Yahoo's quarterly balance sheet, from the column dated the
+  same quarter-end. A balance the company does not report stays `N/A`.
+- **Lenders** (`archetype == "financial"`) get `LENDER METRICS` instead of the
+  F-Score and working-capital days: NII share of revenue, NII ÷ average total
+  assets, (revenue − pretax income) ÷ revenue, ROTCE, P/TBV and loans ÷ assets.
+  The second and third are labelled as proxies, because Yahoo carries neither
+  earning assets nor credit provisions. Charge-offs and CET1 are `N/A`.
+
+### One scorecard, a computed composite
+
+The prompt has one scorecard (§1.1, six dimensions, 1–10). The sub-scores are
+the model's judgement. The composite is their mean, so
+`validate/scorecard.py` computes it after generation, writes it over the stated
+one and records it as `score`. The same module reads the rating the report
+states (`rating`). Rule 20 lets that sit one notch from `rating_computed`;
+stage-1 QA flags a wider gap (`RATING_GAP`).
+
+Prompt rule 21 makes sub-sections, columns and charts conditional on their data:
+no market-share or TAM chart without a figure to cite, no all-`N/A` column, and
+scenario values only from the DCF model's own scenarios.
+
 ### Funds and ETFs
 
 A `quoteType` of `ETF` or `MUTUALFUND` takes its own path through the same
@@ -247,7 +280,26 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
 - **Candlestick claims.** The context carries the last 10 daily and 8 weekly OHLC
   bars. The prompt allows candlestick claims about those bars only.
 - **Levels.** The computed R1–S3 are written to front matter as `levels`, which
-  stage-1 QA compares with Ch.4.
+  stage-1 QA compares with Ch.4. Each side is searched in the last 252 sessions
+  first. A side with fewer than two levels is searched again over 504 and then
+  1,260 sessions of the price store (`technicals.key_levels`), so a stock at a
+  52-week low still has supports. Classic monthly pivot points are listed
+  separately as 樞軸 P / PR1 / PS1 …, never as R1–S3.
+- **Studies.** `data/technical_studies.py` adds Ichimoku, a volume profile (POC
+  and value area), VWAP anchored at the 52-week high and low, and the A/D line.
+- **Base rates.** `technical_studies.base_rates()` finds every past session in
+  the same state as today (RSI bucket, side of the 200-day average) in up to
+  ten years of store closes, and reports the 5-, 20- and 60-session forward
+  return: sample size, number of separate runs, share that rose, median and
+  quartiles, beside the same for all sessions. Below 30 matching sessions a
+  horizon is `N/A`. Prompt rule 23 allows a percentage probability only from
+  this table. The model's own judgements are written 高／中／低.
+- **Scorecard.** One table of six sub-scores (0–100). `validate/scorecard.py`
+  computes the composite and records `score` and `signal` (bullish at 60 or
+  above, bearish at 40 or below, the prompt's own routing thresholds).
+- **Shape.** The prompt asks for tables. It forbids hand-drawn ASCII charts and
+  allows one Mermaid diagram. Each figure is stated in full once, in the
+  chapter that owns it. The target is 400–550 lines.
 
 ---
 
@@ -260,12 +312,21 @@ Every report records how it was made, so QA can check it later:
 | `price`, `price_date` | The close the model was given, and its session date |
 | `close_source` | `quote` when the last close came from the quote, not a bar |
 | `levels` | Computed R1–S3 (technical) |
+| `score`, `score_stated` | The scorecard composite Python computed from the sub-scores, and the one the report printed when it differed |
+| `signal` | `bullish`, `neutral` or `bearish`, from the technical `score` |
+| `rating`, `fair_value` | The rating the report states (else the computed one) and its weighted fair value once rechecked (fundamental, companies) |
 | `arithmetic_check`, `weighted_fair_value_stated` | §8.8 recheck result (fundamental) |
 | `valuation`, `fair_value_computed`, `rating_computed`, `dcf_value` | The methods (value and weight), fair value, rating and DCF value Python computed (fundamental, companies) |
 | `instrument` | `fund` when the report came from the ETF branch |
 | `derivation_fixed` | Numbers `derivation.fix()` re-solved in a `$$ … $$` or inline `$ … $` equation chain |
 | `data_sources_ok`, `data_sources_failed` | Which fetchers succeeded |
 | `prompt_sha256`, `temperature`, `max_tokens` | Reproducibility |
+
+Fundamental and technical reports also end with a **資料與來源** table that
+`pipeline.data_sources_block()` writes from the same record: the close and its
+source, the filing the statements come from, the sources that answered and
+those that did not, which figures were computed in Python, and the model. The
+model does not write it, and the prompts forbid citing "資料包" or "題示".
 
 ---
 

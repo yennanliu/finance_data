@@ -44,12 +44,83 @@ def complete(hist):
     return hist[hist["Close"].notna()]
 
 
-def key_levels(hist) -> dict:
+# Sessions searched for swing levels: one year, then two, then five. A stock at
+# a 52-week low has no swing low below it in the last year (NVDA 2026-11-14 had
+# no S1–S3 and so no downside target), though older bars hold plenty.
+LEVEL_LOOKBACKS = (252, 504, 1260)
+LEVEL_LOOKBACK_NAMES = {252: "近一年", 504: "近兩年", 1260: "近五年"}
+MIN_LEVELS = 2          # fewer than this on one side widens that side's lookback
+SWING_WINDOW = 5
+
+
+def bars_frame(rows: "list[dict]"):
+    """Price-store rows as an OHLCV frame indexed by date, or None when empty.
+
+    Store prices are split-adjusted and not dividend-adjusted: the prices that
+    actually traded, which is what a level from years back should be.
+    """
+    import pandas as pd
+
+    if not rows:
+        return None
+    return pd.DataFrame({
+        "Open": [r["open"] for r in rows], "High": [r["high"] for r in rows],
+        "Low": [r["low"] for r in rows], "Close": [r["close"] for r in rows],
+        "Volume": [float(r["volume"]) for r in rows],
+    }, index=pd.DatetimeIndex([r["date"] for r in rows], name="Date"))
+
+
+def swing_points(high, low, window: int = SWING_WINDOW) -> "tuple[list, list]":
+    """Fractal highs and lows: a bar whose high (low) is the extreme of the
+    ``window`` bars on each side."""
+    h, l = high.reset_index(drop=True), low.reset_index(drop=True)
+    highs, lows = [], []
+    for i in range(window, len(h) - window):
+        if h.iloc[i] == h.iloc[i - window:i + window + 1].max():
+            highs.append(float(h.iloc[i]))
+        if l.iloc[i] == l.iloc[i - window:i + window + 1].min():
+            lows.append(float(l.iloc[i]))
+    return highs, lows
+
+
+def _merge_levels(found: list, more: list, tol_pct: float = 0.015) -> list:
+    """``found`` plus each of ``more`` that is not within ``tol_pct`` of a level
+    already kept. The one-year levels keep their values when a side is widened."""
+    out = list(found)
+    for lv in more:
+        if all(abs(lv - kept) / (abs(kept) or 1.0) > tol_pct for kept in out):
+            out.append(lv)
+    return out
+
+
+def pivot_points(hist) -> "dict | None":
+    """Classic floor pivots from the last **completed** month's high, low and
+    close: ``P = (H + L + C) / 3``, ``R1 = 2P − L``, ``S1 = 2P − H``,
+    ``R2 = P + (H − L)``, ``S2 = P − (H − L)``. None without a completed month."""
+    months = monthly_bars(hist)
+    if len(months) < 2:
+        return None
+    bar = months.iloc[-2]
+    h, l, c = float(bar["High"]), float(bar["Low"]), float(bar["Close"])
+    p = (h + l + c) / 3
+    return {"period_end": str(months.index[-2])[:10], "high": h, "low": l, "close": c,
+            "P": p, "PR1": 2 * p - l, "PS1": 2 * p - h, "PR2": p + (h - l), "PS2": p - (h - l)}
+
+
+def key_levels(hist, long_bars=None) -> dict:
     """Swing-pivot resistances/supports and the 52-week Fibonacci grid.
 
     ``{"last", "resistance": [R1, R2, R3], "support": [S1, S2, S3],
-    "fib": [(label, price), …], "low", "high"}``, or ``{}`` without data.
-    The validator compares a report's R1–S3 with these (via front matter).
+    "fib": [(label, price), …], "low", "high", "lookback", "pivots"}``, or
+    ``{}`` without data. The validator compares a report's R1–S3 with these
+    (via front matter).
+
+    Each side is searched in the last 252 sessions first. A side with fewer
+    than ``MIN_LEVELS`` is searched again over 504 and then 1260 sessions,
+    keeping what was already found; ``lookback`` records how far each side
+    went. ``long_bars`` is the longer history to widen into (the price store,
+    as a frame from :func:`bars_frame`); without it widening stops at the bars
+    ``hist`` has.
     """
     hist = complete(hist)
     if hist is None or hist.empty:
@@ -59,27 +130,29 @@ def key_levels(hist) -> dict:
     low = hist["Low"]
 
     last = float(close.iloc[-1])
+    wide = long_bars if long_bars is not None and len(long_bars) > len(hist) else hist
 
-    # ── Swing pivots (fractal highs/lows over last ~1y of daily bars) ──
-    window = 5
-    h = high.tail(252).reset_index(drop=True)
-    l = low.tail(252).reset_index(drop=True)
-    n = len(h)
-    swing_highs, swing_lows = [], []
-    for i in range(window, n - window):
-        seg_h = h.iloc[i - window:i + window + 1]
-        seg_l = l.iloc[i - window:i + window + 1]
-        if h.iloc[i] == seg_h.max():
-            swing_highs.append(float(h.iloc[i]))
-        if l.iloc[i] == seg_l.min():
-            swing_lows.append(float(l.iloc[i]))
-
-    # Resistances: clustered swing highs at/above current price (nearest first)
-    res = [lv for lv in _cluster_levels(swing_highs) if lv >= last]
-    res = sorted(res)[:3]
-    # Supports: clustered swing lows at/below current price (nearest first)
-    sup = [lv for lv in _cluster_levels(swing_lows) if lv <= last]
-    sup = sorted(sup, reverse=True)[:3]
+    sides = {"resistance": [], "support": []}
+    lookback = {}
+    for side in sides:
+        found, used = [], 0
+        for n in LEVEL_LOOKBACKS:
+            src = hist if n == LEVEL_LOOKBACKS[0] else wide
+            if used and len(src) <= used:
+                break               # no more bars than the last pass saw
+            window = src.tail(n)
+            used = len(window)
+            highs, lows = swing_points(window["High"], window["Low"])
+            if side == "resistance":
+                more = [lv for lv in _cluster_levels(highs) if lv >= last]
+            else:
+                more = [lv for lv in _cluster_levels(lows) if lv <= last]
+            found = _merge_levels(found, more)
+            lookback[side] = n if used == n else used
+            if len(found) >= MIN_LEVELS:
+                break
+        # Nearest first: resistances ascending, supports descending.
+        sides[side] = sorted(found, reverse=(side == "support"))[:3]
 
     # ── Fibonacci retracement over the 52-week range ──
     hi = float(high.tail(252).max())
@@ -95,8 +168,9 @@ def key_levels(hist) -> dict:
         ("100.0% (52W Low)", lo),
     ]
 
-    return {"last": last, "resistance": res, "support": sup, "fib": fibs,
-            "low": lo, "high": hi}
+    return {"last": last, "resistance": sides["resistance"], "support": sides["support"],
+            "fib": fibs, "low": lo, "high": hi, "lookback": lookback,
+            "pivots": pivot_points(hist)}
 
 
 def levels_summary(levels: dict) -> str:
@@ -106,26 +180,27 @@ def levels_summary(levels: dict) -> str:
     return "; ".join(parts)
 
 
-def compute_levels(hist) -> str:
+def compute_levels(hist, long_bars=None) -> str:
     """Compute swing-pivot support/resistance and Fibonacci retracement levels.
 
     All numbers are derived from the OHLCV data so the LLM can cite them
     verbatim instead of inventing precise-looking price levels.
     """
     try:
-        levels = key_levels(hist)
+        levels = key_levels(hist, long_bars)
         if not levels:
             return "  (no OHLC data for levels)"
         last, res, sup, fibs = (levels[k] for k in ("last", "resistance", "support", "fib"))
         lo, hi = levels["low"], levels["high"]
+        span = {k: LEVEL_LOOKBACK_NAMES.get(v, f"近 {v} 個交易日") for k, v in levels["lookback"].items()}
         res_lines = [
             f"  R{i+1}:  ${lv:8.2f}   ({(lv/last-1)*100:+.2f}% from price)"
             for i, lv in enumerate(res)
-        ] or ["  (no swing-high resistance detected above current price)"]
+        ] or [f"  (no swing-high resistance detected above current price, {span['resistance']}內)"]
         sup_lines = [
             f"  S{i+1}:  ${lv:8.2f}   ({(lv/last-1)*100:+.2f}% from price)"
             for i, lv in enumerate(sup)
-        ] or ["  (no swing-low support detected below current price)"]
+        ] or [f"  (no swing-low support detected below current price, {span['support']}內)"]
 
         fib_lines = [
             f"  {label:<18} ${price:8.2f}"
@@ -133,18 +208,33 @@ def compute_levels(hist) -> str:
             for label, price in fibs
         ]
 
+        pv = levels["pivots"]
+        if pv:
+            pivot_lines = [
+                f"  ── 經典樞軸點（上一個完整月 {pv['period_end']}：高 ${pv['high']:.2f} / 低 ${pv['low']:.2f} / 收 ${pv['close']:.2f}）──",
+                f"  樞軸 PR2: ${pv['PR2']:8.2f}   樞軸 PR1: ${pv['PR1']:8.2f}   樞軸 P: ${pv['P']:8.2f}   "
+                f"樞軸 PS1: ${pv['PS1']:8.2f}   樞軸 PS2: ${pv['PS2']:8.2f}",
+                "  註: 樞軸點是公式值（P = (高+低+收)÷3），不是波段高低點；波段支撐或阻力不足兩個時可作為補充價位，"
+                "引用時須寫明「樞軸」，不得改標為 R1–R3 / S1–S3。",
+            ]
+        else:
+            pivot_lines = ["  ── 經典樞軸點 ──", "  N/A（沒有完整的上一個月 K 棒）"]
+
         return f"""
   ── 關鍵價位（由 OHLCV 計算，非估算）──
   當前價格:  ${last:.2f}
 
-  阻力位 (Resistance) — 近一年波段高點聚類：
+  阻力位 (Resistance) — {span['resistance']}波段高點聚類：
 {chr(10).join(res_lines)}
 
-  支撐位 (Support) — 近一年波段低點聚類：
+  支撐位 (Support) — {span['support']}波段低點聚類：
 {chr(10).join(sup_lines)}
+  註: 每一側先找近一年；不足 {MIN_LEVELS} 個時依序放寬到近兩年、近五年，標題寫的是該側實際用到的期間。
 
   ── 斐波那契回調（52週區間 ${lo:.2f} → ${hi:.2f}）──
 {chr(10).join(fib_lines)}
+
+{chr(10).join(pivot_lines)}
 """
     except Exception as exc:
         return f"  (levels computation error: {exc})"
@@ -502,6 +592,18 @@ def ohlc_table(bars, title: str) -> str:
     return "\n".join(rows)
 
 
+def long_history(key: "str | None"):
+    """The ticker's price-store history as a frame (up to ten years), or None.
+
+    The fetched ``hist`` is two years of bars; levels and base rates that need
+    more read the committed store instead.
+    """
+    if not key:
+        return None
+    from . import prices
+    return bars_frame(prices.load_store(key))
+
+
 def compute_technicals(hist, key: "str | None" = None,
                        earnings_date: "str | None" = None) -> str:
     """Compute technical indicators from OHLCV history DataFrame.
@@ -515,6 +617,10 @@ def compute_technicals(hist, key: "str | None" = None,
     try:
         import pandas as pd
         import numpy as np
+
+        from . import technical_studies as studies
+
+        long_bars = long_history(key)
 
         close = hist["Close"]
         high = hist["High"]
@@ -646,7 +752,7 @@ def compute_technicals(hist, key: "str | None" = None,
         ma_charts = compute_moving_average_charts(hist)
 
         # Computed support/resistance + Fibonacci levels
-        levels = compute_levels(hist)
+        levels = compute_levels(hist, long_bars)
 
         return f"""
   ── 當前技術指標快照 ──
@@ -687,9 +793,13 @@ def compute_technicals(hist, key: "str | None" = None,
   OBV趨勢:      {obv_trend}
 {levels}
 
+{studies.studies_block(hist)}
+
 {timeframe_block(hist)}
 
 {market_context(hist, key, earnings_date) if key else ""}
+
+{studies.base_rate_block(hist, long_bars)}
 
 {indicator_table(weekly, 20, "近20週收盤走勢（RSI、MACD 柱皆以週K計算）", "週", "週末交易日")}
 
