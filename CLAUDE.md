@@ -39,8 +39,10 @@ make analyze TICKERS="NVDA TSLA" TYPES="fundamental-analysis,technical-analysis"
 ```
 scripts/generate_analysis.py → analysis.pipeline.run_analysis()
   data/sources.py          fetch: yfinance + scrapers (complete bars only)
-  context/__init__.py      assemble: one branch per type (+ fundamental_facts.py VERIFIED FIGURES)
+  context/__init__.py      assemble: one branch per type (+ fundamental_facts.py VERIFIED FIGURES,
+                           valuation.py for companies, fund_facts.py for ETFs)
   prompts/<type>.txt       template: {ticker} {financial_context} {today}
+                           (a fund's fundamental run uses fundamental_etf.txt)
   utils/llm.py             generate: run_with_fallback over FALLBACK_CHAIN (gemini → openai;
                            fundamental and technical lead with openai gpt-6-luna via TYPE_DEFAULTS)
   validate/arithmetic.py   recheck §8.8 and write the corrected sum back (fundamental)
@@ -57,6 +59,12 @@ All paths above are under `scripts/analysis/` unless shown otherwise.
   last retry, so the chain falls through to the next provider.
 - The model copies figures well and derives them badly. Compute derived numbers
   in Python (`fundamental_facts.py`) and have the prompt quote them.
+- The fundamental report's valuation is Python's, not the model's: the DCF, the
+  §8.8 method values and weights, fair value, MOS and rating come from
+  `context/valuation.py`, with every assumption in `config/valuation.py`. Change
+  the number there, never by letting the prompt choose it.
+- A fund is not a company. `quoteType` ETF / MUTUALFUND takes `fund_facts.py`
+  and `prompts/fundamental_etf.txt`; do not add company chapters to it.
 - yfinance `revenueGrowth`, `earningsGrowth`, `earningsQuarterlyGrowth` and
   `operatingMargins` are **latest-quarter**, never TTM. Label them that way.
 - Fetch Yahoo with `prices.to_yf_symbol(ticker)`. A bare `0050` returns 404.

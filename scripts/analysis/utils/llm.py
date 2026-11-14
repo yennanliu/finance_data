@@ -26,7 +26,7 @@ from pathlib import Path
 
 from ..config import REPORT_TEMPERATURE, TODAY
 from ..exceptions import LLMError, RefusalError
-from ..prompts import PROMPT_MAP
+from ..prompts import PROMPT_MAP, load_prompt
 from .logging_utils import setup_logger
 
 logger = setup_logger(__name__)
@@ -465,10 +465,16 @@ def run_gemini(ticker: str, prompt: str, system_message: str, *,
 
 # ── Analysis-report entry points (PROMPT_MAP-driven) ─────────────────────────
 
+def _template(analysis_type: str, prompt_file: "str | None" = None) -> str:
+    """The prompt template for a report: the type's own, or ``prompt_file`` when
+    the pipeline picked a variant (a fund gets ``fundamental_etf``)."""
+    return load_prompt(prompt_file) if prompt_file else PROMPT_MAP[analysis_type]
+
+
 def call_claude(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
+                model: str, max_tokens: int, prompt_file: "str | None" = None) -> str:
     """Call Claude API for an analysis report and return the response text."""
-    prompt = PROMPT_MAP[analysis_type].format(
+    prompt = _template(analysis_type, prompt_file).format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
     return run_claude(ticker, prompt, None, model=model, max_tokens=max_tokens,
@@ -476,10 +482,10 @@ def call_claude(ticker: str, context: str, analysis_type: str,
 
 
 def call_openai(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
+                model: str, max_tokens: int, prompt_file: "str | None" = None) -> str:
     """Call OpenAI API for an analysis report and return the response text."""
     system_message = _load_openai_system_message().format(ticker=ticker)
-    prompt = PROMPT_MAP[analysis_type].format(
+    prompt = _template(analysis_type, prompt_file).format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
     return run_openai(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
@@ -487,17 +493,18 @@ def call_openai(ticker: str, context: str, analysis_type: str,
 
 
 def call_gemini(ticker: str, context: str, analysis_type: str,
-                model: str, max_tokens: int) -> str:
+                model: str, max_tokens: int, prompt_file: "str | None" = None) -> str:
     """Call Gemini API for an analysis report and return the response text."""
     system_message = _load_gemini_system_message().format(ticker=ticker)
-    prompt = PROMPT_MAP[analysis_type].format(
+    prompt = _template(analysis_type, prompt_file).format(
         ticker=ticker, financial_context=context, today=TODAY,
     )
     return run_gemini(ticker, prompt, system_message, model=model, max_tokens=max_tokens,
                       temperature=REPORT_TEMPERATURE)
 
 
-def prompt_fingerprint(analysis_type: str, provider: str) -> str:
+def prompt_fingerprint(analysis_type: str, provider: str,
+                       prompt_file: "str | None" = None) -> str:
     """First 12 hex chars of SHA-256 over the prompt template and the system
     message that provider receives, so reports can be grouped by prompt version."""
     import hashlib
@@ -508,19 +515,21 @@ def prompt_fingerprint(analysis_type: str, provider: str) -> str:
         system = _load_gemini_system_message()
     else:
         system = ""
-    blob = (PROMPT_MAP[analysis_type] + "\0" + system).encode("utf-8")
+    blob = (_template(analysis_type, prompt_file) + "\0" + system).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()[:12]
 
 
 def call_llm(ticker: str, context: str, analysis_type: str,
-             provider: str, model: str, max_tokens: int) -> str:
+             provider: str, model: str, max_tokens: int,
+             prompt_file: "str | None" = None) -> str:
     """Dispatch to the appropriate LLM provider."""
+    variant = {"prompt_file": prompt_file} if prompt_file else {}
     if provider == "openai":
-        return call_openai(ticker, context, analysis_type, model, max_tokens)
+        return call_openai(ticker, context, analysis_type, model, max_tokens, **variant)
     elif provider == "gemini":
-        return call_gemini(ticker, context, analysis_type, model, max_tokens)
+        return call_gemini(ticker, context, analysis_type, model, max_tokens, **variant)
     else:
-        return call_claude(ticker, context, analysis_type, model, max_tokens)
+        return call_claude(ticker, context, analysis_type, model, max_tokens, **variant)
 
 
 # HTTP statuses that signal a permanent request/config error (bad key, no

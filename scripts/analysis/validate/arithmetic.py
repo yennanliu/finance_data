@@ -28,6 +28,9 @@ TOLERANCE_PP = 1.0
 
 # Chapters every fundamental report must carry (prompts/fundamental.txt).
 FUNDAMENTAL_CHAPTERS = tuple(range(1, 12))
+# … and every fund report (prompts/fundamental_etf.txt; front matter
+# ``instrument: fund``).
+FUND_CHAPTERS = tuple(range(1, 9))
 
 _NUM = r"(\d[\d,]*(?:\.\d+)?)"
 # "$583.87 × 35%", "NT$218.70 × 50%", "\$14.38 \times 40\%", "($181.75 × 0.40)"
@@ -85,6 +88,33 @@ def _row_cells(line: str) -> "list[str]":
     return [re.sub(r"\*|\\", "", c).strip() for c in line.strip().strip("|").split("|")]
 
 
+def table_rows(s88: str) -> "tuple[list[tuple[str, float, float]], float | None]":
+    """``(label, value, weight)`` for each method row of the §8.8 table, and the
+    total its 加權合理價值 row states. See :func:`table_terms`."""
+    for table in re.findall(r"(?:^[ \t]*\|.*\n?)+", s88, re.M):
+        lines = table.splitlines()
+        header = _row_cells(lines[0])
+        wcol = next((i for i, c in enumerate(header) if "權重" in c), None)
+        if wcol is None:
+            continue
+        rows, stated = [], None
+        for line in lines[1:]:
+            cells = _row_cells(line)
+            if len(cells) <= wcol:
+                continue
+            value = next((m for c in cells[1:wcol] for m in [_VALUE_CELL.search(c)] if m), None)
+            price = _num(value.group(1) or value.group(2)) if value else None
+            if _TOTAL_ROW.search(cells[0]):
+                stated = price if stated is None else stated
+                continue
+            w = _WEIGHT_CELL.fullmatch(cells[wcol])
+            if w and price is not None and _num(w.group(1)):
+                rows.append((cells[0], price, _num(w.group(1)) / 100))
+        if len(rows) >= 2 and stated is not None:
+            return rows, stated
+    return [], None
+
+
 def table_terms(s88: str) -> "tuple[list[tuple[float, float]], float | None]":
     """``(value, weight)`` pairs read from the §8.8 table itself, and the total
     its 加權合理價值 row states.
@@ -103,28 +133,51 @@ def table_terms(s88: str) -> "tuple[list[tuple[float, float]], float | None]":
     A method printed ``N/A`` with a weight (GRAB's FCF yield at 5%) has no
     term, so the weights fall short of 100% and the total is flagged.
     """
-    for table in re.findall(r"(?:^[ \t]*\|.*\n?)+", s88, re.M):
-        lines = table.splitlines()
-        header = _row_cells(lines[0])
-        wcol = next((i for i, c in enumerate(header) if "權重" in c), None)
-        if wcol is None:
-            continue
-        terms, stated = [], None
-        for line in lines[1:]:
-            cells = _row_cells(line)
-            if len(cells) <= wcol:
+    rows, stated = table_rows(s88)
+    return [(v, w) for _, v, w in rows], stated
+
+
+def parse_valuation(summary: str) -> "list[tuple[str, float, float]]":
+    """``"dcf 83.99 40%; fwd_pe 316.65 25%"`` (the front matter's ``valuation``)
+    as ``[(key, value, weight), …]``."""
+    out = []
+    for part in (summary or "").split(";"):
+        bits = part.split()
+        if len(bits) == 3:
+            try:
+                out.append((bits[0], float(bits[1]), float(bits[2].rstrip("%")) / 100))
+            except ValueError:
                 continue
-            value = next((m for c in cells[1:wcol] for m in [_VALUE_CELL.search(c)] if m), None)
-            price = _num(value.group(1) or value.group(2)) if value else None
-            if _TOTAL_ROW.search(cells[0]):
-                stated = price if stated is None else stated
-                continue
-            w = _WEIGHT_CELL.fullmatch(cells[wcol])
-            if w and price is not None and _num(w.group(1)):
-                terms.append((price, _num(w.group(1)) / 100))
-        if len(terms) >= 2 and stated is not None:
-            return terms, stated
-    return [], None
+    return out
+
+
+def valuation_overrides(text: str, summary: str) -> "list[str]":
+    """How the report's §8.8 table departs from the methods the pipeline
+    computed and recorded in the front matter.
+
+    The values and weights are Python's (``context/valuation.py``); the prompt
+    tells the model to copy them. A report that reweights, swaps a value or
+    adds a method has put the conclusion back in the model's hands. Empty when
+    the front matter has no ``valuation`` (an older report) or the table
+    matches. A value matches within a cent or 0.1%.
+    """
+    expected = parse_valuation(summary)
+    if not expected:
+        return []
+    rows, _ = table_rows(section(text, "8.8"))
+    if not rows:
+        return ["§8.8 table missing or unreadable"]
+    left = [(v, w) for _, v, w in rows]
+    out = []
+    for key, value, weight in expected:
+        hit = next((r for r in left if abs(r[0] - value) <= max(0.011, 0.001 * value)
+                    and abs(r[1] - weight) < 0.0051), None)
+        if hit:
+            left.remove(hit)
+        else:
+            out.append(f"{key} {value:.2f}@{weight * 100:.0f}% not in table")
+    out += [f"extra row {v:.2f}@{w * 100:.0f}%" for v, w in left]
+    return out
 
 
 def report_price(text: str) -> "float | None":
@@ -443,6 +496,7 @@ def annotate(text: str, result: dict) -> str:
     return re.sub(r"^(# [^\n]+\n)", lambda m: m.group(1) + notice, text, count=1, flags=re.M)
 
 
-__all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "section",
-           "weighted_terms", "table_terms", "report_price", "check", "valuation_mismatches",
+__all__ = ["TOLERANCE_PCT", "TOLERANCE_PP", "FUNDAMENTAL_CHAPTERS", "FUND_CHAPTERS", "section",
+           "weighted_terms", "table_terms", "table_rows",
+           "parse_valuation", "valuation_overrides", "report_price", "check", "valuation_mismatches",
            "missing_chapters", "annotate", "correct", "fix_products", "rating_band", "RATING_BANDS"]

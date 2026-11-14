@@ -57,7 +57,9 @@ scripts/analysis/
 │   └── intrinsic_value.py         DCF, reverse DCF, sensitivity, WACC build-up
 ├── context/
 │   ├── __init__.py        build_context(): one branch per analysis type
-│   └── fundamental_facts.py   VERIFIED FIGURES block (pure)
+│   ├── fundamental_facts.py   VERIFIED FIGURES block (pure)
+│   ├── valuation.py           DCF, method values, fixed weights, fair value, rating (pure)
+│   └── fund_facts.py          VERIFIED FUND FIGURES block for ETFs (pure)
 ├── llm/__init__.py        public LLM API (re-exports utils/llm.py)
 ├── prompts/*.txt          one template per analysis type, plus system and QA prompts
 ├── pipeline.py            run_analysis(): fetch → assemble → generate → recheck → publish

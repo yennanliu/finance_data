@@ -17,11 +17,13 @@ from __future__ import annotations
 from datetime import date
 
 from ..config.valuation import (
-    DEFAULT_TAX_RATE, EQUITY_RISK_PREMIUM, HISTORY_YEARS, MAX_STATEMENT_AGE_DAYS,
-    TAX_RATE_BOUNDS,
+    DEFAULT_CREDIT_SPREAD, DEFAULT_TAX_RATE, EQUITY_RISK_PREMIUM, FCFF_GROWTH_BOUNDS, FCFF_TERMINAL_CAPEX_TO_DA,
+    HISTORY_YEARS, MAX_STATEMENT_AGE_DAYS, TAX_RATE_BOUNDS, WACC_BOUNDS,
 )
 from ..data import fundamental_analytics as fa
+from ..data import prices
 from ..utils.formatting import money
+from . import valuation as val
 
 FUND_TYPES = ("ETF", "MUTUALFUND")
 
@@ -111,6 +113,11 @@ def statement_facts(rows: "list[dict]", as_of: "str | None") -> "dict | None":
         "ocf_ttm": t.get("ocf"),
         "capex_ttm": t.get("capex"),
         "fcf_ttm": fa.free_cash_flow(t),
+        "da_ttm": t.get("dep_amort"),
+        "ebitda_ttm": fa.ebitda(t),
+        # Complete fiscal years, oldest first, for the DCF's normalised margin.
+        "op_margin_history": [m["operating"] / 100 for m in map(fa.margins, fa.annual_series(rows))
+                              if m["operating"] is not None],
         "cash": cash,
         "debt": debt,
         "net_cash": (cash or 0.0) - (debt or 0.0) if cash is not None or debt is not None else None,
@@ -152,8 +159,9 @@ def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free,
     ``fx`` (quote-currency units per statement-currency unit) converts debt so
     an ADR's market cap and debt can be weighted; without it they cannot.
     """
-    beta = _f(info.get("beta"))
-    ke = risk_free + beta * EQUITY_RISK_PREMIUM if risk_free is not None and beta is not None else None
+    beta_raw = _f(info.get("beta"))
+    beta, beta_note = val.adjusted_beta(beta_raw)
+    ke = risk_free + beta * EQUITY_RISK_PREMIUM if risk_free is not None else None
 
     income = data.get("income")
     interest = _frame_value(income, "Interest Expense")
@@ -169,11 +177,15 @@ def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free,
     debt = stmt["debt"] if stmt and stmt.get("debt") is not None else _f(info.get("totalDebt"))
     equity = _f(info.get("marketCap"))
     kd = abs(interest) / debt if interest and debt else None
+    kd_source = "interest ÷ debt"
+    if kd is None and debt and risk_free is not None:
+        kd, kd_source = risk_free + DEFAULT_CREDIT_SPREAD, "assumed: Rf + credit spread, no interest reported"
 
     out = {"risk_free": risk_free, "erp": EQUITY_RISK_PREMIUM, "beta": beta,
-           "cost_of_equity": ke, "pre_tax_cost_of_debt": kd,
+           "beta_raw": beta_raw, "beta_note": beta_note,
+           "cost_of_equity": ke, "pre_tax_cost_of_debt": kd, "kd_source": kd_source,
            "tax_rate": tax_rate, "tax_source": tax_source,
-           "equity_value": equity, "debt": debt, "wacc": None,
+           "equity_value": equity, "debt": debt, "wacc": None, "wacc_raw": None,
            "equity_weight": None, "debt_weight": None}
     if ke is None or not equity:
         return out
@@ -186,9 +198,49 @@ def wacc_inputs(info: dict, data: dict, stmt: "dict | None", risk_free,
     we, wd = equity / (equity + d), d / (equity + d)
     if wd and kd is None:
         return out
-    out.update(equity_weight=we, debt_weight=wd,
-               wacc=we * ke + wd * (kd or 0.0) * (1 - tax_rate))
+    raw = we * ke + wd * (kd or 0.0) * (1 - tax_rate)
+    out.update(equity_weight=we, debt_weight=wd, wacc_raw=raw, wacc=val.banded_wacc(raw))
     return out
+
+
+def _annual_margins(income) -> "list[float]":
+    """Operating margin of each fiscal year in a newest-first yfinance frame,
+    returned oldest first."""
+    out = []
+    try:
+        if income is None or "Operating Income" not in income.index or "Total Revenue" not in income.index:
+            return out
+        for col in income.columns:
+            op, rev = _f(income.loc["Operating Income", col]), _f(income.loc["Total Revenue", col])
+            if op is not None and rev:
+                out.append(op / rev)
+    except (KeyError, IndexError):
+        return []
+    return out[::-1]
+
+
+def _fill_from_yahoo(stmt: dict, data: dict, info: dict) -> None:
+    """Fill what the DCF needs and the SEC store could not give.
+
+    AMD, MRVL and WDC tag no depreciation concept the store maps, so D&A comes
+    from Yahoo's quarterly cash flow, then from EBITDA − operating income. A
+    company with no SEC rows at all (an IFRS filer) gets its margin history
+    from Yahoo's annual income statement.
+    """
+    from . import statement_ttm
+
+    if stmt.get("da_ttm") is None:
+        stmt["da_ttm"] = statement_ttm(data).get("da")
+    if stmt.get("da_ttm") is None:
+        ebitda, revenue, margin = _f(info.get("ebitda")), stmt.get("revenue_ttm"), stmt.get("op_margin_ttm")
+        if ebitda is not None and revenue and margin is not None and ebitda > revenue * margin:
+            stmt["da_ttm"] = ebitda - revenue * margin
+    if stmt.get("ebitda_ttm") is None:
+        revenue, margin, da = stmt.get("revenue_ttm"), stmt.get("op_margin_ttm"), stmt.get("da_ttm")
+        stmt["ebitda_ttm"] = (revenue * margin + da if None not in (revenue, margin, da)
+                              else _f(info.get("ebitda")))
+    if not stmt.get("op_margin_history"):
+        stmt["op_margin_history"] = _annual_margins(data.get("income"))
 
 
 # ── assembly ─────────────────────────────────────────────────────────────────
@@ -218,11 +270,17 @@ def compute_facts(data: dict, inputs: dict) -> dict:
             "op_margin_ttm": y["op_margin"],
             "op_margin_q": _f(info.get("operatingMargins")),
             "ocf_ttm": y["ocf"], "capex_ttm": y["capex"], "fcf_ttm": y["fcf"],
+            "da_ttm": y["da"],
+            "ebitda_ttm": (y["op_income"] + y["da"] if y["op_income"] is not None
+                           and y["da"] is not None else _f(info.get("ebitda"))),
             "cash": _f(info.get("totalCash")), "debt": _f(info.get("totalDebt")),
             "_ttm_row": None,
         }
         stmt["net_cash"] = ((stmt["cash"] or 0.0) - (stmt["debt"] or 0.0)
                             if stmt["cash"] is not None or stmt["debt"] is not None else None)
+
+    if stmt is not None:
+        _fill_from_yahoo(stmt, data, info)
 
     mismatch = currency_mismatch(info)
     fx = inputs.get("fx") if mismatch else None
@@ -231,6 +289,12 @@ def compute_facts(data: dict, inputs: dict) -> dict:
     fcf_yield = None
     if stmt and stmt.get("fcf_ttm") is not None and mkt and rate:
         fcf_yield = stmt["fcf_ttm"] * rate / mkt
+
+    wacc = None if is_fund else wacc_inputs(info, data, stmt, inputs.get("risk_free"),
+                                            fx["rate"] if fx else None)
+    valuation = None if is_fund else val.build(
+        prices.report_key(data.get("ticker") or ""), info, stmt, wacc,
+        inputs.get("peers") or [], price, rate)
 
     return {
         "ticker": data.get("ticker"),
@@ -245,8 +309,8 @@ def compute_facts(data: dict, inputs: dict) -> dict:
         "fcf_yield": fcf_yield,
         "history": history_multiples(rows, inputs.get("bars"), stmt and stmt.get("_ttm_row"), price)
         if stmt and not mismatch else {},
-        "wacc": None if is_fund else wacc_inputs(info, data, stmt, inputs.get("risk_free"),
-                                                 fx["rate"] if fx else None),
+        "wacc": wacc,
+        "valuation": valuation,
         "peers": inputs.get("peers") or [],
     }
 
@@ -272,6 +336,114 @@ def _peer_line(p: dict) -> str:
             f"P/E(Fwd) {_x(_f(p.get('forwardPE')))}  P/S(TTM) {ps}  EV/EBITDA(TTM) {ev}  "
             f"Rev growth (latest Q YoY) {_p(_f(p.get('revenueGrowth')))}  "
             f"Gross margin (TTM) {_p(_f(p.get('grossMargins')))}")
+
+
+def _usd(v, ccy: str = "") -> str:
+    return "N/A" if v is None else f"{v:,.2f} {ccy}".strip()
+
+
+def render_dcf(d: dict, ccy: str, sccy: str, price) -> "list[str]":
+    """The DCF MODEL block: assumptions, yearly table, bridge, grid, scenarios
+    and reverse DCF, every cell computed."""
+    if not d.get("available"):
+        return ["", "DCF MODEL: N/A — " + d.get("reason", "not available") + ".",
+                "  → Write §8.1–8.7 as N/A with this reason. Do not build a DCF of your own."]
+    a, m, ps = d["assumptions"], d["model"], d["per_share"]
+    bn = lambda v: f"{v / 1e9:,.2f}"
+    up = lambda v: "N/A" if v is None or not price else f"{(v / price - 1) * 100:+.1f}%"
+    lines = [
+        "",
+        f"DCF MODEL (computed in Python; amounts in {sccy} billions unless per share) — copy §8.1–8.7 from here:",
+        "  Assumptions (the house base case; explain and criticise them, do not change a number):",
+        f"    Forecast length N:                {a['years']} years",
+        f"    Revenue base (TTM):               {bn(a['revenue'])}",
+        f"    Revenue growth, year 1:           {_p(a['start_growth'])}   ← {a['growth_source']} {_p(a['raw_growth'])}, "
+        f"held inside {_p(FCFF_GROWTH_BOUNDS[0], 0)}–{_p(FCFF_GROWTH_BOUNDS[1], 0)}",
+        f"    Revenue growth, year {a['years']}:          {_p(a['terminal_growth'])}   ← fades linearly from year 1",
+        f"    Operating margin (GAAP EBIT):     {_p(a['op_margin'])} in year 1 → {_p(a['op_margin_end'])} in year {a['years']}   ← "
+        + (f"TTM, fading to the median of the last {a['margin_years']} fiscal years (TTM included)"
+           if a["margin_years"] else "TTM, held constant (too little history for a median, or a median that is not positive)"),
+        f"    Tax rate:                         {_p(a['tax_rate'])}",
+        f"    D&A ÷ revenue:                    {_p(a['da_pct'])}   ← TTM, held constant",
+        f"    Capex ÷ revenue:                  {_p(a['capex_start'])} in year 1 → {_p(a['capex_end'])} in year {a['years']}"
+        f"   ← TTM, fading to {FCFF_TERMINAL_CAPEX_TO_DA:.1f} × D&A if above it",
+        f"    WACC:                             {_p(a['wacc'], 2)}",
+        f"    Terminal growth g:                {_p(a['terminal_growth'])}",
+        "    FCFF = NOPAT + D&A − Capex. Working capital is not modelled. EBIT is GAAP, so SBC is already",
+        "    an expense and the share count is not diluted further (prompt combination A).",
+        "",
+        "  Year  Growth   Revenue  Margin      EBIT       Tax     NOPAT      D&A     Capex      FCFF   Disc.f        PV",
+    ]
+    for y in m["years"]:
+        lines.append(f"  FY+{y['year']:<2} {_p(y['growth']):>7} {bn(y['revenue']):>9} {_p(y['op_margin']):>7} {bn(y['ebit']):>9} "
+                     f"{bn(y['tax']):>9} {bn(y['nopat']):>9} {bn(y['da']):>8} {bn(y['capex']):>9} "
+                     f"{bn(y['fcff']):>9}   {y['discount_factor']:.3f} {bn(y['pv']):>9}")
+    last = m["years"][-1]
+    lines += [
+        f"  Sum of PV (forecast):               {bn(m['pv_sum'])}",
+        f"  Terminal value = {bn(last['fcff'])} × (1 + {_p(m['terminal_growth'])}) ÷ ({_p(m['wacc'], 2)} − {_p(m['terminal_growth'])})"
+        f" = {bn(m['terminal_value'])}",
+        f"  PV of terminal value = {bn(m['terminal_value'])} × {last['discount_factor']:.3f} = {bn(m['pv_terminal'])}"
+        f"   ({_p(m['terminal_share'])} of enterprise value)",
+        f"  Enterprise value:                   {bn(m['enterprise_value'])}",
+        f"  + Net cash (− = net debt):          {bn(m['net_cash'])}",
+        f"  = Equity value:                     {bn(m['equity_value'])}",
+        f"  Per share = equity value × price ÷ market cap (in {ccy}) = {_usd(d['value'], ccy)}"
+        f"   ({up(d['value'])} vs price)   ← the DCF base value for §8.5 and §8.8",
+        "",
+        "  Sensitivity, value per share (rows: terminal growth g; columns: WACC):",
+        "      g \\ WACC " + "".join(f"{_p(w, 2):>12}" for w in d["sensitivity"]["waccs"]),
+    ]
+    for g, row in zip(d["sensitivity"]["growths"], d["sensitivity"]["values"]):
+        lines.append(f"      {_p(g, 1):>8}  " + "".join(
+            f"{'N/A (WACC ≤ g)' if v is None else f'{v:,.2f}':>12}" for v in row))
+    lines += ["", "  Scenarios (growth, margin and WACC all move; value per share):"]
+    names = {"bear": "悲觀", "base": "基準", "bull": "樂觀"}
+    for sc in d["scenarios"]:
+        lines.append(f"    {names[sc['name']]}  year-1 growth {_p(sc['start_growth'])}, year-{a['years']} operating margin {_p(sc['op_margin'])}, "
+                     f"WACC {_p(sc['wacc'], 2)} → {_usd(sc['value'], ccy)} ({up(sc['value'])})   probability {_p(sc['probability'], 0)}")
+    lines.append(f"    Probability-weighted: {_usd(d['scenario_weighted'], ccy)} ({up(d['scenario_weighted'])})"
+                 "   ← context only; §8.8 uses the base value")
+    ig, im = d["implied_growth"], d["implied_margin"]
+    lines += [
+        "",
+        "  Reverse DCF (one variable solved at a time, the rest at the base case, so that value = price):",
+        "    Year-1 revenue growth the price implies: "
+        + ("no solution between −10% and 100%" if ig is None else f"{_p(ig)} (base case {_p(a['start_growth'])})"),
+        "    Constant operating margin the price implies: "
+        + ("no solution between 0.5% and 95%" if im is None
+           else f"{_p(im)} (base case {_p(a['op_margin'])} → {_p(a['op_margin_end'])})"),
+    ]
+    return lines
+
+
+def render_valuation(f: dict) -> "list[str]":
+    """DCF model, §8.8 method table and the rating that follows from it."""
+    v = f.get("valuation")
+    if not v:
+        return []
+    ccy = f.get("currency") or ""
+    price = f.get("price")
+    lines = render_dcf(v["dcf"], ccy, f.get("statement_currency") or ccy, price)
+    lines += ["", f"VALUATION METHODS for §7.4 and §8.8 (company type: {v['archetype']}; weights are fixed "
+                  "by type — copy values and weights unchanged, add no method and drop none):"]
+    if not v["methods"]:
+        lines.append("  None could be computed. Write §8.8 as N/A, give no weighted fair value, no MOS and "
+                     "no MOS-based rating; say which inputs are missing.")
+        return lines
+    for r in v["methods"]:
+        up = f"{(r['value'] / price - 1) * 100:+.1f}%" if price else "N/A"
+        lines.append(f"  {r['label']:<14} {r['value']:>12,.2f} {ccy}   {up:>8}   weight {r['weight_pct']:>3}%   ← {r['basis']}")
+    terms = " + ".join(f"{r['value']:,.2f} × {r['weight_pct']}%" for r in v["methods"])
+    lines += [
+        f"  加權合理價值 = {terms} = {v['fair_value']:,.2f} {ccy}",
+        f"  MOS = {v['mos_pct']:+.1f}%   上行空間 = {v['upside_pct']:+.1f}%   評級（規則 20）= {v['rating']}",
+    ]
+    if v["unavailable"]:
+        lines.append("  Not computable, so left out and its weight shared among the rest: "
+                     + "、".join(v["unavailable"]))
+    lines.append("  Relative methods use the peers' median multiple, never this company's own current multiple.")
+    return lines
 
 
 def render_facts(f: dict) -> str:
@@ -335,15 +507,20 @@ def render_facts(f: dict) -> str:
                      " figure (e.g. capex) so that a table adds up.")
     w = f.get("wacc")
     if w:
-        lines += ["", "Cost of capital inputs (reference; deviate only with a stated reason):",
+        lines += ["", "Cost of capital (use these; WACC is the discount rate of §6.2 and §8):",
                   f"  Risk-free rate (10Y Treasury):  {_p(w['risk_free'], 2)}",
                   f"  Equity risk premium (assumed):  {_p(w['erp'], 2)}",
-                  f"  Beta:                           {_num(w['beta'], 2)}",
+                  f"  Beta (raw, Yahoo):              {_num(w.get('beta_raw'), 2)}",
+                  f"  Beta used (adjusted):           {_num(w['beta'], 2)}   ← {w.get('beta_note', '')}",
                   f"  Cost of equity = Rf + β × ERP:  {_p(w['cost_of_equity'], 2)}",
-                  f"  Pre-tax cost of debt (interest ÷ debt): {_p(w['pre_tax_cost_of_debt'], 2)}",
+                  f"  Pre-tax cost of debt ({w.get('kd_source', 'interest ÷ debt')}): {_p(w['pre_tax_cost_of_debt'], 2)}",
                   f"  Tax rate ({w['tax_source']}):   {_p(w['tax_rate'], 1)}",
                   f"  Weights E / D (market cap / debt): {_p(w['equity_weight'])} / {_p(w['debt_weight'])}",
-                  f"  Reference WACC:                 {_p(w['wacc'], 2)}"]
+                  f"  WACC:                           {_p(w['wacc'], 2)}"]
+        raw = w.get("wacc_raw")
+        if raw is not None and w["wacc"] is not None and abs(raw - w["wacc"]) > 1e-9:
+            lo, hi = WACC_BOUNDS
+            lines.append(f"    (computed {_p(raw, 2)}; held at the {_p(lo, 0)}–{_p(hi, 0)} band — say so in §8.2)")
     h = f.get("history")
     if h:
         lines += ["", f"Valuation vs own {HISTORY_YEARS}-year history (TTM multiples, price store × SEC statements):"]
@@ -358,6 +535,7 @@ def render_facts(f: dict) -> str:
         lines += [_peer_line(p) for p in peers]
     else:
         lines.append("Peer multiples: not provided. Any peer multiple you cite must be marked 「估計值」.")
+    lines += render_valuation(f)
     lines += [
         "",
         "MOS / upside definitions (Python re-checks §8.8 after generation):",
@@ -367,4 +545,5 @@ def render_facts(f: dict) -> str:
     return "\n".join(lines)
 
 
-__all__ = ["compute_facts", "render_facts", "statement_facts", "history_multiples", "wacc_inputs"]
+__all__ = ["compute_facts", "render_facts", "render_valuation", "render_dcf",
+           "statement_facts", "history_multiples", "wacc_inputs"]

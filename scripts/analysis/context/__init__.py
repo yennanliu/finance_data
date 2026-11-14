@@ -8,8 +8,10 @@ import textwrap
 
 from ..config import TODAY
 from ..utils.formatting import safe, pct, money, fmt_price, df_to_text
+from ..data import prices
 from ..data.technicals import price_ascii_chart, compute_technicals
 from .fundamental_facts import render_facts
+from .fund_facts import render as render_fund_facts
 
 
 def _ttm_sum(df, row: str):
@@ -39,12 +41,15 @@ def statement_ttm(data: dict) -> dict:
     ocf = _ttm_sum(data.get("cashflow_q"), "Operating Cash Flow")
     capex = _ttm_sum(data.get("cashflow_q"), "Capital Expenditure")  # negative
     fcf = ocf + capex if ocf is not None and capex is not None else None
+    da = _ttm_sum(data.get("cashflow_q"), "Depreciation And Amortization")
     return {
         "revenue": revenue,
+        "op_income": op_income,
         "op_margin": op_income / revenue if op_income is not None and revenue else None,
         "ocf": ocf,
         "capex": -capex if capex is not None else None,
         "fcf": fcf,
+        "da": da,
     }
 
 
@@ -262,7 +267,8 @@ Summary:
     # technical-analysis: focus on price/indicator data
     if analysis_type == "technical-analysis":
         chart = price_ascii_chart(data["price_series"])
-        technicals = compute_technicals(data["hist"])
+        technicals = compute_technicals(data["hist"], key=prices.report_key(ticker),
+                                        earnings_date=data.get("earnings_date"))
         analyst = f"""
 ━━ ANALYST CONSENSUS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Recommendation:  {safe(info.get('recommendationKey'))}
@@ -374,6 +380,18 @@ Payout Ratio:    {pct(info.get('payoutRatio'))}
             earnings_block,
             upgrades_block,
             insider_block,
+            news_block,
+        ])
+
+    # fundamental-analysis of a fund: its own, much shorter context. The
+    # company context hands the model eleven chapters of statements a fund
+    # does not have, and it answered with ~430 "N/A" per report.
+    if analysis_type == "fundamental-analysis" and data.get("fund_facts"):
+        chart = price_ascii_chart(data["price_series"])
+        return "\n".join([
+            company_hdr,
+            render_fund_facts(data["fund_facts"]),
+            f"\n━━ 24-MONTH PRICE HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n{chart}",
             news_block,
         ])
 

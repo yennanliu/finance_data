@@ -20,7 +20,7 @@ from .sources import _get_yf, last_completed_close
 PEER_FIELDS = (
     "currency", "financialCurrency", "trailingPE", "forwardPE",
     "priceToSalesTrailing12Months", "enterpriseToEbitda",
-    "revenueGrowth", "grossMargins", "profitMargins",
+    "revenueGrowth", "grossMargins", "profitMargins", "priceToBook",
 )
 
 
@@ -74,6 +74,69 @@ def peer_multiples(ticker: str) -> "list[dict]":
         entry.update({k: info.get(k) for k in PEER_FIELDS})
         out.append(entry)
     return out
+
+
+def _fraction(v, percent_units: bool = False) -> "float | None":
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    if x != x:
+        return None
+    return x / 100.0 if percent_units else x
+
+
+def fund_profile(ticker: str, info: "dict | None" = None) -> "dict | None":
+    """What Yahoo knows about a fund: cost, size, holdings and sector weights.
+
+    Best-effort, like every other input here: a field Yahoo does not return is
+    left out and the fact block prints it as N/A. Ratios are returned as
+    fractions (0.0018 for 0.18%); Yahoo's ``netExpenseRatio`` is in percent and
+    its ``funds_data`` figure is a fraction, so the latter is preferred.
+    """
+    info = info or {}
+    out: dict = {
+        "family": info.get("fundFamily"), "category": info.get("category"),
+        "total_assets": _fraction(info.get("totalAssets")),
+        "yield": _fraction(info.get("yield")),
+        "nav": _fraction(info.get("navPrice")),
+        "expense_ratio": _fraction(info.get("netExpenseRatio"), percent_units=True),
+        "pe": _fraction(info.get("trailingPE")),
+    }
+    try:
+        fd = _get_yf().Ticker(prices.to_yf_symbol(ticker)).funds_data
+        overview = fd.fund_overview or {}
+        out["family"] = out["family"] or overview.get("family")
+        out["category"] = out["category"] or overview.get("categoryName")
+        ops = fd.fund_operations
+        if ops is not None and not ops.empty:
+            def op(row, col=0):
+                try:
+                    return _fraction(ops.loc[row].iloc[col])
+                except (KeyError, IndexError):
+                    return None
+            out["expense_ratio"] = op("Annual Report Expense Ratio") or out["expense_ratio"]
+            out["expense_ratio_category"] = op("Annual Report Expense Ratio", 1)
+            out["turnover"] = op("Annual Holdings Turnover")
+        top = fd.top_holdings
+        if top is not None and not top.empty:
+            out["holdings"] = [{"symbol": str(sym), "name": str(row.get("Name", "")),
+                                "weight": float(row["Holding Percent"])}
+                               for sym, row in top.iterrows()]
+        out["sectors"] = {k.replace("_", " "): float(v) for k, v in (fd.sector_weightings or {}).items()}
+        eq = fd.equity_holdings
+        if eq is not None and not eq.empty:
+            # Yahoo reports these as yields (E/P, B/P); invert for the multiple.
+            for key, row in (("pe", "Price/Earnings"), ("pb", "Price/Book")):
+                try:
+                    y = _fraction(eq.loc[row].iloc[0])
+                except (KeyError, IndexError):
+                    y = None
+                if y and y > 0:
+                    out[key] = 1.0 / y
+    except Exception as exc:  # noqa: BLE001
+        print(f"  ⚠ fund profile unavailable for {ticker}: {exc}")
+    return out if any(v for v in out.values()) else None
 
 
 def fx_rate(statement_ccy: "str | None", quote_ccy: "str | None") -> "dict | None":
@@ -134,5 +197,5 @@ def gather(ticker: str, info: "dict | None" = None) -> dict:
             "peers": peers, "fx": fx, "status": status}
 
 
-__all__ = ["gather", "store_rows", "risk_free_rate", "peer_multiples",
+__all__ = ["gather", "store_rows", "risk_free_rate", "peer_multiples", "fund_profile",
            "prefer_newer_close", "fx_rate", "PEER_FIELDS"]

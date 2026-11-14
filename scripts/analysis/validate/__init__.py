@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
+from ..config.valuation import DCF_GAP_WARN
 from ..utils.mermaid import mermaid_syntax_issues
 from . import arithmetic, derivation, market_data, technical
 
@@ -42,12 +43,17 @@ ISSUE_TYPES = {
     "MERMAID": "a ```mermaid flowchart that will not render",
     "CUTOFF": "ends mid-sentence or mid-code-block (truncated)",
     # structure — fundamental
-    "MISSING_SECTIONS": "fundamental report lacks one of chapters ## 1. … ## 11.",
+    "MISSING_SECTIONS": "fundamental report lacks one of chapters ## 1. … ## 11. "
+                        "(## 1. … ## 8. for a fund)",
     # accuracy — the report against its own figures
     "ARITHMETIC": "a derived valuation (§8.8 total, MOS, DCF premium) does not "
                   "recompute from the report's own figures",
     "DERIVATION": "a step of a $$ … $$ or $ … $ equation chain does not "
                   "recompute (a = b that is false)",
+    "VALUATION_OVERRIDE": "the §8.8 table is not the methods and weights the pipeline "
+                          "computed (front matter `valuation`)",
+    "DCF_GAP": "the computed DCF value is more than 50% away from the price: "
+               "a reading to review, not an arithmetic error",
     "RR_MISMATCH": "a stated R/R matches neither target from its own entry/stop",
     "RR_TOO_LOW": "a recommended strategy's reward/risk to T1 is below 1 : 1.5, "
                   "or its T1 is the current price",
@@ -261,7 +267,12 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
         price = None
     out: "list[tuple[str, str]]" = []
 
-    if atype == "fundamental_analysis":
+    if atype == "fundamental_analysis" and fm.get("instrument") == "fund":
+        # A fund report has its own eight chapters and no valuation to recheck.
+        missing = arithmetic.missing_chapters(content, arithmetic.FUND_CHAPTERS)
+        if missing:
+            out.append(("MISSING_SECTIONS", f"missing_fund_chapters={missing}"))
+    elif atype == "fundamental_analysis":
         missing = arithmetic.missing_chapters(content)
         if missing:
             out.append(("MISSING_SECTIONS", f"missing_chapters={missing}"))
@@ -277,6 +288,16 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
         quoted = market_data.quote_mismatch(arithmetic.report_price(content), price)
         if quoted:
             out.append(("PRICE_MISMATCH", "quoted " + _fmt(quoted, "stated", "price", "diff_pct")))
+        # The methods and weights are computed, not chosen: has the table kept them?
+        overrides = arithmetic.valuation_overrides(content, fm.get("valuation", ""))
+        if overrides:
+            out.append(("VALUATION_OVERRIDE", "; ".join(overrides)))
+        try:
+            dcf = float(fm["dcf_value"]) if fm.get("dcf_value") else None
+        except ValueError:
+            dcf = None
+        if dcf and price and abs(dcf / price - 1) > DCF_GAP_WARN:
+            out.append(("DCF_GAP", f"dcf={dcf} price={price} gap={(dcf / price - 1) * 100:+.0f}%"))
 
     if atype == "technical_analysis":
         tech = technical.check(text)

@@ -17,9 +17,11 @@ import pytest
 import build_docs as bd
 from analysis import pipeline
 from analysis.data.sources import complete_bars
+from analysis.data.sources import next_earnings_date
 from analysis.data.technicals import (MACD_MIN_BARS, alignment, compute_technicals,
                                       key_levels, levels_summary, macd_histogram,
-                                      monthly_bars, timeframe_snapshot, weekly_bars,
+                                      market_context, monthly_bars, price_gaps,
+                                      relative_strength, timeframe_snapshot, weekly_bars,
                                       wilder_rsi)
 from analysis.exceptions import DataFetchError
 from analysis.prompts import load_prompt
@@ -192,6 +194,86 @@ def test_a_short_history_reports_na_rather_than_failing():
 def test_prompt_forbids_calling_a_daily_indicator_weekly():
     prompt = load_prompt("technical")
     assert "時框標示" in prompt and "多時框一致性 X/3" in prompt
+
+
+# ── market context: relative strength, gaps, earnings date (prompt rule 22) ──
+
+def store_bars(h, scale=1.0, drop_last=0):
+    """Price-store rows for a benchmark that moves like ``h`` times ``scale``."""
+    rows = [{"date": str(ts)[:10], "close": float(c) * scale} for ts, c in h["Close"].items()]
+    return rows[:len(rows) - drop_last] if drop_last else rows
+
+
+def test_relative_strength_is_the_return_gap_on_common_sessions():
+    h = bars(200)
+    flat = [{"date": str(ts)[:10], "close": 50.0} for ts in h.index]
+    rs = relative_strength(h, flat)
+    close = h["Close"]
+    one_month = rs["rows"][0]
+    assert one_month["stock"] == pytest.approx((close.iloc[-1] / close.iloc[-22] - 1) * 100)
+    assert one_month["benchmark"] == 0.0 and one_month["excess"] == one_month["stock"]
+    # A benchmark that is the stock itself: no excess, in any window.
+    assert all(r["excess"] == pytest.approx(0.0) for r in relative_strength(h, store_bars(h, 3.0))["rows"])
+
+
+def test_relative_strength_ends_on_the_last_session_both_have():
+    h = bars(200)
+    rs = relative_strength(h, store_bars(h, drop_last=1))     # the store is a session behind
+    assert rs["as_of"] == str(h.index[-2])[:10]
+    assert relative_strength(h, []) is None
+    assert relative_strength(bars(15), store_bars(bars(15))) is None      # under a month
+
+
+def test_a_gap_is_a_session_that_does_not_overlap_the_one_before():
+    """NVDA 2026-11-12 opened 13% lower and never traded up to the prior low;
+    the report called it a long bullish candle."""
+    h = bars(40)
+    for col in ("Open", "High", "Low", "Close"):
+        h[col] = 100.0
+    h["High"] += 1.0
+    h["Low"] -= 1.0
+    for col in ("Open", "High", "Low", "Close"):               # session 30 onwards: 10 lower
+        h.iloc[30:, h.columns.get_loc(col)] -= 10.0
+    gaps = price_gaps(h)
+    assert len(gaps) == 1
+    g = gaps[0]
+    assert g["date"] == str(h.index[30])[:10] and g["direction"] == "down"
+    assert (g["low"], g["high"]) == (91.0, 99.0) and g["size_pct"] == pytest.approx(8.0)
+    assert not g["filled"]
+    h.iloc[35, h.columns.get_loc("High")] = 99.5               # trades back through the gap
+    assert price_gaps(h)[0]["filled"]
+    assert price_gaps(bars()) == []                            # ordinary overlapping sessions
+
+
+def test_market_context_block_and_its_place_in_the_context(monkeypatch):
+    from analysis.data import prices
+    h = bars(200)
+    monkeypatch.setattr(prices, "load_store",
+                        lambda key, store_dir=None: store_bars(h, 2.0) if key in ("vti", "smh") else [])
+    text = market_context(h, "nvda", "2027-01-20")
+    assert "相對強度 vs VTI" in text and "相對強度 vs SMH" in text
+    assert "下次財報日: 2027-01-20" in text and "跳空缺口: 無" in text
+    assert "下次財報日: N/A（數據未提供）" in market_context(h, "nvda", None)
+    assert "相對強度: N/A" in market_context(h, "vti", None)  # the benchmark itself, no sector ETF
+    assert "市場脈絡" in compute_technicals(h, key="nvda") and "市場脈絡" not in compute_technicals(h)
+
+
+def test_next_earnings_date_is_the_first_on_or_after_the_close():
+    class T:
+        calendar = {"Earnings Date": ["2026-08-20", "2026-11-18", "2027-02-24"]}
+    assert next_earnings_date(T(), "2026-11-13") == "2026-11-18"
+    assert next_earnings_date(T(), "2027-03-01") is None
+
+    class Broken:
+        @property
+        def calendar(self):
+            raise RuntimeError("no calendar for a fund")
+    assert next_earnings_date(Broken(), "2026-11-13") is None
+
+
+def test_prompt_requires_the_market_context_to_be_used():
+    prompt = load_prompt("technical")
+    assert "市場脈絡（相對強度、缺口、財報日）" in prompt and "Beta 與相對強度" in prompt
 
 
 def test_context_carries_daily_and_weekly_ohlc():

@@ -106,11 +106,63 @@ def test_wacc_components_are_exposed_and_combine():
     d = _data()
     d["income"] = income
     w = wacc_inputs(d["info"], d, {"debt": 10e9}, 0.04)
-    assert w["cost_of_equity"] == pytest.approx(0.04 + 1.2 * 0.05)
+    # Beta 1.2 is Blume-adjusted to ⅔ × 1.2 + ⅓ before CAPM.
+    beta = 2 / 3 * 1.2 + 1 / 3
+    assert (w["beta_raw"], w["beta"]) == (1.2, pytest.approx(beta))
+    assert w["cost_of_equity"] == pytest.approx(0.04 + beta * 0.05)
     assert w["pre_tax_cost_of_debt"] == pytest.approx(0.05)
     assert w["tax_rate"] == pytest.approx(0.20)
     we, wd = 500 / 510, 10 / 510
-    assert w["wacc"] == pytest.approx(we * 0.10 + wd * 0.05 * 0.8)
+    assert w["wacc"] == pytest.approx(we * (0.04 + beta * 0.05) + wd * 0.05 * 0.8)
+    assert w["wacc_raw"] == w["wacc"]                         # inside the band
+
+
+def test_a_high_beta_wacc_is_held_at_the_band_and_both_figures_are_shown():
+    """NVDA 2026-11-14: raw beta 2.25 at Rf 5.15% gave a 16.26% WACC."""
+    d = _data(beta=2.25)
+    w = wacc_inputs(d["info"], d, {"debt": 0.0}, 0.0515)
+    assert w["wacc_raw"] == pytest.approx(0.0515 + (2 / 3 * 2.25 + 1 / 3) * 0.05)
+    assert w["wacc"] == 0.14
+    f = compute_facts(_data(beta=2.25), _inputs(risk_free=0.0515))
+    text = render_facts(f)
+    assert "held at the 7%–14% band" in text and "Beta used (adjusted)" in text
+
+
+def test_a_company_without_a_beta_or_interest_still_gets_a_labelled_wacc():
+    d = _data(beta=None)
+    w = wacc_inputs(d["info"], d, {"debt": 10e9}, 0.04)       # debt, but no interest row
+    assert w["beta"] == 1.0 and "assumed" in w["beta_note"]
+    assert w["pre_tax_cost_of_debt"] == pytest.approx(0.06) and "assumed" in w["kd_source"]
+    assert w["wacc"] is not None
+
+
+def test_the_block_carries_the_python_valuation():
+    peers = [{"ticker": "AAA", "forwardPE": 20.0, "enterpriseToEbitda": 15.0},
+             {"ticker": "BBB", "forwardPE": 30.0, "enterpriseToEbitda": 25.0}]
+    rows = _rows(dep_amort=[0.3e9] * 8)
+    f = compute_facts(_data(forwardEps=4.0, targetMeanPrice=150.0), _inputs(rows=rows, peers=peers))
+    v = f["valuation"]
+    assert v["dcf"]["available"] and [r["key"] for r in v["methods"]] == [
+        "dcf", "fwd_pe", "ev_ebitda", "consensus"]
+    text = render_facts(f)
+    assert "DCF MODEL (computed in Python" in text and "VALUATION METHODS" in text
+    assert f"= {v['fair_value']:,.2f} USD" in text and f"評級（規則 20）= {v['rating']}" in text
+    assert text.count("FY+") == 10                           # every forecast year is listed
+    assert "Reverse DCF" in text and "Sensitivity" in text
+
+
+def test_a_missing_dcf_input_is_said_not_guessed():
+    f = compute_facts(_data(), _inputs())                    # the store rows carry no D&A
+    assert not f["valuation"]["dcf"]["available"]
+    assert "DCF MODEL: N/A — missing TTM input: D&A" in render_facts(f)
+
+
+def test_depreciation_falls_back_to_yahoo_when_the_store_has_none():
+    """AMD, MRVL and WDC tag no depreciation concept the store maps."""
+    d = _data(ebitda=6.9e9)                                   # TTM operating income is 4.9e9
+    f = compute_facts(d, _inputs())
+    assert f["statements"]["da_ttm"] == pytest.approx(2.0e9)
+    assert f["valuation"]["dcf"]["available"]
 
 
 def test_wacc_withheld_when_market_cap_and_debt_are_in_different_currencies():

@@ -31,8 +31,10 @@ there, not inline in `parse_file`.
 |------------|------|------------|
 | All | `EMPTY`, `NO_FRONTMATTER`, `REFUSAL`, `TOO_SHORT`, `CUTOFF`, `HTML_LEAK`, `MERMAID`, `DUPLICATE`, `READ_ERROR` | Mechanical failures |
 | All | `PLACEHOLDER` | An unfilled template placeholder, including the prompts' example figures copied verbatim (`$XXX`, `第 XX 百分位`) |
-| Fundamental | `MISSING_SECTIONS` | Any of `## 1.`–`## 11.` is absent |
+| Fundamental | `MISSING_SECTIONS` | Any of `## 1.`–`## 11.` is absent; for a fund report (front-matter `instrument: fund`), any of `## 1.`–`## 8.`. The valuation checks below do not run on a fund report |
 | Fundamental | `ARITHMETIC` | The §8.8 total differs from Σ of its terms by more than 0.5% or the weights of the valued methods do not sum to 100% (terms are read from the §8.8 table, the prose formula only as a fallback), **or** the §1.0 MOS / DCF premium differs by more than 1pp from what the report's own fair value, DCF value and price give (`arithmetic.valuation_mismatches`) |
+| Fundamental | `VALUATION_OVERRIDE` | The §8.8 table is not the methods, values and weights the pipeline computed and recorded in front-matter `valuation` (a value matches within a cent or 0.1%). Silent for reports without that field |
+| Fundamental | `DCF_GAP` | Front-matter `dcf_value` is more than 50% from `price`. A reading to review, not an arithmetic error |
 | Fundamental | `PRICE_MISMATCH` | The quoted 現價 differs from the front-matter `price` |
 | Any | `DERIVATION` | A step of a `$$ … $$` or inline `$ … $` equation chain does not hold: `= $59.323 ≈ $58.90` where the terms sum to $58.903, or `($58.90 − $58.60) = $0.72` (`derivation.check`). The tolerance is each printed figure's rounding, propagated, plus 0.1%. Labels (`52\text{週}`), variables (`\text{EV}`), arrows and mixed units are skipped, as is the first link of a span that continues an expression begun before it on the line. A deduction printed negative (`= −$147.4M`) passes. |
 | Technical | `NAN_VALUE` | A `$nan` / `nan%` leaked from an empty data bar |

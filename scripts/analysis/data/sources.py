@@ -482,6 +482,18 @@ def complete_bars(hist, info: dict, now=None):
     return pd.concat([hist, bar[hist.columns]]), "quote"
 
 
+def next_earnings_date(t, after: "str | None") -> "str | None":
+    """The first earnings date in Yahoo's calendar on or after ``after`` (ISO),
+    or None. Yahoo's date is the company's announced or estimated one and can
+    move, which the context says where it prints it."""
+    try:
+        dates = (t.calendar or {}).get("Earnings Date") or []
+    except Exception:  # noqa: BLE001 — a fund has no calendar; the call can also just fail
+        return None
+    iso = sorted(str(d)[:10] for d in dates)
+    return next((d for d in iso if not after or d >= after), None)
+
+
 def fetch_data(ticker: str) -> dict:
     """Download fundamentals, price history, and news from Yahoo Finance."""
     yf = _get_yf()
@@ -645,6 +657,8 @@ def fetch_data(ticker: str) -> dict:
     except Exception:
         pass
 
+    earnings_date = next_earnings_date(t, price_date)
+
     # ── Additional sources (best-effort, non-blocking) ──
     finviz_data = {}
     stockanalysis_data = {}
@@ -703,6 +717,7 @@ def fetch_data(ticker: str) -> dict:
         "price_series": price_series,
         "upgrades_text": upgrades_text,
         "earnings_text": earnings_text,
+        "earnings_date": earnings_date,
         "insider_text": insider_text,
         "major_holders_text": major_holders_text,
         "institutional_text": institutional_text,
