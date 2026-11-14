@@ -151,6 +151,18 @@ def test_the_block_carries_the_python_valuation():
     assert "Reverse DCF" in text and "Sensitivity" in text
 
 
+def test_no_price_gives_method_values_but_no_mos_or_rating():
+    """Forward P/E and consensus need no price; MOS does."""
+    peers = [{"ticker": "AAA", "forwardPE": 20.0}, {"ticker": "BBB", "forwardPE": 30.0}]
+    d = _data(forwardEps=4.0, targetMeanPrice=150.0)
+    d["price_now"] = None
+    f = compute_facts(d, _inputs(peers=peers))
+    v = f["valuation"]
+    assert v["methods"] and v["mos_pct"] is None and v["rating"] is None
+    text = render_facts(f)                                    # used to raise TypeError
+    assert "MOS / 上行空間 / 評級: N/A — no price" in text
+
+
 def test_a_missing_dcf_input_is_said_not_guessed():
     f = compute_facts(_data(), _inputs())                    # the store rows carry no D&A
     assert not f["valuation"]["dcf"]["available"]

@@ -437,8 +437,13 @@ def render_valuation(f: dict) -> "list[str]":
     terms = " + ".join(f"{r['value']:,.2f} × {r['weight_pct']}%" for r in v["methods"])
     lines += [
         f"  加權合理價值 = {terms} = {v['fair_value']:,.2f} {ccy}",
-        f"  MOS = {v['mos_pct']:+.1f}%   上行空間 = {v['upside_pct']:+.1f}%   評級（規則 20）= {v['rating']}",
     ]
+    if v["mos_pct"] is None:
+        # No price to measure against (Yahoo and the price store both failed).
+        lines.append("  MOS / 上行空間 / 評級: N/A — no price. Give no MOS and no MOS-based rating.")
+    else:
+        lines.append(f"  MOS = {v['mos_pct']:+.1f}%   上行空間 = {v['upside_pct']:+.1f}%   "
+                     f"評級（規則 20）= {v['rating']}")
     if v["unavailable"]:
         lines.append("  Not computable, so left out and its weight shared among the rest: "
                      + "、".join(v["unavailable"]))

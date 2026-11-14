@@ -98,6 +98,8 @@ def fund_profile(ticker: str, info: "dict | None" = None) -> "dict | None":
     out: dict = {
         "family": info.get("fundFamily"), "category": info.get("category"),
         "total_assets": _fraction(info.get("totalAssets")),
+        # A fraction already (QQQ 0.0045 = 0.45%). It is ``dividendYield`` that
+        # Yahoo returns in percent (0.45), which is why that field is not used.
         "yield": _fraction(info.get("yield")),
         "nav": _fraction(info.get("navPrice")),
         "expense_ratio": _fraction(info.get("netExpenseRatio"), percent_units=True),
