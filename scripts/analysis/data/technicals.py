@@ -237,11 +237,18 @@ def monthly_bars(hist):
 
 
 def wilder_rsi(close, n: int = 14):
-    """RSI with Wilder smoothing (α = 1/n), NaN until ``n`` changes exist."""
+    """RSI with Wilder smoothing (α = 1/n), NaN until ``n`` changes exist.
+
+    A window with gains and no loss at all is RSI 100, not a division by zero:
+    fourteen rising months is the strongest reading there is, and reporting it
+    as N/A would also blank that timeframe's direction. A window with no move
+    in either direction has no RSI.
+    """
     delta = close.diff()
     gain = delta.clip(lower=0).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
     loss = (-delta.clip(upper=0)).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
-    return 100 - (100 / (1 + gain / loss.replace(0, float("nan"))))
+    rsi = 100 - (100 / (1 + gain / loss.where(loss > 0)))
+    return rsi.mask((loss == 0) & (gain > 0), 100.0)
 
 
 # 26 bars for the slow EMA plus 9 for the signal line. An EMA will return a
@@ -382,11 +389,7 @@ def compute_technicals(hist) -> str:
         # 14-day simple mean used before (Cutler's RSI) read INTC at 14.5 where
         # the standard RSI was 36.4, and called 7 of 24 tickers oversold that
         # were not.
-        delta = close.diff()
-        gain = delta.clip(lower=0).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
-        loss = (-delta.clip(upper=0)).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
-        rs = gain / loss.replace(0, float("nan"))
-        rsi = 100 - (100 / (1 + rs))
+        rsi = wilder_rsi(close)
 
         # MACD (12/26/9)
         ema12 = close.ewm(span=12, adjust=False).mean()

@@ -138,6 +138,22 @@ def test_weekly_and_monthly_indicators_come_from_their_own_bars():
     assert "月RSI(14)" in out.split("近12個月收盤走勢")[1]
 
 
+def test_rsi_of_a_window_with_no_loss_is_100_not_na():
+    rising = pd.Series(np.arange(100.0, 130.0))
+    assert wilder_rsi(rising).iloc[-1] == 100.0
+    assert wilder_rsi(rising).iloc[:14].isna().all()            # still needs 14 changes
+    flat = wilder_rsi(pd.Series([100.0] * 30)).iloc[-1]
+    assert flat != flat                                         # no move: no RSI
+
+    h = bars(520)
+    for col in ("Open", "High", "Low", "Close"):
+        h[col] = np.linspace(100, 300, len(h))
+    snap = timeframe_snapshot(h)
+    assert [t["rsi"] for t in snap] == [100.0, 100.0, 100.0]
+    assert [t["direction"] for t in snap] == ["偏多"] * 3
+    assert "RSI(14):      100.00  (Wilder)  🔴 超買 >70" in compute_technicals(h)
+
+
 def test_macd_is_na_until_the_slow_ema_and_signal_have_enough_bars():
     h = bars(520)                                 # two years is ~24 monthly bars
     assert len(monthly_bars(h)) < MACD_MIN_BARS
@@ -294,6 +310,16 @@ def test_a_short_is_measured_with_the_sign_reversed():
     text = report().replace("$435.50", "$169.04").replace("$424.00", "$184.93").replace(
         "| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$162.85**")
     assert tq.weak_strategies(text)[0] == {"column": 1, "rr_t1": 0.39, "reason": "below_minimum"}
+
+
+def test_a_ratio_that_only_rounds_up_to_the_minimum_is_still_flagged():
+    # (450.61 − 435.50) / (435.50 − 425.40) = 1.496, which prints as 1.5.
+    weak = tq.weak_strategies(report().replace("$424.00", "$425.40"))
+    assert weak == [{"column": 1, "rr_t1": 1.5, "reason": "below_minimum"}]
+    # … and exactly 1.5 passes: (450.50 − 435.50) / (435.50 − 425.50).
+    exact = report().replace("$424.00", "$425.50").replace(
+        "| **目標價 T1** | **$450.61**", "| **目標價 T1** | **$450.50**")
+    assert tq.weak_strategies(exact) == []
 
 
 def test_a_first_target_at_the_current_price_is_flagged():

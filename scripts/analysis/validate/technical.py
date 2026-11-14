@@ -199,10 +199,12 @@ def weak_strategies(text: str, price=None) -> list:
         entries, t1, stop = _entry_prices(cells[0]), _money(cells[1]), _money(cells[2])
         if not entries or not t1 or not stop or entries[0] == stop:
             continue
-        rr = round((t1 - entries[0]) / (entries[0] - stop), 2)
+        # Compared unrounded: 1.496 is below the floor, though it prints as 1.5.
+        raw = (t1 - entries[0]) / (entries[0] - stop)
+        rr = round(raw, 2)
         if price and abs(t1 - price) <= LEVEL_TOLERANCE:
             out.append({"column": col, "rr_t1": rr, "reason": "t1_is_current_price"})
-        elif 0 < rr < MIN_RR:
+        elif 0 < raw < MIN_RR:
             out.append({"column": col, "rr_t1": rr, "reason": "below_minimum"})
     return out
 
