@@ -1,0 +1,31 @@
+
+============================================================
+Reports reviewed : 150
+Mean score       : 4.18 / 5
+
+Verdict breakdown (150 grounded):
+  pass              93
+  warn              48
+  fail               5
+  PARSE_ERROR        4
+
+Mean score by dimension:
+  data_integrity   4.34
+  completeness     4.52
+  depth            4.21
+  consistency      4.52
+  language         4.93
+
+Failed review (5):
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-15_openai.md
+      → 報告列示記憶體製造商 SNDK 之 TTM 毛利率達 80.0%、營業利益率達 72.5%（最新單季達 79.6%），嚴重偏離半導體儲存產業常態與真實財務邏輯。
+  0050         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/0050/market_news_2026-11-15_gemini.md
+      → 報告中提到的 'No news for 0050 in the past two years' 與市場實際情況可能不符，存在數據誠信問題。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-15_gemini.md
+      → 報告中提到的單季營收達到創紀錄的 1.675 億美元，按年暴增 1,550%，但未提供去年基期的具體數字，可能存在數據誠信問題。
+  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-16_gemini.md
+      → 報告中提到的最新收盤價 125.35 美元與報告日期不符，應為 2026-11-16。
+  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-15_gemini.md
+      → 報告中提到的QQQ最新收盤價為679.89 USD，但未提供來源，可能存在數據誠信問題。
+
+CSV written → qa/llm_review_2026-11-16.csv (57 row(s))
