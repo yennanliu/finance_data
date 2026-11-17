@@ -7,11 +7,11 @@ an LLM to judge what regex cannot see.
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-11-16 |
-| Bad reports, last 2 days | 11  (11.8%) |
-| Bad reports, all scanned | 896 |
-| CSV | [bad_reports_2026-11-16.csv](bad_reports_2026-11-16.csv) |
-| Full summary | [summary_2026-11-16.txt](summary_2026-11-16.txt) |
+| Last run | 2026-11-17 |
+| Bad reports, last 2 days | 9  (9.6%) |
+| Bad reports, all scanned | 905 |
+| CSV | [bad_reports_2026-11-17.csv](bad_reports_2026-11-17.csv) |
+| Full summary | [summary_2026-11-17.txt](summary_2026-11-17.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -20,20 +20,18 @@ an LLM to judge what regex cannot see.
 
 ============================================================
 
-Recent — last 2 UTC days (2026-11-15, 2026-11-16)
-Total scanned : 93
-Bad reports   : 11  (11.8%)
+Recent — last 2 UTC days (2026-11-16, 2026-11-17)
+Total scanned : 94
+Bad reports   : 9  (9.6%)
 
 Issue breakdown:
   DCF_GAP                  9  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
-  VALUATION_OVERRIDE       1  the §8.8 table is not the methods and weights the pipeline computed (front matter `valuation`)
-  DERIVATION               1  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
 
 ------------------------------------------------------------
 
 All scanned reports
-Total scanned : 2383
-Bad reports   : 896  (37.6%)
+Total scanned : 2447
+Bad reports   : 905  (37.0%)
 
 Issue breakdown:
   RR_TOO_LOW             445  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
@@ -41,7 +39,7 @@ Issue breakdown:
   DERIVATION             185  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
   DUPLICATE               94  same ticker+type+date with a -2 / -3 suffix
   RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
-  DCF_GAP                 16  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DCF_GAP                 25  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
   STALE_PRICE              8  a newer completed session existed before the report date
   MISSING_SECTIONS         7  fundamental report lacks one of chapters ## 1. … ## 11. (## 1. … ## 8. for a fund)
   PLACEHOLDER              6  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
@@ -53,18 +51,18 @@ Issue breakdown:
   LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
 
 Top 10 tickers by bad-report count:
-  amd            42 / 77   bad
-  tsla           41 / 76   bad
-  2330.tw        35 / 77   bad
-  ktos           35 / 77   bad
-  pl             35 / 77   bad
-  sofi           35 / 77   bad
-  spcx           35 / 78   bad
-  avgo           34 / 78   bad
-  pltr           34 / 77   bad
-  amzn           33 / 77   bad
+  amd            43 / 79   bad
+  tsla           42 / 78   bad
+  ktos           36 / 79   bad
+  2330.tw        35 / 79   bad
+  pl             35 / 79   bad
+  pltr           35 / 79   bad
+  sofi           35 / 79   bad
+  spcx           35 / 80   bad
+  amzn           34 / 79   bad
+  avgo           34 / 80   bad
 
-CSV written → qa/bad_reports_2026-11-16.csv
+CSV written → qa/bad_reports_2026-11-17.csv
 ```
 
 ## Stage 2 — LLM review (`scripts/review_report_quality.py`)
@@ -77,39 +75,37 @@ given the close each report was built on and stage 1's findings.
 
 | Field | Value |
 |-------|-------|
-| CSV | [llm_review_2026-11-16.csv](llm_review_2026-11-16.csv) |
-| Full summary | [llm_review_2026-11-16.txt](llm_review_2026-11-16.txt) |
+| CSV | [llm_review_2026-11-17.csv](llm_review_2026-11-17.csv) |
+| Full summary | [llm_review_2026-11-17.txt](llm_review_2026-11-17.txt) |
 
 ```
 
 ============================================================
-Reports reviewed : 150
-Mean score       : 4.18 / 5
+Reports reviewed : 153
+Mean score       : 4.20 / 5
 
-Verdict breakdown (150 grounded):
-  pass              93
-  warn              48
-  fail               5
-  PARSE_ERROR        4
+Verdict breakdown (153 grounded):
+  pass              97
+  warn              51
+  fail               4
+  PARSE_ERROR        1
 
 Mean score by dimension:
-  data_integrity   4.34
-  completeness     4.52
-  depth            4.21
-  consistency      4.52
-  language         4.93
+  data_integrity   4.32
+  completeness     4.55
+  depth            4.19
+  consistency      4.53
+  language         4.90
 
-Failed review (5):
-  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-15_openai.md
-      → 報告列示記憶體製造商 SNDK 之 TTM 毛利率達 80.0%、營業利益率達 72.5%（最新單季達 79.6%），嚴重偏離半導體儲存產業常態與真實財務邏輯。
-  0050         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/0050/market_news_2026-11-15_gemini.md
-      → 報告中提到的 'No news for 0050 in the past two years' 與市場實際情況可能不符，存在數據誠信問題。
-  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-15_gemini.md
-      → 報告中提到的單季營收達到創紀錄的 1.675 億美元，按年暴增 1,550%，但未提供去年基期的具體數字，可能存在數據誠信問題。
-  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-16_gemini.md
-      → 報告中提到的最新收盤價 125.35 美元與報告日期不符，應為 2026-11-16。
-  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-15_gemini.md
-      → 報告中提到的QQQ最新收盤價為679.89 USD，但未提供來源，可能存在數據誠信問題。
+Failed review (4):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-16_openai.md
+      → 報告列出 MU 的 TTM 營收為 $133.19B、營業利益率高達 74.6%（最新一季 80.7%）及淨利 $84.97B，對記憶體製造商而言嚴重偏離真實與合理產業財務常理。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-17_openai.md
+      → 記憶體製造商之 TTM 營業利益率達「74.6%」（最新一季更列「80.7%」）及毛利率「80.7%」，屬於評審指引中明定的典型不合理失真數據。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-16_openai.md
+      → 報告宣稱記憶體製造商 SNDK 最新單季營業利益率達 79.6%、TTM 達 72.5%，且 DCF 模型第 10 年仍假設 61.2% 的營業利益率，屬於嚴重背離半導體與儲存製造業常理的極端不合理數字。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-17_gemini.md
+      → 報告中提到的 1.675 億美元營收與 1,550% 年增幅的數據未能提供合理的基期支持，可能存在數據誠信問題。
 
-CSV written → qa/llm_review_2026-11-16.csv (57 row(s))
+CSV written → qa/llm_review_2026-11-17.csv (56 row(s))
 ```

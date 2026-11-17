@@ -1,0 +1,46 @@
+
+============================================================
+
+Recent — last 2 UTC days (2026-11-16, 2026-11-17)
+Total scanned : 94
+Bad reports   : 9  (9.6%)
+
+Issue breakdown:
+  DCF_GAP                  9  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 2447
+Bad reports   : 905  (37.0%)
+
+Issue breakdown:
+  RR_TOO_LOW             445  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
+  ARITHMETIC             206  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DERIVATION             185  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  DUPLICATE               94  same ticker+type+date with a -2 / -3 suffix
+  RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
+  DCF_GAP                 25  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  STALE_PRICE              8  a newer completed session existed before the report date
+  MISSING_SECTIONS         7  fundamental report lacks one of chapters ## 1. … ## 11. (## 1. … ## 8. for a fund)
+  PLACEHOLDER              6  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
+  NAN_VALUE                3  a $nan / nan% leaked from an empty data bar
+  VALUATION_OVERRIDE       2  the §8.8 table is not the methods and weights the pipeline computed (front matter `valuation`)
+  TOO_SHORT                2  fewer content lines than a real report has
+  REFUSAL                  1  the model refused instead of writing the report
+  CUTOFF                   1  ends mid-sentence or mid-code-block (truncated)
+  LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
+
+Top 10 tickers by bad-report count:
+  amd            43 / 79   bad
+  tsla           42 / 78   bad
+  ktos           36 / 79   bad
+  2330.tw        35 / 79   bad
+  pl             35 / 79   bad
+  pltr           35 / 79   bad
+  sofi           35 / 79   bad
+  spcx           35 / 80   bad
+  amzn           34 / 79   bad
+  avgo           34 / 80   bad
+
+CSV written → qa/bad_reports_2026-11-17.csv

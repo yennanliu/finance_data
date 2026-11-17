@@ -1,0 +1,29 @@
+
+============================================================
+Reports reviewed : 153
+Mean score       : 4.20 / 5
+
+Verdict breakdown (153 grounded):
+  pass              97
+  warn              51
+  fail               4
+  PARSE_ERROR        1
+
+Mean score by dimension:
+  data_integrity   4.32
+  completeness     4.55
+  depth            4.19
+  consistency      4.53
+  language         4.90
+
+Failed review (4):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-16_openai.md
+      → 報告列出 MU 的 TTM 營收為 $133.19B、營業利益率高達 74.6%（最新一季 80.7%）及淨利 $84.97B，對記憶體製造商而言嚴重偏離真實與合理產業財務常理。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-17_openai.md
+      → 記憶體製造商之 TTM 營業利益率達「74.6%」（最新一季更列「80.7%」）及毛利率「80.7%」，屬於評審指引中明定的典型不合理失真數據。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-16_openai.md
+      → 報告宣稱記憶體製造商 SNDK 最新單季營業利益率達 79.6%、TTM 達 72.5%，且 DCF 模型第 10 年仍假設 61.2% 的營業利益率，屬於嚴重背離半導體與儲存製造業常理的極端不合理數字。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-17_gemini.md
+      → 報告中提到的 1.675 億美元營收與 1,550% 年增幅的數據未能提供合理的基期支持，可能存在數據誠信問題。
+
+CSV written → qa/llm_review_2026-11-17.csv (56 row(s))
