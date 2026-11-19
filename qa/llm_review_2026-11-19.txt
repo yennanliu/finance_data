@@ -1,0 +1,31 @@
+
+============================================================
+Reports reviewed : 181
+Mean score       : 4.11 / 5
+
+Verdict breakdown (181 grounded):
+  pass             107
+  warn              67
+  fail               5
+  PARSE_ERROR        2
+
+Mean score by dimension:
+  data_integrity   4.28
+  completeness     4.50
+  depth            4.14
+  consistency      4.47
+  language         4.93
+
+Failed review (5):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-18_openai.md
+      → 報告出現嚴重捏造且荒謬的財務數據，如宣稱 Micron TTM 營收達 $133.19B、營業利益率高達 74.6% 與最新季度達 80.7%，完全偏離半導體記憶體產業實際現實。
+  skhy         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/skhy/fundamental_analysis_2026-11-18_openai.md
+      → 報告引用「TTM 營業利益率 76.8%」與「淨利率 70.1%」，屬於半導體記憶體製造業極度不合理且失真的獲利數字。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-18_gemini.md
+      → 報告中提到的股價在財報後遭遇強烈拋售，最新交易日收在 4.39 美元，但未提供該數字的來源。
+  spcx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/spcx/market_news_2026-11-19_gemini.md
+      → 報告中提到的 '1,205 億美元' 合約金額與 '120.5 億美元' 的數字不一致。
+  wdc          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/wdc/market_news_2026-11-18_gemini.md
+      → 報告中提到WDC股價面臨17%的劇烈回檔，但未提供具體數據來源。
+
+CSV written → qa/llm_review_2026-11-19.csv (74 row(s))
