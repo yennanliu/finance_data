@@ -1,0 +1,27 @@
+
+============================================================
+Reports reviewed : 180
+Mean score       : 4.15 / 5
+
+Verdict breakdown (180 grounded):
+  pass             106
+  warn              67
+  fail               3
+  PARSE_ERROR        4
+
+Mean score by dimension:
+  data_integrity   4.28
+  completeness     4.53
+  depth            4.16
+  consistency      4.51
+  language         4.93
+
+Failed review (3):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-19_openai.md
+      → 報告列出 TTM 營業利益率「74.6%」與最新一季營業利益率「80.7%」，毛利率高達「80.7%」，嚴重違背半導體記憶體製造商的實際營運水準與產業常態。
+  amd          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amd/market_news_2026-11-20_gemini.md
+      → 報告中提到「單日市值劇烈蒸發 670 億美元」，但未提供具體數據來源，存在數據誠信問題。
+  spcx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/spcx/market_news_2026-11-19_gemini.md
+      → 報告中提到的 '1,205 億美元' 合約金額與 '120.5 億美元' 的數字不一致。
+
+CSV written → qa/llm_review_2026-11-20.csv (74 row(s))
