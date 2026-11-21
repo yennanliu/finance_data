@@ -1,0 +1,35 @@
+
+============================================================
+Reports reviewed : 178
+Mean score       : 4.13 / 5
+
+Verdict breakdown (178 grounded):
+  pass             107
+  warn              59
+  fail               7
+  PARSE_ERROR        5
+
+Mean score by dimension:
+  data_integrity   4.27
+  completeness     4.51
+  depth            4.18
+  consistency      4.46
+  language         4.88
+
+Failed review (7):
+  amd          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amd/market_news_2026-11-20_gemini.md
+      → 報告中提到的股價 '收報 489.19 美元' 與 '單日市值劇烈蒸發 670 億美元' 的數據未能合理解釋其來源，存在數據誠信問題。
+  msft         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/msft/market_news_2026-11-20_gemini.md
+      → 報告中提到的微軟最新收盤價為 498.3 美元，但未提供該數據的來源，可能存在數據誠信問題。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-21_gemini.md
+      → 報告中提到輝達股價自10月峰值回檔40%，但未提供具體數據來源。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-21_gemini.md
+      → 報告中提到的股價 3.76 美元與 52 週新低的數據未能確認其來源，存在數據誠信問題。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-20_gemini.md
+      → 報告中提到SK海力士的利潤率高達80%，這一數字不合理。
+  soxq         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxq/market_news_2026-11-21_gemini.md
+      → 報告中提到的 '晶片出口總值歷史性地超越了原油' 需要具體數據支持，否則可能存在數據誠信問題。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-20_gemini.md
+      → 報告中提到輝達股價重挫約 18%，但未提供具體數據來源，可能存在數據誠信問題。
+
+CSV written → qa/llm_review_2026-11-21.csv (71 row(s))

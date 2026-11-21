@@ -1,0 +1,50 @@
+
+============================================================
+
+Recent — last 2 UTC days (2026-11-20, 2026-11-21)
+Total scanned : 108
+Bad reports   : 18  (16.7%)
+
+Issue breakdown:
+  DCF_GAP                 15  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DUPLICATE                2  same ticker+type+date with a -2 / -3 suffix
+  STALE_PRICE              1  a newer completed session existed before the report date
+  RR_TOO_LOW               1  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 2698
+Bad reports   : 968  (35.9%)
+
+Issue breakdown:
+  RR_TOO_LOW             446  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
+  ARITHMETIC             206  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
+  DERIVATION             185  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+  DUPLICATE              102  same ticker+type+date with a -2 / -3 suffix
+  DCF_GAP                 64  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
+  STORE_MISMATCH          28  the close the report was given is not the committed price store's close for that date
+  STALE_PRICE             11  a newer completed session existed before the report date
+  MISSING_SECTIONS         7  fundamental report lacks one of chapters ## 1. … ## 11. (## 1. … ## 8. for a fund)
+  PLACEHOLDER              6  unfilled template placeholder ({ticker}, [INSERT …, $XXX)
+  VALUATION_OVERRIDE       4  the §8.8 table is not the methods and weights the pipeline computed (front matter `valuation`)
+  NAN_VALUE                3  a $nan / nan% leaked from an empty data bar
+  TOO_SHORT                2  fewer content lines than a real report has
+  REFUSAL                  1  the model refused instead of writing the report
+  CUTOFF                   1  ends mid-sentence or mid-code-block (truncated)
+  LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
+
+Top 10 tickers by bad-report count:
+  amd            47 / 87   bad
+  tsla           46 / 86   bad
+  ktos           40 / 87   bad
+  pltr           39 / 87   bad
+  amzn           38 / 87   bad
+  2330.tw        37 / 87   bad
+  pl             36 / 87   bad
+  sofi           35 / 87   bad
+  spcx           35 / 88   bad
+  avgo           34 / 88   bad
+
+CSV written → qa/bad_reports_2026-11-21.csv
