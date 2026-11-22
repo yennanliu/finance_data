@@ -7,11 +7,11 @@ an LLM to judge what regex cannot see.
 
 | Field | Value |
 |-------|-------|
-| Last run | 2026-11-21 |
-| Bad reports, last 2 days | 18  (16.7%) |
-| Bad reports, all scanned | 968 |
-| CSV | [bad_reports_2026-11-21.csv](bad_reports_2026-11-21.csv) |
-| Full summary | [summary_2026-11-21.txt](summary_2026-11-21.txt) |
+| Last run | 2026-11-22 |
+| Bad reports, last 2 days | 25  (23.6%) |
+| Bad reports, all scanned | 988 |
+| CSV | [bad_reports_2026-11-22.csv](bad_reports_2026-11-22.csv) |
+| Full summary | [summary_2026-11-22.txt](summary_2026-11-22.txt) |
 | Retention | 10 most recent runs (older files pruned by `scripts/prune_qa.py`) |
 
 ## Latest Summary
@@ -20,28 +20,27 @@ an LLM to judge what regex cannot see.
 
 ============================================================
 
-Recent — last 2 UTC days (2026-11-20, 2026-11-21)
-Total scanned : 108
-Bad reports   : 18  (16.7%)
+Recent — last 2 UTC days (2026-11-21, 2026-11-22)
+Total scanned : 106
+Bad reports   : 25  (23.6%)
 
 Issue breakdown:
-  DCF_GAP                 15  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
-  DUPLICATE                2  same ticker+type+date with a -2 / -3 suffix
-  STALE_PRICE              1  a newer completed session existed before the report date
-  RR_TOO_LOW               1  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
+  DCF_GAP                 14  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DUPLICATE               11  same ticker+type+date with a -2 / -3 suffix
+  RR_TOO_LOW               3  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
 
 ------------------------------------------------------------
 
 All scanned reports
-Total scanned : 2698
-Bad reports   : 968  (35.9%)
+Total scanned : 2761
+Bad reports   : 988  (35.8%)
 
 Issue breakdown:
-  RR_TOO_LOW             446  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
+  RR_TOO_LOW             448  a recommended strategy's reward/risk to T1 is below 1 : 1.5, or its T1 is the current price
   ARITHMETIC             206  a derived valuation (§8.8 total, MOS, DCF premium) does not recompute from the report's own figures
   DERIVATION             185  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
-  DUPLICATE              102  same ticker+type+date with a -2 / -3 suffix
-  DCF_GAP                 64  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DUPLICATE              113  same ticker+type+date with a -2 / -3 suffix
+  DCF_GAP                 74  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
   RR_MISMATCH             29  a stated R/R matches neither target from its own entry/stop
   STORE_MISMATCH          28  the close the report was given is not the committed price store's close for that date
   STALE_PRICE             11  a newer completed session existed before the report date
@@ -55,18 +54,18 @@ Issue breakdown:
   LEVEL_MISMATCH           1  a Ch.4 R1–S3 is not the computed level of the same label
 
 Top 10 tickers by bad-report count:
-  amd            47 / 87   bad
-  tsla           46 / 86   bad
-  ktos           40 / 87   bad
-  pltr           39 / 87   bad
-  amzn           38 / 87   bad
-  2330.tw        37 / 87   bad
-  pl             36 / 87   bad
-  sofi           35 / 87   bad
-  spcx           35 / 88   bad
-  avgo           34 / 88   bad
+  amd            48 / 89   bad
+  tsla           47 / 88   bad
+  ktos           41 / 89   bad
+  pltr           40 / 89   bad
+  amzn           39 / 89   bad
+  2330.tw        37 / 89   bad
+  pl             37 / 89   bad
+  sofi           36 / 89   bad
+  grab           35 / 89   bad
+  spcx           35 / 90   bad
 
-CSV written → qa/bad_reports_2026-11-21.csv
+CSV written → qa/bad_reports_2026-11-22.csv
 ```
 
 ## Stage 2 — LLM review (`scripts/review_report_quality.py`)
@@ -79,43 +78,37 @@ given the close each report was built on and stage 1's findings.
 
 | Field | Value |
 |-------|-------|
-| CSV | [llm_review_2026-11-21.csv](llm_review_2026-11-21.csv) |
-| Full summary | [llm_review_2026-11-21.txt](llm_review_2026-11-21.txt) |
+| CSV | [llm_review_2026-11-22.csv](llm_review_2026-11-22.csv) |
+| Full summary | [llm_review_2026-11-22.txt](llm_review_2026-11-22.txt) |
 
 ```
 
 ============================================================
-Reports reviewed : 178
-Mean score       : 4.13 / 5
+Reports reviewed : 166
+Mean score       : 4.17 / 5
 
-Verdict breakdown (178 grounded):
-  pass             107
-  warn              59
-  fail               7
-  PARSE_ERROR        5
+Verdict breakdown (166 grounded):
+  pass             100
+  warn              58
+  fail               4
+  PARSE_ERROR        4
 
 Mean score by dimension:
   data_integrity   4.27
-  completeness     4.51
-  depth            4.18
-  consistency      4.46
-  language         4.88
+  completeness     4.58
+  depth            4.20
+  consistency      4.49
+  language         4.93
 
-Failed review (7):
-  amd          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amd/market_news_2026-11-20_gemini.md
-      → 報告中提到的股價 '收報 489.19 美元' 與 '單日市值劇烈蒸發 670 億美元' 的數據未能合理解釋其來源，存在數據誠信問題。
-  msft         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/msft/market_news_2026-11-20_gemini.md
-      → 報告中提到的微軟最新收盤價為 498.3 美元，但未提供該數據的來源，可能存在數據誠信問題。
-  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-21_gemini.md
-      → 報告中提到輝達股價自10月峰值回檔40%，但未提供具體數據來源。
-  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-21_gemini.md
-      → 報告中提到的股價 3.76 美元與 52 週新低的數據未能確認其來源，存在數據誠信問題。
-  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-20_gemini.md
-      → 報告中提到SK海力士的利潤率高達80%，這一數字不合理。
-  soxq         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxq/market_news_2026-11-21_gemini.md
-      → 報告中提到的 '晶片出口總值歷史性地超越了原油' 需要具體數據支持，否則可能存在數據誠信問題。
-  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-20_gemini.md
-      → 報告中提到輝達股價重挫約 18%，但未提供具體數據來源，可能存在數據誠信問題。
+Failed review (4):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-21_openai.md
+      → 報告宣稱記憶體製造商 MU 的 TTM 毛利率達 80.7%、營業利益率達 74.6%（最新季度達 80.7%），屬明顯不合理之捏造數據。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-21_openai.md
+      → 第 3.3 節宣稱記憶體製造商營業利益率達「最新季 79.6%」及「TTM 營業利益率 72.5%」，嚴重偏離半導體記憶體產業真實經營水準。
+  nu           market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nu/market_news_2026-11-22_gemini.md
+      → 報告日期標題為 2026-11-22，但內容中提到的報告日期為 2026-11-21，存在矛盾。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-22_gemini.md
+      → 報告中提到 SOXL 單日暴跌 32%，但未提供具體數據來源，可能存在數據誠信問題。
 
-CSV written → qa/llm_review_2026-11-21.csv (71 row(s))
+CSV written → qa/llm_review_2026-11-22.csv (66 row(s))
 ```

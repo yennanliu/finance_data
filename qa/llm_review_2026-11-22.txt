@@ -1,0 +1,29 @@
+
+============================================================
+Reports reviewed : 166
+Mean score       : 4.17 / 5
+
+Verdict breakdown (166 grounded):
+  pass             100
+  warn              58
+  fail               4
+  PARSE_ERROR        4
+
+Mean score by dimension:
+  data_integrity   4.27
+  completeness     4.58
+  depth            4.20
+  consistency      4.49
+  language         4.93
+
+Failed review (4):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-21_openai.md
+      → 報告宣稱記憶體製造商 MU 的 TTM 毛利率達 80.7%、營業利益率達 74.6%（最新季度達 80.7%），屬明顯不合理之捏造數據。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-21_openai.md
+      → 第 3.3 節宣稱記憶體製造商營業利益率達「最新季 79.6%」及「TTM 營業利益率 72.5%」，嚴重偏離半導體記憶體產業真實經營水準。
+  nu           market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nu/market_news_2026-11-22_gemini.md
+      → 報告日期標題為 2026-11-22，但內容中提到的報告日期為 2026-11-21，存在矛盾。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-22_gemini.md
+      → 報告中提到 SOXL 單日暴跌 32%，但未提供具體數據來源，可能存在數據誠信問題。
+
+CSV written → qa/llm_review_2026-11-22.csv (66 row(s))
