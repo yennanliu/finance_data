@@ -1,0 +1,43 @@
+
+============================================================
+Reports reviewed : 156
+Mean score       : 4.08 / 5
+
+Verdict breakdown (156 grounded):
+  pass              92
+  warn              50
+  fail              11
+  PARSE_ERROR        3
+
+Mean score by dimension:
+  data_integrity   4.20
+  completeness     4.50
+  depth            4.14
+  consistency      4.46
+  language         4.87
+
+Failed review (11):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-22_openai.md
+      → 報告引用嚴重脫離現實的財務數據，如記憶體製造商 TTM 營業利益率達「74.6%」、毛利率達「80.7%」。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-23_openai.md
+      → 報告出現記憶體製造商營業利益率高達「74.6%」（第 3.3 節）甚至最新季達「80.7%」（第 11.5 節），毛利率達「80.7%」，數據明顯荒謬且嚴重偏離產業真實常態。
+  goog         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/goog/market_news_2026-11-22_gemini.md
+      → 報告中提到的股價 264.0 美元與其他數據（如本益比 15 倍）未能提供一致的背景資料，可能存在數據誠信問題。
+  nu           market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nu/market_news_2026-11-22_gemini.md
+      → 報告日期標題為 2026-11-22，但內容中提到的報告日期為 2026-11-21，存在矛盾。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-23_gemini.md
+      → 報告中提到輝達市值蒸發達 2.7 兆美元，但未提供具體的數據來源或背景。
+  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-23_gemini.md
+      → 報告中提到的最新收盤價101.19美元與報告日期不符，可能存在數據誠信問題。
+  pltr         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/pltr/market_news_2026-11-22_gemini.md
+      → 報告中提到PLTR股價最新收盤價為143.49 USD，但未提供該數據的來源，可能存在數據誠信問題。
+  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-23_gemini.md
+      → 報告中提到的最新交易價格為608.45美元，但未提供來源，可能存在數據誠信問題。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-23_gemini.md
+      → 報告中提到 SK hynix 的 HBM 業務毛利率為 80%，這一數字的合理性需進一步驗證。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-22_gemini.md
+      → 報告中提到 SOXL 單日暴跌 32%，但未提供具體數據來源，可能存在數據誠信問題。
+  vst          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/vst/market_news_2026-11-22_gemini.md
+      → 報告中提到的股價從 128.38 美元滑落至 115.25 美元，但未提供具體的數據來源，可能存在數據誠信問題。
+
+CSV written → qa/llm_review_2026-11-23.csv (64 row(s))
