@@ -1,0 +1,27 @@
+
+============================================================
+Reports reviewed : 192
+Mean score       : 4.16 / 5
+
+Verdict breakdown (192 grounded):
+  pass             114
+  warn              69
+  fail               3
+  PARSE_ERROR        6
+
+Mean score by dimension:
+  data_integrity   4.31
+  completeness     4.52
+  depth            4.15
+  consistency      4.52
+  language         4.89
+
+Failed review (3):
+  amd          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amd/market_news_2026-11-24_gemini.md
+      → 報告中提到的 AMD 最新收盤價為 453.46 美元，但未提供來源，可能存在數據誠信問題。
+  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-25_gemini.md
+      → 報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源，可能存在數據誠信問題。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-24_gemini.md
+      → 報告中提到 SK 海力士的營業利益率達 80%，這一數字的合理性存疑。
+
+CSV written → qa/llm_review_2026-11-25.csv (78 row(s))
