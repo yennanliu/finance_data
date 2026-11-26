@@ -1,0 +1,37 @@
+
+============================================================
+Reports reviewed : 193
+Mean score       : 4.11 / 5
+
+Verdict breakdown (193 grounded):
+  pass             112
+  warn              69
+  fail               8
+  PARSE_ERROR        4
+
+Mean score by dimension:
+  data_integrity   4.23
+  completeness     4.48
+  depth            4.13
+  consistency      4.46
+  language         4.87
+
+Failed review (8):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-26_openai.md
+      → 報告列出記憶體製造商 TTM 毛利率「80.7%」、營業利益率「74.6%」及最新季度營業利益率「80.7%」，明顯脫離半導體硬體製造業的真實財務常理。
+  amzn         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amzn/market_news_2026-11-26_gemini.md
+      → 報告中提到的 AWS 雲端流量疲軟與股價回調的數據缺乏具體來源，無法驗證其真實性。
+  goog         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/goog/market_news_2026-11-26_gemini.md
+      → 報告中提到的「高達上兆美元規模的長期 AI 投資帳單」缺乏具體數據支持，可能存在誇大問題。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-26_gemini.md
+      → 報告中提到的最新交易股價收於149.3美元，但未提供來源，可能存在數據誠信問題。
+  onds         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/onds/market_news_2026-11-26_gemini.md
+      → 報告中提到的營收數字（1.675 億美元）與毛利率的描述存在矛盾，未能清楚解釋毛利率下降的原因。
+  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-25_gemini.md
+      → 報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源，可能存在數據誠信問題。
+  orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-26_gemini.md
+      → 報告中提到的股價跌幅（53%至67%）缺乏具體數據支持，可能存在誤導。
+  robo         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/robo/market_news_2026-11-25_gemini.md
+      → 報告中提到的最新交易價格 65.89 USD 是否正確，未提供來源。
+
+CSV written → qa/llm_review_2026-11-26.csv (81 row(s))
