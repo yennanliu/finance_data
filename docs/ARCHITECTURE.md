@@ -145,15 +145,15 @@ PROVIDER_DEFAULTS = {
 }
 FALLBACK_CHAIN = ["gemini", "openai"]
 TYPE_DEFAULTS = {
-    "fundamental-analysis": {"provider": "openai", "model": "gpt-6-luna", "max_tokens": 64000},
-    "technical-analysis":   {"provider": "openai", "model": "gpt-6-luna"},  # keeps DEFAULT_TOKENS
+    "fundamental-analysis": {"provider": "openai", "model": "gpt-6-luna", "max_tokens": 112000},
+    "technical-analysis":   {"provider": "openai", "model": "gpt-6-luna", "max_tokens": 112000},
 }
 ```
 
 Scheduled CI runs pass no provider or model, so `resolve_chain()` decides:
-fundamental reports run on `openai:gpt-6-luna` with a 64,000-token budget,
-technical reports on `openai:gpt-6-luna` with the default 32,000, both fall
-back to gemini, and every
+fundamental and technical reports run on `openai:gpt-6-luna` with a
+112,000-token budget (plus 16k reasoning headroom = the model's 128,000
+ceiling), both fall back to gemini, and every
 other type starts at `FALLBACK_CHAIN[0]`. See [`REPORT_PIPELINE.md`](REPORT_PIPELINE.md#llm-layer)
 for retries, refusals and token clamps.
 

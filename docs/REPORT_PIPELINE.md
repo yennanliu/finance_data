@@ -44,8 +44,9 @@ Code: `scripts/analysis/utils/llm.py`, re-exported as `analysis.llm`.
   `max_completion_tokens` plus 16k of headroom, since that cap also covers
   reasoning tokens.
 - **Token budget.** The budget sent is `--max-tokens`. Without it,
-  `resolve_max_tokens()` uses the type's `TYPE_DEFAULTS` budget (fundamental:
-  64000) and otherwise `DEFAULT_TOKENS` (32000, which technical keeps). A full
+  `resolve_max_tokens()` uses the type's `TYPE_DEFAULTS` budget (fundamental
+  and technical: 112000, which with the 16k headroom is gpt-6-luna's full
+  128,000) and otherwise `DEFAULT_TOKENS` (32000). A full
   fundamental report (11 chapters, Ch.8 DCF arithmetic) needs ~32k output tokens.
   `run_openai` clamps to the model's own ceiling (`OPENAI_MAX_TOKENS`; gpt-4o is
   16,384, so the OpenAI fallback truncates full-length reports; the gpt-6

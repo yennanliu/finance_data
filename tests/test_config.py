@@ -120,19 +120,21 @@ def test_fundamental_budget_is_larger_and_fits_gpt_6_luna():
     from scripts.analysis.utils import llm
 
     budget = resolve_max_tokens("fundamental-analysis")
-    assert budget == 64000 > DEFAULT_TOKENS
-    assert budget + llm._OPENAI_REASONING_HEADROOM <= llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
+    assert budget == 112000 > DEFAULT_TOKENS
+    # Exactly the ceiling: any larger and the OpenAI request is rejected (400).
+    assert budget + llm._OPENAI_REASONING_HEADROOM == llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
     assert resolve_max_tokens("fundamental-analysis", 8000) == 8000   # explicit wins
 
 
-def test_technical_keeps_the_default_budget():
+def test_technical_gets_the_full_luna_budget():
     from scripts.analysis.config import DEFAULT_TOKENS
     from scripts.analysis.config.providers import resolve_max_tokens
     from scripts.analysis.utils import llm
 
     budget = resolve_max_tokens("technical-analysis")
-    assert budget == DEFAULT_TOKENS == resolve_max_tokens("stock-eval")
-    assert budget + llm._OPENAI_REASONING_HEADROOM <= llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
+    assert budget == resolve_max_tokens("fundamental-analysis") == 112000
+    assert budget + llm._OPENAI_REASONING_HEADROOM == llm.OPENAI_MAX_TOKENS["gpt-6-luna"]
+    assert resolve_max_tokens("stock-eval") == DEFAULT_TOKENS   # untouched types keep it
 
 
 def test_resolve_chain_honors_explicit_primary_model():

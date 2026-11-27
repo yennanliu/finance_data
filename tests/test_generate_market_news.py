@@ -318,3 +318,15 @@ def test_fetch_ticker_info_null_short_name_falls_back_to_ticker():
     # would reach _short_name() and abort the whole news fetch.
     obj = types.SimpleNamespace(info={"longName": None, "shortName": None})
     assert mn.fetch_ticker_info("ONDS", obj)["name"] == "ONDS"
+
+
+def test_gemini_cap_covers_the_workflow_budget():
+    """At 8000 the cap cut ~4% of reports off mid-line (thinking tokens share
+    the budget), while the workflow asked for 20000. Keep them in step."""
+    import re
+    from pathlib import Path
+
+    wf = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+          / "daily_market_news.yml").read_text()
+    workflow_budget = int(re.search(r'DEFAULT_MAX_TOKENS: "(\d+)"', wf).group(1))
+    assert mn._GEMINI_MAX_TOKENS == workflow_budget == mn.DEFAULT_TOKENS == 20000

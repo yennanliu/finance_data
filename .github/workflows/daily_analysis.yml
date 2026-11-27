@@ -160,7 +160,7 @@ on:
           - claude-opus-4-6
           - claude-haiku-4-5-20251001
       max_tokens:
-        description: "Max output tokens (blank = the analysis type's default: fundamental 64000, others 32000)"
+        description: "Max output tokens (blank = the analysis type's default: fundamental and technical 112000, others 32000)"
         required: false
         default: ""
 
@@ -219,7 +219,7 @@ jobs:
       # analysis type. Provider / model / max-tokens are left EMPTY for
       # scheduled runs on purpose: the generator's own defaults (per analysis
       # type: fundamental and technical → openai gpt-6-luna, the rest →
-      # gemini-3.8-flash; fundamental 64000 tokens, others 32000 — see
+      # gemini-3.8-flash; fundamental and technical 112000 tokens, others 32000 — see
       # analysis/config/providers.py) are the single source
       # of truth, so this workflow no longer restates them.
       - name: Resolve analysis parameters

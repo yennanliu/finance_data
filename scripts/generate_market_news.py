@@ -29,10 +29,15 @@ from analysis.data.sources import yahoo_news
 from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
 from analysis.publish import GENERATED_BY, frontmatter
 
-DEFAULT_TOKENS = 12000
+DEFAULT_TOKENS = 20000
 
-# Hard cap for Gemini to prevent runaway multi-hundred-KB outputs
-_GEMINI_MAX_TOKENS = 8000
+# Hard cap for Gemini against runaway output. It was 8000 after a prompt that
+# told the model to invent missing news produced 200-270 KB reports; that
+# prompt is fixed, and at 8000 about 4% of reports (68 of 1,759 by 2026-11)
+# were cut off mid-line, because Gemini's thinking tokens share this budget.
+# 20000 matches the workflow's DEFAULT_MAX_TOKENS and still bounds a runaway
+# at roughly 40k characters. Real runs at 20000 used ~5k and finished (STOP).
+_GEMINI_MAX_TOKENS = 20000
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -354,7 +359,7 @@ def call_openai(prompt: str, model: str, max_tokens: int) -> str:
 
 
 def call_gemini(prompt: str, model: str, max_tokens: int) -> str:
-    """Generate a market-news report via Gemini (8k cap, no recovery/refusal retry)."""
+    """Generate a market-news report via Gemini (20k cap, no recovery/refusal retry)."""
     return run_gemini("", prompt, _GEMINI_SYSTEM_MESSAGE, model=model,
                       max_tokens=max_tokens, token_ceiling=_GEMINI_MAX_TOKENS,
                       recover_truncation=False, refusal_retry=False)
