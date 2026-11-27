@@ -201,7 +201,8 @@ a rule it was not given.
 
 ### How far to trust the scores
 
-The judge is reproducible, but about a third of its verdicts are boilerplate.
+The findings below are from the `gpt-4o-mini` era (before 2026-11-27). With that
+model the judge was reproducible, but about a third of its verdicts were boilerplate.
 
 - Two live `gpt-4o-mini` runs over the same 117 reports agreed closely: 34/12/71,
   then 36/6/75 pass/warn/fail, with per-dimension means within 0.04. The scores
@@ -214,7 +215,18 @@ The judge is reproducible, but about a third of its verdicts are boilerplate.
   `$90.27B` TTM revenue was a genuine fabrication (actual ≈ $37B) that stage 1
   passed clean.
 
-So the aggregate fail rate is not actionable, but the grounded subset is exactly
-what this stage is for. A larger reviewer model has **not** been compared yet;
-`llm_review_limit` makes that cheap. On current evidence the boilerplate looks
-more like a prompt or rubric problem than a model-capability one.
+So with `gpt-4o-mini` the aggregate fail rate was not actionable, but the
+grounded subset was exactly what this stage is for. At the time the boilerplate
+looked more like a prompt or rubric problem than a model-capability one. The
+rubric fixes (sourcing is not a defect, the evidence rule) and the downstream
+filters (`verdict_is_grounded`, `complaint_is_substantive`) followed from that.
+
+The 2026-11-27 comparison changed that reading. Even with those rubric fixes in
+place, `gpt-4o-mini` kept writing sourcing-only complaints on market-news
+reports. On the same 12 reports, `gpt-6-luna` wrote none and named checkable
+defects instead (see *Who grades what*). So the remaining noise was a model
+limit, not a prompt problem, and the reviewer was switched. That comparison
+covered 12 market-news reports from one day. It has not been repeated for
+reproducibility, as the 117-report runs above were, or on fundamental and
+technical reports, which Gemini grades. `llm_review_limit` keeps either check
+cheap.
