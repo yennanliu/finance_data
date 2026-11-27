@@ -84,9 +84,15 @@ NEWS_MAX_AGE_DAYS = 14
 # site searches already filter on the company, so only these are re-checked.
 KEYWORD_FEEDS = frozenset(name for name, _ in RSS_FEEDS)
 # Quote, profile and options pages: titles of a page about a ticker, not news.
+# A bare "Flytech Technology Co., Ltd. (6206.TW)" is Bing's profile page, so a
+# title that is only a company name (ending in a corporate suffix) and a
+# ticker counts too. A headline that merely ends in its ticker, such as
+# "AMD Announces Quarterly Results (AMD)", is news and is kept.
 _LISTING_PAGE = re.compile(
     r"stock price,? (?:news,? )?quote|price,? quote|company profile|options chain"
-    r"|stock price and chart|META_TITLE|^[^|]*\([0-9A-Z.\-]+\)\s*$", re.I)
+    r"|stock price and chart|META_TITLE"
+    r"|^[^()|]*\b(?:inc|corp|corporation|co|company|ltd|limited|plc|holdings?|group"
+    r"|etf|fund|trust)\.?,?\s*\([0-9A-Z.:\-]+\)\s*$", re.I)
 
 
 def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
@@ -252,6 +258,36 @@ def fetch_news(ticker: str, company: str = "") -> list[dict]:
     return unique
 
 
+# Yahoo's marketState while the regular session is trading; any other state
+# (PRE, POST, POSTPOST, PREPRE, CLOSED) means regularMarketPrice is a close.
+_TRADING_STATES = {"REGULAR"}
+
+
+def session_close(info: dict):
+    """``(price, 'YYYY-MM-DD')`` of the last closed session from the quote.
+
+    ``quote_close`` treats a quote stamped before 16:00 New York as intraday,
+    which rejects the real close of a 13:00 early-close session (the Friday
+    after Thanksgiving, Christmas Eve). Yahoo's ``marketState`` says whether
+    the session is still trading, so it decides here when present.
+    """
+    state = info.get("marketState")
+    if not state:
+        return quote_close(info)
+    if state in _TRADING_STATES:
+        return None, None
+    price, stamp, tzname = (info.get("regularMarketPrice"), info.get("regularMarketTime"),
+                            info.get("exchangeTimezoneName"))
+    try:
+        price = float(price)
+        when = datetime.fromtimestamp(int(stamp), ZoneInfo(tzname) if tzname else timezone.utc)
+    except (TypeError, ValueError, KeyError, OSError):
+        return None, None
+    if price != price or price <= 0:
+        return None, None
+    return price, when.date().isoformat()
+
+
 def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
     """Return basic info dict (price, sector, name…) from yfinance.
 
@@ -263,7 +299,7 @@ def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
     try:
         t = ticker_obj or yf.Ticker(ticker)
         info = t.info or {}
-        close, close_date = quote_close(info)
+        close, close_date = session_close(info)
         if close_date is None:  # mid-session: the last finished session instead
             try:
                 close, close_date = last_completed_close(t.history(period="5d"))
@@ -341,8 +377,54 @@ def format_news_block(news_items: list[dict], tzname: str = "") -> str:
     return "\n".join(lines) if lines else "（暫時無可用新聞資料）"
 
 
-def build_prompt(ticker: str, info: dict, news_block: str) -> str:
+def build_no_news_prompt(ticker: str, info: dict, today: str) -> str:
+    """A short-report prompt for a ticker with no recent news about it.
+
+    The full template asks for a 400–600 字 summary and 5–8 insights, which with
+    no news the model filled from general industry knowledge (6206.tw).
+    """
+    name = info.get("name", ticker)
+    summary = info.get("business_summary")
+    profile = f"\n- 公司簡介（Yahoo Finance）：{summary}" if summary else ""
+    return f"""請用**繁體中文**為 {ticker}（{name}）撰寫一份簡短的市場新聞報告。
+
+## 股票基本資訊
+- 代碼：{ticker}
+- 名稱：{name}
+- 報告日期：{today}{profile}
+
+本期（最近 {NEWS_MAX_AGE_DAYS} 天）沒有與 {ticker} 相關的可用新聞。
+
+規則：
+- 全文約 300 字以內
+- 不得捏造新聞，不得用一般產業知識推演公司近況、股價走勢或市場情緒
+- 不使用 "$XXX"、"N/A"、"TBD" 等佔位符
+
+請依照以下格式輸出（使用 Markdown）：
+
+# {ticker} 市場新聞分析報告 ({today})
+
+## 📅 報告日期
+{today}
+
+## 🏢 公司概覽
+[依上方公司簡介，2–3 句]
+
+## 📝 新聞摘要總覽
+本期（最近 {NEWS_MAX_AGE_DAYS} 天）無與 {ticker} 相關的可用新聞。
+
+## 🔮 短期關注重點
+[1–3 點可追蹤的公開資訊類別，例如財報、月營收或法說會，不推測其結果]
+
+---
+*本報告由 AI 自動生成，僅供參考，不構成任何投資建議。*
+"""
+
+
+def build_prompt(ticker: str, info: dict, news_block: str, has_news: bool = True) -> str:
     today = date.today().isoformat()
+    if not has_news:
+        return build_no_news_prompt(ticker, info, today)
     name = info.get("name", ticker)
     sector = info.get("sector", "N/A")
     price = info.get("current_price", "N/A")
@@ -386,7 +468,6 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 - 不要自行計算百分比、漲跌幅或上行空間。只引用新聞或上方資料中已有的數字，並註明出處
   （例如「據 Yahoo Finance 報導，股價需上漲約 57% 才能回到歷史高點」），不要把不同來源的價格與百分比湊在一起
 - 分析師共識目標價只是背景資訊：可以引用，但不得單憑它推論估值支撐、低估或營運前景
-- 若上方沒有提供任何新聞，各章節只需簡短說明本期無可用新聞，不得用一般產業知識推演公司近況
 - 區分事實與推論：新聞報導的事件寫成事實；你的推論要寫成「可能」「或將」，不得把推測寫成已確定的因果或結果
 - 「創歷史紀錄」「自某年以來最大」等歷史比較，只有新聞明確這樣寫時才可引用，並註明出處
 - 新聞的發布時間是其報導時間；描述事件日期時以新聞內容為準，不要把發布日期當成事件發生日
@@ -458,7 +539,10 @@ _OPENAI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁�
 **新聞資料處理原則**：
 - **只分析實際提供的新聞**，不捏造或推測不存在的新聞標題與事件
 - 跳過標題為「未命名」或「N/A」的條目，不對其進行內容推演
-- 若新聞數量有限，深度分析現有重點新聞即可，無需填充虛假內容"""
+- 若新聞數量有限，深度分析現有重點新聞即可，無需填充虛假內容
+
+**例外（沒有新聞時）**：若使用者提示中沒有提供任何新聞，改寫簡短報告（約 300 字以內），
+各章節只需說明本期無可用新聞；上述字數、洞察數量與深度要求一律不適用，不得以一般產業知識填充"""
 
 
 _GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁有 CFA 資格與 15 年以上財經新聞分析經驗。
@@ -471,7 +555,10 @@ _GEMINI_SYSTEM_MESSAGE = """你是一位頂級美股投資研究分析師，擁�
 5. **專業格式**：使用完整的 Markdown 格式，包含表格、條列、emoji 視覺標記
 6. **風險評估**：詳細分析風險因素，使用 🟢🟡🔴 標記風險等級
 7. **報告長度**：目標 1500–2500 字，精簡有力，不重複鋪墊
-8. **新聞誠信**：只分析實際提供的新聞，不捏造或推測不存在的新聞標題與事件"""
+8. **新聞誠信**：只分析實際提供的新聞，不捏造或推測不存在的新聞標題與事件
+
+**例外（沒有新聞時）**：若使用者提示中沒有提供任何新聞，改寫簡短報告（約 300 字以內），
+各章節只需說明本期無可用新聞；上述字數、洞察數量與深度要求一律不適用，不得以一般產業知識填充"""
 
 
 def call_claude(prompt: str, model: str, max_tokens: int) -> str:
@@ -523,7 +610,7 @@ def generate_report(
 
     news_block = (format_news_block(news_items, info.get("timezone", ""))
                   if news_items else "（目前無可用新聞資料）")
-    prompt = build_prompt(ticker, info, news_block)
+    prompt = build_prompt(ticker, info, news_block, has_news=bool(news_items))
 
     def dispatch(prov: str, mdl: str) -> str:
         if prov == "openai":

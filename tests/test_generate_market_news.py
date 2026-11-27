@@ -422,7 +422,6 @@ def test_prompt_carries_the_profile_target_and_derivation_rules():
     assert "Advanced Micro Devices operates…" in prompt
     assert "+63.0%（程式計算）" in prompt
     assert "不得單憑它推論估值支撐" in prompt
-    assert "本期無可用新聞" in prompt
     assert "不要自行計算百分比" in prompt
     assert "區分事實與推論" in prompt
 
@@ -488,3 +487,49 @@ def test_target_is_rounded_to_price_precision():
     prompt = mn.build_prompt("AMD", {"current_price": 406.03, "price_date": "2026-11-25",
                                      "target_mean": 649.8857}, "N")
     assert "649.89 USD" in prompt and "649.8857" not in prompt
+
+
+def test_a_headline_ending_in_its_ticker_is_news():
+    """Greptile on #118: the old rule dropped any title ending in "(TICKER)"."""
+    items = [_item("AMD Announces Quarterly Results (AMD)", publisher="Yahoo"),
+             _item("Advanced Micro Devices, Inc. (AMD)", publisher="Yahoo")]
+    kept = mn.select_news(items, "AMD", "Advanced Micro Devices, Inc.", _NOW)
+    assert [i["title"] for i in kept] == ["AMD Announces Quarterly Results (AMD)"]
+
+
+def _quote(state, hour, minute):
+    stamp = int(_dt(2026, 11, 27, hour, minute, tzinfo=_tz.utc).timestamp())
+    return {"marketState": state, "regularMarketPrice": 130.0, "regularMarketTime": stamp,
+            "exchangeTimezoneName": "America/New_York"}
+
+
+def test_an_early_close_is_a_close():
+    """The Friday after Thanksgiving closes at 13:00 New York (18:00 UTC)."""
+    assert mn.session_close(_quote("POST", 18, 0)) == (130.0, "2026-11-27")
+
+
+def test_a_trading_session_is_not_a_close():
+    assert mn.session_close(_quote("REGULAR", 16, 0)) == (None, None)
+
+
+def test_without_market_state_the_clock_rule_applies():
+    q = _quote("", 16, 0)  # 11:00 New York
+    assert mn.session_close(q) == (None, None)
+
+
+def test_no_news_gets_the_short_prompt_and_the_system_messages_allow_it():
+    prompt = mn.build_prompt("6206.TW", {"name": "Flytech", "business_summary": "POS maker"},
+                             "（目前無可用新聞資料）", has_news=False)
+    assert "300 字以內" in prompt and "POS maker" in prompt
+    assert "400–600" not in prompt and "關鍵洞察" not in prompt
+    for msg in (mn._OPENAI_SYSTEM_MESSAGE, mn._GEMINI_SYSTEM_MESSAGE):
+        assert "沒有新聞時" in msg
+
+
+def test_generate_report_uses_the_short_prompt_when_selection_leaves_nothing(monkeypatch, tmp_path):
+    monkeypatch.setattr(mn, "fetch_ticker_info", lambda t, obj=None: {"name": "Flytech"})
+    monkeypatch.setattr(mn, "fetch_news", lambda t, company="": [_item("old", ts=_OLD)])
+    sent = {}
+    monkeypatch.setattr(mn, "call_openai", lambda p, m, t: sent.setdefault("p", p) and "body")
+    mn.generate_report("6206.TW", "openai", "gpt-4o", 100, tmp_path)
+    assert "300 字以內" in sent["p"]
