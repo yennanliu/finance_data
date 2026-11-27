@@ -1,0 +1,10 @@
+path,ticker,analysis_type,date,provider,issues,line_count,content_lines,note
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amd/fundamental_analysis_2026-11-27_openai.md,amd,fundamental_analysis,2026-11-27,openai,DCF_GAP,1030,1002,dcf=75.54 price=406.03 gap=-81%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/amzn/fundamental_analysis_2026-11-27_openai.md,amzn,fundamental_analysis,2026-11-27,openai,DCF_GAP,918,890,dcf=56.75 price=244.43 gap=-77%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/grab/fundamental_analysis_2026-11-27_openai.md,grab,fundamental_analysis,2026-11-27,openai,DCF_GAP,1038,1010,dcf=6.27 price=2.84 gap=+121%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/ktos/fundamental_analysis_2026-11-27_openai.md,ktos,fundamental_analysis,2026-11-27,openai,DCF_GAP,1038,1010,dcf=9.93 price=28.95 gap=-66%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mrvl/fundamental_analysis_2026-11-26_openai.md,mrvl,fundamental_analysis,2026-11-26,openai,DCF_GAP,1066,1038,dcf=38.67 price=130.93 gap=-70%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/pltr/fundamental_analysis_2026-11-27_openai.md,pltr,fundamental_analysis,2026-11-27,openai,DCF_GAP,1041,1013,dcf=22.35 price=163.59 gap=-86%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/skhy/fundamental_analysis_2026-11-26_openai.md,skhy,fundamental_analysis,2026-11-26,openai,DCF_GAP,1063,1035,dcf=266.59 price=111.14 gap=+140%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-26_openai.md,sndk,fundamental_analysis,2026-11-26,openai,DCF_GAP,1010,982,dcf=612.02 price=73.61 gap=+731%
+/home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/tsla/fundamental_analysis_2026-11-27_openai.md,tsla,fundamental_analysis,2026-11-27,openai,DCF_GAP,1111,1083,dcf=13.13 price=380.14 gap=-97%
