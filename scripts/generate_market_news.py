@@ -158,7 +158,11 @@ def fetch_news(ticker: str, company: str = "") -> list[dict]:
         futures = {pool.submit(fetch): name for name, fetch in web_sources.items()}
         for fut in as_completed(futures):
             name = futures[fut]
-            batch = fut.result()
+            try:
+                batch = fut.result()
+            except Exception as exc:  # a fetcher bug must not abort the report
+                print(f"  [WARN] {name} failed: {exc!r}", file=sys.stderr)
+                batch = []
             source_counts[name] = len(batch)
             web_items.extend(batch)
 

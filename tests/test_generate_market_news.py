@@ -204,6 +204,36 @@ def test_fetch_news_with_every_source_empty(monkeypatch):
     assert mn.fetch_news("AAPL") == []
 
 
+@pytest.mark.parametrize("x_behaviour", ["down", "empty", "raises"])
+def test_report_still_builds_without_x(monkeypatch, x_behaviour):
+    """X unreachable, X with nothing on the stock, or a bug in the X fetcher:
+    the other sources still reach the prompt and the report is not aborted."""
+    real_urlopen = mn.urlopen
+
+    def fake_urlopen(req, **k):
+        if "site:x.com" in req.full_url:
+            if x_behaviour == "down":
+                raise TimeoutError("x.com unreachable")
+            return _FakeResp(b'<?xml version="1.0"?><rss><channel></channel></rss>')
+        return _FakeResp(RSS_XML)
+
+    monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
+    monkeypatch.setattr(mn, "urlopen", fake_urlopen)
+    if x_behaviour == "raises":
+        real_site = mn._fetch_site
+        def buggy(name, *a, **k):
+            if name == "X":
+                raise ValueError("unexpected")
+            return real_site(name, *a, **k)
+        monkeypatch.setattr(mn, "_fetch_site", buggy)
+
+    items = mn.fetch_news("AAPL", "Apple Inc.")
+    assert items and not any(i["publisher"] == "X" for i in items)
+    block = mn.format_news_block(items)
+    assert "無可用新聞" not in block
+    assert "AAPL" in mn.build_prompt("AAPL", {"name": "Apple Inc."}, block)
+
+
 # ── format_news_block / build_prompt ─────────────────────────────────────────
 
 def test_format_news_block_empty():
