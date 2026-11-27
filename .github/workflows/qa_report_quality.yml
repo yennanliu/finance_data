@@ -16,7 +16,7 @@ on:
         type: choice
         options: ["true", "false"]
       llm_review_model:
-        description: "Reviewer model (blank = script default, a mini-class model)"
+        description: "Reviewer model for openai (blank = script default, gpt-6-luna)"
         required: false
         default: ""
         type: string

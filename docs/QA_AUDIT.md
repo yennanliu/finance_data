@@ -88,9 +88,17 @@ template is `.format()`ed, so escape literal JSON braces as `{{` `}}`.
 - Reviewer models are set in `REVIEWER_MODELS` in `review_report_quality.py`,
   **not** in `resolve_chain()`. Otherwise changing the generator's OpenAI model
   would silently change the auditor too. There is one entry per provider, so a
-  `--cross-provider` switch never hands Gemini an OpenAI model id. Each is a
-  cheap model, because cost is driven by input volume, not the ~300-token
-  verdict. `--model` applies only to `--provider`.
+  `--cross-provider` switch never hands Gemini an OpenAI model id. Cost is
+  driven by input volume, not the ~300-token verdict. `--model` applies only
+  to `--provider`.
+- The OpenAI reviewer is `gpt-6-luna` (was `gpt-4o-mini` until 2026-11-27).
+  On the same 12 market-news reports, `gpt-4o-mini` warned on 9 with vague
+  sourcing complaints; `gpt-6-luna` raised none and instead caught checkable
+  defects (a wrong upside %, stale news presented as current, off-topic
+  headlines). It is the same model as the fundamental/technical generator, so
+  **`--cross-provider` is what keeps it from grading its own output**. If the
+  workflow drops the flag for a missing `GEMINI_API_KEY`, those reports are
+  self-graded and the summary's `Self-graded` line says how many.
 
 ### Inputs to the judge
 
@@ -144,7 +152,7 @@ a rule it was not given.
   kept.
 - **Sourcing-only complaints are ungrounded too** (`complaint_is_substantive`).
   The rubric already says a missing citation is not a defect, but `gpt-4o-mini`
-  kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
+  (the OpenAI reviewer before 2026-11-27) kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
   issue only asks for a source or verification (and names no contradiction,
   fabrication, exaggeration…) is kept in the CSV with `grounded=no`.
   The match is strict: each clause of an issue must be the figure it cites
@@ -193,7 +201,8 @@ a rule it was not given.
 
 ### How far to trust the scores
 
-The judge is reproducible, but about a third of its verdicts are boilerplate.
+The findings below are from the `gpt-4o-mini` era (before 2026-11-27). With that
+model the judge was reproducible, but about a third of its verdicts were boilerplate.
 
 - Two live `gpt-4o-mini` runs over the same 117 reports agreed closely: 34/12/71,
   then 36/6/75 pass/warn/fail, with per-dimension means within 0.04. The scores
@@ -206,7 +215,18 @@ The judge is reproducible, but about a third of its verdicts are boilerplate.
   `$90.27B` TTM revenue was a genuine fabrication (actual ≈ $37B) that stage 1
   passed clean.
 
-So the aggregate fail rate is not actionable, but the grounded subset is exactly
-what this stage is for. A larger reviewer model has **not** been compared yet;
-`llm_review_limit` makes that cheap. On current evidence the boilerplate looks
-more like a prompt or rubric problem than a model-capability one.
+So with `gpt-4o-mini` the aggregate fail rate was not actionable, but the
+grounded subset was exactly what this stage is for. At the time the boilerplate
+looked more like a prompt or rubric problem than a model-capability one. The
+rubric fixes (sourcing is not a defect, the evidence rule) and the downstream
+filters (`verdict_is_grounded`, `complaint_is_substantive`) followed from that.
+
+The 2026-11-27 comparison changed that reading. Even with those rubric fixes in
+place, `gpt-4o-mini` kept writing sourcing-only complaints on market-news
+reports. On the same 12 reports, `gpt-6-luna` wrote none and named checkable
+defects instead (see *Who grades what*). So the remaining noise was a model
+limit, not a prompt problem, and the reviewer was switched. That comparison
+covered 12 market-news reports from one day. It has not been repeated for
+reproducibility, as the 117-report runs above were, or on fundamental and
+technical reports, which Gemini grades. `llm_review_limit` keeps either check
+cheap.
