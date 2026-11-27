@@ -257,6 +257,15 @@ Code: `data/sources.complete_bars`, `data/technicals.py`.
   `$nan` close and no levels. Trailing NaN-close bars and an in-progress session
   are dropped. A newer official close from the quote is appended
   (`close_source: quote` in front matter).
+- **Skipped sessions come from the store.** Yahoo's Taiwan history can omit
+  the previous session while the next one trades. The 0050 technical cron,
+  delayed about 6 h by GitHub into the Taipei session, kept getting a close
+  two sessions old. Completed sessions between Yahoo's last bar and today are
+  filled from `data/prices/<key>.csv` (`close_source: price_store`). The store
+  update is scheduled mid-session in Taipei, so a stored row can be an intraday
+  snapshot. A row is filled only when it is the single missing session, its
+  close matches the official previous close in today's live quote to 0.05%
+  (about a tick), and the store agrees with Yahoo's last bar to 0.5%.
 - **No bars, no report.** `pipeline.require_price_history` aborts a technical run
   that has no bars or price, rather than let the model invent one (0050 was
   affected all through October).
