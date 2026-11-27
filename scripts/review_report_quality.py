@@ -303,9 +303,41 @@ _SUBSTANTIVE_RE = re.compile(
     r"placeholder|contradict|fabricat|inconsistent", re.IGNORECASE)
 
 
+# An issue is split into clauses, and every clause must be one of three
+# known-harmless kinds for the issue to count as sourcing-only. Anything else —
+# "且缺少結論或投資建議章節", a depth complaint, an unfamiliar phrasing — keeps
+# the issue, so a mixed or unclear complaint is never discarded.
+# CJK punctuation only (plus ", " / "; "): a bare "." or "," would cut a
+# figure like 4.31 or 2,400 into fragments.
+_CLAUSE_SPLIT_RE = re.compile(r"[，；。！？]+|[,;]\s+")
+# The clause that names the figure: 「報告中提到的 66.2% 毛利率是否為歷史最高」.
+_CITING_CLAUSE_RE = re.compile(r"^(但|而)?報告(中|內)?(所)?(提到|提及|列出|指出|宣稱|引用|寫道)")
+# The consequence boilerplate that follows: 「可能存在數據誠信問題」「影響數據的可信度」.
+_BOILERPLATE_CLAUSE_RE = re.compile(
+    r"^(可能)?(存在|影響|降低)(了)?(數據|資料)?(的)?(誠信|可信度|準確性|完整性)(問題)?$")
+
+
+def _clause_kind(clause: str) -> str:
+    if _SOURCING_RE.search(clause):
+        return "sourcing"
+    if _CITING_CLAUSE_RE.search(clause):
+        return "citing"
+    if _BOILERPLATE_CLAUSE_RE.search(clause.replace(" ", "")):
+        return "boilerplate"
+    return "other"
+
+
 def is_sourcing_only(issue: str) -> bool:
-    """Whether an issue complains only that a figure is uncited/unverified."""
-    return bool(_SOURCING_RE.search(issue)) and not _SUBSTANTIVE_RE.search(issue)
+    """Whether an issue complains *only* that a figure is uncited/unverified.
+
+    Strict on purpose: it needs at least one sourcing clause, no substantive
+    word anywhere, and no clause outside the citing / sourcing / boilerplate
+    shapes. Mixed or unclear issues return False and keep the verdict counted.
+    """
+    if _SUBSTANTIVE_RE.search(issue):
+        return False
+    kinds = [_clause_kind(c.strip()) for c in _CLAUSE_SPLIT_RE.split(issue) if c.strip()]
+    return "sourcing" in kinds and "other" not in kinds
 
 
 def complaint_is_substantive(verdict: str, issues: List[str]) -> bool:
@@ -690,8 +722,9 @@ def print_summary(results: List[ReviewResult], out=None) -> None:
         # Stated before the breakdown so the numbers below are never read as
         # covering every report.
         print(f"Ungrounded       : {len(ungrounded)}  "
-              f"(all-ones scores citing nothing from the report — "
-              f"in the CSV, excluded below)", file=out)
+              f"(all-ones scores citing nothing from the report, or "
+              f"complaints that only ask for a source — in the CSV, "
+              f"excluded below)", file=out)
     if scored:
         print(f"Mean score       : {sum(scored) / len(scored):.2f} / 5", file=out)
     print(f"\nVerdict breakdown ({len(counted)} grounded):", file=out)

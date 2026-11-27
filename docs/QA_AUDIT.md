@@ -147,6 +147,10 @@ a rule it was not given.
   kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
   issue only asks for a source or verification (and names no contradiction,
   fabrication, exaggeration…) is kept in the CSV with `grounded=no`.
+  The match is strict: each clause of an issue must be the figure it cites
+  (「報告中提到…」), a sourcing complaint, or the 「可能存在數據誠信問題」
+  boilerplate. Any other clause keeps the issue, so mixed or unclear
+  complaints still count.
 - **Gemini gets a larger output budget** (`REVIEWER_MAX_TOKENS_BY_PROVIDER`).
   Its thinking tokens count against `max_output_tokens`, so at the shared 1200
   the verdict JSON was cut off ~160 characters in and 4–6 Gemini-graded

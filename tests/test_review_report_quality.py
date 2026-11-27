@@ -1048,6 +1048,13 @@ def test_stage1_findings_are_not_scored_twice():
     ("未提供來源，且與第 3 章的 $54.23B 前後不一。", False),
     ("「高達上兆美元」缺乏具體數據支持，可能存在誇大問題。", False),
     ("關鍵洞察部分的分析較為表面。", False),
+    ("報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源，可能存在數據誠信問題。", True),
+    ("報告中提到的最新交易價格 65.89 USD 是否正確，未提供來源。", True),
+    # Mixed: a sourcing clause plus a real defect the word list does not know.
+    ("未提供來源，且缺少結論或投資建議章節。", False),
+    ("報告中提到的 2,400 點未提供來源，結論章節僅有一句話。", False),
+    # Unclear phrasing is kept, not discarded.
+    ("數據來源不明，分析流於表面。", False),
 ])
 def test_is_sourcing_only(issue, sourcing_only):
     assert rrq.is_sourcing_only(issue) is sourcing_only
@@ -1114,3 +1121,27 @@ def test_concurrent_review_keeps_the_input_order(tmp_path):
     rows = (tmp_path / "r.csv").read_text(encoding="utf-8").splitlines()[1:]
     dates = [r.split(",")[3] for r in rows]
     assert dates == sorted(dates) and len(dates) == 10
+
+
+def test_a_mixed_issue_keeps_the_verdict_counted(tmp_path):
+    """Greptile P1 on #113: a source mention must not hide a missing chapter."""
+    p = _write(tmp_path, "orcl", "market_news_2026-09-17_gemini.md")
+    raw = _verdict_json(verdict="warn", score=3,
+                        issues=["未提供來源，且缺少結論或投資建議章節。"])
+    with patch.object(rrq, "run_openai", return_value=raw):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.grounded is True
+    assert result.counts_against_quality()
+
+
+def test_summary_explains_sourcing_only_exclusions():
+    import io
+    r = rrq.ReviewResult(path="x", ticker="orcl", analysis_type="market_news",
+                         date="2026-09-17", report_provider="gemini",
+                         reviewer_provider="openai", reviewer_model="m",
+                         verdict="warn", score=3, issues=["未提供來源。"],
+                         grounded=False)
+    out = io.StringIO()
+    rrq.print_summary([r], out=out)
+    assert "only ask for a source" in out.getvalue()
