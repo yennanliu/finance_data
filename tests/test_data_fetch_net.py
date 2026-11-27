@@ -31,6 +31,13 @@ def test_get_soup_returns_soup_on_200(monkeypatch):
     assert soup is not None and soup.find("b").get_text() == "hi"
 
 
+@pytest.fixture(autouse=True)
+def _no_committed_price_store(monkeypatch):
+    """fetch_data fills skipped sessions from data/prices; these tests feed
+    their own bars and must not depend on the repo's committed store."""
+    monkeypatch.setattr(data_fetch, "load_store", lambda key: [])
+
+
 def test_get_soup_returns_none_on_403(monkeypatch):
     resp = type("R", (), {"status_code": 403, "text": ""})()
     monkeypatch.setattr("requests.get", lambda *a, **k: resp)

@@ -10,7 +10,7 @@ import time
 
 from ..exceptions import DataFetchError
 from ..utils.formatting import money
-from .prices import to_yf_symbol
+from .prices import load_store, report_key, to_yf_symbol
 
 
 # ── HTTP helpers ─────────────────────────────────────────────────────
@@ -423,7 +423,49 @@ def quote_close(info: dict):
     return price, when.date().isoformat()
 
 
-def complete_bars(hist, info: dict, now=None):
+# Relative close difference allowed between Yahoo's last bar and the store's
+# bar for the same date before the store may fill sessions after it.
+STORE_FILL_AGREEMENT = 0.005
+
+
+def _fill_from_store(hist, store_bars, local_today: str):
+    """``hist`` plus store sessions newer than its last bar and before today.
+
+    Yahoo's Taiwan history can omit the previous session while the next one
+    trades: at 10:21 Taipei on 2026-11-27 it went from 11-25 straight to the
+    in-progress 11-27 bar, while ``data/prices/0050.csv`` held the 11-26 close.
+    The 0050 technical cron is set for 05:30 Taipei, but GitHub runs it about
+    6 h late, mid-session. So 5 of the last 10 reports were given a close two
+    sessions old (QA ``STALE_PRICE``). Store bars are added only when the
+    store agrees with ``hist`` on its last date, so a split or restatement
+    that one side has not caught up with is never spliced in.
+    """
+    import pandas as pd
+
+    if not store_bars:
+        return hist, False
+    last = str(hist.index[-1])[:10]
+    by_date = {b["date"]: b for b in store_bars}
+    anchor = by_date.get(last)
+    if anchor is None or not anchor["close"]:
+        return hist, False
+    if abs(float(hist["Close"].iloc[-1]) / anchor["close"] - 1) > STORE_FILL_AGREEMENT:
+        return hist, False
+    fill = [b for b in store_bars if last < b["date"] < local_today]
+    if not fill:
+        return hist, False
+    tz = hist.index.tz
+    index = pd.DatetimeIndex([pd.Timestamp(b["date"]).tz_localize(tz) for b in fill],
+                             name=hist.index.name)
+    rows = pd.DataFrame({"Open": [b["open"] for b in fill], "High": [b["high"] for b in fill],
+                         "Low": [b["low"] for b in fill], "Close": [b["close"] for b in fill],
+                         "Volume": [float(b["volume"]) for b in fill]}, index=index)
+    for col in hist.columns.difference(rows.columns):
+        rows[col] = 0.0
+    return pd.concat([hist, rows[hist.columns]]), True
+
+
+def complete_bars(hist, info: dict, now=None, store_bars=None):
     """``(hist, close_source)``: daily bars every indicator can be computed from.
 
     After the US close Yahoo often publishes the new session's bar with volume
@@ -433,7 +475,12 @@ def complete_bars(hist, info: dict, now=None):
     were written anyway. Bars without a close are dropped, as is a bar for a
     session still in progress; if the quote carries a newer official close
     (:func:`quote_close`), it is appended as that session's bar. ``close_source``
-    is ``"daily_bar"``, ``"quote"`` or ``None`` when no bar is left.
+    is ``"daily_bar"``, ``"quote"``, ``"price_store"`` or ``None`` when no bar
+    is left.
+
+    ``store_bars`` (the committed ``data/prices`` rows) fills completed sessions
+    Yahoo's history skipped between its last bar and today; see
+    :func:`_fill_from_store`.
     """
     from datetime import datetime
 
@@ -454,10 +501,13 @@ def complete_bars(hist, info: dict, now=None):
                 and (local.hour, local.minute) < (close_h, close_m)
                 and len(hist) > 1):
             hist = hist.iloc[:-1]
+        hist, filled = _fill_from_store(hist, store_bars, local.date().isoformat())
+    else:
+        filled = False
 
     q_price, q_date = quote_close(info)
     if not q_date or q_date <= str(hist.index[-1])[:10]:
-        return hist, "daily_bar"
+        return hist, "price_store" if filled else "daily_bar"
     stamp = pd.Timestamp(q_date)
     stamp = stamp.tz_localize(tz) if tz is not None else stamp
     # The empty bar Yahoo published for this session still carries its volume.
@@ -512,7 +562,12 @@ def fetch_data(ticker: str) -> dict:
 
     # price history (2Y for richer technical context)
     try:
-        hist, close_source = complete_bars(t.history(period="2y"), info)
+        try:
+            store_bars = load_store(report_key(ticker))
+        except Exception:  # noqa: BLE001 — the store only fills gaps; never fatal
+            store_bars = []
+        hist, close_source = complete_bars(t.history(period="2y"), info,
+                                           store_bars=store_bars)
         price_now, price_date = last_completed_close(hist)
         price_52w = hist.tail(252)
         price_52w_high = float(price_52w["High"].max()) if not hist.empty else None
