@@ -40,10 +40,12 @@ static MkDocs site.
 
 ### Coverage
 
-- **Daily fundamental (36):** 0050, 2330.TW, TSLA, PL, GRAB, TSM, GOOG, AMZN,
+- **Daily fundamental (39):** 0050, 2330.TW, TSLA, PL, GRAB, TSM, GOOG, AMZN,
   MSFT, SOFI, PLTR, RKLB, ONDS, AVAV, KTOS, META, AMD, NVDA, NU, VST, ORCL, INTC,
-  SPCX, AVGO, NBIS, MU, SKHY, WDC, SNDK, MRVL, SOXQ, SOXX, WQTM, VTI, QQQ, ROBO
-- **Daily technical (25):** the first 25 of the above (0050 … NBIS)
+  SPCX, AVGO, NBIS, MU, SKHY, WDC, SNDK, MRVL, SOXQ, SOXX, WQTM, VTI, QQQ, ROBO,
+  UBER, ANT, CRWV
+- **Daily technical (28):** the first 25 of the above (0050 … NBIS), plus UBER,
+  ANT and CRWV
 - **Analysis types (12):** `fundamental-analysis`, `technical-analysis`,
   `stock-eval`, `stock-valuation`, `financial-report-analyst`,
   `earnings-call-analysis`, `insider-trading`, `institutional-ownership`,

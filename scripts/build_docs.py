@@ -1429,6 +1429,8 @@ COMPANY_META: dict[str, dict] = {
     "mrvl":     {"name": "Marvell Technology",        "flag": "🌊", "sector": "Semiconductors"},
     "mu":       {"name": "Micron Technology",         "flag": "🧠", "sector": "Memory / Storage"},
     "nbis":     {"name": "Nebius Group",              "flag": "☁️",  "sector": "AI Cloud"},
+    "crwv":     {"name": "CoreWeave",                 "flag": "☁️",  "sector": "AI Cloud"},
+    "ant":      {"name": "Anthropic PBC",             "flag": "🤖", "sector": "AI Models"},
     "nu":       {"name": "Nu Holdings",               "flag": "💜", "sector": "LatAm Fintech"},
     "sndk":     {"name": "SanDisk Corp.",             "flag": "💾", "sector": "Memory / Storage"},
     "uber":     {"name": "Uber Technologies",         "flag": "🚕", "sector": "Mobility / Delivery"},

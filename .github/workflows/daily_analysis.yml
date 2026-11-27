@@ -9,7 +9,7 @@ run-name: "Daily Stock Analysis ${{ github.event.inputs.ticker || github.event.s
 
 on:
   schedule:
-    # ── Fundamental Analysis (17:00 - 21:00 UTC) ──
+    # ── Fundamental Analysis (17:00 - 21:20 UTC) ──
     - cron: "0 17 * * *"     # 0050 fundamental
     - cron: "10 17 * * *"    # 2330.tw fundamental
     - cron: "20 17 * * *"    # TSLA fundamental
@@ -35,7 +35,9 @@ on:
     - cron: "40 20 * * *"    # SPCX fundamental
     - cron: "50 20 * * *"    # AVGO fundamental
     - cron: "0 21 * * *"     # NBIS fundamental
-    # ── Technical Analysis (21:30 - 01:40 UTC) ──
+    - cron: "10 21 * * *"    # ANT fundamental
+    - cron: "20 21 * * *"    # CRWV fundamental
+    # ── Technical Analysis (21:30 - 01:55 UTC) ──
     - cron: "30 21 * * *"    # 0050 technical
     - cron: "40 21 * * *"    # 2330.tw technical
     - cron: "50 21 * * *"    # TSLA technical
@@ -62,6 +64,8 @@ on:
     - cron: "20 1 * * *"     # AVGO technical
     - cron: "30 1 * * *"     # NBIS technical
     - cron: "40 1 * * *"     # UBER technical
+    - cron: "50 1 * * *"     # ANT technical
+    - cron: "55 1 * * *"     # CRWV technical (02:00 is MU fundamental)
     # ── Additional Fundamental (02:00 - 03:50 UTC) ──
     - cron: "0 2 * * *"      # MU fundamental
     - cron: "10 2 * * *"     # SKHY fundamental
@@ -259,6 +263,8 @@ jobs:
               "40 20 * * *")  TICKER="SPCX";    ANALYSIS_TYPE="fundamental-analysis" ;;
               "50 20 * * *")  TICKER="AVGO";    ANALYSIS_TYPE="fundamental-analysis" ;;
               "0 21 * * *")   TICKER="NBIS";    ANALYSIS_TYPE="fundamental-analysis" ;;
+              "10 21 * * *")  TICKER="ANT";     ANALYSIS_TYPE="fundamental-analysis" ;;
+              "20 21 * * *")  TICKER="CRWV";    ANALYSIS_TYPE="fundamental-analysis" ;;
               # ── Technical ──────────────────────────────────────────
               "30 21 * * *")  TICKER="0050";    ANALYSIS_TYPE="technical-analysis" ;;
               "40 21 * * *")  TICKER="2330.tw"; ANALYSIS_TYPE="technical-analysis" ;;
@@ -286,6 +292,8 @@ jobs:
               "20 1 * * *")   TICKER="AVGO";    ANALYSIS_TYPE="technical-analysis" ;;
               "30 1 * * *")   TICKER="NBIS";    ANALYSIS_TYPE="technical-analysis" ;;
               "40 1 * * *")   TICKER="UBER";    ANALYSIS_TYPE="technical-analysis" ;;
+              "50 1 * * *")   TICKER="ANT";     ANALYSIS_TYPE="technical-analysis" ;;
+              "55 1 * * *")   TICKER="CRWV";    ANALYSIS_TYPE="technical-analysis" ;;
               # ── Additional Fundamental ─────────────────────────────
               "0 2 * * *")    TICKER="MU";      ANALYSIS_TYPE="fundamental-analysis" ;;
               "10 2 * * *")   TICKER="SKHY";    ANALYSIS_TYPE="fundamental-analysis" ;;
