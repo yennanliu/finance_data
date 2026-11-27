@@ -828,7 +828,7 @@ def test_grounding_uses_the_full_report_not_the_elided_copy(tmp_path):
     body = FM + "頭" * 200 + "\n關鍵數字 4321.99\n" + "尾" * 200
     p = _write(tmp_path, "aapl", "fundamental_analysis_2026-09-17_gemini.md", body)
     response = _verdict_json(verdict="fail", score=1, dimensions=ALL_ONES,
-                             issues=["數字 4321.99 無法查證。"])
+                             issues=["數字 4321.99 與前文矛盾。"])
 
     with patch.object(rrq, "MAX_REPORT_CHARS", 120), \
             patch.object(rrq, "run_openai", return_value=response) as m:
@@ -1037,3 +1037,111 @@ def test_stage1_findings_are_not_scored_twice():
     text = _rubric()
     assert "不要寫進 issues，也不要因此扣分" in text
     assert "應反映在" not in text
+
+
+# ── sourcing-only complaints ─────────────────────────────────────────────────
+
+@pytest.mark.parametrize("issue, sourcing_only", [
+    ("報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源。", True),
+    ("報告中提到的 66.2% 毛利率是否為歷史最高，需進一步查證。", True),
+    ("營收數字（1.675 億美元）與毛利率的描述存在矛盾。", False),
+    ("未提供來源，且與第 3 章的 $54.23B 前後不一。", False),
+    ("「高達上兆美元」缺乏具體數據支持，可能存在誇大問題。", False),
+    ("關鍵洞察部分的分析較為表面。", False),
+    ("報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源，可能存在數據誠信問題。", True),
+    ("報告中提到的最新交易價格 65.89 USD 是否正確，未提供來源。", True),
+    # Mixed: a sourcing clause plus a real defect the word list does not know.
+    ("未提供來源，且缺少結論或投資建議章節。", False),
+    ("報告中提到的 2,400 點未提供來源，結論章節僅有一句話。", False),
+    # Unclear phrasing is kept, not discarded.
+    ("數據來源不明，分析流於表面。", False),
+])
+def test_is_sourcing_only(issue, sourcing_only):
+    assert rrq.is_sourcing_only(issue) is sourcing_only
+
+
+def test_a_fail_made_only_of_sourcing_complaints_is_ungrounded(tmp_path):
+    """The rubric says a missing citation is not a defect. A verdict built
+    on nothing else breaks the rubric and must not count against the report."""
+    p = _write(tmp_path, "orcl", "market_news_2026-09-17_gemini.md",
+               FM + "甲骨文股價重挫 4.31% 至 109.5 美元。\n")
+    dims = {k: 3 for k in rrq.DIMENSIONS} | {"data_integrity": 2}
+    raw = _verdict_json(verdict="fail", score=2, dimensions=dims, issues=[
+        "報告中提到甲骨文股價重挫 4.31% 至 109.5 美元，但未提供該數據的來源。"])
+    with patch.object(rrq, "run_openai", return_value=raw):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.verdict == "fail"
+    assert result.grounded is False
+    assert not result.counts_against_quality()
+
+
+def test_one_substantive_issue_keeps_the_verdict_grounded(tmp_path):
+    p = _write(tmp_path, "onds", "market_news_2026-09-17_gemini.md")
+    raw = _verdict_json(verdict="warn", score=3, issues=[
+        "股價 3.9 美元未提供來源。", "營收與毛利率的描述存在矛盾。"])
+    with patch.object(rrq, "run_openai", return_value=raw):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.grounded is True
+
+
+# ── output budget and concurrency ────────────────────────────────────────────
+
+def test_gemini_reviewer_gets_room_for_its_thinking_tokens(tmp_path):
+    """At the shared 1200, Gemini's thinking tokens left the verdict JSON cut
+    off ~160 characters in (nightly PARSE_ERROR rows, 2026-11-23..26)."""
+    p = _write(tmp_path, "mu", "fundamental_analysis_2026-09-17_openai.md")
+    with patch.object(rrq, "run_gemini", return_value=_verdict_json()) as g, \
+            patch.object(rrq, "run_openai", return_value=_verdict_json()) as o:
+        rrq.review_one(p, provider="gemini", model="gemini-x")
+        rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert g.call_args.kwargs["max_tokens"] > rrq.REVIEWER_MAX_TOKENS
+    assert o.call_args.kwargs["max_tokens"] == rrq.REVIEWER_MAX_TOKENS
+
+
+def test_an_explicit_max_tokens_applies_to_every_provider():
+    assert rrq.reviewer_max_tokens("gemini", 500) == 500
+    assert rrq.reviewer_max_tokens("openai", 500) == 500
+
+
+def test_concurrent_review_keeps_the_input_order(tmp_path):
+    """Workers finish in any order; the CSV must still follow the sorted
+    selection so the same --limit picks and lists the same reports."""
+    for n in range(10, 20):
+        _write(tmp_path, f"t{n}", f"fundamental_analysis_2026-09-{n}_gemini.md")
+
+    with patch.object(rrq, "run_openai", return_value=_verdict_json()):
+        code = rrq.main(["--root", str(tmp_path), "--date", "all", "--summary",
+                         "--workers", "4", "--csv", str(tmp_path / "r.csv"),
+                         "--csv-all"])
+
+    assert code == 0
+    rows = (tmp_path / "r.csv").read_text(encoding="utf-8").splitlines()[1:]
+    dates = [r.split(",")[3] for r in rows]
+    assert dates == sorted(dates) and len(dates) == 10
+
+
+def test_a_mixed_issue_keeps_the_verdict_counted(tmp_path):
+    """Greptile P1 on #113: a source mention must not hide a missing chapter."""
+    p = _write(tmp_path, "orcl", "market_news_2026-09-17_gemini.md")
+    raw = _verdict_json(verdict="warn", score=3,
+                        issues=["未提供來源，且缺少結論或投資建議章節。"])
+    with patch.object(rrq, "run_openai", return_value=raw):
+        result = rrq.review_one(p, provider="openai", model="gpt-4o-mini")
+
+    assert result.grounded is True
+    assert result.counts_against_quality()
+
+
+def test_summary_explains_sourcing_only_exclusions():
+    import io
+    r = rrq.ReviewResult(path="x", ticker="orcl", analysis_type="market_news",
+                         date="2026-09-17", report_provider="gemini",
+                         reviewer_provider="openai", reviewer_model="m",
+                         verdict="warn", score=3, issues=["未提供來源。"],
+                         grounded=False)
+    out = io.StringIO()
+    rrq.print_summary([r], out=out)
+    assert "only ask for a source" in out.getvalue()
