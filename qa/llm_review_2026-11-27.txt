@@ -1,52 +1,60 @@
 
 ============================================================
-Reports reviewed : 130
-Mean score       : 3.92 / 5
+Reports reviewed : 189
+Mean score       : 3.96 / 5
 
-Verdict breakdown (130 grounded):
-  pass              69
-  warn              45
-  fail              16
+Verdict breakdown (189 grounded):
+  pass             105
+  warn              59
+  fail              25
 
 Mean score by dimension:
-  data_integrity   3.93
+  data_integrity   3.98
   completeness     4.50
-  depth            3.89
-  consistency      3.97
-  language         4.55
+  depth            3.98
+  consistency      4.05
+  language         4.57
 
-Failed review (16):
+Failed review (25):
   mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-26_openai.md
-      → 報告列示 TTM 營業利益率「74.6%」及最新季度「80.7%」、毛利率「80.7%」，對記憶體硬體製造商而言屬明顯悖離產業常理的異常數據。
+      → 數據存在極為荒謬的捏造：報告宣稱 MU 的 TTM 營收達 $133.19B 且營業利益率達 74.6%（GAAP 營業利益 $99.34B），與記憶體產業實際規模與獲利水準嚴重脫節。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-27_openai.md
+      → 記憶體製造商 MU 的 TTM 毛利率達 80.7%、營業利益率達 74.6%（最新季度達 80.7%），嚴重背離半導體記憶體硬體製造業的合理利潤水準。
   skhy         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/skhy/fundamental_analysis_2026-11-26_openai.md
-      → 記憶體製造商出現極不合理的「TTM 營業利益率 74.5%」與「淨利率 70.1%」，違反半導體重資產製造業的基本財務常理。
+      → 第 3.5 節稱「2026 年第二季達 KRW 93.82T」，然而第 3.2 節列示該季營收僅為「KRW 79.32T」，單季淨利顯著大於單季營收，數據嚴重矛盾荒謬。
   sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-26_openai.md
-      → 數據真實性嚴重失真：報告將 Sandisk（已於 2016 年被 WDC 收購下市）視為 2026 年獨立運營公司，並產出 TTM 營收 $28.97B 的虛構財務數據。
+      → 第 3.3 節與 11.5 節列出記憶體製造商「TTM 毛利率 80.0%」與「最新季度營業利益率 79.6%」，屬於明顯背離產業常理的異常數據。
+  2330.tw      market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/2330.tw/market_news_2026-11-27_gemini.md
+      → 新聞總覽將「Intel Guidance Shock Sends Taiwan Stocks Plunging 812 Points at Open」列為 2026-11-01；該日為星期日，台股休市，所述開盤重挫事件日
   3008.tw      market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/3008.tw/market_news_2026-11-26_gemini.md
-      → 報告將台股單週下跌 6.2% 稱為「創下自 1991 年以來的最大單週跌幅」，此歷史紀錄說法不可信，重大數據疑似錯誤。
+      → 報告將台股單週下跌「6.2%」稱為「創下自 1991 年以來的最大單週跌幅」，此歷史紀錄說法高度可疑，足以動搖核心市場敘事。
   6643.tw      market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/6643.tw/market_news_2026-11-26_gemini.md
-      → 報告將「輝達執行長黃仁勳震撼離職」及其引發市場震盪、台灣 ASIC 族群漲停描述為已發生的重大事件，並據此推導 M31 營運與估值利多，屬高度可疑且影響重大的事實主張。
-  amd          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/amd/market_news_2026-11-26_gemini.md
-      → 報告稱「662 美元」目標價相較「406.03 美元」股價有「約 57% 至 58%」上行空間，但按所列數字計算約為 63%，屬明顯算術不一致。
+      → 報告稱「矽智財族群雖然毛利率高達 100%」，將整個族群毛利率概括為 100%，屬明顯不合理的數字陳述。
   ant          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/ant/market_news_2026-11-27_gemini.md
-      → 報告稱股價「連續第二個交易日收於 IPO 發行價下方」，但新聞總覽又列出 2026-11-25「Stock Rebounds Above $83 IPO Price」，交易日敘述互相矛盾。
-  goog         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/goog/market_news_2026-11-26_gemini.md
-      → 將「上兆美元規模」AI 投資帳單及「自由現金流轉負」作為核心利空，並據此推演回購受壓與估值下修；報告未區分聳動標題、長期估算與 Alphabet 已發生的實際支出或現金流，數字口徑有重大可信度疑慮。
+      → 報告稱「最新收盤價為 82.79 美元」並多次描述 2026-11-26 收盤；但 2026-11-26 是美國感恩節，NASDAQ 當日休市，相關收盤價與交易日敘述不成立。
   meta         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/meta/market_news_2026-11-26_gemini.md
-      → 報告將「Muse」「51% 的 AI Agent 訂單」直接解讀為廣告工具已接管訂單配置，並據此推論轉換率與營收受益；訂單占比本身不能證明這些商業效果，關鍵數字的口徑被過度延伸。
+      → 報告把 Class C 股份計畫描述為支應 AI 資本支出的「籌資緩衝」及不稀釋投票權的融資管道，混淆股權激勵安排與公司籌資，並據此推導融資風險。
+  mrvl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/mrvl/market_news_2026-11-27_gemini.md
+      → 報告多處稱市場預期營收為「3.15 億美元」，相對於同段所述 EPS 1.10 美元及 Marvell 的公司規模極不合理，疑將十億誤寫為億，屬重大數據錯誤。
+  nu           market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nu/market_news_2026-11-27_gemini.md
+      → 報告多處稱「12 美元」為 NU 的「IPO 價格」或「IPO 基準線」；Nu Holdings 的 IPO 發行價為每股 9 美元，將 12 美元描述為 IPO 價格屬重大數據錯誤。
+  nvda         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/nvda/market_news_2026-11-26_gemini.md
+      → 報告將「黃仁勳重新回任執行長」及「重返執行長職位僅一天後」當作核心事實，但沒有交代他曾離任；這項重大人事事件高度可疑，足以使主要分析建立在錯誤前提上。
   orcl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/orcl/market_news_2026-11-26_gemini.md
-      → Larry Ellison 資產損失數字前後不一：正文稱「單日蒸發 10.9 億美元」，新聞標題為「$10.9 billion」，後文又寫「縮水百億美元」，相差約十倍。
-  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-26_gemini.md
-      → 報告列出「2026-11-26 | S&P 500, Nasdaq End Lower But Dow Rebounds」，並描述當日市場走勢；但 2026-11-26 是美國感恩節，美股休市，這類當日收盤行情不可能發生
+      → 報告稱 Larry Ellison「單日蒸發 10.9 億美元」，但來源索引標題寫的是「lost $10.9 billion」；中文金額少了一個數量級。
+  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-27_gemini.md
+      → 報告稱「若於 2000 年頂部投入 200 萬美元在 QQQ 本金將會耗盡」，但未提取款或其他會使本金耗盡的條件，將歷史回撤表述成本金歸零，屬重大數據誤導。
+  rklb         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/rklb/market_news_2026-11-27_gemini.md
+      → 報告將「第 101 次 Electron 發射任務」延伸描述為「破百次的成功發射」，混淆任務總數與成功發射累計數；Rocket Lab 過往曾有發射失敗，這會誇大其成功紀錄。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-27_gemini.md
+      → 公司概覽稱 SK hynix「成立於 1949 年」，與公司實際成立年份不符。
+  sndk         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/sndk/market_news_2026-11-27_gemini.md
+      → 報告將「價格底限」連結到「至少 80% 的毛利率」，並在多處當作獲利保障；對 NAND 儲存業者而言此數字極不合理，且合約價格底限本身不能保證特定毛利率。
   soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-26_gemini.md
-      → 報告稱「截至 2026 年 11 月 26 日」SOXX「收在 127.98 美元」；該日是美國感恩節，市場休市，不能有當日收盤價。
+      → 報告稱「截至 2026 年 11 月 26 日……SOXX 收在 127.98 美元」，但 2026 年 11 月 26 日是美國感恩節，市場休市，該日不會有收盤價；且同段稱「感恩節前夕」也與日期不符。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-27_gemini.md
+      → 報告列出 SOXX 收盤價 127.98，卻引用行使價 390.000 的 SOXX 賣權作為近期市場資料，兩者價位差距極大，顯示選擇權資料可能與標的價格不匹配。
   spcx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/spcx/market_news_2026-11-26_gemini.md
-      → 報告將「FCC 正式批准 SpaceX 部署最多 100 萬顆」衛星及「Starmind」計畫寫成已落地的重大監管事實；如此極端的核准規模可信度存疑，卻被當作確定前提推導股價與競爭優勢。
-  tsla         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/tsla/market_news_2026-11-27_gemini.md
-      → 報告引用「五年前投入 10,000 美元持有 TSLA 至今僅剩約 9,800 美元」，但以報告列出的現價 380.14 美元及五年前 TSLA 約 229 美元的拆股調整股價估算，投資價值應明顯高於 10,000 美元
-  wdc          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/wdc/market_news_2026-11-26_gemini.md
-      → 公司概覽稱 WDC 核心業務包括「快閃記憶體（Flash/NAND）」；WDC 與 SanDisk 拆分後，這項業務描述已不適用，會誤導對公司營運的理解。
-  wqtm         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/wqtm/market_news_2026-11-26_gemini.md
-      → 報告將「華盛頓 20 億美元」扶植及政府「直接持股」描述為已到位、可改善成分股現金流並提供防護墊，卻未區分政策提案、資金核准與實際撥付，呈現重大事實確定性過高。
+      → 報告將「FCC 正式批准 SpaceX 部署最多 100 萬顆」及「SPCX 135 美元 IPO 發行價」等重大事件與數字當作確定事實，存在重大捏造或失實風險。
 
-CSV written → qa/llm_review_2026-11-27.csv (61 row(s))
+CSV written → qa/llm_review_2026-11-27.csv (84 row(s))
