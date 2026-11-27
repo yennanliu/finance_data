@@ -454,7 +454,7 @@ def run_gemini(ticker: str, prompt: str, system_message: str, *,
             temp = min(0.7 + retry * 0.15, 1.0)
             logger.warning(f"Refusal detected (attempt {retry}/{_MAX_REFUSAL_RETRIES}), retrying with temp={temp:.2f}…")
             time.sleep(3)
-            response = _generate_with_retry(override + prompt, _config(max_tokens, temp))
+            response = _generate_with_retry(override + prompt, _config(effective_max_tokens, temp))
             text = response.text or ""
             usage = response.usage_metadata
             logger.info(f"Retry {retry}: input={usage.prompt_token_count}, "

@@ -254,6 +254,21 @@ def test_gemini_persistent_refusal_raises(monkeypatch):
         call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-2.5-flash", 8000)
 
 
+def test_gemini_refusal_retry_stays_within_the_model_ceiling(monkeypatch):
+    """The fundamental/technical budget (112000) is above Gemini's 65,536. The
+    first call was clamped but the refusal retry sent the raw budget, which
+    Gemini rejects with a 400 — terminal, so the report aborted."""
+    from scripts.analysis.config.providers import resolve_max_tokens
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    gen = Scripted(FakeGeminiResponse(REFUSAL), FakeGeminiResponse(LONG_OK))
+    install_gemini(monkeypatch, gen)
+    budget = resolve_max_tokens("fundamental-analysis")
+    assert budget > llm._GEMINI_MAX_TOKENS
+    out = call_gemini("AAPL", "ctx", "fundamental-analysis", "gemini-3.8-flash", budget)
+    assert out == LONG_OK
+    assert [c["config"].max_output_tokens for c in gen.calls] == [llm._GEMINI_MAX_TOKENS] * 2
+
+
 def test_refusal_error_is_not_terminal():
     """A refusal must fall through to the next provider, not abort the chain."""
     assert not llm._is_terminal_error(RefusalError("refused"))
