@@ -354,7 +354,16 @@ def extend_from_recent(new: list[dict], recent: list[dict] | None
     """
     if not new or not recent or recent[-1]["date"] <= new[-1]["date"]:
         return new, ""
+    # Validate both sides before dividing by either. A bad long fetch is
+    # returned untouched, so update()'s own gate() rejects it with its usual
+    # reason. A zero close here used to raise ZeroDivisionError, which aborted
+    # the whole update_prices run (review on #116).
+    if gate(new, []):
+        return new, ""
     last = new[-1]["date"]
+    bad = gate(recent, [])
+    if bad:
+        return new, f"long fetch ends {last}; recent window rejected ({bad}), not merged"
     long_close = {b["date"]: b["close"] for b in new}
     shared = [b for b in recent if b["date"] in long_close]
     if not shared:

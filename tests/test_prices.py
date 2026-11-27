@@ -511,7 +511,8 @@ def test_recent_bars_extend_a_stale_long_fetch():
 def test_a_recent_window_that_disagrees_is_not_spliced_in():
     """One side restated (a split): splicing would put a cliff in the series."""
     long = series(DATES)
-    recent = [dict(b, close=b["close"] / 8) for b in series(DATES + LATER)[2:]]
+    recent = [dict(b, **{k: b[k] / 8 for k in ("open", "high", "low", "close")})
+              for b in series(DATES + LATER)[2:]]
     merged, note = prices.extend_from_recent(long, recent)
     assert merged == long
     assert "disagrees" in note
@@ -549,3 +550,28 @@ def test_fetch_history_passes_an_explicit_period(fake_yf):
     cap = fake_yf([("2026-07-31", _row())])
     prices.fetch_history("SNDK", period="1mo")
     assert cap["kwargs"]["period"] == "1mo"
+
+
+def test_a_zero_close_in_the_long_fetch_does_not_raise():
+    """Review on #116: this divided by the long fetch's close before gate()
+    ran, and the uncaught ZeroDivisionError stopped every later ticker."""
+    long = series(DATES)
+    long[2] = dict(long[2], close=0.0)
+    merged, note = prices.extend_from_recent(long, series(DATES + LATER)[2:])
+    assert merged == long and note == ""
+    assert prices.gate(merged, []) is not None     # update() still rejects it
+
+
+def test_a_recent_window_that_fails_the_gate_is_not_spliced_in():
+    recent = series(DATES + LATER)[2:]
+    recent[-1] = dict(recent[-1], close=0.0)
+    merged, note = prices.extend_from_recent(series(DATES), recent)
+    assert merged == series(DATES)
+    assert "rejected" in note
+
+
+def test_update_skips_a_bad_long_fetch_instead_of_crashing(tmp_path, fake_fetch):
+    long = series(DATES)
+    long[2] = dict(long[2], close=0.0)
+    fake_fetch(long, recent=series(DATES + LATER)[2:])
+    assert prices.update("amd", "AMD", store_dir=tmp_path)[0] == "skipped"
