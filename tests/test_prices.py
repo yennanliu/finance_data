@@ -282,11 +282,16 @@ def fake_fetch(monkeypatch):
     """Install a canned fetch result; returns a setter."""
     state = {}
 
-    def setter(bars):
+    def setter(bars, recent=None):
         state["bars"] = bars
+        state.pop("recent", None)
+        if recent is not None:
+            state["recent"] = recent
 
-    def fetch(symbol, years=prices.KEEP_YEARS):
-        got = state.get("bars")
+    def fetch(symbol, years=prices.KEEP_YEARS, period=None):
+        # The recent-window top-up (period=...) gets its own canned result,
+        # defaulting to the long one: no newer bars, nothing to add.
+        got = state.get("recent" if period and "recent" in state else "bars")
         if isinstance(got, Exception):
             raise got
         return got
@@ -488,3 +493,85 @@ def test_to_yf_symbol(key, symbol):
 ])
 def test_currency_for(symbol, ccy):
     assert prices.currency_for(symbol) == ccy
+
+
+# ── stale long fetch: the recent-window top-up ───────────────────────────────
+LATER = ["2026-08-03", "2026-08-04"]
+
+
+def test_recent_bars_extend_a_stale_long_fetch():
+    """SNDK, 2026-11-20..26: the 10y fetch ended on 11-19 every night."""
+    long = series(DATES)
+    recent = series(DATES + LATER)[2:]          # overlaps and agrees, then newer
+    merged, note = prices.extend_from_recent(long, recent)
+    assert [b["date"] for b in merged] == DATES + LATER
+    assert "+2 bars" in note
+
+
+def test_a_recent_window_that_disagrees_is_not_spliced_in():
+    """One side restated (a split): splicing would put a cliff in the series."""
+    long = series(DATES)
+    recent = [dict(b, **{k: b[k] / 8 for k in ("open", "high", "low", "close")})
+              for b in series(DATES + LATER)[2:]]
+    merged, note = prices.extend_from_recent(long, recent)
+    assert merged == long
+    assert "disagrees" in note
+
+
+def test_a_recent_window_with_no_overlap_is_not_spliced_in():
+    merged, note = prices.extend_from_recent(series(DATES), series(LATER))
+    assert merged == series(DATES)
+    assert "does not overlap" in note
+
+
+def test_a_fresh_long_fetch_needs_no_top_up():
+    long = series(DATES)
+    assert prices.extend_from_recent(long, series(DATES)[2:]) == (long, "")
+    assert prices.extend_from_recent(long, None) == (long, "")
+
+
+def test_update_appends_bars_only_the_recent_window_had(tmp_path, fake_fetch):
+    fake_fetch(series(DATES))
+    prices.update("sndk", "SNDK", store_dir=tmp_path)
+
+    fake_fetch(series(DATES), recent=series(DATES + LATER)[2:])
+    status, detail = prices.update("sndk", "SNDK", store_dir=tmp_path)
+    assert status == "appended"
+    assert "long fetch ended 2026-07-31" in detail
+    assert prices.load_store("sndk", tmp_path)[-1]["date"] == LATER[-1]
+
+
+def test_a_failed_top_up_does_not_fail_the_update(tmp_path, fake_fetch):
+    fake_fetch(series(DATES), recent=RuntimeError("429"))
+    assert prices.update("amd", "AMD", store_dir=tmp_path)[0] == "created"
+
+
+def test_fetch_history_passes_an_explicit_period(fake_yf):
+    cap = fake_yf([("2026-07-31", _row())])
+    prices.fetch_history("SNDK", period="1mo")
+    assert cap["kwargs"]["period"] == "1mo"
+
+
+def test_a_zero_close_in_the_long_fetch_does_not_raise():
+    """Review on #116: this divided by the long fetch's close before gate()
+    ran, and the uncaught ZeroDivisionError stopped every later ticker."""
+    long = series(DATES)
+    long[2] = dict(long[2], close=0.0)
+    merged, note = prices.extend_from_recent(long, series(DATES + LATER)[2:])
+    assert merged == long and note == ""
+    assert prices.gate(merged, []) is not None     # update() still rejects it
+
+
+def test_a_recent_window_that_fails_the_gate_is_not_spliced_in():
+    recent = series(DATES + LATER)[2:]
+    recent[-1] = dict(recent[-1], close=0.0)
+    merged, note = prices.extend_from_recent(series(DATES), recent)
+    assert merged == series(DATES)
+    assert "rejected" in note
+
+
+def test_update_skips_a_bad_long_fetch_instead_of_crashing(tmp_path, fake_fetch):
+    long = series(DATES)
+    long[2] = dict(long[2], close=0.0)
+    fake_fetch(long, recent=series(DATES + LATER)[2:])
+    assert prices.update("amd", "AMD", store_dir=tmp_path)[0] == "skipped"

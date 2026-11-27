@@ -63,8 +63,8 @@ def test_a_session_on_the_report_date_itself_does_not():
 
 def test_unknown_or_missing_provenance_is_skipped():
     assert M.check({"price": "1", "price_date": "unknown"}, "skhy", "2026-10-23") == \
-        {"store": None, "stale": []}
-    assert M.check({}, "skhy", "2026-10-23") == {"store": None, "stale": []}
+        {"store": None, "stale": [], "behind": None}
+    assert M.check({}, "skhy", "2026-10-23") == {"store": None, "stale": [], "behind": None}
 
 
 def test_parse_file_reports_store_and_freshness_findings(tmp_path, monkeypatch):
@@ -81,3 +81,21 @@ def test_parse_file_reports_store_and_freshness_findings(tmp_path, monkeypatch):
     issue = parse_file(p)
     assert {"STORE_MISMATCH", "STALE_PRICE"} <= set(issue.issues)
     assert "newer_sessions=['2026-10-22']" in issue.note
+
+
+def test_a_store_days_behind_the_reports_close_is_caught():
+    """SNDK's store stopped on 2026-11-19 while reports carried 11-25 closes;
+    store_mismatch and stale_sessions both stayed silent for want of a bar."""
+    bars = [bar("2026-11-18", 97.03), bar("2026-11-19", 94.39)]
+    out = M.store_behind("2026-11-25", bars)
+    assert out == {"price_date": "2026-11-25", "store_last": "2026-11-19", "lag_days": 6}
+
+
+@pytest.mark.parametrize("price_date", ["2026-11-19", "2026-11-20", "2026-11-23"])
+def test_a_store_a_weekend_and_a_session_behind_is_normal(price_date):
+    """The store updates after report generation: Fri close, Mon report."""
+    assert M.store_behind(price_date, [bar("2026-11-19", 94.39)]) is None
+
+
+def test_store_behind_needs_a_store():
+    assert M.store_behind("2026-11-25", []) is None

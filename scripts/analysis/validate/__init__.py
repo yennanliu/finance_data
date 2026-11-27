@@ -69,6 +69,8 @@ ISSUE_TYPES = {
     "STORE_MISMATCH": "the close the report was given is not the committed "
                       "price store's close for that date",
     "STALE_PRICE": "a newer completed session existed before the report date",
+    "STORE_BEHIND": "the committed price store ends days before the close the "
+                    "report was given: the nightly store update is stuck",
 }
 
 # ── tuneable thresholds / patterns ───────────────────────────────────────────
@@ -347,6 +349,8 @@ def content_findings(atype: str, text: str, content: str, ticker: str,
     record = market_data.check(fm, ticker, date)
     if record["store"]:
         out.append(("STORE_MISMATCH", "store " + _fmt(record["store"], "price", "store", "diff_pct")))
+    if record["behind"]:
+        out.append(("STORE_BEHIND", _fmt(record["behind"], "price_date", "store_last", "lag_days")))
     if record["stale"]:
         out.append(("STALE_PRICE", f"price_date={fm.get('price_date')} "
                                    f"newer_sessions={record['stale']}"))

@@ -123,6 +123,9 @@ def main() -> None:
 
         counts[status] = counts.get(status, 0) + 1
         print(f"  {GLYPH.get(status, status)}  {key:<10} ({symbol:<10}) {detail}")
+        if "long fetch" in detail:
+            # Yahoo served a stale long history; visible on the run summary.
+            print(f"::warning::{key}: {detail}")
 
     print(f"\n{'=' * 70}")
     print("  " + "  ".join(f"{k}={v}" for k, v in sorted(counts.items())))

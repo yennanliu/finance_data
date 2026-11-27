@@ -47,6 +47,7 @@ there, not inline in `parse_file`.
 | Technical | `RR_TOO_LOW` | A Ch.8 strategy's reward/risk to T1, recomputed from its entry and stop, is below 1 : 1.5, or its T1 is the front-matter `price`. A column the report marks `不交易` is skipped (`technical.weak_strategies`, prompt rule 21) |
 | Any report with provenance | `STORE_MISMATCH` | Front-matter `price` ≠ the `data/prices/` close on `price_date`, with later splits undone. Silent when the store has no bar for that date yet |
 | Any report with provenance | `STALE_PRICE` | A store session is dated strictly between `price_date` and the report date, so a newer close existed |
+| Any report with provenance | `STORE_BEHIND` | The store's newest bar is more than 4 calendar days (`STORE_LAG_DAYS`) older than `price_date`: the nightly store update is stuck, which also silences the two checks above. SNDK's store sat on 2026-11-19 for a week after its split |
 
 ### Summary layout
 
