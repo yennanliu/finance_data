@@ -38,7 +38,11 @@ jobs:
   quality-check:
     name: Check Report Quality
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Above stage 2's own step timeout plus everything else (~2 min). When
+    # this was 30 and stage 2 ran sequentially (~21 min on a normal night),
+    # four runs in November hit it during stage 2 and the cancelled job never
+    # reached the commit step, so stage 1's audit was lost too.
+    timeout-minutes: 40
 
     steps:
       - name: Checkout repository
@@ -149,6 +153,11 @@ jobs:
         # red run with no artifacts.
         if: steps.key.outputs.ok == 'true' && steps.deps.outcome == 'success'
         continue-on-error: true
+        # A step timeout fails only this step; continue-on-error then lets the
+        # prune/README/commit steps publish stage 1. Without it, a slow
+        # provider night ran into the *job* timeout instead and committed
+        # nothing at all.
+        timeout-minutes: 25
         env:
           OPENAI_API_KEY: ${{ secrets.OPEN_KEY_API }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -243,8 +252,9 @@ jobs:
           Grades data integrity, completeness, depth, internal consistency and
           language on a 1-5 scale over a rolling 2-day window (report-gen crons
           run 17:00-03:00 UTC, so one cycle spans two date stamps). The judge
-          is OpenAI, never the provider that wrote the report (gemini), and is
-          given the close each report was built on and stage 1's findings.
+          is never the provider that wrote the report (OpenAI grades
+          Gemini-generated reports, Gemini grades OpenAI-generated ones), and
+          is given the close each report was built on and stage 1's findings.
 
           | Field | Value |
           |-------|-------|

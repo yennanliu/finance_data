@@ -52,6 +52,7 @@ import os
 import re
 import sys
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -120,6 +121,17 @@ REVIEWER_MODELS = {
 }
 REVIEWER_MODEL = REVIEWER_MODELS[REVIEWER_PROVIDER]
 REVIEWER_MAX_TOKENS = 1200
+# Gemini 3.x is a thinking model: its reasoning tokens are billed against
+# max_output_tokens, so at 1200 the visible JSON was cut off ~160 characters
+# in. 4-6 of the ~15 Gemini-graded reports per night (2026-11-23..26) became
+# PARSE_ERROR rows — the fundamental and technical reports, i.e. the ones
+# --cross-provider sends to Gemini. The verdict itself is still ~300 tokens.
+REVIEWER_MAX_TOKENS_BY_PROVIDER = {"gemini": 8192}
+# Reviews are independent network-bound calls. Run one at a time, ~190
+# reports took 21 minutes and four nightly runs (2026-11-06/08/09/13) hit the
+# job's 30-minute timeout, which cancelled the commit step and lost the
+# stage-1 audit with them.
+DEFAULT_WORKERS = 4
 # 0.0: a grader should return the same verdict for the same report.
 REVIEWER_TEMPERATURE = 0.0
 # Report-gen crons run 17:00-03:00 UTC, so the nightly QA run at 02:00 UTC must
@@ -274,6 +286,39 @@ def verdict_is_grounded(verdict: str, dimensions: dict, issues: List[str],
     if not all_ones:
         return True
     return any(figure in report_text for figure in cited_figures(issues))
+
+
+# ── sourcing-only complaints ──────────────────────────────────────────────────
+# The rubric says a missing citation is not a defect (qa_review.txt, rule 1),
+# yet gpt-4o-mini keeps writing 「未提供來源」 for market-news reports: 44-63
+# of each night's 64-81 problem rows on 2026-11-23..26 were warn/fail rows
+# whose complaints were about sourcing. A rule the judge ignores has to be
+# enforced downstream, the same way verdict_is_grounded() handles all-ones rows.
+_SOURCING_RE = re.compile(
+    r"來源|出處|查證|驗證|未標註|未註明|需確認|需要確認|source", re.IGNORECASE)
+# Words that make a complaint substantive even when it also mentions sourcing:
+# "未提供來源，且與第 3 章的數字矛盾" is still a consistency finding.
+_SUBSTANTIVE_RE = re.compile(
+    r"矛盾|不一致|不符|不合理|捏造|虛構|錯誤|誇大|脫離|前後|自相|簡體|截斷|佔位|"
+    r"placeholder|contradict|fabricat|inconsistent", re.IGNORECASE)
+
+
+def is_sourcing_only(issue: str) -> bool:
+    """Whether an issue complains only that a figure is uncited/unverified."""
+    return bool(_SOURCING_RE.search(issue)) and not _SUBSTANTIVE_RE.search(issue)
+
+
+def complaint_is_substantive(verdict: str, issues: List[str]) -> bool:
+    """False for a warn/fail whose every issue is a sourcing-only complaint.
+
+    Such a row breaks the rubric rather than finding a defect, so it is kept in
+    the CSV (marked ungrounded) but leaves the headline counts and the exit
+    code alone. A warn/fail with no issues at all is left to the score-based
+    rules — there is nothing here to judge.
+    """
+    if verdict not in ("warn", "fail") or not issues:
+        return True
+    return not all(is_sourcing_only(i) for i in issues)
 
 
 # ── report text preparation ──────────────────────────────────────────────────
@@ -466,8 +511,15 @@ def _dispatch(provider: str, ticker: str, prompt: str, model: str,
                       refusal_retry=False)
 
 
+def reviewer_max_tokens(provider: str, override: Optional[int] = None) -> int:
+    """The output budget for ``provider``; an explicit --max-tokens wins."""
+    if override is not None:
+        return override
+    return REVIEWER_MAX_TOKENS_BY_PROVIDER.get(provider, REVIEWER_MAX_TOKENS)
+
+
 def review_one(path: Path, *, provider: str, model: str,
-               max_tokens: int = REVIEWER_MAX_TOKENS) -> ReviewResult:
+               max_tokens: Optional[int] = None) -> ReviewResult:
     """Grade a single report file. Never raises — failures become result rows.
 
     A provider error or an unparseable response on one report must not abort a
@@ -496,7 +548,8 @@ def review_one(path: Path, *, provider: str, model: str,
     )
 
     try:
-        response = _dispatch(provider, meta.ticker, prompt, model, max_tokens)
+        response = _dispatch(provider, meta.ticker, prompt, model,
+                             reviewer_max_tokens(provider, max_tokens))
     except Exception as e:  # noqa: BLE001 — one bad call must not end the run
         return ReviewResult(**base, verdict="ERROR",
                             rationale=f"{type(e).__name__}: {e}"[:300])
@@ -515,8 +568,10 @@ def review_one(path: Path, *, provider: str, model: str,
     # Grounded against the full report text, not the (possibly elided) copy
     # sent to the model: a figure quoted from the part that was elided is
     # still a real citation.
-    grounded = verdict_is_grounded(
-        parsed["verdict"], parsed["dimensions"], parsed["issues"], text)
+    grounded = (
+        verdict_is_grounded(parsed["verdict"], parsed["dimensions"],
+                            parsed["issues"], text)
+        and complaint_is_substantive(parsed["verdict"], parsed["issues"]))
     return ReviewResult(**base, **parsed, grounded=grounded)
 
 
@@ -704,8 +759,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--model", default=None,
                    help="Reviewer model for --provider (default: per-provider, "
                         + ", ".join(f"{p}={m}" for p, m in REVIEWER_MODELS.items()) + ")")
-    p.add_argument("--max-tokens", type=int, default=REVIEWER_MAX_TOKENS,
-                   help=f"Reviewer output budget (default: {REVIEWER_MAX_TOKENS})")
+    p.add_argument("--max-tokens", type=int, default=None,
+                   help=f"Reviewer output budget (default: {REVIEWER_MAX_TOKENS}, "
+                        + ", ".join(f"{p}={n}" for p, n in REVIEWER_MAX_TOKENS_BY_PROVIDER.items())
+                        + ")")
+    p.add_argument("--workers", type=int, default=DEFAULT_WORKERS,
+                   help=f"Reports reviewed concurrently (default: {DEFAULT_WORKERS})")
     p.add_argument("--cross-provider", action="store_true",
                    help="Never let a provider grade a report it generated")
     p.add_argument("--limit", type=int, default=None,
@@ -771,26 +830,30 @@ def main(argv: Optional[List[str]] = None) -> int:
             write_csv([], args.csv, bad_only=not args.csv_all)
         return 0
 
-    results: List[ReviewResult] = []
-    for n, path in enumerate(paths, 1):
+    def review(path: Path) -> ReviewResult:
         meta = parse_file(path)
         provider = pick_reviewer(meta.provider, args.provider, args.cross_provider)
         if provider is None:
             # validate_cross_provider ran above, so this is unreachable in a
             # normal run; recorded rather than raised so an odd per-report
             # provider value cannot abort the batch.
-            results.append(ReviewResult(
+            return ReviewResult(
                 path=str(path), ticker=meta.ticker, analysis_type=meta.analysis_type,
                 date=meta.date, report_provider=meta.provider,
                 reviewer_provider="", reviewer_model="", verdict="ERROR",
                 rationale="no cross-provider reviewer available for "
-                          f"{meta.provider!r}-generated report"))
-            continue
-        result = review_one(
+                          f"{meta.provider!r}-generated report")
+        return review_one(
             path, provider=provider,
             model=reviewer_model_for(provider, args.provider, args.model),
             max_tokens=args.max_tokens)
-        results.append(result)
+
+    # map() keeps input order, so the CSV and summary are as deterministic as
+    # a sequential run; review_one never raises, so one call cannot sink the pool.
+    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
+        results: List[ReviewResult] = list(pool.map(review, paths))
+
+    for n, (path, result) in enumerate(zip(paths, results), 1):
         if not args.summary and (args.verbose or result.is_bad()):
             print(f"[{n}/{len(paths)}] {result.verdict:<12} score={result.score} "
                   f"{result.ticker:<12} {result.analysis_type:<28} {path}")

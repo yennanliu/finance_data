@@ -1,7 +1,8 @@
 # QA Audit
 
 `.github/workflows/qa_report_quality.yml` audits recently generated reports every
-night at **02:00 UTC**, after the report-generation crons (17:00–03:00 UTC) have
+night at **02:20 UTC** (GitHub's scheduler has been starting it 6–8 hours
+late, around 08:30–10:30 UTC), after the report-generation crons (17:00–03:00 UTC) have
 mostly finished. It has two stages, and the second never blocks the first.
 
 | Stage | Script | Cost | Output |
@@ -141,6 +142,15 @@ a rule it was not given.
   excluded from the headline verdict counts and cannot trip `--fail-on-fail`.
   `pass` verdicts need no evidence, and an all-1s row that cites a real figure is
   kept.
+- **Sourcing-only complaints are ungrounded too** (`complaint_is_substantive`).
+  The rubric already says a missing citation is not a defect, but `gpt-4o-mini`
+  kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
+  issue only asks for a source or verification (and names no contradiction,
+  fabrication, exaggeration…) is kept in the CSV with `grounded=no`.
+- **Gemini gets a larger output budget** (`REVIEWER_MAX_TOKENS_BY_PROVIDER`).
+  Its thinking tokens count against `max_output_tokens`, so at the shared 1200
+  the verdict JSON was cut off ~160 characters in and 4–6 Gemini-graded
+  reports per night became `PARSE_ERROR` rows.
 - Malformed JSON *shapes* (a list under `dimensions`, a number under `issues`)
   raise `ValueError` and become a `PARSE_ERROR` row. Provider errors become
   `ERROR` rows. `review_one`'s handler is deliberately broad: no single bad
@@ -154,6 +164,11 @@ a rule it was not given.
   of the output.
 - **Non-blocking.** The script exits 0 even on `fail` verdicts, so a bad night
   still commits an audit trail. `--fail-on-fail` opts into exit 1.
+- **Bounded in time.** Reviews run concurrently (`--workers`, default 4) and
+  the step has its own `timeout-minutes: 25`, below the job's 40. Run
+  sequentially under a 30-minute job timeout, stage 2 took ~21 minutes on a
+  normal night and four November runs (11-06, 11-08, 11-09, 11-13) were
+  cancelled mid-review, which skipped the commit and lost stage 1's audit.
 - **Never on stage 1's critical path.** `openai` is installed *after* stage 1
   runs, and the install, key check and review steps are all gated and
   `continue-on-error`. A missing secret or PyPI hiccup annotates the run but
