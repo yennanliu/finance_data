@@ -330,3 +330,161 @@ def test_gemini_cap_covers_the_workflow_budget():
           / "daily_market_news.yml").read_text()
     workflow_budget = int(re.search(r'DEFAULT_MAX_TOKENS: "(\d+)"', wf).group(1))
     assert mn._GEMINI_MAX_TOKENS == workflow_budget == mn.DEFAULT_TOKENS == 20000
+
+
+# ── select_news / price date / prompt rules (2026-11-27 QA findings) ─────────
+
+from datetime import datetime as _dt, timezone as _tz
+
+_NOW = _dt(2026, 11, 27, 12, tzinfo=_tz.utc)
+_RECENT = int(_dt(2026, 11, 25, tzinfo=_tz.utc).timestamp())
+_OLD = int(_dt(2017, 5, 9, tzinfo=_tz.utc).timestamp())
+
+
+def _item(title, publisher="Google News", ts=_RECENT, summary=""):
+    return {"title": title, "publisher": publisher, "providerPublishTime": ts,
+            "summary": summary}
+
+
+def test_select_news_drops_items_older_than_the_window_or_undated():
+    items = [_item("AMD rallies"), _item("AMD in 2017", ts=_OLD), _item("AMD undated", ts=0)]
+    assert [i["title"] for i in mn.select_news(items, "AMD", "Advanced Micro Devices, Inc.", _NOW)] \
+        == ["AMD rallies"]
+
+
+@pytest.mark.parametrize("title", [
+    "Flytech Technology Co., Ltd. (6206.TW) Stock Price, News, Quote & History - Yahoo Finance",
+    "Flytech Technology Co., Ltd. (6206.TW) Company Profile & Facts - Yahoo Finance",
+    "Flytech Technology Co., Ltd. (6206.TW)",
+    "Sandisk Corporation (SNDK) Stock Options Chain, Prices, Historical Calls & Puts",
+    "META_TITLE_QUOTE - Yahoo Finance",
+])
+def test_select_news_drops_quote_and_profile_pages(title):
+    assert mn.select_news([_item(title, publisher="Yahoo")], "6206.TW", "Flytech", _NOW) == []
+
+
+def test_keyword_feed_items_must_name_the_company():
+    items = [
+        _item("Domino's Pizza: Consumer Weakness Is The Opportunity", "Seeking Alpha"),
+        _item("盤中速報 - 南寶(4766)大漲7.1%", "Bing News"),
+        _item("Nan Pao 2026-11-20 Earnings Call", "Google News"),
+        _item("Resin maker beats", "Google News", summary="Nan Pao Resins reported…"),
+    ]
+    kept = mn.select_news(items, "4766.TW", "Nan Pao Resins Chemical Co., Ltd.", _NOW)
+    assert [i["title"] for i in kept] == [i["title"] for i in items[1:]]
+
+
+def test_a_tw_code_does_not_match_inside_a_longer_number():
+    items = [_item("Index closes at 147661", "Google News")]
+    assert mn.select_news(items, "4766.TW", "", _NOW) == []
+
+
+def test_yahoo_search_items_are_not_held_to_the_name_rule():
+    """Yahoo's search is per symbol; sector stories it returns stay."""
+    items = [_item("Cerebras Expands AI Inference Reach", publisher="Zacks")]
+    assert len(mn.select_news(items, "AMD", "Advanced Micro Devices, Inc.", _NOW)) == 1
+
+
+def test_analyst_upside_is_computed_in_python():
+    assert mn.analyst_upside({"current_price": 406.03, "target_mean": 662}) == "+63.0%"
+    assert mn.analyst_upside({"current_price": "N/A", "target_mean": 662}) is None
+    assert mn.analyst_upside({"current_price": 406.03}) is None
+
+
+def test_prompt_says_the_market_was_closed_on_a_holiday(monkeypatch):
+    class _D(mn.date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 11, 26)
+    monkeypatch.setattr(mn, "date", _D)
+    prompt = mn.build_prompt("SOXX", {"name": "iShares", "current_price": 127.98,
+                                      "price_date": "2026-11-25"}, "N")
+    assert "127.98 USD（2026-11-25 收盤）" in prompt
+    assert "2026-11-26 沒有已完成的交易日收盤" in prompt
+
+
+def test_prompt_on_a_trading_day_has_no_closed_market_line(monkeypatch):
+    class _D(mn.date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 11, 25)
+    monkeypatch.setattr(mn, "date", _D)
+    prompt = mn.build_prompt("SOXX", {"current_price": 1, "price_date": "2026-11-25"}, "N")
+    assert "沒有已完成的交易日收盤" not in prompt
+
+
+def test_prompt_carries_the_profile_target_and_derivation_rules():
+    prompt = mn.build_prompt("AMD", {"name": "AMD", "current_price": 406.03,
+                                     "price_date": "2026-11-25", "target_mean": 662,
+                                     "analyst_count": 40,
+                                     "business_summary": "Advanced Micro Devices operates…"},
+                             "N")
+    assert "Advanced Micro Devices operates…" in prompt
+    assert "+63.0%（程式計算）" in prompt
+    assert "不得單憑它推論估值支撐" in prompt
+    assert "本期無可用新聞" in prompt
+    assert "不要自行計算百分比" in prompt
+    assert "區分事實與推論" in prompt
+
+
+def test_news_times_are_shown_in_the_exchange_zone():
+    ts = int(_dt(2026, 11, 26, 1, tzinfo=_tz.utc).timestamp())  # 11-25 20:00 in New York
+    block = mn.format_news_block([_item("S&P ends lower", ts=ts)], "America/New_York")
+    assert "2026-11-25 20:00 EST" in block
+
+
+def test_fetch_ticker_info_dates_the_price_from_the_quote():
+    stamp = int(_dt(2026, 11, 25, 21, 0, tzinfo=_tz.utc).timestamp())  # 16:00 New York
+    obj = types.SimpleNamespace(info={
+        "longName": "iShares Semiconductor ETF", "regularMarketPrice": 127.98,
+        "regularMarketTime": stamp, "exchangeTimezoneName": "America/New_York",
+        "longBusinessSummary": "x" * 2000})
+    info = mn.fetch_ticker_info("SOXX", obj)
+    assert (info["current_price"], info["price_date"]) == (127.98, "2026-11-25")
+    assert len(info["business_summary"]) == mn.BUSINESS_SUMMARY_CHARS
+
+
+def test_report_front_matter_records_the_price_and_its_date(monkeypatch, tmp_path):
+    monkeypatch.setattr(mn, "fetch_ticker_info", lambda t, obj=None: {
+        "name": "Apple", "current_price": 200.5, "price_date": "2026-11-25"})
+    monkeypatch.setattr(mn, "fetch_news", lambda t, company="": [])
+    monkeypatch.setattr(mn, "call_openai", lambda p, m, t: "body")
+    mn.generate_report("AAPL", "openai", "gpt-4o", 100, tmp_path)
+    text = next(tmp_path.glob("*.md")).read_text(encoding="utf-8")
+    assert "price: 200.5\nprice_date: 2026-11-25\n" in text
+
+
+def test_generate_report_asks_yahoo_for_the_tw_symbol(monkeypatch, tmp_path):
+    seen = []
+    monkeypatch.setattr(mn, "fetch_ticker_info", lambda t, obj=None: seen.append(t) or {"name": t})
+    monkeypatch.setattr(mn, "fetch_news", lambda t, company="": [])
+    monkeypatch.setattr(mn, "call_openai", lambda p, m, t: "body")
+    mn.generate_report("0050", "openai", "gpt-4o", 100, tmp_path)
+    assert seen == ["0050.TW"]
+
+
+def test_company_name_matches_case_sensitively():
+    """grab's report filled up with "40-yard grab" and "money grab" posts."""
+    items = [_item("Malcolm Simmons with a 40-yard grab!"),
+             _item("Carpool Pilot Could Matter For Grab Stock")]
+    kept = mn.select_news(items, "GRAB", "Grab Holdings Limited", _NOW)
+    assert [i["title"] for i in kept] == ["Carpool Pilot Could Matter For Grab Stock"]
+
+
+def test_mid_session_price_falls_back_to_the_last_close():
+    import pandas as pd
+    hist = pd.DataFrame({"Close": [91.0, 92.6]},
+                        index=pd.DatetimeIndex(["2026-11-25", "2026-11-26"]))
+    obj = types.SimpleNamespace(
+        info={"longName": "Yuanta", "regularMarketPrice": 92.65,
+              "regularMarketTime": int(_dt(2026, 11, 27, 2, 20, tzinfo=_tz.utc).timestamp()),
+              "exchangeTimezoneName": "Asia/Taipei"},
+        history=lambda period: hist)
+    info = mn.fetch_ticker_info("0050.TW", obj)
+    assert (info["current_price"], info["price_date"]) == (92.6, "2026-11-26")
+
+
+def test_target_is_rounded_to_price_precision():
+    prompt = mn.build_prompt("AMD", {"current_price": 406.03, "price_date": "2026-11-25",
+                                     "target_mean": 649.8857}, "N")
+    assert "649.89 USD" in prompt and "649.8857" not in prompt

@@ -14,18 +14,20 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from functools import partial
 from pathlib import Path
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).parent))
 
 from analysis.config.providers import resolve_chain
-from analysis.data.sources import yahoo_news
+from analysis.data.prices import to_yf_symbol
+from analysis.data.sources import last_completed_close, quote_close, yahoo_news
 from analysis.llm import run_claude, run_openai, run_gemini, run_with_fallback
 from analysis.publish import GENERATED_BY, frontmatter
 
@@ -70,6 +72,21 @@ SITE_SCAN_LIMIT = 100
 
 _CORP_SUFFIX = re.compile(r",?\s+(?:inc|corp|corporation|co|company|ltd|limited|plc|holdings?|group)\.?$", re.I)
 _QUOTE_PAGE = re.compile(r"\bPrice: Quote\b")
+
+# ── News selection ─────────────────────────────────────────────────────────────
+# What reaches the prompt. The 2026-11-27 QA review failed or warned market-news
+# reports for news dated 2017-2025 presented as current (6206.tw's newest item
+# was 2025-07-09) and for headlines about other companies (Domino's, FiscalNote,
+# Wells Fargo in 4766.tw). Both came from the keyword feeds: a search for
+# "4766.TW stock" returns old quote pages and unrelated Seeking Alpha articles.
+NEWS_MAX_AGE_DAYS = 14
+# The keyword-search feeds. Yahoo's own search (yfinance) is per-symbol and the
+# site searches already filter on the company, so only these are re-checked.
+KEYWORD_FEEDS = frozenset(name for name, _ in RSS_FEEDS)
+# Quote, profile and options pages: titles of a page about a ticker, not news.
+_LISTING_PAGE = re.compile(
+    r"stock price,? (?:news,? )?quote|price,? quote|company profile|options chain"
+    r"|stock price and chart|META_TITLE|^[^|]*\([0-9A-Z.\-]+\)\s*$", re.I)
 
 
 def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEED_LIMIT) -> list[dict]:
@@ -123,8 +140,8 @@ def _fetch_rss(url: str, source_name: str, ticker: str, limit: int = RSS_PER_FEE
 
 def _short_name(company: str) -> str:
     """'Tesla, Inc.' → 'Tesla', 'NVIDIA Corporation' → 'NVIDIA'."""
-    while (stripped := _CORP_SUFFIX.sub("", company).strip()) != company:
-        company = stripped
+    while (stripped := _CORP_SUFFIX.sub("", company).strip().rstrip(",")) != company:
+        company = stripped  # "Nan Pao Resins Chemical Co., Ltd." leaves "… Co.," after one pass
     return company
 
 
@@ -136,7 +153,8 @@ def _fetch_site(name: str, site: str, ticker: str, company: str = "",
     # case-insensitively would bypass the cashtag and case rules above.
     # Compare the raw name: "Arm Holdings plc" shortens to "Arm" and is real.
     if company.upper() != ticker.upper() and (short := _short_name(company)):
-        names.append(rf"\b{re.escape(short)}\b")
+        # Case-sensitive like the ticker: "Grab" the company, not a "40-yard grab".
+        names.append(rf"\b(?-i:{re.escape(short)})\b")
     about_company = re.compile("|".join(names), re.I)
 
     feed = SITE_FEED.format(query="{query}", site=site)
@@ -146,6 +164,48 @@ def _fetch_site(name: str, site: str, ticker: str, company: str = "",
         if about_company.search(item["title"]) and not _QUOTE_PAGE.search(item["title"]):
             kept.append(item)
     return kept[:RSS_PER_FEED_LIMIT]
+
+
+def _names_company(ticker: str, company: str) -> re.Pattern:
+    """Pattern for text that names the stock: its ticker or its short name.
+
+    A Taiwan listing is named by its bare code ("南寶(4766)", "TWSE:4766");
+    a US ticker is matched case-sensitively, as in :func:`_fetch_site`.
+    """
+    code = ticker.upper().removesuffix(".TW")
+    names = [rf"(?<![0-9A-Za-z])(?-i:{re.escape(code)})(?![0-9A-Za-z])"]
+    if company.upper() != ticker.upper() and (short := _short_name(company)):
+        # Headlines shorten long names: "Nan Pao Resins Chemical" is "Nan Pao".
+        words = short.split()
+        lead = " ".join(words[:2]) if len(words) > 2 else short
+        names.append(rf"\b(?-i:{re.escape(lead)})\b")
+    return re.compile("|".join(names), re.I)
+
+
+def select_news(items: list[dict], ticker: str, company: str = "",
+                now: datetime | None = None) -> list[dict]:
+    """Keep the items a news report may treat as current news about *ticker*.
+
+    Drops items older than NEWS_MAX_AGE_DAYS or with no publish time, quote and
+    profile pages, and keyword-feed items whose title and summary do not name
+    the company. Fewer items is the intended outcome: the prompt already says
+    to analyse only what is provided.
+    """
+    now = now or datetime.now(timezone.utc)
+    cutoff = (now - timedelta(days=NEWS_MAX_AGE_DAYS)).timestamp()
+    about = _names_company(ticker, company)
+    kept = []
+    for item in items:
+        title = item.get("title") or ""
+        if (item.get("providerPublishTime") or 0) < cutoff:
+            continue
+        if _LISTING_PAGE.search(title):
+            continue
+        if (item.get("publisher") in KEYWORD_FEEDS
+                and not about.search(f"{title} {item.get('summary') or ''}")):
+            continue
+        kept.append(item)
+    return kept
 
 
 def fetch_news(ticker: str, company: str = "") -> list[dict]:
@@ -193,32 +253,78 @@ def fetch_news(ticker: str, company: str = "") -> list[dict]:
 
 
 def fetch_ticker_info(ticker: str, ticker_obj: yf.Ticker | None = None) -> dict:
-    """Return basic info dict (price, sector, name…) from yfinance."""
+    """Return basic info dict (price, sector, name…) from yfinance.
+
+    ``price_date`` is the session the price closed on (None when the quote is
+    intraday or undated). A report dated on a market holiday was otherwise
+    handed a bare price and wrote it up as that day's close: qqq and soxx on
+    2026-11-26, Thanksgiving.
+    """
     try:
         t = ticker_obj or yf.Ticker(ticker)
         info = t.info or {}
+        close, close_date = quote_close(info)
+        if close_date is None:  # mid-session: the last finished session instead
+            try:
+                close, close_date = last_completed_close(t.history(period="5d"))
+            except Exception:
+                close, close_date = None, None
+        summary = (info.get("longBusinessSummary") or "").strip()
         return {
             "name": info.get("longName") or info.get("shortName") or ticker,
             "sector": info.get("sector", "N/A"),
             "industry": info.get("industry", "N/A"),
-            "current_price": info.get("currentPrice") or info.get("regularMarketPrice", "N/A"),
+            "current_price": close or info.get("currentPrice") or info.get("regularMarketPrice", "N/A"),
+            "price_date": close_date,
+            "timezone": info.get("exchangeTimezoneName") or "",
             "currency": info.get("currency", "USD"),
             "market_cap": info.get("marketCap", "N/A"),
+            "business_summary": summary[:BUSINESS_SUMMARY_CHARS],
+            "target_mean": info.get("targetMeanPrice"),
+            "analyst_count": info.get("numberOfAnalystOpinions"),
         }
     except Exception as exc:
         print(f"[WARN] Could not fetch ticker info: {exc}", file=sys.stderr)
         return {"name": ticker}
 
 
-def format_news_block(news_items: list[dict]) -> str:
-    """Convert news list to a readable text block for the prompt."""
+# Yahoo's own profile, so the overview is not written from the model's memory:
+# wdc was still described as a flash-memory maker after the SanDisk split.
+BUSINESS_SUMMARY_CHARS = 800
+
+
+def analyst_upside(info: dict) -> str | None:
+    """'+63.0%' from the consensus target to the price, computed here.
+
+    amd's report paired a 662 target with headline upside figures ("about 57%"
+    to the record high, "58%" to another target) that do not recompute from it.
+    """
+    try:
+        price, target = float(info["current_price"]), float(info["target_mean"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    if price <= 0 or target <= 0:
+        return None
+    return f"{(target / price - 1) * 100:+.1f}%"
+
+
+def format_news_block(news_items: list[dict], tzname: str = "") -> str:
+    """Convert news list to a readable text block for the prompt.
+
+    Times are in the exchange's zone when known: a story filed on the US
+    evening of 11-25 is 11-26 in UTC, and the model wrote it up as 11-26 news.
+    """
+    try:
+        tz = ZoneInfo(tzname) if tzname else timezone.utc
+    except Exception:
+        tz = timezone.utc
     lines = []
     for i, item in enumerate(news_items[:25], 1):
         title = (item.get("title") or "").strip() or f"《未命名新聞 #{i}》"
         publisher = (item.get("publisher") or "").strip() or "未知來源"
         pub_ts = item.get("providerPublishTime", 0)
         if pub_ts:
-            pub_dt = datetime.fromtimestamp(pub_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+            pub_dt = datetime.fromtimestamp(pub_ts, tz=tz).strftime("%Y-%m-%d %H:%M %Z")
         else:
             pub_dt = "未知時間"
         link = (item.get("link") or "").strip()
@@ -241,6 +347,20 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
     sector = info.get("sector", "N/A")
     price = info.get("current_price", "N/A")
     currency = info.get("currency", "USD")
+    price_date = info.get("price_date")
+    if price_date:
+        price_line = f"{price} {currency}（{price_date} 收盤）"
+        if price_date != today:
+            price_line += (f"\n- 交易狀態：{today} 沒有已完成的交易日收盤（休市或尚未收盤）。"
+                           f"不得描述 {today} 的收盤價、漲跌或盤勢")
+    else:
+        price_line = f"{price} {currency}（盤中報價，非收盤價）"
+    summary = info.get("business_summary")
+    profile = f"\n- 公司簡介（Yahoo Finance）：{summary}" if summary else ""
+    upside = analyst_upside(info)
+    target = (f"\n- 分析師共識目標價：{float(info['target_mean']):.2f} {currency}"
+              f"（{info.get('analyst_count') or '?'} 位分析師），相對現價 {upside}（程式計算）"
+              if upside else "")
 
     return f"""你是一位專業的財經分析師，請根據以下 {ticker}（{name}）的最新新聞，
 用**繁體中文**撰寫一份詳盡的市場新聞分析報告。
@@ -249,8 +369,8 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 - 代碼：{ticker}
 - 名稱：{name}
 - 產業：{sector}
-- 最新股價：{price} {currency}
-- 報告日期：{today}
+- 最新股價：{price_line}{target}
+- 報告日期：{today}{profile}
 
 ## 最新新聞資料
 {news_block}
@@ -262,6 +382,14 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 - 如新聞數量較少，深度分析現有的 3–5 則重點新聞即可，無需填充虛假內容
 - 不使用 "$XXX"、"N/A"、"TBD" 等佔位符；若某數值未知，直接跳過該細節
 - 每個新聞分析應包含對公司營運或股價的具體影響說明
+- 「🏢 公司概覽」以上方公司簡介為準，不要用你記憶中的業務描述（公司可能已分拆、併購或轉型）
+- 不要自行計算百分比、漲跌幅或上行空間。只引用新聞或上方資料中已有的數字，並註明出處
+  （例如「據 Yahoo Finance 報導，股價需上漲約 57% 才能回到歷史高點」），不要把不同來源的價格與百分比湊在一起
+- 分析師共識目標價只是背景資訊：可以引用，但不得單憑它推論估值支撐、低估或營運前景
+- 若上方沒有提供任何新聞，各章節只需簡短說明本期無可用新聞，不得用一般產業知識推演公司近況
+- 區分事實與推論：新聞報導的事件寫成事實；你的推論要寫成「可能」「或將」，不得把推測寫成已確定的因果或結果
+- 「創歷史紀錄」「自某年以來最大」等歷史比較，只有新聞明確這樣寫時才可引用，並註明出處
+- 新聞的發布時間是其報導時間；描述事件日期時以新聞內容為準，不要把發布日期當成事件發生日
 - 來源為「X」的條目是社群貼文，不是新聞報導：只可作為市場情緒的參考，不得當作已證實的事實引用。
   引用 X 貼文中的任何數字或說法時，必須在同一句註明「據 X 貼文」；不得把未經新聞證實的 X 數字寫成一般事實
   （例如「散戶單日買入逾 1 億美元」應寫成「據 X 貼文，散戶單日買入逾 1 億美元（未經證實）」）。
@@ -373,12 +501,15 @@ def generate_report(
     output_dir: Path,
     output_filename: str | None = None,
 ) -> None:
-    print(f"[1/4] Fetching ticker info for {ticker}…")
-    info = fetch_ticker_info(ticker)
+    symbol = to_yf_symbol(ticker)  # a bare "0050" is a 404 on Yahoo
+    print(f"[1/4] Fetching ticker info for {symbol}…")
+    info = fetch_ticker_info(symbol)
 
-    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds + Perplexity + X)…")
-    news_items = fetch_news(ticker, info.get("name", ""))
-    print(f"      Found {len(news_items)} unique news items.")
+    print(f"[2/4] Fetching recent news for {symbol} (yfinance + RSS feeds + Perplexity + X)…")
+    fetched = fetch_news(symbol, info.get("name", ""))
+    news_items = select_news(fetched, symbol, info.get("name", ""))
+    print(f"      Found {len(fetched)} unique news items; {len(news_items)} recent and about "
+          f"{symbol} (last {NEWS_MAX_AGE_DAYS} days).")
 
     if news_items:
         valid_titles = sum(1 for item in news_items if item.get("title", "").strip())
@@ -390,7 +521,8 @@ def generate_report(
     if not news_items:
         print("[WARN] No news found. Report will note data unavailability.")
 
-    news_block = format_news_block(news_items) if news_items else "（目前無可用新聞資料）"
+    news_block = (format_news_block(news_items, info.get("timezone", ""))
+                  if news_items else "（目前無可用新聞資料）")
     prompt = build_prompt(ticker, info, news_block)
 
     def dispatch(prov: str, mdl: str) -> str:
@@ -411,6 +543,8 @@ def generate_report(
         "ticker": ticker,
         "date": today,
         "type": "market-news",
+        **({"price": info["current_price"], "price_date": info["price_date"]}
+           if info.get("price_date") else {}),
         "provider": provider,
         "model": model,
         "language": "zh-TW",

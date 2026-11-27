@@ -350,5 +350,21 @@ Code: `scripts/generate_market_news.py`.
   short name. The raw search is mostly other companies' articles, quote pages,
   and posts listing many cashtags. On X the ticker must be a cashtag (`$ANT`;
   bare `ANT` is also a crypto token). Adding a site is one `SITE_SEARCHES` entry.
+- **Selection** (`select_news`): only items from the last `NEWS_MAX_AGE_DAYS`
+  (14) with a publish time reach the prompt. Quote, profile and options pages
+  are dropped, and keyword-feed items (`RSS_FEEDS`) must name the stock: its
+  ticker (a Taiwan listing by its bare code) or the first two words of its short
+  name, both case-sensitive. A ticker with no recent news gets a short "no news"
+  report. Before this, 6206.tw was written from 2017 quote pages and 4766.tw
+  from Domino's and FiscalNote articles.
+- **Price and profile come from Yahoo, not the model.** The price carries its
+  session date (`quote_close`, else `last_completed_close`). When that is not
+  the report date, the prompt says the market has no close for today, since
+  qqq and soxx described a Thanksgiving close. News times are shown in the
+  exchange's zone. The overview is written from `longBusinessSummary`, and the
+  consensus-target upside is computed in Python (`analyst_upside`). `price` and
+  `price_date` go in front matter. The prompt forbids self-computed
+  percentages, unattributed "record since 19xx" claims, and inference stated
+  as fact.
 - **X posts are opinion, not news.** They arrive with publisher `X`, and the
   prompt tells the model to use them as sentiment only, never as fact.
