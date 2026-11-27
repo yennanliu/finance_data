@@ -340,10 +340,14 @@ model does not write it, and the prompts forbid citing "資料包" or "題示".
 
 Code: `scripts/generate_market_news.py`.
 
-- **Sources:** Yahoo (`sources.yahoo_news()`), four keyword RSS feeds and
-  Perplexity Discover. Results are merged and de-duplicated by title. Every
-  source fails soft to `[]`.
-- **Perplexity** (`perplexity.ai/discover`) is behind Cloudflare and has no feed.
-  It is read without a key through Google News `site:perplexity.ai when:7d`,
+- **Sources:** Yahoo (`sources.yahoo_news()`), four keyword RSS feeds, and
+  the `SITE_SEARCHES` sites: Perplexity Discover and X. Results are merged and
+  de-duplicated by title. Every source fails soft to `[]`.
+- **Site searches** (`_fetch_site`) read sites with no keyless feed (Perplexity is
+  behind Cloudflare, X's API is paid) through Google News `site:<domain> when:7d`,
   keeping only titles that name the ticker (case-sensitive) or the company's
-  short name. The raw search is mostly other companies' articles and quote pages.
+  short name. The raw search is mostly other companies' articles, quote pages,
+  and posts listing many cashtags. On X the ticker must be a cashtag (`$ANT`;
+  bare `ANT` is also a crypto token). Adding a site is one `SITE_SEARCHES` entry.
+- **X posts are opinion, not news.** They arrive with publisher `X`, and the
+  prompt tells the model to use them as sentiment only, never as fact.

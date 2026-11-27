@@ -66,7 +66,7 @@ def test_fetch_rss_respects_limit(monkeypatch):
     assert len(items) == 1
 
 
-# ── _fetch_perplexity ────────────────────────────────────────────────────────
+# ── _fetch_site ────────────────────────────────────────────────────────
 
 PPLX_XML = b"""<?xml version="1.0"?>
 <rss><channel>
@@ -93,7 +93,7 @@ def test_short_name_strips_corporate_suffixes(name, short):
 
 def test_fetch_perplexity_keeps_only_articles_about_the_company(monkeypatch):
     monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
-    items = mn._fetch_perplexity("TSLA", "Tesla, Inc.")
+    items = mn._fetch_site("Perplexity", "perplexity.ai", "TSLA", "Tesla, Inc.")
     assert [i["title"] for i in items] == [
         "Tesla Executive Says Launching Cybercabs In Dallas",
         "This Week in TSLA: Roadster Debut",
@@ -103,15 +103,82 @@ def test_fetch_perplexity_keeps_only_articles_about_the_company(monkeypatch):
 
 def test_fetch_perplexity_ticker_only_without_company(monkeypatch):
     monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
-    assert [i["title"] for i in mn._fetch_perplexity("TSLA")] == ["This Week in TSLA: Roadster Debut"]
+    assert [i["title"] for i in mn._fetch_site("Perplexity", "perplexity.ai", "TSLA")] == ["This Week in TSLA: Roadster Debut"]
 
 
-def test_fetch_perplexity_fails_soft(monkeypatch):
+def test_fetch_site_fails_soft(monkeypatch):
     def boom(*a, **k):
         raise ConnectionError("down")
 
     monkeypatch.setattr(mn, "urlopen", boom)
-    assert mn._fetch_perplexity("TSLA", "Tesla, Inc.") == []
+    assert mn._fetch_site("X", "x.com", "TSLA", "Tesla, Inc.") == []
+
+
+X_XML = b"""<?xml version="1.0"?>
+<rss><channel>
+  <item><title>$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE - X</title></item>
+  <item><title>Tech stocks in pre-market: $DELL -7.7% $ARM -6.2% - X</title></item>
+  <item><title>Tesla Robotaxi expands to Austin airport - X</title></item>
+  <item><title>Hold TSLA, not ANT: a bare ticker is not a cashtag - X</title></item>
+</channel></rss>"""
+
+
+def test_fetch_site_reads_x_through_google_news(monkeypatch):
+    urls = []
+
+    def fake_urlopen(req, **k):
+        urls.append(req.full_url)
+        return _FakeResp(X_XML)
+
+    monkeypatch.setattr(mn, "urlopen", fake_urlopen)
+    items = mn._fetch_site("X", "x.com", "TSLA", "Tesla, Inc.", r"\$")
+    assert urls == ["https://news.google.com/rss/search?q=TSLA+site:x.com+when:7d&hl=en-US&gl=US&ceid=US:en"]
+    assert [i["title"] for i in items] == [
+        "$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE",
+        "Tesla Robotaxi expands to Austin airport",
+    ]
+    assert all(i["publisher"] == "X" for i in items)
+
+
+def test_x_needs_the_cashtag_when_the_company_name_is_absent(monkeypatch):
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(X_XML))
+    titles = [i["title"] for i in mn._fetch_site("X", "x.com", "TSLA", "", r"\$")]
+    assert titles == ["$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE"]
+
+
+@pytest.mark.parametrize("site, prefix, xml, title", [
+    ("x.com", r"\$", b"""<rss><channel>
+  <item><title>2,500 ANT Believers Index blind boxes - X</title></item>
+  <item><title>$ANT falls below IPO price - X</title></item>
+</channel></rss>""", "$ANT falls below IPO price"),
+    ("perplexity.ai", "", b"""<rss><channel>
+  <item><title>Why ant colonies scale - Perplexity</title></item>
+  <item><title>ANT closes below IPO price - Perplexity</title></item>
+</channel></rss>""", "ANT closes below IPO price"),
+])
+def test_ticker_fallback_name_does_not_bypass_ticker_rules(monkeypatch, site, prefix, xml, title):
+    """fetch_ticker_info() returns {"name": ticker} when Yahoo has no name (NBIS
+    has no longName). That name must not re-admit bare or lowercase tickers."""
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(xml))
+    name = "X" if site == "x.com" else "Perplexity"
+    assert [i["title"] for i in mn._fetch_site(name, site, "ANT", "ANT", prefix)] == [title]
+
+
+def test_short_name_equal_to_ticker_still_matches(monkeypatch):
+    """Only the fallback (name == ticker) is skipped. "Arm Holdings plc"
+    shortens to "Arm", which is a real company name for ARM."""
+    xml = b"""<rss><channel>
+  <item><title>Arm announces new chips - X</title></item>
+</channel></rss>"""
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(xml))
+    titles = [i["title"] for i in mn._fetch_site("X", "x.com", "ARM", "Arm Holdings plc", r"\$")]
+    assert titles == ["Arm announces new chips"]
+
+
+def test_prompt_tells_the_model_x_posts_are_not_news():
+    prompt = mn.build_prompt("TSLA", {}, "")
+    assert "「X」的條目是社群貼文" in prompt
+    assert "必須在同一句註明「據 X 貼文」" in prompt
 
 
 # ── fetch_news (dedup + sort) ────────────────────────────────────────────────
@@ -144,17 +211,19 @@ def test_fetch_news_merges_perplexity(monkeypatch):
     ])
     seen = {}
 
-    def fake_pplx(ticker, company=""):
-        seen["company"] = company
+    def fake_site(name, site, ticker, company="", ticker_prefix=""):
+        seen[name] = (site, company)
+        if name != "Perplexity":
+            return []
         return [
             {"title": "shared story", "providerPublishTime": 20},  # dup of the RSS item
             {"title": "Perplexity Exclusive", "providerPublishTime": 30},
         ]
 
-    monkeypatch.setattr(mn, "_fetch_perplexity", fake_pplx)
+    monkeypatch.setattr(mn, "_fetch_site", fake_site)
     out = mn.fetch_news("AAPL", "Apple Inc.")
     titles = [i["title"].lower() for i in out]
-    assert seen["company"] == "Apple Inc."
+    assert seen == {"Perplexity": ("perplexity.ai", "Apple Inc."), "X": ("x.com", "Apple Inc.")}
     assert titles[0] == "perplexity exclusive"
     assert titles.count("shared story") == 1
 
@@ -162,8 +231,38 @@ def test_fetch_news_merges_perplexity(monkeypatch):
 def test_fetch_news_with_every_source_empty(monkeypatch):
     monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
     monkeypatch.setattr(mn, "_fetch_rss", lambda *a, **k: [])
-    monkeypatch.setattr(mn, "_fetch_perplexity", lambda *a, **k: [])
+    monkeypatch.setattr(mn, "_fetch_site", lambda *a, **k: [])
     assert mn.fetch_news("AAPL") == []
+
+
+@pytest.mark.parametrize("x_behaviour", ["down", "empty", "raises"])
+def test_report_still_builds_without_x(monkeypatch, x_behaviour):
+    """X unreachable, X with nothing on the stock, or a bug in the X fetcher:
+    the other sources still reach the prompt and the report is not aborted."""
+    real_urlopen = mn.urlopen
+
+    def fake_urlopen(req, **k):
+        if "site:x.com" in req.full_url:
+            if x_behaviour == "down":
+                raise TimeoutError("x.com unreachable")
+            return _FakeResp(b'<?xml version="1.0"?><rss><channel></channel></rss>')
+        return _FakeResp(RSS_XML)
+
+    monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
+    monkeypatch.setattr(mn, "urlopen", fake_urlopen)
+    if x_behaviour == "raises":
+        real_site = mn._fetch_site
+        def buggy(name, *a, **k):
+            if name == "X":
+                raise ValueError("unexpected")
+            return real_site(name, *a, **k)
+        monkeypatch.setattr(mn, "_fetch_site", buggy)
+
+    items = mn.fetch_news("AAPL", "Apple Inc.")
+    assert items and not any(i["publisher"] == "X" for i in items)
+    block = mn.format_news_block(items)
+    assert "無可用新聞" not in block
+    assert "AAPL" in mn.build_prompt("AAPL", {"name": "Apple Inc."}, block)
 
 
 # ── format_news_block / build_prompt ─────────────────────────────────────────
