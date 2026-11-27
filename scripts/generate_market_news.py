@@ -49,12 +49,19 @@ RSS_PER_FEED_LIMIT = 5  # top N headlines per feed
 
 _USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)"
 
-# Perplexity Discover (perplexity.ai/discover) has no feed and sits behind a
-# Cloudflare challenge, but Google News indexes its articles. A site: search
-# matches the ticker anywhere on a page (sidebars, quote widgets), so the whole
-# feed is scanned and only titles naming the company are kept.
-PERPLEXITY_FEED = "https://news.google.com/rss/search?q={query}+site:perplexity.ai+when:7d&hl=en-US&gl=US&ceid=US:en"
-PERPLEXITY_SCAN_LIMIT = 100
+# Sites with no keyless feed, read through a Google News site: search instead.
+# Perplexity Discover sits behind Cloudflare; X's API is paid. Google News
+# indexes both, titling each item "<headline or post> - <name>". A site: search
+# matches the ticker anywhere on a page (sidebars, quote widgets, a post's list
+# of ten cashtags), so the whole feed is scanned and only titles naming the
+# company are kept. On X a stock is its cashtag: bare "ANT" is also a crypto
+# token, "$ANT" is Anthropic.
+SITE_SEARCHES = {  # name: (domain, regex required before the ticker)
+    "Perplexity": ("perplexity.ai", ""),
+    "X":          ("x.com", r"\$"),
+}
+SITE_FEED = "https://news.google.com/rss/search?q={query}+site:{site}+when:7d&hl=en-US&gl=US&ceid=US:en"
+SITE_SCAN_LIMIT = 100
 
 _CORP_SUFFIX = re.compile(r",?\s+(?:inc|corp|corporation|co|company|ltd|limited|plc|holdings?|group)\.?$", re.I)
 _QUOTE_PAGE = re.compile(r"\bPrice: Quote\b")
@@ -116,24 +123,25 @@ def _short_name(company: str) -> str:
     return company
 
 
-def _fetch_perplexity(ticker: str, company: str = "") -> list[dict]:
-    """Perplexity Discover articles whose title names *ticker* or *company*."""
-    names = [rf"\b(?-i:{re.escape(ticker)})\b"]  # case-sensitive: tickers like ON, IT
+def _fetch_site(name: str, site: str, ticker: str, company: str = "",
+                ticker_prefix: str = "") -> list[dict]:
+    """Items from *site* (via Google News) whose title names *ticker* or *company*."""
+    names = [rf"{ticker_prefix}\b(?-i:{re.escape(ticker)})\b"]  # case-sensitive: tickers like ON, IT
     if short := _short_name(company):
         names.append(rf"\b{re.escape(short)}\b")
     about_company = re.compile("|".join(names), re.I)
 
-    items = _fetch_rss(PERPLEXITY_FEED, "Perplexity", ticker, limit=PERPLEXITY_SCAN_LIMIT)
+    feed = SITE_FEED.format(query="{query}", site=site)
     kept = []
-    for item in items:
-        item["title"] = item["title"].removesuffix(" - Perplexity")
+    for item in _fetch_rss(feed, name, ticker, limit=SITE_SCAN_LIMIT):
+        item["title"] = item["title"].removesuffix(f" - {name}")
         if about_company.search(item["title"]) and not _QUOTE_PAGE.search(item["title"]):
             kept.append(item)
     return kept[:RSS_PER_FEED_LIMIT]
 
 
 def fetch_news(ticker: str, company: str = "") -> list[dict]:
-    """Collect news from yfinance + RSS feeds + Perplexity, deduplicate, and return.
+    """Collect news from yfinance + RSS feeds + site searches, deduplicate, and return.
 
     Every web source fails soft (returns []), so one going down narrows the
     report instead of aborting it.
@@ -142,7 +150,8 @@ def fetch_news(ticker: str, company: str = "") -> list[dict]:
     source_counts: dict[str, int] = {"yfinance": len(yf_items)}
 
     web_sources = {name: partial(_fetch_rss, url, name, ticker) for name, url in RSS_FEEDS}
-    web_sources["Perplexity"] = partial(_fetch_perplexity, ticker, company)
+    web_sources |= {name: partial(_fetch_site, name, site, ticker, company, prefix)
+                    for name, (site, prefix) in SITE_SEARCHES.items()}
 
     web_items: list[dict] = []
     with ThreadPoolExecutor(max_workers=len(web_sources)) as pool:
@@ -241,6 +250,7 @@ def build_prompt(ticker: str, info: dict, news_block: str) -> str:
 - 如新聞數量較少，深度分析現有的 3–5 則重點新聞即可，無需填充虛假內容
 - 不使用 "$XXX"、"N/A"、"TBD" 等佔位符；若某數值未知，直接跳過該細節
 - 每個新聞分析應包含對公司營運或股價的具體影響說明
+- 來源為「X」的條目是社群貼文，不是新聞報導：只可作為市場情緒的參考，不得當作已證實的事實引用
 
 請依照以下格式完整輸出報告（使用 Markdown）：
 
@@ -351,7 +361,7 @@ def generate_report(
     print(f"[1/4] Fetching ticker info for {ticker}…")
     info = fetch_ticker_info(ticker)
 
-    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds + Perplexity)…")
+    print(f"[2/4] Fetching recent news for {ticker} (yfinance + RSS feeds + Perplexity + X)…")
     news_items = fetch_news(ticker, info.get("name", ""))
     print(f"      Found {len(news_items)} unique news items.")
 

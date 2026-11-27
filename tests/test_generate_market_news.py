@@ -66,7 +66,7 @@ def test_fetch_rss_respects_limit(monkeypatch):
     assert len(items) == 1
 
 
-# ── _fetch_perplexity ────────────────────────────────────────────────────────
+# ── _fetch_site ────────────────────────────────────────────────────────
 
 PPLX_XML = b"""<?xml version="1.0"?>
 <rss><channel>
@@ -93,7 +93,7 @@ def test_short_name_strips_corporate_suffixes(name, short):
 
 def test_fetch_perplexity_keeps_only_articles_about_the_company(monkeypatch):
     monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
-    items = mn._fetch_perplexity("TSLA", "Tesla, Inc.")
+    items = mn._fetch_site("Perplexity", "perplexity.ai", "TSLA", "Tesla, Inc.")
     assert [i["title"] for i in items] == [
         "Tesla Executive Says Launching Cybercabs In Dallas",
         "This Week in TSLA: Roadster Debut",
@@ -103,15 +103,51 @@ def test_fetch_perplexity_keeps_only_articles_about_the_company(monkeypatch):
 
 def test_fetch_perplexity_ticker_only_without_company(monkeypatch):
     monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(PPLX_XML))
-    assert [i["title"] for i in mn._fetch_perplexity("TSLA")] == ["This Week in TSLA: Roadster Debut"]
+    assert [i["title"] for i in mn._fetch_site("Perplexity", "perplexity.ai", "TSLA")] == ["This Week in TSLA: Roadster Debut"]
 
 
-def test_fetch_perplexity_fails_soft(monkeypatch):
+def test_fetch_site_fails_soft(monkeypatch):
     def boom(*a, **k):
         raise ConnectionError("down")
 
     monkeypatch.setattr(mn, "urlopen", boom)
-    assert mn._fetch_perplexity("TSLA", "Tesla, Inc.") == []
+    assert mn._fetch_site("X", "x.com", "TSLA", "Tesla, Inc.") == []
+
+
+X_XML = b"""<?xml version="1.0"?>
+<rss><channel>
+  <item><title>$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE - X</title></item>
+  <item><title>Tech stocks in pre-market: $DELL -7.7% $ARM -6.2% - X</title></item>
+  <item><title>Tesla Robotaxi expands to Austin airport - X</title></item>
+  <item><title>Hold TSLA, not ANT: a bare ticker is not a cashtag - X</title></item>
+</channel></rss>"""
+
+
+def test_fetch_site_reads_x_through_google_news(monkeypatch):
+    urls = []
+
+    def fake_urlopen(req, **k):
+        urls.append(req.full_url)
+        return _FakeResp(X_XML)
+
+    monkeypatch.setattr(mn, "urlopen", fake_urlopen)
+    items = mn._fetch_site("X", "x.com", "TSLA", "Tesla, Inc.", r"\$")
+    assert urls == ["https://news.google.com/rss/search?q=TSLA+site:x.com+when:7d&hl=en-US&gl=US&ceid=US:en"]
+    assert [i["title"] for i in items] == [
+        "$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE",
+        "Tesla Robotaxi expands to Austin airport",
+    ]
+    assert all(i["publisher"] == "X" for i in items)
+
+
+def test_x_needs_the_cashtag_when_the_company_name_is_absent(monkeypatch):
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(X_XML))
+    titles = [i["title"] for i in mn._fetch_site("X", "x.com", "TSLA", "", r"\$")]
+    assert titles == ["$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE"]
+
+
+def test_prompt_tells_the_model_x_posts_are_not_news():
+    assert "「X」的條目是社群貼文" in mn.build_prompt("TSLA", {}, "")
 
 
 # ── fetch_news (dedup + sort) ────────────────────────────────────────────────
@@ -144,17 +180,19 @@ def test_fetch_news_merges_perplexity(monkeypatch):
     ])
     seen = {}
 
-    def fake_pplx(ticker, company=""):
-        seen["company"] = company
+    def fake_site(name, site, ticker, company="", ticker_prefix=""):
+        seen[name] = (site, company)
+        if name != "Perplexity":
+            return []
         return [
             {"title": "shared story", "providerPublishTime": 20},  # dup of the RSS item
             {"title": "Perplexity Exclusive", "providerPublishTime": 30},
         ]
 
-    monkeypatch.setattr(mn, "_fetch_perplexity", fake_pplx)
+    monkeypatch.setattr(mn, "_fetch_site", fake_site)
     out = mn.fetch_news("AAPL", "Apple Inc.")
     titles = [i["title"].lower() for i in out]
-    assert seen["company"] == "Apple Inc."
+    assert seen == {"Perplexity": ("perplexity.ai", "Apple Inc."), "X": ("x.com", "Apple Inc.")}
     assert titles[0] == "perplexity exclusive"
     assert titles.count("shared story") == 1
 
@@ -162,7 +200,7 @@ def test_fetch_news_merges_perplexity(monkeypatch):
 def test_fetch_news_with_every_source_empty(monkeypatch):
     monkeypatch.setattr(mn, "yahoo_news", lambda t: [])
     monkeypatch.setattr(mn, "_fetch_rss", lambda *a, **k: [])
-    monkeypatch.setattr(mn, "_fetch_perplexity", lambda *a, **k: [])
+    monkeypatch.setattr(mn, "_fetch_site", lambda *a, **k: [])
     assert mn.fetch_news("AAPL") == []
 
 
