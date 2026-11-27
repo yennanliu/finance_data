@@ -69,7 +69,7 @@ on:
       model:
         description: "Model ID (ignored if it does not belong to the chosen provider)"
         required: false
-        default: "gemini-3.7-flash"
+        default: "gemini-3.8-flash"
         type: choice
         # Kept in the same grouping/order as daily_analysis.yml and
         # advanced_analysis.yml: workflow_dispatch choices cannot be shared
@@ -77,6 +77,8 @@ on:
         # rather than a three-way merge.
         options:
           # OpenAI models
+          - gpt-6.2-astra
+          - gpt-6.2-sol
           - gpt-6-luna
           - gpt-6.1-terra
           - gpt-6.1-sol
@@ -87,8 +89,14 @@ on:
           - gpt-4o
           - gpt-4o-mini
           - gpt-4-turbo
-          # Gemini 3.x models (latest)
+          # Gemini 4 models (latest)
+          - gemini-4-neon
+          - gemini-4-carbon
+          - gemini-4-argon
+          - gemini-4-hydrogen
+          # Gemini 3.x models
           - gemini-3.8-flash
+          - gemini-3.8-live
           - gemini-3.7-flash
           - gemini-3.6-flash
           - gemini-3.5-flash
@@ -99,6 +107,8 @@ on:
           - gemini-2.5-pro
           - gemini-2.5-flash-lite
           # Claude models
+          - claude-fable-5-2
+          - claude-mythos-5-2
           - claude-haiku-5-5
           - claude-sonnet-5-5
           - claude-opus-5-5
@@ -125,11 +135,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      # News runs deliberately differ from the report generators' defaults in
-      # analysis/config (gemini-3.8-flash / 32000 tokens), so those values are
-      # owned here rather than inherited.
+      # Owned here rather than inherited from analysis/config: the model happens
+      # to match the report default (gemini-3.8-flash), but news runs a smaller
+      # token budget (20000 vs 32000) and should not move when reports do.
       DEFAULT_PROVIDER: gemini
-      DEFAULT_MODEL: gemini-3.7-flash
+      DEFAULT_MODEL: gemini-3.8-flash
       DEFAULT_MAX_TOKENS: "20000"
 
     steps:
