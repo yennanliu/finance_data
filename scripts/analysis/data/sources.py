@@ -428,17 +428,45 @@ def quote_close(info: dict):
 STORE_FILL_AGREEMENT = 0.005
 
 
-def _fill_from_store(hist, store_bars, local_today: str):
-    """``hist`` plus store sessions newer than its last bar and before today.
+def _session_previous_close(info: dict, local_today: str):
+    """The official close of the session before today's, from a quote stamped
+    today; None when the quote is not from today's session. Outside the
+    session Yahoo's previous close refers to an older session, so it is only
+    read while today's quote is live."""
+    from datetime import datetime, timezone
+    from zoneinfo import ZoneInfo
+
+    info = info or {}
+    try:
+        tzname = info.get("exchangeTimezoneName")
+        tz = ZoneInfo(tzname) if tzname else timezone.utc
+        when = datetime.fromtimestamp(int(info["regularMarketTime"]), tz)
+        prev = float(info.get("regularMarketPreviousClose") or info.get("previousClose"))
+    except (TypeError, ValueError, KeyError, OSError):
+        return None
+    if when.date().isoformat() != local_today or prev != prev or prev <= 0:
+        return None
+    return prev
+
+
+def _fill_from_store(hist, store_bars, local_today: str, info: "dict | None" = None):
+    """``hist`` plus the one store session between its last bar and today.
 
     Yahoo's Taiwan history can omit the previous session while the next one
     trades: at 10:21 Taipei on 2026-11-27 it went from 11-25 straight to the
     in-progress 11-27 bar, while ``data/prices/0050.csv`` held the 11-26 close.
     The 0050 technical cron is set for 05:30 Taipei, but GitHub runs it about
     6 h late, mid-session. So 5 of the last 10 reports were given a close two
-    sessions old (QA ``STALE_PRICE``). Store bars are added only when the
-    store agrees with ``hist`` on its last date, so a split or restatement
-    that one side has not caught up with is never spliced in.
+    sessions old (QA ``STALE_PRICE``).
+
+    A stored row is not proof of a finished session: the store update is
+    scheduled at 03:30 UTC (11:30 Taipei), so a Taiwan row can be an intraday
+    snapshot that ``upsert`` keeps when Yahoo later skips that day. The row
+    is therefore filled only when it is the *single* missing session and its
+    close matches the official previous close in today's quote
+    (:func:`_session_previous_close`). It must also agree with ``hist`` on
+    their shared last date, so a split or restatement that one side has not
+    caught up with is never spliced in. Anything else leaves ``hist`` as it is.
     """
     import pandas as pd
 
@@ -452,7 +480,10 @@ def _fill_from_store(hist, store_bars, local_today: str):
     if abs(float(hist["Close"].iloc[-1]) / anchor["close"] - 1) > STORE_FILL_AGREEMENT:
         return hist, False
     fill = [b for b in store_bars if last < b["date"] < local_today]
-    if not fill:
+    if len(fill) != 1:     # none missing, or more than the quote can vouch for
+        return hist, False
+    prev = _session_previous_close(info, local_today)
+    if prev is None or abs(fill[0]["close"] / prev - 1) > STORE_FILL_AGREEMENT:
         return hist, False
     tz = hist.index.tz
     index = pd.DatetimeIndex([pd.Timestamp(b["date"]).tz_localize(tz) for b in fill],
@@ -501,7 +532,7 @@ def complete_bars(hist, info: dict, now=None, store_bars=None):
                 and (local.hour, local.minute) < (close_h, close_m)
                 and len(hist) > 1):
             hist = hist.iloc[:-1]
-        hist, filled = _fill_from_store(hist, store_bars, local.date().isoformat())
+        hist, filled = _fill_from_store(hist, store_bars, local.date().isoformat(), info)
     else:
         filled = False
 

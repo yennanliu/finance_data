@@ -117,11 +117,20 @@ def _skipped_session(day_before_last="2026-11-25"):
     return h, pd.concat([h, live])
 
 
+def live_quote(prev_close=92.85, day="2026-11-27", hour=10, minute=21):
+    """Yahoo's 0050 quote mid-session: intraday price, official previous close."""
+    stamp = datetime.fromisoformat(f"{day}T{hour:02d}:{minute:02d}").replace(tzinfo=TPE)
+    return {"regularMarketPrice": 92.4, "regularMarketTime": int(stamp.timestamp()),
+            "regularMarketPreviousClose": prev_close, "exchangeTimezoneName": "Asia/Taipei"}
+
+
+SESSION_NOW = datetime(2026, 11, 27, 10, 21, tzinfo=TPE)
+
+
 def test_a_session_yahoo_skipped_is_filled_from_the_store():
     h, served = _skipped_session()
     store = _store_rows(h, [("2026-11-26", 92.85), ("2026-11-27", 92.4)])
-    now = datetime(2026, 11, 27, 10, 21, tzinfo=TPE)
-    out, source = complete_bars(served, {}, now=now, store_bars=store)
+    out, source = complete_bars(served, live_quote(), now=SESSION_NOW, store_bars=store)
     assert source == "price_store"
     assert str(out.index[-1])[:10] == "2026-11-26"      # never today's bar
     assert out["Close"].iloc[-1] == 92.85
@@ -133,15 +142,44 @@ def test_the_store_is_not_used_when_it_disagrees_with_yahoo():
     store = [dict(r, close=r["close"] / 8) for r in _store_rows(h)]
     store.append({"date": "2026-11-26", "open": 11.6, "high": 11.6, "low": 11.6,
                   "close": 11.6, "volume": 1, "div": None, "split": None})
-    now = datetime(2026, 11, 27, 10, 21, tzinfo=TPE)
-    out, source = complete_bars(served, {}, now=now, store_bars=store)
+    out, source = complete_bars(served, live_quote(11.6), now=SESSION_NOW, store_bars=store)
     assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-25"
+
+
+def test_a_provisional_store_row_is_not_published_as_a_close():
+    """Greptile on #117: the store update is scheduled mid-session in Taipei,
+    so a stored row can be an intraday snapshot (0050's flat, low-volume
+    95.70 bar on 11-24). It does not match the official previous close."""
+    h, served = _skipped_session()
+    store = _store_rows(h, [("2026-11-26", 95.70)])
+    out, source = complete_bars(served, live_quote(92.85), now=SESSION_NOW, store_bars=store)
+    assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-25"
+
+
+@pytest.mark.parametrize("info", [
+    {},                                              # no quote at all
+    live_quote(day="2026-11-26", hour=11, minute=0),   # yesterday's intraday quote
+    {**live_quote(), "regularMarketPreviousClose": None},
+])
+def test_no_fill_without_todays_previous_close(info):
+    h, served = _skipped_session()
+    store = _store_rows(h, [("2026-11-26", 92.85)])
+    out, source = complete_bars(served, info, now=SESSION_NOW, store_bars=store)
+    assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-25"
+
+
+def test_more_than_one_missing_session_is_not_filled():
+    """The quote vouches only for the last session; an earlier gap could be
+    a snapshot too."""
+    h, served = _skipped_session(day_before_last="2026-11-24")
+    store = _store_rows(h, [("2026-11-25", 90.30), ("2026-11-26", 92.85)])
+    out, source = complete_bars(served, live_quote(), now=SESSION_NOW, store_bars=store)
+    assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-24"
 
 
 def test_without_a_store_the_last_yahoo_session_is_used():
     _, served = _skipped_session()
-    now = datetime(2026, 11, 27, 10, 21, tzinfo=TPE)
-    out, source = complete_bars(served, {}, now=now)
+    out, source = complete_bars(served, live_quote(), now=SESSION_NOW)
     assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-25"
 
 
