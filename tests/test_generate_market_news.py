@@ -147,7 +147,9 @@ def test_x_needs_the_cashtag_when_the_company_name_is_absent(monkeypatch):
 
 
 def test_prompt_tells_the_model_x_posts_are_not_news():
-    assert "「X」的條目是社群貼文" in mn.build_prompt("TSLA", {}, "")
+    prompt = mn.build_prompt("TSLA", {}, "")
+    assert "「X」的條目是社群貼文" in prompt
+    assert "必須在同一句註明「據 X 貼文」" in prompt
 
 
 # ── fetch_news (dedup + sort) ────────────────────────────────────────────────
