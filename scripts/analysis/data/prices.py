@@ -225,7 +225,8 @@ def window(bars: list[dict], *, days: int | None = None,
 
 
 # ── Fetch ────────────────────────────────────────────────────────────────────
-def fetch_history(symbol: str, years: int = KEEP_YEARS) -> list[dict] | None:
+def fetch_history(symbol: str, years: int = KEEP_YEARS,
+                  period: str | None = None) -> list[dict] | None:
     """Fetch ``years`` of daily bars from Yahoo. Returns None on no data.
 
     ``auto_adjust=False`` keeps the as-reported (split-adjusted, not
@@ -237,7 +238,7 @@ def fetch_history(symbol: str, years: int = KEEP_YEARS) -> list[dict] | None:
     import yfinance as yf  # lazy import keeps this module offline-safe
 
     hist = yf.Ticker(symbol).history(
-        period=f"{years}y", interval="1d", auto_adjust=False, actions=True,
+        period=period or f"{years}y", interval="1d", auto_adjust=False, actions=True,
     )
     if hist is None or hist.empty:
         return None
@@ -328,6 +329,44 @@ def gate(new: list[dict] | None, old: list[dict]) -> str | None:
     return None
 
 
+# ── Stale long fetches ───────────────────────────────────────────────────────
+# Yahoo can keep serving an old copy of a ticker's long history. After SNDK's
+# 8:1 split on 2026-11-20, every nightly ``period="10y"`` fetch in CI ended on
+# 11-19 and the store logged ``unchanged`` for a week. Meanwhile the reports'
+# own ``period="2y"`` fetch had the new sessions, and so did a local fetch. The
+# store never got the split row either, so ``split_adjust`` had nothing to
+# apply and SNDK's own-history P/S read 0.4x against a real 2.89x. A
+# short-window fetch is a different request. Its newer bars are appended only
+# when it agrees with the long fetch on the dates both cover, so a restatement
+# the long fetch has not caught up with is never spliced in.
+RECENT_PERIOD = "1mo"
+RECENT_AGREEMENT = 0.005   # relative close difference allowed on shared dates
+
+
+def extend_from_recent(new: list[dict], recent: list[dict] | None
+                       ) -> tuple[list[dict], str]:
+    """``new`` plus the bars of ``recent`` dated after it, and a note.
+
+    The note is empty when nothing was added. Bars are added only when the
+    two fetches overlap and every shared close agrees within
+    ``RECENT_AGREEMENT``. A disagreement means one side has been restated
+    (typically a split), and mixing the two would put a cliff in the series.
+    """
+    if not new or not recent or recent[-1]["date"] <= new[-1]["date"]:
+        return new, ""
+    last = new[-1]["date"]
+    long_close = {b["date"]: b["close"] for b in new}
+    shared = [b for b in recent if b["date"] in long_close]
+    if not shared:
+        return new, f"long fetch ends {last}; recent window does not overlap it, not merged"
+    for b in shared:
+        if abs(b["close"] / long_close[b["date"]] - 1) > RECENT_AGREEMENT:
+            return new, (f"long fetch ends {last}; recent window disagrees on "
+                         f"{b['date']}, not merged")
+    extra = [b for b in recent if b["date"] > last]
+    return new + extra, f"long fetch ended {last}; +{len(extra)} bars from {RECENT_PERIOD} window"
+
+
 # ── Update one ticker ────────────────────────────────────────────────────────
 def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
            store_dir: Path | None = None, dry_run: bool = False) -> tuple[str, str]:
@@ -350,6 +389,12 @@ def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
         return "failed", f"fetch error: {e}"
     if not new:
         return "failed", "no data"
+    try:
+        recent = fetch_history(symbol, years, period=RECENT_PERIOD)
+    except Exception:  # the long fetch already succeeded; this is a top-up
+        recent = None
+    new, note = extend_from_recent(new, recent)
+    suffix = f" [{note}]" if note else ""
 
     reason = gate(new, old)
     if reason:
@@ -363,7 +408,7 @@ def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
     else:
         wrote = write_store(key, merged, store_dir)
     if not wrote:
-        return "unchanged", f"{len(merged)} bars"
+        return "unchanged", f"{len(merged)} bars{suffix}"
 
     if not old:
         return "created", (f"would write {len(merged)} bars" if dry_run
@@ -375,9 +420,9 @@ def update(key: str, symbol: str | None = None, years: int = KEEP_YEARS,
     if changed:
         return "restated", (
             f"would rewrite {changed} existing bars ({len(merged)} total)" if dry_run
-            else f"{changed} existing bars rewritten, {len(merged)} total")
+            else f"{changed} existing bars rewritten, {len(merged)} total") + suffix
     return "appended", (f"would write {len(merged) - len(old)} new bars" if dry_run
-                        else f"{len(merged)} bars")
+                        else f"{len(merged)} bars") + suffix
 
 
 def _restated_count(old: list[dict], new: list[dict]) -> int:
@@ -434,7 +479,7 @@ __all__ = [
     "KEEP_YEARS", "STORE_DIR", "FIELDS",
     "fmt_price", "fmt_event", "fmt_volume", "serialise", "parse",
     "store_path", "load_store", "write_store",
-    "upsert", "trim", "window",
+    "upsert", "trim", "window", "extend_from_recent", "RECENT_PERIOD",
     "fetch_history", "gate", "update",
     "report_key", "to_yf_symbol", "currency_for",
 ]

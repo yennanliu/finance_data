@@ -8,6 +8,9 @@ Every report since #84 records the close it was given in its front matter
   NT$195 for an ETF trading at NT$107) — :func:`quote_mismatch`;
 * the pipeline was given the wrong close (a fetch bug) — :func:`store_mismatch`
   compares it with the committed store, ``data/prices/<key>.csv``;
+* the store itself stopped updating (SNDK's ended on 2026-11-19 for a week
+  while its reports carried newer closes), which leaves the two checks above
+  silent because they have no bar to compare with — :func:`store_behind`;
 * the close was a session old (79 October technical reports, all committed in
   the 00:00–01:59 UTC window when Yahoo's newest bar is still empty) —
   :func:`stale_sessions`.
@@ -23,6 +26,10 @@ from pathlib import Path
 from ..data.prices import load_store, report_key
 
 PRICE_TOLERANCE = 0.005   # relative; prices are quoted to the cent
+# Calendar days a report's close may run ahead of the store's newest bar. The
+# store updates once a day after report generation, so one session plus a
+# weekend (Fri close → Mon report, store still on Thu) is normal.
+STORE_LAG_DAYS = 4
 
 
 def quote_mismatch(stated, price) -> "dict | None":
@@ -57,6 +64,23 @@ def store_mismatch(price, price_date: str, bars: list) -> "dict | None":
             "diff_pct": round((price / close - 1) * 100, 2)}
 
 
+def store_behind(price_date: str, bars: list) -> "dict | None":
+    """The store's newest bar when it is more than ``STORE_LAG_DAYS`` older
+    than the close a report was given: the store has stopped updating."""
+    from datetime import date
+
+    if not bars:
+        return None
+    last = bars[-1]["date"]
+    try:
+        lag = (date.fromisoformat(price_date) - date.fromisoformat(last)).days
+    except ValueError:
+        return None
+    if lag <= STORE_LAG_DAYS:
+        return None
+    return {"price_date": price_date, "store_last": last, "lag_days": lag}
+
+
 def stale_sessions(price_date: str, report_date: str, bars: list) -> "list[str]":
     """Completed sessions newer than the close used and older than the report.
 
@@ -70,7 +94,7 @@ def stale_sessions(price_date: str, report_date: str, bars: list) -> "list[str]"
 def check(fm: dict, ticker: str, report_date: str,
           store_dir: "Path | None" = None) -> dict:
     """Store and freshness checks for one report; empty values mean pass or n/a."""
-    out = {"store": None, "stale": []}
+    out = {"store": None, "stale": [], "behind": None}
     try:
         price = float(fm.get("price") or "")
     except ValueError:
@@ -80,10 +104,12 @@ def check(fm: dict, ticker: str, report_date: str,
         return out
     bars = load_store(report_key(ticker), store_dir)
     out["store"] = store_mismatch(price, price_date, bars)
+    out["behind"] = store_behind(price_date, bars)
     if report_date:
         out["stale"] = stale_sessions(price_date, report_date, bars)
     return out
 
 
 __all__ = ["PRICE_TOLERANCE", "quote_mismatch", "recorded_close",
-           "store_mismatch", "stale_sessions", "check"]
+           "store_mismatch", "store_behind", "stale_sessions", "check",
+           "STORE_LAG_DAYS"]

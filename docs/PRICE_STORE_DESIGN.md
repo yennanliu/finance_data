@@ -176,6 +176,14 @@ their relationship to the chart's y-axis shifts. Splits are rare enough — a ha
 a year across 38 tickers — that the trade is worth it. If a report ever needs to be
 read against its original prices, the `split` column reconstructs the factor.
 
+**Stale long fetch.** Yahoo can keep serving an old copy of the 10y history:
+after SNDK's 8:1 split on 2026-11-20 the CI fetch ended on 11-19 every night and
+the store logged `unchanged` for a week. `update()` therefore also fetches a
+`RECENT_PERIOD` (1mo) window and appends its newer bars, but only when the two
+agree on every shared date (`extend_from_recent`); a disagreement means one side
+was restated and nothing is spliced. A top-up is logged as a `::warning::`, and
+QA's `STORE_BEHIND` catches a store that is stuck anyway.
+
 `upsert` keeps stored bars whose dates fall outside the fetched range. That only
 matters if a fetch returns a short window; with a full 10y fetch it is a no-op
 safeguard.
