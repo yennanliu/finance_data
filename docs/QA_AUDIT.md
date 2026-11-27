@@ -88,9 +88,17 @@ template is `.format()`ed, so escape literal JSON braces as `{{` `}}`.
 - Reviewer models are set in `REVIEWER_MODELS` in `review_report_quality.py`,
   **not** in `resolve_chain()`. Otherwise changing the generator's OpenAI model
   would silently change the auditor too. There is one entry per provider, so a
-  `--cross-provider` switch never hands Gemini an OpenAI model id. Each is a
-  cheap model, because cost is driven by input volume, not the ~300-token
-  verdict. `--model` applies only to `--provider`.
+  `--cross-provider` switch never hands Gemini an OpenAI model id. Cost is
+  driven by input volume, not the ~300-token verdict. `--model` applies only
+  to `--provider`.
+- The OpenAI reviewer is `gpt-6-luna` (was `gpt-4o-mini` until 2026-11-27).
+  On the same 12 market-news reports, `gpt-4o-mini` warned on 9 with vague
+  sourcing complaints; `gpt-6-luna` raised none and instead caught checkable
+  defects (a wrong upside %, stale news presented as current, off-topic
+  headlines). It is the same model as the fundamental/technical generator, so
+  **`--cross-provider` is what keeps it from grading its own output**. If the
+  workflow drops the flag for a missing `GEMINI_API_KEY`, those reports are
+  self-graded and the summary's `Self-graded` line says how many.
 
 ### Inputs to the judge
 
@@ -144,7 +152,7 @@ a rule it was not given.
   kept.
 - **Sourcing-only complaints are ungrounded too** (`complaint_is_substantive`).
   The rubric already says a missing citation is not a defect, but `gpt-4o-mini`
-  kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
+  (the OpenAI reviewer before 2026-11-27) kept failing market-news reports for 「未提供來源」. A warn/fail whose *every*
   issue only asks for a source or verification (and names no contradiction,
   fabrication, exaggeration…) is kept in the CSV with `grounded=no`.
   The match is strict: each clause of an issue must be the figure it cites

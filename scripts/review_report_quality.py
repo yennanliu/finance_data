@@ -107,15 +107,28 @@ def route_library_logs_to_stderr() -> int:
 # ── reviewer configuration ───────────────────────────────────────────────────
 # The judge emits ~300 tokens, so its own output cap is irrelevant to cost —
 # the driver is *input* volume (one day of fundamental+technical reports is
-# ~3.8 MB of mostly-CJK markdown). A mini-class model is therefore the default;
-# override with --model when a run needs sharper judgement.
+# ~3.8 MB of mostly-CJK markdown).
+#
+# OpenAI was gpt-4o-mini until 2026-11-27. It warned on ~70 market-news reports
+# a night with vague complaints (「未提供來源」, 「缺乏具體數據支持」, 「分析較為
+# 表面」) despite rubric rule 1. On the same 12 market-news reports from
+# 2026-11-26, gpt-6-luna raised no sourcing-only issue and instead found
+# checkable defects gpt-4o-mini missed: amd's "57-58% upside" from 406.03 to
+# 662 (it is 63%), news dated 2017-2025 presented as current, off-topic
+# headlines in the news list. gpt-6.2-sol returned 403 for this project.
+#
+# gpt-6-luna is also the fundamental/technical generator, but the openai
+# reviewer only grades gemini-written reports under --cross-provider (the CI
+# setting), so it never grades its own output. It is a reasoning model, so
+# run_openai drops REVIEWER_TEMPERATURE and adds reasoning headroom on top of
+# REVIEWER_MAX_TOKENS.
 REVIEWER_PROVIDER = "openai"
 # One model per provider, because --cross-provider can switch provider
 # mid-run: handing the switched-to provider the configured provider's model id
 # (Gemini receiving "gpt-4o-mini") makes every such call fail. Kept
 # deliberately separate from PROVIDER_DEFAULTS — see the module docstring.
 REVIEWER_MODELS = {
-    "openai": "gpt-4o-mini",
+    "openai": "gpt-6-luna",
     "gemini": "gemini-3.8-flash",
     "claude": "claude-haiku-4-5-20251001",
 }
