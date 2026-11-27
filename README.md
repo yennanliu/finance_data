@@ -187,7 +187,7 @@ finance_data/
 | `daily_analysis.yml` | 17:00–03:00, 61 slots | One fundamental or technical report per slot |
 | `daily_market_news.yml` | 17:00–23:10, 38 slots | One news digest per ticker |
 | `daily_stock_watchlist.yml` | 22:00 | Pre-market watchlist → `ws/` |
-| `qa_report_quality.yml` | 02:00 | Rule-based + LLM audit → `qa/` |
+| `qa_report_quality.yml` | 02:20 | Rule-based + LLM audit → `qa/` |
 | `cleanup_refusals.yml` | 02:00 | Removes refusal posts |
 | `update_kline_data.yml` | 03:30 | Refreshes `data/prices/` |
 | `update_fundamentals.yml` | Sun 03:00 | Refreshes `data/fundamentals/` |

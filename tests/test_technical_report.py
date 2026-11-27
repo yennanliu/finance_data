@@ -573,3 +573,24 @@ def test_range_entry_rr_from_either_end_is_accepted_but_not_a_wrong_one():
     # Matches no entry/target pair: mid 0.97/3.70, $435 1.42/4.77, $440 0.66/2.97.
     wrong = report(rr="2.30").replace("**$435.50** | **$413.00**", row)
     assert tq.rr_mismatches(wrong) == [{"column": 1, "stated": 2.3, "recomputed": [0.97, 3.7]}]
+
+
+def test_newly_listed_ticker_gets_na_labels_not_false_signals():
+    """A 5-bar history (ANT listed 2026-11-19) has no MA20/50/200, OBV MA or
+    trustworthy MACD. NaN compares False, which used to print 下方 / 量能疲弱 /
+    混合排列 / 看空 — statements the model would repeat as findings."""
+    out = compute_technicals(bars(5))
+    line = lambda key: next(l for l in out.splitlines() if l.strip().startswith(key))
+    for key in ("MA20:", "MA50:", "MA200:", "均線排列:"):
+        assert line(key).rstrip().endswith("N/A"), line(key)
+    for word in ("下方", "混合排列", "量能疲弱", "看多", "看空"):
+        assert word not in out, word
+    assert line("MACD Hist:").split()[2:] == ["N/A", "N/A"]
+    assert line("ADX(14):").split()[1:] == ["N/A", "N/A"]
+    for word in ("強趨勢", "弱趨勢", "多頭主導", "空頭主導"):
+        assert word not in out, word
+
+
+def test_daily_macd_is_withheld_below_min_bars():
+    assert "MACD Hist:    N/A" in compute_technicals(bars(MACD_MIN_BARS - 1))
+    assert "MACD Hist:    N/A" not in compute_technicals(bars(MACD_MIN_BARS + 30))
