@@ -351,7 +351,8 @@ def test_gemini_retries_on_repeated_heading(monkeypatch):
 
 # ── newer models: request shape ──────────────────────────────────────────────
 
-@pytest.mark.parametrize("model", ["gpt-6-luna", "gpt-6.1-terra", "gpt-6.1-sol", "gpt-6-astra",
+@pytest.mark.parametrize("model", ["gpt-6.2-astra", "gpt-6.2-sol",
+                                   "gpt-6-luna", "gpt-6.1-terra", "gpt-6.1-sol", "gpt-6-astra",
                                    "gpt-5.6-sol", "o3"])
 def test_openai_reasoning_models_get_completion_cap_and_no_temperature(monkeypatch, model):
     monkeypatch.setenv("OPENAI_API_KEY", "k")
@@ -445,8 +446,10 @@ def test_workflow_model_choices_all_belong_to_a_provider():
         block = re.search(r"^      model:\n(.*?)^      max_tokens:", (workflows / name).read_text(),
                           re.M | re.S).group(1)
         ids = re.findall(r"^\s+- (\S+)$", block, re.M)
-        for new in ("gpt-6-luna", "gpt-6.1-sol", "claude-haiku-5-5", "claude-sonnet-5-5",
-                    "claude-opus-5-5"):
+        for new in ("gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-astra", "gpt-6.2-sol",
+                    "gemini-4-neon", "gemini-4-carbon", "gemini-4-argon", "gemini-4-hydrogen",
+                    "gemini-3.8-live", "claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5",
+                    "claude-fable-5-2", "claude-mythos-5-2"):
             assert new in ids, (name, new)
         assert all(i.startswith(prefixes) for i in ids), name
 

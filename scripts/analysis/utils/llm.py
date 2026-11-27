@@ -41,6 +41,8 @@ _MAX_REFUSAL_RETRIES = 5
 # OpenAI model token limits
 OPENAI_MAX_TOKENS = {
     # GPT-6 family: 128k output (platform docs, 2026-11).
+    "gpt-6.2-astra": 128000,
+    "gpt-6.2-sol": 128000,
     "gpt-6-astra": 128000,
     "gpt-6.1-sol": 128000,
     "gpt-6.1-terra": 128000,
