@@ -156,6 +156,14 @@ def test_a_provisional_store_row_is_not_published_as_a_close():
     assert source == "daily_bar" and str(out.index[-1])[:10] == "2026-11-25"
 
 
+def test_a_snapshot_near_the_close_is_still_rejected():
+    """Within 0.5% of the final close is common intraday; a tick is not."""
+    h, served = _skipped_session()
+    store = _store_rows(h, [("2026-11-26", 92.60)])        # 0.27% off 92.85
+    out, source = complete_bars(served, live_quote(92.85), now=SESSION_NOW, store_bars=store)
+    assert source == "daily_bar"
+
+
 @pytest.mark.parametrize("info", [
     {},                                              # no quote at all
     live_quote(day="2026-11-26", hour=11, minute=0),   # yesterday's intraday quote

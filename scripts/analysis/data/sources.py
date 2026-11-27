@@ -426,6 +426,10 @@ def quote_close(info: dict):
 # Relative close difference allowed between Yahoo's last bar and the store's
 # bar for the same date before the store may fill sessions after it.
 STORE_FILL_AGREEMENT = 0.005
+# A filled row's close against the official previous close. Much tighter than
+# the anchor check: an intraday snapshot is often within 0.5% of the final
+# close, rarely within a tick (0.05 on 0050 at ~NT$92 ≈ 0.05%).
+PREV_CLOSE_MATCH = 0.0005
 
 
 def _session_previous_close(info: dict, local_today: str):
@@ -483,7 +487,7 @@ def _fill_from_store(hist, store_bars, local_today: str, info: "dict | None" = N
     if len(fill) != 1:     # none missing, or more than the quote can vouch for
         return hist, False
     prev = _session_previous_close(info, local_today)
-    if prev is None or abs(fill[0]["close"] / prev - 1) > STORE_FILL_AGREEMENT:
+    if prev is None or abs(fill[0]["close"] / prev - 1) > PREV_CLOSE_MATCH:
         return hist, False
     tz = hist.index.tz
     index = pd.DatetimeIndex([pd.Timestamp(b["date"]).tz_localize(tz) for b in fill],
