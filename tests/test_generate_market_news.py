@@ -164,6 +164,17 @@ def test_ticker_fallback_name_does_not_bypass_ticker_rules(monkeypatch, site, pr
     assert [i["title"] for i in mn._fetch_site(name, site, "ANT", "ANT", prefix)] == [title]
 
 
+def test_short_name_equal_to_ticker_still_matches(monkeypatch):
+    """Only the fallback (name == ticker) is skipped. "Arm Holdings plc"
+    shortens to "Arm", which is a real company name for ARM."""
+    xml = b"""<rss><channel>
+  <item><title>Arm announces new chips - X</title></item>
+</channel></rss>"""
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(xml))
+    titles = [i["title"] for i in mn._fetch_site("X", "x.com", "ARM", "Arm Holdings plc", r"\$")]
+    assert titles == ["Arm announces new chips"]
+
+
 def test_prompt_tells_the_model_x_posts_are_not_news():
     prompt = mn.build_prompt("TSLA", {}, "")
     assert "「X」的條目是社群貼文" in prompt

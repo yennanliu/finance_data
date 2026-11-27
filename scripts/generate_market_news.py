@@ -129,7 +129,8 @@ def _fetch_site(name: str, site: str, ticker: str, company: str = "",
     names = [rf"{ticker_prefix}\b(?-i:{re.escape(ticker)})\b"]  # case-sensitive: tickers like ON, IT
     # fetch_ticker_info() falls back to the ticker as the name; matching that
     # case-insensitively would bypass the cashtag and case rules above.
-    if (short := _short_name(company)) and short.upper() != ticker.upper():
+    # Compare the raw name: "Arm Holdings plc" shortens to "Arm" and is real.
+    if company.upper() != ticker.upper() and (short := _short_name(company)):
         names.append(rf"\b{re.escape(short)}\b")
     about_company = re.compile("|".join(names), re.I)
 
