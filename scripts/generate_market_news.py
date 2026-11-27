@@ -127,7 +127,9 @@ def _fetch_site(name: str, site: str, ticker: str, company: str = "",
                 ticker_prefix: str = "") -> list[dict]:
     """Items from *site* (via Google News) whose title names *ticker* or *company*."""
     names = [rf"{ticker_prefix}\b(?-i:{re.escape(ticker)})\b"]  # case-sensitive: tickers like ON, IT
-    if short := _short_name(company):
+    # fetch_ticker_info() falls back to the ticker as the name; matching that
+    # case-insensitively would bypass the cashtag and case rules above.
+    if (short := _short_name(company)) and short.upper() != ticker.upper():
         names.append(rf"\b{re.escape(short)}\b")
     about_company = re.compile("|".join(names), re.I)
 

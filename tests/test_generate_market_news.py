@@ -146,6 +146,24 @@ def test_x_needs_the_cashtag_when_the_company_name_is_absent(monkeypatch):
     assert titles == ["$TSLA - TESLA TO INVEST 3 BILLION EUROS IN GRUENHEIDE"]
 
 
+@pytest.mark.parametrize("site, prefix, xml, title", [
+    ("x.com", r"\$", b"""<rss><channel>
+  <item><title>2,500 ANT Believers Index blind boxes - X</title></item>
+  <item><title>$ANT falls below IPO price - X</title></item>
+</channel></rss>""", "$ANT falls below IPO price"),
+    ("perplexity.ai", "", b"""<rss><channel>
+  <item><title>Why ant colonies scale - Perplexity</title></item>
+  <item><title>ANT closes below IPO price - Perplexity</title></item>
+</channel></rss>""", "ANT closes below IPO price"),
+])
+def test_ticker_fallback_name_does_not_bypass_ticker_rules(monkeypatch, site, prefix, xml, title):
+    """fetch_ticker_info() returns {"name": ticker} when Yahoo has no name (NBIS
+    has no longName). That name must not re-admit bare or lowercase tickers."""
+    monkeypatch.setattr(mn, "urlopen", lambda *a, **k: _FakeResp(xml))
+    name = "X" if site == "x.com" else "Perplexity"
+    assert [i["title"] for i in mn._fetch_site(name, site, "ANT", "ANT", prefix)] == [title]
+
+
 def test_prompt_tells_the_model_x_posts_are_not_news():
     prompt = mn.build_prompt("TSLA", {}, "")
     assert "「X」的條目是社群貼文" in prompt
