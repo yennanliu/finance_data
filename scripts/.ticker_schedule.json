@@ -5,13 +5,13 @@
       "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
       "AMD", "NVDA", "NU", "VST", "ORCL", "INTC", "SPCX", "AVGO", "NBIS",
       "MU", "SKHY", "WDC", "SNDK", "MRVL", "SOXQ", "SOXX", "WQTM",
-      "VTI", "QQQ", "ROBO", "UBER"
+      "VTI", "QQQ", "ROBO", "UBER", "ANT", "CRWV"
     ],
     "technical": [
       "0050", "2330.TW", "TSLA", "PL", "GRAB", "TSM", "GOOG", "AMZN",
       "MSFT", "SOFI", "PLTR", "RKLB", "ONDS", "AVAV", "KTOS", "META",
       "AMD", "NVDA", "NU", "VST", "ORCL", "INTC", "SPCX", "AVGO", "NBIS",
-      "UBER"
+      "UBER", "ANT", "CRWV"
     ]
   },
   "defaults": {

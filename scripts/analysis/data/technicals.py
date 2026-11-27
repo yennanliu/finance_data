@@ -369,6 +369,8 @@ def wilder_rsi(close, n: int = 14):
 # 26 bars for the slow EMA plus 9 for the signal line. An EMA will return a
 # number from the first bar on; before this many it is mostly its seed value.
 MACD_MIN_BARS = 35
+# ADX(14) smooths DX, itself built from smoothed DMs: two periods to settle.
+ADX_MIN_BARS = 28
 
 
 def macd_histogram(close):
@@ -671,6 +673,10 @@ def compute_technicals(hist, key: "str | None" = None,
         macd = ema12 - ema26
         signal = macd.ewm(span=9, adjust=False).mean()
         hist_m = macd - signal
+        if len(close) < MACD_MIN_BARS:
+            # The EMAs are still mostly their seed; withhold the reading, as
+            # macd_histogram() does for the timeframe table.
+            macd, signal, hist_m = (x * float("nan") for x in (macd, signal, hist_m))
 
         # Bollinger Bands (20, 2σ)
         bb_mid = close.rolling(20).mean()
@@ -704,6 +710,10 @@ def compute_technicals(hist, key: "str | None" = None,
         minus_di = 100 * minus_dm.ewm(alpha=1/14, adjust=False).mean() / atr14_adx.replace(0, float("nan"))
         dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, float("nan"))
         adx = dx.ewm(alpha=1/14, adjust=False).mean()
+        if len(close) < ADX_MIN_BARS:
+            # DX is itself smoothed from smoothed DMs; on a handful of bars the
+            # seed dominates (5 bars of ANT read ADX 94). Withhold it.
+            adx, plus_di, minus_di = (x * float("nan") for x in (adx, plus_di, minus_di))
 
         # OBV (On-Balance Volume)
         obv_direction = close.diff().apply(lambda x: 1 if x > 0 else (-1 if x < 0 else 0))
@@ -767,9 +777,14 @@ def compute_technicals(hist, key: "str | None" = None,
         na = lambda v: f"{v:.2f}" if v == v else "N/A"
         na3 = lambda v: f"{v:.3f}" if v == v else "N/A"
         vol = lambda v: f"{v:,.0f}" if v == v else "N/A"
+        # A label read off a comparison is N/A when any input is NaN: NaN
+        # compares False, which used to print "below MA" / "weak volume" /
+        # "mixed alignment" for a newly listed ticker with too few bars.
+        lbl = lambda text, *vals: "N/A" if any(v != v for v in vals) else text
 
         vol_ratio = last_vol / last_avg_vol if last_avg_vol > 0 else float("nan")
-        obv_trend = "OBV > MA → 量能支撐上漲" if last_obv > last_obv_ma else "OBV < MA → 量能疲弱"
+        obv_trend = lbl("OBV > MA → 量能支撐上漲" if last_obv > last_obv_ma else "OBV < MA → 量能疲弱",
+                        last_obv, last_obv_ma)
 
         atr_pct = last_atr / last * 100 if last > 0 else float("nan")
 
@@ -786,10 +801,10 @@ def compute_technicals(hist, key: "str | None" = None,
   ATR(14):      ${na(last_atr)}  ({na(atr_pct)}% of price, Wilder) — 每日波動參考
 
   ── 均線系統 ──
-  MA20:         ${na(last_ma20)}   {'▲ 上方' if last > last_ma20 else '▼ 下方'}
-  MA50:         ${na(last_ma50)}   {'▲ 上方' if last > last_ma50 else '▼ 下方'}
-  MA200:        ${na(last_ma200)}  {'▲ 上方' if last_ma200 == last_ma200 and last > last_ma200 else '▼ 下方' if last_ma200 == last_ma200 else 'N/A'}
-  均線排列:     {'多頭排列 MA20>MA50>MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 > last_ma50 > last_ma200 else '空頭排列 MA20<MA50<MA200' if last_ma20 == last_ma20 and last_ma50 == last_ma50 and last_ma200 == last_ma200 and last_ma20 < last_ma50 < last_ma200 else '混合排列'}
+  MA20:         ${na(last_ma20)}   {lbl('▲ 上方' if last > last_ma20 else '▼ 下方', last_ma20)}
+  MA50:         ${na(last_ma50)}   {lbl('▲ 上方' if last > last_ma50 else '▼ 下方', last_ma50)}
+  MA200:        ${na(last_ma200)}  {lbl('▲ 上方' if last > last_ma200 else '▼ 下方', last_ma200)}
+  均線排列:     {lbl('多頭排列 MA20>MA50>MA200' if last_ma20 > last_ma50 > last_ma200 else '空頭排列 MA20<MA50<MA200' if last_ma20 < last_ma50 < last_ma200 else '混合排列', last_ma20, last_ma50, last_ma200)}
 
 {ma_charts}
 
@@ -798,12 +813,12 @@ def compute_technicals(hist, key: "str | None" = None,
   RSI 背離:     {divergence}  (僅比較近20根K棒首尾的價格與RSI方向)
   MACD:         {na3(last_macd)}
   MACD Signal:  {na3(last_signal)}
-  MACD Hist:    {last_hist_m:+.3f}  {'🟢 看多' if last_hist_m > 0 else '🔴 看空'}
-  Stoch %K:     {na(last_stoch_k)}  Stoch %D: {na(last_stoch_d)}  {'超買' if last_stoch_k > 80 else '超賣' if last_stoch_k < 20 else '中性'}
+  MACD Hist:    {f'{last_hist_m:+.3f}' if last_hist_m == last_hist_m else 'N/A'}  {lbl('🟢 看多' if last_hist_m > 0 else '🔴 看空', last_hist_m)}
+  Stoch %K:     {na(last_stoch_k)}  Stoch %D: {na(last_stoch_d)}  {lbl('超買' if last_stoch_k > 80 else '超賣' if last_stoch_k < 20 else '中性', last_stoch_k)}
 
   ── 趨勢強度 (ADX) ──
-  ADX(14):      {na(last_adx)}  {'強趨勢 >25' if last_adx > 25 else '弱趨勢/盤整 <25'}
-  +DI:          {na(last_plus_di)}  -DI: {na(last_minus_di)}  {'多頭主導' if last_plus_di > last_minus_di else '空頭主導'}
+  ADX(14):      {na(last_adx)}  {lbl('強趨勢 >25' if last_adx > 25 else '弱趨勢/盤整 <25', last_adx)}
+  +DI:          {na(last_plus_di)}  -DI: {na(last_minus_di)}  {lbl('多頭主導' if last_plus_di > last_minus_di else '空頭主導', last_plus_di, last_minus_di)}
 
   ── 布林通道 ──
   BB上軌:       ${na(last_bb_up)}

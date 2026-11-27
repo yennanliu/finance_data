@@ -29,11 +29,11 @@ on:
     # Content deploys ONLY here (push-on-content is disabled above), so this
     # cron must run AFTER the full daily generation window or same-day reports
     # miss a cycle. Generation window (UTC):
-    #   daily_market_news:          17:00 – 23:10  (last: ROBO)
-    #   daily_analysis fundamental: 17:00 – 21:00  (last: NBIS)
-    #   daily_analysis technical:   21:30 – 01:30  (last: NBIS, next day)
-    #   daily_analysis fundamental: 02:00 – 03:40  (additional; last: ROBO)
-    # → Last job scheduled 03:40 UTC; deploy at 04:00 UTC to capture it.
+    #   daily_market_news:          17:00 – 23:50  (last: NBIS)
+    #   daily_analysis fundamental: 17:00 – 21:20  (last: CRWV)
+    #   daily_analysis technical:   21:30 – 01:55  (last: CRWV, next day)
+    #   daily_analysis fundamental: 02:00 – 03:50  (additional; last: UBER)
+    # → Last job scheduled 03:50 UTC; deploy at 04:00 UTC to capture it.
     #   (GitHub may delay scheduled crons; push this later if tail jobs are missed.)
     - cron: "0 4 * * *"
   workflow_dispatch:      # allow manual trigger from GitHub UI

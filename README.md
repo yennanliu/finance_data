@@ -40,10 +40,12 @@ static MkDocs site.
 
 ### Coverage
 
-- **Daily fundamental (36):** 0050, 2330.TW, TSLA, PL, GRAB, TSM, GOOG, AMZN,
+- **Daily fundamental (39):** 0050, 2330.TW, TSLA, PL, GRAB, TSM, GOOG, AMZN,
   MSFT, SOFI, PLTR, RKLB, ONDS, AVAV, KTOS, META, AMD, NVDA, NU, VST, ORCL, INTC,
-  SPCX, AVGO, NBIS, MU, SKHY, WDC, SNDK, MRVL, SOXQ, SOXX, WQTM, VTI, QQQ, ROBO
-- **Daily technical (25):** the first 25 of the above (0050 … NBIS)
+  SPCX, AVGO, NBIS, MU, SKHY, WDC, SNDK, MRVL, SOXQ, SOXX, WQTM, VTI, QQQ, ROBO,
+  UBER, ANT, CRWV
+- **Daily technical (28):** the first 25 of the above (0050 … NBIS), plus UBER,
+  ANT and CRWV
 - **Analysis types (12):** `fundamental-analysis`, `technical-analysis`,
   `stock-eval`, `stock-valuation`, `financial-report-analyst`,
   `earnings-call-analysis`, `insider-trading`, `institutional-ownership`,
@@ -185,7 +187,7 @@ finance_data/
 | `daily_analysis.yml` | 17:00–03:00, 61 slots | One fundamental or technical report per slot |
 | `daily_market_news.yml` | 17:00–23:10, 38 slots | One news digest per ticker |
 | `daily_stock_watchlist.yml` | 22:00 | Pre-market watchlist → `ws/` |
-| `qa_report_quality.yml` | 02:00 | Rule-based + LLM audit → `qa/` |
+| `qa_report_quality.yml` | 02:20 | Rule-based + LLM audit → `qa/` |
 | `cleanup_refusals.yml` | 02:00 | Removes refusal posts |
 | `update_kline_data.yml` | 03:30 | Refreshes `data/prices/` |
 | `update_fundamentals.yml` | Sun 03:00 | Refreshes `data/fundamentals/` |
