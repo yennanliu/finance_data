@@ -93,7 +93,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--max-tokens", type=int, default=None,
         help=f"Max output tokens (default: {DEFAULT_TOKENS}; "
-             "fundamental-analysis: 64000)",
+             "fundamental-analysis and technical-analysis: 112000)",
     )
     return p.parse_args()
 

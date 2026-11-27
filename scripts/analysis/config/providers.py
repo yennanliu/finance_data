@@ -54,6 +54,11 @@ PROVIDER_DEFAULTS = {
 # through to the next. Add levels by appending provider names here.
 FALLBACK_CHAIN = ["gemini", "openai"]
 
+# gpt-6-luna's 128,000 completion ceiling minus run_openai's reasoning headroom
+# (llm._OPENAI_REASONING_HEADROOM, 16,000). Not imported from llm: config must
+# not depend on the LLM layer; tests/test_config.py pins the two together.
+LUNA_FULL_BUDGET = 112000
+
 # Per-analysis-type defaults. A type listed here starts its chain with this
 # provider/model when the run names no provider, and uses this model when the
 # run names that provider without a model. The rest of ``FALLBACK_CHAIN`` still
@@ -65,16 +70,19 @@ TYPE_DEFAULTS = {
     "fundamental-analysis": {
         "provider": "openai",
         "model": "gpt-6-luna",
-        # GPT-6 Luna emits up to 128k tokens. 64k for the visible report plus
-        # run_openai's 16k reasoning headroom stays well inside that, and the
-        # gemini fallback clamps it to its own 65,536 ceiling.
-        "max_tokens": 64000,
+        # GPT-6 Luna accepts at most 128,000 completion tokens (a request for
+        # 128,001 is rejected with a 400). 112k plus run_openai's 16k reasoning
+        # headroom sends exactly that ceiling. It is a ceiling, not a target:
+        # a real NVDA run used 24,896. The gemini fallback clamps it to 65,536.
+        "max_tokens": LUNA_FULL_BUDGET,
     },
     "technical-analysis": {
         "provider": "openai",
         "model": "gpt-6-luna",
-        # No ``max_tokens``: a technical report is far shorter than a
-        # fundamental one, so it keeps ``DEFAULT_TOKENS``.
+        # Same ceiling as fundamental. A technical report is shorter (a real
+        # NVDA run used 12,226), so this is headroom against truncation, not
+        # a request for a longer report.
+        "max_tokens": LUNA_FULL_BUDGET,
     },
 }
 
