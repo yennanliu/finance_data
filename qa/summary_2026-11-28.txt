@@ -1,0 +1,34 @@
+
+============================================================
+
+Recent — last 2 UTC days (2026-11-27, 2026-11-28)
+Total scanned : 122
+Bad reports   : 19  (15.6%)
+
+Issue breakdown:
+  DCF_GAP                 18  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DERIVATION               1  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+
+------------------------------------------------------------
+
+All scanned reports
+Total scanned : 2113
+Bad reports   : 22  (1.0%)
+
+Issue breakdown:
+  DCF_GAP                 21  the computed DCF value is more than 50% away from the price: a reading to review, not an arithmetic error
+  DERIVATION               1  a step of a $$ … $$ or $ … $ equation chain does not recompute (a = b that is false)
+
+Top 10 tickers by bad-report count:
+  skhy            3 / 32   bad
+  amd             2 / 49   bad
+  amzn            2 / 58   bad
+  grab            2 / 61   bad
+  ktos            2 / 56   bad
+  mrvl            2 / 29   bad
+  pltr            2 / 57   bad
+  sndk            2 / 14   bad
+  tsla            2 / 49   bad
+  vst             2 / 63   bad
+
+CSV written → qa/bad_reports_2026-11-28.csv

@@ -1,0 +1,56 @@
+
+============================================================
+Reports reviewed : 205
+Mean score       : 4.03 / 5
+
+Verdict breakdown (205 grounded):
+  pass             116
+  warn              71
+  fail              18
+
+Mean score by dimension:
+  data_integrity   4.12
+  completeness     4.52
+  depth            4.01
+  consistency      4.12
+  language         4.63
+
+Failed review (18):
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-27_openai.md
+      → 報告出現記憶體製造商營業利益率達「80.7%」（TTM 為 74.6%）與毛利率「80.7%」的極端不合理數據。
+  mu           fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/mu/fundamental_analysis_2026-11-28_openai.md
+      → 報告列出 MU TTM 營收達「$133.19B」及最新季度營業利益率達「80.7%」，屬於記憶體製造商明顯不合理的數據捏造。
+  sndk         fundamental_analysis         /home/runner/work/finance_data/finance_data/ai_gen_report/fundamental/sndk/fundamental_analysis_2026-11-27_openai.md
+      → 記憶體製造商利潤率數據嚴重背離產業現實，報告出現「TTM 營業利益率 72.5%」與最新一季「79.6%」等不合理數值。
+  0050         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/0050/market_news_2026-11-27_gemini.md
+      → 「受益人數突破 403 萬人」及「自 388 萬激增至 403 萬人」的規模與短期增幅都極不尋常，報告將其當作核心事實並據此推導資金流入，數據可信度不足。
+  ant          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/ant/market_news_2026-11-28_gemini.md
+      → 報告多次稱公司估值約「1.7 兆美元左右」，但未交代股數或估值依據；以文中「91.88 美元」股價推算，隱含約 185 億股，這一估值數字可信度存疑。
+  crwv         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/crwv/market_news_2026-11-28_gemini.md
+      → 報告將「Anthropic 規模達 813 億美元的 IPO」描述為已完成的募資，並稱「資金到位」；把 IPO 規模或估值當成實際募集資金，可能造成重大數據誤讀。
+  goog         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/goog/market_news_2026-11-27_gemini.md
+      → 報告反覆將「單季高達 91 億美元的現金消耗」視為核心財務事實，卻未界定期間或現金消耗口徑；這項重大且異常的數字直接支撐流動性與 CDS 風險結論，數據可信度不足。
+  ktos         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/ktos/market_news_2026-11-27_gemini.md
+      → 報告稱「國防預算在無人載具和太空領域的真正放量節點將落在 2025–2026 年底」，但報告日期為 2026-11-27，將已過期間描述為未來節點，時間口徑錯誤。
+  mrvl         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/mrvl/market_news_2026-11-27_gemini.md
+      → 報告稱市場預期營收為「3.15 億美元」；對 Marvell 而言此季度營收規模明顯不合理，且該數字在摘要與深度分析中重複出現，屬重大數據可信度問題。
+  qqq          market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/qqq/market_news_2026-11-27_gemini.md
+      → 報告同時稱 2026-11-23「QQQ +7.0%」，又稱截至 2026-11-25「連續 9 個交易日收盤價低於開盤價」；若該連續區間涵蓋 11 月 23 日，兩者直接矛盾。
+  rklb         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/rklb/market_news_2026-11-27_gemini.md
+      → 報告把「SPCX Stock」及「$135 IPO Price」當作 SpaceX 可交易股票資訊，並將「FCC 百萬顆衛星」核准作為事實，存在重大且高度可疑的市場數據，影響同業分析可信度。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-27_gemini.md
+      → 公司概覽稱 SK hynix「成立於 1949 年」，此公司基本資料錯誤，損及數據誠信。
+  skhy         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/skhy/market_news_2026-11-28_gemini.md
+      → 公司概覽稱 SK hynix「成立於 1949 年」，其公司起源年份有明顯錯誤，損害基本事實可信度。
+  sndk         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/sndk/market_news_2026-11-27_gemini.md
+      → 報告將 X 貼文所稱的 LTA 價格底限「支撐至少 80% 的毛利率」當作重要基本面防護，並稱公司毛利率可「在 80% 以上」；對 NAND 儲存製造商而言，此數字極不合理，足以動搖核心分析。
+  soxx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/soxx/market_news_2026-11-28_gemini.md
+      → 報告多次稱黃仁勳「重新出任輝達執行長」，並以此解釋晶片股反彈；這項核心事件與他長期擔任 NVIDIA 執行長的事實不符，相關新聞敘述及因果分析因此不可信。
+  spcx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/spcx/market_news_2026-11-27_gemini.md
+      → 報告以「7,000 萬名」兒童、每人「兩股」及「127.44」美元計，贈股價值約 178 億美元；再加上所稱「等額配捐」，總額應接近 357 億美元，而非僅稱可能「超過 180 億美元」。
+  spcx         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/spcx/market_news_2026-11-28_gemini.md
+      → 報告將「128 quintillion」解作「百萬的五次方」；兩者數量級不同，屬明確的數字概念錯誤。
+  tsla         market_news                  /home/runner/work/finance_data/finance_data/ai_gen_report/market_news/tsla/market_news_2026-11-27_gemini.md
+      → 報告把「車載硬體記憶體縮減 25%」當作已發生的明確事件，但未界定是容量、頻寬或哪一款硬體的規格變動，這個核心數字缺乏可判讀的口徑。
+
+CSV written → qa/llm_review_2026-11-28.csv (89 row(s))
